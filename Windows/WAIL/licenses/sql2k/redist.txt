@@ -1,0 +1,536 @@
+WEITERVERTREIBBARE KOMPONENTEN
+
+Die folgenden Dateien sind weitervertreibbar:
+
+
+PivotTable Service 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+msolap80.dll		OLE DB Provider für Analysis Services
+msolap80.rll		Analysis Services-Ressourcen
+msmdcb80.dll		PivotTable Service
+msmdgd80.dll		Analysis Services-Treiber
+msolui80.dll		Analysis Services-Verbindungsdialog
+olapuir.rll		Analysis Services-Ressourcen für Verbindungsdialog
+msdmine.dll		OLE DB Provider für Datamining 
+msdmine.rll		Ressourcen für OLE DB für Datamining 
+msdmeng.dll		Lernalgorithmus für Datamining 
+msmdun80.dll		SQL Server-Unicode/ANSI-Übersetzungsschicht
+ptsfull.exe		Installiert PivotTable Services
+ptslite.exe		Installiert PivotTable Services ohne MDAC
+
+msolap.dll		OLE DB Provider für Analysis Services (Version 7.0)
+msolapr.dll		OLAP Services-Ressourcen (Version 7.0)
+msmdcube.dll		PivotTable Service (Version 7.0)
+msmdgdrv.dll		OLAP Services-Treiber (Version 7.0)
+msolapui.dll		OLAP Services-Verbindungsdialog (Version 7.0)
+
+
+Decision Support Objects (DSO) 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+msmdnet.dll		Analysis Services-Netzwerkschnittstelle
+msmdlock.dll		Analysis Services-Sperren-Manager
+msmddo.dll		Analysis Services-Decision Support Objects, Version 7.0
+msmddo80.dll		Analysis Services-Decision Support Objects, Version 8.0
+msmdso.rll		Ressourcendatei für Analysis Services Decision Support Objects, Version 8.0
+
+
+English Query 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+mseqole.dll		English Query-Server-Objektmodell
+mseqbase.dll		English Query-Zusatzdatei
+mseqsql.dll		English Query-Zusatzdatei
+mseqmsg.dll		English Query-Zusatzdatei
+mseqconn.dll		English Query-Zusatzdatei
+mseqcore.eqd		English Query-Zusatzdatei
+mseqgrqb.ocx		Question Builder-Steuerelement
+eqqbhlp.chm		Hilfe zu Question Builder
+
+
+Repository
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+DBScan.dll		Datenbankscanner
+INSREPIM.DLL		Information Model-Installationsprogramm
+InsRepIM.exe		Information Model-Installationsprogramm
+MSMDCXML.DLL		MDC-XML-Import/Export
+REPBR.DLL		Repository-Browser
+REPBRUI.DLL		Benutzeroberfläche von Repository-Browser
+repodbc.dll		Meta Data Services-Repository-Modul
+reprc.rll		Ressourcen für das Repository-Modul
+MSMDCXML.rll		MDC-XML-Import/Export-Ressource
+msrmirc.rll		Ressource für das Information Model-Installationsprogramm
+REPBRUI.rll		Ressource für die Benutzeroberfläche von Repository-Browser
+REPBRMDC.RLL		Repository-Browser-Symbolressource
+DB2.rdm			Model-Installationsskript
+DBM.rdm			Model-Installationsskript
+DTM.rdm			Model-Installationsskript
+DTS.rdm			Model-Installationsskript
+EQM.rdm			Model-Installationsskript
+GEN.rdm			Model-Installationsskript
+IFX.rdm			Model-Installationsskript
+MDS.rdm			Model-Installationsskript
+OCL.rdm			Model-Installationsskript
+OLP.rdm			Model-Installationsskript
+SIM.rdm			Model-Installationsskript
+SQL.rdm			Model-Installationsskript
+TFM.rdm			Model-Installationsskript
+UML.rdm			Model-Installationsskript
+UMX.rdm			Model-Installationsskript
+
+
+Replikation
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+atl.dll			Bibliotheken für aktive Vorlagen
+rdistcom.dll		Schnittstelle für den Replikationsverteilungs-Agenten
+replerrx.dll		Fehlerbehandlung von Replikations-ActiveX-Steuerelementen
+replprov.dll		Schnittstelle für den Mergereplikationsprovider
+replrec.dll		Schnittstelle für die Mergereplikations-Konfliktauflösung
+replres.rll		Replikationsressourcen
+sqldistx.dll		ActiveX-Steuerelement für Replikationsverteilung
+sqlmergx.dll		ActiveX-Steuerelement für Replikationsmerge
+wzcnf.dll		Replikationskonflikt-Viewer und Interaktiver Konfliktlöser
+wzcnflct.exe		Ausführbare Datei zum Replikationskonflikt-Viewer
+wzcnfrc.rll		Ressourcen für Replikationskonflikt-Viewer und Interaktiven Konfliktlöser
+
+
+Data Transformation Services (DTS) 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+sqlresld.dll		Satellite-Ressourcen-DLL-Loader
+dtsffile.dll		In DTS integrierter OLE DB-Flatfileprovider
+dtsffile.rll		DTS-Ressourcendatei
+dtspkg.dll		DTS-Paket
+dtspkg.rll		DTS-Ressourcendatei
+dtspump.dll		DTS-Datapump
+dtspump.rll		DTS-Ressourcendatei
+axscphst.dll		DTS-ActiveX-Skript-Host
+axscphst.rll		DTS-Ressourcendatei
+dtsrun.exe		Befehlszeilenprogramm zum Ausführen eines DTS-Pakets
+dtsrun.rll		DTS-Ressourcendatei
+sqlunirl.dll		SQL Server-Unicode/ANSI-Übersetzungsschicht
+custtask.dll		DTS-Datei für benutzerdefinierte Tasks
+custtask.rll		DTS-Ressourcendatei für benutzerdefinierte Tasks
+
+
+Distributed Management Objects (DMO) 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+sqldmo.dll		Distributed Management Objects-COM 
+sqldmo.rll		Ressourcendatei für Distributed Management Objects
+sqlresld.dll		SQL Server Enterprise Manager-Ressourcen-DLL-Loader
+sqlsvc.dll		Datenbankdienstschicht
+sqlsvc.rll		Ressourcen-DLL für die Datenbankdienstschicht
+sqlunirl.dll		SQL Server-Unicode/ANSI-Übersetzungsschicht
+w95scm.dll		Abstraktionsschicht des SQL-Dienstkontroll-Managers
+
+
+SQL Namespace (SQLNS) 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+sqlns.dll		SQL Namespace
+sqlns.rll		Ressourcendatei für SQL Namespace
+sqlgui.dll		SQL Server-GUI-Unterstützung
+sqlgui.rll		Ressourcendatei für SQL Server-GUI
+sfc.dll			Foundation Classes
+sfc.rll			Ressourcendatei für Foundation Classes
+semcomn.dll		Allgemeine Objekte
+semcomn.rll		Ressourcendatei für allgemeine Objekte
+semcros.dll		Benutzeroberfläche
+semcros.rll		Ressourcendatei für die Benutzeroberfläche
+semexec.dll		Benutzeroberfläche
+semexec.rll		Ressourcendatei für die Benutzeroberfläche
+semwiz.dll		Benutzeroberfläche für Assistenten
+semwiz.rll		Ressourcendatei für die Benutzeroberfläche für Assistenten
+semsys.dll		Benutzeroberfläche
+semsys.rll		Ressourcendatei für die Benutzeroberfläche
+semobj.dll		Benutzeroberfläche
+semobj.rll		Ressourcendatei für die Benutzeroberfläche
+semrepl.dll		Benutzeroberfläche
+semrepl.rll		Ressourcendatei für die Benutzeroberfläche
+semmap.dll		SQL Server Enterprise Manager-MAPI-Unterstützung
+semmap.rll		Ressourcendatei für die SQL Server Enterprise Manager-MAPI-Unterstützung
+semwebwz.dll		SQL Server-Web-Assistent
+semwebwz.rll		Ressourcendatei für den SQL Server-Web-Assistenten
+semdll.dll		SQL Enterprise-Komponenten
+semdll.rll		Ressourcendatei für SQL Enterprise-Komponenten 
+semnt.dll		SQL Enterprise-Komponenten (Windows NT-spezifisch) 
+semnt.rll		Ressourcendatei für SQL Enterprise-Komponenten (Windows NT-spezifisch)
+sqllex.dll		Transact-SQL-Color-Lexer
+
+
+OSQL  
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+OSQL.EXE 		SQL-Befehlszeilen-Abfragetool
+
+
+DB-Library 
+----------------------------------------------
+Dateiname		Beschreibung
+----------------------------------------------
+ntwdblib.dll		DB-Library-DLL
+
+
+SQLREDIS.EXE
+----------------------------------------------------------------------
+Dieses Paket enthält die folgenden weitervertreibbaren Komponenten:
+----------------------------------------------------------------------
+Jet 4.0
+Jet OLE DB 4.0
+ODBC-Treiber für Desktopdatenbanken
+SQL Server 2000-Netzwerkbibliotheken
+SQL ODBC-Treiber
+SQL OLEDB-Provider
+XML-Provider für SQL
+Microsoft Data Access Components (MDAC), Version 2.6
+
+
+VERTRIEBSBESTIMMUNGEN:
+
+Microsoft gewährt Ihnen das nicht ausschließliche lizenzgebührenfreie Recht, die Weitervertreibbaren Komponenten zu vervielfältigen und zu vertreiben, vorausgesetzt, (a) Sie vertreiben die Weitervertreibbaren Komponenten nur im Objektcode und einzig und allein in Verbindung mit und als Teil Ihrer Anwendung, die in Verbindung mit Microsoft SQL Server arbeitet ("Anwendung"); (b) Ihre Anwendung fügt den Weitervertreibbaren Komponenten entscheidende und primäre Funktionalität hinzu; (c) in der Anwendung arbeiten die Weitervertreibbaren Komponenten nur in Verbindung mit Microsoft SQL Server und anderen Microsoft-Produkten; (d) wenn Sie sich entschließen, die weiter oben als PivotTable Service-Dateien ("PTS-Dateien") bezeichneten Dateien zu vervielfältigen/und oder weiterzuvertreiben, gestatten Sie den Endbenutzer/innen Ihrer Anwendung, solche PTS-Dateien zu verwenden, um Datencubes zu erstellen, die nur von einem Microsoft SQL Server extrahierte Daten enthalten, und Sie erzwingen diese Einschränkung zumindest dadurch, dass Sie diese Einschränkung in den Lizenzvertrag Ihrer Anwendung aufnehmen; (e) Sie verwenden weder den Namen, noch das Logo oder die Marken von Microsoft, um Ihre Anwendung zu vermarkten; (f) Sie nehmen einen gültigen Urheberrechtshinweis in Ihre Anwendung auf; (g) Sie nehmen alle in den Weitervertreibbaren Komponenten enthaltenen Urheberrechts- und Markenschutzhinweise auf; (h) Sie halten Microsoft schadlos und schützen Microsoft vor allen Ansprüchen oder Rechtsstreitigkeiten, inklusive Anwaltsgebühren, zu denen es aufgrund der Verwendung oder dem Vertrieb Ihrer Anwendung kommt; und (i) Sie gestatten keinen weiteren Vertrieb der Weitervertreibbaren Komponenten durch Ihre Endbenutzer/innen. Es gilt die folgende Ausnahme: Sie dürfen den weiteren Vertrieb der Weitervertreibbaren Dateien durch Ihre Distributoren an Endbenutzer/innen erlauben, wenn Ihre Distributoren die Weitervertreibbaren Komponenten nur in Verbindung mit und als Teil Ihrer Anwendung vertreiben. 
+
+
+Wenn Ihre Anwendung die (weiter unten definierten) "Jet-Dateien" verwendet, stimmen Sie zu, die folgenden zusätzlichen Anforderungen zu erfüllen: (a) Ihre Anwendung darf die Funktionen von Microsoft Access nicht zu großen Teilen duplizieren oder nach vernünftiger Einschätzung durch Microsoft mit diesem Produkt konkurrieren; und (b) Sie dürfen eine der Jet-Dateien nicht zum gewerblichen Vertrieb in Verbindung mit einem allgemein verwendbaren Softwareprodukt zur Textverarbeitung, Tabellenkalkulation oder Datenbankverwaltung oder einer integrierten Arbeits- oder Produktreihe vervielfältigen oder verwenden, deren Komponenten ein allgemein verwendbares Softwareprodukt zur Textverarbeitung, Tabellenkalkulation oder Datenbankverwaltung (ausgenommen zur ausschließlichen Verwendung zum Importieren von Daten in eines der zahlreichen von Microsoft Access unterstützten Formate) umfassen, ohne dass Ihre Anwendung erfordert, dass Ihre Kundschaft Microsoft Access lizenziert, um Ihre Anwendung verwenden zu können. Anmerkung: Ein Produkt, das beschränkte Textverarbeitungs-, Tabellenkalkulations- oder Datenbankkomponenten zusammen mit anderen Komponenten enthält, die einen erheblichen und primären Teil des Produkts ausmachen, wie z.B. ein Buchhaltungsprogramm mit beschränkter Tabellenkalkulationsmöglichkeit, wird nicht als "allgemein verwendbares" Produkt angesehen. Im Sinne des oben Genannten beziehen sich die "Jet-Dateien" auf die folgenden Dateien: vbajet32.dll, expsrv.dll, msexch40.dll, msjint40.dll, msexcl40.dll, msjet40.dll, msjetoledb40.dll, msjter40.dll, msjtes40.dll, msltus40.dll, mspbde40.dll, msrclr40.dll, msrd2x40.dll, msrd3x40.dll, msrecr40.dll, msrepl40.dll, msrpfs40.dll, msrpjt40.dll, mstext40.dll, mswdat10.dll, mswstr10.dll, msxbde40.dll.
+
+Wenn Sie die Clientverbindungskomponenten von SQL Server weitervertreiben, erklären Sie sich damit einverstanden, sie als Ganzes, nur im Objektcode, in einer einzigen ausführbaren Datei wie von Microsoft bestimmt (sqlredis.exe) weiterzuvertreiben. Sie sind nicht berechtigt, die in der Datei "sqlredis.exe" enthaltenen Komponenten zu trennen.
+
+Fragen Sie Microsoft nach den anwendbaren Lizenzgebühren und sonstigen Lizenzbestimmungen, falls Sie die Weitervertreibbaren Komponenten anders verwenden und/oder weitervertreiben möchten.
+
+GARANTIEAUSSCHLUSS. Im größtmöglichen durch das anwendbare Recht gestatteten Umfang stellen Microsoft und deren Lieferanten die Weitervertreibbaren Komponenten und gegebenenfalls Supportleistungen in Verbindung mit den Weitervertreibbaren Komponenten ("Supportleistungen") WIE BESEHEN UND OHNE GARANTIE AUF FEHLERFREIHEIT zur Verfügung. Sie schließen alle anderen Garantien und Bedingungen, gleich ob ausdrücklich, konkludent oder gesetzlich, einschließlich, aber nicht beschränkt auf (falls zutreffend) jede konkludente Garantie oder Bedingung der Handelsüblichkeit, Eignung für einen bestimmten Zweck, Virenfreiheit, Genauigkeit oder Vollständigkeit von Antworten, Ergebnisse, Fahrlässigkeit oder mangelnde fachmännische Bemühungen - alles bezüglich der Weitervertreibbaren Komponenten sowie der erbrachten oder nicht erbrachten Supportleistungen - aus. ES WIRD AUCH JEDE GARANTIE ODER BEDINGUNG FÜR EIGENTUM, UNGESTÖRTE NUTZUNG, UNGESTÖRTEN BESITZ, ÜBEREINSTIMMUNG MIT DER BESCHREIBUNG ODER NICHTVERLETZUNG VON RECHTEN DRITTER IN BEZUG AUF DIE WEITERVERTREIBBAREN KOMPONENTEN AUSGESCHLOSSEN. DAS GESAMTE RISIKO BEZÜGLICH DER QUALITÄT, ODER DAS DURCH DIE VERWENDUNG ODER LEISTUNG DER WEITERVERTREIBBAREN KOMPONENTEN UND SUPPORTLEISTUNGEN (SOFERN ZUTREFFEND) ENTSTEHT, VERBLEIBT BEI IHNEN.
+
+AUSSCHLUSS VON FOLGE-, ZUFÄLLIGEN UND BESTIMMTEN ANDEREN SCHÄDEN. IM GRÖSSTMÖGLICHEN DURCH DAS ANWENDBARE RECHT GESTATTETEN UMFANG SIND MICROSOFT ODER DEREN LIEFERANTEN IN KEINEM FALL HAFTBAR FÜR IRGENDWELCHE SPEZIELLEN, FOLGE-, ZUFÄLLIGEN, INDIREKTEN ODER SONSTIGEN SCHÄDEN WELCHER ART AUCH IMMER (EINSCHLIESSLICH, ABER NICHT BESCHRÄNKT AUF SCHÄDEN AUS ENTGANGENEM GEWINN, VERLUST VON GESCHÄFTLICHEN, VERTRAULICHEN ODER SONSTIGEN INFORMATIONEN, GESCHÄFTSUNTERBRECHUNG, PERSONENSCHÄDEN, VERLUST VON PRIVATSPHÄRE, VERLETZUNG VON VERTRAGSPFLICHTEN (EINSCHLIESSLICH PFLICHTEN NACH TREU UND GLAUBEN ODER SORGFALTSPFLICHTEN), FAHRLÄSSIGKEIT ODER ANDERE FINANZIELLE ODER SONSTIGE VERLUSTE), DIE AUS DER VERWENDUNG DER WEITERVERTREIBBAREN KOMPONENTEN, AUS ERBRACHTEN ODER NICHT ERBRACHTEN SUPPORTLEISTUNGEN ODER ANDERWEITIG AUS ODER IN VERBINDUNG MIT EINER BESTIMMUNG DIESES EULAS RESULTIEREN ODER IN IRGENDEINEM ZUSAMMENHANG DAMIT STEHEN, SELBST IM FALLE VON VERSCHULDEN, UNERLAUBTEN HANDLUNGEN (EINSCHLIESSLICH FAHRLÄSSIGKEIT), VERSCHULDENSUNABHÄNGIGER HAFTUNG, VERTRAGSBRUCH ODER VERLETZUNG DER GARANTIE VON/DURCH MICROSOFT, UND SELBST WENN MICROSOFT ODER DEREN LIEFERANTEN AUF DIE MÖGLICHKEIT SOLCHER SCHÄDEN HINGEWIESEN WURDEN. 
+
+BESCHRÄNKUNG DER HAFTUNG UND VON ANSPRÜCHEN. Ungeachtet aller Schäden, die Sie aus welchen Gründen auch immer erleiden mögen (einschließlich, jedoch nicht beschränkt auf alle oben angesprochenen Schäden sowie alle direkten oder allgemeinen Schäden), ist die gesamte Haftung von Microsoft und deren Lieferanten unter allen Bestimmungen dieses EULAs und Ihr ausschließlicher Anspruch für alles oben Genannte auf den höheren dieser beiden Beträge beschränkt: den tatsächlich für die Weitervertreibbaren Komponenten gezahlten Betrag oder US-$ 5,00. Die vorstehenden Einschränkungen und Ausschlüsse gelten im größtmöglichen durch das anwendbare Recht gestatteten Umfang, auch wenn ein Anspruch dadurch seinen wesentlichen Zweck verfehlt.
+
+----------------------------------------------
+
+
+INSTALLATIONSHINWEISE FÜR PIVOTTABLE SERVICE
+-----------------------------------------
+
+PivotTable Service umfasst eine Reihe von DLLs, die Sie möglicherweise zusammen mit einer Clientanwendung bereitstellen müssen. Jede einzelne Clientanwendung kann abhängig von den verwendeten PivotTable Service-Funktionen eine Kombination dieser Komponenten erfordern. 
+
+Dateigruppe 1: 
+	Msolap80.dll, 
+	Msolui80.dll, 
+	Olapuir.rll,
+	Msolap80.rll und 
+	Microsoft Data Access Components (MDAC)
+
+Dateigruppe 2: 
+	Dateigruppe 1 plus 
+	Msmdcb80.dll, 
+	Msmdgd80.dll und 
+	einen entsprechenden tabellarischen OLE DB-Datenprovider 
+
+Dateigruppe 3:
+	Dateigruppe 1 plus 
+	Msdmine.dll, 
+	Msdmine.rll und 
+	Msdmeng.dll 
+
+Die folgenden Task-Dateigruppe-Paare zeigen, welche Dateigruppe für welche von der Clientanwendung auszuführenden Tasks verwendet werden muss:
+
+	Task: Kommunikation mit dem Analysis-Server mithilfe von TCP/IP oder HTTP 
+	Dateigruppe: 1 
+
+	Task: Lesen von lokalen MOLAP-Cubedateien (multidimensionale OLAP)
+	Dateigruppe: 1 
+
+	Task: Lesen von lokalen ROLAP-Cubedateien (relationale OLAP)
+	Dateigruppe: 1 
+
+	Task: Erstellen und Aktualisieren lokaler Cubes 
+	Dateigruppe: 2 
+
+	Task: Lesen von OLAP- und relationalen Dataminingmodellen
+	Dateigruppe: 3 
+
+Sie müssen MDAC vor der Installation von PivotTable Service installieren. Die Dateigruppen 2 und 3 können kombiniert werden, wenn die gesamte Suite von Komponenten benötigt wird. Falls Sie PivotTable Service mit Microsoft Windows 95 installieren, müssen Sie Distributed COM (DCOM) installieren, bevor Sie MDAC installieren. Weitere Informationen zum Verteilen und Installieren von MDAC finden Sie in der MSDN Library unter http://msdn.microsoft.com/.
+
+Die PivotTable(r) Service-Dateien müssen mit Ausnahme der Ressourcendateien (Dateien mit der Erweiterung RLL) in dem folgenden Pfad installiert werden:
+
+	"System Drive"\Programme\Gemeinsame Dateien\System\OLE DB
+
+Nach der Installation der erforderlichen Komponenten müssen die folgenden Komponenten ebenfalls mithilfe von "Regsvr32.exe" oder ihren eigenen DLLSelfRegister-Funktionen registriert werden: 
+
+	Msolap80.dll
+	Msolui80.dll
+	Msmdgd80.dll
+	Msmdcb80.dll
+	Msdmine.dll
+	Msdmeng.dll 
+
+Die Ressourcendateien "Msolap80.rll", "Olapuir.rll" und "Msdmine.rll" müssen in dem folgenden Pfad installiert werden:
+
+	"System Drive"\Programme\Gemeinsame Dateien\System\OLE DB\Resources\1031
+
+Beachten Sie beim Registrieren von DLLs die folgenden Abhängigkeiten: 
+
+(a) "Msolap80.dll" ist abhängig von "Msolap80.rll", "Wininet.dll" und "Oleaut32.dll", Version 2.3.0 oder höher;
+
+(b) "Msolap80.rll" ist die Ressourcendatei für "Msolap80.dll". "Oleaut32" ist die Laufzeitbibliothek der OLE-Automatisierung. Sie wird ebenfalls entweder im Verzeichnis "C:\Windows\System" oder "C:\Winnt\System32" installiert.
+
+(c) "Msolui80.dll" ist abhängig von "Msolap80.dll", "Olapuir.rll", "Msvbvm60.dll" und "Oleaut32.dll", Version 2.3.0 oder höher. 
+
+"Msvbvm60.dll" ist eine Microsoft Visual Basic-Laufzeitbibliothek, und "Wininet.dll" enthält die Laufzeitbibliothek der Internetautomatisierung. Beide Dateien werden im Verzeichnis "C:\Windows\System" oder "C:\Winnt\System32" installiert.
+
+Anmerkung: Sie können das im Windows NT(r) Resource Kit verfügbare Programm "Depends.exe" verwenden, um die vollständige Gruppe der externen Abhängigkeiten für diese DLLs anzuzeigen.
+
+Registrierungseinstellungen für die Installation
+Zum Zwecke des Installierens und Deinstallierens sollten alle PivotTable(r) Service-Dateien wie freigegebene Dateien behandelt werden. Erstellen Sie einen Registrierungswert für jede PivotTable Service-Datei unter dem folgenden Registrierungsschlüssel:
+
+	HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs
+
+Falls der Registrierungswert (auch Verweiszähler genannt) bereits vorhanden ist, sollte er während der Installation der PivotTable Service-Dateien um Eins erhöht werden. Während des Entfernens der PivotTable Service-Dateien sollte der Verweiszähler um Eins verringert werden. Die PivotTable Service-Dateien sollten nicht entfernt werden, wenn der entsprechende Verweiszähler größer als Null ist.
+
+Auf der SQL Server 2000-CD-ROM stehen im Ordner "\Msolap\Install\Pts" zwei Installationsprogramme, "Ptslite.exe" und "Ptsfull.exe", zur Verfügung. "Ptslite.exe" installiert ausschließlich die PivotTable Service-Dateien; "Ptsfull.exe" installiert die PivotTable Service-Dateien und Microsoft Data Access Components (MDAC).
+
+Zusätzlich zu zwei erforderlichen Parametern verwenden "Ptslite.exe" und "Ptsfull.exe" dieselben optionalen Befehlszeilenparameter wie das Setup-Programm von Analysis Services. Die erforderlichen Parameter, die als erste Parameter in der Befehlszeile angegeben werden, sind -s und -a. Hinter diesen erforderlichen Parametern folgen optionale Parameter. Wenn Sie z.B. "Ptslite.exe" zur Durchführung einer unbeaufsichtigten Installation der PivotTable Service-Dateien verwenden möchten, muss der Befehl folgendermaßen lauten:
+
+	Ptslite -s -a -s -f1Setup.iss ...
+
+Die PTS-Dateien, die als "Version 7.0" aufgeführt sind, sind nur zum Zwecke der Abwärtskompatibilität enthalten.
+
+
+INSTALLATIONSHINWEISE FÜR DECISION SUPPORT OBJECTS (DSO)
+-----------------------------------------------------
+Anders als die Microsoft PivotTable Service-Dateien, die von Clients zum Herstellen einer Verbindung zu Microsoft SQL Server Analysis Services benötigt werden, sind die DSO-Dateien optional. DSO wird nur zur Ausführung von Programmen benötigt, die OLAP-Dienstobjekte verwalten müssen, wie z.B. Dimensionsverwaltung, Cubeaufbereitung und Erstellung virtueller Dimensionen.
+
+Vor der Installation von DSO müssen Sie sicherstellen, dass Microsoft Data Access Components (MDAC) und PivotTable Service installiert sind.
+
+DSO wird nur unter Microsoft Windows NT 4.0 und Windows 2000 unterstützt. Es wird nicht unter Windows 95 oder Windows 98 unterstützt. Microsoft PivotTable Service muss vor der Installation von DSO installiert werden.
+
+Die DSO-Dateien sollten in der folgenden Abfolge installiert werden. Alle Dateien müssen registriert werden.
+	msmdnet.dll
+	msmdlock.dll
+	msmddo.dll
+
+Die Dateien müssen sich in dem folgenden Ordner befinden:
+
+	"system drive"\Programme\Gemeinsame Dateien\Microsoft Shared\DSO
+
+Die Ressourcendatei "Msmdso.rll" muss nicht registriert werden und wird standardmäßig in den folgenden Pfad installiert:
+
+	"system drive"\Programme\Gemeinesame Dateien\Microsoft Shared\DSO\Resources\1031
+
+Beim Registrieren von DLLs sollte die folgende Abhängigkeit beachtet werden: "msmddo80.dll" ist abhängig von "msvbvm60.dll". "msvbvm60.dll" ist eine Visual Basic-Laufzeitbibliothek, die in dem Ordner "\winnt\system32" installiert ist.
+
+Das im Windows NT Resource Kit verfügbare Dienstprogramm "depends.exe" kann zum Anzeigen der vollständigen Gruppe von externen Abhängigkeiten verwendet werden.
+
+Um die DLL-Dateien zu registrieren, sollten Sie die Regsvr32.exe oder die eigenen DLLSelfRegister()-Funktionen verwenden. Zudem sollten für alle Dateien Registrierungseinträge unter dem folgenden Registrierungsschlüssel erfolgen:
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs
+
+Falls der Registrierungswert (auch Verweiszähler genannt) bereits vorhanden ist, sollte er während der Installation der DSO-Dateien um Eins erhöht werden. Während des Entfernens der DSO-Dateien sollte der Verweiszähler um Eins verringert werden. Die DSO-Dateien sollten nicht entfernt werden, wenn der entsprechende Verweiszähler größer als Null ist. 
+
+Weitere Informationen zu Setup-Entwurfsspezifikationen finden Sie unter: http://www.microsoft.com/win32dev/uiguide/.
+
+Beibehalten der Abwärtskompatibilität:
+
+Die in Analysis Services enthaltenen Abwärtskompatibilitätsdateien ("Msmddo.dll" und "Msmdsgn.dll") sind nicht mit den gleichnamigen Dateien kompatibel, die in SQL Server 7.0 OLAP Services enthalten waren (d.h. die 7.0-Versionen dieser Dateien). Verwenden Sie die folgenden Regeln, um zu ermitteln, welche Dateien installiert werden sollen: 
+
+Falls die Anwendung ausschließlich mit SQL Server 2000 Analysis Services verwendet werden soll, müssen "Msmddo80.dll", "Msmdnet.dll", "Msmdlock.dll" und "Msmdso.rll" auf dem Zielcomputer installiert werden.
+
+Falls die Anwendung auch mit SQL Server 7.0 OLAP Services verwendet wird, muss "Msmddo.dll" installiert werden. Falls die 7.0-Version dieser Datei bereits auf dem Zielcomputer vorhanden ist, muss sie durch die neuere Version ersetzt werden. 
+
+
+INSTALLATIONSHINWEISE FÜR ENGLISH QUERY
+------------------------------------
+Wenn die English Query-Funktionalität in einer Anwendung enthalten ist, wird die Anwendung von den English Query-Laufzeit-DLLs begleitet. Die English Query-DLLs müssen nicht weiter vertrieben werden, wenn die English Query-Anwendung auf einem Webserver bereitgestellt wird. In diesem Fall muss die English Query-Laufzeit nur auf dem Webserver installiert werden.
+
+"Mseqgrqb.ocx" und "Mseqgrqb.cab" sind Microsoft(r) ActiveX(r)-Steuerelemente, mit deren Hilfe die Verwendung von English Query-Modellen verbessert werden kann. Bei Anwendungen, die über eine Website bereitgestellt werden, können Endbenutzer diese Dateien von der Site downloaden. Es ist weder erforderlich noch zulässig, Endbenutzern den Download der English Query-System-DLLs aus dem Web zu erlauben. 
+
+Die Weitervertreibung der English Query-Laufzeit beinhaltet das Kopieren aller English Query-DLLs und das Registrieren der erforderlichen DLLs nach der Installation der Anwendung. Wenn Sie die English Query-DLLs weiter vertreiben müssen, müssen alle Benutzer von English Query lizensierte Microsoft(r) SQL Server(tm)-Benutzer sein. Da die Anwendung in der Regel auf SQL Server-Daten zugreift, muss jeder English Query-Benutzer über eine Clientzugriffslizenz für SQL Server verfügen. 
+
+Sie können die in der folgenden Tabelle aufgeführten Dateien mit einer English Query-Anwendung vertreiben.
+
+	Dateiname		Beschreibung
+
+	Mseqole.dll		English Query Server-Objektmodell
+	Mseqbase.dll		English Query-Zusatzdatei
+	Mseqsql.dll		English Query-Zusatzdatei
+	Mseqmsg.dll		English Query-Zusatzdatei
+	Mseqconn.dll		English Query-Zusatzdatei
+	Mseqcore.eqd		English Query-Zusatzdatei
+	Mseqgrqb.ocx		English Query Question Builder Microsoft ActiveX(r)-Steuerelement
+	Mseqgrqb.cab		English Query-CAB-Datei mit:
+					Mseqgrqb.ocx, 
+					der Hilfedatei (.chm) und 
+					der INF-Datei, die Microsoft Internet Explorer Folgendes mitteilt: 
+						den Speicherort zum Kopieren der Dateien, 
+						die Art der Registrierung der OCX-Datei
+						die Art der Deinstallation des Steuerelements.
+
+Wenn English Query installiert wurde, sind diese Dateien standardmäßig im Verzeichnis "\Programme\Gemeinsame Dateien\System\EQ80" installiert. Vor der Registrierung dieser Dateien installiert die English Query-Anwendung oder Setup sie in dieses gemeinsame Verzeichnis oder erstellt es, falls es nicht vorhanden ist. Die kompilierte English Query-Anwendung (.eqd), z. B. "Northwind.eqd", wird auf den Computer des Endbenutzers kopiert. Standardmäßig befindet sich die EQD-Datei in demselben Verzeichnis, das von den übrigen Teilen der Anwendung verwendet wird.
+
+Registrieren der erforderlichen English Query-Dateien:
+
+Sowohl "Mseqole.dll" als auch "Mseqgrqb.ocx" müssen mithilfe des Dienstprogramms "Regsvr32.exe" registriert werden.
+
+Die folgenden English Query-Dateien müssen mithilfe des Dienstprogramms "regsvr32.exe" registriert werden:
+
+	Zum Registrieren von "Mseqole.dll" verwenden Sie "\path to the
+	dll\Mseqole.dll", Beispiel:
+
+		Regsvr32 "\Programme\Gemeinsame Dateien\System\EQ80\Mseqole.dll"
+
+
+	Zum Registrieren von "Mseqgrqb.ocx" verwenden Sie "\path to the location of the ActiveX controls\Mseqgrqb.ocx", Beispiel:
+
+		Regsvr32 "\Programme\Gemeinsame Dateien\System\EQ80\Mseqgrqb.ocx"
+
+Wenn den Endbenutzern das Dialogfeld, das die erfolgreiche Registrierung bestätigt, nicht angezeigt werden soll, verwenden Sie die Option /s (silent):
+Regsvr32 "\Programme\Gemeinsame Dateien\System\EQ80\Mseqole.dll" /s
+	
+Wenn die Registrierung der Endbenutzer nach der Deinstallation von English Query geleert werden soll, verwenden Sie die Option /u (uninstall):
+Regsvr32 "\Programme\Gemeinsame Dateien\System\EQ80\Mseqole.dll" /u
+
+
+INSTALLATIONSHINWEISE FÜR REPOSITORY
+---------------------------------
+Installieren Sie die folgenden Repository-Dateien in das Verzeichnis "Programme\Gemeinsame Dateien\Microsoft Shared\Repostry":
+	DBScan.dll
+	INSREPIM.DLL
+	InsRepIM.exe
+	MSMDCXML.DLL
+	REPBR.DLL
+	REPBRUI.DLL
+	repodbc.dll
+
+Installieren Sie die folgenden Repository-Dateien in das Verzeichnis "Programme\Gemeinsame Dateien\Microsoft Shared\Repostry\resources\1031":
+	reprc.rll
+	MSMDCXML.rll
+	msrmirc.rll
+	REPBRUI.rll
+	REPBRMDC.RLL
+
+Installieren Sie die folgenden Repository-Dateien in das Verzeichnis "Programme\Gemeinsame Dateien\Microsoft Shared\Repostry\OIM\Install":
+	DB2.rdm
+	DBM.rdm
+	DTM.rdm
+	DTS.rdm
+	EQM.rdm
+	GEN.rdm
+	IFX.rdm	
+	MDS.rdm
+	OCL.rdm
+	OLP.rdm
+	SIM.rdm
+	SQL.rdm
+	TFM.rdm
+	UML.rdm
+	UMX.rdm
+
+Die folgenden Dateien müssen mithilfe von "regsvr32.exe" registriert werden:
+	DBScan.dll
+	INSREPIM.DLL
+	MSMDCXML.DLL
+	REPBR.DLL
+	REPBRUI.DLL
+	repodbc.dll
+
+	Beispiel: regsvr32 "Programme\Gemeinsame Dateien\Microsoft Shared\Repostry\DBScan.dll"
+
+
+INSTALLATIONSHINWEISE FÜR REPLIKATIONSDATEIEN
+----------------------------------------
+Die Datei "atl.dll" sollte nur unter Windows NT, Windows 98 und Windows 95 weiter vertrieben werden.
+
+Die folgende Datei sollte im Systemordner installiert werden
+	(d.h. "\winnt\system32" oder "\windows\system"):
+	atl.dll 
+
+Die folgenden Dateien sollten im Ordner 
+	"\Programme\Microsoft SQL Server\80\COM" installiert werden:
+	rdistcom.dll
+	replerrx.dll
+	replprov.dll
+	replrec.dll
+	sqldistx.dll
+	sqlmergx.dll
+
+Die folgende Ressourcendatei sollte im Ordner 
+	"\Programme\Microsoft SQL Server\80\COM\Resources\<LCID>" installiert werden:
+	replres.rll
+
+Die folgenden Dateien sollten im Ordner 
+	"\Programme\Gemeinsame Dateien\Microsoft Shared\Database Replication\Conflict Viewer" installiert werden:
+	wzcnf.dll
+	wzcnfclt.exe
+
+Die folgende Ressourcendatei sollte in einem sprachenspezischen Ordner 
+	"\Programe\Gemeinsame Dateien\Microsoft Shared\Database Replication\Conflict Viewer\Resources\<LCID>" installiert werden:
+	wzcnfrc.rll
+
+Die folgenden Dateien müssen mithilfe von "regsvr32.exe" registriert werden:
+	rdistcom.dll
+	replerrx.dll
+	replprov.dll
+	replrec.dll
+	sqldistx.dll
+	sqlmergx.dll
+
+	Beispiel: regsvr32 \Program Files\Microsoft SQL Server\80\COM\rdistcom.dll
+
+Die folgenden Dateien müssen mithilfe der angegebenen Syntax registriert werden bzw. der Registrierungseintrag muss mithilfe der angegebenen Syntax entfernt werden:
+	wzcnflct.exe /RegServer
+	wzcnflct.exe /UnRegServer
+
+Alle Dateien sollten wie "freigegebene Dateien" behandelt werden. Daher sollten 
+Sie den folgenden Registrierungswert für jede einzelne der oben genannten 
+Dateien erstellen:
+	HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\SharedDLLs
+
+Wenn dieser Registrierungswert (auch Verweiszähler genannt) bereits vorhanden ist, sollte er während der Installation dieser Dateien um Eins erhöht werden. Bei der Deinstallation dieser Dateien sollte der Verweiszähler um Eins verringert werden. Diese Dateien sollten nicht gelöscht werden, wenn der entsprechende Verweiszähler größer als 1 ist.
+
+Weitere Informationen zu Setup-Entwurfsspezifikationen finden Sie unter: http://www.microsoft.com/win32dev/uiguide/.
+
+
+INSTALLATIONSHINWEISE FÜR DATA TRANSFORMATION SERVICES (DTS)
+---------------------------------------------------------
+Die folgenden Dateien müssen mithilfe von "regsvr32.exe" registriert werden:
+	dtsffile.dll
+	dtspkg.dll
+	dtspump.dll
+	axscphst.dll
+
+	Beispiel: regsvr32 80\Tools\Binn\dtsffile.dll
+
+Die Datei "sqlunirl.dll" sollte sich in dem Systemordner ("\winnt\system32" oder "\windows\system") befinden.
+
+
+INSTALLATIONSHINWEISE FÜR DISTRIBUTED MANAGEMENT OBJECTS (DMO)
+-----------------------------------------------------------
+Die Datei "sqldmo.dll" muss mithilfe von "regsvr32.exe" registriert werden.
+Beispiel: regsvr32 80\Tools\Binn\sqldmo.dll
+
+Die Datei "sqlunirl.dll" sollte sich im Systemordner ("\winnt\system32" oder "\windows\system") befinden.
+
+
+INSTALLATIONSHINWEISE FÜR SQL NAMESPACE-Dateien (SQLNS)
+--------------------------------------------------
+Die folgenden Dateien müssen mithilfe von "regsvr32.exe" registriert werden:
+	sqlns.dll
+	sqllex.dll
+
+	Beispiel: regsvr32 80\Tools\Binn\sqlns.dll
+
+
+INSTALLATIONSHINWEISE FÜR DIE OSQL-DATEI
+--------------------------------
+Die OSQL-Datei sollte sich in dem Anwendungsverzeichnis bzw. in dem Pfad befinden.
+

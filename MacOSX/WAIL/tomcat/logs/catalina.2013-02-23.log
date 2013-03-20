@@ -1,0 +1,28 @@
+Feb 23, 2013 8:01:51 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Feb 23, 2013 8:01:51 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Feb 23, 2013 8:01:51 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Feb 23, 2013 8:01:51 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 1122 ms
+Feb 23, 2013 8:01:51 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Feb 23, 2013 8:01:51 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Feb 23, 2013 8:01:51 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Feb 23, 2013 8:01:52 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Feb 23, 2013 8:01:52 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Feb 23, 2013 8:01:52 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Feb 23, 2013 8:01:52 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Feb 23, 2013 8:01:58 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Feb 23, 2013 8:01:58 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Feb 23, 2013 8:01:58 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 6825 ms

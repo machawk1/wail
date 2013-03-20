@@ -1,0 +1,30 @@
+License Restrictions
+
+The files are protected by copyright and no unauthorized use is 
+permitted.
+
+You may use the files on commercial and personal web servers, and with 
+analytic/statistics software, without violating my copyright.
+
+You shall not offer the files for redistribution without prior 
+authorization.
+
+You shall not mirror the files without prior authorization.
+
+If you intend to make use of the files in conjunction with a 
+commercial product or service that contains an auto-update feature you 
+shall contact me first to obtain permission.
+
+Said permission is usually perfunctory. Mostly I'm concerned with 
+things like what the added load on my server might be. If the 
+potential load is too large I might ask you to mirror the files on one 
+of your servers and have your customers update via your mirror.
+
+If you want to disregard my request and launch your product without 
+consulting me please plan on your customers losing access to their 
+updates fairly quickly. In short, it's a lot easier to be polite about 
+this and contact me first. That way I can work with you to ensure 
+you'll get the services you'll need without the risk and embarrassment 
+of being cut-off from receiving updates.
+
+All other license restrictions remain as-is.

@@ -1,0 +1,5 @@
+Package: mysql-5.1.44
+Homepage: http://www.mysql.com/
+Sources: http://mysql.linux.cz/Downloads/MySQL-5.1/mysql-5.1.44.tar.gz
+Comment: 32bit libmysql.dll from http://mysql.linux.cz/Downloads/MySQL-5.1/mysql-noinstall-5.1.44-win32.zip
+Comment: 64bit libmysql.dll from http://mysql.linux.cz/Downloads/MySQL-5.1/mysql-noinstall-5.1.44-winx64.zip

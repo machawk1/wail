@@ -1,0 +1,66 @@
+Feb 20, 2013 10:11:48 AM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Feb 20, 2013 10:11:49 AM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Feb 20, 2013 10:11:49 AM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Feb 20, 2013 10:11:49 AM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 1584 ms
+Feb 20, 2013 10:11:49 AM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Feb 20, 2013 10:11:49 AM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Feb 20, 2013 10:11:49 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Feb 20, 2013 10:11:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Feb 20, 2013 10:11:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Feb 20, 2013 10:11:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Feb 20, 2013 10:11:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Feb 20, 2013 10:11:56 AM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Feb 20, 2013 10:11:56 AM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Feb 20, 2013 10:11:56 AM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 6907 ms
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Feb 20, 2013 3:06:22 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@5d9d277e]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,12 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,24 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Feb 20, 2013 3:06:22 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]

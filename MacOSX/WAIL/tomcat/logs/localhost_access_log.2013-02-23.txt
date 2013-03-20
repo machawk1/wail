@@ -1,0 +1,16 @@
+127.0.0.1 - - [23/Feb/2013:20:01:59 -0500] "GET /wayback/ HTTP/1.1" 200 3511
+127.0.0.1 - - [23/Feb/2013:20:02:03 -0500] "GET /wayback/ HTTP/1.1" 200 3511
+127.0.0.1 - - [23/Feb/2013:20:02:20 -0500] "GET /wayback/query?type=urlquery&url=http%3A%2F%2Fwww.missabigail.com&date=&Submit=Take+Me+Back HTTP/1.1" 302 -
+127.0.0.1 - - [23/Feb/2013:20:02:20 -0500] "GET /wayback/*/http://www.missabigail.com HTTP/1.1" 404 3699
+127.0.0.1 - - [23/Feb/2013:20:02:39 -0500] "GET /wayback/*/http://www.missabigail.com HTTP/1.1" 404 3699
+127.0.0.1 - - [23/Feb/2013:20:02:39 -0500] "GET /wayback/css/styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:39 -0500] "GET /wayback/images/shim.gif HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:39 -0500] "GET /wayback/images/wayback_logo_tr.gif HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:41 -0500] "GET /wayback/*/http://www.missabigail.com HTTP/1.1" 404 3699
+127.0.0.1 - - [23/Feb/2013:20:02:41 -0500] "GET /wayback/css/styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:41 -0500] "GET /wayback/images/wayback_logo_tr.gif HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:41 -0500] "GET /wayback/images/shim.gif HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:55 -0500] "GET /wayback/*/http://www.missabigail.com HTTP/1.1" 404 3699
+127.0.0.1 - - [23/Feb/2013:20:02:55 -0500] "GET /wayback/css/styles.css HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:55 -0500] "GET /wayback/images/wayback_logo_tr.gif HTTP/1.1" 304 -
+127.0.0.1 - - [23/Feb/2013:20:02:55 -0500] "GET /wayback/images/shim.gif HTTP/1.1" 304 -

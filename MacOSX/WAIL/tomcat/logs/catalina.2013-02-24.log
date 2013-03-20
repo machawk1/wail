@@ -1,0 +1,26 @@
+Feb 24, 2013 1:51:32 AM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Feb 24, 2013 1:51:32 AM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Feb 24, 2013 1:51:32 AM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Feb 24, 2013 1:51:33 AM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@27ecfcd9]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,19 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,26 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 24, 2013 1:51:33 AM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@27ecfcd9]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,19 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,26 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 24, 2013 1:51:33 AM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@27ecfcd9]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,19 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,26 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Feb 24, 2013 1:51:33 AM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Feb 24, 2013 1:51:33 AM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Feb 24, 2013 1:51:33 AM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Feb 24, 2013 1:51:33 AM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]

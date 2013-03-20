@@ -1,0 +1,14 @@
+{
+  "license": "",
+  "description": "",
+  "contributors": [],
+  "author": "",
+  "url": "",
+  "dependencies": ["api-utils", "addon-kit"],
+  "version": "0.2",
+  "lib": "lib",
+  "fullName": "WARC viewer",
+  "main": "main",
+  "id": "jid0-uHB5DEdOTJ81w8htBMi5H24qBiM",
+  "name": "warc-viewer"
+}

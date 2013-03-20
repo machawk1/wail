@@ -1,0 +1,46 @@
+DiamondCS Freeware Console Tools
+
+DiamondCS Freeware Console Tools exist to make your life easier and more secure. We encourage use of these tools not only at home but also in the workplace. 
+ 
+All of our console tools are FREE to use in personal, educational, commercial and non-commercial environments, so whether you're at home, school or work you'll be able to use our tools for free.
+ 
+ 
+SOFTWARE LICENSE AGREEMENT
+ 
+Copyright (C) 2005 Diamond Computer Systems Pty. Ltd.
+Established 1986   ACN 009 210 155   ABN 15 623 532 827
+Official website: http://www.diamondcs.com.au
+ 
+This collection of programs (collectively known as "DiamondCS Freeware Console Tools") by Diamond Computer Systems of Australia, which includes computer software and any associated media and printed materials including on-line or electronic documentation or help files is herein referred to as the Software Product. By installing, copying, or otherwise using the Software Product, you have agreed to be bound by the terms of this Software License Agreement. If you do not agree with all terms of this License Agreement, you must remove the Software Product from your computer(s).
+
+1. This Software License Agreement is a legal agreement between you (either an individual or a single entity) and Diamond Computer Systems Pty Ltd for the Software Product.
+
+2. The Software Product is intellectual property owned by Diamond Computer Systems Pty Ltd and is protected by copyright laws and international copyright treaties, as well as other intellectual property laws and treaties.
+
+3. You may install and use as many copies of this Software Product on this and any number of computers and redistribute this product to any person or organisation providing that:
+
+   i. The Software Product (or any part of it) is not sold.
+
+  ii. You do not modify the Software Product in any way.
+
+ iii. You do not reverse engineer, decompile, or disassemble the Software Product.
+
+  iv. You acknowledge that this Software Product is provided free of charge, and indemnify Diamond Computer Systems Pty Ltd, its staff and suppliers to the full extent permitted by law against all claims, actions demands or damages arising directly or indirectly out of the Licensee's use or possession of the Software and such indemnity shall extend to any fault or failure in the Software or related documentation to perform any particular test or to achieve a particular result or to comply with a particular specification. This clause shall survive the termination of this Agreement.
+ 
+4. Licensing for use in other software. We permit and encourage use of the Software Product as an included component of your own programs (including scripts), provided that DiamondCS is creditted in both your software and its accompanying documentation, the Software Product is not sold, and the Software Product is not modified in any way.
+ 
+5. Termination. Without prejudice to any other rights, Diamond Computer Systems may terminate this Software License Agreement if you fail to comply with the terms and conditions of this Software License Agreement. In such event, you must destroy all copies of the Software Product.
+
+6. All title and copyrights in and to the Software Product are owned by Diamond Computer Systems Pty Ltd.
+
+7. Each part of this Agreement shall be severable from the other and if for any reason any part is invalid or unenforceable such invalidity or enforceability shall not prejudice or in any way affect the validity or enforceability of any other part.
+
+8. Warranty-free: Diamond Computer Systems disclaims any warranties concerning works of this copy. Diamond Computer Systems has made all attempts to ensure that the quality of this software is of the highest possible, but does not warrant that the software is error-free.
+
+9. In no event shall Diamond Computer Systems or its suppliers be liable for consequential, incidental, direct or indirect damages of any kind arising out of the performance or use of the Software Product, even if Diamond Computer Systems has been advised of the possibility of such damage. You use the Software Product at your own risk.
+
+
+---
+DiamondCS
+http://www.diamondcs.com.au
+ 

@@ -1,0 +1,10 @@
+('C:\\Downloads\\pyinstaller-2.0\\warcproxy\\build\\pyi.win32\\warcproxy\\warcproxy.exe',
+ True,
+ False,
+ None,
+ None,
+ [],
+ None,
+ True,
+ 0,
+ 1360779623L)

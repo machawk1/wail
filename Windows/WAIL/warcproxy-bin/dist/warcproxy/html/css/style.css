@@ -1,0 +1,172 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+h1 {
+  margin: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.5;
+}
+h2, p {
+  margin: 0;
+  padding: 0;
+  line-height: 1.5;
+}
+p {
+  font-size: 12px;
+}
+ul, li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#head {
+  padding: 5px 7px 5px 7px;
+  background: #222;
+  color: white;
+}
+#files div.stats {
+  padding: 5px 7px 5px 7px;
+  background: #DDD;
+  border-bottom: 1px solid #AAA;
+}
+#files li.file {
+  position: relative;
+  padding: 5px 7px 5px 7px;
+  border-bottom: 1px solid #aaa;
+}
+#files li.file .btn-toolbar {
+  margin: 0;
+}
+#files li.file .btn-toolbar p {
+  display: inline-block;
+  padding: 6px 6px 6px 12px;
+  vertical-align: middle;
+  text-align: center;
+}
+#files li.file h2 {
+  font-weight: bold;
+  font-size: 14px;
+}
+#files li.file .progress {
+  margin: 5px 45px 5px 0;
+}
+#files li.file-loading .radio-mimetype {
+  display: none;
+}
+#files li.file-loading .pull-right {
+  margin-top: -3px;
+}
+
+#files div.load-file {
+  position: relative;
+  padding: 7px 7px 5px 7px;
+}
+
+.dynatree-node .icon-dynatree {
+  /* icon-file */
+  background-position: -24px -24px;
+}
+span.dynatree-folder a {
+  font-weight: normal;
+}
+.dynatree-folder.dynatree-exp-ef .icon-dynatree,
+.dynatree-folder.dynatree-exp-e .icon-dynatree,
+.dynatree-folder.dynatree-exp-el .icon-dynatree {
+  /* icon-folder-open */
+  width: 16px;
+  background-position: -408px -120px;
+}
+.dynatree-folder.dynatree-exp-cf .icon-dynatree,
+.dynatree-folder.dynatree-exp-c .icon-dynatree,
+.dynatree-folder.dynatree-exp-cl .icon-dynatree {
+  /* icon-folder-close */
+  background-position: -384px -120px;
+}
+ul.dynatree-container {
+  padding: 3px 0 3px 0;
+  border: none;
+  font-family: inherit;
+}
+span.dynatree-active a {
+  background-color: #0E90D2 !important;
+}
+ul.dynatree-container a:focus, span.dynatree-focused a:link {
+  background-color: #eee;
+}
+
+#fileBrowserDialog.modal {
+  width: 300px;
+  margin-left: -150px;
+  top: 50%;
+}
+#fileBrowserDialog .modal-header {
+  padding: 9px 10px;
+}
+#fileBrowserDialog .modal-header h3 {
+  line-height: 1.5;
+  font-size: 14px
+}
+#fileBrowserDialog .modal-header .close {
+  margin-top: -2px;
+}
+#fileBrowserDialog .modal-body {
+  padding: 10px;
+}
+#fileBrowserDialog .modal-footer {
+  padding: 10px;
+}
+#fileBrowserDialog form {
+  margin: 0;
+}
+#fileBrowserDialog input[type='text'] {
+  float: left;
+  width: 200px;
+  margin: 0;
+}
+
+#proxy-unavailable,
+#proxy-disabled {
+  display: block;
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: #fff;
+  z-index: 100;
+}
+#proxy-unavailable p,
+#proxy-disabled p {
+  font-size: 16px;
+  margin: 1em 1em;
+  text-align: center;
+}
+#proxy-disabled .alert ,
+#proxy-unavailable .alert {
+  margin: 2em;
+}
+#proxy-disabled .alert p ,
+#proxy-unavailable .alert p {
+  margin: 0;
+}
+#proxy-disabled p:first-child {
+  margin-top: 3em;
+  margin-bottom: 2em;
+}
+
+.addon-mozilla #head {
+  display: none;
+}
+.addon-mozilla #files div.stats {
+  padding: 5px 7px 5px 9px;
+  background: #fafafa;
+  border-top: 1px solid #BBB;
+  border-bottom: 1px solid #BBB;
+}
+.addon-mozilla #proxy-disabled,
+.addon-mozilla #proxy-unavailable {
+  border-top: 1px solid #BBB;
+}
+

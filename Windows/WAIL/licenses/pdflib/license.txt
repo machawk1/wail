@@ -1,0 +1,254 @@
+See http://www.pdflib.com/fileadmin/pdflib/pdf/license/PDFlib-terms-and-conditions.pdf
+
+Page E-1 of PDFlib GmbH General License and Support Conditions, Last amended November 2009 6
+General License and Support Conditions
+PDFlib GmbH, Franziska-Bilek-Weg 9, 80339 München, Germany
+Telephone +49 • 89 • 452 33 84-0 Fax +49 • 89 • 452 33 84-99
+sales@pdflib.com, support@pdflib.com, www.pdflib.com
+1 General
+The terms defined in Appendix 1: Definitions shall apply for these General License and Support Conditions.
+These License and Support Conditions shall apply for all PDFlib GmbH software products.
+The present agreement concerns solely executable object code and does not include any rights of any
+nature to the products’ source code. Within this agreement, the specific products licensed by the customer
+shall be referred to as a whole as »the Program«. The Program shall be supplied with a manual
+in electronic format describing the Program characteristics and its use (»the Documentation«).
+PDFlib GmbH sells its products and services solely to companies, but not to consumers.
+The following provisions in Clauses 2 to 5 relate to licenses for the Program purchased by the customer,
+Clause 6 to any additional support services (software maintenance) for the Program, and Clauses 7
+to 9 relate to both alike.
+2 Scope of the License
+2.1 Remunerated Licenses
+Purchase of a remunerated license from PDFlib GmbH shall entitle Licensee to the non-exclusive, perpetual
+right to use Program on the agreed number of Licensee’s computers run on the agreed platform;
+free licenses shall be governed by the provisions in Clause 2.3 and Clause 2.4. The remunerated
+license can be transferred to a third party in so far as and as soon as the license transfer form which
+can be requested from PDFlib GmbH is properly completed by Licensee and the third party and is received
+by PDFlib GmbH.
+2.2 License for Backup and Development Systems
+The following provisions in Clause 2.2 shall apply for executable object code of the software products
+offered by PDFlib GmbH on all platforms except IBM eServer iSeries, IBM eServer zSeries and compatible
+systems.
+Every properly remunerated licensed Program may be used by the customer not only on the computer
+it is first installed on but also on another computer running on the same operating system (»backup
+system«), as long as both computers with the same license right (for one computer) are not used at
+the same time.
+Licensee shall also be entitled to use the Program on an unlimited number of development computers
+as long as they are not used for production purposes at the same time (development license). The necessary
+preconditions for such a development license are that access to the development computer via
+a network is only possible for developers working on products in which a licensed copy of the Program
+is or will be integrated, and that the development computer is run on the same platform for which a license
+was purchased.
+2.3 Free Products
+For the products PDFlib FontReporter Plugin, PDFlib TET Plugin and PDFlib TET PDF IFilter (here only the
+desktop version and only non-commercial use), Licensee shall be granted a non-exclusive, free, nontransferable
+and perpetual license to use the Program on any number of Licensee’s computers. These
+licenses shall not be governed by the provisions in Clause 5 (Warranty) and 7 (Liability), the statutory
+provisions for gifts shall apply instead.
+2.4 Free use of Evaluation Versions of the Program
+For certain products, PDFlib GmbH offers freely available versions which can be run without purchasing
+a license key (evaluation versions), albeit with restrictions compared with the purchased license of
+the same product as described in the pertinent product documentation. For evaluation versions, Licensee
+shall be granted a non-exclusive, free, non-transferable and perpetual license to evaluate the
+Program on any number of Licensee’s computers. Evaluation in this sense is the consideration by
+Page E-2 of PDFlib GmbH General License and Support Conditions, Last amended November 2009 6
+Licensee whether to purchase the Program for productive use (productive use is use of the Program directly,
+indirectly or as support for profit-making activities or other activities according to its articles of
+incorporation by Licensee or a third party), and the development of products by Licensee in which a
+(subsequently purchased) remunerated licensed copy of the Program or an evaluation version is or will
+be integrated and whose intended use materially exceeds the integration of the PDFlib GmbH Program.
+If Licensee integrates the evaluation version in one of his own products of the aforementioned
+type, he shall also be entitled to transfer the license to the integrated evaluation version when passing
+on his product to a third party.
+2.5 PDFlib Block Plugin
+For the PDFlib Block Plugin, which is a component of the PDFlib Personalization Server, Licensee of the
+PDFlib Personalization Server shall be granted – above and beyond the license granted in Clause 2.1 –
+the right to pass the PDFlib Block Plugin on to any number of third parties and to grant them the right
+to use the PDFlib Block Plugin solely to create data for their own purposes which are then transmitted
+to and processed by Licensee subject to the condition that Licensee secures from the third parties an
+undertaking to use the PDFlib Block Plugin only in the aforementioned manner and not to pass it on to
+any further persons themselves.
+3 Restrictions
+3.1 Intellectual Property
+The Program and the Documentation are the copyrighted intellectual property of PDFlib GmbH.
+When processing existing PDF documents with the Program Licensee must respect the access permissions
+and permission controls which have been applied by the document’s author in order to grant or
+deny certain rights to the users of the document.
+3.2 Reverse Engineering and Confidentiality
+Licensee undertakes not to translate, disassemble, or reverse-engineer the Program, in so far as this is
+not permitted under Section 69e German Copyright Act.
+Licensee undertakes not to redistribute or make publicly available any license key received from PDFlib
+GmbH.
+3.3 Updates and Upgrades
+If Licensee receives the Program as a new main version or maintenance release to an earlier version of
+the same or other product (Update) or if a product license is converted into a license for another product
+which contains the originally licensed product (Upgrade), the new license shall be provided on a license
+exchange basis. Installing and using an updated or upgraded version shall terminate the license
+for the earlier version.
+4 Delivery
+The Program and the Documentation shall be delivered in digital format only. The Program, Documentation
+and all pertinent maintenance updates shall be retrieved from the PDFlib GmbH website at
+www.pdflib.com. PDFlib GmbH shall not provide Licensee with either digital storage media or printed
+Documentation.
+5 Warranty
+5.1 Warranty for Customers with registered Offices in the Federal Republic of Germany
+If the customer has registered offices in the Federal Republic of Germany, the following provisions
+shall apply:
+Subject to Clause 9, the statutory provisions for warranties shall apply with the condition that the
+warranty period (time bar for warranty claims, Section 438 Subs. 1 German Civil Code) shall be one
+year. This shall not apply, however, for fault-related claims for damages under compensation for bodily
+harm or impairment of health due to a fault for which PDFlib GmbH is liable or under gross negligence
+by PDFlib GmbH or its agents, nor for cases of deceit by PDFlib GmbH; these cases shall be governed by
+statutory provisions.
+Page E-3 of PDFlib GmbH General License and Support Conditions, Last amended November 2009 6
+5.2 Warranty for Customers with registered Offices outside the Federal Republic of Germany
+If the customer does not have registered offices in the Federal Republic of Germany, the following provisions
+shall apply:
+If the Program unmodified by the customer does not meet the owed characteristics within a period of
+30 days after conclusion of the license agreement, PDFlib GmbH shall promptly at its own expense
+and in its own discretion (i) provide a correction of or a workaround for any reproducible faults reported
+by Licensee and supply an updated version of the Program or (ii) refund any fees paid under this license
+agreement. In the latter case, Licensee shall immediately terminate any use and distribution of
+the Program and destroy any license keys issued by PDFlib GmbH. All further liability on the part of PDFlib
+GmbH is hereby expressly excluded.
+6 Support Agreement / Support Services
+In addition to purchasing the license, the customer can request support services from PDFlib GmbH
+(support agreement) against payment of an annual fee. This shall be agreed by the customer choosing
+the support service for the purchased licenses and PDFlib GmbH accepting the choice.
+If the customer has selected the automatic renewal option for the term of the support agreement, the
+support agreement shall be prolonged after each term of one year by the same period unless terminated
+by the customer with up to one month’s notice to the end of the pertinent term sent by letter or
+fax. In this case of automatic prolongation, the support agreement shall also end without separate
+declaration by the parties being required if and when the end of the pertinent product’s lifetime is
+reached.
+This shall be without prejudice to the possibility of termination without notice for good cause.
+Under the support agreement PDFlib GmbH shall render the services listed under the »Contractual
+Support« column in Appendix 2: Support Services.
+7 Liability
+7.1 Liability for Customers with registered Offices in the Federal Republic of Germany
+If the customer has registered offices in the Federal Republic of Germany, the following provisions
+shall apply:
+PDFlib GmbH’s liability for simple negligent breaches of cardinal duties (in other words duties whose
+fulfillment renders the proper execution of the agreement possible and on whose compliance the contractual
+partner may generally rely) is limited to the typical losses foreseeable when the agreement
+was concluded. PDFlib GmbH accepts no liability for simple negligent breaches of non-cardinal duties.
+7.2 Liability for Customers with registered Offices outside the Federal Republic of Germany
+If the customer does not have registered offices in the Federal Republic of Germany, the following provisions
+shall apply:
+Neither party shall be liable for any losses, interruptions of business or indirect, special, incidental
+losses or consequential losses of any kind (including foregone profit) arising from use regardless of the
+form of action whether in contract, tort (including negligence), strict product liability or otherwise. Regardless
+of the legal grounds, PDFlib GmbH’s liability shall be limited (a) under and in conjunction
+with the license agreement to fivefold the license fee and (b) under and in conjunction with the support
+agreement to the annual support fee.
+8 Data Protection
+PDFlib GmbH collects, processes, uses and transmits personal data solely in so far as this is necessary
+for executing and fulfilling the contractual relationship with the customer.
+9 Applicable Law
+This agreement shall be governed by the law of the country in which the customer has his registered
+offices, however to the exclusion of the UN Convention Relating to a Uniform Law on the International
+Sale of Goods and the conflict of law provisions of international private law.
+Page E-PDFlib GmbH General License and Support Conditions, Last amended November 2009 4 of 6
+10 Legal Forum
+The exclusive legal forum for all disputes under and in conjunction with the purchase, license and/or
+support agreement(s) shall be PDFlib GmbH’s registered offices for the customer’s claims, for PDFlib
+GmbH’s claims the registered offices of the customers or of PDFlib GmbH. This shall be without prejudice,
+however, to any statutory provisions for filing counterclaims by the other party in the forum of
+the original action.
+Page E-5 of 6 PDFlib GmbH General License and Support Conditions, Last amended November 2009 Appendix 1: Definitions
+Term Definition Example
+Platform Combination of operating system and one or more hardware architectures. Fully compatible versions of
+operating system and/or hardware shall be deemed one platform, for Mac OS X and Windows server and
+desktop versions shall, however, be deemed different platforms.
+Windows XP/Vista/7 (without Windows Server
+2003/2008) is one platform;
+Solaris on x86 or Sparc is a platform
+Product PDFlib GmbH software offering for a certain platform PDFlib 8 for Windows Server 2003/2008;
+PDFlib+PDI 8 for Linux on x86
+Major release New version of a product with significantly extended functionality PDFlib 8;
+TET 3
+Maintenance release
+A maintenance release (also called minor release) is a new version of a product that rectifies faults, modifies
+the product to new versions of an operating system or a language binding etc. Maintenance releases
+do not contain any significant extensions in functionality, however. A maintenance release is explicitly
+marked as such.
+PLOP 4.1 is a maintenance release of PLOP 4.
+Update An Update converts an existing product license into a license for a newer major release of the same product
+for the same platform.
+Updating from PDFlib 7 for Windows XP/Vista/7 to
+PDFlib 8 for Windows XP/Vista/7
+Upgrade An Upgrade converts an existing license for a product into a license for the same major release of a
+higher-quality product, which constitutes a functional expansion of the first product.
+Upgrading from PDFlib 8 to PDFlib+PDI 8 or from
+PDFlib+PDI 8 to PPS 8
+Fault A fault (Bug) is any variance from the documented behavior, PDF output rejected by Adobe Acrobat as
+faulty, or software crash, subject to the condition that suitable input data were used and all documented
+conditions were complied with.
+PDFlib does not correctly convert a JPEG image to
+PDF, although this should be possible according to
+the Documentation.
+Language
+binding
+Executable version of a product for use with a platform-specific version of a programming language or
+programming environment.
+PHP 5.1.1 on Linux; Java 1.4 on Windows;
+.NET 3.0 on Windows
+Lifetime The lifetime of a product defines how long support cases to this product will be accepted (given a valid
+support agreement). The lifetime shall be defined for each major release of a product. It is stated in the
+pertinent Documentation and also posted at www.pdflib.com.
+The lifetime of PDFlib 7 will end in 10/2011.
+Page E-6 of 6 PDFlib GmbH General License and Support Conditions, Last amended November 2009 Appendix 2: Support Services
+Service Example
+Warranty
+(free)
+Contractual support
+(fee-based)
+Response time for a support case (actual fault rectification may take longer) undefined 2 business days
+End of support: Support for a product is no longer available Germany: 1 year
+otherwise: 30 days
+lifetime of the product
+Correction1 or workaround for a fault
+1. Implemented by a maintenance release for all licensed platforms and the pertinent language binding used.
+in so far as required by
+law
+yes
+Modifications for a newer version of an operating system platform not fully compatible
+with the previous one1.
+Windows Vista requires modifications to
+programs running under Windows XP.
+voluntary yes
+Modifications for a newer version of a language binding not fully compatible with
+the previous one1.
+PHP 5 requires modification of the PDFlib
+language binding for PHP 4
+voluntary yes
+Modifications for the corrected version of a language binding that is not the current
+version but was supported in the past and the corrected version of the language
+is not fully compatible with the previous one1.
+PHP 5.1.1 requires modification of the PDFlib
+language binding for PHP 5.1.0, although
+PHP 5.2 is already supported.
+voluntary yes
+License to use the current maintenance release of the licensed product Migration from PDFlib 7.0.3 to PDFlib 7.0.4 voluntary free
+Availability (download) of the licensed product up to availability of the
+next major release
+lifetime of the
+product
+Availability (download) of the latest maintenance release of the licensed product up to availability of the
+next major release
+lifetime of the
+product
+Update to the current main version of the licensed product Migration from PDFlib 7 to PDFlib 8 at the update list price free
+Information on availability of new maintenance or major releases – by email
+Upgrade to current maintenance release of a higher-quality product of the same
+major release at the upgrade list price
+Migration from PDFlib 8 to PDFlib+PDI 8 1 year after availability
+of the next major release
+lifetime of the
+product
+Purchase of additional licenses of the licensed product at the list price Customer uses PDFlib 7 and requires further
+licenses for this version, although PDFlib 8 is
+already available.
+1 year after availability
+of the next major release
+lifetime of the
+product

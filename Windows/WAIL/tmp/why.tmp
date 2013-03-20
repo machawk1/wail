@@ -1,0 +1,9 @@
+Warum dieses tmp-Verzeichnis?
+Das braucht beispielweise PHP 
+für seine Sessions-Verwaltung.
+Also bitte nicht löschen!
+
+Why this tmp-Folder?
+PHP need it for saving
+the Sessions. 
+So please do not delete it!

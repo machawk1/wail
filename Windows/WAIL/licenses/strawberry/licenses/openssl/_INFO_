@@ -1,0 +1,3 @@
+Package: openssl-1.0.0d
+Sources: http://www.openssl.org/source/openssl-1.0.0d.tar.gz
+Homepage: http://www.openssl.org/

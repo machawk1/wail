@@ -1,0 +1,3 @@
+Package: gdbm-1.8.3
+Sources: ftp://ftp.gnu.org/gnu/gdbm/gdbm-1.8.3.tar.gz
+Homepage: http://www.gnu.org/software/gdbm/

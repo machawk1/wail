@@ -1,0 +1,5 @@
+Package: dmake-SVN20091127
+Homepage: http://tools.openoffice.org/dmake/index.html
+Sources: http://tools.openoffice.org/dmake/dmake_4.11.zip
+SVN: http://svn.services.openoffice.org/ooo/trunk/dmake/
+Comment: SVN source codes were used
