@@ -11,6 +11,7 @@ import wx, subprocess, shlex, webbrowser, os, time, sys, datetime
 import urllib2
 import glob
 import re
+import ssl
 from urlparse import urlparse
 
 ###############################
@@ -69,10 +70,12 @@ menuTitle_help = "&Help"
 heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
 
+
+uri_tomcat  = "http://localhost:8080/"
 uri_wayback = "http://localhost:8080/wayback/"
 uri_wayback_allMementos = uri_wayback + "*/"
 uri_heritrix = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
-uri_heritrix_accessiblityURI = "http://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
+uri_heritrix_accessiblityURI = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
 uri_heritrixJob = uri_heritrix+"/engine/job/"
 uri_warcProxy = "http://localhost:8000"
 
@@ -242,15 +245,25 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.StaticText(self,100,tabLabel_advanced_wayback,        (col0, rowHeight*2),      cellSize)
              wx.StaticText(self,100,tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
              
+             ##################################  
+             # Check if each service is enabled and set the GUI elements accordingly
+             ##################################  
+             
              col1 = 65+colWidth*1
              serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
-             heritrixAccessible = serviceEnabled[Heritrix.accessible()]
-             tomcatAccessible = serviceEnabled[Tomcat.accessible()]
-             waybackAccessible = serviceEnabled[Wayback.accessible()]
+             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
+             waybackAccessible = serviceEnabled[Wayback().accessible()]
+             if waybackAccessible:
+               tomcatAccessible = serviceEnabled[True]
+             else:
+               tomcatAccessible = serviceEnabled[Tomcat().accessible()]
+             
              wx.StaticText(self,100,"STATE",          (col1,    rowHeight*0),      cellSize)
-             self.status_heritrix = wx.StaticText(self,100,"o",              (col1,    rowHeight*1),      cellSize)
-             self.status_tomcat = wx.StaticText(self,100,waybackAccessible,             (col1,    rowHeight*2),      cellSize)
-             self.status_wayback = wx.StaticText(self,100,tomcatAccessible,              (col1,    rowHeight*3),      cellSize)
+             self.status_heritrix = wx.StaticText(self,100,heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
+             self.status_tomcat = wx.StaticText(self,100,waybackAccessible,       (col1,    rowHeight*2),      cellSize)
+             self.status_wayback = wx.StaticText(self,100,tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
+             
+             ##################################  
              
              col2 = col1+colWidth
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
@@ -270,13 +283,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
              fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
         def updateServiceStatuses(self):
              serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
-             heritrixAccessible = serviceEnabled[Heritrix.accessible()]
-             tomcatAccessible = serviceEnabled[Tomcat.accessible()]
-             waybackAccessible = serviceEnabled[Wayback.accessible()]
+             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
+             waybackAccessible = serviceEnabled[Wayback().accessible()]
+             if waybackAccessible:
+               tomcatAccessible = serviceEnabled[True]
+             else:
+               tomcatAccessible = serviceEnabled[Tomcat().accessible()]
+               
              self.status_heritrix.SetLabel(heritrixAccessible)
              self.status_tomcat.SetLabel(waybackAccessible)
              self.status_wayback.SetLabel(tomcatAccessible)
-   
         def getHeritrixVersion(self):
         #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
              if not os.path.exists(heritrixPath+"heritrix_out.log"): return "?" 
@@ -521,13 +537,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.writeConfig.Enable()
 
 class Service():
-    @staticmethod
-    def accessible():
+    def accessible(self):
         try:
             print "Trying to access "+self.uri
-            handle = urllib2.urlopen(self.uri)
+            handle = urllib2.urlopen(self.uri,None,3)
+            print "Success in accessing "+self.uri
             return True
-        except:
+        except IOError, e:
+            if hasattr(e, 'code'): # HTTPError
+               print "Pseudo-Success in accessing "+self.uri
+               return True
+            print "Failed to access "+self.uri
             return False     
 class Wayback(Service):
     uri = uri_wayback
@@ -539,7 +559,8 @@ class Wayback(Service):
 class Tomcat(Service):
     uri = uri_wayback
 class Heritrix(Service):
-    uri = uri_heritrix_accessiblityURI
+    #uri = uri_heritrix_accessiblityURI
+    uri = "https://127.0.0.1:8443"
     def getListOfJobs(self):
       def justFile(fullPath):
         return os.path.basename(fullPath)
