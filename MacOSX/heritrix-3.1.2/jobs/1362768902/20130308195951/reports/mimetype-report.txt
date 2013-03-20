@@ -1,0 +1,7 @@
+[#urls] [#bytes] [mime-types]
+6 603458 image/png
+4 5613 text/html
+2 108 text/dns
+1 231 image/x-icon
+1 630 text/css
+1 342 text/plain

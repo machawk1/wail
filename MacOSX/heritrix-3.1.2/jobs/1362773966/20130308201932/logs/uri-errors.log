@@ -1,0 +1,59 @@
+2013-03-08T20:20:21.249Z http://cdn.optimizely.com/js/131788053.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. (www)" https://(www)?\.google\..*?/$
+2013-03-08T20:20:22.810Z http://bleacherreport.com/?utm_source=cnn.com&utm_medium=referral&utm_campaign=cnn-nav "invalid port number" http://br:in::bleacherreport.com
+2013-03-08T20:20:32.453Z http://cdn.gigya.com/js/socialize.js?apiKey=2_DFPY9kjgEqG2hKJod27qJDg0TO9uiajG5HXfIZapBiottF8svFxy26Lp7-fa8Ecc&lang=es "gnu.inet.encoding.IDNAException: Contains non-LDH characters. cnnmexico.com,mexico.cnn.com" http://cnnmexico.com,mexico.cnn.com
+2013-03-08T20:20:32.488Z http://cdn.gigya.com/js/socialize.js?apiKey=2_DFPY9kjgEqG2hKJod27qJDg0TO9uiajG5HXfIZapBiottF8svFxy26Lp7-fa8Ecc&lang=es "gnu.inet.encoding.IDNAException: Contains non-LDH characters. socialize.{0}" https://socialize.{0}/gs/bookmark.aspx?{1}
+2013-03-08T20:20:32.496Z http://cdn.gigya.com/js/socialize.js?apiKey=2_DFPY9kjgEqG2hKJod27qJDg0TO9uiajG5HXfIZapBiottF8svFxy26Lp7-fa8Ecc&lang=es "gnu.inet.encoding.IDNAException: Contains non-LDH characters. {0}.{1}" https://{0}.{1}/{0}.{2}?
+2013-03-08T20:20:32.497Z http://cdn.gigya.com/js/socialize.js?apiKey=2_DFPY9kjgEqG2hKJod27qJDg0TO9uiajG5HXfIZapBiottF8svFxy26Lp7-fa8Ecc&lang=es "gnu.inet.encoding.IDNAException: Contains non-LDH characters. socialize.{0}" https://socialize.{0}/socialize.login?
+2013-03-08T20:21:00.081Z http://z.cdn.turner.com/cnn/tmpl_asset/static/www_homepage/2117/js/hplib-min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T20:21:00.088Z http://z.cdn.turner.com/cnn/tmpl_asset/static/www_homepage/2117/js/hplib-min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T20:21:02.899Z http://bleacherreport.com/ "invalid port number" http://br:in::bleacherreport.com
+2013-03-08T20:21:09.902Z http://connect.facebook.net/en_US/all.js "invalid port number" http://legacy:fb.ua
+2013-03-08T20:21:21.414Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:page.name
+2013-03-08T20:21:21.415Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:video.id
+2013-03-08T20:21:21.415Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:21:21.416Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:21:21.416Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:page.name
+2013-03-08T20:21:21.436Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:page.name
+2013-03-08T20:21:21.436Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:video.id
+2013-03-08T20:21:21.436Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:21:21.437Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:21:21.439Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:21:21.439Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:21:21.506Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:page.name
+2013-03-08T20:21:21.507Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:business.name
+2013-03-08T20:21:21.507Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:video.id
+2013-03-08T20:21:21.508Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:21:21.508Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:21:21.508Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "invalid port number" http://m:page.name
+2013-03-08T20:21:21.524Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. secure-${sfcode}.imrworldwide.com" http://secure-${sfcode}.imrworldwide.com/cgi-bin/m?ci=${clientid}&c6=${prod},${vcid}&cc=1&tl=${state}-${videoId}&rnd=${random}
+2013-03-08T20:21:21.524Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. secure-${sfcode}.imrworldwide.com" http://secure-${sfcode}.imrworldwide.com/cgi-bin/m?ci=${clientid}&c6=${prod},${vcid}&cc=1&tl=${state}-${videoId}&rnd=${random}&cg=live
+2013-03-08T20:21:21.558Z http://z.cdn.turner.com/cnn/.e/js/libs/jsmd-347.min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. secure-${sfcode}.imrworldwide.com" http://secure-${sfcode}.imrworldwide.com/cgi-bin/m?ci=${clientid}&c6=${prod},${vcid}&cc=1&tl=${state}-${videoId}&rnd=${random}&cg=${videoTitle}
+2013-03-08T20:21:36.526Z http://www.newsvine.com/_tools/seed&save?u= "gnu.inet.encoding.IDNAException: String too long. .newsvine.com" http://.newsvine.com/_tps/_user/posts
+2013-03-08T20:21:47.099Z https://plus.google.com/_/scs/apps-static/_/js/k=oz.home.en_US.AOuX0sux-s8.O/m=b,prc/am=AOggAEA58DgE_5IAQMAAAXgAANCAQwIQBv__lwEAAAACIAQAQA/rt=h/d=1/rs=AItRSTO4rwhA_A1KLmPzXxgpo2fn4OSxyg "gnu.inet.encoding.IDNAException: Contains non-LDH characters. (" http://(?:[a-zA-Z]{2,3}\.)?(?:youtube\.com/watch)(?:\?(?:[\w=-]+&(?:amp;)?)*v=([\w-]+)(?:&(?:amp;)?[\w=-]+)*)?(?:#[!]?(?:(?:(?:[\w=-]+&(?:amp;)?)*(?:v=([\w-]+))(?:&(?:amp;)?[\w=-]+)*)|(?:[\w=&-]+)))?[^\w-]?
+2013-03-08T20:21:48.052Z https://plus.google.com/_/scs/apps-static/_/js/k=oz.home.en_US.AOuX0sux-s8.O/m=b,prc/am=AOggAEA58DgE_5IAQMAAAXgAANCAQwIQBv__lwEAAAACIAQAQA/rt=h/d=1/rs=AItRSTO4rwhA_A1KLmPzXxgpo2fn4OSxyg "invalid port number" http://d:twitter.com
+2013-03-08T20:21:55.970Z https://secure.newsvine.com/_tps/_accounts/login?redirect=http%3A%2F%2Fwww.newsvine.com%2F_tools%2Fseed%26save%3Fu%3D "gnu.inet.encoding.IDNAException: String too long. .newsvine.com" http://.newsvine.com/_tps/_user/posts
+2013-03-08T20:21:57.062Z http://www.google.com/uds/api/ima/1.7/9fd415db3bb953707e811e4827fe957b/default.IN.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. *.google.com" http://*.google.com
+2013-03-08T20:21:57.063Z http://www.google.com/uds/api/ima/1.7/9fd415db3bb953707e811e4827fe957b/default.IN.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. *.youtube.com" http://*.youtube.com
+2013-03-08T20:21:59.956Z http://static.bleacherreport.net/pkg/javascripts/e13fb203_redesign_omniture.js "invalid port number" http://javascript:,bleacherreport.com
+2013-03-08T20:22:08.444Z http://z.cdn.turner.com/cnn/tmpl_asset/static/intl_homepage/991/js/intlhplib-min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T20:22:08.452Z http://z.cdn.turner.com/cnn/tmpl_asset/static/intl_homepage/991/js/intlhplib-min.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T20:22:59.503Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:page.name
+2013-03-08T20:22:59.504Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:video.id
+2013-03-08T20:22:59.504Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:22:59.504Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:22:59.505Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:page.name
+2013-03-08T20:22:59.507Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:video.id
+2013-03-08T20:22:59.507Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:22:59.507Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:22:59.520Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:page.name
+2013-03-08T20:22:59.521Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:business.name
+2013-03-08T20:22:59.521Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:video.id
+2013-03-08T20:22:59.521Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.internal.id
+2013-03-08T20:22:59.521Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:promo.external.id
+2013-03-08T20:22:59.522Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "invalid port number" http://m:page.name
+2013-03-08T20:22:59.535Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. secure-${sfcode}.imrworldwide.com" http://secure-${sfcode}.imrworldwide.com/cgi-bin/m?ci=${clientid}&c6=${prod},${vcid}&cc=1&tl=${state}-${videoId}&rnd=${random}
+2013-03-08T20:22:59.554Z http://arabic.cnn.com/.element/js/2.0/jsmd/jsmd.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. secure-${sfcode}.imrworldwide.com" http://secure-${sfcode}.imrworldwide.com/cgi-bin/m?ci=${clientid}&c6=${prod},${vcid}&cc=1&tl=${state}-${videoId}&rnd=${random}&cg=${videoTitle}
+2013-03-08T20:32:13.032Z http://i.cdn.turner.com/cnn/.element/js/3.0/search/ContextualAds.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &webClientId=cnn-int&intl=true&domains=cnn.com|turner.com" http://&webClientId=cnn-int&intl=true&domains=cnn.com|turner.com
+2013-03-08T20:32:13.032Z http://i.cdn.turner.com/cnn/.element/js/3.0/search/ContextualAds.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T20:33:00.042Z http://i.cdn.turner.com/cnn/.element/js/3.0/search/customSrchProcessor.js "gnu.inet.encoding.IDNAException: Contains non-LDH characters. &domains=cnn.com|turner.com" http://&domains=cnn.com|turner.com
+2013-03-08T21:16:27.867Z http://daol.aol.com/ "invalid port number" http://javascript:,aol.com

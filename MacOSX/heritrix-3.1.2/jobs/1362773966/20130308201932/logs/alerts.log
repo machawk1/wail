@@ -1,0 +1,8 @@
+Mar 8, 2013 8:20:08 PM org.archive.modules.seeds.TextSeedModule addSeed
+WARNING: nowhere to log added seed: http://www.cnn.com/ (in thread 'ToeThread #9: http://cnn.com/'; in processor 'candidates')
+Mar 8, 2013 8:20:12 PM org.archive.modules.seeds.TextSeedModule addSeed
+WARNING: nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #1: http://www.cnn.com/'; in processor 'candidates')
+Mar 8, 2013 8:20:23 PM org.archive.modules.seeds.TextSeedModule addSeed
+WARNING: nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #5: http://www.cnn.com/?refresh=1'; in processor 'candidates')
+Mar 8, 2013 8:20:38 PM org.archive.modules.seeds.TextSeedModule addSeed
+WARNING: nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #5: http://www.cnn.com/?refresh=1'; in processor 'candidates')

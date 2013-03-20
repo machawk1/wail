@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "WAIL.py", line 1237, in <module>
+    mainAppWindow = TabController()
+  File "WAIL.py", line 127, in __init__
+    self.advConfig = WAILGUIFrame_Advanced(self.Notebook)
+  File "WAIL.py", line 306, in __init__
+    self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.Notebook)
+  File "WAIL.py", line 287, in __init__
+    self.Bind(wx.EVT_LIST_ITEM_ACTIVATED, self.OnClick, self.listbox)
+AttributeError: 'HeritrixPanel' object has no attribute 'listbox'

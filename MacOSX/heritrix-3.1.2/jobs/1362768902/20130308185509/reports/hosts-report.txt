@@ -1,0 +1,4 @@
+[#urls] [#bytes] [host] [#robots] [#remaining] [#novel-urls] [#novel-bytes] [#dup-by-hash-urls] [#dup-by-hash-bytes] [#not-modified-urls] [#not-modified-bytes]
+11 608946 matkelly.com 0 0 11 608946 0 0 0 0 
+2 109 dns: 0 0 2 109 0 0 0 0 
+2 1328 www.youtube.com 0 0 2 1328 0 0 0 0 

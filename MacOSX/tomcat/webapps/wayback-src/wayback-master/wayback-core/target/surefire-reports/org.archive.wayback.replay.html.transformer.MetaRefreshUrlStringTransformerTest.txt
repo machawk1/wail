@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: org.archive.wayback.replay.html.transformer.MetaRefreshUrlStringTransformerTest
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.032 sec

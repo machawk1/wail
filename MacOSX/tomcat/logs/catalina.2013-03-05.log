@@ -1,0 +1,46 @@
+Mar 5, 2013 9:36:48 AM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 5, 2013 9:36:49 AM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 5, 2013 9:36:49 AM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 5, 2013 9:36:49 AM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 939 ms
+Mar 5, 2013 9:36:49 AM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 5, 2013 9:36:49 AM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 5, 2013 9:36:49 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 5, 2013 9:36:49 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 5, 2013 9:36:49 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 5, 2013 9:36:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 5, 2013 9:36:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 5, 2013 9:36:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 5, 2013 9:36:50 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 5, 2013 9:36:54 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 5, 2013 9:36:58 AM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 5, 2013 9:36:58 AM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 5, 2013 9:36:58 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 5, 2013 9:37:01 AM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 5, 2013 9:37:01 AM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 5, 2013 9:37:01 AM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 5, 2013 9:37:01 AM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 5, 2013 9:37:01 AM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 5, 2013 9:37:01 AM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 12192 ms

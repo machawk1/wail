@@ -1,0 +1,15 @@
+2013-03-08T18:27:45.190Z     1         56 dns:matkelly.com P http://matkelly.com/wail text/dns #003 20130308182744501+171 sha1:IQTRGSMPHDCG64Q4Q74Z3OTNKTEVJV5L - -
+2013-03-08T18:27:48.699Z   200         88 http://matkelly.com/robots.txt P http://matkelly.com/wail text/plain #003 20130308182748203+488 sha1:WUM4DQPHBJKLHVC2FNHYZG5TJDCQXB4Z - -
+2013-03-08T18:27:51.928Z   301        233 http://matkelly.com/wail - - text/html #003 20130308182751703+200 sha1:WASTWHNY2YAEFOVKQX7NQ2P2NJUQTM3W - 3t
+2013-03-08T18:27:55.218Z   200       3564 http://matkelly.com/wail/ R http://matkelly.com/wail text/html #003 20130308182754932+229 sha1:ZN3S5VP3IG4OU3ZDTKEXFBTKPIJ6D7HT - usingCharsetInHTML:UTF-8
+2013-03-08T18:27:55.260Z     1         53 dns:www.youtube.com REP http://www.youtube.com/embed/aYqW8CI-eQ8?rel=0 text/dns #003 20130308182755223+35 sha1:YXRT3V7UA7YME32WAI5H5C3P466446VJ - -
+2013-03-08T18:27:58.498Z   200          0 http://matkelly.com/favicon.ico PI http://matkelly.com/robots.txt image/x-icon #003 20130308182758263+232 sha1:3I42H3S6NNFQ2MSVX7XZKYAYSCX5QBYJ - -
+2013-03-08T18:27:58.587Z   403        513 http://www.youtube.com/robots.txt REP http://www.youtube.com/embed/aYqW8CI-eQ8?rel=0 text/html #025 20130308182758489+81 sha1:6B3SXEX2OQMLYRQDJJOL5PR4MEVKTRYH - -
+2013-03-08T18:28:01.675Z   403        513 http://www.youtube.com/embed/aYqW8CI-eQ8?rel=0 RE http://matkelly.com/wail/ text/html #025 20130308182801591+79 sha1:YIS2NWH7ADRKTLCYDE57Q64QSNAQ6Q7E - 3t
+2013-03-08T18:28:01.734Z   200        399 http://matkelly.com/wail/site/style.css RE http://matkelly.com/wail/ text/css #003 20130308182801501+230 sha1:U7P72GCOFX2EVV6Q4PTPLBGDEIMSPLKV - -
+2013-03-08T18:28:05.452Z   200      44984 http://matkelly.com/wail/site/whale_512.png RE http://matkelly.com/wail/ image/png #003 20130308182804737+712 sha1:OYGJ4MP2ALHTC7FRGUVAOO62DQN36VJH - -
+2013-03-08T18:28:10.098Z   200      33077 http://matkelly.com/wail/site/wail_basic.png RE http://matkelly.com/wail/ image/png #003 20130308182809456+639 sha1:H4ODQRG6TCHXFPSEUIW3XAZM42M36GUG - -
+2013-03-08T18:28:14.430Z   200      66865 http://matkelly.com/wail/site/wail_advanced.png RE http://matkelly.com/wail/ image/png #020 20130308182813491+936 sha1:2V2IHXKYEQGNMBP56YJFAHBSOJGD5LRR - -
+2013-03-08T18:28:20.079Z   200      32404 http://matkelly.com/wail/site/cnn_wail.png RE http://matkelly.com/wail/ image/png #020 20130308182819435+641 sha1:UK3HVQJ2GFLM5KF56SZPMWMIQKUUEPAW - -
+2013-03-08T18:28:25.593Z   200     347977 http://matkelly.com/wail/site/cnn_replay.png RE http://matkelly.com/wail/ image/png #019 20130308182823506+2083 sha1:MUIC27Q6MSUX6CYJUQ4NJT64BBSX4DUZ - -
+2013-03-08T18:28:36.965Z   200      76737 http://matkelly.com/wail/site/cnn_wayback.png RE http://matkelly.com/wail/ image/png #020 20130308182836096+866 sha1:N33ULZ27H2665MLNDPXYD3FUEOKSG2JO - -

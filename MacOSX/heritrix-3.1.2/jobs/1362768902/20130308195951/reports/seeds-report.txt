@@ -1,0 +1,3 @@
+[code] [status] [seed] [redirect]
+301 CRAWLED http://matkelly.com/wail http://matkelly.com/wail/
+200 CRAWLED http://matkelly.com/wail/

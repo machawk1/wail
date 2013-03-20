@@ -1,0 +1,8 @@
+2013-03-08T20:19:28.550Z INFO Job instantiated
+2013-03-08T20:19:31.252Z INFO Job launched
+2013-03-08T20:19:32.802Z INFO PREPARING 20130308201932
+2013-03-08T20:19:33.798Z INFO RUNNING 20130308201932
+2013-03-08T20:20:08.416Z WARNING nowhere to log added seed: http://www.cnn.com/ (in thread 'ToeThread #9: http://cnn.com/'; in processor 'candidates')
+2013-03-08T20:20:12.645Z WARNING nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #1: http://www.cnn.com/'; in processor 'candidates')
+2013-03-08T20:20:23.478Z WARNING nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #5: http://www.cnn.com/?refresh=1'; in processor 'candidates')
+2013-03-08T20:20:38.644Z WARNING nowhere to log added seed: http://www.cnn.com/?refresh=1 (in thread 'ToeThread #5: http://www.cnn.com/?refresh=1'; in processor 'candidates')

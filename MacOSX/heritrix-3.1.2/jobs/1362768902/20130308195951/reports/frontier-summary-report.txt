@@ -1,0 +1,97 @@
+Frontier report - 201303082001
+ Job being crawled: basic
+
+ -----===== STATS =====-----
+ Discovered:    15
+ Queued:        0
+ Finished:      15
+  Successfully: 15
+  Failed:       0
+  Disregarded:  0
+
+ -----===== QUEUES =====-----
+ Already included size:     15
+               pending:     0
+
+ All class queues map size: 2
+             Active queues: 1
+                    In-process: 0
+                         Ready: 0
+                       Snoozed: 1
+           Inactive queues: 0 (p3: 0)
+            Retired queues: 0
+          Exhausted queues: 1
+
+             Last state: EMPTY
+ -----===== MANAGER THREAD =====-----
+Java Thread State: RUNNABLE
+Blocked/Waiting On: NONE
+    java.lang.Thread.getStackTrace(Thread.java:1503)
+    org.archive.crawler.framework.ToeThread.reportThread(ToeThread.java:484)
+    org.archive.crawler.frontier.WorkQueueFrontier.reportTo(WorkQueueFrontier.java:1304)
+    org.archive.crawler.reporting.FrontierSummaryReport.write(FrontierSummaryReport.java:39)
+    org.archive.crawler.reporting.StatisticsTracker.writeReportFile(StatisticsTracker.java:910)
+    org.archive.crawler.reporting.StatisticsTracker.dumpReports(StatisticsTracker.java:938)
+    org.archive.crawler.reporting.StatisticsTracker.crawlEnded(StatisticsTracker.java:566)
+    org.archive.crawler.reporting.StatisticsTracker.onApplicationEvent(StatisticsTracker.java:986)
+    org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:97)
+    org.springframework.context.support.AbstractApplicationContext.publishEvent(AbstractApplicationContext.java:303)
+    org.archive.crawler.framework.CrawlController.sendCrawlStateChangeEvent(CrawlController.java:327)
+    org.archive.crawler.framework.CrawlController.completeStop(CrawlController.java:392)
+    org.archive.crawler.framework.CrawlController.noteFrontierState(CrawlController.java:657)
+    org.archive.crawler.frontier.AbstractFrontier.reachedState(AbstractFrontier.java:440)
+    org.archive.crawler.frontier.AbstractFrontier.managementTasks(AbstractFrontier.java:398)
+    org.archive.crawler.frontier.AbstractFrontier$1.run(AbstractFrontier.java:316)
+
+ -----===== 2 LONGEST QUEUES =====-----
+LONGEST#0:
+Queue com,matkelly, (p3)
+  0 items
+   wakes in: 7s606ms
+    last enqueued: http://matkelly.com/wail/site/cnn_wayback.png
+      last peeked: http://matkelly.com/wail/site/cnn_wayback.png
+   total expended: 12 (total budget: -1)
+   active balance: 2988
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   12 12 0 0 12 0 609001 609001 2 2013-03-08T20:01:09.544Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#1:
+Queue com,youtube,www, (p3)
+  0 items
+    last enqueued: http://www.youtube.com/embed/aYqW8CI-eQ8?rel=0
+      last peeked: http://www.youtube.com/embed/aYqW8CI-eQ8?rel=0
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 1381 1381 2 2013-03-08T20:00:09.909Z
+   SimplePrecedenceProvider
+   3
+
+
+ -----===== IN-PROCESS QUEUES =====-----
+
+ -----===== READY QUEUES =====-----
+
+ -----===== SNOOZED QUEUES =====-----
+SNOOZED#0:
+Queue com,matkelly, (p3)
+  0 items
+   wakes in: 7s605ms
+    last enqueued: http://matkelly.com/wail/site/cnn_wayback.png
+      last peeked: http://matkelly.com/wail/site/cnn_wayback.png
+   total expended: 12 (total budget: -1)
+   active balance: 2988
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   12 12 0 0 12 0 609001 609001 2 2013-03-08T20:01:09.544Z
+   SimplePrecedenceProvider
+   3
+
+
+ -----===== INACTIVE QUEUES =====-----
+
+ -----===== RETIRED QUEUES =====-----
