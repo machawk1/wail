@@ -92,7 +92,7 @@ warcProxyExecPath = ""
 fontSize = 8
 if sys.platform.startswith('darwin'):
  '''OS X Specific Code here'''
- heritrixPath = "/Applications/WAIL/heritrix-3.1.0/"
+ heritrixPath = "/Applications/WAIL/heritrix-3.1.2/"
  heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
  heritrixJobPath = heritrixPath+"jobs/"
  fontSize = 10
@@ -108,7 +108,7 @@ elif sys.platform.startswith('win32'):
  '''Win Specific Code here, this applies to both 32 and 64 bit
  Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
  '''
- heritrixPath = "C:/WAIL/heritrix-3.1.0/"
+ heritrixPath = "C:/WAIL/heritrix-3.1.2/"
  heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
  heritrixJobPath = "C:\\WAIL\\jobs\\"
  warcsFolder = "/WAIL/tomcat/webapps/root/files1"
