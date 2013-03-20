@@ -17,3 +17,7 @@ To run it using Python for testing, simple use:
 ...on Windows or:
 <blockquote>arch -i386 python WAIL.py</blockquote>
 on MacOS X.
+
+<h2>Compiling</h2>
+To compile WAIL to a system-dependent executable file to rid the local Python requirement, use:
+<blockquote>arch -i386 python pyinstaller.py (WAIL.py path) --onefile --windowed</blockquote>
