@@ -47,7 +47,7 @@ textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"  
-aboutWIndow_author = "By Mat Kelly <wail@matkelly.com>"
+aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
 aboutWindow_iconPath = "icons/whale.ico"
 
 # Advanced Tab Buttons
