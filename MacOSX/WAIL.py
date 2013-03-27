@@ -374,12 +374,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Append( 2, "Destroy Job (Does not delete archive)" )
             menu.Bind(wx.EVT_MENU, self.fooo, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
-            menu.Destroy()
-
-        def fooo(self,evt):
-            wx.MessageBox("Right-click event fired from listbox","Test")
-            #print self.listbox.HitTest(mainAppWindow.ScreenToClient(wx.GetMousePosition()))
-            
+            menu.Destroy()            
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
