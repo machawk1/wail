@@ -11,6 +11,7 @@ import urllib2
 import glob
 import re
 import ssl
+import shutil
 from urlparse import urlparse
 
 ###############################
@@ -337,10 +338,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
-             list = Heritrix().getListOfJobs()
+
              self.listbox = wx.ListBox(self,100)
-             self.listbox.InsertItems(list,0)
-             #listbox.Bind(wx.EVT_LIST_ITEM_ACTIVATED,self.OnClick)
+             self.populateListboxWithJobs()
+             
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
              self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
@@ -354,6 +355,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
              #Button functionality
              self.launchWebUIButton.Bind(wx.EVT_BUTTON,self.launchWebUI)
              self.launchProcess.Bind(wx.EVT_BUTTON,self.launchHeritrixProcess)
+        def populateListboxWithJobs(self):
+             list = Heritrix().getListOfJobs()
+             self.listbox.Set(list)           
         def clickedListboxItem(self,event):
              active = self.listbox.GetString(self.listbox.GetSelection())
              print tail(heritrixJobPath+active+"/job.log")
@@ -369,14 +373,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             mainAppWindow.basicConfig.launchHeritrix() 
         def manageJobs(self,evt):                 
             menu = wx.Menu()
-            menu.Append( 1, "Restart Job" )
-            menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
+            #menu.Append( 1, "Restart Job" )
+            #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 2, "Destroy Job (Does not delete archive)" )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
         def deleteHeritrixJob(self,evt):
-            print "Delete Job"
+            jobPath = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))
+            print "Deleting Job at "+jobPath
+            shutil.rmtree(jobPath)
+            self.populateListboxWithJobs()
         def restartJob(self,evt):
             print "Restarting job"            
     class MiscellaneousPanel(wx.Panel):
