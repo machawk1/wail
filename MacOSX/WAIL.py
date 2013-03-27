@@ -343,7 +343,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              #listbox.Bind(wx.EVT_LIST_ITEM_ACTIVATED,self.OnClick)
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
-             self.listbox.Bind(wx.EVT_RIGHT_DOWN, self.manageJobs)
+             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
              
              #Button layout
              bsize = self.width,self.height = (125,25*.75)
@@ -367,9 +367,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             webbrowser.open_new_tab(uri_heritrix)    
         def launchHeritrixProcess(self,button):
             mainAppWindow.basicConfig.launchHeritrix() 
-        def manageJobs(self,evt):
-            #wx.MessageBox("Right-click event fired from listbox","Test")
-            #mainAppWindow.PopupMenu(MyPopupMenu(self), e.GetPosition())                     
+        def manageJobs(self,evt):                 
             menu = wx.Menu()
             menu.Append( 1, "Restart Job" )
             menu.Bind(wx.EVT_MENU, self.fooo, id=1)
@@ -377,9 +375,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.fooo, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
-            
+
         def fooo(self,evt):
             wx.MessageBox("Right-click event fired from listbox","Test")
+            #print self.listbox.HitTest(mainAppWindow.ScreenToClient(wx.GetMousePosition()))
+            
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
