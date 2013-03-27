@@ -314,6 +314,26 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
              wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
              wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
+    class MyPopupMenu(wx.Menu):
+     def __init__(self, parent):
+        super(MyPopupMenu, self).__init__()
+        
+        self.parent = parent
+
+        mmi = wx.MenuItem(self, wx.NewId(), 'Minimize')
+        self.AppendItem(mmi)
+        self.Bind(wx.EVT_MENU, self.OnMinimize, mmi)
+
+        cmi = wx.MenuItem(self, wx.NewId(), 'Close')
+        self.AppendItem(cmi)
+        self.Bind(wx.EVT_MENU, self.OnClose, cmi)
+
+
+     def OnMinimize(self, e):
+        self.parent.Iconize()
+
+     def OnClose(self, e):
+        self.parent.Close()
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -323,9 +343,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
              #listbox.Bind(wx.EVT_LIST_ITEM_ACTIVATED,self.OnClick)
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
-             bsize = self.width,self.height = (125,25*.75)
+             self.listbox.Bind(wx.EVT_RIGHT_DOWN, self.manageJobs)
              
              #Button layout
+             bsize = self.width,self.height = (125,25*.75)
              wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
              self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
              self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
@@ -346,10 +367,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
             webbrowser.open_new_tab(uri_heritrix)    
         def launchHeritrixProcess(self,button):
             mainAppWindow.basicConfig.launchHeritrix() 
-        
-    
-  
-             
+        def manageJobs(self,evt):
+            #wx.MessageBox("Right-click event fired from listbox","Test")
+            #mainAppWindow.PopupMenu(MyPopupMenu(self), e.GetPosition())                     
+            menu = wx.Menu()
+            menu.Append( 1, "Restart Job" )
+            menu.Bind(wx.EVT_MENU, self.fooo, id=1)
+            menu.Append( 2, "Destroy Job (Does not delete archive)" )
+            menu.Bind(wx.EVT_MENU, self.fooo, id=2)
+            mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
+            menu.Destroy()
+            
+        def fooo(self,evt):
+            wx.MessageBox("Right-click event fired from listbox","Test")
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
