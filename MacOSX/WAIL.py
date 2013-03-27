@@ -345,6 +345,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.populateListboxWithJobs()
              
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
+             
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
              self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
              
@@ -362,6 +363,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
              list = Heritrix().getListOfJobs()
              self.listbox.Set(list)           
         def clickedListboxItem(self,event):
+             self.hideNewCrawlUIElements()
+             self.statusMsg.Show()
+             
              active = self.listbox.GetString(self.listbox.GetSelection())
              print tail(heritrixJobPath+active+"/job.log")
              jobLaunches = Heritrix().getJobLaunches(active)
@@ -390,12 +394,26 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def restartJob(self,evt):
             print "Restarting job"  
         def setupNewCrawl(self,evt):
-            wx.StaticText(self,-1,"Enter one URI per line to crawl",pos=(135,0))
+            self.statusMsg.Hide()
+        	
+            self.newCrawlTextCtrlLabel = wx.StaticText(self,-1,"Enter one URI per line to crawl",pos=(135,0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
-            wx.TextCtrl(self, -1,pos=(135,20),size=(250,100),style=multiLineAndNoWrapStyle) 
-            crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
-            startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
-            startCrawlButton.SetDefault()  
+            self.newCrawlTextCtrl = wx.TextCtrl(self, -1,pos=(135,20),size=(250,100),style=multiLineAndNoWrapStyle) 
+            self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
+            self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
+            self.startCrawlButton.SetDefault()  
+            self.showNewCrawlUIElements()
+        def hideNewCrawlUIElements(self):
+            if not hasattr(self,'newCrawlTextCtrlLabel'): return
+            self.newCrawlTextCtrlLabel.Hide()
+            self.newCrawlTextCtrl.Hide()
+            self.crawlOptionsButton.Hide()  
+            self.startCrawlButton.Hide()
+        def showNewCrawlUIElements(self):
+            self.newCrawlTextCtrlLabel.Show()
+            self.newCrawlTextCtrl.Show()
+            self.crawlOptionsButton.Show()  
+            self.startCrawlButton.Show()        	
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -638,12 +656,13 @@ class Heritrix(Service):
       return map(justFile,glob.glob(os.path.join(heritrixJobPath, '*')))
     def getJobLaunches(self,jobId):
       jobPath = heritrixJobPath+jobId
-      return [f for f in os.listdir(heritrixJobPath+jobId) if re.search(r'[0-9]+$', f)]
+      return [f for f in os.listdir(heritrixJobPath+jobId) if re.search(r'^[0-9]+$', f)]
     def getCurrentStats(self,jobId):
       launches = self.getJobLaunches(jobId)
       ret = ""
       for launch in launches:
-        print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
+        #print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
+        print heritrixJobPath+"#"+jobId+"/#"+launch+"#/logs/progress-statistics.log"
         lastLine = tail(heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log")
         ll = lastLine[0].replace(" ","|")
         logData = re.sub(r'[|]+','|',ll).split("|")
