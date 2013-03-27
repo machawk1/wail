@@ -324,9 +324,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
              bsize = self.width,self.height = (125,25*.75)
+             
+             #Button layout
              wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
-             wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
-             wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
+             self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
+             self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
+             
+             #Button functionality
+             self.launchWebUIButton.Bind(wx.EVT_BUTTON,self.launchWebUI)
+             self.launchProcess.Bind(wx.EVT_BUTTON,self.launchHeritrixProcess)
         def clickedListboxItem(self,event):
              active = self.listbox.GetString(self.listbox.GetSelection())
              print tail(heritrixJobPath+active+"/job.log")
@@ -336,7 +342,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
              	+ "\n"+str(len(jobLaunches))+" job launches\n"
              	+  Heritrix().getCurrentStats(active)
              	)
-             
+        def launchWebUI(self,button):
+            webbrowser.open_new_tab(uri_heritrix)    
+        def launchHeritrixProcess(self,button):
+            mainAppWindow.basicConfig.launchHeritrix() 
         
     
   
