@@ -91,19 +91,22 @@ tomcatPathStop = ""
 phantomJSPath = ""
 phantomJSExecPath = ""
 warcProxyExecPath = ""
+wailPath = os.path.dirname(os.path.realpath(__file__))
+print wailPath
 fontSize = 8
+
 if sys.platform.startswith('darwin'):
  '''OS X Specific Code here'''
- heritrixPath = "/Applications/WAIL/heritrix-3.1.2/"
+ heritrixPath = wailPath+"/heritrix-3.1.2/"
  heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
  heritrixJobPath = heritrixPath+"jobs/"
  fontSize = 10
- warcsFolder = "/Applications/WAIL/tomcat/webapps/root/files1"
- tomcatPathStart = "/Applications/WAIL/tomcat/bin/startup.sh"
- tomcatPathStop = "/Applications/WAIL/tomcat/bin/shutdown.sh"
- phantomJSPath = "/Applications/WAIL/phantomjs/"
+ warcsFolder = wailPath+"/tomcat/webapps/root/files1"
+ tomcatPathStart = wailPath+"/tomcat/bin/startup.sh"
+ tomcatPathStop = wailPath+"/tomcat/bin/shutdown.sh"
+ phantomJSPath = wailPath+"/phantomjs/"
  phantomJSExecPath = phantomJSPath+"phantomjs-osx"
- warcProxyExecPath = "/Applications/WAIL/warcproxy-bin/dist/warcproxy"
+ warcProxyExecPath = wailPath+"/warcproxy-bin/dist/warcproxy"
 elif sys.platform.startswith('linux'):
  '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'): 
