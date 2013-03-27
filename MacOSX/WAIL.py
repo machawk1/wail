@@ -370,18 +370,22 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def manageJobs(self,evt):                 
             menu = wx.Menu()
             menu.Append( 1, "Restart Job" )
-            menu.Bind(wx.EVT_MENU, self.fooo, id=1)
+            menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 2, "Destroy Job (Does not delete archive)" )
-            menu.Bind(wx.EVT_MENU, self.fooo, id=2)
+            menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
-            menu.Destroy()            
+            menu.Destroy()
+        def deleteHeritrixJob(self,evt):
+            print "Delete Job"
+        def restartJob(self,evt):
+            print "Restarting job"            
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
              bsize = self.width,self.height = (375,25*.75)
-             wx.Button(self, 1, "Launch WARC-Proxy",   (0,0),bsize)
-             wx.Button(self, 1, "Setup WARC-Proxy",   (0,25),bsize)
-             wx.Button(self, 1, "Control Other Tools",   (0,50),bsize)
+             wx.Button(self, 1, "Launch WARC-Proxy",   (0,0), bsize)
+             wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
+             wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
