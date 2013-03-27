@@ -92,7 +92,6 @@ phantomJSPath = ""
 phantomJSExecPath = ""
 warcProxyExecPath = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
-print wailPath
 fontSize = 8
 
 if sys.platform.startswith('darwin'):
