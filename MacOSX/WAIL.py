@@ -177,6 +177,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.checkArchiveStatus = wx.Button(self, -1, buttonLabel_checkStatus,  pos=(112,30))
         self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive,  pos=(280,30))
         
+        self.archiveNowButton.SetDefault()
+        
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON,self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON,self.checkIfURLIsInArchive)
@@ -348,11 +350,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
              
              #Button layout
              bsize = self.width,self.height = (125,25*.75)
-             wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
+             self.setupNewCrawlButton = wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
              self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
              self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
              
              #Button functionality
+             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON,self.setupNewCrawl)
              self.launchWebUIButton.Bind(wx.EVT_BUTTON,self.launchWebUI)
              self.launchProcess.Bind(wx.EVT_BUTTON,self.launchHeritrixProcess)
         def populateListboxWithJobs(self):
@@ -373,7 +376,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             mainAppWindow.basicConfig.launchHeritrix() 
         def manageJobs(self,evt):                 
             menu = wx.Menu()
-            #menu.Append( 1, "Restart Job" )
+            #menu.Append( 1, "Restart Job" ) #TODO
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 2, "Destroy Job (Does not delete archive)" )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
@@ -385,7 +388,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
         def restartJob(self,evt):
-            print "Restarting job"            
+            print "Restarting job"  
+        def setupNewCrawl(self,evt):
+            wx.StaticText(self,-1,"Enter one URI per line to crawl",pos=(135,0))
+            multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
+            wx.TextCtrl(self, -1,pos=(135,20),size=(250,100),style=multiLineAndNoWrapStyle) 
+            crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
+            startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
+            startCrawlButton.SetDefault()  
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
