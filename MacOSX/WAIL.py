@@ -4,8 +4,7 @@
 # Web Archiving Integration Layer (WAIL)
 #  This tool ties together web archiving applications including Wayback,
 #   Heritrix, WARC-Proxy and Tomcat.
-#  Mat Kelly <wail@matkelly.com> 20130219 Init
-#  Mat Kelly <wail@matkelly.com> 20130227 MaxHops to Heritrix config, created Makefile
+#  Mat Kelly <wail@matkelly.com> 2013
 
 import wx, subprocess, shlex, webbrowser, os, time, sys, datetime
 import urllib2
@@ -253,7 +252,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
              serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
              heritrixAccessible = serviceEnabled[Heritrix().accessible()]
              waybackAccessible = serviceEnabled[Wayback().accessible()]
-             if waybackAccessible:
+
+             if waybackAccessible is serviceEnabledLabel_YES:
                tomcatAccessible = serviceEnabled[True]
              else:
                tomcatAccessible = serviceEnabled[Tomcat().accessible()]
@@ -291,8 +291,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                tomcatAccessible = serviceEnabled[Tomcat().accessible()]
                
              self.status_heritrix.SetLabel(heritrixAccessible)
-             self.status_tomcat.SetLabel(waybackAccessible)
-             self.status_wayback.SetLabel(tomcatAccessible)
+             self.status_tomcat.SetLabel(tomcatAccessible)
+             self.status_wayback.SetLabel(waybackAccessible)
         def getHeritrixVersion(self):
         #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
              if not os.path.exists(heritrixPath+"heritrix_out.log"): return "?" 
@@ -307,6 +307,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
+             bsize = self.width,self.height = (375,25*.75)
+             wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
+             wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
+             wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
+             wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -316,6 +321,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
              #listbox.Bind(wx.EVT_LIST_ITEM_ACTIVATED,self.OnClick)
              self.statusMsg = wx.StaticText(self,-1,"",pos=(150,0))
              self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
+             bsize = self.width,self.height = (125,25*.75)
+             wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
+             wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
+             wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
         def clickedListboxItem(self,event):
              active = self.listbox.GetString(self.listbox.GetSelection())
              print tail(heritrixJobPath+active+"/job.log")
@@ -333,6 +342,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
+             bsize = self.width,self.height = (375,25*.75)
+             wx.Button(self, 1, "Launch WARC-Proxy",   (0,0),bsize)
+             wx.Button(self, 1, "Setup WARC-Proxy",   (0,25),bsize)
+             wx.Button(self, 1, "Control Other Tools",   (0,50),bsize)
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
@@ -348,7 +361,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.Notebook)
         self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(self.Notebook)
         # Add advanced config page/tab
-    	#self.advConfig = WAILGUIFrame_Advanced(self.Notebook)
+    	#self.advConfig = WAILGUIFrame_Advanced(self.Notebook) #PDA2013 advanced tab
     	    	
         self.Notebook.AddPage(self.generalPanel,tabLabel_advanced_general)
         self.Notebook.AddPage(self.waybackPanel,tabLabel_advanced_wayback)
@@ -359,7 +372,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         bsize = self.width,self.height = (150,25*.75)
         
         smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        return
+        return		#add for recursive tabs
 ##################################
 # "View Archive" Group
 ##################################     
@@ -539,15 +552,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
 class Service():
     def accessible(self):
         try:
-            print "Trying to access "+self.uri
+            print "Trying to access "+self.__class__.__name__+" service at "+self.uri
             handle = urllib2.urlopen(self.uri,None,3)
-            print "Success in accessing "+self.uri
+            print self.__class__.__name__+" is a go! "
             return True
         except IOError, e:
             if hasattr(e, 'code'): # HTTPError
                print "Pseudo-Success in accessing "+self.uri
                return True
-            print "Failed to access "+self.uri
+            print "Failed to access "+self.__class__.__name__+" service at "+self.uri
             return False     
 class Wayback(Service):
     uri = uri_wayback
