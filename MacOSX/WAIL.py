@@ -317,26 +317,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
              wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
              wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
-    class MyPopupMenu(wx.Menu):
-     def __init__(self, parent):
-        super(MyPopupMenu, self).__init__()
-        
-        self.parent = parent
-
-        mmi = wx.MenuItem(self, wx.NewId(), 'Minimize')
-        self.AppendItem(mmi)
-        self.Bind(wx.EVT_MENU, self.OnMinimize, mmi)
-
-        cmi = wx.MenuItem(self, wx.NewId(), 'Close')
-        self.AppendItem(cmi)
-        self.Bind(wx.EVT_MENU, self.OnClose, cmi)
-
-
-     def OnMinimize(self, e):
-        self.parent.Iconize()
-
-     def OnClose(self, e):
-        self.parent.Close()
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -361,6 +341,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.launchProcess.Bind(wx.EVT_BUTTON,self.launchHeritrixProcess)
         def populateListboxWithJobs(self):
              list = Heritrix().getListOfJobs()
+             list.reverse() # set to reverse chronological so newest jobs are at the top
              self.listbox.Set(list)           
         def clickedListboxItem(self,event):
              self.hideNewCrawlUIElements()
@@ -402,6 +383,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
             self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
             self.startCrawlButton.SetDefault()  
+            self.startCrawlButton.Bind(wx.EVT_BUTTON,self.crawlURIsListed)            
+            
             self.showNewCrawlUIElements()
         def hideNewCrawlUIElements(self):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
@@ -413,7 +396,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
             self.crawlOptionsButton.Show()  
-            self.startCrawlButton.Show()        	
+            self.startCrawlButton.Show()
+        def crawlURIsListed(self,evt):
+            uris = self.newCrawlTextCtrl.GetValue().split("\n")
+            self.hJob = HeritrixJob(uris)
+            self.hJob.write()
+            self.populateListboxWithJobs()
+            #TODO: launch job just created
+            #self.uriListBox.Set([""])        	
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -1384,7 +1374,10 @@ metadata.description=Basic crawl starting with useful defaults
 
 
 def tail(filename, lines=1, _buffer=4098):
-             f = open(filename,"r")
+             try:
+               f = open(filename,"r")
+             except:
+               return "No job info yet\nYou must run a job because stats can\nbe shown here\n"
              lines_found = []
              block_counter = -1
              while len(lines_found) < lines:
