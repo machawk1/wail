@@ -249,26 +249,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.StaticText(self,100,tabLabel_advanced_wayback,        (col0, rowHeight*2),      cellSize)
              wx.StaticText(self,100,tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
              
-             ##################################  
-             # Check if each service is enabled and set the GUI elements accordingly
-             ##################################  
-             
              col1 = 65+colWidth*1
-             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
-             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
-             waybackAccessible = serviceEnabled[Wayback().accessible()]
-
-             if waybackAccessible is serviceEnabledLabel_YES:
-               tomcatAccessible = serviceEnabled[True]
-             else:
-               tomcatAccessible = serviceEnabled[Tomcat().accessible()]
-             
-             wx.StaticText(self,100,"STATE",          (col1,    rowHeight*0),      cellSize)
-             self.status_heritrix = wx.StaticText(self,100,heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
-             self.status_tomcat = wx.StaticText(self,100,waybackAccessible,       (col1,    rowHeight*2),      cellSize)
-             self.status_wayback = wx.StaticText(self,100,tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
-             
-             ##################################  
+             self.updateServiceStatuses()  
              
              col2 = col1+colWidth
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
@@ -279,25 +261,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
              col3 = col2+colWidth
              buttonSize = (50,rowHeight)
              smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
-             wx.Button(self, 1, "Fix",                (col3,     rowHeight*1),     buttonSize).SetFont(smallFont)
-             fix_wayback = wx.Button(self, 1, "Fix",                (col3,     rowHeight*2),     buttonSize)
-             fix_wayback.SetFont(smallFont)
-             fix_tomcat = wx.Button(self, 1, "Fix",                (col3,     rowHeight*3),     buttonSize)
-             fix_tomcat.SetFont(smallFont)
+             self.fix_heritrix = wx.Button(self, 1, "Fix",                (col3,     rowHeight*1),     buttonSize)
+             self.fix_heritrix.SetFont(smallFont)
+             self.fix_wayback = wx.Button(self, 1, "Fix",                (col3,     rowHeight*2),     buttonSize)
+             self.fix_wayback.SetFont(smallFont)
+             self.fix_tomcat = wx.Button(self, 1, "Fix",                (col3,     rowHeight*3),     buttonSize)
+             self.fix_tomcat.SetFont(smallFont)
              
-             fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
-        def updateServiceStatuses(self):
-             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
-             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
-             waybackAccessible = serviceEnabled[Wayback().accessible()]
-             if waybackAccessible:
-               tomcatAccessible = serviceEnabled[True]
-             else:
-               tomcatAccessible = serviceEnabled[Tomcat().accessible()]
-               
-             self.status_heritrix.SetLabel(heritrixAccessible)
-             self.status_tomcat.SetLabel(tomcatAccessible)
-             self.status_wayback.SetLabel(waybackAccessible)
+             self.fix_heritrix.Bind(wx.EVT_BUTTON,Heritrix().fix)
+             self.fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
+             
+             self.updateServiceStatuses()  
         def getHeritrixVersion(self):
         #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
              if not os.path.exists(heritrixPath+"heritrix_out.log"): return "?" 
@@ -309,6 +283,53 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 break
              f.close()
              return version
+        def updateServiceStatuses(self):
+             ##################################  
+             # Check if each service is enabled and set the GUI elements accordingly
+             ##################################  
+             
+             colWidth = 60
+             rowHeight = 18
+             col1 = 65+colWidth*1
+             cellSize = (150,rowHeight)
+             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
+             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
+             waybackAccessible = serviceEnabled[Wayback().accessible()]
+
+             if waybackAccessible is serviceEnabledLabel_YES:
+               tomcatAccessible = serviceEnabled[True]
+             else:
+               tomcatAccessible = serviceEnabled[Tomcat().accessible()]         
+                          
+             if hasattr(self,'status_heritrix'): 
+               self.status_heritrix.SetLabel(heritrixAccessible)
+               self.status_tomcat.SetLabel(tomcatAccessible)
+               self.status_wayback.SetLabel(waybackAccessible)
+             else:
+               wx.StaticText(self,100,"STATE",          (col1,    rowHeight*0),      cellSize)
+               self.status_heritrix = wx.StaticText(self,100,heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
+               self.status_tomcat = wx.StaticText(self,100,waybackAccessible,       (col1,    rowHeight*2),      cellSize)
+               self.status_wayback = wx.StaticText(self,100,tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
+             
+             if not hasattr(self,'fix_heritrix'): 
+              print "First call, UI has not been setup"
+              return #initial setup call will return here, ui elements haven't been created
+             
+             #enable/disable FIX buttons based on service status
+             if heritrixAccessible is serviceEnabledLabel_YES:
+              self.fix_heritrix.Disable()
+             else:
+              self.fix_heritrix.Enable()
+              
+             if waybackAccessible is serviceEnabledLabel_YES:
+              self.fix_wayback.Disable()
+              self.fix_tomcat.Disable()
+             else:
+              self.fix_wayback.Enable()      
+              self.fix_tomcat.Enable()            
+             
+             
+             ##################################             
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -408,9 +429,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
              bsize = self.width,self.height = (375,25*.75)
-             wx.Button(self, 1, "Launch WARC-Proxy",   (0,0), bsize)
-             wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
-             wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
+             launchWarcProxyButton = wx.Button(self, 1, "Launch WARC-Proxy",   (0,0), bsize)
+             #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
+             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
+             
+             launchWarcProxyButton.Bind(wx.EVT_BUTTON,self.launchWarcProxy)
+        def launchWarcProxy(self,button):
+             cmd = warcProxyExecPath
+             ret= subprocess.Popen(cmd)
+             time.sleep(2)
+             webbrowser.open_new_tab(uri_warcProxy)
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
@@ -660,6 +688,9 @@ class Heritrix(Service):
         ret = ret + "JobID: "+jobId+"\n   Discovered: "+discovered+"\n   Queued: "+queued+"\n   Downloaded: "+downloaded+"\n"
         
       return ret
+    def fix(self,button):
+      mainAppWindow.basicConfig.launchHeritrix() 
+      mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 class HeritrixJob:
    def write(self):
       self.jobNumber = str(int(time.time()))
