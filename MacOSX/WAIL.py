@@ -268,6 +268,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.fix_tomcat = wx.Button(self, 1, "Fix",                (col3,     rowHeight*3),     buttonSize)
              self.fix_tomcat.SetFont(smallFont)
              
+             self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
+
+             
              self.fix_heritrix.Bind(wx.EVT_BUTTON,Heritrix().fix)
              self.fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
              
