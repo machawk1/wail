@@ -234,7 +234,7 @@ class WAILGUIFrame_Basic(wx.Panel):
           wx.MessageBox(msg_uriInArchives)
     def viewArchiveInBrowser(self,button):
         webbrowser.open_new_tab(uri_wayback_allMementos + self.uri.GetValue())
-               
+        
 class WAILGUIFrame_Advanced(wx.Panel):
     class GeneralPanel(wx.Panel):
         def __init__(self, parent):
@@ -337,7 +337,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
              wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
              wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
-             wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
+             self.viewWaybackInBrowserButton = wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
+         
+             self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON,self.openWaybackInBrowser)
+        def openWaybackInBrowser(self,button):
+             webbrowser.open_new_tab(uri_wayback)
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
