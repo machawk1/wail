@@ -268,7 +268,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.fix_tomcat = wx.Button(self, 1, "Fix",                (col3,     rowHeight*3),     buttonSize)
              self.fix_tomcat.SetFont(smallFont)
              
-             self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
+             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
 
              
              self.fix_heritrix.Bind(wx.EVT_BUTTON,Heritrix().fix)
@@ -337,10 +337,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
              bsize = self.width,self.height = (375,25*.75)
-             wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
-             wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
-             wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
-             self.viewWaybackInBrowserButton = wx.Button(self, 1, "View Wayback In Browser",   (0,75),bsize)
+             #wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
+             #wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
+             #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
+             self.viewWaybackInBrowserButton = wx.Button(self, 1, "View Wayback In Browser",   (0,0),bsize)
          
              self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON,self.openWaybackInBrowser)
         def openWaybackInBrowser(self,button):
@@ -393,6 +393,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 2, "Destroy Job (Does not delete archive)" )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
+            #menu.Append( 2, "Open config in a text editor" )
+            #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
         def deleteHeritrixJob(self,evt):
@@ -400,6 +402,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print "Deleting Job at "+jobPath
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
+        def openConfigInTextEditor(self,evt):
+            #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?
+            file = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))+"/crawler-beans.cxml"
+            if sys.platform.startswith('darwin'):
+               subprocess.call(('open', file))
+            elif os.name == 'nt':
+               os.startfile(file)
+            elif os.name == 'posix':
+               subprocess.call(('xdg-open', file))
         def restartJob(self,evt):
             print "Restarting job"  
         def setupNewCrawl(self,evt):
@@ -408,7 +419,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrlLabel = wx.StaticText(self,-1,"Enter one URI per line to crawl",pos=(135,0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
             self.newCrawlTextCtrl = wx.TextCtrl(self, -1,pos=(135,20),size=(250,100),style=multiLineAndNoWrapStyle) 
-            self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
+            #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
             self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
             self.startCrawlButton.SetDefault()  
             self.startCrawlButton.Bind(wx.EVT_BUTTON,self.crawlURIsListed)            
@@ -418,18 +429,25 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
             self.newCrawlTextCtrlLabel.Hide()
             self.newCrawlTextCtrl.Hide()
-            self.crawlOptionsButton.Hide()  
+            #self.crawlOptionsButton.Hide()  
             self.startCrawlButton.Hide()
         def showNewCrawlUIElements(self):
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
-            self.crawlOptionsButton.Show()  
+            #self.crawlOptionsButton.Show()  
             self.startCrawlButton.Show()
         def crawlURIsListed(self,evt):
             uris = self.newCrawlTextCtrl.GetValue().split("\n")
             self.hJob = HeritrixJob(uris)
             self.hJob.write()
             self.populateListboxWithJobs()
+
+            cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
+            ret = subprocess.Popen(cmd,shell=True)
+            time.sleep(3)
+            cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
+            ret = subprocess.Popen(cmd,shell=True)
+
             #TODO: launch job just created
             #self.uriListBox.Set([""])        	
     class MiscellaneousPanel(wx.Panel):
@@ -1415,7 +1433,7 @@ def tail(filename, lines=1, _buffer=4098):
              try:
                f = open(filename,"r")
              except:
-               return "No job info yet\nYou must run a job because stats can\nbe shown here\n"
+               return "No job info yet\nYou must run a job because stats can be shown here"
              lines_found = []
              block_counter = -1
              while len(lines_found) < lines:
