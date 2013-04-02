@@ -36,8 +36,8 @@ tabLabel_advanced_tomcat = "Tomcat"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
 tabLabel_advanced_general_serviceStatus = "SERVICE STATUS"
 
-serviceEnabledLabel_YES = "✓"
-serviceEnabledLabel_NO = "✗"
+serviceEnabledLabel_YES = "OK"#"✓"
+serviceEnabledLabel_NO = "X"#"✗"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
