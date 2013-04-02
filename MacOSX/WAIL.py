@@ -265,7 +265,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              col2 = col1+colWidth
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
              wx.StaticText(self,100,self.getHeritrixVersion(), (col2,     rowHeight*1),     cellSize)
-             wx.StaticText(self,100,"1.0",                     (col2,     rowHeight*2),     cellSize)
+             wx.StaticText(self,100,"?",                     (col2,     rowHeight*2),     cellSize)
              wx.StaticText(self,100,self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
              
              col3 = col2+colWidth
