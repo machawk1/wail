@@ -308,18 +308,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
              waybackAccessible = serviceEnabled[Wayback().accessible()]
 
              if waybackAccessible is serviceEnabledLabel_YES:
-               tomcatAccessible = serviceEnabled[True]
+               tomcatAccessible = waybackAccessible
              else:
                tomcatAccessible = serviceEnabled[Tomcat().accessible()]         
                           
              if hasattr(self,'status_heritrix'): 
                self.status_heritrix.SetLabel(heritrixAccessible)
                self.status_tomcat.SetLabel(tomcatAccessible)
-               self.status_wayback.SetLabel(waybackAccessible)
+               self.status_wayback.SetLabel(tomcatAccessible)
              else:
                wx.StaticText(self,100,"STATE",          (col1,    rowHeight*0),      cellSize)
                self.status_heritrix = wx.StaticText(self,100,heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
-               self.status_tomcat = wx.StaticText(self,100,waybackAccessible,       (col1,    rowHeight*2),      cellSize)
+               self.status_tomcat = wx.StaticText(self,100,tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
                self.status_wayback = wx.StaticText(self,100,tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
              
              if not hasattr(self,'fix_heritrix'): 
@@ -332,7 +332,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              else:
               self.fix_heritrix.Enable()
               
-             if waybackAccessible is serviceEnabledLabel_YES:
+             if tomcatAccessible is serviceEnabledLabel_YES:
               self.fix_wayback.Disable()
               self.fix_tomcat.Disable()
              else:
