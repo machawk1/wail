@@ -88,6 +88,7 @@ heritrixPath = ""
 heritrixBinPath = ""
 heritrixJobPath = ""
 warcsFolder = ""
+tomcatPath = ""
 tomcatPathStart = ""
 tomcatPathStop = ""
 phantomJSPath = ""
@@ -102,9 +103,10 @@ if sys.platform.startswith('darwin'):
  heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
  heritrixJobPath = heritrixPath+"jobs/"
  fontSize = 10
- warcsFolder = wailPath+"/tomcat/webapps/root/files1"
- tomcatPathStart = wailPath+"/tomcat/bin/startup.sh"
- tomcatPathStop = wailPath+"/tomcat/bin/shutdown.sh"
+ tomcatPath = wailPath+"/tomcat"
+ warcsFolder = tomcatPath+"/webapps/root/files1"
+ tomcatPathStart = tomcatPath+"/bin/startup.sh"
+ tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
  phantomJSPath = wailPath+"/phantomjs/"
  phantomJSExecPath = phantomJSPath+"phantomjs-osx"
  warcProxyExecPath = wailPath+"/warcproxy-bin/dist/warcproxy"
@@ -264,7 +266,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
              wx.StaticText(self,100,self.getHeritrixVersion(), (col2,     rowHeight*1),     cellSize)
              wx.StaticText(self,100,"1.0",                     (col2,     rowHeight*2),     cellSize)
-             wx.StaticText(self,100,"1.0",                     (col2,     rowHeight*3),     cellSize)
+             wx.StaticText(self,100,self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
              
              col3 = col2+colWidth
              buttonSize = (50,rowHeight)
@@ -294,6 +296,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 break
              f.close()
              return version
+        
+        def getTomcatVersion(self):
+        #Apache Tomcat Version 7.0.30
+             if not os.path.exists(tomcatPath+"/RELEASE-NOTES"): return "?" 
+             f = open(tomcatPath+"/RELEASE-NOTES",'r')
+             version = ""
+             for line in f.readlines():
+               if "Apache Tomcat Version " in line:
+                version = re.sub("[^0-9^\.]", "", line)
+                break
+             f.close()
+             return version        
         def updateServiceStatuses(self):
              ##################################  
              # Check if each service is enabled and set the GUI elements accordingly
