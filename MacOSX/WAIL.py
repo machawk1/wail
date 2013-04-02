@@ -13,7 +13,7 @@ import re
 import ssl
 import shutil
 from urlparse import urlparse
-from wxPython.wx import *
+#from wxPython.wx import *
 
 ###############################
 # Platform independent Messages
@@ -174,11 +174,11 @@ class TabController(wx.Frame):
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.uriLabel = wx.StaticText(self,-1,buttonLabel_uri,pos=(0,0))
-        self.uri = wx.TextCtrl(self, -1,pos=(30,0),value=textLabel_defaultURI,size=(350,20))
+        self.uriLabel = wx.StaticText(self,-1,buttonLabel_uri,pos=(0,5))
+        self.uri = wx.TextCtrl(self, -1,pos=(30,0),value=textLabel_defaultURI,size=(350,25))
         self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow,  pos=(0,30))
-        self.checkArchiveStatus = wx.Button(self, -1, buttonLabel_checkStatus,  pos=(112,30))
-        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive,  pos=(280,30))
+        self.checkArchiveStatus = wx.Button(self, -1, buttonLabel_checkStatus,  pos=(105,30))
+        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive,  pos=(270,30))
         
         self.archiveNowButton.SetDefault()
         
@@ -264,7 +264,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              
              col2 = col1+colWidth
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
-             wx.StaticText(self,100,self.getHeritrixVersion(), (col2,     rowHeight*1),     cellSize)
+             wx.StaticText(self,100,self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize)
              wx.StaticText(self,100,"?",                     (col2,     rowHeight*2),     cellSize)
              wx.StaticText(self,100,self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
              
@@ -285,14 +285,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
              
              self.updateServiceStatuses()  
-        def getHeritrixVersion(self):
+        def getHeritrixVersion(self,abbr=True):
         #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
              if not os.path.exists(heritrixPath+"heritrix_out.log"): return "?" 
              f = open(heritrixPath+"heritrix_out.log",'r')
              version = ""
              for line in f.readlines():
                if "Heritrix version: " in line:
-                version = line[18:]
+                if abbr: version = line[18:23]
+                else: version = line[18:]
                 break
              f.close()
              return version
@@ -358,7 +359,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
-             bsize = self.width,self.height = (375,25*.75)
+             bsize = self.width,self.height = (340,25*.75)
              #wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
              #wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
              #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
@@ -390,9 +391,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
              
              #Button layout
              bsize = self.width,self.height = (125,25*.75)
-             self.setupNewCrawlButton = wx.Button(self, 1, "Setup New Crawl",   (0,75),bsize)
-             self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0,100),bsize)
-             self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0,125),bsize)
+             self.setupNewCrawlButton = wx.Button(self, 1, "Setup New Crawl",   (0,70),bsize)
+             self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0,92),bsize)
+             self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0,114),bsize)
              
              #Button functionality
              self.setupNewCrawlButton.Bind(wx.EVT_BUTTON,self.setupNewCrawl)
@@ -449,9 +450,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
         	
             self.newCrawlTextCtrlLabel = wx.StaticText(self,-1,"Enter one URI per line to crawl",pos=(135,0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
-            self.newCrawlTextCtrl = wx.TextCtrl(self, -1,pos=(135,20),size=(250,100),style=multiLineAndNoWrapStyle) 
+            self.newCrawlTextCtrl = wx.TextCtrl(self, -1,pos=(135,20),size=(225,90),style=multiLineAndNoWrapStyle) 
             #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
-            self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(275,125))
+            self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(265,110))
             self.startCrawlButton.SetDefault()  
             self.startCrawlButton.Bind(wx.EVT_BUTTON,self.crawlURIsListed)            
             
@@ -484,7 +485,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
-             bsize = self.width,self.height = (375,25*.75)
+             bsize = self.width,self.height = (340,25*.75)
              launchWarcProxyButton = wx.Button(self, 1, "Launch WARC-Proxy",   (0,0), bsize)
              #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
              #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
@@ -518,7 +519,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.Notebook.AddPage(self.miscellaneousPanel,tabLabel_advanced_miscellaneous)
         
         self.x,self.y = (15,5)
-        bsize = self.width,self.height = (150,25*.75)
+        bsize = self.width,self.height = (150,25*.80)
         
         smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
         return		#add for recursive tabs
