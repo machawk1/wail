@@ -13,6 +13,7 @@ import re
 import ssl
 import shutil
 from urlparse import urlparse
+from wxPython.wx import *
 
 ###############################
 # Platform independent Messages
@@ -119,7 +120,7 @@ elif sys.platform.startswith('win32'):
  warcsFolder = "/WAIL/tomcat/webapps/root/files1"
  tomcatPathStart = "C:/WAIL/catalina_stop.bat"
  tomcatPathStop = "C:/WAIL/catalina_stop.bat"
- phantomJSPath = "C:/WAIL/phantomjs/"
+ phantomJSPath = "C:/WAIL\phantomjs/"
  phantomJSExecPath = "C:/WAIL/phantomjs/phantomjs-win.exe"
  warcProxyExecPath = "C:/WAIL/warcproxy-bin/dist/warcproxy/warcproxy.exe"
 ###############################
@@ -198,10 +199,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         ret = subprocess.Popen(cmd,shell=True)
     def startHeritrixJob(self):
         cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
-        ret = subprocess.Popen(cmd,shell=True)
+        try:
+         ret = subprocess.Popen(cmd,shell=True)
+        except:
+         print "err 1"
+        
         time.sleep(3)
         cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
-        ret = subprocess.Popen(cmd,shell=True)
+        try:
+         ret = subprocess.Popen(cmd,shell=True)
+        except:
+         print "err 2"
         doneArchiving = False
         while(doneArchiving):
           f = open(heritrixJobPath+self.hJob.jobNumber+"/job.log", 'r+')
@@ -344,7 +352,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
          
              self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON,self.openWaybackInBrowser)
         def openWaybackInBrowser(self,button):
-             webbrowser.open_new_tab(uri_wayback)
+             if Wayback().accessible():
+               webbrowser.open_new_tab(uri_wayback)
+             else:
+               d = wxMessageDialog(self, "Launch now?",
+                                      "Wayback is not running", wxYES_NO|wx.YES_DEFAULT|wxICON_QUESTION)
+               result = d.ShowModal()
+               d.Destroy()
+               if result == wx.ID_YES: # Launch Wayback
+                Wayback().fix(None)
+
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
@@ -552,20 +569,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uriListBox = None
         
     def tomcatMessageOff(self):
-     self.tomcatStatus.SetLabel(msg_waybackDisabled)
+     #self.tomcatStatus.SetLabel(msg_waybackDisabled)
      self.tomcatStatus.SetForegroundColour((255,0,0))
      self.startTomcatButton.SetLabel(self.startTomcatLabel)
     def tomcatMessageOn(self):
-     self.tomcatStatus.SetLabel(msg_waybackEnabled)
+     #self.tomcatStatus.SetLabel(msg_waybackEnabled)
      self.tomcatStatus.SetForegroundColour((0,200,0))
      self.startTomcatButton.SetLabel(self.stopTomcatLabel)
     def startTomcat(self,button):
-     self.tomcatStatus.SetLabel(msg_startingTomcat)
+     #self.tomcatStatus.SetLabel(msg_startingTomcat)
      cmd = tomcatPathStart       
      ret= subprocess.Popen(cmd)
      waitingForTomcat = True
      while waitingForTomcat:
-       if Wayback.accessible(): waitingForTomcat = False
+       if Wayback().accessible(): waitingForTomcat = False
        time.sleep(2)
        
      self.viewWaybackButton.Enable()
@@ -652,7 +669,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uriListBox.Set([""])
         self.launchCrawlButton.Enable()
     def launchCrawl(self,button):
-    	mainAppWindow.basicConfig.hJob = self.hJob 
+        mainAppWindow.basicConfig.hJob = self.hJob 
         mainAppWindow.basicConfig.launchHeritrix()
         mainAppWindow.basicConfig.startHeritrixJob()
     def addURI(self,listbox):
