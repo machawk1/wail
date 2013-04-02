@@ -13,7 +13,7 @@ import re
 import ssl
 import shutil
 from urlparse import urlparse
-#from wxPython.wx import *
+from wx import *
 
 ###############################
 # Platform independent Messages
@@ -243,7 +243,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
           wx.MessageBox(msg_uriInArchives)
     def viewArchiveInBrowser(self,button):
-        webbrowser.open_new_tab(uri_wayback_allMementos + self.uri.GetValue())
+        if Wayback().accessible():
+           webbrowser.open_new_tab(uri_wayback_allMementos + self.uri.GetValue())
+        else:
+           d = wx.MessageDialog(self, "Launch now?",
+              "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+           result = d.ShowModal()
+           d.Destroy()
+           if result == wx.ID_YES: # Launch Wayback
+             Wayback().fix(None)
+             self.viewArchiveInBrowser(None)
+        
         
 class WAILGUIFrame_Advanced(wx.Panel):
     class GeneralPanel(wx.Panel):
@@ -370,13 +380,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
              if Wayback().accessible():
                webbrowser.open_new_tab(uri_wayback)
              else:
-               d = wxMessageDialog(self, "Launch now?",
-                                      "Wayback is not running", wxYES_NO|wx.YES_DEFAULT|wxICON_QUESTION)
+               d = wx.MessageDialog(self, "Launch now?",
+                                      "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
                result = d.ShowModal()
                d.Destroy()
                if result == wx.ID_YES: # Launch Wayback
                 Wayback().fix(None)
-
+                self.openWaybackInBrowser(None)
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
              wx.Panel.__init__(self, parent)
