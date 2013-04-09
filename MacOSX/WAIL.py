@@ -155,12 +155,14 @@ class TabController(wx.Frame):
         self.createMenu()
     def createMenu(self):
          self.menu_bar  = wx.MenuBar()
-         self.help_menu = wx.Menu()
+         self.help_menu = wx.Menu()        
         
          self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
+         self.help_menu.Append(wx.ID_EXIT,   "&QUIT")
          self.menu_bar.Append(self.help_menu, menuTitle_help)
          
          self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
+         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
          self.SetMenuBar(self.menu_bar)
     def displayAboutMenu(self,button):
          info = wx.AboutDialogInfo()
@@ -173,6 +175,8 @@ class TabController(wx.Frame):
          #info.License = "lic info"
          info.SetIcon(wx.Icon(aboutWindow_iconPath,wx.BITMAP_TYPE_ICO))
          wx.AboutBox(info)
+    def quit(self,button):
+         sys.exit()
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
