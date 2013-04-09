@@ -2,7 +2,7 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict><key>CFBundleShortVersionString</key>
-<string>0.2013.03.08 by Mat Kelly</string>
+<string>0.2013.04.09 by Mat Kelly</string>
 <key>CFBundleExecutable</key>
 <string>MacOS/WAIL</string>
 <key>CFBundleName</key>
