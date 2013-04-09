@@ -15,6 +15,7 @@ import shutil
 from urlparse import urlparse
 from wx import *
 
+
 ###############################
 # Platform independent Messages
 ###############################
@@ -97,8 +98,9 @@ warcProxyExecPath = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
 
-if sys.platform.startswith('darwin'):
+if 'darwin' in sys.platform:
  '''OS X Specific Code here'''
+ wailPath = "/Applications/WAIL" #this should be dynamic but doesn't work with WAIL binary
  heritrixPath = wailPath+"/heritrix-3.1.2/"
  heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
  heritrixJobPath = heritrixPath+"jobs/"
@@ -270,7 +272,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
              wx.StaticText(self,100,tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
              
              col1 = 65+colWidth*1
-             self.updateServiceStatuses()  
+
+             self.updateServiceStatuses()   
+             #wx.CallLater(0, self.updateServiceStatuses) 
              
              col2 = col1+colWidth
              wx.StaticText(self,100,"VERSION",                 (col2,     rowHeight*0),     cellSize)
@@ -294,6 +298,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
              self.fix_heritrix.Bind(wx.EVT_BUTTON,Heritrix().fix)
              self.fix_wayback.Bind(wx.EVT_BUTTON,Wayback().fix)
              
+             #wx.CallLater(2000, self.updateServiceStatuses)            
              self.updateServiceStatuses()  
         def getHeritrixVersion(self,abbr=True):
         #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
