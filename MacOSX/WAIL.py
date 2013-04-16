@@ -762,8 +762,9 @@ class Heritrix(Service):
         ret = ""
         for launch in launches:
             #print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
-            print heritrixJobPath+"#"+jobId+"/#"+launch+"#/logs/progress-statistics.log"
+            print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
             lastLine = tail(heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log")
+
             ll = lastLine[0].replace(" ","|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
@@ -1485,7 +1486,7 @@ metadata.description=Basic crawl starting with useful defaults
 '''
 
 
-
+#from http://stackoverflow.com/questions/136168/get-last-n-lines-of-a-file-with-python-similar-to-tail
 def tail(filename, lines=1, _buffer=4098):
     try:
         f = open(filename,"r")
@@ -1505,7 +1506,7 @@ def tail(filename, lines=1, _buffer=4098):
         if len(lines_found) > lines:
             break
         block_counter -= 1
-        return lines_found[-lines:]
+    return lines_found[-lines:]
 
 mainAppWindow = None
 
