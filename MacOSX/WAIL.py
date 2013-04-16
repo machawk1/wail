@@ -303,7 +303,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
              
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
-             
+            self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
+            
             #wx.CallLater(2000, self.updateServiceStatuses)            
             self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
@@ -494,7 +495,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hJob = HeritrixJob(uris)
             self.hJob.write()
             self.populateListboxWithJobs()
-
+             
+            if not Heritrix().accessible():
+                mainAppWindow.basicConfig.launchHeritrix()
+            
             cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
             ret = subprocess.Popen(cmd, shell=True)
             time.sleep(3)
