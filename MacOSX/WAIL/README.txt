@@ -1,5 +1,5 @@
 Web Archiving Integration Layer (WAIL)
-version 0.2013.2.27
+version 0.2013.4.16
 By Mat Kelly (wail@matkelly.com)
 http://matkelly.com/wail
 

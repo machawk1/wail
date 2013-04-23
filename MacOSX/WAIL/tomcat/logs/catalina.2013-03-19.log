@@ -1,0 +1,916 @@
+Mar 19, 2013 2:14:55 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 2:14:57 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 2:14:57 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 2:14:57 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 6325 ms
+Mar 19, 2013 2:14:57 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 2:14:57 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 2:14:58 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 2:14:58 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 2:14:58 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 2:14:58 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 2:14:59 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 2:14:59 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 2:14:59 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 2:15:01 PM org.apache.catalina.util.SessionIdGenerator createSecureRandom
+INFO: Creation of SecureRandom instance for session ID generation using [SHA1PRNG] took [257] milliseconds.
+Mar 19, 2013 2:15:01 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 2:15:01 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 2:15:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 2:15:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 2:15:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 2:15:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 2:15:22 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 2:15:30 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 2:15:30 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 2:15:31 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 2:15:39 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 2:15:39 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 2:15:39 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 2:15:39 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 2:15:39 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 2:15:39 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 42093 ms
+Mar 19, 2013 4:50:56 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 4:50:56 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,54 lastmatch=], \\=java.util.regex.Matcher[pattern=\\ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,31 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@58c1c2f1]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,22 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 4:50:56 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 4:51:02 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 4:51:02 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 4:51:02 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 820 ms
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 4:51:02 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 4:51:02 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 4:51:02 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 4:51:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 4:51:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 4:51:08 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 4:51:13 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 4:51:13 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 4:51:13 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 4:51:17 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 4:51:17 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 4:51:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 4:51:17 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 4:51:17 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 4:51:17 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 15167 ms
+Mar 19, 2013 5:42:46 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 5:42:46 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,72 lastmatch=], \\=java.util.regex.Matcher[pattern=\\ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,49 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,69 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,46 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,65 lastmatch=], \\=java.util.regex.Matcher[pattern=\\ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,47 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,67 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,44 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,75 lastmatch=], \\=java.util.regex.Matcher[pattern=\\ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,52 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,66 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,43 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,77 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,54 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,68 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,45 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,16 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,77 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,54 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@64fe7a67]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,17 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,86 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,62 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 5:42:46 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 5:44:01 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 5:44:01 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 5:44:01 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 770 ms
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 5:44:01 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 5:44:01 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 5:44:01 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 5:44:01 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 5:44:02 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 5:44:08 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 5:44:12 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 5:44:12 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 5:44:12 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 5:44:16 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 5:44:16 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 5:44:16 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 5:44:16 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 5:44:16 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 5:44:16 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 14917 ms
+Mar 19, 2013 6:16:21 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 6:16:21 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:16:21 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:16:22 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,26 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,26 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@ef98ce0]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,7 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,15 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:16:22 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:16:22 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:16:22 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:16:22 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 6:16:29 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:16:29 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 789 ms
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 6:16:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 6:16:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 6:16:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 6:16:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 6:16:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 6:16:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 6:16:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 6:16:39 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:16:39 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 6:16:39 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 6:16:42 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:16:42 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 6:16:42 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 6:16:42 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:16:42 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:16:42 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 13306 ms
+Mar 19, 2013 6:25:16 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:25:16 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,18 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,30 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,5 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@3030d5aa]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:25:16 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:25:28 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 6:25:28 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:25:29 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 1186 ms
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 6:25:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 6:25:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 6:25:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 6:25:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 6:25:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 6:25:30 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 6:25:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 6:25:38 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:25:38 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 6:25:38 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 6:25:42 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:25:42 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 6:25:42 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 6:25:42 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:25:42 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:25:42 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 12957 ms
+Mar 19, 2013 6:29:11 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:29:11 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@1ff05076]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:29:11 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 6:29:16 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:29:16 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:29:16 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 741 ms
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 6:29:16 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 6:29:16 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 6:29:16 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 6:29:16 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 6:29:17 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 6:29:22 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 6:29:26 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:29:26 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 6:29:26 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 6:29:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:29:29 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 6:29:29 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 6:29:29 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:29:29 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:29:29 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 13021 ms
+Mar 19, 2013 6:32:51 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:32:51 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 6:32:51 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@a54f742]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:32:51 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@a54f742]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:32:51 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@a54f742]) and a value of type [java.util.HashMap] (value [{[
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,34 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,9 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:32:51 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:32:56 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 6:32:57 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:32:57 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 762 ms
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 6:32:57 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 6:32:57 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 6:33:03 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 6:33:06 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:33:06 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 6:33:06 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 6:33:09 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:33:09 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 6:33:09 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 6:33:10 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:33:10 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:33:10 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 12956 ms
+Mar 19, 2013 6:34:29 PM org.apache.catalina.core.StandardServer await
+INFO: A valid shutdown command was received via the shutdown port. Stopping the Server instance.
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:34:29 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 6:34:29 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@48b91881]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:34:29 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@48b91881]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:34:29 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:34:34 PM org.apache.catalina.core.AprLifecycleListener init
+INFO: The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: .:/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java
+Mar 19, 2013 6:34:34 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:34:34 PM org.apache.coyote.AbstractProtocol init
+INFO: Initializing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:34:34 PM org.apache.catalina.startup.Catalina load
+INFO: Initialization processed in 760 ms
+Mar 19, 2013 6:34:34 PM org.apache.catalina.core.StandardService startInternal
+INFO: Starting service Catalina
+Mar 19, 2013 6:34:34 PM org.apache.catalina.core.StandardEngine startInternal
+INFO: Starting Servlet Engine: Apache Tomcat/7.0.30
+Mar 19, 2013 6:34:34 PM org.apache.catalina.startup.HostConfig deployDescriptor
+INFO: Deploying configuration descriptor /Applications/WAIL/tomcat/conf/Catalina/localhost/wayback-webapp.xml
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDescriptor
+WARNING: A docBase /Applications/WAIL/tomcat/webapps/wayback-src/wayback-master/wayback-webapp/target/wayback-1.7.1-SNAPSHOT inside the host appBase has been specified, and will be ignored
+Mar 19, 2013 6:34:35 PM org.apache.catalina.core.StandardContext resourcesStart
+SEVERE: Error starting static Resources
+java.lang.IllegalArgumentException: Document base /Applications/WAIL/tomcat/webapps/wayback-webapp does not exist or is not a readable directory
+	at org.apache.naming.resources.FileDirContext.setDocBase(FileDirContext.java:140)
+	at org.apache.catalina.core.StandardContext.resourcesStart(StandardContext.java:4906)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5086)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:150)
+	at org.apache.catalina.core.ContainerBase.addChildInternal(ContainerBase.java:901)
+	at org.apache.catalina.core.ContainerBase.addChild(ContainerBase.java:877)
+	at org.apache.catalina.core.StandardHost.addChild(StandardHost.java:618)
+	at org.apache.catalina.startup.HostConfig.deployDescriptor(HostConfig.java:650)
+	at org.apache.catalina.startup.HostConfig$DeployDescriptor.run(HostConfig.java:1582)
+	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:439)
+	at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:303)
+	at java.util.concurrent.FutureTask.run(FutureTask.java:138)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:895)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:918)
+	at java.lang.Thread.run(Thread.java:680)
+Mar 19, 2013 6:34:35 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error in resourceStart()
+Mar 19, 2013 6:34:35 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error getConfigured
+Mar 19, 2013 6:34:35 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-webapp] startup failed due to previous errors
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/bin
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/docs
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/examples
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/host-manager
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/lib
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/manager
+Mar 19, 2013 6:34:35 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT
+Mar 19, 2013 6:34:40 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/ROOT_old
+Mar 19, 2013 6:34:44 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:34:44 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/ROOT_old] startup failed due to previous errors
+Mar 19, 2013 6:34:44 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-1.6
+Mar 19, 2013 6:34:47 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Error filterStart
+Mar 19, 2013 6:34:47 PM org.apache.catalina.core.StandardContext startInternal
+SEVERE: Context [/wayback-1.6] startup failed due to previous errors
+Mar 19, 2013 6:34:47 PM org.apache.catalina.startup.HostConfig deployDirectory
+INFO: Deploying web application directory /Applications/WAIL/tomcat/webapps/wayback-src
+Mar 19, 2013 6:34:47 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 6:34:47 PM org.apache.coyote.AbstractProtocol start
+INFO: Starting ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 6:34:47 PM org.apache.catalina.startup.Catalina start
+INFO: Server startup in 12974 ms
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol pause
+INFO: Pausing ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 7:12:33 PM org.apache.catalina.core.StandardService stopInternal
+INFO: Stopping service Catalina
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,11 lastmatch=www.], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,19 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,1 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,13 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,68 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,43 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.catalina.loader.WebappClassLoader checkThreadLocalMapForLeaks
+SEVERE: The web application [] created a ThreadLocal with key of type [org.archive.util.TextUtils$1] (value [org.archive.util.TextUtils$1@56acf892]) and a value of type [java.util.HashMap] (value [{^www\d*\.=java.util.regex.Matcher[pattern=^www\d*\. region=0,13 lastmatch=], [
+	]+=java.util.regex.Matcher[pattern=[
+	]+ region=0,68 lastmatch=], ^(/\.\./)+=java.util.regex.Matcher[pattern=^(/\.\./)+ region=0,43 lastmatch=]}]) but failed to remove it when the web application was stopped. Threads are going to be renewed over time to try and avoid a probable memory leak.
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol stop
+INFO: Stopping ProtocolHandler ["ajp-bio-8009"]
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["http-bio-8080"]
+Mar 19, 2013 7:12:33 PM org.apache.coyote.AbstractProtocol destroy
+INFO: Destroying ProtocolHandler ["ajp-bio-8009"]

@@ -1,6 +1,9 @@
 #!/bin/bash
 
 #This is the Makefile for WAIL for MacOS X
+
+cd /Applications/WAIL
+
 # You need python to execute it
 
 if [ ! -z "$1" -a "$1" = "clean"  ]; then
@@ -13,7 +16,7 @@ if [ ! -z "$1" -a "$1" = "clean"  ]; then
   if [ -e tomcat/webapps/ROOT/index-data ]; then 
    rm -r tomcat/webapps/ROOT/index-data
   fi
-  rm -r heritrix-3.1.0/jobs/* 
+  rm -r heritrix-3.1.2/jobs/* 
   rm tomcat/webapps/ROOT/files1/*
 fi
 

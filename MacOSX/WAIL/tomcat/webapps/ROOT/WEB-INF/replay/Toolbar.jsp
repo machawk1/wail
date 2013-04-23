@@ -57,6 +57,7 @@ String graphImgUrl = graphJspPrefix + "jsp/graph.jsp?graphdata=" + encodedGraph;
 // TODO: this is archivalUrl specific:
 String starLink = fmt.escapeHtml(queryPrefix + wbRequest.getReplayTimestamp() + 
 		"*/" + searchUrl);
+		System.out.println("foo"+results);
 %>
 <!-- BEGIN WAYBACK TOOLBAR INSERT -->
 
@@ -273,7 +274,60 @@ function trackMouseMove(event,element) {
            </tr>
            </tbody></table>
        </td>
+		<td style="padding-left: 1.0em;">
+			<script type="text/javascript">
+				function setCookie(){
+					createCookie("waybackUserAgent",$("#userAgent").find(":selected").attr("value"),30);
+				}
+	
+				function setUserAgentDropdownBasedOnCookie(){
+					var cookieValue = readCookie("waybackUserAgent");
+					if(cookieValue){
+						$("#userAgent").val(readCookie("waybackUserAgent"));
+					}
+				}
+								
+				/* From QuirksMode http://www.quirksmode.org/js/cookies.html */
+				function createCookie(name, value, days) {
+					if (days) {
+						var date = new Date();
+						date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+						var expires = "; expires=" + date.toGMTString();
+					} else var expires = "";
+					document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
+				}
+				
+				function readCookie(name) {
+					var nameEQ = escape(name) + "=";
+					var ca = document.cookie.split(';');
+					for (var i = 0; i < ca.length; i++) {
+						var c = ca[i];
+						while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+						if (c.indexOf(nameEQ) == 0) return unescape(c.substring(nameEQ.length, c.length));
+					}
+					return null;
+				}
+				
+				function eraseCookie(name) {
+					createCookie(name, "", -1);
+				}
+				
 
+				
+				$(document).ready(function(){
+					setUserAgentDropdownBasedOnCookie();
+					$("#userAgent").change(setCookie);	
+				});
+			</script>
+			<label for="userAgent">Filter By User Agent:</label><br />
+			<select id="userAgent" style="marging-left: 5px;">
+				<option value="all">All User Agents</option>
+				<option disabled="disabled"></option>
+				<option disabled="disabled">Switch to Version</option>
+				<option value="mobile"> &bull; Mobile Only</option>
+				<option value="desktop"> &bull; Desktop Only</option>
+			</select>
+		</td>
        </tr>
        <tr>
        <td style="vertical-align:middle;padding:0!important;">
