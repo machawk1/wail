@@ -1,0 +1,8 @@
+# Wintel binary
+*.exe
+
+# Mac binary
+*.app
+
+# Mac meta
+.DS_Store
