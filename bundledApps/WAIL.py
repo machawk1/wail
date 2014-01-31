@@ -14,6 +14,7 @@ import ssl
 import shutil
 from urlparse import urlparse
 from wx import *
+import waybackConfigWriter
 
 
 ###############################
@@ -57,6 +58,8 @@ aboutWindow_iconPath = "icons/whale.ico"
 
 # Advanced Tab Buttons
 buttonLabel_wayback = "View Wayback in Browser"
+buttonLabel_editWaybackConfig = "Edit Wayback Configuration"
+buttonLabel_resetWaybackConfig = "Reset Wayback Configuration"
 buttonLabel_warcProxy = "View WARC Contents"
 buttonLabel_startTomcat = "Start Tomcat Process"
 buttonLabel_stopTomcat = "Stop Tomcat Process"
@@ -385,9 +388,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
             #wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
             #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
-            self.viewWaybackInBrowserButton = wx.Button(self, 1, "View Wayback In Browser",   (0, 0), bsize)
-         
+            self.viewWaybackInBrowserButton = wx.Button(self, 1, buttonLabel_wayback,   (0, 0), bsize)
+            self.editWaybackConfiguration = wx.Button(self, 1, buttonLabel_editWaybackConfig,   (0, 25), bsize)
+            self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
+             
             self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON, self.openWaybackInBrowser)
+            self.editWaybackConfiguration.Bind(wx.EVT_BUTTON, self.openWaybackConfiguration)
+            self.resetWaybackConfiguration.Bind(wx.EVT_BUTTON, waybackConfigWriter.writeConfig)
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
                 webbrowser.open_new_tab(uri_wayback)
@@ -399,6 +406,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 if result == wx.ID_YES: # Launch Wayback
                     Wayback().fix(None)
                     self.openWaybackInBrowser(None)
+        def openWaybackConfiguration(self,button):
+            filepath = os.path.dirname(os.path.realpath(__file__))+"/tomcat/webapps/ROOT/WEB-INF/wayback.xml"
+            if sys.platform.startswith('darwin'):
+             subprocess.call(('open', filepath))
+            elif os.name == 'nt':
+             os.startfile(filepath)
+            elif os.name == 'posix':
+             subprocess.call(('xdg-open', filepath))
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)

@@ -397,18 +397,18 @@ xml = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 
+def writeConfig(self):
+ thisScriptsPath = os.path.dirname(os.path.realpath(__file__))
+ waybackRoot = thisScriptsPath+"/tomcat/webapps/ROOT"
+ filename = 'waybackNEW.xml'
 
-
-thisScriptsPath = os.path.dirname(os.path.realpath(__file__))
-waybackRoot = thisScriptsPath+"/tomcat/webapps/ROOT"
-filename = 'waybackNEW.xml'
-
-# Delete the config file if it exists
-try:
+ # Delete the config file if it exists
+ try:
     os.remove(filename)
-except OSError:
+ except OSError:
     pass
 
-waybackXML =  pystache.render(xml,{"waybackBaseDir":waybackRoot,"waybackURLPrefix":"http://localhost:8080/wayback/"})
-with open(filename, 'a') as xmlfile:
-   xmlfile.write(waybackXML)
+ waybackXML =  pystache.render(xml,{"waybackBaseDir":waybackRoot,"waybackURLPrefix":"http://localhost:8080/wayback/"})
+ with open(filename, 'a') as xmlfile:
+    xmlfile.write(waybackXML)
+   
