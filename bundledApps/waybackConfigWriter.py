@@ -1,4 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+# The purpose of this script is to write the Wayback configuration files dynamically based on
+# the location of the script. This is necessary, as absolute paths are required for WARC ingestion
+
+import os, pystache
+
+##########################################
+# wayback.xml
+##########################################
+
+xml = """<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -14,8 +23,8 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
-        wayback.basedir=/Applications/WAIL/tomcat/webapps/ROOT
-        wayback.urlprefix=http://localhost:8080/wayback/
+        wayback.basedir={{waybackBaseDir}}
+        wayback.urlprefix={{waybackURLPrefix}}
       </value>
     </property>
   </bean>
@@ -227,11 +236,11 @@
 
   <import resource="MementoReplay.xml"/>
   <bean name="8080:memento" parent="8080:wayback">
-    <property name="replayPrefix" value="http://localhost:8080/wayback/memento/" />
-    <property name="queryPrefix" value="http://localhost:8080/wayback/list/" />
+    <property name="replayPrefix" value="{{waybackURLPrefix}}memento/" />
+    <property name="queryPrefix" value="{{waybackURLPrefix}}list/" />
 	<property name="configs">
       <props>
-	    <prop key="aggregationPrefix">http://localhost:8080/wayback/list/</prop>
+	    <prop key="aggregationPrefix">{{waybackURLPrefix}}list/</prop>
       </props>
 	</property>
 
@@ -244,7 +253,7 @@
 
     <property name="uriConverter">
       <bean class="org.archive.wayback.archivalurl.ArchivalUrlResultURIConverter">
-        <property name="replayURIPrefix" value="http://localhost:8080/wayback/memento/"/>
+        <property name="replayURIPrefix" value="{{waybackURLPrefix}}memento/"/>
       </bean>
     </property>
     <property name="parser">
@@ -262,12 +271,12 @@
 
 
   <bean name="8080:list" parent="8080:memento">
-    <property name="replayPrefix" value="http://localhost:8080/wayback/memento/" />
-    <property name="queryPrefix" value="http://localhost:8080/wayback/list/" />
-    <property name="staticPrefix" value="http://localhost:8080/wayback/list/" />
+    <property name="replayPrefix" value="{{waybackURLPrefix}}memento/" />
+    <property name="queryPrefix" value="{{waybackURLPrefix}}list/" />
+    <property name="staticPrefix" value="{{waybackURLPrefix}}list/" />
 	<property name="configs">
 	  <props>
-	    <prop key="Prefix">http://localhost:8080/wayback/memento/</prop>
+	    <prop key="Prefix">{{waybackURLPrefix}}memento/</prop>
 	  </props>
 	</property>
 
@@ -384,4 +393,22 @@
   </bean>
 -->
 
-</beans>
+</beans>"""
+
+
+
+
+
+thisScriptsPath = os.path.dirname(os.path.realpath(__file__))
+waybackRoot = thisScriptsPath+"/tomcat/webapps/ROOT"
+filename = 'waybackNEW.xml'
+
+# Delete the config file if it exists
+try:
+    os.remove(filename)
+except OSError:
+    pass
+
+waybackXML =  pystache.render(xml,{"waybackBaseDir":waybackRoot,"waybackURLPrefix":"http://localhost:8080/wayback/"})
+with open(filename, 'a') as xmlfile:
+   xmlfile.write(waybackXML)
