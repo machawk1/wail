@@ -15,7 +15,7 @@ import shutil
 from urlparse import urlparse
 from wx import *
 import waybackConfigWriter
-
+from subprocess import Popen, PIPE
 
 ###############################
 # Platform independent Messages
@@ -106,17 +106,17 @@ fontSize = 8
 if 'darwin' in sys.platform:
     #OS X Specific Code here
     wailPath = "/Applications/WAIL" #this should be dynamic but doesn't work with WAIL binary
-    heritrixPath = wailPath+"/heritrix-3.1.2/"
+    heritrixPath = wailPath+"/bundledApps/heritrix-3.1.2/"
     heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath+"jobs/"
     fontSize = 10
-    tomcatPath = wailPath+"/tomcat"
+    tomcatPath = wailPath+"/bundledApps/tomcat"
     warcsFolder = tomcatPath+"/webapps/root/files1"
     tomcatPathStart = tomcatPath+"/bin/startup.sh"
     tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
-    phantomJSPath = wailPath+"/phantomjs/"
+    phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
-    warcProxyExecPath = wailPath+"/warcproxy-bin/dist/warcproxy"
+    warcProxyExecPath = wailPath+"/bundledApps/warcproxy-bin/dist/warcproxy"
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'): 
@@ -200,12 +200,22 @@ class WAILGUIFrame_Basic(wx.Panel):
         #hJob = HeritrixJob([self.uri.GetValue()])
     def archiveNow(self, button):
         self.writeHeritrixLogWithURI()
-        self.launchHeritrix()
-        self.startHeritrixJob()
-        mainAppWindow.advConfig.startTomcat(None)
+        # First check to be sure Java SE is installed. 
+        if self.javaInstalled():
+          self.launchHeritrix()
+          self.startHeritrixJob()
+          mainAppWindow.advConfig.startTomcat(None)
+        else:
+          print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
     def writeHeritrixLogWithURI(self):
         self.hJob = HeritrixJob([self.uri.GetValue()])
         self.hJob.write()
+    def javaInstalled(self):
+        # First check to be sure Java SE is installed. Move this logic elsewhere in production
+        noJava = "No Java runtime present, requesting install."
+        p = Popen(["java","--version"], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        return (noJava not in stdout) and (noJava not in stderr)
     def launchHeritrix(self):
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
