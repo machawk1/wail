@@ -123,15 +123,15 @@ elif sys.platform.startswith('win32'):
     #Win Specific Code here, this applies to both 32 and 64 bit
     #Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
 
-    heritrixPath = "C:/WAIL/heritrix-3.1.2/"
+    heritrixPath = "C:/WAIL/bundledApps/heritrix-3.1.2/"
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     warcsFolder = "/WAIL/tomcat/webapps/root/files1"
-    tomcatPathStart = "C:/WAIL/catalina_stop.bat"
-    tomcatPathStop = "C:/WAIL/catalina_stop.bat"
-    phantomJSPath = "C:/WAIL\phantomjs/"
-    phantomJSExecPath = "C:/WAIL/phantomjs/phantomjs-win.exe"
-    warcProxyExecPath = "C:/WAIL/warcproxy-bin/dist/warcproxy/warcproxy.exe"
+    tomcatPathStart = "C:/WAIL/support/catalina_stop.bat"
+    tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
+    phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
+    phantomJSExecPath = "C:/WAIL/bundledApps/phantomjs/phantomjs-win.exe"
+    warcProxyExecPath = "C:/WAIL/bundledApps/warcproxy-bin/dist/warcproxy/warcproxy.exe"
 ###############################
 # Tab Controller (Notebook)
 ############################### 
