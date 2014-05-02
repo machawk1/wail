@@ -117,6 +117,9 @@ if 'darwin' in sys.platform:
     phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
     warcProxyExecPath = wailPath+"/bundledApps/warcproxy-bin/dist/warcproxy"
+    
+    #Fix phantomJS permission
+    os.chmod(phantomJSExecPath,0744)
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'): 
