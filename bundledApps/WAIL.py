@@ -303,7 +303,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             col2 = col1+colWidth
             wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize)
             wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize)
-            wx.StaticText(self, 100, "?",                     (col2,     rowHeight*2),     cellSize)
+            wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*2),     cellSize)
             wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
              
             col3 = col2+colWidth
@@ -326,17 +326,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.CallLater(2000, self.updateServiceStatuses)            
             self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
-        #Heritrix version: 3.1.2-SNAPSHOT-20130307.141538
-            if not os.path.exists(heritrixPath+"heritrix_out.log"): return "?" 
-            f = open(heritrixPath+"heritrix_out.log",'r')
-            version = ""
-            for line in f.readlines():
-                if "Heritrix version: " in line:
-                    if abbr: version = line[18:23]
-                    else: version = line[18:]
-                    break
-            f.close()
-            return version
+            for file in os.listdir("/Applications/WAIL.app/bundledApps/heritrix-3.1.2/lib/"):
+              if file.startswith("heritrix-commons"):
+                #This is setup to read from a snapshot, what I wanted was (.*)[\.|\-] but that doesn't work
+                regex = re.compile("commons-(.*)-") 
+                return regex.findall(file)[0]
+        
+        def getWaybackVersion(self):
+            for file in os.listdir(tomcatPath+"/webapps/lib/"):
+              if file.startswith("wayback-core"):
+                regex = re.compile("core-(.*)\.")
+                return regex.findall(file)[0]
         
         def getTomcatVersion(self):
         #Apache Tomcat Version 7.0.30
