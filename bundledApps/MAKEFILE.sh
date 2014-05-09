@@ -27,13 +27,14 @@ python ./build/pyinstaller-2.1/pyinstaller.py ./bundledApps/WAIL.py --onefile --
 
 todaysVersion=$(date "+0.%Y.%m.%d")
 # OS X (& other BSDs) requires an empty string after the -i flag so it doesn't invoke unix "d" command
-#sed -i "" "s/0.0.0/$todaysVersion by Mat Kelly/g" "dist/WAIL.app/Contents/Info.plist"
+sed -i "" "s/0.0.0/$todaysVersion by Mat Kelly/g" "./dist/WAIL.app/Contents/Info.plist"
 
 # Copy the bundledApps and support directories to inside WAIL.app/
 cp -r ./bundledApps ./support ./dist/WAIL.app/
+mv ./dist/WAIL.app /Applications/
 
 #remove stale .app
-#rm -r ../WAIL.app
+rm -r ./dist
 
 #move app to WAIL root
 #mv ./dist/WAIL.app ../WAIL.app
