@@ -185,6 +185,12 @@ class TabController(wx.Frame):
         #info.License = "lic info"
         info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO))
         wx.AboutBox(info)
+    def ensureCorrectInstallation(self):
+        # Check that the file is being executed from the correct location
+        if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
+        # Alert the user to move the file. Exit the program
+           wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location")
+           sys.exit()
     def quit(self, button):
         sys.exit()
 class WAILGUIFrame_Basic(wx.Panel):
@@ -1544,5 +1550,6 @@ if __name__ == "__main__":
     #app = wx.App(redirect=True,filename="mylogfile.txt")
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
+    mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
     app.MainLoop()
