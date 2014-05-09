@@ -54,7 +54,7 @@ textLabel_defaultURI_title = "WAIL homepage"
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"  
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
-aboutWindow_iconPath = "icons/whale.ico"
+aboutWindow_iconPath = "/build/icons/whale.ico"
 
 # Advanced Tab Buttons
 buttonLabel_wayback = "View Wayback in Browser"
@@ -117,6 +117,8 @@ if 'darwin' in sys.platform:
     phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
     warcProxyExecPath = wailPath+"/bundledApps/warcproxy-bin/dist/warcproxy"
+    
+    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
     
     #Fix phantomJS permission
     os.chmod(phantomJSExecPath,0744)

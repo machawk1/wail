@@ -30,7 +30,7 @@ todaysVersion=$(date "+0.%Y.%m.%d")
 sed -i "" "s/0.0.0/$todaysVersion by Mat Kelly/g" "./dist/WAIL.app/Contents/Info.plist"
 
 # Copy the bundledApps and support directories to inside WAIL.app/
-cp -r ./bundledApps ./support ./dist/WAIL.app/
+cp -r ./bundledApps ./support ./build ./dist/WAIL.app/
 mv ./dist/WAIL.app /Applications/
 
 #remove stale .app
