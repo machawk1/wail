@@ -105,7 +105,7 @@ fontSize = 8
 
 if 'darwin' in sys.platform:
     #OS X Specific Code here
-    wailPath = "/Applications/WAIL" #this should be dynamic but doesn't work with WAIL binary
+    wailPath = "/Applications/WAIL.app" #this should be dynamic but doesn't work with WAIL binary
     heritrixPath = wailPath+"/bundledApps/heritrix-3.1.2/"
     heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath+"jobs/"
