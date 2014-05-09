@@ -20,6 +20,5 @@ You may need to install other dependencies on your system to compile from source
 Python is not required to be installed for end-users, just double-click (above) and go!
 
 <h2>Compiling</h2>
-To compile WAIL to a system-dependent executable file to rid the local Python requirement, use:
-<strike><blockquote>python pyinstaller.py (WAIL.py path) --onefile --windowed</blockquote></strike>
-<blockquote>cd bundledApps; sh MAKEFILE.sh</blockquote>
+To compile WAIL to a system-dependent executable file to rid the local Python requirement, from the root of the WAIL source directory use:
+<blockquote>sh ./bundledApps/MAKEFILE.sh</blockquote>
