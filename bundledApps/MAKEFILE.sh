@@ -32,6 +32,7 @@ sed -i "" "s/0.0.0/$todaysVersion by Mat Kelly/g" "./dist/WAIL.app/Contents/Info
 # Copy the bundledApps and support directories to inside WAIL.app/
 cp -r ./bundledApps ./support ./build ./dist/WAIL.app/
 mv ./dist/WAIL.app /Applications/
+mv ./dist/WAIL /Applications/WAILX
 
 #remove stale .app
 rm -r ./dist

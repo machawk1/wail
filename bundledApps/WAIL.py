@@ -122,6 +122,12 @@ if 'darwin' in sys.platform:
     
     #Fix phantomJS permission
     os.chmod(phantomJSExecPath,0744)
+    os.chmod(tomcatPathStart,0744)
+    os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
+
+    # Change all permissions within the app bundle (a big hammer)
+    for r,d,f in os.walk(wailPath):
+      os.chmod( r , 0777)
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'): 
