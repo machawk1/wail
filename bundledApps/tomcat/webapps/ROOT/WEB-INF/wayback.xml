@@ -14,7 +14,7 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
-        wayback.basedir=/Applications/WAIL.app/tomcat/webapps/ROOT
+        wayback.basedir=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
         wayback.urlprefix=http://localhost:8080/wayback/
       </value>
     </property>
