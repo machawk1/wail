@@ -29,13 +29,13 @@ rem
 rem $Id: service.bat 1000718 2010-09-24 06:00:00Z mturk $
 rem ---------------------------------------------------------------------------
 
-rem ---------XAMPP-------------------------------------------------------------
+rem ---------WAIL-------------------------------------------------------------
 ::::::::::::::::::::::::::::::::::::
 ::  Set JAVA_HOME or JRE_HOME     ::
 ::::::::::::::::::::::::::::::::::::
 
 echo.
-echo [XAMPP]: Searching for JDK or JRE HOME with reg query ...
+echo [WAIL]: Searching for JDK or JRE HOME with reg query ...
 set JDKKeyName64=HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Development Kit
 set JDKKeyName32=HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\JavaSoft\Java Development Kit
 set JREKeyName64=HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Runtime Environment
@@ -43,8 +43,8 @@ set JREKeyName32=HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\JavaSoft\Java Runtime E
 
 reg query "%JDKKeyName64%" /s
 if %ERRORLEVEL% EQU 1 (
-	echo . [XAMPP]: Could not find 32 bit or 64 bit JDK
-	echo . [XAMPP]: Looking for 32 bit JDK on 64 bit machine
+	echo . [WAIL]: Could not find 32 bit or 64 bit JDK
+	echo . [WAIL]: Looking for 32 bit JDK on 64 bit machine
 	goto FINDJDK32
 )
 set KeyName=%JDKKeyName64%
@@ -53,8 +53,8 @@ goto JDKRUN
 :FINDJDK32
 reg query "%JDKKeyName32%" /s
 if %ERRORLEVEL% EQU  1 (
-	echo . [XAMPP]: Could not find 32 bit JDK
-	echo . [XAMPP]: Looking for 32 bit or 64 bit JRE
+	echo . [WAIL]: Could not find 32 bit JDK
+	echo . [WAIL]: Looking for 32 bit or 64 bit JRE
 	goto FINDJRE64
 )
 set KeyName=%JDKKeyName32%
@@ -63,8 +63,8 @@ goto JDKRUN
 :FINDJRE64
 reg query "%JREKeyName64%" /s
 if %ERRORLEVEL% EQU 1 (
-	echo . [XAMPP]: Could not find 32 bit or 64 bit JRE 
-	echo . [XAMPP]: Looking for 32 bit JRE on 64 bit machine
+	echo . [WAIL]: Could not find 32 bit or 64 bit JRE 
+	echo . [WAIL]: Looking for 32 bit JRE on 64 bit machine
 	goto FINDJRE32
 )
 set KeyName=%JREKeyName64%
@@ -73,8 +73,8 @@ goto JRERUN
 :FINDJRE32
 reg query "%JREKeyName32%" /s
 if %ERRORLEVEL% EQU 1 (
-	echo . [XAMPP]: Could not find 32 bit JRE
-	echo . [XAMPP]: Could not set JAVA_HOME or JRE_HOME. Aborting
+	echo . [WAIL]: Could not find 32 bit JRE
+	echo . [WAIL]: Could not set JAVA_HOME or JRE_HOME. Aborting
 	goto ENDERROR
 )
 set KeyName=%JREKeyName32%
@@ -82,7 +82,7 @@ goto JRERUN
 
 :JDKRUN
 echo.
-echo [XAMPP]: Using JDK
+echo [WAIL]: Using JDK
 set "CURRENT_DIR=%cd%"
 set "CATALINA_HOME=%CURRENT_DIR%\tomcat"
 
@@ -90,16 +90,16 @@ set Cmd=reg query "%KeyName%" /s
 for /f "tokens=2*" %%i in ('%Cmd% ^| find "JavaHome"') do set JAVA_HOME=%%j
 
 echo.
-echo [XAMPP]: Seems fine!
-echo [XAMPP]: Set JAVA_HOME : %JAVA_HOME%
-echo [XAMPP]: Set CATALINA_HOME : %CATALINA_HOME%
+echo [WAIL]: Seems fine!
+echo [WAIL]: Set JAVA_HOME : %JAVA_HOME%
+echo [WAIL]: Set CATALINA_HOME : %CATALINA_HOME%
 echo.
 
 goto NEXT
 
 :JRERUN
 echo.
-echo [XAMPP]: Using JRE
+echo [WAIL]: Using JRE
 set "CURRENT_DIR=%cd%"
 set "CATALINA_HOME=%CURRENT_DIR%\tomcat"
 
@@ -107,9 +107,9 @@ set Cmd=reg query "%KeyName%" /s
 for /f "tokens=2*" %%i in ('%Cmd% ^| find "JavaHome"') do set JRE_HOME=%%j
 
 echo.
-echo [XAMPP]: Seems fine!
-echo [XAMPP]: Set JRE_HOME : %JRE_HOME%
-echo [XAMPP]: Set CATALINA_HOME : %CATALINA_HOME%
+echo [WAIL]: Seems fine!
+echo [WAIL]: Set JRE_HOME : %JRE_HOME%
+echo [WAIL]: Set CATALINA_HOME : %CATALINA_HOME%
 echo.
 
 :ENDERROR
@@ -117,16 +117,16 @@ exit 1
 
 :NEXT
 
-echo [XAMPP]: Finding Java Version
+echo [WAIL]: Finding Java Version
 
 set Cmd=reg query "%KeyName%" /v CurrentVersion
 for /f "tokens=2*" %%i in ('%Cmd% ^| find "CurrentVersion"') do set CVERSION=%%j
 
-echo [XAMPP]: Java Version: %CVERSION%
-echo [XAMPP]: Starting Tomcat Service Install...
+echo [WAIL]: Java Version: %CVERSION%
+echo [WAIL]: Starting Tomcat Service Install...
 echo .
 
-rem ----------END XAMPP-----------------------------------------------------------------
+rem ----------END WAIL-----------------------------------------------------------------
 
 set "SELF=%~dp0%service.bat"
 rem Guess CATALINA_HOME if not defined
@@ -259,7 +259,7 @@ set "PR_LOGPATH=%CATALINA_BASE%\logs"
 set PR_STDOUTPUT=auto
 set PR_STDERROR=auto
 
-rem XAMPP: We need special parameters for Java 7
+rem WAIL: We need special parameters for Java 7
 if "%CVERSION%" == "1.7" goto JAVA7
 :JAVA
 "%EXECUTABLE%" //US//%SERVICE_NAME% ++JvmOptions "-Djava.io.tmpdir=%CATALINA_BASE%\temp;-Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager;-Djava.util.logging.config.file=%CATALINA_BASE%\conf\logging.properties" --JvmMs 128 --JvmMx 256
