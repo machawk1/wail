@@ -66,6 +66,8 @@ buttonLabel_stopTomcat = "Stop Tomcat Process"
 buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
+buttonLabel_launchWarcProxy = "Launch WARC-Proxy"
+buttonLabel_viewArchiveFiles = "View Archive Files"
 
 groupLabel_createArchives = "Heritrix (Create Archives)"
 groupLabel_viewArchives = "Wayback Machine / Tomcat / WARC-Proxy (View Archives)"
@@ -553,16 +555,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            launchWarcProxyButton = wx.Button(self, 1, "Launch WARC-Proxy",   (0, 0), bsize)
+            launchWarcProxyButton = wx.Button(self, 1, buttonLabel_launchWarcProxy,   (0, 0), bsize)
+            viewArcchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 25), bsize)
             #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
             
             launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy)
+            viewArcchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
         def launchWarcProxy(self, button):
             cmd = warcProxyExecPath
             ret = subprocess.Popen(cmd)
             time.sleep(2)
             webbrowser.open_new_tab(uri_warcProxy)
+        def openArchivesFolder(self, button):
+            subprocess.call(["open", "-R", warcsFolder])
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
