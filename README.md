@@ -23,4 +23,4 @@ Python is not required to be installed for end-users, just double-click (above) 
 <strike>To compile WAIL to a system-dependent executable file to rid the local Python requirement, use:
 <blockquote>python pyinstaller.py (WAIL.py path) --onefile --windowed</blockquote></strike>
 
-The master branch is deprecated. Please see the <a href="https://github.com/machawk1/wail/tree/osagnostic">osagnostic branch</a> for current instructions in getting an updated copy from source.
+The master branch is deprecated. Please see the <a href="https://github.com/machawk1/wail/tree/osagnostic">osagnostic branch</a> for current instructions in obtaining an updated copy from source.
