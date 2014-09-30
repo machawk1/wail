@@ -342,8 +342,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir("/Applications/WAIL.app/bundledApps/heritrix-3.2.0/lib/"):
               if file.startswith("heritrix-commons"):
-                #This is setup to read from a snapshot, what I wanted was (.*)[\.|\-] but that doesn't work
-                regex = re.compile("commons-(.*)-") 
+                regex = re.compile("commons-(.*)\.") 
                 return regex.findall(file)[0]
         
         def getWaybackVersion(self):

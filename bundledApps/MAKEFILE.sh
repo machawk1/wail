@@ -17,7 +17,7 @@
 #  if [ -e tomcat/webapps/ROOT/index-data ]; then 
 #   rm -r tomcat/webapps/ROOT/index-data
 #  fi
-#  rm -r heritrix-3.1.2/jobs/* 
+#  rm -r heritrix-3.2.0/jobs/* 
 #  rm tomcat/webapps/ROOT/files1/*
 #fi
 
