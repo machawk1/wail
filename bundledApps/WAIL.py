@@ -108,7 +108,7 @@ fontSize = 8
 if 'darwin' in sys.platform:
     #OS X Specific Code here
     wailPath = "/Applications/WAIL.app" #this should be dynamic but doesn't work with WAIL binary
-    heritrixPath = wailPath+"/bundledApps/heritrix-3.1.2/"
+    heritrixPath = wailPath+"/bundledApps/heritrix-3.2.0/"
     heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath+"jobs/"
     fontSize = 10
@@ -136,7 +136,7 @@ elif sys.platform.startswith('win32'):
     #Win Specific Code here, this applies to both 32 and 64 bit
     #Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
 
-    heritrixPath = "C:/WAIL/bundledApps/heritrix-3.1.2/"
+    heritrixPath = "C:/WAIL/bundledApps/heritrix-3.2.0/"
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     warcsFolder = "/WAIL/tomcat/webapps/root/files1"
@@ -340,7 +340,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.CallLater(2000, self.updateServiceStatuses)            
             self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
-            for file in os.listdir("/Applications/WAIL.app/bundledApps/heritrix-3.1.2/lib/"):
+            for file in os.listdir("/Applications/WAIL.app/bundledApps/heritrix-3.2.0/lib/"):
               if file.startswith("heritrix-commons"):
                 #This is setup to read from a snapshot, what I wanted was (.*)[\.|\-] but that doesn't work
                 regex = re.compile("commons-(.*)-") 
