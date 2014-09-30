@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-init-method="init">
 
 <!--
@@ -15,7 +15,14 @@
     <property name="properties">
       <value>
         wayback.basedir=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
-        wayback.urlprefix=http://localhost:8080/wayback/
+        
+        wayback.archivedir.1=${wayback.basedir}/files1/
+        wayback.archivedir.2=${wayback.basedir}/files2/
+        
+        wayback.url.scheme=http
+        wayback.url.host=localhost
+        wayback.url.port=8080
+        wayback.url.prefix=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}
       </value>
     </property>
   </bean>
@@ -134,7 +141,7 @@
     uriConverter.
 
     This AccessPoint currently will provide access only from the machine
-    running Tomcat. To provide external access, replace "localhost.archive.org"
+    running Tomcat. To provide external access, replace "localhost"
     with your fully qualified hostname of the computer running Tomcat.
 -->
   <import resource="ArchivalUrlReplay.xml"/>
@@ -149,19 +156,22 @@
     <property name="useCollection" value="true" />
   </bean>
 
-  <bean name="8080:wayback" class="org.archive.wayback.webapp.AccessPoint">
+  <bean name="standardaccesspoint" class="org.archive.wayback.webapp.AccessPoint">
+    <property name="accessPointPath" value="${wayback.url.prefix}/wayback/"/>
+    <property name="internalPort" value="${wayback.url.port}"/>
     <property name="serveStatic" value="true" />
     <property name="bounceToReplayPrefix" value="false" />
     <property name="bounceToQueryPrefix" value="false" />
+    <property name="enableMemento" value="true" />
 
 	<!--
 	  These properties enable customized handling of query, replay, and static
 	  requests by different URL prefixes
 	-->
 	
-    <property name="replayPrefix" value="${wayback.urlprefix}" />
-    <property name="queryPrefix" value="${wayback.urlprefix}" />
-    <property name="staticPrefix" value="${wayback.urlprefix}" />
+    <property name="replayPrefix" value="${wayback.url.prefix}/wayback/" />
+    <property name="queryPrefix" value="${wayback.url.prefix}/wayback/" />
+    <property name="staticPrefix" value="${wayback.url.prefix}/wayback/" />
 
 	<!--
 		The following property will cause only results matching the exact host
@@ -191,7 +201,7 @@
 
     <property name="uriConverter">
       <bean class="org.archive.wayback.archivalurl.ArchivalUrlResultURIConverter">
-        <property name="replayURIPrefix" value="${wayback.urlprefix}"/>
+        <property name="replayURIPrefix" value="${wayback.url.prefix}/wayback/"/>
       </bean>
     </property>
 
@@ -221,82 +231,18 @@
 
 
 <!--
-  The following import and two bean definitions enable Memento access to
-  content in your collections.
--->
-
-  <import resource="MementoReplay.xml"/>
-  <bean name="8080:memento" parent="8080:wayback">
-    <property name="replayPrefix" value="http://localhost:8080/wayback/memento/" />
-    <property name="queryPrefix" value="http://localhost:8080/wayback/list/" />
-	<property name="configs">
-      <props>
-	    <prop key="aggregationPrefix">http://localhost:8080/wayback/list/</prop>
-      </props>
-	</property>
-
-    <property name="replay" ref="mementoreplay" />
-    <property name="query">
-      <bean class="org.archive.wayback.query.Renderer">
-        <property name="captureJsp" value="/WEB-INF/query/Memento.jsp" />
-      </bean>
-    </property>
-
-    <property name="uriConverter">
-      <bean class="org.archive.wayback.archivalurl.ArchivalUrlResultURIConverter">
-        <property name="replayURIPrefix" value="http://localhost:8080/wayback/memento/"/>
-      </bean>
-    </property>
-    <property name="parser">
-      <bean class="org.archive.wayback.memento.MementoRequestParser">
-        <property name="maxRecords" value="10000" />
-        <property name="earliestTimestamp" value="1996" />
-      </bean>
-    </property>
-    <property name="exception">
-      <bean class="org.archive.wayback.exception.BaseExceptionRenderer">
-        <property name="errorJsp" value="/WEB-INF/exception/TimegateError.jsp" />
-      </bean>
-    </property>
-  </bean>
-
-
-  <bean name="8080:list" parent="8080:memento">
-    <property name="replayPrefix" value="http://localhost:8080/wayback/memento/" />
-    <property name="queryPrefix" value="http://localhost:8080/wayback/list/" />
-    <property name="staticPrefix" value="http://localhost:8080/wayback/list/" />
-	<property name="configs">
-	  <props>
-	    <prop key="Prefix">http://localhost:8080/wayback/memento/</prop>
-	  </props>
-	</property>
-
-    <property name="replay" ref="archivalurlreplay" />
-    <property name="query">
-      <bean class="org.archive.wayback.query.Renderer">
-        <property name="captureJsp" value="/WEB-INF/query/ORE.jsp" />
-      </bean>
-    </property>
-
-    <property name="uriConverter">
-      <bean class="org.archive.wayback.archivalurl.ArchivalUrlResultURIConverter">
-        <property name="replayURIPrefix" value="http://localhost:8080/list/"/>
-      </bean>
-    </property>
-  </bean>
-
-
-<!--
-    The following AccessPoint inherits all configuration from the 8080:wayback
+    The following AccessPoint inherits all configuration from the standardaccesspoint
     AccessPoint, but provides a OpenSearch format query results.
          
     Note: the links generated by this AccessPoint drive to the parent 
-         8080:wayback AccessPoint: presumably users following links from here
+         standardaccesspoint AccessPoint: presumably users following links from here
          will prefer the HTML interface. 
  -->
  <!--
-  <bean name="8080:opensearch" parent="8080:wayback">
-    <property name="queryPrefix" value="http://localhost.archive.org:8080/opensearch/" />
+  <bean name="opensearchaccesspoint" parent="standardaccesspoint">
+    <property name="accessPointPath" value="${wayback.url.prefix}/opensearch/"/>
+    <property name="internalPort" value="${wayback.url.port}"/>
+    <property name="queryPrefix" value="${wayback.url.prefix}/opensearch/" />
     <property name="query">
       <bean class="org.archive.wayback.query.Renderer">
         <property name="captureJsp" value="/WEB-INF/query/OpenSearchCaptureResults.jsp" />
@@ -313,7 +259,7 @@
   -->
 
 <!--
-    The following AccessPoint inherits all configuration from the 8080:wayback
+    The following AccessPoint inherits all configuration from the standardaccesspoint
     AccessPoint, but provides a DomainPrefix Replay UI to the same collection.
     These two access points can be used simultaneously on the same Tomcat 
     installation.
@@ -321,31 +267,32 @@
     Note: using this AccessPoint requires adding a "Connector" on port 8081
          in your Tomcat's server.xml file.
          
-    Note: the hostname suffix localhost.archive.org has a special DNS wildcard
+    Note: the hostname suffix localhost has a special DNS wildcard
          entry, so all hostnames suffixed with this value resolve to 127.0.0.1 
  -->
 <!--
   <import resource="DomainPrefixReplay.xml"/>
-  <bean name="8081" parent="8080:wayback">
-    <property name="queryPrefix" value="http://localhost.archive.org:8081/" />
-    <property name="replayPrefix" value="http://localhost.archive.org:8081/" />
-    <property name="staticPrefix" value="http://localhost.archive.org:8081/" />
+  <bean name="prefixaccesspoint" parent="standardaccesspoint">
+    <property name="internalPort" value="8081"/>
+    <property name="queryPrefix" value="http://localhost:8081/" />
+    <property name="replayPrefix" value="http://localhost:8081/" />
+    <property name="staticPrefix" value="http://localhost:8081/" />
     <property name="replay" ref="domainprefixreplay" />
     <property name="uriConverter">
       <bean class="org.archive.wayback.domainprefix.DomainPrefixResultURIConverter">
-        <property name="hostPort" value="localhost.archive.org:8081" />
+        <property name="hostPort" value="localhost:8081" />
       </bean>
     </property>
     <property name="parser">
       <bean class="org.archive.wayback.domainprefix.DomainPrefixCompositeRequestParser">
-        <property name="hostPort" value="localhost.archive.org:8081" />
+        <property name="hostPort" value="localhost:8081" />
         <property name="maxRecords" value="1000" />
       </bean>
     </property>
   </bean>
 -->
 <!--
-    The following AccessPoint inherits all configuration from the 8080:wayback
+    The following AccessPoint inherits all configuration from the standardaccesspoint
     AccessPoint, but provides a Proxy Replay UI to the same collection. These
     two access points can be used simultaneously on the same Tomcat 
     installation.
@@ -355,26 +302,28 @@
  -->
 <!--
   <import resource="ProxyReplay.xml"/>
-  <bean name="8090" parent="8080:wayback">
+  <bean name="proxyaccesspoint" parent="standardaccesspoint">
+    <property name="internalPort" value="8090"/>
     <property name="serveStatic" value="true" />
     <property name="bounceToReplayPrefix" value="false" />
     <property name="bounceToQueryPrefix" value="false" />
     <property name="refererAuth" value="" />
+    <property name="accessPointPath" value="8090"/>
 
-    <property name="staticPrefix" value="http://localhost.archive.org:8090/" />
-    <property name="replayPrefix" value="http://localhost.archive.org:8090/" />
-    <property name="queryPrefix" value="http://localhost.archive.org:8090/" />
+    <property name="staticPrefix" value="http://localhost:8090/" />
+    <property name="replayPrefix" value="http://localhost:8090/" />
+    <property name="queryPrefix" value="http://localhost:8090/" />
     <property name="replay" ref="proxyreplay" />
     <property name="uriConverter">
       <bean class="org.archive.wayback.proxy.RedirectResultURIConverter">
-        <property name="redirectURI" value="http://localhost.archive.org:8090/jsp/QueryUI/Redirect.jsp" />
+        <property name="redirectURI" value="http://localhost:8090/jsp/QueryUI/Redirect.jsp" />
       </bean>
     </property>
     <property name="parser">
       <bean class="org.archive.wayback.proxy.ProxyRequestParser">
         <property name="localhostNames">
           <list>
-            <value>localhost.archive.org</value>
+            <value>localhost</value>
           </list>
         </property>
         <property name="maxRecords" value="1000" />

@@ -47,17 +47,20 @@ Date firstYearDate = data.yearPartitions.get(0).getStart();
 Date lastYearDate = data.yearPartitions.get(data.yearPartitions.size()-1).getEnd();
 
 int resultIndex = 1;
-int imgWidth = 375;
+int imgWidth = 0;
 int imgHeight = 27;
 int monthWidth = 2;
 int yearWidth = 25;
+
+for (int year = 1996; year <= Calendar.getInstance().get(Calendar.YEAR); year++)
+    imgWidth += yearWidth;
+
 String yearFormatKey = "PartitionSize.dateHeader.yearGraphLabel";
 String encodedGraph = data.computeGraphString(yearFormatKey,imgWidth,imgHeight);
 String graphImgUrl = graphJspPrefix + "jsp/graph.jsp?graphdata=" + encodedGraph;
 // TODO: this is archivalUrl specific:
 String starLink = fmt.escapeHtml(queryPrefix + wbRequest.getReplayTimestamp() + 
 		"*/" + searchUrl);
-		System.out.println("foo"+results);
 %>
 <!-- BEGIN WAYBACK TOOLBAR INSERT -->
 
@@ -175,7 +178,7 @@ function trackMouseMove(event,element) {
 
        <table style="border-collapse:collapse;margin:0 auto;padding:0;width:570px;"><tbody><tr>
        <td style="padding:3px 0;" colspan="2">
-       <form target="_top" method="get" action="<%= queryPrefix %>query" name="wmtb" id="wmtb" style="margin:0!important;padding:0!important;"><input type="text" name="<%= WaybackRequest.REQUEST_URL %>" id="wmtbURL" value="<%= searchUrlSafe %>" style="width:400px;font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;"/><input type="hidden" name="<%= WaybackRequest.REQUEST_TYPE %>" value="<%= WaybackRequest.REQUEST_REPLAY_QUERY %>"><input type="hidden" name="<%= WaybackRequest.REQUEST_DATE %>" value="<%= data.curResult.getCaptureTimestamp() %>"><input type="submit" value="Go" style="font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;margin-left:5px;"/><span id="wm_tb_options" style="display:block;"></span></form>
+           <form target="_top" method="get" action="<%= queryPrefix %>query" name="wmtb" id="wmtb" style="margin:0!important;padding:0!important;"><input type="text" name="<%= WaybackRequest.REQUEST_URL %>" id="wmtbURL" value="<%= searchUrlSafe %>" maxlength="256" style="width:400px;font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;"/><input type="hidden" name="<%= WaybackRequest.REQUEST_TYPE %>" value="<%= WaybackRequest.REQUEST_REPLAY_QUERY %>"><input type="hidden" name="<%= WaybackRequest.REQUEST_DATE %>" value="<%= data.curResult.getCaptureTimestamp() %>"><input type="submit" value="Go" style="font-size:11px;font-family:'Lucida Grande','Arial',sans-serif;margin-left:5px;"/><span id="wm_tb_options" style="display:block;"></span></form>
        </td>
        <td style="vertical-align:bottom;padding:5px 0 0 0!important;" rowspan="2">
            <table style="border-collapse:collapse;width:110px;color:#99a;font-family:'Helvetica','Lucida Grande','Arial',sans-serif;"><tbody>
@@ -274,60 +277,7 @@ function trackMouseMove(event,element) {
            </tr>
            </tbody></table>
        </td>
-		<td style="padding-left: 1.0em;">
-			<script type="text/javascript">
-				function setCookie(){
-					createCookie("waybackUserAgent",$("#userAgent").find(":selected").attr("value"),30);
-				}
-	
-				function setUserAgentDropdownBasedOnCookie(){
-					var cookieValue = readCookie("waybackUserAgent");
-					if(cookieValue){
-						$("#userAgent").val(readCookie("waybackUserAgent"));
-					}
-				}
-								
-				/* From QuirksMode http://www.quirksmode.org/js/cookies.html */
-				function createCookie(name, value, days) {
-					if (days) {
-						var date = new Date();
-						date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-						var expires = "; expires=" + date.toGMTString();
-					} else var expires = "";
-					document.cookie = escape(name) + "=" + escape(value) + expires + "; path=/";
-				}
-				
-				function readCookie(name) {
-					var nameEQ = escape(name) + "=";
-					var ca = document.cookie.split(';');
-					for (var i = 0; i < ca.length; i++) {
-						var c = ca[i];
-						while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-						if (c.indexOf(nameEQ) == 0) return unescape(c.substring(nameEQ.length, c.length));
-					}
-					return null;
-				}
-				
-				function eraseCookie(name) {
-					createCookie(name, "", -1);
-				}
-				
 
-				
-				$(document).ready(function(){
-					setUserAgentDropdownBasedOnCookie();
-					$("#userAgent").change(setCookie);	
-				});
-			</script>
-			<label for="userAgent">Filter By User Agent:</label><br />
-			<select id="userAgent" style="marging-left: 5px;">
-				<option value="all">All User Agents</option>
-				<option disabled="disabled"></option>
-				<option disabled="disabled">Switch to Version</option>
-				<option value="mobile"> &bull; Mobile Only</option>
-				<option value="desktop"> &bull; Desktop Only</option>
-			</select>
-		</td>
        </tr>
        <tr>
        <td style="vertical-align:middle;padding:0!important;">
@@ -366,7 +316,7 @@ function trackMouseMove(event,element) {
    </td>
    <td style="text-align:right;padding:5px;width:65px;font-size:11px!important;">
        <a href="javascript:;" onclick="document.getElementById('wm-ipp').style.display='none';" style="display:block;padding-right:18px;background:url(<%= staticPrefix %>images/toolbar/wm_tb_close.png) no-repeat 100% 0;color:#33f;font-family:'Lucida Grande','Arial',sans-serif;margin-bottom:23px;background-color:transparent;border:none;" title="<%= fmt.format("ToolBar.closeTitle") %>"><%= fmt.format("ToolBar.closeText") %></a>
-       <a href="https://webarchive.jira.com/wiki/display/WWMOS/FAQs" style="display:block;padding-right:18px;background:url(<%= staticPrefix %>images/toolbar/wm_tb_help.png) no-repeat 100% 0;color:#33f;font-family:'Lucida Grande','Arial',sans-serif;background-color:transparent;border:none;" title="<%= fmt.format("ToolBar.helpTitle") %>"><%= fmt.format("ToolBar.helpText") %></a>
+       <a href="<%= fmt.format("UIGlobal.helpUrl") %>" style="display:block;padding-right:18px;background:url(<%= staticPrefix %>images/toolbar/wm_tb_help.png) no-repeat 100% 0;color:#33f;font-family:'Lucida Grande','Arial',sans-serif;background-color:transparent;border:none;" title="<%= fmt.format("ToolBar.helpTitle") %>"><%= fmt.format("ToolBar.helpText") %></a>
    </td>
    </tr></tbody></table>
 

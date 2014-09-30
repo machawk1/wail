@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-init-method="init">
 
 <!--
@@ -36,20 +36,19 @@
     as needed, but each must have a unique 'name' property.
   -->
 
-  
   <bean id="datadirs" class="org.springframework.beans.factory.config.ListFactoryBean">
     <property name="sourceList">
       <list>
- 	  <bean class="org.archive.wayback.resourcestore.resourcefile.DirectoryResourceFileSource">
+        <bean class="org.archive.wayback.resourcestore.resourcefile.DirectoryResourceFileSource">
           <property name="name" value="files1" />
-          <property name="prefix" value="${wayback.basedir}/files1/" />
+          <property name="prefix" value="${wayback.archivedir.1}" />
           <property name="recurse" value="false" />
         </bean>
-        <!--<bean class="org.archive.wayback.resourcestore.resourcefile.DirectoryResourceFileSource">
+        <bean class="org.archive.wayback.resourcestore.resourcefile.DirectoryResourceFileSource">
           <property name="name" value="files2" />
-          <property name="prefix" value="${wayback.basedir}/files2/" />
+          <property name="prefix" value="${wayback.archivedir.2}" />
           <property name="recurse" value="false" />
-        </bean>-->
+        </bean>
       </list>
     </property>
   </bean>
@@ -66,6 +65,7 @@
       </bean>
     </property>
     <property name="maxRecords" value="100000000" />
+    <property name="dedupeRecords" value="true" />
   </bean>
 
 <!--

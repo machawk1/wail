@@ -1,0 +1,9 @@
+('/Users/machawk1/Desktop/wail/dist/WAIL',
+ False,
+ False,
+ 'build/icons/whale_1024.icns',
+ None,
+ [],
+ None,
+ False,
+ 1412115314)

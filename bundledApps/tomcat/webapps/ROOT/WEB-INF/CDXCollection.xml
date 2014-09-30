@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
        default-init-method="init">
 
 <!--
@@ -30,11 +30,7 @@
 
     <property name="resourceStore">
       <bean class="org.archive.wayback.resourcestore.LocationDBResourceStore">
-        <property name="db">
-          <bean class="org.archive.wayback.resourcestore.locationdb.FlatFileResourceFileLocationDB">
-            <property name="path" value="${wayback.basedir}/path-index.txt" />
-          </bean>
-        </property>
+        <property name="db" ref="resourcefilelocationdb" />
       </bean>
     </property>
 
@@ -67,6 +63,7 @@
 -->      
         </property>
         <property name="maxRecords" value="10000" />
+        <property name="dedupeRecords" value="true" />    
       </bean>
     </property>
   </bean>

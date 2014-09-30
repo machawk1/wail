@@ -347,7 +347,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         
         def getWaybackVersion(self):
             for file in os.listdir(tomcatPath+"/webapps/lib/"):
-              if file.startswith("wayback-core"):
+              if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
         
