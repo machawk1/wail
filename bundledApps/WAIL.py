@@ -13,7 +13,7 @@ import re
 import ssl
 import shutil
 from urlparse import urlparse
-from wx import *
+#from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
 
@@ -140,6 +140,7 @@ elif sys.platform.startswith('win32'):
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     warcsFolder = "/WAIL/tomcat/webapps/root/files1"
+    tomcatPath = "C:/WAIL/bundledApps/tomcat"
     tomcatPathStart = "C:/WAIL/support/catalina_stop.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
     phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
@@ -148,8 +149,6 @@ elif sys.platform.startswith('win32'):
 ###############################
 # Tab Controller (Notebook)
 ############################### 
- 
-
  
 class TabController(wx.Frame):
     def __init__(self):
@@ -340,7 +339,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.CallLater(2000, self.updateServiceStatuses)            
             self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
-            for file in os.listdir("/Applications/WAIL.app/bundledApps/heritrix-3.2.0/lib/"):
+            for file in os.listdir(heritrixPath+"lib/"):
               if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.") 
                 return regex.findall(file)[0]
