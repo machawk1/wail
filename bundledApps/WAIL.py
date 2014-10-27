@@ -139,8 +139,8 @@ elif sys.platform.startswith('win32'):
     heritrixPath = "C:/WAIL/bundledApps/heritrix-3.2.0/"
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
-    warcsFolder = "/WAIL/tomcat/webapps/root/files1"
     tomcatPath = "C:/WAIL/bundledApps/tomcat"
+    warcsFolder = tomcatPath + "/webapps/ROOT/files1"
     tomcatPathStart = "C:/WAIL/support/catalina_stop.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
     phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
@@ -566,7 +566,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             time.sleep(2)
             webbrowser.open_new_tab(uri_warcProxy)
         def openArchivesFolder(self, button):
-            subprocess.call(["open", "-R", warcsFolder])
+            if sys.platform.startswith('win32'):
+               if os.path.isdir(warcsFolder) and os.path.exists(warcsFolder):
+                 os.startfile(warcsFolder)
+               else:
+                 wx.MessageBox("No archive folder exists just yet. Try running a crawl.", "Command Failed")
+            else:
+              subprocess.call(["open", "-R", warcsFolder])
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
