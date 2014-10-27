@@ -84,7 +84,7 @@ goto JRERUN
 echo.
 echo [WAIL]: Using JDK
 set "CURRENT_DIR=%cd%"
-set "CATALINA_HOME=%CURRENT_DIR%\tomcat"
+set "CATALINA_HOME=%CURRENT_DIR%\bundledApps\tomcat"
 
 set Cmd=reg query "%KeyName%" /s
 for /f "tokens=2*" %%i in ('%Cmd% ^| find "JavaHome"') do set JAVA_HOME=%%j
@@ -101,7 +101,7 @@ goto NEXT
 echo.
 echo [WAIL]: Using JRE
 set "CURRENT_DIR=%cd%"
-set "CATALINA_HOME=%CURRENT_DIR%\tomcat"
+set "CATALINA_HOME=%CURRENT_DIR%\bundledApps\tomcat"
 
 set Cmd=reg query "%KeyName%" /s
 for /f "tokens=2*" %%i in ('%Cmd% ^| find "JavaHome"') do set JRE_HOME=%%j
