@@ -23,7 +23,7 @@
 
 #arch -i386 python ../build/pyinstaller-2.0/pyinstaller.py WAIL.py --onefile --windowed
 # Above no longer works on OS X>10.8.5 though it might be a homebrew vs. Apple python issue.
-python ./build/pyinstaller-2.1/pyinstaller.py ./bundledApps/WAIL.py --onefile --windowed --icon "./build/icons/whale_1024.icns"
+python ./build/pyinstaller-2.1/pyinstaller.py ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns" #--distpath="/Applications"
 
 todaysVersion=$(date "+0.%Y.%m.%d")
 # OS X (& other BSDs) requires an empty string after the -i flag so it doesn't invoke unix "d" command
@@ -34,12 +34,8 @@ cp -r ./bundledApps ./support ./build ./dist/WAIL.app/
 mv ./dist/WAIL.app /Applications/
 mv ./dist/WAIL /Applications/WAILX
 
-#remove stale .app
+#remove installation remnants
 rm -r ./dist
-
-#move app to WAIL root
-#mv ./dist/WAIL.app ../WAIL.app
-#sleep 3
 
 #cleanup
 #rm -r dist
