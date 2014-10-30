@@ -6,3 +6,6 @@
 
 # Mac meta
 .DS_Store
+
+# Compilation artifacts
+build/*
