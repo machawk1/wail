@@ -7,6 +7,8 @@
 #ignore build remnants
 build/*
 !build/icons*
+bundledApps/waybackConfigWriter.pyc
+WAIL.spec
 
 # Mac meta
 .DS_Store
