@@ -4,5 +4,8 @@
 # Mac binary
 *.app
 
+build/*
+!build/icons*
+
 # Mac meta
 .DS_Store
