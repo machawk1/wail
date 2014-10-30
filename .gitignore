@@ -4,6 +4,7 @@
 # Mac binary
 *.app
 
+#ignore build remnants
 build/*
 !build/icons*
 
