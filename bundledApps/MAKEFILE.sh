@@ -36,6 +36,7 @@ mv ./dist/WAIL /Applications/WAILX
 
 #remove installation remnants
 rm -r ./dist
+rm -r ./build/WAIL
 
 #cleanup
 #rm -r dist

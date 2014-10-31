@@ -554,25 +554,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
             launchWarcProxyButton = wx.Button(self, 1, buttonLabel_launchWarcProxy,   (0, 0), bsize)
-            viewArcchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 25), bsize)
+            viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 25), bsize)
             #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
             
             launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy)
-            viewArcchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
+            viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
         def launchWarcProxy(self, button):
             cmd = warcProxyExecPath
             ret = subprocess.Popen(cmd)
             time.sleep(2)
             webbrowser.open_new_tab(uri_warcProxy)
         def openArchivesFolder(self, button):
+            if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
+            
             if sys.platform.startswith('win32'):
-               if os.path.isdir(warcsFolder) and os.path.exists(warcsFolder):
                  os.startfile(warcsFolder)
-               else:
-                 wx.MessageBox("No archive folder exists just yet. Try running a crawl.", "Command Failed")
             else:
-              subprocess.call(["open", "-R", warcsFolder])
+              subprocess.call(["open", warcsFolder])
+              #subprocess.check_call(['open', '--', tomcatPath+"/webapps/root/"])
+              #subprocess.Popen(["open", tomcatPath+"/webapps/root/"])
+
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
