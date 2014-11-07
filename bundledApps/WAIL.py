@@ -16,6 +16,18 @@ from urlparse import urlparse
 #from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
+from multiprocessing import Pool # For a more asynchronous UI, esp with accessible()s
+
+#import tornado.ioloop
+#import tornado.web
+
+#class MainHandler(tornado.web.RequestHandler):
+#    def get(self):
+#        self.write("Hello, world")
+
+#application = tornado.web.Application([
+#    (r"/", MainHandler),
+#])
 
 ###############################
 # Platform independent Messages
@@ -193,11 +205,12 @@ class TabController(wx.Frame):
         info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO))
         wx.AboutBox(info)
     def ensureCorrectInstallation(self):
+        #TODO: properly implement this
         # Check that the file is being executed from the correct location
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
         # Alert the user to move the file. Exit the program
-           wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location")
-           sys.exit()
+           wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location",)
+           #sys.exit()
     def quit(self, button):
         sys.exit()
 class WAILGUIFrame_Basic(wx.Panel):
@@ -310,6 +323,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
              
             col1 = 65+colWidth*1
 
+            #pool = Pool(processes=1)  # attempt at making this more asynchronous
+            #pool.apply_async(self.updateServiceStatuses)
             self.updateServiceStatuses()   
             #wx.CallLater(0, self.updateServiceStatuses) 
              
@@ -337,7 +352,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
             
             #wx.CallLater(2000, self.updateServiceStatuses)            
-            self.updateServiceStatuses()  
+            #pool.apply_async(self.updateServiceStatuses)
+            #self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath+"lib/"):
               if file.startswith("heritrix-commons"):
@@ -371,6 +387,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             col1 = 65+colWidth*1
             cellSize = (150, rowHeight)
             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
+            
             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
             waybackAccessible = serviceEnabled[Wayback().accessible()]
 
@@ -1566,8 +1583,12 @@ mainAppWindow = None
 
 if __name__ == "__main__":
     #app = wx.App(redirect=True,filename="mylogfile.txt")
+    #application.listen(8888)
+    #tornado.ioloop.IOLoop.instance().start()
+    
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
     app.MainLoop()
+    
