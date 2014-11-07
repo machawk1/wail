@@ -153,7 +153,7 @@ elif sys.platform.startswith('win32'):
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     tomcatPath = "C:/WAIL/bundledApps/tomcat"
     warcsFolder = tomcatPath + "/webapps/ROOT/files1"
-    tomcatPathStart = "C:/WAIL/support/catalina_stop.bat"
+    tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
     phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
     phantomJSExecPath = "C:/WAIL/bundledApps/phantomjs/phantomjs-win.exe"
