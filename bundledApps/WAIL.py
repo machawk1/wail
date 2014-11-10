@@ -60,6 +60,7 @@ buttonLabel_archiveNow = "Archive Now!"
 buttonLabel_checkStatus = "Check Archived Status"
 buttonLabel_viewArchive = "View Archive"
 buttonLabel_uri = "URL:"
+buttonLabel_fix = "Fix"
 
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
@@ -312,7 +313,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             colWidth = 60
-            rowHeight = 18
+            rowHeight = 20#18
             cellSize = (150, rowHeight)
             
             col0 = colWidth*0+10
@@ -335,13 +336,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
              
             col3 = col2+colWidth
-            buttonSize = (50, rowHeight)
+            buttonSize = (50, rowHeight-6)
             smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
-            self.fix_heritrix = wx.Button(self, 1, "Fix",                (col3,     rowHeight*1),     buttonSize)
+            self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*1),     buttonSize)
             self.fix_heritrix.SetFont(smallFont)
-            self.fix_wayback = wx.Button(self, 1, "Fix",                (col3,     rowHeight*2),     buttonSize)
+            self.fix_wayback = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize)
             self.fix_wayback.SetFont(smallFont)
-            self.fix_tomcat = wx.Button(self, 1, "Fix",                (col3,     rowHeight*3),     buttonSize)
+            self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize)
             self.fix_tomcat.SetFont(smallFont)
             
             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
