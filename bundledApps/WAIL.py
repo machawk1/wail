@@ -12,6 +12,7 @@ import glob
 import re
 import ssl
 import shutil
+import errno
 from urlparse import urlparse
 #from wx import *
 import waybackConfigWriter
@@ -457,11 +458,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
             self.viewWaybackInBrowserButton = wx.Button(self, 1, buttonLabel_wayback,   (0, 0), bsize)
             self.editWaybackConfiguration = wx.Button(self, 1, buttonLabel_editWaybackConfig,   (0, 25), bsize)
-            self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
+            #self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
              
             self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON, self.openWaybackInBrowser)
             self.editWaybackConfiguration.Bind(wx.EVT_BUTTON, self.openWaybackConfiguration)
-            self.resetWaybackConfiguration.Bind(wx.EVT_BUTTON, waybackConfigWriter.writeConfig)
+            #self.resetWaybackConfiguration.Bind(wx.EVT_BUTTON, waybackConfigWriter.writeConfig)
+            
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
                 webbrowser.open_new_tab(uri_wayback)
@@ -600,6 +602,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             
             launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy)
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
+            self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 50), bsize)
+            self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates) 
+            
         def launchWarcProxy(self, button):
             cmd = warcProxyExecPath
             ret = subprocess.Popen(cmd)
@@ -614,7 +619,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
               subprocess.call(["open", warcsFolder])
               #subprocess.check_call(['open', '--', tomcatPath+"/webapps/root/"])
               #subprocess.Popen(["open", tomcatPath+"/webapps/root/"])
-
+        def checkForUpdates(self, button):
+            # check if an updates version is available
+            
+            # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
+            
+            d = wx.MessageDialog(self, "Do you Want to Update WAIL?",
+                                      "There is an update available for the main WAIL application", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+            result = d.ShowModal()
+            d.Destroy()
+            if result == wx.ID_YES: # Launch Wayback
+                print "The user wants to update!"
+                
+                copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
+    
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
@@ -1613,6 +1631,14 @@ def tail(filename, lines=1, _buffer=4098):
             break
         block_counter -= 1
     return lines_found[-lines:]
+
+def copyanything(src, dst):
+    try:
+        shutil.copytree(src, dst)
+    except OSError as exc: # python >2.5
+        if exc.errno == errno.ENOTDIR:
+            shutil.copy(src, dst)
+        else: raise
 
 mainAppWindow = None
 
