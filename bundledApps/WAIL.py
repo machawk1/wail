@@ -474,7 +474,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     Wayback().fix(None)
                     self.openWaybackInBrowser(None)
         def openWaybackConfiguration(self,button):
-            filepath = os.path.dirname(os.path.realpath(__file__))+"/tomcat/webapps/ROOT/WEB-INF/wayback.xml"
+            filepath = tomcatPath+"/webapps/ROOT/WEB-INF/wayback.xml"
             if sys.platform.startswith('darwin'):
              subprocess.call(('open', filepath))
             elif os.name == 'nt':
