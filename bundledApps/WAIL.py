@@ -61,6 +61,7 @@ buttonLabel_checkStatus = "Check Archived Status"
 buttonLabel_viewArchive = "View Archive"
 buttonLabel_uri = "URL:"
 buttonLabel_fix = "Fix"
+buttonLabel_kill = "Kill"
 
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
@@ -138,8 +139,9 @@ if 'darwin' in sys.platform:
     #Fix phantomJS permission
     os.chmod(phantomJSExecPath,0744)
     os.chmod(tomcatPathStart,0744)
+    os.chmod(tomcatPathStop,0744)
     os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
-
+    
     # Change all permissions within the app bundle (a big hammer)
     for r,d,f in os.walk(wailPath):
       os.chmod( r , 0777)
@@ -352,9 +354,23 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
             
+            col4 = col3+colWidth
+             
+            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize)
+            self.kill_heritrix.SetFont(smallFont)
+            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize)
+            self.kill_wayback.SetFont(smallFont)
+            self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize)
+            self.kill_tomcat.SetFont(smallFont)
+            
+            self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
+            self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
+            self.kill_tomcat.Bind(wx.EVT_BUTTON, Wayback().kill)
+     
+            
             #wx.CallLater(2000, self.updateServiceStatuses)            
             #pool.apply_async(self.updateServiceStatuses)
-            #self.updateServiceStatuses()  
+            self.updateServiceStatuses()  
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath+"lib/"):
               if file.startswith("heritrix-commons"):
@@ -414,15 +430,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
              #enable/disable FIX buttons based on service status
             if heritrixAccessible is serviceEnabledLabel_YES:
                 self.fix_heritrix.Disable()
+                self.kill_heritrix.Enable()
             else:
                 self.fix_heritrix.Enable()
+                self.kill_heritrix.Disable()
               
             if tomcatAccessible is serviceEnabledLabel_YES:
                 self.fix_wayback.Disable()
                 self.fix_tomcat.Disable()
+                self.kill_wayback.Enable()
+                self.kill_tomcat.Enable()
             else:
                 self.fix_wayback.Enable()      
-                self.fix_tomcat.Enable()            
+                self.fix_tomcat.Enable()
+                self.kill_wayback.Disable()      
+                self.kill_tomcat.Disable()              
              
              
              ##################################             
@@ -816,6 +838,11 @@ class Wayback(Service):
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()    
+    def kill(self,button):
+        cmd = tomcatPathStop
+        ret = subprocess.Popen(cmd)
+        time.sleep(3)
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses() 
 class Tomcat(Service):
     uri = uri_wayback
 class Heritrix(Service):
@@ -846,6 +873,13 @@ class Heritrix(Service):
     def fix(self, button):
         mainAppWindow.basicConfig.launchHeritrix() 
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+    def kill(self,button):
+        print "Unimplemented :("
+        return
+        cmd = tomcatPathStop
+        ret = subprocess.Popen(cmd)
+        time.sleep(3)
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses() 
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
