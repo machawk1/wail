@@ -133,15 +133,18 @@ if 'darwin' in sys.platform:
     tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
     phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
-    warcProxyExecPath = wailPath+"/bundledApps/warcproxy-bin/dist/warcproxy"
+    warcProxyExecPath = wailPath+"/bundledApps/warc-proxy/mac/dist/warcproxy"
     
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
     
     #Fix phantomJS permission
     os.chmod(phantomJSExecPath,0744)
+    #Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart,0744)
     os.chmod(tomcatPathStop,0744)
     os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
+    #Fix warc-proxy bin permission
+    os.chmod(warcProxyExecPath,0744)
     
     # Change all permissions within the app bundle (a big hammer)
     for r,d,f in os.walk(wailPath):
@@ -607,6 +610,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             
         def launchWarcProxy(self, button):
             cmd = warcProxyExecPath
+            print cmd
             ret = subprocess.Popen(cmd)
             time.sleep(2)
             webbrowser.open_new_tab(uri_warcProxy)
