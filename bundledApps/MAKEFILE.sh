@@ -25,7 +25,7 @@
 # Above no longer works on OS X>10.8.5 though it might be a homebrew vs. Apple python issue.
 pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns" #--distpath="/Applications"
 
-todaysVersion=$(date "+0.%Y.%m.%d")
+todaysVersion="1.0" #$(date "+0.%Y.%m.%d") #This is bad practice, as the source code specifies a version internally, too. Unify this to one src. Until then, duct tape!
 # OS X (& other BSDs) requires an empty string after the -i flag so it doesn't invoke unix "d" command
 sed -i "" "s/0.0.0/$todaysVersion by Mat Kelly/g" "./dist/WAIL.app/Contents/Info.plist"
 

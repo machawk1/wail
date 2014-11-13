@@ -30,6 +30,8 @@ from multiprocessing import Pool # For a more asynchronous UI, esp with accessib
 #    (r"/", MainHandler),
 #])
 
+WAIL_VERSION = "1.0"
+
 ###############################
 # Platform independent Messages
 ###############################
@@ -203,7 +205,7 @@ class TabController(wx.Frame):
     def displayAboutMenu(self, button):
         info = wx.AboutDialogInfo()
         info.Name = aboutWindow_appName
-        info.Version = "v. " + datetime.date.today().strftime('0.%Y.%m.%d')
+        info.Version = "v. " + WAIL_VERSION#datetime.date.today().strftime('0.%Y.%m.%d')
         info.Copyright = aboutWindow_author
         # info.Description = "foo"
         info.WebSite = (textLabel_defaultURI, textLabel_defaultURI_title)
@@ -598,14 +600,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            launchWarcProxyButton = wx.Button(self, 1, buttonLabel_launchWarcProxy,   (0, 0), bsize)
-            viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 25), bsize)
+            #launchWarcProxyButton = wx.Button(self, 1, buttonLabel_launchWarcProxy,   (0, 0), bsize) # Disabled until dependencies are resolved with new WAIL hierarchy
+            viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 0), bsize)
             #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
             
-            launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy)
+            #launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy) # Disabled until dependencies are resolved with new WAIL hierarchy
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
-            self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 50), bsize)
+            self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates) 
             
         def launchWarcProxy(self, button):
@@ -628,7 +630,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             
             # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
             
-            d = wx.MessageDialog(self, "Do you Want to Update WAIL?",
+            d = wx.MessageDialog(self, "Do you want to update WAIL? All of your WARCs will remain in-place.",
                                       "There is an update available for the main WAIL application", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
             result = d.ShowModal()
             d.Destroy()
