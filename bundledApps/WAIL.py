@@ -297,7 +297,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                 sys.stdout.flush()
         retCode = str(retCode.rstrip("\r\n"))
         if "-1" == retCode:
-            wx.MessageBox(msg_uriNotInArchives)
+            wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         elif retCode == "":
             wx.MessageBox(msg_waybackNotStarted)
             mainAppWindow.advConfig.toggleTomcat(None)
