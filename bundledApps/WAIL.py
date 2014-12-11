@@ -19,6 +19,8 @@ import waybackConfigWriter
 from subprocess import Popen, PIPE
 from multiprocessing import Pool # For a more asynchronous UI, esp with accessible()s
 
+import tarfile # For updater
+
 #import tornado.ioloop
 #import tornado.web
 
@@ -637,7 +639,28 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if result == wx.ID_YES: # Launch Wayback
                 print "The user wants to update!"
                 
+                #TODO: show progress bar or separate window for updater
+                wailcorefile = urllib2.urlopen("http://matkelly.com/wail/release/WAILCore1_1.tar.gz")
+                output = open('/Applications/WAIL.app/support/WAILCore1_1.tar.gz','wb')
+                output.write(wailcorefile.read())
+                output.close()
+                
+                print "Done fetching WAIL core"
+                
+                #TODO untar to temp dir
+                
+                #TODO move new temp directory to Contents/
+                
+                # TODO: check if this directory already exists
                 copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
+                shutil.rmtree("/Applications/WAIL.app/Contents/")
+                
+                tar = tarfile.open("/Applications/WAIL.app/support/WAILCore1_1.tar.gz")
+                tar.extractall('/Applications/WAIL.app/')
+                tar.close()
+                
+                print "done extracting the tar file of wailcore"
+                
     
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
