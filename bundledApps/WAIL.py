@@ -342,19 +342,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.CallLater(0, self.updateServiceStatuses) 
              
             col2 = col1+colWidth
-            wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize)
-            wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize)
-            wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*2),     cellSize)
-            wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize)
+            cellSize_versionFix = (50,rowHeight)
+            wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize_versionFix)
+            wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize_versionFix)
+            wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*2),     cellSize_versionFix)
+            wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize_versionFix)
              
             col3 = col2+colWidth
             buttonSize = (50, rowHeight-6)
+            buttonSize = (50, rowHeight) #redefining for Windows, needs regression testing on OS X
             smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
-            self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*1),     buttonSize)
+            self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
             self.fix_heritrix.SetFont(smallFont)
-            self.fix_wayback = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize)
+            self.fix_wayback = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
             self.fix_wayback.SetFont(smallFont)
-            self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize)
+            self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.fix_tomcat.SetFont(smallFont)
             
             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
@@ -365,12 +367,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
             
             col4 = col3+colWidth
-             
-            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize)
+              
+            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
             self.kill_heritrix.SetFont(smallFont)
-            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize)
+            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
             self.kill_wayback.SetFont(smallFont)
-            self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize)
+            self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.kill_tomcat.SetFont(smallFont)
             
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
@@ -412,7 +414,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             colWidth = 60
             rowHeight = 18
             col1 = 65+colWidth*1
-            cellSize = (150, rowHeight)
+            cellSize = (40, rowHeight)
             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
             
             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
