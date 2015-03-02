@@ -41,7 +41,7 @@ msg_stoppingTomcat = "Stopping Tomcat..."
 msg_startingTomcat = "Starting Tomcat..."
 msg_waybackEnabled = "Currently Enabled"
 msg_waybackDisabled = "Currently Disabled"
-msg_waybackNotStarted = ("Wayback Does not Appear to Be started." 
+msg_waybackNotStarted = ("Wayback Does not Appear to Be started."
                          "Try Archiving something first.")
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives = ("This URL is currently in the archives!\n\n"
@@ -71,7 +71,7 @@ buttonLabel_kill = "Kill"
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
 
-aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"  
+aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
 aboutWindow_iconPath = "/build/icons/whale.ico"
 
@@ -138,9 +138,9 @@ if 'darwin' in sys.platform:
     phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
     warcProxyExecPath = wailPath+"/bundledApps/warc-proxy/mac/dist/warcproxy"
-    
+
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
-    
+
     #Fix phantomJS permission
     os.chmod(phantomJSExecPath,0744)
     #Fix tomcat control scripts' permissions
@@ -149,13 +149,13 @@ if 'darwin' in sys.platform:
     os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
     #Fix warc-proxy bin permission
     os.chmod(warcProxyExecPath,0744)
-    
+
     # Change all permissions within the app bundle (a big hammer)
     for r,d,f in os.walk(wailPath):
       os.chmod( r , 0777)
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
-elif sys.platform.startswith('win32'): 
+elif sys.platform.startswith('win32'):
     #Win Specific Code here, this applies to both 32 and 64 bit
     #Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
 
@@ -173,8 +173,8 @@ elif sys.platform.startswith('win32'):
     warcProxyExecPath = "C:/WAIL/bundledApps/warcproxy-bin/dist/warcproxy/warcproxy.exe"
 ###############################
 # Tab Controller (Notebook)
-############################### 
- 
+###############################
+
 class TabController(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=groupLabel_window)
@@ -190,19 +190,19 @@ class TabController(wx.Frame):
 		# Add basic config page/tab
         self.basicConfig = WAILGUIFrame_Basic(self.Notebook)
         self.Notebook.AddPage(self.basicConfig, tabLabel_basic)
-        
+
         # Add advanced config page/tab
         self.advConfig = WAILGUIFrame_Advanced(self.Notebook)
         self.Notebook.AddPage(self.advConfig, tabLabel_advanced)
         self.createMenu()
     def createMenu(self):
         self.menu_bar  = wx.MenuBar()
-        self.help_menu = wx.Menu()        
-       
+        self.help_menu = wx.Menu()
+
         self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT,   "&QUIT")
         self.menu_bar.Append(self.help_menu, menuTitle_help)
-        
+
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.SetMenuBar(self.menu_bar)
@@ -234,9 +234,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(0, 30))
         self.checkArchiveStatus = wx.Button(self,  -1, buttonLabel_checkStatus, pos=(105, 30))
         self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(270, 30))
-        
+
         self.archiveNowButton.SetDefault()
-        
+
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
@@ -244,7 +244,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         #hJob = HeritrixJob([self.uri.GetValue()])
     def archiveNow(self, button):
         self.writeHeritrixLogWithURI()
-        # First check to be sure Java SE is installed. 
+        # First check to be sure Java SE is installed.
         if self.javaInstalled():
           self.launchHeritrix()
           self.startHeritrixJob()
@@ -270,7 +270,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             ret = subprocess.Popen(cmd, shell=True)
         except:
             print "err 1"
-        
+
         time.sleep(3)
         cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
         try:
@@ -281,7 +281,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         while(doneArchiving):
             f = open(heritrixJobPath+self.hJob.jobNumber+"/job.log", 'r+')
             wx.MessageBox(heritrixJobPath+self.hJob.jobNumber+"/job.log")
-            lines = f.readlines() 
+            lines = f.readlines()
             lastLine = lines[len(lines-1)]
             if "FINISHED" in lastLine:
                 doneArchiving = True
@@ -318,8 +318,8 @@ class WAILGUIFrame_Basic(wx.Panel):
             if result == wx.ID_YES: # Launch Wayback
                 Wayback().fix(None)
                 self.viewArchiveInBrowser(None)
-        
-        
+
+
 class WAILGUIFrame_Advanced(wx.Panel):
     class GeneralPanel(wx.Panel):
         def __init__(self, parent):
@@ -327,27 +327,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
             colWidth = 60
             rowHeight = 20#18
             cellSize = (150, rowHeight)
-            
+
             col0 = colWidth*0+10
             wx.StaticText(self, 100, tabLabel_advanced_general_serviceStatus, (col0-10,    rowHeight*0),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_heritrix,       (col0, rowHeight*1),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_wayback,        (col0, rowHeight*2),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
-             
+
             col1 = 65+colWidth*1
 
             #pool = Pool(processes=1)  # attempt at making this more asynchronous
             #pool.apply_async(self.updateServiceStatuses)
-            self.updateServiceStatuses()   
-            #wx.CallLater(0, self.updateServiceStatuses) 
-             
+            self.updateServiceStatuses()
+            #wx.CallLater(0, self.updateServiceStatuses)
+
             col2 = col1+colWidth
             cellSize_versionFix = (50,rowHeight)
             wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*2),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize_versionFix)
-             
+
             col3 = col2+colWidth
             buttonSize = (50, rowHeight-6)
             buttonSize = (50, rowHeight) #redefining for Windows, needs regression testing on OS X
@@ -358,46 +358,46 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_wayback.SetFont(smallFont)
             self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.fix_tomcat.SetFont(smallFont)
-            
+
             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
 
-             
+
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
-            
+
             col4 = col3+colWidth
-              
+
             self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
             self.kill_heritrix.SetFont(smallFont)
             self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
             self.kill_wayback.SetFont(smallFont)
             self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.kill_tomcat.SetFont(smallFont)
-            
+
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_tomcat.Bind(wx.EVT_BUTTON, Wayback().kill)
-     
-            
-            #wx.CallLater(2000, self.updateServiceStatuses)            
+
+
+            #wx.CallLater(2000, self.updateServiceStatuses)
             #pool.apply_async(self.updateServiceStatuses)
-            self.updateServiceStatuses()  
+            self.updateServiceStatuses()
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath+"lib/"):
               if file.startswith("heritrix-commons"):
-                regex = re.compile("commons-(.*)\.") 
+                regex = re.compile("commons-(.*)\.")
                 return regex.findall(file)[0]
-        
+
         def getWaybackVersion(self):
             for file in os.listdir(tomcatPath+"/webapps/lib/"):
               if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
-        
+
         def getTomcatVersion(self):
         #Apache Tomcat Version 7.0.30
-            if not os.path.exists(tomcatPath+"/RELEASE-NOTES"): return "?" 
+            if not os.path.exists(tomcatPath+"/RELEASE-NOTES"): return "?"
             f = open(tomcatPath+"/RELEASE-NOTES",'r')
             version = ""
             for line in f.readlines():
@@ -405,27 +405,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     version = re.sub("[^0-9^\.]", "", line)
                     break
             f.close()
-            return version        
+            return version
         def updateServiceStatuses(self):
-            ##################################  
+            ##################################
             # Check if each service is enabled and set the GUI elements accordingly
-            ##################################  
-            
+            ##################################
+
             colWidth = 60
-            rowHeight = 18
+            rowHeight = 20
             col1 = 65+colWidth*1
             cellSize = (40, rowHeight)
             serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
-            
+
             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
             waybackAccessible = serviceEnabled[Wayback().accessible()]
 
             if waybackAccessible is serviceEnabledLabel_YES:
                 tomcatAccessible = waybackAccessible
             else:
-                tomcatAccessible = serviceEnabled[Tomcat().accessible()]         
-                          
-            if hasattr(self,'status_heritrix'): 
+                tomcatAccessible = serviceEnabled[Tomcat().accessible()]
+
+            if hasattr(self,'status_heritrix'):
                 self.status_heritrix.SetLabel(heritrixAccessible)
                 self.status_tomcat.SetLabel(tomcatAccessible)
                 self.status_wayback.SetLabel(tomcatAccessible)
@@ -434,11 +434,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
                 self.status_tomcat = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
                 self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
-                
-            if not hasattr(self,'fix_heritrix'): 
+
+            if not hasattr(self,'fix_heritrix'):
                 print "First call, UI has not been setup"
                 return #initial setup call will return here, ui elements haven't been created
-             
+
              #enable/disable FIX buttons based on service status
             if heritrixAccessible is serviceEnabledLabel_YES:
                 self.fix_heritrix.Disable()
@@ -446,20 +446,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 self.fix_heritrix.Enable()
                 self.kill_heritrix.Disable()
-              
+
             if tomcatAccessible is serviceEnabledLabel_YES:
                 self.fix_wayback.Disable()
                 self.fix_tomcat.Disable()
                 self.kill_wayback.Enable()
                 self.kill_tomcat.Enable()
             else:
-                self.fix_wayback.Enable()      
+                self.fix_wayback.Enable()
                 self.fix_tomcat.Enable()
-                self.kill_wayback.Disable()      
-                self.kill_tomcat.Disable()              
-             
-             
-             ##################################             
+                self.kill_wayback.Disable()
+                self.kill_tomcat.Disable()
+
+
+             ##################################
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
@@ -470,11 +470,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.viewWaybackInBrowserButton = wx.Button(self, 1, buttonLabel_wayback,   (0, 0), bsize)
             self.editWaybackConfiguration = wx.Button(self, 1, buttonLabel_editWaybackConfig,   (0, 25), bsize)
             #self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
-             
+
             self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON, self.openWaybackInBrowser)
             self.editWaybackConfiguration.Bind(wx.EVT_BUTTON, self.openWaybackConfiguration)
             #self.resetWaybackConfiguration.Bind(wx.EVT_BUTTON, waybackConfigWriter.writeConfig)
-            
+
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
                 webbrowser.open_new_tab(uri_wayback)
@@ -500,18 +500,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.listbox = wx.ListBox(self, 100)
             self.populateListboxWithJobs()
-             
+
             self.statusMsg = wx.StaticText(self, -1, "", pos=(150, 0))
-             
+
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
-             
+
             #Button layout
             bsize = self.width, self.height = (125, 25*.75)
             self.setupNewCrawlButton = wx.Button(self, 1, "Setup New Crawl",   (0, 70), bsize)
             self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0, 92), bsize)
             self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0, 114), bsize)
-            
+
             #Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
@@ -519,11 +519,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
             list.reverse() # set to reverse chronological so newest jobs are at the top
-            self.listbox.Set(list)           
+            self.listbox.Set(list)
         def clickedListboxItem(self, event):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
-             
+
             active = self.listbox.GetString(self.listbox.GetSelection())
             print tail(heritrixJobPath+active+"/job.log")
             jobLaunches = Heritrix().getJobLaunches(active)
@@ -533,10 +533,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
              	+  Heritrix().getCurrentStats(active)
              	)
         def launchWebUI(self, button):
-            webbrowser.open_new_tab(uri_heritrix)    
+            webbrowser.open_new_tab(uri_heritrix)
         def launchHeritrixProcess(self, button):
-            mainAppWindow.basicConfig.launchHeritrix() 
-        def manageJobs(self, evt):                 
+            mainAppWindow.basicConfig.launchHeritrix()
+        def manageJobs(self, evt):
             menu = wx.Menu()
             #menu.Append( 1, "Restart Job" ) #TODO
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
@@ -561,39 +561,39 @@ class WAILGUIFrame_Advanced(wx.Panel):
             elif os.name == 'posix':
                 subprocess.call(('xdg-open', file))
         def restartJob(self, evt):
-            print "Restarting job"  
+            print "Restarting job"
         def setupNewCrawl(self, evt):
             self.statusMsg.Hide()
-        	
+
             self.newCrawlTextCtrlLabel = wx.StaticText(self, -1, "Enter one URI per line to crawl", pos=(135, 0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
-            self.newCrawlTextCtrl = wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90), style=multiLineAndNoWrapStyle) 
-            #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))   
+            self.newCrawlTextCtrl = wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90), style=multiLineAndNoWrapStyle)
+            #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))
             self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(265, 110))
-            self.startCrawlButton.SetDefault()  
-            self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)            
-            
+            self.startCrawlButton.SetDefault()
+            self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
+
             self.showNewCrawlUIElements()
         def hideNewCrawlUIElements(self):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
             self.newCrawlTextCtrlLabel.Hide()
             self.newCrawlTextCtrl.Hide()
-            #self.crawlOptionsButton.Hide()  
+            #self.crawlOptionsButton.Hide()
             self.startCrawlButton.Hide()
         def showNewCrawlUIElements(self):
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
-            #self.crawlOptionsButton.Show()  
+            #self.crawlOptionsButton.Show()
             self.startCrawlButton.Show()
         def crawlURIsListed(self, evt):
             uris = self.newCrawlTextCtrl.GetValue().split("\n")
             self.hJob = HeritrixJob(uris)
             self.hJob.write()
             self.populateListboxWithJobs()
-             
+
             if not Heritrix().accessible():
                 mainAppWindow.basicConfig.launchHeritrix()
-            
+
             cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
             ret = subprocess.Popen(cmd, shell=True)
             time.sleep(3)
@@ -601,7 +601,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             ret = subprocess.Popen(cmd, shell=True)
 
             #TODO: launch job just created
-            #self.uriListBox.Set([""])        	
+            #self.uriListBox.Set([""])
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
@@ -610,12 +610,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 0), bsize)
             #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
-            
+
             #launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy) # Disabled until dependencies are resolved with new WAIL hierarchy
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
-            self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates) 
-            
+            self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
+
         def launchWarcProxy(self, button):
             cmd = warcProxyExecPath
             print cmd
@@ -624,7 +624,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             webbrowser.open_new_tab(uri_warcProxy)
         def openArchivesFolder(self, button):
             if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
-            
+
             if sys.platform.startswith('win32'):
                  os.startfile(warcsFolder)
             else:
@@ -633,43 +633,43 @@ class WAILGUIFrame_Advanced(wx.Panel):
               #subprocess.Popen(["open", tomcatPath+"/webapps/root/"])
         def checkForUpdates(self, button):
             # check if an updates version is available
-            
+
             # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
-            
+
             d = wx.MessageDialog(self, "Do you want to update WAIL? All of your WARCs will remain in-place.",
                                       "There is an update available for the main WAIL application", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
             result = d.ShowModal()
             d.Destroy()
             if result == wx.ID_YES: # Launch Wayback
                 print "The user wants to update!"
-                
+
                 #TODO: show progress bar or separate window for updater
                 wailcorefile = urllib2.urlopen("http://matkelly.com/wail/release/WAILCore1_1.tar.gz")
                 output = open('/Applications/WAIL.app/support/WAILCore1_1.tar.gz','wb')
                 output.write(wailcorefile.read())
                 output.close()
-                
+
                 print "Done fetching WAIL core"
-                
+
                 #TODO untar to temp dir
-                
+
                 #TODO move new temp directory to Contents/
-                
+
                 # TODO: check if this directory already exists
                 copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
                 shutil.rmtree("/Applications/WAIL.app/Contents/")
-                
+
                 tar = tarfile.open("/Applications/WAIL.app/support/WAILCore1_1.tar.gz")
                 tar.extractall('/Applications/WAIL.app/')
                 tar.close()
-                
+
                 print "done extracting the tar file of wailcore"
-                
-    
+
+
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         #wx.Frame.__init__(self, None, title="foo")
-        
+
         self.Notebook = wx.Notebook(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.Notebook, 10, flag=wx.EXPAND)
@@ -682,40 +682,40 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(self.Notebook)
         # Add advanced config page/tab
     	#self.advConfig = WAILGUIFrame_Advanced(self.Notebook) #PDA2013 advanced tab
-    	    	
+
         self.Notebook.AddPage(self.generalPanel, tabLabel_advanced_general)
         self.Notebook.AddPage(self.waybackPanel, tabLabel_advanced_wayback)
         self.Notebook.AddPage(self.heritrixPanel, tabLabel_advanced_heritrix)
         self.Notebook.AddPage(self.miscellaneousPanel, tabLabel_advanced_miscellaneous)
-        
+
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
-        
+
         smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
         return		#add for recursive tabs
 ##################################
 # "View Archive" Group
-##################################     
+##################################
         self.archiveViewGroup = wx.StaticBox(self, 100, groupLabel_viewArchives, (5, self.y+self.height*0), (370, 92))
-        
+
         self.startTomcatLabel = buttonLabel_startTomcat
         self.stopTomcatLabel = buttonLabel_stopTomcat
         self.startTomcatButton = wx.Button(self, 1, buttonLabel_startTomcat,   (self.x, self.y+self.height*1), bsize)
         self.startTomcatButton.SetFont(smallFont)
-        
+
         self.viewWaybackButton = wx.Button(self, 2, buttonLabel_wayback,   (self.x, self.y+self.height*2+5), bsize)
         self.viewWaybackButton.Disable()
         self.viewWaybackButton.SetFont(smallFont)
-        
+
         self.viewWARCContents = wx.Button(self, 2, buttonLabel_warcProxy,   (self.x, self.y+self.height*3+10), bsize)
         self.viewWARCContents.SetFont(smallFont)
         #self.viewWARCContents.Disable()
-        
+
 ##################################
 # "Create Archive" Group
-##################################         
+##################################
         self.archiveViewGroup = wx.StaticBox(self, 101, groupLabel_createArchives, (5, self.y+self.height*4+15), (370, 80))
-		
+
         self.launchHeritrixButton = wx.Button(self, 4, buttonLabel_startHeritrix, (self.x, self.y+self.height*5+20), bsize)
         self.launchHeritrixButton.SetFont(smallFont)
         self.viewHeritrixButton = wx.Button(self, 5, buttonLabel_viewHeritrix, (self.x, self.y+self.height*6+25 ), bsize)
@@ -726,10 +726,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
 ##################################
 # Set Wayback/Tomcat status (up/down)
-##################################         
+##################################
         waybackAccessibilityMessage = msg_waybackEnabled
         waybackAccessibilityMessageColor = (0, 200, 0)
-        
+
         if Tomcat.accessible():
             self.startTomcatButton.SetLabel(buttonLabel_stopTomcat)
             waybackAccessibilityMessage = msg_waybackEnabled
@@ -739,20 +739,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.tomcatStatus = wx.StaticText(self, 6, waybackAccessibilityMessage,  (self.width+20, self.y+self.height*1))
         self.tomcatStatus.SetForegroundColour(waybackAccessibilityMessageColor)
 
-                   
-		
+
+
 ##################################
 # Add Functionality to Button
-################################## 
+##################################
         self.startTomcatButton.Bind(wx.EVT_BUTTON, self.toggleTomcat)
         self.launchHeritrixButton.Bind(wx.EVT_BUTTON, self.launchHeritrix)
         self.viewHeritrixButton.Bind(wx.EVT_BUTTON, self.viewHeritrix)
         self.viewWARCContents.Bind(wx.EVT_BUTTON, self.launchWARCProxy)
         self.viewWaybackButton.Bind(wx.EVT_BUTTON, self.viewWayback)
         self.heritrixOneOffButton.Bind(wx.EVT_BUTTON, self.setupOneOffCrawl)
-        
+
         self.uriListBox = None
-        
+
     def tomcatMessageOff(self):
         #self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
@@ -763,22 +763,22 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.startTomcatButton.SetLabel(self.stopTomcatLabel)
     def startTomcat(self, button):
         #self.tomcatStatus.SetLabel(msg_startingTomcat)
-        cmd = tomcatPathStart       
+        cmd = tomcatPathStart
         ret = subprocess.Popen(cmd)
         waitingForTomcat = True
         while waitingForTomcat:
             if Wayback().accessible(): waitingForTomcat = False
             time.sleep(2)
-       
+
         self.viewWaybackButton.Enable()
         self.tomcatMessageOn()
-    # toggleTomcat needs to be broken up into start and stop Tomcat function, already done above    
+    # toggleTomcat needs to be broken up into start and stop Tomcat function, already done above
     def toggleTomcat(self, button, suppressAlert=False): #Optimize me, Seymour
         cmd = ""
 
         if self.startTomcatButton.GetLabel() == self.startTomcatLabel :
             self.tomcatStatus.SetLabel(msg_startingTomcat)
-            cmd = tomcatPathStart       
+            cmd = tomcatPathStart
             ret = subprocess.Popen(cmd)
             waitingForTomcat = True
             while waitingForTomcat:
@@ -791,7 +791,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             cmd = tomcatPathStop
             ret = subprocess.Popen(cmd)
             waitingForTomcat = True
-          
+
             tomcatChecks = 0
             tomcatStopped = False
             while waitingForTomcat and tomcatChecks < 6:
@@ -817,14 +817,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
-        time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat 
+        time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat
         self.viewHeritrixButton.Enable()
     def viewWayback(self, button):
         webbrowser.open_new_tab(uri_wayback)
     def viewHeritrix(self, button):
         webbrowser.open_new_tab(uri_heritrix)
     def createListBox(self):
-        
+
         self.uriListBoxTitle = wx.StaticText(self, 7, 'URIs to Crawl:',  (self.x, 5+self.height*7+30))
         self.uriListBox = wx.ListBox(self, 99, (self.x, 5+self.height*8+25), (400-50, 100), [""])
         #self.uriListBox.Bind(wx.EVT_LISTBOX_DCLICK,self.addURI)
@@ -845,7 +845,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.launchCrawlButton = wx.Button(self, 33, "Launch Crawl",   (self.GetSize().x-175, 305), (self.width, self.height))
         self.launchCrawlButton.SetFont(wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL))
         self.launchCrawlButton.Bind(wx.EVT_BUTTON, self.launchCrawl)
-        self.launchCrawlButton.Disable()      
+        self.launchCrawlButton.Disable()
     def crawlURIs(self, button):
         uris = self.uriListBox.GetStrings()
         self.hJob = HeritrixJob(uris)
@@ -854,7 +854,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uriListBox.Set([""])
         self.launchCrawlButton.Enable()
     def launchCrawl(self, button):
-        mainAppWindow.basicConfig.hJob = self.hJob 
+        mainAppWindow.basicConfig.hJob = self.hJob
         mainAppWindow.basicConfig.launchHeritrix()
         mainAppWindow.basicConfig.startHeritrixJob()
     def addURI(self, listbox):
@@ -881,19 +881,19 @@ class Service():
                 print "Pseudo-Success in accessing "+self.uri
                 return True
             print "Failed to access "+self.__class__.__name__+" service at "+self.uri
-            return False     
+            return False
 class Wayback(Service):
     uri = uri_wayback
-    def fix(self, button): 
-        cmd = tomcatPathStart; 
+    def fix(self, button):
+        cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()    
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def kill(self,button):
         cmd = tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses() 
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 class Tomcat(Service):
     uri = uri_wayback
 class Heritrix(Service):
@@ -919,10 +919,10 @@ class Heritrix(Service):
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
             ret = ret + "JobID: "+jobId+"\n   Discovered: "+discovered+"\n   Queued: "+queued+"\n   Downloaded: "+downloaded+"\n"
-        
+
         return ret
     def fix(self, button):
-        mainAppWindow.basicConfig.launchHeritrix() 
+        mainAppWindow.basicConfig.launchHeritrix()
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def kill(self,button):
         print "Unimplemented :("
@@ -930,7 +930,7 @@ class Heritrix(Service):
         cmd = tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses() 
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
@@ -940,22 +940,22 @@ class HeritrixJob:
         if sys.platform.startswith('win32'):
             beansFilePath += "\\"
         else:
-            beansFilePath += "/" 
+            beansFilePath += "/"
         with open(beansFilePath+"crawler-beans.cxml","w") as f:
             f.write(self.sampleXML)
             #print beansFilePath+"crawler-beans.cxml"
 
     def __init__(self, uris):
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
-<!-- 
+<!--
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE
-  
+
    This is a relatively minimal configuration suitable for many crawls.
-   
+
    Commented-out beans and properties are provided as an example; values
    shown in comments reflect the actual defaults which are in effect
-   if not otherwise specified specification. (To change from the default 
-   behavior, uncomment AND alter the shown values.)   
+   if not otherwise specified specification. (To change from the default
+   behavior, uncomment AND alter the shown values.)
  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -966,17 +966,17 @@ class HeritrixJob:
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
- 
+
  <context:annotation-config/>
 
-<!-- 
+<!--
   OVERRIDES
-   Values elsewhere in the configuration may be replaced ('overridden') 
-   by a Properties map declared in a PropertiesOverrideConfigurer, 
-   using a dotted-bean-path to address individual bean properties. 
+   Values elsewhere in the configuration may be replaced ('overridden')
+   by a Properties map declared in a PropertiesOverrideConfigurer,
+   using a dotted-bean-path to address individual bean properties.
    This allows us to collect a few of the most-often changed values
    in an easy-to-edit format here at the beginning of the model
-   configuration.    
+   configuration.
  -->
  <!-- overrides from a text property list -->
  <bean id="simpleOverrides" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
@@ -1018,12 +1018,12 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="operatorFrom" value=""/> -->
   <!-- <property name="organization" value=""/> -->
   <!-- <property name="audience" value=""/> -->
-   <property name="userAgentTemplate" 
+   <property name="userAgentTemplate"
          value="Mozilla/5.0 (compatible; heritrix/@VERSION@ +@OPERATOR_CONTACT_URL@)"/>
-       
+
  </bean>
- 
- <!-- SEEDS: crawl starting points 
+
+ <!-- SEEDS: crawl starting points
       ConfigString allows simple, inline specification of a moderate
       number of seeds; see below comment for example of using an
       arbitrarily-large external file. -->
@@ -1040,11 +1040,11 @@ metadata.description=Basic crawl starting with useful defaults
 <!-- <property name='sourceTagSeeds' value='false'/> -->
 <!-- <property name='blockAwaitingSeedLines' value='-1'/> -->
  </bean>
- 
+
  <!-- SEEDS ALTERNATE APPROACH: specifying external seeds.txt file in
-      the job directory, similar to the H1 approach. 
+      the job directory, similar to the H1 approach.
       Use either the above, or this, but not both. -->
- <!-- 
+ <!--
  <bean id="seeds" class="org.archive.modules.seeds.TextSeedModule">
   <property name="textSource">
    <bean class="org.archive.spring.ConfigFile">
@@ -1055,8 +1055,8 @@ metadata.description=Basic crawl starting with useful defaults
   <property name='blockAwaitingSeedLines' value='-1'/>
  </bean>
   -->
- 
- <!-- SCOPE: rules for which discovered URIs to crawl; order is very 
+
+ <!-- SCOPE: rules for which discovered URIs to crawl; order is very
       important because last decision returned other than 'NONE' wins. -->
  <bean id="scope" class="org.archive.modules.deciderules.DecideRuleSequence">
   <!-- <property name="logToFile" value="false" /> -->
@@ -1079,13 +1079,13 @@ metadata.description=Basic crawl starting with useful defaults
               # http://www.example.edu/path1/
               # +http://(org,example,
              </value>
-            </property> 
+            </property>
            </bean>
           </property> -->
     </bean>
     <!-- ...but REJECT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TooManyHopsDecideRule">
-       <property name="maxHops" value="1" /> 
+       <property name="maxHops" value="1" />
     </bean>
     <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
@@ -1096,7 +1096,7 @@ metadata.description=Basic crawl starting with useful defaults
     <bean class="org.archive.modules.deciderules.surt.SurtPrefixedDecideRule">
           <property name="decision" value="REJECT"/>
           <property name="seedsAsSurtPrefixes" value="false"/>
-          <property name="surtsDumpFile" value="${launchId}/negative-surts.dump" /> 
+          <property name="surtsDumpFile" value="${launchId}/negative-surts.dump" />
      <!-- <property name="surtsSource">
            <bean class="org.archive.spring.ConfigFile">
             <property name="path" value="negative-surts.txt" />
@@ -1129,35 +1129,35 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
- 
- <!-- 
+
+ <!--
    PROCESSING CHAINS
-    Much of the crawler's work is specified by the sequential 
+    Much of the crawler's work is specified by the sequential
     application of swappable Processor modules. These Processors
-    are collected into three 'chains'. The CandidateChain is applied 
+    are collected into three 'chains'. The CandidateChain is applied
     to URIs being considered for inclusion, before a URI is enqueued
-    for collection. The FetchChain is applied to URIs when their 
-    turn for collection comes up. The DispositionChain is applied 
+    for collection. The FetchChain is applied to URIs when their
+    turn for collection comes up. The DispositionChain is applied
     after a URI is fetched and analyzed/link-extracted.
   -->
-  
- <!-- CANDIDATE CHAIN --> 
+
+ <!-- CANDIDATE CHAIN -->
  <!-- first, processors are declared as top-level named beans -->
  <bean id="candidateScoper" class="org.archive.crawler.prefetch.CandidateScoper">
  </bean>
  <bean id="preparer" class="org.archive.crawler.prefetch.FrontierPreparer">
   <!-- <property name="preferenceDepthHops" value="-1" /> -->
   <!-- <property name="preferenceEmbedHops" value="1" /> -->
-  <!-- <property name="canonicalizationPolicy"> 
+  <!-- <property name="canonicalizationPolicy">
         <ref bean="canonicalizationPolicy" />
        </property> -->
-  <!-- <property name="queueAssignmentPolicy"> 
+  <!-- <property name="queueAssignmentPolicy">
         <ref bean="queueAssignmentPolicy" />
        </property> -->
-  <!-- <property name="uriPrecedencePolicy"> 
+  <!-- <property name="uriPrecedencePolicy">
         <ref bean="uriPrecedencePolicy" />
        </property> -->
-  <!-- <property name="costAssignmentPolicy"> 
+  <!-- <property name="costAssignmentPolicy">
         <ref bean="costAssignmentPolicy" />
        </property> -->
  </bean>
@@ -1172,8 +1172,8 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-  
- <!-- FETCH CHAIN --> 
+
+ <!-- FETCH CHAIN -->
  <!-- first, processors are declared as top-level named beans -->
  <bean id="preselector" class="org.archive.crawler.prefetch.Preselector">
   <!-- <property name="recheckScope" value="false" /> -->
@@ -1198,7 +1198,7 @@ metadata.description=Basic crawl starting with useful defaults
          <entry key="whois.arin.net" value="z + %s" />
          <entry key="whois.denic.de" value="-T dn %s" />
         </map>
-       </property> 
+       </property>
       </bean> -->
  <bean id="fetchHttp" class="org.archive.modules.fetcher.FetchHTTP">
   <!-- <property name="useHTTP11" value="false" /> -->
@@ -1206,7 +1206,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="timeoutSeconds" value="1200" /> -->
   <!-- <property name="maxFetchKBSec" value="0" /> -->
   <!-- <property name="defaultEncoding" value="ISO-8859-1" /> -->
-  <!-- <property name="shouldFetchBodyRule"> 
+  <!-- <property name="shouldFetchBodyRule">
         <bean class="org.archive.modules.deciderules.AcceptDecideRule"/>
        </property> -->
   <!-- <property name="soTimeoutMs" value="20000" /> -->
@@ -1217,7 +1217,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="sendRange" value="false" /> -->
   <!-- <property name="ignoreCookies" value="false" /> -->
   <!-- <property name="sslTrustLevel" value="OPEN" /> -->
-  <!-- <property name="acceptHeaders"> 
+  <!-- <property name="acceptHeaders">
         <list>
          <value>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</value>
         </list>
@@ -1245,11 +1245,11 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="maxAttributeValueLength" value="16384" /> -->
  </bean>
  <bean id="extractorCss" class="org.archive.modules.extractor.ExtractorCSS">
- </bean> 
+ </bean>
  <bean id="extractorJs" class="org.archive.modules.extractor.ExtractorJS">
  </bean>
  <bean id="extractorSwf" class="org.archive.modules.extractor.ExtractorSWF">
- </bean>    
+ </bean>
  <!-- now, processors are assembled into ordered FetchChain bean -->
  <bean id="fetchProcessors" class="org.archive.modules.FetchChain">
   <property name="processors">
@@ -1276,12 +1276,12 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-  
+
  <!-- DISPOSITION CHAIN -->
  <!-- first, processors are declared as top-level named beans  -->
  <bean id="warcWriter" class="org.archive.modules.writer.WARCWriterProcessor">
-  <property name="compress" value="false" /> 
-  <property name="prefix" value="MAT" /> 
+  <property name="compress" value="false" />
+  <property name="prefix" value="MAT" />
   <!-- <property name="suffix" value="${HOSTNAME}" /> -->
   <!-- <property name="maxFileSizeBytes" value="1000000000" /> -->
   <!-- <property name="poolMaxActive" value="1" /> -->
@@ -1293,7 +1293,7 @@ metadata.description=Basic crawl starting with useful defaults
         <list>
          <value>''' + warcsFolder + '''</value>
         </list>
-       </property> 
+       </property>
   <!-- <property name="writeRequests" value="true" /> -->
   <!-- <property name="writeMetadata" value="true" /> -->
   <!-- <property name="writeRevisitForIdenticalDigests" value="true" /> -->
@@ -1318,7 +1318,7 @@ metadata.description=Basic crawl starting with useful defaults
    <list>
     <!-- write to aggregate archival files... -->
     <ref bean="warcWriter"/>
-    <!-- ...send each outlink candidate URI to CandidateChain, 
+    <!-- ...send each outlink candidate URI to CandidateChain,
          and enqueue those ACCEPTed to the frontier... -->
     <ref bean="candidates"/>
     <!-- ...then update stats, shared-structures, frontier decisions -->
@@ -1327,9 +1327,9 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
- 
+
  <!-- CRAWLCONTROLLER: Control interface, unifying context -->
- <bean id="crawlController" 
+ <bean id="crawlController"
    class="org.archive.crawler.framework.CrawlController">
   <!-- <property name="maxToeThreads" value="25" /> -->
   <property name="pauseAtStart" value="false" />
@@ -1338,9 +1338,9 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="recorderOutBufferBytes" value="16384" /> -->
   <!-- <property name="scratchDir" value="scratch" /> -->
  </bean>
- 
+
  <!-- FRONTIER: Record of all URIs discovered and queued-for-collection -->
- <bean id="frontier" 
+ <bean id="frontier"
    class="org.archive.crawler.frontier.BdbFrontier">
   <!-- <property name="queueTotalBudget" value="-1" /> -->
   <!-- <property name="balanceReplenishAmount" value="3000" /> -->
@@ -1369,23 +1369,23 @@ metadata.description=Basic crawl starting with useful defaults
        </property> -->
   <!-- <property name="dumpPendingAtClose" value="false" /> -->
  </bean>
- 
- <!-- URI UNIQ FILTER: Used by frontier to remember already-included URIs --> 
- <bean id="uriUniqFilter" 
+
+ <!-- URI UNIQ FILTER: Used by frontier to remember already-included URIs -->
+ <bean id="uriUniqFilter"
    class="org.archive.crawler.util.BdbUriUniqFilter">
  </bean>
- 
+
  <!--
    EXAMPLE SETTINGS OVERLAY SHEETS
    Sheets allow some settings to vary by context - usually by URI context,
-   so that different sites or sections of sites can be treated differently. 
+   so that different sites or sections of sites can be treated differently.
    Here are some example Sheets for common purposes. The SheetOverlaysManager
-   (below) automatically collects all Sheet instances declared among the 
-   original beans, but others can be added during the crawl via the scripting 
+   (below) automatically collects all Sheet instances declared among the
+   original beans, but others can be added during the crawl via the scripting
    interface.
   -->
 
-<!-- forceRetire: any URI to which this sheet's settings are applied 
+<!-- forceRetire: any URI to which this sheet's settings are applied
      will force its containing queue to 'retired' status. -->
 <bean id='forceRetire' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -1395,10 +1395,10 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- smallBudget: any URI to which this sheet's settings are applied 
-     will give its containing queue small values for balanceReplenishAmount 
-     (causing it to have shorter 'active' periods while other queues are 
-     waiting) and queueTotalBudget (causing the queue to enter 'retired' 
+<!-- smallBudget: any URI to which this sheet's settings are applied
+     will give its containing queue small values for balanceReplenishAmount
+     (causing it to have shorter 'active' periods while other queues are
+     waiting) and queueTotalBudget (causing the queue to enter 'retired'
      status once that expenditure is reached by URI attempts and errors) -->
 <bean id='smallBudget' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -1409,7 +1409,7 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- veryPolite: any URI to which this sheet's settings are applied 
+<!-- veryPolite: any URI to which this sheet's settings are applied
      will cause its queue to take extra-long politeness snoozes -->
 <bean id='veryPolite' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -1422,9 +1422,9 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- highPrecedence: any URI to which this sheet's settings are applied 
-     will give its containing queue a slightly-higher than default 
-     queue precedence value. That queue will then be preferred over 
+<!-- highPrecedence: any URI to which this sheet's settings are applied
+     will give its containing queue a slightly-higher than default
+     queue precedence value. That queue will then be preferred over
      other queues for active crawling, never waiting behind lower-
      precedence queues. -->
 <bean id='highPrecedence' class='org.archive.spring.Sheet'>
@@ -1460,43 +1460,43 @@ metadata.description=Basic crawl starting with useful defaults
 </bean>
 -->
 
- <!-- 
+ <!--
    OPTIONAL BUT RECOMMENDED BEANS
   -->
-  
+
  <!-- ACTIONDIRECTORY: disk directory for mid-crawl operations
-      Running job will watch directory for new files with URIs, 
+      Running job will watch directory for new files with URIs,
       scripts, and other data to be processed during a crawl. -->
  <bean id="actionDirectory" class="org.archive.crawler.framework.ActionDirectory">
   <!-- <property name="actionDir" value="action" /> -->
   <!-- <property name="doneDir" value="${launchId}/actions-done" /> -->
   <!-- <property name="initialDelaySeconds" value="10" /> -->
   <!-- <property name="delaySeconds" value="30" /> -->
- </bean> 
- 
+ </bean>
+
  <!--  CRAWLLIMITENFORCER: stops crawl when it reaches configured limits -->
  <bean id="crawlLimiter" class="org.archive.crawler.framework.CrawlLimitEnforcer">
   <!-- <property name="maxBytesDownload" value="0" /> -->
   <!-- <property name="maxDocumentsDownload" value="0" /> -->
   <!-- <property name="maxTimeSeconds" value="0" /> -->
  </bean>
- 
+
  <!-- CHECKPOINTSERVICE: checkpointing assistance -->
- <bean id="checkpointService" 
+ <bean id="checkpointService"
    class="org.archive.crawler.framework.CheckpointService">
   <!-- <property name="checkpointIntervalMinutes" value="-1"/> -->
   <!-- <property name="checkpointsDir" value="checkpoints"/> -->
  </bean>
- 
- <!-- 
+
+ <!--
    OPTIONAL BEANS
-    Uncomment and expand as needed, or if non-default alternate 
+    Uncomment and expand as needed, or if non-default alternate
     implementations are preferred.
   -->
-  
+
  <!-- CANONICALIZATION POLICY -->
  <!--
- <bean id="canonicalizationPolicy" 
+ <bean id="canonicalizationPolicy"
    class="org.archive.modules.canonicalize.RulesCanonicalizationPolicy">
    <property name="rules">
     <list>
@@ -1510,42 +1510,42 @@ metadata.description=Basic crawl starting with useful defaults
   </property>
  </bean>
  -->
- 
+
 
  <!-- QUEUE ASSIGNMENT POLICY -->
  <!--
- <bean id="queueAssignmentPolicy" 
+ <bean id="queueAssignmentPolicy"
    class="org.archive.crawler.frontier.SurtAuthorityQueueAssignmentPolicy">
   <property name="forceQueueAssignment" value="" />
   <property name="deferToPrevious" value="true" />
   <property name="parallelQueues" value="1" />
  </bean>
  -->
- 
+
  <!-- URI PRECEDENCE POLICY -->
  <!--
- <bean id="uriPrecedencePolicy" 
+ <bean id="uriPrecedencePolicy"
    class="org.archive.crawler.frontier.precedence.CostUriPrecedencePolicy">
  </bean>
  -->
- 
+
  <!-- COST ASSIGNMENT POLICY -->
  <!--
- <bean id="costAssignmentPolicy" 
+ <bean id="costAssignmentPolicy"
    class="org.archive.crawler.frontier.UnitCostAssignmentPolicy">
  </bean>
  -->
- 
+
  <!-- CREDENTIAL STORE: HTTP authentication or FORM POST credentials -->
- <!-- 
- <bean id="credentialStore" 
+ <!--
+ <bean id="credentialStore"
    class="org.archive.modules.credential.CredentialStore">
  </bean>
  -->
- 
- <!-- DISK SPACE MONITOR: 
+
+ <!-- DISK SPACE MONITOR:
       Pauses the crawl if disk space at monitored paths falls below minimum threshold -->
- <!-- 
+ <!--
  <bean id="diskSpaceMonitor" class="org.archive.crawler.monitor.DiskSpaceMonitor">
    <property name="pauseThresholdMiB" value="500" />
    <property name="monitorConfigPaths" value="true" />
@@ -1556,14 +1556,14 @@ metadata.description=Basic crawl starting with useful defaults
    </property>
  </bean>
  -->
- 
- <!-- 
+
+ <!--
    REQUIRED STANDARD BEANS
     It will be very rare to replace or reconfigure the following beans.
   -->
 
  <!-- STATISTICSTRACKER: standard stats/reporting collector -->
- <bean id="statisticsTracker" 
+ <bean id="statisticsTracker"
    class="org.archive.crawler.reporting.StatisticsTracker" autowire="byName">
   <!-- <property name="reports">
         <list>
@@ -1585,9 +1585,9 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="keepSnapshotsCount" value="5" /> -->
   <!-- <property name="liveHostReportSize" value="20" /> -->
  </bean>
- 
+
  <!-- CRAWLERLOGGERMODULE: shared logging facility -->
- <bean id="loggerModule" 
+ <bean id="loggerModule"
    class="org.archive.crawler.reporting.CrawlerLoggerModule">
   <!-- <property name="path" value="${launchId}/logs" /> -->
   <!-- <property name="crawlLogPath" value="crawl.log" /> -->
@@ -1598,25 +1598,25 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="nonfatalErrorsLogPath" value="nonfatal-errors.log" /> -->
   <!-- <property name="logExtraInfo" value="false" /> -->
  </bean>
- 
+
  <!-- SHEETOVERLAYMANAGER: manager of sheets of contextual overlays
-      Autowired to include any SheetForSurtPrefix or 
+      Autowired to include any SheetForSurtPrefix or
       SheetForDecideRuled beans -->
  <bean id="sheetOverlaysManager" autowire="byType"
    class="org.archive.crawler.spring.SheetOverlaysManager">
  </bean>
 
  <!-- BDBMODULE: shared BDB-JE disk persistence manager -->
- <bean id="bdb" 
+ <bean id="bdb"
   class="org.archive.bdb.BdbModule">
   <!-- <property name="dir" value="state" /> -->
   <!-- <property name="cachePercent" value="60" /> -->
   <!-- <property name="useSharedCache" value="true" /> -->
   <!-- <property name="expectedConcurrency" value="25" /> -->
  </bean>
- 
+
  <!-- BDBCOOKIESTORAGE: disk-based cookie storage for FetchHTTP -->
- <bean id="cookieStorage" 
+ <bean id="cookieStorage"
    class="org.archive.modules.fetcher.BdbCookieStorage">
   <!-- <property name="cookiesLoadFile"><null/></property> -->
   <!-- <property name="cookiesSaveFile"><null/></property> -->
@@ -1624,9 +1624,9 @@ metadata.description=Basic crawl starting with useful defaults
         <ref bean="bdb"/>
        </property> -->
  </bean>
- 
+
  <!-- SERVERCACHE: shared cache of server/host info -->
- <bean id="serverCache" 
+ <bean id="serverCache"
    class="org.archive.modules.net.BdbServerCache">
   <!-- <property name="bdb">
         <ref bean="bdb"/>
@@ -1635,10 +1635,10 @@ metadata.description=Basic crawl starting with useful defaults
 
  <!-- CONFIG PATH CONFIGURER: required helper making crawl paths relative
       to crawler-beans.cxml file, and tracking crawl files for web UI -->
- <bean id="configPathConfigurer" 
+ <bean id="configPathConfigurer"
    class="org.archive.spring.ConfigPathConfigurer">
  </bean>
- 
+
 </beans>
 '''
 
@@ -1679,10 +1679,9 @@ if __name__ == "__main__":
     #app = wx.App(redirect=True,filename="mylogfile.txt")
     #application.listen(8888)
     #tornado.ioloop.IOLoop.instance().start()
-    
+
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
     app.MainLoop()
-    
