@@ -23,9 +23,9 @@ Python is not required to be installed for end-users, just double-click (above) 
 To compile WAIL to a system-dependent executable file to rid the local Python requirement, from the root of the WAIL source directory use:
 <h3>MacOS X</h3>
 <blockquote>sh ./bundledApps/MAKEFILE.sh</blockquote>
+This will create /Applications/WAIL.app on MacOS X.
+
 <h3>Windows</h3>
 From the Windows shell:
 <blockquote>"./bundledApps/MAKEFILE.bat</blockquote>
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
-
-This will create /Applications/WAIL.app on MacOS X. The build script only currently has preliminary support for Windows, since WAIL now includes all assets in a single file (not supported in Windows, as far as I know).
