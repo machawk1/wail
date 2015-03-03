@@ -923,12 +923,13 @@ class Heritrix(Service):
         return ret
     def fix(self, button):
         mainAppWindow.basicConfig.launchHeritrix()
+        time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def kill(self,button):
-        print "Unimplemented :("
-        return
-        cmd = tomcatPathStop
-        ret = subprocess.Popen(cmd)
+        #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
+        cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
+        print "Trying to kill Heritrix..."
+        ret = subprocess.Popen(cmd,stderr=subprocess.STDOUT,shell=True)
         time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 class HeritrixJob:
