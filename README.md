@@ -24,6 +24,8 @@ To compile WAIL to a system-dependent executable file to rid the local Python re
 <h3>MacOS X</h3>
 <blockquote>sh ./bundledApps/MAKEFILE.sh</blockquote>
 <h3>Windows</h3>
-<blockquote>pyinstaller --onefile --windowed --version-file=build/version.txt --icon=build/icons/whale_1024.ico bundledApps/WAIL.py</blockquote>
+From the Windows shell:
+<blockquote>"./bundledApps/MAKEFILE.bat</blockquote>
+then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
 This will create /Applications/WAIL.app on MacOS X. The build script only currently has preliminary support for Windows, since WAIL now includes all assets in a single file (not supported in Windows, as far as I know).
