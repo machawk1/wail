@@ -246,8 +246,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
-          self.launchHeritrix()
-          self.startHeritrixJob()
+          if not Heritrix().accessible():
+            self.launchHeritrix()
           mainAppWindow.advConfig.startTomcat(None)
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
@@ -264,6 +264,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
+        time.sleep(3)
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def startHeritrixJob(self):
         cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
         try:
@@ -425,6 +427,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 tomcatAccessible = serviceEnabled[Tomcat().accessible()]
 
+
+
+
             if hasattr(self,'status_heritrix'):
                 self.status_heritrix.SetLabel(heritrixAccessible)
                 self.status_tomcat.SetLabel(tomcatAccessible)
@@ -434,6 +439,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
                 self.status_tomcat = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
                 self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
+
+                #For eventual icons instead of text
+                #bmp = wx.Bitmap("./build/icons/famYes.png", wx.BITMAP_TYPE_ANY)
+                #bmapBtn = wx.BitmapButton(self, id=wx.ID_ANY, bitmap=bmp,pos=(col1,    rowHeight*3),size=(bmp.GetWidth()+14, bmp.GetHeight()+14),style=wx.BU_EXACTFIT)
+                #bmapBtn.SetMargins(0,0)
+                #bmapBtn.SetBackgroundColour('RED')
 
             if not hasattr(self,'fix_heritrix'):
                 print "First call, UI has not been setup"
@@ -533,8 +544,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
              	+  Heritrix().getCurrentStats(active)
              	)
         def launchWebUI(self, button):
+            if not Heritrix().accessible():
+                mainAppWindow.basicConfig.launchHeritrix()
             webbrowser.open_new_tab(uri_heritrix)
         def launchHeritrixProcess(self, button):
+            Heritrix().kill(None)
+            time.sleep(3)
             mainAppWindow.basicConfig.launchHeritrix()
         def manageJobs(self, evt):
             menu = wx.Menu()
@@ -696,7 +711,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 ##################################
 # "View Archive" Group
 ##################################
-        self.archiveViewGroup = wx.StaticBox(self, 100, groupLabel_viewArchives, (5, self.y+self.height*0), (370, 92))
+        '''self.archiveViewGroup = wx.StaticBox(self, 100, groupLabel_viewArchives, (5, self.y+self.height*0), (370, 92))
 
         self.startTomcatLabel = buttonLabel_startTomcat
         self.stopTomcatLabel = buttonLabel_stopTomcat
@@ -752,7 +767,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.heritrixOneOffButton.Bind(wx.EVT_BUTTON, self.setupOneOffCrawl)
 
         self.uriListBox = None
-
+'''
     def tomcatMessageOff(self):
         #self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
@@ -770,8 +785,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if Wayback().accessible(): waitingForTomcat = False
             time.sleep(2)
 
-        self.viewWaybackButton.Enable()
-        self.tomcatMessageOn()
+        self.waybackPanel.viewWaybackInBrowserButton.Enable() #TODO: error here
+        #self.tomcatMessageOn()
     # toggleTomcat needs to be broken up into start and stop Tomcat function, already done above
     def toggleTomcat(self, button, suppressAlert=False): #Optimize me, Seymour
         cmd = ""
@@ -784,8 +799,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             while waitingForTomcat:
                 if Wayback.accessible(): waitingForTomcat = False
                 time.sleep(2)
-            self.viewWaybackButton.Enable()
-            self.tomcatMessageOn()
+            self.viewWaybackInBrowserButton.Enable()
+            #self.tomcatMessageOn()
         else:
             self.tomcatStatus.SetLabel(msg_stoppingTomcat)
             cmd = tomcatPathStop
@@ -802,11 +817,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     tomcatStopped = True
                 time.sleep(2)
             if tomcatStopped:
-                self.viewWaybackButton.Disable()
+                self.viewWaybackInBrowserButton.Disable()
                 self.tomcatMessageOff()
             else:
                 if not suppressAlert: message = wx.MessageBox("Tomcat could not be stopped", "Command Failed")
-                self.tomcatMessageOn()
+                #self.tomcatMessageOn()
     def launchWARCProxy(self, button):
         cmd = warcProxyExecPath
         ret = subprocess.Popen(cmd)
