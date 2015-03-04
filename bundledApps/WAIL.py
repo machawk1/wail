@@ -7,7 +7,8 @@
 #  Mat Kelly <wail@matkelly.com> 2013
 
 import wx, subprocess, shlex, webbrowser, os, time, sys, datetime
-import urllib2
+import urllib
+import urllib2, base64
 import glob
 import re
 import ssl
@@ -18,19 +19,11 @@ from urlparse import urlparse
 import waybackConfigWriter
 from subprocess import Popen, PIPE
 from multiprocessing import Pool # For a more asynchronous UI, esp with accessible()s
+import logging
+import requests
+from requests.auth import HTTPDigestAuth
 
 import tarfile # For updater
-
-#import tornado.ioloop
-#import tornado.web
-
-#class MainHandler(tornado.web.RequestHandler):
-#    def get(self):
-#        self.write("Hello, world")
-
-#application = tornado.web.Application([
-#    (r"/", MainHandler),
-#])
 
 WAIL_VERSION = "1.0"
 
@@ -249,6 +242,8 @@ class WAILGUIFrame_Basic(wx.Panel):
           if not Heritrix().accessible():
             self.launchHeritrix()
           mainAppWindow.advConfig.startTomcat(None)
+          time.sleep(4)
+          self.startHeritrixJob()
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
     def writeHeritrixLogWithURI(self):
@@ -267,18 +262,40 @@ class WAILGUIFrame_Basic(wx.Panel):
         time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def startHeritrixJob(self):
-        cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
-        try:
-            ret = subprocess.Popen(cmd, shell=True)
-        except:
-            print "err 1"
+        self.buildHeritrixJob()
+        self.launchHeritrixJob()
+    def launchHeritrixJob(self):
+        print "Lanching! (not implemented)"
+    def buildHeritrixJob(self):
+        logging.basicConfig(level=logging.DEBUG)
+        print "Building heririx job"
+        data = {"action":"build"}
+        headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
+        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
 
-        time.sleep(3)
-        cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
-        try:
-            ret = subprocess.Popen(cmd, shell=True)
-        except:
-            print "err 2"
+        print r
+        print r.headers
+        print r.text
+        #data = urllib.urlencode(values)
+        #result = urllib2.urlopen(request,data)
+        #print result.read()
+
+        sys.exit()
+
+
+        #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
+        #cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
+        #try:
+        #    ret = subprocess.Popen(cmd, shell=True)
+        #except:
+        #    print "err 1"
+        #
+        #time.sleep(3)
+        #cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
+        #try:
+        #    ret = subprocess.Popen(cmd, shell=True)
+        #except:
+        #    print "err 2"
         doneArchiving = False
         while(doneArchiving):
             f = open(heritrixJobPath+self.hJob.jobNumber+"/job.log", 'r+')
