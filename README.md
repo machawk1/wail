@@ -27,5 +27,5 @@ This will create /Applications/WAIL.app on MacOS X.
 
 <h3>Windows</h3>
 From the Windows shell:
-<blockquote>"./bundledApps/MAKEFILE.bat</blockquote>
+<blockquote>"./bundledApps/MAKEFILE.bat"</blockquote>
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
