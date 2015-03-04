@@ -1690,7 +1690,7 @@ def tail(filename, lines=1, _buffer=4098):
     try:
         f = open(filename,"r")
     except:
-        return "No job info yet\nYou must run a job because stats can be shown here"
+        return "No job info yet\nYou must run a job before stats can be shown here"
     lines_found = []
     block_counter = -1
     while len(lines_found) < lines:
