@@ -619,6 +619,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if not Heritrix().accessible():
                 mainAppWindow.basicConfig.launchHeritrix()
 
+            self.hJob.buildHeritrixJob()
+            self.hJob.launchHeritrixJob()
+
+            return
+
             cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
             ret = subprocess.Popen(cmd, shell=True)
             time.sleep(3)
@@ -970,7 +975,18 @@ class HeritrixJob:
         with open(beansFilePath+"crawler-beans.cxml","w") as f:
             f.write(self.sampleXML)
             #print beansFilePath+"crawler-beans.cxml"
-
+    def launchHeritrixJob(self):
+        logging.basicConfig(level=logging.DEBUG)
+        print "Launching heririx job"
+        data = {"action":"launch"}
+        headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
+        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+    def buildHeritrixJob(self):
+        logging.basicConfig(level=logging.DEBUG)
+        print "Building heririx job"
+        data = {"action":"build"}
+        headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
+        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
     def __init__(self, uris):
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
