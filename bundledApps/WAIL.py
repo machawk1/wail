@@ -34,8 +34,8 @@ msg_stoppingTomcat = "Stopping Tomcat..."
 msg_startingTomcat = "Starting Tomcat..."
 msg_waybackEnabled = "Currently Enabled"
 msg_waybackDisabled = "Currently Disabled"
-msg_waybackNotStarted = ("Wayback does not appear to be running."
-                         "Try archiving something first.")
+msg_waybackNotStarted_title = "Wayback does not appear to be running."
+msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives = ("This URL is currently in the archives!\n\n"
                      "Hit the \"View Archive\" Button")
@@ -300,7 +300,6 @@ class WAILGUIFrame_Basic(wx.Panel):
             time.sleep(3)
             f.close()
     def checkIfURLIsInArchive(self, button):
-        #TODO: revise and decouple from PhantomJS
         url = "http://localhost:8080/wayback/*/"+self.uri.GetValue()
         req = urllib2.Request(url)
         statusCode = None
@@ -309,14 +308,16 @@ class WAILGUIFrame_Basic(wx.Panel):
             statusCode = resp.getcode()
         except urllib2.HTTPError, e:
             statusCode = e.code
-        except:
+        except: # When the server is unavailable, keep the default. This is necessary, as unavailability will still cause an exception
             ''''''
-        print statusCode
+        #print statusCode
 
         if statusCode is None:
-            wx.MessageBox(msg_waybackNotStarted)
-            #wx.MultiChoiceDialog(self, parent, message, caption, choices=EmptyList, style=CHOICEDLG_STYLE, pos=DefaultPosition)
-            Wayback().fix(None)
+            launchWaybackDialog = wx.MessageDialog(None, msg_waybackNotStarted_body, msg_waybackNotStarted_title, wx.YES_NO|wx.YES_DEFAULT)
+            launchWayback = launchWaybackDialog.ShowModal()
+            if launchWayback == wx.ID_YES:
+                Wayback().fix(None)
+                self.checkIfURLIsInArchive(button)
         elif "200" != statusCode:
             wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
