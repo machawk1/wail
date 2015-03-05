@@ -106,8 +106,6 @@ warcsFolder = ""
 tomcatPath = ""
 tomcatPathStart = ""
 tomcatPathStop = ""
-phantomJSPath = ""
-phantomJSExecPath = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
 
@@ -122,13 +120,9 @@ if 'darwin' in sys.platform:
     warcsFolder = tomcatPath+"/webapps/root/files1"
     tomcatPathStart = tomcatPath+"/bin/startup.sh"
     tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
-    phantomJSPath = wailPath+"/bundledApps/phantomjs/"
-    phantomJSExecPath = phantomJSPath+"phantomjs-osx"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    #Fix phantomJS permission
-    os.chmod(phantomJSExecPath,0744)
     #Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart,0744)
     os.chmod(tomcatPathStop,0744)
@@ -152,8 +146,6 @@ elif sys.platform.startswith('win32'):
     warcsFolder = tomcatPath + "/webapps/ROOT/files1"
     tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
-    phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
-    phantomJSExecPath = "C:/WAIL/bundledApps/phantomjs/phantomjs-win.exe"
 ###############################
 # Tab Controller (Notebook)
 ###############################
@@ -614,17 +606,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.hJob.buildHeritrixJob()
             self.hJob.launchHeritrixJob()
-
-            return
-
-            cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "buildJob.js " + uri_heritrixJob + self.hJob.jobNumber
-            ret = subprocess.Popen(cmd, shell=True)
-            time.sleep(3)
-            cmd = phantomJSExecPath + " --ignore-ssl-errors=true "+phantomJSPath + "launchJob.js " + uri_heritrixJob + self.hJob.jobNumber
-            ret = subprocess.Popen(cmd, shell=True)
-
-            #TODO: launch job just created
-            #self.uriListBox.Set([""])
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
