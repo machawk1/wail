@@ -34,8 +34,8 @@ msg_stoppingTomcat = "Stopping Tomcat..."
 msg_startingTomcat = "Starting Tomcat..."
 msg_waybackEnabled = "Currently Enabled"
 msg_waybackDisabled = "Currently Disabled"
-msg_waybackNotStarted = ("Wayback Does not Appear to Be started."
-                         "Try Archiving something first.")
+msg_waybackNotStarted = ("Wayback does not appear to be running."
+                         "Try archiving something first.")
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives = ("This URL is currently in the archives!\n\n"
                      "Hit the \"View Archive\" Button")
@@ -300,23 +300,25 @@ class WAILGUIFrame_Basic(wx.Panel):
             time.sleep(3)
             f.close()
     def checkIfURLIsInArchive(self, button):
-        cmd = phantomJSExecPath + " " + phantomJSPath + "existsInArchive.js " +self.uri.GetValue()
-        ret = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
-        retCode = ""
-        while True:
-            out = ret.stdout.read(1)
-            if out == '' and ret.poll() != None:
-                break
-            if out != '':
-                retCode += out
-                #sys.stdout.write(out)
-                sys.stdout.flush()
-        retCode = str(retCode.rstrip("\r\n"))
-        if "-1" == retCode:
-            wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
-        elif retCode == "":
+        #TODO: revise and decouple from PhantomJS
+        url = "http://localhost:8080/wayback/*/"+self.uri.GetValue()
+        req = urllib2.Request(url)
+        statusCode = None
+        try:
+            resp = urllib2.urlopen(req)
+            statusCode = resp.getcode()
+        except urllib2.HTTPError, e:
+            statusCode = e.code
+        except:
+            ''''''
+        print statusCode
+
+        if statusCode is None:
             wx.MessageBox(msg_waybackNotStarted)
-            mainAppWindow.advConfig.toggleTomcat(None)
+            #wx.MultiChoiceDialog(self, parent, message, caption, choices=EmptyList, style=CHOICEDLG_STYLE, pos=DefaultPosition)
+            Wayback().fix(None)
+        elif "200" != statusCode:
+            wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
             wx.MessageBox(msg_uriInArchives)
     def viewArchiveInBrowser(self, button):
