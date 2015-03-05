@@ -37,8 +37,8 @@ msg_waybackDisabled = "Currently Disabled"
 msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
-msg_uriInArchives = ("This URL is currently in the archives!\n\n"
-                     "Hit the \"View Archive\" Button")
+msg_uriInArchives_title = "This page has been archived!"
+msg_uriInArchives_body = "This URL is currently in the archives! Hit the \"View Archive\" Button"
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -293,17 +293,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         except: # When the server is unavailable, keep the default. This is necessary, as unavailability will still cause an exception
             ''''''
         #print statusCode
-
+        print statusCode
         if statusCode is None:
             launchWaybackDialog = wx.MessageDialog(None, msg_waybackNotStarted_body, msg_waybackNotStarted_title, wx.YES_NO|wx.YES_DEFAULT)
             launchWayback = launchWaybackDialog.ShowModal()
             if launchWayback == wx.ID_YES:
                 Wayback().fix(None)
                 self.checkIfURLIsInArchive(button)
-        elif "200" != statusCode:
+        elif 200 != statusCode:
             wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
-            wx.MessageBox(msg_uriInArchives)
+            wx.MessageBox(msg_uriInArchives_body,msg_uriInArchives_title)
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
             webbrowser.open_new_tab(uri_wayback_allMementos + self.uri.GetValue())
