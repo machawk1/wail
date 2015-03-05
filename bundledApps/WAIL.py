@@ -3,7 +3,7 @@
 
 # Web Archiving Integration Layer (WAIL)
 #  This tool ties together web archiving applications including Wayback,
-#   Heritrix, WARC-Proxy and Tomcat.
+#   Heritrix, and Tomcat.
 #  Mat Kelly <wail@matkelly.com> 2013
 
 import wx, subprocess, shlex, webbrowser, os, time, sys, datetime
@@ -72,17 +72,13 @@ aboutWindow_iconPath = "/build/icons/whale.ico"
 buttonLabel_wayback = "View Wayback in Browser"
 buttonLabel_editWaybackConfig = "Edit Wayback Configuration"
 buttonLabel_resetWaybackConfig = "Reset Wayback Configuration"
-buttonLabel_warcProxy = "View WARC Contents"
 buttonLabel_startTomcat = "Start Tomcat Process"
 buttonLabel_stopTomcat = "Stop Tomcat Process"
 buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
-buttonLabel_launchWarcProxy = "Launch WARC-Proxy"
 buttonLabel_viewArchiveFiles = "View Archive Files"
 
-groupLabel_createArchives = "Heritrix (Create Archives)"
-groupLabel_viewArchives = "Wayback Machine / Tomcat / WARC-Proxy (View Archives)"
 groupLabel_window = "Web Archiving Integration Layer"
 
 menuTitle_about = "&About WAIL"
@@ -98,7 +94,6 @@ uri_wayback_allMementos = uri_wayback + "*/"
 uri_heritrix = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
 uri_heritrix_accessiblityURI = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
 uri_heritrixJob = uri_heritrix+"/engine/job/"
-uri_warcProxy = "http://localhost:8000"
 
 ###############################
 # Platform-specific paths
@@ -113,7 +108,6 @@ tomcatPathStart = ""
 tomcatPathStop = ""
 phantomJSPath = ""
 phantomJSExecPath = ""
-warcProxyExecPath = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
 
@@ -130,7 +124,6 @@ if 'darwin' in sys.platform:
     tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
     phantomJSPath = wailPath+"/bundledApps/phantomjs/"
     phantomJSExecPath = phantomJSPath+"phantomjs-osx"
-    warcProxyExecPath = wailPath+"/bundledApps/warc-proxy/mac/dist/warcproxy"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
@@ -140,8 +133,6 @@ if 'darwin' in sys.platform:
     os.chmod(tomcatPathStart,0744)
     os.chmod(tomcatPathStop,0744)
     os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
-    #Fix warc-proxy bin permission
-    os.chmod(warcProxyExecPath,0744)
 
     # Change all permissions within the app bundle (a big hammer)
     for r,d,f in os.walk(wailPath):
@@ -163,7 +154,6 @@ elif sys.platform.startswith('win32'):
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
     phantomJSPath = "C:/WAIL/bundledApps/phantomjs/"
     phantomJSExecPath = "C:/WAIL/bundledApps/phantomjs/phantomjs-win.exe"
-    warcProxyExecPath = "C:/WAIL/bundledApps/warcproxy-bin/dist/warcproxy/warcproxy.exe"
 ###############################
 # Tab Controller (Notebook)
 ###############################
@@ -639,22 +629,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            #launchWarcProxyButton = wx.Button(self, 1, buttonLabel_launchWarcProxy,   (0, 0), bsize) # Disabled until dependencies are resolved with new WAIL hierarchy
             viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 0), bsize)
-            #wx.Button(self, 1, "Setup WARC-Proxy",   (0,25), bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
 
-            #launchWarcProxyButton.Bind(wx.EVT_BUTTON, self.launchWarcProxy) # Disabled until dependencies are resolved with new WAIL hierarchy
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
-        def launchWarcProxy(self, button):
-            cmd = warcProxyExecPath
-            print cmd
-            ret = subprocess.Popen(cmd)
-            time.sleep(2)
-            webbrowser.open_new_tab(uri_warcProxy)
         def openArchivesFolder(self, button):
             if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
 
@@ -725,67 +706,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
         bsize = self.width, self.height = (150, 25*.80)
 
         smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
-        return		#add for recursive tabs
 ##################################
 # "View Archive" Group
 ##################################
-        '''self.archiveViewGroup = wx.StaticBox(self, 100, groupLabel_viewArchives, (5, self.y+self.height*0), (370, 92))
-
-        self.startTomcatLabel = buttonLabel_startTomcat
-        self.stopTomcatLabel = buttonLabel_stopTomcat
-        self.startTomcatButton = wx.Button(self, 1, buttonLabel_startTomcat,   (self.x, self.y+self.height*1), bsize)
-        self.startTomcatButton.SetFont(smallFont)
-
-        self.viewWaybackButton = wx.Button(self, 2, buttonLabel_wayback,   (self.x, self.y+self.height*2+5), bsize)
-        self.viewWaybackButton.Disable()
-        self.viewWaybackButton.SetFont(smallFont)
-
-        self.viewWARCContents = wx.Button(self, 2, buttonLabel_warcProxy,   (self.x, self.y+self.height*3+10), bsize)
-        self.viewWARCContents.SetFont(smallFont)
-        #self.viewWARCContents.Disable()
-
-##################################
-# "Create Archive" Group
-##################################
-        self.archiveViewGroup = wx.StaticBox(self, 101, groupLabel_createArchives, (5, self.y+self.height*4+15), (370, 80))
-
-        self.launchHeritrixButton = wx.Button(self, 4, buttonLabel_startHeritrix, (self.x, self.y+self.height*5+20), bsize)
-        self.launchHeritrixButton.SetFont(smallFont)
-        self.viewHeritrixButton = wx.Button(self, 5, buttonLabel_viewHeritrix, (self.x, self.y+self.height*6+25 ), bsize)
-        #self.viewHeritrixButton.Disable()
-        self.viewHeritrixButton.SetFont(smallFont)
-        self.heritrixOneOffButton = wx.Button(self, 7, buttonLabel_setupCrawl, (self.width + 20, self.y+self.height*5+20), bsize)
-        self.heritrixOneOffButton.SetFont(smallFont)
-
-##################################
-# Set Wayback/Tomcat status (up/down)
-##################################
-        waybackAccessibilityMessage = msg_waybackEnabled
-        waybackAccessibilityMessageColor = (0, 200, 0)
-
-        if Tomcat.accessible():
-            self.startTomcatButton.SetLabel(buttonLabel_stopTomcat)
-            waybackAccessibilityMessage = msg_waybackEnabled
-        else:
-            waybackAccessibilityMessageColor = (255, 0, 0)
-            waybackAccessibilityMessage = msg_waybackDisabled
-        self.tomcatStatus = wx.StaticText(self, 6, waybackAccessibilityMessage,  (self.width+20, self.y+self.height*1))
-        self.tomcatStatus.SetForegroundColour(waybackAccessibilityMessageColor)
-
-
-
-##################################
-# Add Functionality to Button
-##################################
-        self.startTomcatButton.Bind(wx.EVT_BUTTON, self.toggleTomcat)
-        self.launchHeritrixButton.Bind(wx.EVT_BUTTON, self.launchHeritrix)
-        self.viewHeritrixButton.Bind(wx.EVT_BUTTON, self.viewHeritrix)
-        self.viewWARCContents.Bind(wx.EVT_BUTTON, self.launchWARCProxy)
-        self.viewWaybackButton.Bind(wx.EVT_BUTTON, self.viewWayback)
-        self.heritrixOneOffButton.Bind(wx.EVT_BUTTON, self.setupOneOffCrawl)
-
-        self.uriListBox = None
-'''
     def tomcatMessageOff(self):
         #self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
@@ -840,11 +763,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 if not suppressAlert: message = wx.MessageBox("Tomcat could not be stopped", "Command Failed")
                 #self.tomcatMessageOn()
-    def launchWARCProxy(self, button):
-        cmd = warcProxyExecPath
-        ret = subprocess.Popen(cmd)
-        time.sleep(2)
-        webbrowser.open_new_tab(uri_warcProxy)
     def launchHeritrix(self, button):
         #self.heritrixStatus.SetLabel("Launching Heritrix")
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
