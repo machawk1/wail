@@ -226,6 +226,7 @@ class WAILGUIFrame_Basic(wx.Panel):
           mainAppWindow.advConfig.startTomcat(None)
           time.sleep(4)
           self.startHeritrixJob()
+          mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
     def writeHeritrixLogWithURI(self):
@@ -836,6 +837,10 @@ class Heritrix(Service):
             return os.path.basename(fullPath)
         #str = '\n'.join(map(justFile,glob.glob(os.path.join(heritrixJobPath, '*'))))
         return map(justFile, glob.glob(os.path.join(heritrixJobPath, '*')))
+    ''' # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
+        -H "Accept: application/xml"
+        # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://localhost:8443/engine
+    '''
     def getJobLaunches(self, jobId):
         jobPath = heritrixJobPath+jobId
         return [f for f in os.listdir(heritrixJobPath+jobId) if re.search(r'^[0-9]+$', f)]
