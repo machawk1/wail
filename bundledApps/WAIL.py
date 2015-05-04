@@ -21,6 +21,7 @@ from subprocess import Popen, PIPE
 from multiprocessing import Pool # For a more asynchronous UI, esp with accessible()s
 import logging
 import requests
+import threading # necessary for polling/indexing
 from requests.auth import HTTPDigestAuth
 
 import tarfile # For updater
@@ -117,7 +118,7 @@ if 'darwin' in sys.platform:
     heritrixJobPath = heritrixPath+"jobs/"
     fontSize = 10
     tomcatPath = wailPath+"/bundledApps/tomcat"
-    warcsFolder = tomcatPath+"/webapps/root/files1"
+    warcsFolder = tomcatPath+"/webapps/ROOT/files1"
     tomcatPathStart = tomcatPath+"/bin/startup.sh"
     tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
 
@@ -827,6 +828,14 @@ class Wayback(Service):
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+    def index(self):
+        paths = [fn+"\t"+os.path.join(warcsFolder,fn) for fn in next(os.walk(warcsFolder))[2]] #could probably put some .warc restrcitions here
+
+        f = open(warcsFolder+"/../path-index.txt", 'w+')
+        f.write("\n".join(paths))
+
+        #TODO: check if the file was updated. If so, invoke cdx-indexer
+        threading.Timer(5.0, Wayback().index).start()
 class Tomcat(Service):
     uri = uri_wayback
 class Heritrix(Service):
@@ -1633,4 +1642,8 @@ if __name__ == "__main__":
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
+
+    # Start indexer
+    Wayback().index()
+
     app.MainLoop()
