@@ -34,20 +34,20 @@
 	The ResourceFileLocationDB implementation to use for mapping ARC/WARC names
 	to absolute paths/URLs via a BDBJE database.
 -->
+<!--
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.BDBResourceFileLocationDB">
     <property name="bdbPath" value="${wayback.basedir}/file-db/db/" />
     <property name="bdbName" value="DB1" />
     <property name="logPath" value="${wayback.basedir}/file-db/db.log" />
   </bean>
+-->
 <!--
 	The following bean provides an alternate flat-file based LocationDB
 	implementation.
 -->
-<!--
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.FlatFileResourceFileLocationDB">
     <property name="path" value="${wayback.basedir}/path-index.txt" />
   </bean>
--->
 <!--
     To enable manual management of, or remote access to the above locationDB,
     uncomment the following bean.
