@@ -35,7 +35,7 @@ VSVersionInfo(
         StringStruct(u'InternalName', u'WAIL'), 
         StringStruct(u'OriginalFilename', u'wail.exe'), 
         StringStruct(u'FileVersion', u'1, 0, 0, 0'), 
-        StringStruct(u'FileDescription', u'(description)f'), 
+        StringStruct(u'FileDescription', u'OpenWayback, Heritrix, and other web archiving tools bundled into a graphical user interface.'), 
         StringStruct(u'LegalCopyright', u'GPLv2'), 
         StringStruct(u'LegalTrademarks', u'GPLv2'),])
       ]), 
