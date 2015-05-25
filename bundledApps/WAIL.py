@@ -18,11 +18,13 @@ from urlparse import urlparse
 #from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
-from multiprocessing import Pool # For a more asynchronous UI, esp with accessible()s
+from multiprocessing import Pool as Thread# For a more asynchronous UI, esp with accessible()s
 import logging
 import requests
 import threading # necessary for polling/indexing
 from requests.auth import HTTPDigestAuth
+
+import wxversion
 
 import tarfile # For updater
 
@@ -199,6 +201,7 @@ class TabController(wx.Frame):
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
         # Alert the user to move the file. Exit the program
            wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location",)
+           print "WAIL must reside in your Applications directory. Move it there then relaunch. Current Location: "+os.path.dirname(os.path.abspath(__file__))
            #sys.exit()
     def quit(self, button):
         sys.exit()
@@ -271,18 +274,6 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
-
-        #The below does not seem relevant since we are now using the Heritrix API
-        doneArchiving = False
-        while(doneArchiving):
-            f = open(heritrixJobPath+self.hJob.jobNumber+"/job.log", 'r+')
-            wx.MessageBox(heritrixJobPath+self.hJob.jobNumber+"/job.log")
-            lines = f.readlines()
-            lastLine = lines[len(lines-1)]
-            if "FINISHED" in lastLine:
-                doneArchiving = True
-            time.sleep(3)
-            f.close()
     def checkIfURLIsInArchive(self, button):
         url = "http://localhost:8080/wayback/*/"+self.uri.GetValue()
         req = urllib2.Request(url)
@@ -320,7 +311,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
-    class GeneralPanel(wx.Panel):
+    class GeneralPanel(wx.Panel, threading.Thread):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             colWidth = 60
@@ -382,6 +373,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.CallLater(2000, self.updateServiceStatuses)
             #pool.apply_async(self.updateServiceStatuses)
             self.updateServiceStatuses()
+
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath+"lib/"):
               if file.startswith("heritrix-commons"):
@@ -1634,10 +1626,6 @@ def copyanything(src, dst):
 mainAppWindow = None
 
 if __name__ == "__main__":
-    #app = wx.App(redirect=True,filename="mylogfile.txt")
-    #application.listen(8888)
-    #tornado.ioloop.IOLoop.instance().start()
-
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
