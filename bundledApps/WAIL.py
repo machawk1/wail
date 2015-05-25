@@ -830,7 +830,7 @@ class Tomcat(Service):
     uri = uri_wayback
 class Heritrix(Service):
     #uri = uri_heritrix_accessiblityURI
-    uri = "https://127.0.0.1:8443"
+    uri = "https://127.0.0.1:8443" #TODO: remove magic hard-coded Heritrix address/port
     def getListOfJobs(self):
         def justFile(fullPath):
             return os.path.basename(fullPath)
