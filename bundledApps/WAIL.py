@@ -320,8 +320,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col0 = colWidth*0+10
             wx.StaticText(self, 100, tabLabel_advanced_general_serviceStatus, (col0-10,    rowHeight*0),      cellSize)
-            wx.StaticText(self, 100, tabLabel_advanced_heritrix,       (col0, rowHeight*1),      cellSize)
-            wx.StaticText(self, 100, tabLabel_advanced_wayback,        (col0, rowHeight*2),      cellSize)
+            wx.StaticText(self, 100, tabLabel_advanced_wayback,       (col0, rowHeight*1),      cellSize)
+            wx.StaticText(self, 100, tabLabel_advanced_heritrix,        (col0, rowHeight*2),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
 
             col1 = 65+colWidth*1
@@ -334,39 +334,38 @@ class WAILGUIFrame_Advanced(wx.Panel):
             col2 = col1+colWidth
             cellSize_versionFix = (50,rowHeight)
             wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize_versionFix)
-            wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*1),     cellSize_versionFix)
-            wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*2),     cellSize_versionFix)
+            wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*1),     cellSize_versionFix)
+            wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*2),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize_versionFix)
 
             col3 = col2+colWidth
             buttonSize = (50, rowHeight-6)
             buttonSize = (50, rowHeight) #redefining for Windows, needs regression testing on OS X
             smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
-            self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
-            self.fix_heritrix.SetFont(smallFont)
-            self.fix_wayback = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
+            self.fix_wayback = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
             self.fix_wayback.SetFont(smallFont)
+            self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
+            self.fix_heritrix.SetFont(smallFont)
             self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.fix_tomcat.SetFont(smallFont)
 
             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
 
-
-            self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
+            self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
             self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
 
             col4 = col3+colWidth
 
-            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
-            self.kill_heritrix.SetFont(smallFont)
-            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
+            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
             self.kill_wayback.SetFont(smallFont)
+            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
+            self.kill_heritrix.SetFont(smallFont)
             self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
             self.kill_tomcat.SetFont(smallFont)
 
-            self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
+            self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
             self.kill_tomcat.Bind(wx.EVT_BUTTON, Wayback().kill)
 
 
@@ -657,7 +656,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        #wx.Frame.__init__(self, None, title="foo")
 
         self.Notebook = wx.Notebook(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
