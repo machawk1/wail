@@ -428,8 +428,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.status_wayback.SetLabel(tomcatAccessible)
             else:
                 wx.StaticText(self, 100, "STATE",          (col1,    rowHeight*0),      cellSize)
-                self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
-                self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
+                self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*1),      cellSize)
+                self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*2),      cellSize)
+                
 
                 #For eventual icons instead of text
                 #bmp = wx.Bitmap("./build/icons/famYes.png", wx.BITMAP_TYPE_ANY)
