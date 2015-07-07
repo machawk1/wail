@@ -52,7 +52,6 @@ tabLabel_advanced = "Advanced"
 tabLabel_advanced_general = "General"
 tabLabel_advanced_wayback = "Wayback"
 tabLabel_advanced_heritrix = "Heritrix"
-tabLabel_advanced_tomcat = "Tomcat"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
 tabLabel_advanced_general_serviceStatus = "SERVICE STATUS"
 
@@ -78,8 +77,6 @@ aboutWindow_iconPath = "/build/icons/whale.ico"
 buttonLabel_wayback = "View Wayback in Browser"
 buttonLabel_editWaybackConfig = "Edit Wayback Configuration"
 buttonLabel_resetWaybackConfig = "Reset Wayback Configuration"
-buttonLabel_startTomcat = "Start Tomcat Process"
-buttonLabel_stopTomcat = "Stop Tomcat Process"
 buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
@@ -338,7 +335,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             wx.StaticText(self, 100, tabLabel_advanced_general_serviceStatus, (col0-10,    rowHeight*0),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_wayback,       (col0, rowHeight*1),      cellSize)
             wx.StaticText(self, 100, tabLabel_advanced_heritrix,        (col0, rowHeight*2),      cellSize)
-            wx.StaticText(self, 100, tabLabel_advanced_tomcat,         (col0, rowHeight*3),      cellSize)
 
             col1 = 65+colWidth*1
 
@@ -352,7 +348,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             wx.StaticText(self, 100, "VERSION",                 (col2,     rowHeight*0),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getWaybackVersion(),                     (col2,     rowHeight*1),     cellSize_versionFix)
             wx.StaticText(self, 100, self.getHeritrixVersion(True), (col2,     rowHeight*2),     cellSize_versionFix)
-            wx.StaticText(self, 100, self.getTomcatVersion(),                     (col2,     rowHeight*3),     cellSize_versionFix)
 
             col3 = col2+colWidth
             buttonSize = (50, rowHeight-6)
@@ -362,14 +357,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_wayback.SetFont(smallFont)
             self.fix_heritrix = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
             self.fix_heritrix.SetFont(smallFont)
-            self.fix_tomcat = wx.Button(self, 1, buttonLabel_fix,                (col3,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
-            self.fix_tomcat.SetFont(smallFont)
 
             #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
-            self.fix_tomcat.Bind(wx.EVT_BUTTON, Wayback().fix)
 
             col4 = col3+colWidth
 
@@ -377,12 +369,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback.SetFont(smallFont)
             self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
             self.kill_heritrix.SetFont(smallFont)
-            self.kill_tomcat = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*3),     buttonSize,wx.BU_EXACTFIT)
-            self.kill_tomcat.SetFont(smallFont)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
-            self.kill_tomcat.Bind(wx.EVT_BUTTON, Wayback().kill)
 
 
             #wx.CallLater(2000, self.updateServiceStatuses)
@@ -436,13 +425,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             if hasattr(self,'status_heritrix'):
                 self.status_heritrix.SetLabel(heritrixAccessible)
-                self.status_tomcat.SetLabel(tomcatAccessible)
                 self.status_wayback.SetLabel(tomcatAccessible)
             else:
                 wx.StaticText(self, 100, "STATE",          (col1,    rowHeight*0),      cellSize)
                 self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*1),      cellSize)
-                self.status_tomcat = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
-                self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*3),      cellSize)
+                self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*2),      cellSize)
 
                 #For eventual icons instead of text
                 #bmp = wx.Bitmap("./build/icons/famYes.png", wx.BITMAP_TYPE_ANY)
@@ -464,14 +451,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             if tomcatAccessible is serviceEnabledLabel_YES:
                 self.fix_wayback.Disable()
-                self.fix_tomcat.Disable()
                 self.kill_wayback.Enable()
-                self.kill_tomcat.Enable()
             else:
                 self.fix_wayback.Enable()
-                self.fix_tomcat.Enable()
                 self.kill_wayback.Disable()
-                self.kill_tomcat.Disable()
 
 
              ##################################
