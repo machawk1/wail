@@ -1629,6 +1629,6 @@ if __name__ == "__main__":
     mainAppWindow.Show()
 
     # Start indexer
-    Wayback().index()
+    #Wayback().index()
 
     app.MainLoop()
