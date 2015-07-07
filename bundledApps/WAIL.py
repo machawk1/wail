@@ -338,10 +338,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col1 = 65+colWidth*1
 
-            #pool = Pool(processes=1)  # attempt at making this more asynchronous
-            #pool.apply_async(self.updateServiceStatuses)
             self.updateServiceStatuses()
-            #wx.CallLater(0, self.updateServiceStatuses)
 
             col2 = col1+colWidth
             cellSize_versionFix = (50,rowHeight)
@@ -401,7 +398,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     break
             f.close()
             return version
-        def updateServiceStatuses(self):
+        def updateServiceStatuses(self, serviceId=None, transitionalStatus=None):
             ##################################
             # Check if each service is enabled and set the GUI elements accordingly
             ##################################
@@ -420,7 +417,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 tomcatAccessible = serviceEnabled[Tomcat().accessible()]
 
-
+            # Update a transitional status and short circuit
+            if serviceId and transitionalStatus:
+              if serviceId is "wayback":
+                self.status_wayback.SetLabel(transitionalStatus)
+                return
+              elif serviceId is "heritrix":
+                self.status_heritrix.SetLabel(transitionalStatus)
+                return
+              else:
+                print "Invalid transitional service id specified. Updating status per usual."
+            
 
 
             if hasattr(self,'status_heritrix'):
@@ -811,6 +818,7 @@ class Wayback(Service):
     def fix(self, button):
         thread.start_new_thread(self.fixAsync,())
     def fixAsync(self):
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
         cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -819,6 +827,7 @@ class Wayback(Service):
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
     def killAsync(self):
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","KILLING")
         cmd = tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -866,12 +875,14 @@ class Heritrix(Service):
     def fix(self, button):
         thread.start_new_thread(self.fixAsync,())
     def fixAsync(self):
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
     def killAsync(self):
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","KILLING")
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print "Trying to kill Heritrix..."
