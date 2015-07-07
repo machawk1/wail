@@ -9,23 +9,14 @@ function getEventX(event) {
 	}
 	return posx;
 }
-function getOffset(elem) {
-    var box = {top: 0, left: 0};
-
-    // BlackBerry 5, iOS 3 (original iPhone)
-    if (typeof elem.getBoundingClientRect !== typeof undefined) {
-        box = elem.getBoundingClientRect();
-    }
-
-    var win = window;
-    var docElem = elem.ownerDocument.documentElement;
-    return {
-        top: box.top + (win.pageYOffset || docElem.scrollTop) - (docElem.clientTop || 0),
-        left: box.left + (win.pageXOffset || docElem.scrollLeft) - (docElem.clientLeft || 0)
-    };
-};
 function getElementX(obj) {
-    return Math.round(getOffset(obj).left);
+	var x = 0;
+	if (obj.offsetParent) {
+		do {
+			x += obj.offsetLeft;
+		} while (obj = obj.offsetParent);
+	}
+	return x;
 }
 function zeroPad(str,len) {
 	var i;

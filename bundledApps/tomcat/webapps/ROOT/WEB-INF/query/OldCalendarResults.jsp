@@ -40,7 +40,7 @@ int numPartitions = partitions.size();
             <%= fmt.format("PathQueryClassic.searchedFor",searchString) %>
       </td>
       <td align="right">
-            <%= fmt.format("PathQuery.anchorWindowText") %>
+            Set Anchor Window:
             <jsp:include page="/WEB-INF/template/AnchorWindow.jsp" flush="true" />
             <%= fmt.format("PathQueryClassic.resultsSummary",resultCount) %>
       </td>
@@ -160,7 +160,7 @@ if(closeMatches != null && !closeMatches.isEmpty()) {
 	
 	
 	%>
-	<%= fmt.format("PathQuery.closeMatchesText") %><br>
+	Close Matches:<br>
 	<%
 	for(String closeMatch : closeMatches) {
 		tmp.setRequestUrl(closeMatch);

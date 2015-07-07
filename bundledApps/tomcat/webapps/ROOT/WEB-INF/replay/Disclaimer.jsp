@@ -20,7 +20,8 @@ if(result != null) {
                     		fmt.format("MetaReplay.captureDateDisplay",
                     				dupeDate) + ")";
                 }
-                dupeMsg = fmt.format("ReplayView.disclaimerText", dupeDate);
+                dupeMsg = " Note that this document was downloaded, and not saved because it was a duplicate of a previously captured version " + 
+                          prettyDate + ". HTTP headers presented here are from the original capture.";
         }
 }
 

@@ -36,14 +36,14 @@ StringFormatter fmt = results.getWbRequest().getFormatter();
             <div id="error">
 
                 <h2><%= fmt.format(e.getTitleKey()) %></h2>
-                <p><%=fmt.escapeHtml( fmt.format(e.getMessageKey(),e.getMessage()) )%></p>
+                <p><%= fmt.format(e.getMessageKey(),e.getMessage()) %></p>
 <%
 if(e instanceof ResourceNotInArchiveException) {
 	ResourceNotInArchiveException niae = (ResourceNotInArchiveException) e;
 	List<String> closeMatches = niae.getCloseMatches();
 	if(closeMatches != null && !closeMatches.isEmpty()) {
 %>
-		        <p><%= fmt.format("HTMLError.tryMatches") %></p>
+		        <p>Other possible close matches to try:</p>
 		        <p>
 <%
 		WaybackRequest tmp = wbr.clone();
@@ -67,8 +67,8 @@ if(e instanceof ResourceNotInArchiveException) {
 		String escapedParentUrl = fmt.escapeHtml(parentUrl);
 		%>
 		        </p>
-		        <p><%= fmt.format("HTMLError.moreOptions") %></p>
-			    <p><%= fmt.format("HTMLError.trySearching") %> <a href="<%= escapedLink %>"><%= escapedParentUrl %></a></p>
+		        <p>More options:</p>
+			    <p>Try Searching all pages under <a href="<%= escapedLink %>"><%= escapedParentUrl %></a></p>
 		<%
 	}
 } else if(e instanceof SpecificCaptureReplayException) {
@@ -85,18 +85,18 @@ if(e instanceof ResourceNotInArchiveException) {
 	                String safePrevReplay = fmt.escapeHtml(conv.makeReplayURI(prev.getCaptureTimestamp(),prev.getOriginalUrl()));
 	                String safeNextReplay = fmt.escapeHtml(conv.makeReplayURI(next.getCaptureTimestamp(),next.getOriginalUrl()));
 	                %>
-	                <%= fmt.format("HTMLError.likeToTry") %> <a href="<%= safePrevReplay %>"><%= fmt.format("UIGlobal.previous") %></a> or <a href="<%= safeNextReplay %>"><%= fmt.format("UIGlobal.next") %></a> <%= fmt.format("HTMLError.date") %>
+	                Would you like to try the <a href="<%= safePrevReplay %>">previous</a> or <a href="<%= safeNextReplay %>">next</a> date?
 	                <%
 	        } else if (prev != null) {
 	                String safePrevReplay = fmt.escapeHtml(conv.makeReplayURI(prev.getCaptureTimestamp(),prev.getOriginalUrl()));
 	                %>
-	                <%= fmt.format("HTMLError.likeToTry") %><a href="<%= safePrevReplay %>"><%= fmt.format("UIGlobal.previous") %></a> <%= fmt.format("HTMLError.date") %>
+	                Would you like to try the <a href="<%= safePrevReplay %>">previous</a> date?
 	                <%
 
 	        } else if (next != null) {
 	                String safeNextReplay = fmt.escapeHtml(conv.makeReplayURI(next.getCaptureTimestamp(),next.getOriginalUrl()));
 	                %>
-	                <%= fmt.format("HTMLError.likeToTry") %><a href="<%= safeNextReplay %>"><%= fmt.format("UIGlobal.next") %></a> <%= fmt.format("HTMLError.date") %>
+	                Would you like to try the <a href="<%= safeNextReplay %>">next</a> date?
 	                <%
 	        }
 	        %>

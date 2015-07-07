@@ -11,7 +11,6 @@
 <%@ page import="org.archive.wayback.core.UIResults" %>
 <%@ page import="org.archive.wayback.core.WaybackRequest" %>
 <%@ page import="org.archive.wayback.partition.BubbleCalendarData" %>
-<%@ page import="org.archive.wayback.util.Timestamp" %>
 <%@ page import="org.archive.wayback.util.partition.Partition" %>
 <%@ page import="org.archive.wayback.util.StringFormatter" %>
 <jsp:include page="/WEB-INF/template/CookieJS.jsp" flush="true" />
@@ -38,9 +37,8 @@ int imgWidth = 0;
 int imgHeight = 75;
 int yearWidth = 49;
 int monthWidth = 5;
-int startYear = Timestamp.getStartYear();
 
-for (int year = startYear; year <= Calendar.getInstance().get(Calendar.YEAR); year++)
+for (int year = 1996; year <= Calendar.getInstance().get(Calendar.YEAR); year++)
     imgWidth += yearWidth;
 
 BubbleCalendarData data = new BubbleCalendarData(results);
@@ -69,11 +67,11 @@ var lastDate = <%= data.dataEndMSSE %>;
 var wbPrefix = "<%= replayPrefix %>";
 var wbCurrentUrl = "<%= data.searchUrlForJS %>";
 
-var curYear = <%= data.yearNum - startYear %>;
+var curYear = <%= data.yearNum - 1996 %>;
 var curMonth = -1;
 var yearCount = 15;
-var firstYear = <%= startYear %>;
-var startYear = <%= data.yearNum - startYear %>;
+var firstYear = 1996;
+var startYear = <%= data.yearNum - 1996 %>;
 var imgWidth = <%= imgWidth %>;
 var yearImgWidth = <%= yearWidth %>;
 var monthImgWidth = <%= monthWidth %>;
@@ -224,8 +222,8 @@ $().ready(function(){
             </form>
     
             <div id="wbMeta">
-                <p class="wbThis"><a href="<%= data.searchUrlForHTML %>"><%= data.searchUrlForHTML %></a> <%= fmt.format("BubbleCalendar.crawledInfo") %><strong><%= fmt.format("{0} times",data.numResults) %></strong> <%= fmt.format("BubbleCalendar.crawledInfo2") %><a href="<%= data.firstResultReplayUrl %>"><%= fmt.format("{0,date,MMMM d, yyyy}",data.firstResultDate) %></a>.</p>
-                <p class="wbNote"><%= fmt.format("BubbleCalendar.crawledInfoDuplicate") %><a href="<%= fmt.format("UIGlobal.helpUrl") %>"><%= fmt.format("BubbleCalendar.documentation") %></a></p>
+                <p class="wbThis"><a href="<%= data.searchUrlForHTML %>"><%= data.searchUrlForHTML %></a> has been crawled <strong><%= fmt.format("{0} times",data.numResults) %></strong> going all the way back to <a href="<%= data.firstResultReplayUrl %>"><%= fmt.format("{0,date,MMMM d, yyyy}",data.firstResultDate) %></a>.</p>
+                <p class="wbNote">A crawl can be a duplicate of the last one. It happens about 25% of the time across 420,000,000 websites. <a href="<%= fmt.format("UIGlobal.helpUrl") %>">Documentation</a></p>
             </div>
         </div>
         
@@ -262,7 +260,7 @@ $().ready(function(){
         </div>
         </a>
         	<%
-        	for(int i = startYear; i <= Calendar.getInstance().get(Calendar.YEAR); i++) {
+        	for(int i = 1996; i <= Calendar.getInstance().get(Calendar.YEAR); i++) {
         		String curClass = "inactiveHighlight";
         		if(data.yearNum == i) {
             		curClass = "activeHighlight";
@@ -271,8 +269,8 @@ $().ready(function(){
 	            <div class="wbChartThisContainer">
 	                <a style="text-decoration: none;" href="<%= queryPrefix + i + "0201000000*/" + data.searchUrlForHTML %>">
 	                
-	                	<div id="highlight-<%= i - startYear %>"
-						onmouseover="showTrackers('inline'); setActiveYear(<%= i - startYear %>)" 
+	                	<div id="highlight-<%= i - 1996 %>"
+						onmouseover="showTrackers('inline'); setActiveYear(<%= i - 1996 %>)" 
 	                	class="<%= curClass %>"><%= i %></div>
 	                </a>
 	            </div>
@@ -469,8 +467,8 @@ for(int moy = 0; moy < 12; moy++) {
     </div>
   </div>
   <div id="wbCalNote">
-    <h2><%= fmt.format("BubbleCalendar.wbCalNoteTitle") %></h2>
-    <p><%= fmt.format("BubbleCalendar.wbCalNote", data.searchUrlForHTML, fmt.format("UIGlobal.helpUrl")) %></p>
+    <h2>Note</h2>
+    <p>This calendar view maps the number of times <%= data.searchUrlForHTML %> was crawled, <em>not</em> how many times the site was actually updated. More info in the <a href="<%= fmt.format("UIGlobal.helpUrl") %>">documentation</a>.</p>
   </div>
 </div>
   
