@@ -808,15 +808,21 @@ class Service():
 class Wayback(Service):
     uri = uri_wayback
     def fix(self, button):
+        thread.start_new_thread(self.fixAsync,())
+    def fixAsync(self):
         cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+#mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def kill(self,button):
+        thread.start_new_thread(self.killAsync,())
+    def killAsync(self):
         cmd = tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
     def index(self):
         paths = [fn+"\t"+os.path.join(warcsFolder,fn) for fn in next(os.walk(warcsFolder))[2]] #could probably put some .warc restrcitions here
 
@@ -857,16 +863,20 @@ class Heritrix(Service):
 
         return ret
     def fix(self, button):
+        thread.start_new_thread(self.fixAsync,())
+    def fixAsync(self):
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
     def kill(self,button):
+        thread.start_new_thread(self.killAsync,())
+    def killAsync(self):
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print "Trying to kill Heritrix..."
         ret = subprocess.Popen(cmd,stderr=subprocess.STDOUT,shell=True)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
