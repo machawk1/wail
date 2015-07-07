@@ -22,11 +22,14 @@ from multiprocessing import Pool as Thread# For a more asynchronous UI, esp with
 import logging
 import requests
 import threading # necessary for polling/indexing
+import thread # first attempts at making the UI seem more responsive
 from requests.auth import HTTPDigestAuth
 
 import wxversion
 
 import tarfile # For updater
+
+# from pync import Notifier # OS X notifications
 
 WAIL_VERSION = "1.0"
 
@@ -221,7 +224,12 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
         #hJob = HeritrixJob([self.uri.GetValue()])
+    def testCallback(self):
+        print "callback executed!"
     def archiveNow(self, button):
+        self.archiveNowButton.SetLabel('INITIALIZING')
+        thread.start_new_thread(self.archiveNow2asyncTest,())
+    def archiveNow2asyncTest(self):
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
@@ -231,8 +239,16 @@ class WAILGUIFrame_Basic(wx.Panel):
           time.sleep(4)
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
+          
+          #if sys.platform.startswith('darwin'): #show a notification of success in OS X
+          #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
+          
+        wx.CallAfter(self.onLongRunDone)
+    def onLongRunDone(self):
+        print "DONE!"
+        self.archiveNowButton.SetLabel(buttonLabel_archiveNow)
     def writeHeritrixLogWithURI(self):
         self.hJob = HeritrixJob([self.uri.GetValue()])
         self.hJob.write()
