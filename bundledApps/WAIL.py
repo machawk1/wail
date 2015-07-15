@@ -1,35 +1,45 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
 
 # Web Archiving Integration Layer (WAIL)
 #  This tool ties together web archiving applications including Wayback,
 #   Heritrix, and Tomcat.
 #  Mat Kelly <wail@matkelly.com> 2013
 
-import wx, subprocess, shlex, webbrowser, os, time, sys, datetime
+import wx
+import subprocess
+import shlex
+import webbrowser
+import os
+import time
+import sys
+import datetime
 import urllib
-import urllib2, base64
+import urllib2
+import base64
 import glob
 import re
 import ssl
 import shutil
 import errno
 from urlparse import urlparse
-#from wx import *
+
+# from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
-from multiprocessing import Pool as Thread# For a more asynchronous UI, esp with accessible()s
+
+# For a more asynchronous UI, esp with accessible()s
+from multiprocessing import Pool as Thread
 import logging
 import requests
-import threading # necessary for polling/indexing
-import thread # first attempts at making the UI seem more responsive
+import threading  # Necessary for polling/indexing
+import thread  # For a more responsive UI
 from requests.auth import HTTPDigestAuth
 
 import wxversion
 
-import tarfile # For updater
+import tarfile  # For updater
 
-# from pync import Notifier # OS X notifications
+#  from pync import Notifier # OS X notifications
 
 WAIL_VERSION = "1.0"
 
@@ -44,7 +54,8 @@ msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
-msg_uriInArchives_body = "This URL is currently in the archives! Hit the \"View Archive\" Button"
+msg_uriInArchives_body = ("This URL is currently in the archives!"
+                          " Hit the \"View Archive\" Button")
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -55,8 +66,8 @@ tabLabel_advanced_heritrix = "Heritrix"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
 tabLabel_advanced_general_serviceStatus = "SERVICE STATUS"
 
-serviceEnabledLabel_YES = "OK"#"✓"
-serviceEnabledLabel_NO = "X"#"✗"
+serviceEnabledLabel_YES = "OK"  # "✓"
+serviceEnabledLabel_NO = "X"  # "✗"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
@@ -91,12 +102,14 @@ heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
 
 
-uri_tomcat  = "http://localhost:8080/"
+uri_tomcat = "http://localhost:8080/"
 uri_wayback = "http://localhost:8080/wayback/"
 uri_wayback_allMementos = uri_wayback + "*/"
-uri_heritrix = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
-uri_heritrix_accessiblityURI = "https://"+heritrixCredentials_username+":"+heritrixCredentials_password+"@localhost:8443"
-uri_heritrixJob = uri_heritrix+"/engine/job/"
+uri_heritrix = ("https://" + heritrixCredentials_username + ":"
+                heritrixCredentials_password + "@localhost:8443")
+uri_heritrix_accessiblityURI = ("https://" + heritrixCredentials_username + ":"
+                                heritrixCredentials_password + "@localhost:8443")
+uri_heritrixJob = uri_heritrix + "/engine/job/"
 
 ###############################
 # Platform-specific paths
@@ -112,9 +125,9 @@ tomcatPathStop = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
 
-if 'darwin' in sys.platform:
-    #OS X Specific Code here
-    wailPath = "/Applications/WAIL.app" #this should be dynamic but doesn't work with WAIL binary
+if 'darwin' in sys.platform:  # OS X Specific Code here
+    # This should be dynamic but doesn't work with WAIL binary
+    wailPath = "/Applications/WAIL.app"
     heritrixPath = wailPath+"/bundledApps/heritrix-3.2.0/"
     heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath+"jobs/"
@@ -126,19 +139,20 @@ if 'darwin' in sys.platform:
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    #Fix tomcat control scripts' permissions
-    os.chmod(tomcatPathStart,0744)
-    os.chmod(tomcatPathStop,0744)
-    os.chmod(tomcatPath+"/bin/catalina.sh",0744) #TODO, variable encode paths, this chmod is needed for startup.sh to execute
+    # Fix tomcat control scripts' permissions
+    os.chmod(tomcatPathStart, 0744)
+    os.chmod(tomcatPathStop, 0744)
+    os.chmod(tomcatPath + "/bin/catalina.sh", 0744)
+    # TODO, variable encode paths, ^ needed for startup.sh to execute
 
     # Change all permissions within the app bundle (a big hammer)
-    for r,d,f in os.walk(wailPath):
-      os.chmod( r , 0777)
+    for r, d, f in os.walk(wailPath):
+        os.chmod(r, 0777)
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'):
-    #Win Specific Code here, this applies to both 32 and 64 bit
-    #Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
+    # Win Specific Code here, this applies to both 32 and 64 bit
+    # Consider using http://code.google.com/p/platinfo/ in the future for finer refinement
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
@@ -153,19 +167,19 @@ elif sys.platform.startswith('win32'):
 # Tab Controller (Notebook)
 ###############################
 
+
 class TabController(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title=groupLabel_window)
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
 
-
         self.Notebook = wx.Notebook(panel)
         vbox.Add(self.Notebook, 2, flag=wx.EXPAND)
 
         panel.SetSizer(vbox)
 
-		# Add basic config page/tab
+        # Add basic config page/tab
         self.basicConfig = WAILGUIFrame_Basic(self.Notebook)
         self.Notebook.AddPage(self.basicConfig, tabLabel_basic)
 
@@ -173,8 +187,9 @@ class TabController(wx.Frame):
         self.advConfig = WAILGUIFrame_Advanced(self.Notebook)
         self.Notebook.AddPage(self.advConfig, tabLabel_advanced)
         self.createMenu()
+
     def createMenu(self):
-        self.menu_bar  = wx.MenuBar()
+        self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
 
         self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
@@ -184,27 +199,36 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.SetMenuBar(self.menu_bar)
+
     def displayAboutMenu(self, button):
         info = wx.AboutDialogInfo()
         info.Name = aboutWindow_appName
-        info.Version = "v. " + WAIL_VERSION#datetime.date.today().strftime('0.%Y.%m.%d')
+        info.Version = "v. " + WAIL_VERSION
         info.Copyright = aboutWindow_author
         # info.Description = "foo"
         info.WebSite = (textLabel_defaultURI, textLabel_defaultURI_title)
-        #info.Developers = ["Mat Kelly"]
-        #info.License = "lic info"
+        # info.Developers = ["Mat Kelly"]
+        # info.License = "lic info"
         info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO))
         wx.AboutBox(info)
+
     def ensureCorrectInstallation(self):
-        #TODO: properly implement this
+        # TODO: properly implement this
         # Check that the file is being executed from the correct location
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
-        # Alert the user to move the file. Exit the program
-           wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location",)
-           print "WAIL must reside in your Applications directory. Move it there then relaunch. Current Location: "+os.path.dirname(os.path.abspath(__file__))
-           #sys.exit()
+            # Alert the user to move the file. Exit the program
+            wx.MessageBox(("WAIL must reside in your Applications directory."
+                          "Move it there then relaunch.\n\nCurrent Location: "
+                          os.path.dirname(os.path.abspath(__file__))), "Wrong Location",)
+            print ("WAIL must reside in your Applications directory. "
+                   "Move it there then relaunch. Current Location: "
+                   os.path.dirname(os.path.abspath(__file__)))
+            #sys.exit()
+
     def quit(self, button):
         sys.exit()
+
+
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -220,12 +244,15 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
-        #hJob = HeritrixJob([self.uri.GetValue()])
+        # hJob = HeritrixJob([self.uri.GetValue()])
+
     def testCallback(self):
         print "callback executed!"
+
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel('INITIALIZING')
         thread.start_new_thread(self.archiveNow2asyncTest,())
+
     def archiveNow2asyncTest(self):
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
@@ -243,27 +270,33 @@ class WAILGUIFrame_Basic(wx.Panel):
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
           
         wx.CallAfter(self.onLongRunDone)
+
     def onLongRunDone(self):
         print "DONE!"
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow)
+
     def writeHeritrixLogWithURI(self):
         self.hJob = HeritrixJob([self.uri.GetValue()])
         self.hJob.write()
+
     def javaInstalled(self):
         # First check to be sure Java SE is installed. Move this logic elsewhere in production
         noJava = "No Java runtime present, requesting install."
         p = Popen(["java","--version"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         return (noJava not in stdout) and (noJava not in stderr)
+
     def launchHeritrix(self):
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+
     def startHeritrixJob(self):
         self.buildHeritrixJob()
         self.launchHeritrixJob()
+
     def launchHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print "Launching heririx job"
@@ -274,6 +307,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print r
         print r.headers
         print r.text
+
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print "Building heririx job"
@@ -287,6 +321,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
+
     def checkIfURLIsInArchive(self, button):
         url = "http://localhost:8080/wayback/*/"+self.uri.GetValue()
         req = urllib2.Request(url)
@@ -310,6 +345,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
             wx.MessageBox(msg_uriInArchives_body,msg_uriInArchives_title)
+
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
             webbrowser.open_new_tab(uri_wayback_allMementos + self.uri.GetValue())
@@ -398,6 +434,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     break
             f.close()
             return version
+
         def updateServiceStatuses(self, serviceId=None, transitionalStatus=None):
             ##################################
             # Check if each service is enabled and set the GUI elements accordingly
@@ -522,10 +559,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
             self.launchProcess.Bind(wx.EVT_BUTTON, self.launchHeritrixProcess)
+
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
             list.reverse() # set to reverse chronological so newest jobs are at the top
             self.listbox.Set(list)
+
         def clickedListboxItem(self, event):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
@@ -538,14 +577,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
              	+ "\n"+str(len(jobLaunches))+" job launches\n"
              	+  Heritrix().getCurrentStats(active)
              	)
+
         def launchWebUI(self, button):
             if not Heritrix().accessible():
                 mainAppWindow.basicConfig.launchHeritrix()
             webbrowser.open_new_tab(uri_heritrix)
+
         def launchHeritrixProcess(self, button):
             Heritrix().kill(None)
             time.sleep(3)
             mainAppWindow.basicConfig.launchHeritrix()
+
         def manageJobs(self, evt):
             menu = wx.Menu()
             #menu.Append( 1, "Restart Job" ) #TODO
@@ -556,11 +598,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
+
         def deleteHeritrixJob(self, evt):
             jobPath = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))
             print "Deleting Job at "+jobPath
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
+
         def openConfigInTextEditor(self, evt):
             #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?
             file = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))+"/crawler-beans.cxml"
@@ -570,8 +614,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 os.startfile(file)
             elif os.name == 'posix':
                 subprocess.call(('xdg-open', file))
+
         def restartJob(self, evt):
             print "Restarting job"
+
         def setupNewCrawl(self, evt):
             self.statusMsg.Hide()
 
@@ -584,17 +630,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
             self.showNewCrawlUIElements()
+
         def hideNewCrawlUIElements(self):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
             self.newCrawlTextCtrlLabel.Hide()
             self.newCrawlTextCtrl.Hide()
             #self.crawlOptionsButton.Hide()
             self.startCrawlButton.Hide()
+
         def showNewCrawlUIElements(self):
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
             #self.crawlOptionsButton.Show()
             self.startCrawlButton.Show()
+
         def crawlURIsListed(self, evt):
             uris = self.newCrawlTextCtrl.GetValue().split("\n")
             self.hJob = HeritrixJob(uris)
@@ -606,6 +655,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.hJob.buildHeritrixJob()
             self.hJob.launchHeritrixJob()
+
+
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
@@ -617,6 +668,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
+
         def openArchivesFolder(self, button):
             if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
 
@@ -626,6 +678,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
               subprocess.call(["open", warcsFolder])
               #subprocess.check_call(['open', '--', tomcatPath+"/webapps/root/"])
               #subprocess.Popen(["open", tomcatPath+"/webapps/root/"])
+
         def checkForUpdates(self, button):
             # check if an updates version is available
 
@@ -660,7 +713,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
                 print "done extracting the tar file of wailcore"
 
-
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
@@ -686,6 +738,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         bsize = self.width, self.height = (150, 25*.80)
 
         smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
+
 ##################################
 # "View Archive" Group
 ##################################
@@ -693,10 +746,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
         #self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
         self.startTomcatButton.SetLabel(self.startTomcatLabel)
+
     def tomcatMessageOn(self):
         #self.tomcatStatus.SetLabel(msg_waybackEnabled)
         self.tomcatStatus.SetForegroundColour((0, 200, 0))
         self.startTomcatButton.SetLabel(self.stopTomcatLabel)
+
     def startTomcat(self, button):
         #self.tomcatStatus.SetLabel(msg_startingTomcat)
         cmd = tomcatPathStart
@@ -709,6 +764,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.waybackPanel.viewWaybackInBrowserButton.Enable() #TODO: error here
         #self.tomcatMessageOn()
     # toggleTomcat needs to be broken up into start and stop Tomcat function, already done above
+
     def toggleTomcat(self, button, suppressAlert=False): #Optimize me, Seymour
         cmd = ""
 
@@ -743,6 +799,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 if not suppressAlert: message = wx.MessageBox("Tomcat could not be stopped", "Command Failed")
                 #self.tomcatMessageOn()
+
     def launchHeritrix(self, button):
         #self.heritrixStatus.SetLabel("Launching Heritrix")
         cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
@@ -750,10 +807,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat
         self.viewHeritrixButton.Enable()
+
     def viewWayback(self, button):
         webbrowser.open_new_tab(uri_wayback)
+
     def viewHeritrix(self, button):
         webbrowser.open_new_tab(uri_heritrix)
+
     def createListBox(self):
 
         self.uriListBoxTitle = wx.StaticText(self, 7, 'URIs to Crawl:',  (self.x, 5+self.height*7+30))
@@ -764,6 +824,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         #self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x,100))
         self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x, 235))
         mainAppWindow.SetSize((mainAppWindow.GetSize().x, 400))
+
     def setupOneOffCrawl(self, button):
         if(self.uriListBox <> None): return #this function has already been done
         self.createListBox()
@@ -777,6 +838,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.launchCrawlButton.SetFont(wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL))
         self.launchCrawlButton.Bind(wx.EVT_BUTTON, self.launchCrawl)
         self.launchCrawlButton.Disable()
+
     def crawlURIs(self, button):
         uris = self.uriListBox.GetStrings()
         self.hJob = HeritrixJob(uris)
@@ -784,10 +846,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.writeConfig.Disable()
         self.uriListBox.Set([""])
         self.launchCrawlButton.Enable()
+
     def launchCrawl(self, button):
         mainAppWindow.basicConfig.hJob = self.hJob
         mainAppWindow.basicConfig.launchHeritrix()
         mainAppWindow.basicConfig.startHeritrixJob()
+
     def addURI(self, listbox):
         defaultMessage = ""
         try:
@@ -799,6 +863,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         url = urlparse(message)
         self.uriListBox.InsertItems([url.geturl()], 0)
         self.writeConfig.Enable()
+
 
 class Service():
     def accessible(self):
@@ -813,19 +878,25 @@ class Service():
                 return True
             print "Failed to access "+self.__class__.__name__+" service at "+self.uri
             return False
+
+
 class Wayback(Service):
     uri = uri_wayback
+
     def fix(self, button):
         thread.start_new_thread(self.fixAsync,())
+
     def fixAsync(self):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
         cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-#mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+# mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
+
     def killAsync(self):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","KILLING")
         cmd = tomcatPathStop
@@ -833,6 +904,7 @@ class Wayback(Service):
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
         #mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+
     def index(self):
         paths = [fn+"\t"+os.path.join(warcsFolder,fn) for fn in next(os.walk(warcsFolder))[2]] #could probably put some .warc restrcitions here
 
@@ -841,11 +913,16 @@ class Wayback(Service):
 
         #TODO: check if the file was updated. If so, invoke cdx-indexer
         threading.Timer(5.0, Wayback().index).start()
+
+
 class Tomcat(Service):
     uri = uri_wayback
+
+
 class Heritrix(Service):
     #uri = uri_heritrix_accessiblityURI
     uri = "https://127.0.0.1:8443" #TODO: remove magic hard-coded Heritrix address/port
+
     def getListOfJobs(self):
         def justFile(fullPath):
             return os.path.basename(fullPath)
@@ -855,9 +932,11 @@ class Heritrix(Service):
         -H "Accept: application/xml"
         # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://localhost:8443/engine
     '''
+
     def getJobLaunches(self, jobId):
         jobPath = heritrixJobPath+jobId
         return [f for f in os.listdir(heritrixJobPath+jobId) if re.search(r'^[0-9]+$', f)]
+
     def getCurrentStats(self, jobId):
         launches = self.getJobLaunches(jobId)
         ret = ""
@@ -872,15 +951,19 @@ class Heritrix(Service):
             ret = ret + "JobID: "+jobId+"\n   Discovered: "+discovered+"\n   Queued: "+queued+"\n   Downloaded: "+downloaded+"\n"
 
         return ret
+
     def fix(self, button):
         thread.start_new_thread(self.fixAsync,())
+
     def fixAsync(self):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
+
     def killAsync(self):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","KILLING")
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
@@ -889,6 +972,8 @@ class Heritrix(Service):
         ret = subprocess.Popen(cmd,stderr=subprocess.STDOUT,shell=True)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+
+
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
@@ -902,18 +987,21 @@ class HeritrixJob:
         with open(beansFilePath+"crawler-beans.cxml","w") as f:
             f.write(self.sampleXML)
             #print beansFilePath+"crawler-beans.cxml"
+
     def launchHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print "Launching heririx job"
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print "Building heririx job"
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+
     def __init__(self, uris):
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
