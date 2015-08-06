@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+#-*- coding:utf-8 -*-
 
 # Web Archiving Integration Layer (WAIL)
 #  This tool ties together web archiving applications including Wayback,
@@ -105,10 +106,8 @@ heritrixCredentials_password = "ipsum"
 uri_tomcat = "http://localhost:8080/"
 uri_wayback = "http://localhost:8080/wayback/"
 uri_wayback_allMementos = uri_wayback + "*/"
-uri_heritrix = ("https://" + heritrixCredentials_username + ":"
-                heritrixCredentials_password + "@localhost:8443")
-uri_heritrix_accessiblityURI = ("https://" + heritrixCredentials_username + ":"
-                                heritrixCredentials_password + "@localhost:8443")
+uri_heritrix = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@localhost:8443"
+uri_heritrix_accessiblityURI = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@localhost:8443"
 uri_heritrixJob = uri_heritrix + "/engine/job/"
 
 ###############################
@@ -217,12 +216,8 @@ class TabController(wx.Frame):
         # Check that the file is being executed from the correct location
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
             # Alert the user to move the file. Exit the program
-            wx.MessageBox(("WAIL must reside in your Applications directory."
-                          "Move it there then relaunch.\n\nCurrent Location: "
-                          os.path.dirname(os.path.abspath(__file__))), "Wrong Location",)
-            print ("WAIL must reside in your Applications directory. "
-                   "Move it there then relaunch. Current Location: "
-                   os.path.dirname(os.path.abspath(__file__)))
+            wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location",)
+            print "WAIL must reside in your Applications directory. Move it there then relaunch. Current Location: "+os.path.dirname(os.path.abspath(__file__))
             #sys.exit()
 
     def quit(self, button):
