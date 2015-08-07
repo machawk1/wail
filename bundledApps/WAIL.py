@@ -57,6 +57,9 @@ msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
 msg_uriInArchives_body = ("This URL is currently in the archives!"
                           " Hit the \"View Archive\" Button")
+msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "
+msg_wrongLocation_title = "Wrong Location"
+msg_noJavaRuntime = "No Java runtime present, requesting install."
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -216,8 +219,8 @@ class TabController(wx.Frame):
         # Check that the file is being executed from the correct location
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
             # Alert the user to move the file. Exit the program
-            wx.MessageBox("WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "+os.path.dirname(os.path.abspath(__file__)),"Wrong Location",)
-            print "WAIL must reside in your Applications directory. Move it there then relaunch. Current Location: "+os.path.dirname(os.path.abspath(__file__))
+            wx.MessageBox(msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)), msg_wrongLocation_title,)
+            print msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__))
             #sys.exit()
 
     def quit(self, button):
@@ -245,7 +248,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "callback executed!"
 
     def archiveNow(self, button):
-        self.archiveNowButton.SetLabel('INITIALIZING')
+        self.archiveNowButton.SetLabel("INITIALIZING")
         thread.start_new_thread(self.archiveNow2asyncTest,())
 
     def archiveNow2asyncTest(self):
@@ -276,7 +279,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def javaInstalled(self):
         # First check to be sure Java SE is installed. Move this logic elsewhere in production
-        noJava = "No Java runtime present, requesting install."
+        noJava = msg_noJavaRuntime
         p = Popen(["java","--version"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         return (noJava not in stdout) and (noJava not in stderr)
@@ -297,7 +300,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "Launching heririx job"
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
         print r
         print r.headers
@@ -308,7 +311,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "Building heririx job"
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
         print r
         print r.headers
@@ -318,7 +321,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         return
 
     def checkIfURLIsInArchive(self, button):
-        url = "http://localhost:8080/wayback/*/"+self.uri.GetValue()
+        url = "http://localhost:8080/wayback/*/" + self.uri.GetValue()
         req = urllib2.Request(url)
         statusCode = None
         try:
@@ -393,9 +396,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col4 = col3+colWidth
 
-            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize,wx.BU_EXACTFIT)
+            self.kill_wayback = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*1),     buttonSize, wx.BU_EXACTFIT)
             self.kill_wayback.SetFont(smallFont)
-            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize,wx.BU_EXACTFIT)
+            self.kill_heritrix = wx.Button(self, 1, buttonLabel_kill,                (col4,     rowHeight*2),     buttonSize, wx.BU_EXACTFIT)
             self.kill_heritrix.SetFont(smallFont)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
@@ -407,13 +410,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.updateServiceStatuses()
 
         def getHeritrixVersion(self, abbr=True):
-            for file in os.listdir(heritrixPath+"lib/"):
+            for file in os.listdir(heritrixPath + "lib/"):
               if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
                 return regex.findall(file)[0]
 
         def getWaybackVersion(self):
-            for file in os.listdir(tomcatPath+"/webapps/lib/"):
+            for file in os.listdir(tomcatPath + "/webapps/lib/"):
               if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
@@ -988,14 +991,14 @@ class HeritrixJob:
         print "Launching heririx job"
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print "Building heririx job"
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth("lorem","ipsum"),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def __init__(self, uris):
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
