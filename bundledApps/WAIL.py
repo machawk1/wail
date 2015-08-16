@@ -104,6 +104,8 @@ groupLabel_window = "Web Archiving Integration Layer"
 
 menuTitle_about = "&About WAIL"
 menuTitle_help = "&Help"
+menu_destroyJob = "Destroy Job (Does not delete archive)"
+menu_forceCrawlFinish = "Force crawl to finish"
 
 heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
@@ -593,15 +595,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu = wx.Menu()
             #menu.Append( 1, "Restart Job" ) #TODO
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
-            menu.Append( 2, "Destroy Job (Does not delete archive)" )
+            menu.Append( 1, menu_forceCrawlFinish ) 
+            menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
+            menu.Append( 2, menu_destroyJob )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             #menu.Append( 2, "Open config in a text editor" )
             #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=2)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
 
+        def forceCrawlFinish(self, evt):
+            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+            self.sendActionToHeritrix("terminate", jobId)
+            self.sendActionToHeritrix("teardown", jobId)
+
+        def sendActionToHeritrix(self, action, jobId):
+            data = {"action": action}
+            headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
+            r =requests.post('https://localhost:8443/engine/job/'+jobId,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+
         def deleteHeritrixJob(self, evt):
-            jobPath = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))
+            jobPath = heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
             print "Deleting Job at "+jobPath
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
