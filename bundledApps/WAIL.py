@@ -592,6 +592,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             mainAppWindow.basicConfig.launchHeritrix()
 
         def manageJobs(self, evt):
+            if self.listbox.GetCount() == 0: # Do not show context menu without context
+                return
+        
             menu = wx.Menu()
             #menu.Append( 1, "Restart Job" ) #TODO
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
