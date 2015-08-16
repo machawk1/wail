@@ -96,6 +96,9 @@ buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
 buttonLabel_viewArchiveFiles = "View Archive Files"
+buttonLabel_heritrix_launchWebUI = "Launch WebUI"
+buttonLabel_heritrix_relaunchProcess = "Relaunch Process"
+buttonLabel_heritrix_newCrawl = "New Crawl"
 
 groupLabel_window = "Web Archiving Integration Layer"
 
@@ -549,9 +552,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             #Button layout
             bsize = self.width, self.height = (125, 25*.75)
-            self.setupNewCrawlButton = wx.Button(self, 1, "New Crawl",   (0, 70), bsize)
-            self.launchWebUIButton = wx.Button(self, 1, "Launch WebUI",   (0, 92), bsize)
-            self.launchProcess = wx.Button(self, 1, "Relaunch Process",   (0, 114), bsize)
+            self.setupNewCrawlButton = wx.Button(self, 1, buttonLabel_heritrix_newCrawl,   (0, 70), bsize)
+            self.launchWebUIButton = wx.Button(self, 1, buttonLabel_heritrix_launchWebUI,   (0, 92), bsize)
+            self.launchProcess = wx.Button(self, 1, buttonLabel_heritrix_relaunchProcess,   (0, 114), bsize)
 
             #Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
