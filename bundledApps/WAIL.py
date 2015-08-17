@@ -40,6 +40,8 @@ import wxversion
 
 import tarfile  # For updater
 
+ssl._create_default_https_context = ssl._create_unverified_context
+
 #  from pync import Notifier # OS X notifications
 
 WAIL_VERSION = "1.0"
@@ -902,15 +904,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
 class Service():
     def accessible(self):
         try:
-            print "Trying to access "+self.__class__.__name__+" service at "+self.uri
+            print "Trying to access " + self.__class__.__name__ + " service at " + self.uri
             handle = urllib2.urlopen(self.uri, None, 3)
-            print self.__class__.__name__+" is a go! "
+            print self.__class__.__name__ + " is a go! "
             return True
         except IOError, e:
             if hasattr(e, 'code'): # HTTPError
-                print "Pseudo-Success in accessing "+self.uri
+                print "Pseudo-Success in accessing " + self.uri
                 return True
-            print "Failed to access "+self.__class__.__name__+" service at "+self.uri
+           # if hasattr(e, 
+
+            print "Failed to access " + self.__class__.__name__+" service at " + self.uri
             return False
 
 
@@ -999,7 +1003,7 @@ class Heritrix(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","KILLING")
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix", "KILLING")
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print "Trying to kill Heritrix..."
