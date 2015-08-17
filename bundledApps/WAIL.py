@@ -136,14 +136,14 @@ fontSize = 8
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
     wailPath = "/Applications/WAIL.app"
-    heritrixPath = wailPath+"/bundledApps/heritrix-3.2.0/"
-    heritrixBinPath = "sh "+heritrixPath+"bin/heritrix"
+    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
+    heritrixBinPath = "sh " + heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath+"jobs/"
     fontSize = 10
-    tomcatPath = wailPath+"/bundledApps/tomcat"
-    warcsFolder = tomcatPath+"/webapps/ROOT/files1"
-    tomcatPathStart = tomcatPath+"/bin/startup.sh"
-    tomcatPathStop = tomcatPath+"/bin/shutdown.sh"
+    tomcatPath = wailPath + "/bundledApps/tomcat"
+    warcsFolder = tomcatPath + "/webapps/ROOT/files1"
+    tomcatPathStart = tomcatPath + "/bin/startup.sh"
+    tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
@@ -579,10 +579,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print tail(heritrixJobPath+active+"/job.log")
             jobLaunches = Heritrix().getJobLaunches(active)
             self.statusMsg.SetLabel(
-             	str(tail(heritrixJobPath+active+"/job.log"))
-             	+ "\n"+str(len(jobLaunches))+" job launches\n"
-             	+  Heritrix().getCurrentStats(active)
-             	)
+                str(tail(heritrixJobPath+active+"/job.log"))
+                 + "\n"+str(len(jobLaunches))+" job launches\n"
+                 +  Heritrix().getCurrentStats(active)
+                 )
 
         def launchWebUI(self, button):
             self.launchWebUIButton.SetLabel(buttonLabel_heritrix_launchWebUI_launching)
