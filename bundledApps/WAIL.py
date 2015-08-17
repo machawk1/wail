@@ -75,6 +75,7 @@ serviceEnabledLabel_NO = "X"  # "✗"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
+buttonLabel_archiveNow_initializing = "INITIALIZING"
 buttonLabel_checkStatus = "Check Archived Status"
 buttonLabel_viewArchive = "View Archive"
 buttonLabel_uri = "URL:"
@@ -97,6 +98,7 @@ buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
 buttonLabel_viewArchiveFiles = "View Archive Files"
 buttonLabel_heritrix_launchWebUI = "Launch WebUI"
+buttonLabel_heritrix_launchWebUI_launching = "Launching..."
 buttonLabel_heritrix_newCrawl = "New Crawl"
 
 groupLabel_window = "Web Archiving Integration Layer"
@@ -252,10 +254,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "callback executed!"
 
     def archiveNow(self, button):
-        self.archiveNowButton.SetLabel("INITIALIZING")
-        thread.start_new_thread(self.archiveNow2asyncTest,())
+        self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
+        self.archiveNowButton.Disable()
+        thread.start_new_thread(self.archiveNow2Async,())
 
-    def archiveNow2asyncTest(self):
+    def archiveNow2Async(self):
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
@@ -276,6 +279,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def onLongRunDone(self):
         print "DONE!"
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow)
+        self.archiveNowButton.Enable()
 
     def writeHeritrixLogWithURI(self):
         self.hJob = HeritrixJob([self.uri.GetValue()])
@@ -304,7 +308,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "Launching heririx job"
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/' + self.hJob.jobNumber,
+            auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),
+            data=data,headers=headers,verify=False,stream=True)
 
         print r
         print r.headers
@@ -579,9 +585,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
              	)
 
         def launchWebUI(self, button):
+            self.launchWebUIButton.SetLabel(buttonLabel_heritrix_launchWebUI_launching)
+            self.launchWebUIButton.Disable()
+            thread.start_new_thread(self.launchWebUIAsync,())
+
+        def launchWebUIAsync(self):
             if not Heritrix().accessible():
                 mainAppWindow.basicConfig.launchHeritrix()
             webbrowser.open_new_tab(uri_heritrix)
+            self.launchWebUIButton.SetLabel(buttonLabel_heritrix_launchWebUI)
+            self.launchWebUIButton.Enable()
 
         def launchHeritrixProcess(self, button):
             Heritrix().kill(None)
