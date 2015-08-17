@@ -599,8 +599,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
             menu.Append( 2, menu_destroyJob )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
-            #menu.Append( 2, "Open config in a text editor" )
-            #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=2)
+            #menu.Append( 3, "Open crawl configuration" )
+            #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
 
@@ -621,8 +621,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.populateListboxWithJobs()
 
         def openConfigInTextEditor(self, evt):
-            #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?
-            file = heritrixJobPath+str(self.listbox.GetString(self.listbox.GetSelection()))+"/crawler-beans.cxml"
+            #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?        
+            # Issue #22 prevents the context of the right-click item from being obtained and used here.
+            file = heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection())) + "/crawler-beans.cxml"
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', file))
             elif os.name == 'nt':
