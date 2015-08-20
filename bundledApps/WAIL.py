@@ -931,15 +931,16 @@ class Wayback(Service):
     uri = uri_wayback
 
     def fix(self, button, *cb):
-        thread.start_new_thread(self.fixAsync,cb)
+        thread.start_new_thread(self.fixAsync, cb)
 
-    def fixAsync(self, cb):
+    def fixAsync(self, cb=None):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
         cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-        wx.CallAfter(cb)
+        if cb:
+          wx.CallAfter(cb)
 # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def kill(self,button):
@@ -1000,15 +1001,17 @@ class Heritrix(Service):
 
         return ret
 
-    def fix(self, button):
-        thread.start_new_thread(self.fixAsync,())
+    def fix(self, button, *cb):
+        thread.start_new_thread(self.fixAsync, cb)
 
-    def fixAsync(self):
+    def fixAsync(self, cb):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-
+        if cb:
+          wx.CallAfter(cb)
+        
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
 
