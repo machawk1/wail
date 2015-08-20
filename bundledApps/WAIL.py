@@ -93,6 +93,7 @@ aboutWindow_iconPath = "/build/icons/whale.ico"
 
 # Advanced Tab Buttons
 buttonLabel_wayback = "View Wayback in Browser"
+buttonLabel_wayback_launching = "Launching Wayback..."
 buttonLabel_editWaybackConfig = "Edit Wayback Configuration"
 buttonLabel_resetWaybackConfig = "Reset Wayback Configuration"
 buttonLabel_startHeritrix = "Start Heritrix Process"
@@ -366,7 +367,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             d.Destroy()
             if result == wx.ID_YES: # Launch Wayback
                 Wayback().fix(None)
-                self.viewArchiveInBrowser(None)
+                # TODO: artificial delay here while we wait for Wayback to launch
+                # TODO: change button to fixing
+                self.archiveNowButton.SetLabel("Initializing Wayback...")
+                #self.viewArchiveInBrowser(None)
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
@@ -531,14 +535,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
                 webbrowser.open_new_tab(uri_wayback)
+                self.viewWaybackInBrowserButton.SetLabel(buttonLabel_wayback)
+                self.viewWaybackInBrowserButton.Enable()
             else:
-                d = wx.MessageDialog(self, "Launch now?",
-                                      "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                d = wx.MessageDialog(self, "Launch nowX?",
+                                      "Wayback is not runningX", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
                 result = d.ShowModal()
                 d.Destroy()
                 if result == wx.ID_YES: # Launch Wayback
-                    Wayback().fix(None)
-                    self.openWaybackInBrowser(None)
+                    Wayback().fix(None, lambda: self.openWaybackInBrowser(None))
+                    self.viewWaybackInBrowserButton.SetLabel(buttonLabel_wayback_launching)
+                    self.viewWaybackInBrowserButton.Disable()
+                    #time.sleep(3)
+                    #self.openWaybackInBrowser(None)
         def openWaybackConfiguration(self,button):
             filepath = tomcatPath+"/webapps/ROOT/WEB-INF/wayback.xml"
             if sys.platform.startswith('darwin'):
@@ -578,11 +587,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.statusMsg.Show()
 
             active = self.listbox.GetString(self.listbox.GetSelection())
-            print tail(heritrixJobPath+active+"/job.log")
+            print tail(heritrixJobPath + active + "/job.log")
             jobLaunches = Heritrix().getJobLaunches(active)
             self.statusMsg.SetLabel(
                 str(tail(heritrixJobPath+active+"/job.log"))
-                 + "\n"+str(len(jobLaunches))+" job launches\n"
+                 + "\n" + str(len(jobLaunches)) + " job launches\n"
                  +  Heritrix().getCurrentStats(active)
                  )
 
@@ -627,7 +636,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def sendActionToHeritrix(self, action, jobId):
             data = {"action": action}
             headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-            r =requests.post('https://localhost:8443/engine/job/'+jobId,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+            r =requests.post('https://localhost:8443/engine/job/' + jobId, auth = HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password), data=data, headers=headers, verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
             jobPath = heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -921,15 +930,16 @@ class Service():
 class Wayback(Service):
     uri = uri_wayback
 
-    def fix(self, button):
-        thread.start_new_thread(self.fixAsync,())
+    def fix(self, button, *cb):
+        thread.start_new_thread(self.fixAsync,cb)
 
-    def fixAsync(self):
+    def fixAsync(self, cb):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
         cmd = tomcatPathStart;
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        wx.CallAfter(cb)
 # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def kill(self,button):
