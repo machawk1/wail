@@ -388,7 +388,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col1 = 65+colWidth*1
 
-            self.updateServiceStatuses()
+            thread.start_new_thread(self.updateServiceStatuses,())
 
             col2 = col1+colWidth
             cellSize_versionFix = (50,rowHeight)
@@ -423,7 +423,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             #wx.CallLater(2000, self.updateServiceStatuses)
             #pool.apply_async(self.updateServiceStatuses)
-            self.updateServiceStatuses()
+            thread.start_new_thread(self.updateServiceStatuses,())
 
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath + "lib/"):
