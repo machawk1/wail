@@ -90,6 +90,8 @@ textLabel_defaultURI_title = "WAIL homepage"
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
 aboutWindow_iconPath = "/build/icons/whale.ico"
+aboutWindow_iconWidth = 128
+aboutWindow_iconHeight = 128
 
 # Advanced Tab Buttons
 buttonLabel_wayback = "View Wayback in Browser"
@@ -221,7 +223,7 @@ class TabController(wx.Frame):
         info.WebSite = (textLabel_defaultURI, textLabel_defaultURI_title)
         # info.Developers = ["Mat Kelly"]
         # info.License = "lic info"
-        info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO))
+        info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
         wx.AboutBox(info)
 
     def ensureCorrectInstallation(self):
