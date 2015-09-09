@@ -540,8 +540,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.viewWaybackInBrowserButton.SetLabel(buttonLabel_wayback)
                 self.viewWaybackInBrowserButton.Enable()
             else:
-                d = wx.MessageDialog(self, "Launch nowX?",
-                                      "Wayback is not runningX", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                d = wx.MessageDialog(self, "Launch now?",
+                                      "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
                 result = d.ShowModal()
                 d.Destroy()
                 if result == wx.ID_YES: # Launch Wayback
