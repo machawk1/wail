@@ -135,6 +135,7 @@ tomcatPathStart = ""
 tomcatPathStop = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
+wailWindowSize = (400,250)
 
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
@@ -181,7 +182,7 @@ elif sys.platform.startswith('win32'):
 
 class TabController(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title=groupLabel_window)
+        wx.Frame.__init__(self, None, title=groupLabel_window, size=wailWindowSize)
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
 
@@ -482,6 +483,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
 
             if hasattr(self,'status_heritrix'):
+                #print "foooo"
                 self.status_heritrix.SetLabel(heritrixAccessible)
                 self.status_wayback.SetLabel(tomcatAccessible)
             else:
