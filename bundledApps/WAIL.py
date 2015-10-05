@@ -929,7 +929,9 @@ class Service():
 
             print "Failed to access " + self.__class__.__name__+" service at " + self.uri
             return False
-
+        except:
+            print "Some other error occurred in trying to check service accessibility."
+            return False
 
 class Wayback(Service):
     uri = uri_wayback
