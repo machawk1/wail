@@ -22,6 +22,8 @@
 #fi
 
 
+#pyVersion=$(python -c 'import sys; print(sys.version_info[:])')
+
 DIRECTORY="/Applications/WAIL.app/"
 
 # Check if WAIL.app exists. Ask the user whether to nuke old binary. Exit if 'no'
