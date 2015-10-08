@@ -255,9 +255,30 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
         # hJob = HeritrixJob([self.uri.GetValue()])
-
+        
+        # TODO: check environment variables
+        self.ensureEnvironmentVariablesAreSet()
     def testCallback(self):
         print "callback executed!"
+
+    def ensureEnvironmentVariablesAreSet(self):
+        JAVA_HOME_defined = 'JAVA_HOME' in os.environ
+        JRE_HOME_defined = 'JRE_HOME' in os.environ
+        if not JAVA_HOME_defined or not JRE_HOME_defined:
+          # Find java 1.7
+          #/usr/libexec/java_home -v 1.7
+          p = Popen(["/usr/libexec/java_home","-v","1.7"], stdout=PIPE, stderr=PIPE)
+          stdout, stderr = p.communicate()
+          if len(stdout.strip()) > 0:
+            os.environ["JAVA_HOME"] = stdout.strip()
+            os.environ["JRE_HOME"] = stdout.strip()
+            self.ensureEnvironmentVariablesAreSet()
+            return;
+            
+          #d = wx.MessageDialog(self, 'Environment variables not configured',
+          #    "Configure now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+          #result = d.ShowModal()
+          #d.Destroy()
 
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
@@ -294,7 +315,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def javaInstalled(self):
         # First check to be sure Java SE is installed. Move this logic elsewhere in production
         noJava = msg_noJavaRuntime
-        p = Popen(["java","--version"], stdout=PIPE, stderr=PIPE)
+        p = Popen(["java","-version"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         return (noJava not in stdout) and (noJava not in stderr)
 
