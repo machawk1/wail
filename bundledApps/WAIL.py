@@ -269,16 +269,19 @@ class WAILGUIFrame_Basic(wx.Panel):
           #/usr/libexec/java_home -v 1.7
           p = Popen(["/usr/libexec/java_home","-v","1.7"], stdout=PIPE, stderr=PIPE)
           stdout, stderr = p.communicate()
-          if len(stdout.strip()) > 0:
+          '''if len(stdout.strip()) > 0:
             os.environ["JAVA_HOME"] = stdout.strip()
             os.environ["JRE_HOME"] = stdout.strip()
             self.ensureEnvironmentVariablesAreSet()
-            return;
-            
-          #d = wx.MessageDialog(self, 'Environment variables not configured',
-          #    "Configure now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
-          #result = d.ShowModal()
-          #d.Destroy()
+            return;'''
+          #else:
+          d = wx.MessageDialog(self, 'Java needs to be installed for Heritrix and Wayback', "Install now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+          result = d.ShowModal()
+          d.Destroy()
+          if result == wx.ID_NO:
+            sys.exit()
+          else:
+            self.javaInstalled()
 
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
