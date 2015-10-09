@@ -643,7 +643,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def manageJobs(self, evt):
             if self.listbox.GetCount() == 0: # Do not show context menu without context
                 return
-        
+            
+            self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
+            self.clickedListboxItem(None)
+            
             menu = wx.Menu()
             #menu.Append( 1, "Restart Job" ) #TODO
             #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
@@ -653,9 +656,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             #menu.Append( 3, "Open crawl configuration" )
             #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
-            menu_forceCrawlFinish
             menu.Append( 3, menu_viewJobInWebBrowser )
-            menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)         
+            menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
 
