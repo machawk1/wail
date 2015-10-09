@@ -667,7 +667,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def sendActionToHeritrix(self, action, jobId):
             data = {"action": action}
             headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-            r =requests.post('https://localhost:8443/engine/job/' + jobId, auth = HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password), data=data, headers=headers, verify=False, stream=True)
+            r =requests.post(uri_heritrixJob + jobId, auth = HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password), data=data, headers=headers, verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
             jobPath = heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -677,7 +677,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def viewJobInWebBrowser(self, evt):
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
-            webbrowser.open_new_tab("https://localhost:8443/engine/job/" + jobId)
+            webbrowser.open_new_tab(uri_heritrixJob + jobId)
 
         def openConfigInTextEditor(self, evt):
             #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?        
