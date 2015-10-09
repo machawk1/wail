@@ -112,6 +112,7 @@ menuTitle_about = "&About WAIL"
 menuTitle_help = "&Help"
 menu_destroyJob = "Destroy Job (Does not delete archive)"
 menu_forceCrawlFinish = "Force crawl to finish"
+menu_viewJobInWebBrowser = "View job in web browser"
 
 heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
@@ -652,6 +653,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             #menu.Append( 3, "Open crawl configuration" )
             #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
+            menu_forceCrawlFinish
+            menu.Append( 3, menu_viewJobInWebBrowser )
+            menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)         
             mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
             menu.Destroy()
 
@@ -670,6 +674,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print "Deleting Job at "+jobPath
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
+
+        def viewJobInWebBrowser(self, evt):
+            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+            webbrowser.open_new_tab("https://localhost:8443/engine/job/" + jobId)
 
         def openConfigInTextEditor(self, evt):
             #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?        
