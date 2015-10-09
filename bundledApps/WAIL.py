@@ -46,6 +46,8 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 WAIL_VERSION = "1.0"
 
+osx_java6DMG = "https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg"
+
 ###############################
 # Platform independent Messages
 ###############################
@@ -273,6 +275,8 @@ class WAILGUIFrame_Basic(wx.Panel):
           #/usr/libexec/java_home -v 1.7
           p = Popen(["/usr/libexec/java_home","-v","1.7"], stdout=PIPE, stderr=PIPE)
           stdout, stderr = p.communicate()
+          print stdout
+          print 'x'
           if len(stdout.strip()) > 0:
             os.environ["JAVA_HOME"] = stdout.strip()
             os.environ["JRE_HOME"] = stdout.strip()
@@ -284,8 +288,16 @@ class WAILGUIFrame_Basic(wx.Panel):
             if result == wx.ID_NO:
                sys.exit()
             else:
-              self.javaInstalled()
-
+              #self.javaInstalled()
+              self.installJava()
+    
+    def installJava(self):
+        urllib.urlretrieve(osx_java6DMG, '/tmp/java6.dmg');
+        p = Popen(["hdiutil","attach","/tmp/java6.dmg"], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        q = Popen(["open","JavaForOSX.pkg"], cwd=r'/Volumes/Java for OS X 2015-001/', stdout=PIPE, stderr=PIPE)
+        stdout, stderr = q.communicate()
+        #sys.exit()
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
         self.status.SetLabel('Starting Archiving Process...');
@@ -1055,7 +1067,7 @@ class Heritrix(Service):
     def fix(self, button, *cb):
         thread.start_new_thread(self.fixAsync, cb)
 
-    def fixAsync(self, cb):
+    def fixAsync(self, cb=None):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
