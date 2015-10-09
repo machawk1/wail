@@ -273,13 +273,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         if not JAVA_HOME_defined or not JRE_HOME_defined:
           # Find java 1.7
           #/usr/libexec/java_home -v 1.7
-          p = Popen(["/usr/libexec/java_home","-v","1.7"], stdout=PIPE, stderr=PIPE)
-          stdout, stderr = p.communicate()
-          print stdout
-          print 'x'
-          if len(stdout.strip()) > 0:
-            os.environ["JAVA_HOME"] = stdout.strip()
-            os.environ["JRE_HOME"] = stdout.strip()
+          jdkInstalled = os.path.isdir("/Library/Java/JavaVirtualMachines/1.6.0.jdk")
+
+          if jdkInstalled:
+            os.environ["JAVA_HOME"] = "/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"
+            os.environ["JRE_HOME"] = "/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"
             self.ensureEnvironmentVariablesAreSet()
           else:
             d = wx.MessageDialog(self, 'Java needs to be installed for Heritrix and Wayback', "Install now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
