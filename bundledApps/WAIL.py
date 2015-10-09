@@ -83,6 +83,7 @@ buttonLabel_viewArchive = "View Archive"
 buttonLabel_uri = "URL:"
 buttonLabel_fix = "Fix"
 buttonLabel_kill = "Kill"
+buttonLabel_refresh = "Refresh"
 
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
@@ -757,7 +758,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
-            self.testUpdate.Disable()
+            #self.testUpdate.Disable()
 
         def openArchivesFolder(self, button):
             if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
@@ -770,6 +771,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
               #subprocess.Popen(["open", tomcatPath+"/webapps/root/"])
 
         def checkForUpdates(self, button):
+            updateWindow = UpdateSoftwareWindow(parent=self, id=-1)
+            updateWindow.Show()
+            return
             # check if an updates version is available
 
             # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
@@ -1827,6 +1831,16 @@ def copyanything(src, dst):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dst)
         else: raise
+
+class UpdateSoftwareWindow(wx.Frame):
+
+    def __init__(self,parent,id):
+        wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
+        wx.Frame.CenterOnScreen(self)
+        self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 30), size=(10,20))
+        #self.wailIcon = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 30), size=(10,20))
+        
+        self.Show(False)
 
 mainAppWindow = None
 
