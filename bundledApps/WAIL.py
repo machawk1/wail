@@ -259,6 +259,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
+        
+        self.status = wx.StaticText(self, -1, "", pos=(5, 65))
     def testCallback(self):
         print "callback executed!"
 
@@ -285,24 +287,30 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
+        self.status.SetLabel('Starting Archiving Process...');
         self.archiveNowButton.Disable()
         thread.start_new_thread(self.archiveNow2Async,())
 
     def archiveNow2Async(self):
+        self.status.SetLabel('Writing Crawl Configuration...');
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
+          self.status.SetLabel('Launching Crawler...');
           if not Heritrix().accessible():
             self.launchHeritrix()
+          self.status.SetLabel('Launching Wayback...');
           mainAppWindow.advConfig.startTomcat(None)
           time.sleep(4)
+          self.status.SetLabel('Initializing Crawl Job...');
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
-          
+          self.status.SetLabel('Crawl of ' + self.uri.GetValue() + ' Started!');
           #if sys.platform.startswith('darwin'): #show a notification of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
+          self.status.SetLabel('Archive Now failed due to Java JRE Requirements');
           
         wx.CallAfter(self.onLongRunDone)
 
