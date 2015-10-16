@@ -8,6 +8,7 @@
 build/*
 !build/icons*
 !build/version.txt
+!build/Info.plist
 bundledApps/waybackConfigWriter.pyc
 WAIL.spec
 
