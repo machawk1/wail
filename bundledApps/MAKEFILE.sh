@@ -61,6 +61,8 @@ mv ./dist/WAIL /Applications/WAILX
 rm -r ./dist
 rm -r ./build/WAIL
 
+defaults read /Applications/WAIL.app/Contents/Info.plist
+
 #cleanup
 #rm -r dist
 #rm WAIL.spec
