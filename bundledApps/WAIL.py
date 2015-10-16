@@ -312,7 +312,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.launchHeritrix()
           self.status.SetLabel('Launching Wayback...');
           mainAppWindow.advConfig.startTomcat(None)
-          time.sleep(4)
+          # time.sleep(4)
           self.status.SetLabel('Initializing Crawl Job...');
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
