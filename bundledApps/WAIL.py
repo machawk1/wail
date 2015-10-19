@@ -1847,10 +1847,52 @@ class UpdateSoftwareWindow(wx.Frame):
     def __init__(self,parent,id):
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
-        self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 30), size=(10,20))
-        #self.wailIcon = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 30), size=(10,20))
+        #self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
+       
+        self.panel_wail = wx.StaticBox(self, -1, "WAIL Core", size=(390,90), pos=(5,10))
+        box = wx.StaticBoxSizer(self.panel_wail, wx.VERTICAL)
         
-        self.Show(False)
+        self.panel_preservation = wx.StaticBox(self, 1, "Preservation", size=(390,90), pos=(5,95))
+        box2 = wx.StaticBoxSizer(self.panel_preservation, wx.VERTICAL)
+
+        self.panel_replay = wx.StaticBox(self, 1, "Replay", size=(390,90), pos=(5,180))
+        box3 = wx.StaticBoxSizer(self.panel_replay, wx.VERTICAL)
+        
+        wx.StaticText(self, 100, "Current Version:", (75,30), (100,100))
+        wx.StaticText(self, 100, "Latest Version:", (75,50), (100,100))
+
+        wx.StaticText(self, 100, "0.2015.10.11", (175,30), (100,100))
+        wx.StaticText(self, 100, "0.2015.12.25", (175,50), (100,100))
+        
+        img = wx.Image('./build/icons/whale_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        wx.StaticBitmap(self, -1, img, (10, 25), (img.GetWidth(), img.GetHeight()))
+        
+        
+        self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, 25), size=(75,20))
+        return
+
+        self.panelLabel2 = wx.StaticBox(self, 1, "XX", size=(400,90))
+        dategraphSizer.Add(self.panelLabel2, 0, wx.ALL|wx.LEFT, 5)
+        
+        
+        #self.panelLabel2 = wx.StaticBox(self, -1, "OpenWayback", size=(400,90))
+        #self.dategraphSizer2 = wx.BoxSizer(wx.VERTICAL)
+        #self.dategraphSizer.Add(self.panelLabel2, 0, wx.ALL|wx.LEFT, 5)
+        
+        #wx.StaticText(self, 100, "Current Version:", (75,15), (100,100))
+        #wx.StaticText(self, 100, "Latest Version:", (75,35), (100,100))
+
+        #wx.StaticText(self, 100, "0.2015.10.11", (175,15), (100,100))
+        #wx.StaticText(self, 100, "0.2015.12.25", (175,35), (100,100))
+        
+        #img = wx.Image('./build/icons/whale_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        #wx.StaticBitmap(self, -1, img, (5, 45), (img.GetWidth(), img.GetHeight()))
+        
+        #self.updateButton_wail = wx.Button(self, 3, "Update", pos=(310, 15), size=(75,20))
+
+        
+        
+        #self.Show(False)
 
 mainAppWindow = None
 
