@@ -1843,37 +1843,106 @@ def copyanything(src, dst):
         else: raise
 
 class UpdateSoftwareWindow(wx.Frame):
-
+    panels = ()
+    
+    # TODO: move layout management to responsibility of sub-panels, UNUSED now
+    class UpdateSoftwarePanel(wx.Frame):
+        panelTitle = ''
+        panelSize = (390, 90)
+        panelPosition = ()
+        panelLogoPath = ''
+        def __init__(self, parent, panelI, indexInPanel=0, panelTitle=''):
+           self.panelPosition = (5, 10*85*panelI)
+           self.panelTitle = panelTitle
+           self.parent = parent
+           ''' '''
+        def draw(self):
+           #TODO: draw icon
+           
+           
+           self.panel = wx.StaticBox(self.parent, -1, self.panelTitle, size=self.panelSize, pos=self.panelPosition)
+           box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
+        
     def __init__(self,parent,id):
+        currentVersion_wail = "0.2015.10.11"
+        latestVersion_wail = "0.2015.12.25"
+        currentVersion_heritrix = "0.2015.10.11"
+        latestVersion_heritrix = "0.2015.12.25"
+        currentVersion_wayback = "0.2015.10.11"
+        latestVersion_wayback = "0.2015.12.25"
+
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
         #self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
-       
-        self.panel_wail = wx.StaticBox(self, -1, "WAIL Core", size=(390,90), pos=(5,10))
-        box = wx.StaticBoxSizer(self.panel_wail, wx.VERTICAL)
         
-        self.panel_preservation = wx.StaticBox(self, 1, "Preservation", size=(390,90), pos=(5,95))
+        updateFrameIcons_pos_left = 15
+        updateFrameIcons_pos_top = (25, 110, 195)
+        
+        updateFrameText_version_pos_tops1 = (updateFrameIcons_pos_top[0] + 5, updateFrameIcons_pos_top[0] + 22)
+        updateFrameText_version_title_pos1 = ((80, updateFrameText_version_pos_tops1[0]), (80, updateFrameText_version_pos_tops1[1]))
+        updateFrameText_version_value_pos1 = ((180, updateFrameText_version_pos_tops1[0]), (180, updateFrameText_version_pos_tops1[1]))
+        
+        updateFrameText_version_pos_tops2 = (updateFrameIcons_pos_top[1], updateFrameIcons_pos_top[1] + 17)
+        updateFrameText_version_title_pos2 = ((80, updateFrameText_version_pos_tops2[0]), (80, updateFrameText_version_pos_tops2[1]))
+        updateFrameText_version_value_pos2 = ((180, updateFrameText_version_pos_tops2[0]), (180, updateFrameText_version_pos_tops2[1]))
+        
+        updateFrameText_version_pos_tops3 = (updateFrameIcons_pos_top[2] , updateFrameIcons_pos_top[2] + 17)
+        updateFrameText_version_title_pos3 = ((80, updateFrameText_version_pos_tops3[0]), (80, updateFrameText_version_pos_tops3[1]))
+        updateFrameText_version_value_pos3 = ((180, updateFrameText_version_pos_tops3[0]), (180, updateFrameText_version_pos_tops3[1]))
+ 
+        updateFrameText_version_size = (100,100)
+        updateFrame_panels_icons = (wailPath + '/build/icons/whaleLogo_64.png',
+                             wailPath + '/build/icons/heritrixLogo_64.png',
+                             wailPath + '/build/icons/openWaybackLogo_64.png')
+        updateFrame_panels_titles = ('WAIL Core', 'Preservation', 'Replay')
+        updateFrame_panels_size = (390, 90)
+        
+        updateFrame_panels_pos = ((5,10), (5,95), (5,180))
+        
+        #wailPanel = self.UpdateSoftwarePanel(self, 0, 0, 'WAIL')
+        #wailPanel.draw()
+        self.panel_wail = wx.StaticBox(self, 1, updateFrame_panels_titles[0], size=updateFrame_panels_size, pos=updateFrame_panels_pos[0])
+        box1 = wx.StaticBoxSizer(self.panel_wail, wx.VERTICAL)
+        
+        self.panel_preservation = wx.StaticBox(self, 1, updateFrame_panels_titles[1], size=updateFrame_panels_size, pos=updateFrame_panels_pos[1])
         box2 = wx.StaticBoxSizer(self.panel_preservation, wx.VERTICAL)
 
-        self.panel_replay = wx.StaticBox(self, 1, "Replay", size=(390,90), pos=(5,180))
+        self.panel_replay = wx.StaticBox(self, 1, updateFrame_panels_titles[2], size=updateFrame_panels_size, pos=updateFrame_panels_pos[2])
         box3 = wx.StaticBoxSizer(self.panel_replay, wx.VERTICAL)
         
-        wx.StaticText(self, 100, "Current Version:", (75,30), (100,100))
-        wx.StaticText(self, 100, "Latest Version:", (75,50), (100,100))
+        # Panel 1
+        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos1[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos1[1], updateFrameText_version_size)
 
-        wx.StaticText(self, 100, "0.2015.10.11", (175,30), (100,100))
-        wx.StaticText(self, 100, "0.2015.12.25", (175,50), (100,100))
+        wx.StaticText(self, 100, currentVersion_wail, updateFrameText_version_value_pos1[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, currentVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
 
-        self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, 25), size=(75,20))
+        # Panel 2
+        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos2[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos2[1], updateFrameText_version_size)
 
-        img = wx.Image(wailPath + '/build/icons/whaleLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, img, (10, 25), (img.GetWidth(), img.GetHeight()))
+        wx.StaticText(self, 100, currentVersion_heritrix, updateFrameText_version_value_pos2[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, currentVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
+
+        # Panel 3
+        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos3[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos3[1], updateFrameText_version_size)
+
+        wx.StaticText(self, 100, currentVersion_wayback, updateFrameText_version_value_pos3[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, currentVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
+
+        self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[0]), size=(75,20))
+        self.updateButton_heritrix = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[1]), size=(75,20))
+        self.updateButton_wayback = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[2]), size=(75,20))
+
+        img = wx.Image(updateFrame_panels_icons[0], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        wx.StaticBitmap(self, -1, img, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]), (img.GetWidth(), img.GetHeight()))
         
-        heritrix_64 = wx.Image(wailPath + '/build/icons/heritrixLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, heritrix_64, (10, 112), (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
+        heritrix_64 = wx.Image(updateFrame_panels_icons[1], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        wx.StaticBitmap(self, -1, heritrix_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[1]), (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
 
-        openwayback_64 = wx.Image(wailPath + '/build/icons/openWaybackLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, openwayback_64, (10, 202), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
+        openwayback_64 = wx.Image(updateFrame_panels_icons[2], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        wx.StaticBitmap(self, -1, openwayback_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[2]), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
         return
