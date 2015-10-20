@@ -22,6 +22,7 @@ import re
 import ssl
 import shutil
 import errno
+import json
 from urlparse import urlparse
 
 # from wx import *
@@ -44,7 +45,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 #  from pync import Notifier # OS X notifications
 
-WAIL_VERSION = "1.0"
+WAIL_VERSION = "0.2015.10.21"
 
 osx_java6DMG = "https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg"
 
@@ -783,39 +784,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def checkForUpdates(self, button):
             updateWindow = UpdateSoftwareWindow(parent=self, id=-1)
             updateWindow.Show()
-            return
+            #return
             # check if an updates version is available
 
             # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
-
-            d = wx.MessageDialog(self, "Do you want to update WAIL? All of your WARCs will remain in-place.",
-                                      "There is an update available for the main WAIL application", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
-            result = d.ShowModal()
-            d.Destroy()
-            if result == wx.ID_YES: # Launch Wayback
-                print "The user wants to update!"
-
-                #TODO: show progress bar or separate window for updater
-                wailcorefile = urllib2.urlopen("http://matkelly.com/wail/release/WAILCore1_1.tar.gz")
-                output = open('/Applications/WAIL.app/support/WAILCore1_1.tar.gz','wb')
-                output.write(wailcorefile.read())
-                output.close()
-
-                print "Done fetching WAIL core"
-
-                #TODO untar to temp dir
-
-                #TODO move new temp directory to Contents/
-
-                # TODO: check if this directory already exists
-                copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
-                shutil.rmtree("/Applications/WAIL.app/Contents/")
-
-                tar = tarfile.open("/Applications/WAIL.app/support/WAILCore1_1.tar.gz")
-                tar.extractall('/Applications/WAIL.app/')
-                tar.close()
-
-                print "done extracting the tar file of wailcore"
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -1844,6 +1816,54 @@ def copyanything(src, dst):
 
 class UpdateSoftwareWindow(wx.Frame):
     panels = ()
+    updateJSONData = ''
+    currentVersion_wail = "0.2015.10.11"
+    latestVersion_wail = "0.2015.12.25"
+    currentVersion_heritrix = ""
+    latestVersion_heritrix = ""
+    currentVersion_wayback = ""
+    latestVersion_wayback = ""
+
+    def updateWAIL(self):
+        print "Downloading " + self.updateJSONData['wail-core']['uri']
+        wailcorefile = urllib2.urlopen(self.updateJSONData['wail-core']['uri'])
+        output = open('/Applications/WAIL.app/support/temp.tar.gz','wb')
+        output.write(wailcorefile.read())
+        output.close()
+        print "Done downloading WAIL update, backing up."
+        
+        try:
+          copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
+          print "Done backing up. Nuking obsolete version."
+        except:
+          print "Back up previously done, continuing."
+        shutil.rmtree("/Applications/WAIL.app/Contents/")
+        print "Done nuking, decompressing update."
+        
+        tar = tarfile.open("/Applications/WAIL.app/support/temp.tar.gz")
+        tar.extractall('/Applications/WAIL.app/')
+        tar.close()
+        print "Done, restart now."
+        os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
+        #TODO: flush Info.plist cache (cmd involving defaults within this py script)
+    def fetchCurrentVersionsFile(self):
+        self.srcURI = "http://matkelly.com/wail/update.json"
+        f = urllib2.urlopen(self.srcURI).read()
+        data = f
+        self.updateJSONData = json.loads(data)
+    
+    def setVersionsInPanel(self):
+        self.currentVersion_wail = WAIL_VERSION
+        self.latestVersion_wail = self.updateJSONData['wail-core']['version']
+        self.currentVersion_heritrix = self.getHeritrixVersion()
+        self.currentVersion_wayback = self.getWaybackVersion()
+        
+        packages = self.updateJSONData['packages'];
+        for package in packages:
+          if package['name'] == 'heritrix-wail':
+            self.latestVersion_heritrix = package['version']
+          elif package['name'] == 'openwayback-wail':
+            self.latestVersion_wayback = package['version']
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     def getHeritrixVersion(self):
@@ -1878,13 +1898,10 @@ class UpdateSoftwareWindow(wx.Frame):
            box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
         
     def __init__(self,parent,id):
-        currentVersion_wail = "0.2015.10.11"
-        latestVersion_wail = "0.2015.12.25"
-        currentVersion_heritrix = self.getHeritrixVersion()
-        latestVersion_heritrix = self.getHeritrixVersion()
-        currentVersion_wayback = self.getWaybackVersion()
-        latestVersion_wayback = self.getWaybackVersion()
-
+        self.fetchCurrentVersionsFile()
+        self.setVersionsInPanel()
+        self.updateWAIL()
+        
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
         #self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
@@ -1928,32 +1945,32 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos1[0], updateFrameText_version_size)
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos1[1], updateFrameText_version_size)
 
-        wx.StaticText(self, 100, currentVersion_wail, updateFrameText_version_value_pos1[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, latestVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.currentVersion_wail, updateFrameText_version_value_pos1[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
 
         # Panel 2
         wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos2[0], updateFrameText_version_size)
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos2[1], updateFrameText_version_size)
 
-        wx.StaticText(self, 100, currentVersion_heritrix, updateFrameText_version_value_pos2[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, latestVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.currentVersion_heritrix, updateFrameText_version_value_pos2[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
 
         # Panel 3
         wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos3[0], updateFrameText_version_size)
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos3[1], updateFrameText_version_size)
 
-        wx.StaticText(self, 100, currentVersion_wayback, updateFrameText_version_value_pos3[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, latestVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.currentVersion_wayback, updateFrameText_version_value_pos3[0], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
 
         self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[0]), size=(75,20))
         self.updateButton_heritrix = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[1]), size=(75,20))
         self.updateButton_wayback = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[2]), size=(75,20))
 
-        if currentVersion_wail == latestVersion_wail:
+        if self.currentVersion_wail == self.latestVersion_wail:
           self.updateButton_wail.Disable()
-        if currentVersion_wayback == latestVersion_wayback:
+        if self.currentVersion_wayback == self.latestVersion_wayback:
           self.updateButton_wayback.Disable()
-        if currentVersion_heritrix == latestVersion_heritrix:
+        if self.currentVersion_heritrix == self.latestVersion_heritrix:
           self.updateButton_heritrix.Disable()
 
         img = wx.Image(updateFrame_panels_icons[0], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
