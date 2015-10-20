@@ -1866,13 +1866,13 @@ class UpdateSoftwareWindow(wx.Frame):
 
         self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, 25), size=(75,20))
 
-        img = wx.Image('./build/icons/whaleLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        img = wx.Image(wailPath + '/build/icons/whaleLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(self, -1, img, (10, 25), (img.GetWidth(), img.GetHeight()))
         
-        heritrix_64 = wx.Image('./build/icons/heritrixLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        heritrix_64 = wx.Image(wailPath + '/build/icons/heritrixLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(self, -1, heritrix_64, (10, 112), (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
 
-        openwayback_64 = wx.Image('./build/icons/openWaybackLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        openwayback_64 = wx.Image(wailPath + '/build/icons/openWaybackLogo_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(self, -1, openwayback_64, (10, 202), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
