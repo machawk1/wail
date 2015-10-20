@@ -45,9 +45,19 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 #  from pync import Notifier # OS X notifications
 
-WAIL_VERSION = "0.2015.10.21"
+WAIL_VERSION = "-1"
 
-osx_java6DMG = "https://support.apple.com/downloads/DL1572/en_US/javaforosx.dmg"
+
+try:
+  with open ("/Applications/WAIL.app/Contents/Info.plist", "r") as myfile:
+    data=myfile.read()
+    m = re.search(r"<key>CFBundleShortVersionString</key>\n<string>(.*)</string>",
+      data)
+    WAIL_VERSION =  m.groups()[0].strip()
+except:
+  print "User likely has the binary in the wrong location."
+
+osx_java7DMG = "http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg"
 
 ###############################
 # Platform independent Messages
@@ -274,11 +284,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         if not JAVA_HOME_defined or not JRE_HOME_defined:
           # Find java 1.7
           #/usr/libexec/java_home -v 1.7
-          jdkInstalled = os.path.isdir("/Library/Java/JavaVirtualMachines/1.6.0.jdk")
+          jdkInstalled = os.path.isdir("/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk")
 
           if jdkInstalled:
-            os.environ["JAVA_HOME"] = "/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"
-            os.environ["JRE_HOME"] = "/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home"
+            os.environ["JAVA_HOME"] = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+            os.environ["JRE_HOME"] = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
             self.ensureEnvironmentVariablesAreSet()
           else:
             d = wx.MessageDialog(self, 'Java needs to be installed for Heritrix and Wayback', "Install now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
@@ -291,12 +301,12 @@ class WAILGUIFrame_Basic(wx.Panel):
               self.installJava()
     
     def installJava(self):
-        urllib.urlretrieve(osx_java6DMG, '/tmp/java6.dmg');
-        p = Popen(["hdiutil","attach","/tmp/java6.dmg"], stdout=PIPE, stderr=PIPE)
+        urllib.urlretrieve(osx_java7DMG, '/tmp/java7.dmg');
+        p = Popen(["hdiutil","attach","/tmp/java7.dmg"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
-        q = Popen(["open","JavaForOSX.pkg"], cwd=r'/Volumes/Java for OS X 2015-001/', stdout=PIPE, stderr=PIPE)
+        q = Popen(["open","JDK 7 Update 79.pkg"], cwd=r'/Volumes/JDK 7 Update 79/', stdout=PIPE, stderr=PIPE)
         stdout, stderr = q.communicate()
-        #sys.exit()
+        sys.exit()
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
         self.status.SetLabel('Starting Archiving Process...');
@@ -1824,7 +1834,7 @@ class UpdateSoftwareWindow(wx.Frame):
     currentVersion_wayback = ""
     latestVersion_wayback = ""
 
-    def updateWAIL(self):
+    def updateWAIL(self, button):
         print "Downloading " + self.updateJSONData['wail-core']['uri']
         wailcorefile = urllib2.urlopen(self.updateJSONData['wail-core']['uri'])
         output = open('/Applications/WAIL.app/support/temp.tar.gz','wb')
@@ -1900,7 +1910,6 @@ class UpdateSoftwareWindow(wx.Frame):
     def __init__(self,parent,id):
         self.fetchCurrentVersionsFile()
         self.setVersionsInPanel()
-        self.updateWAIL()
         
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
@@ -1965,6 +1974,8 @@ class UpdateSoftwareWindow(wx.Frame):
         self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[0]), size=(75,20))
         self.updateButton_heritrix = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[1]), size=(75,20))
         self.updateButton_wayback = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[2]), size=(75,20))
+
+        self.updateButton_wail.Bind(wx.EVT_BUTTON, self.updateWAIL)
 
         if self.currentVersion_wail == self.latestVersion_wail:
           self.updateButton_wail.Disable()
