@@ -1844,6 +1844,20 @@ def copyanything(src, dst):
 
 class UpdateSoftwareWindow(wx.Frame):
     panels = ()
+
+    # TODO: Redundant of Advanced Panel implementation, very inaccessible here
+    def getHeritrixVersion(self):
+        for file in os.listdir(heritrixPath + "lib/"):
+            if file.startswith("heritrix-commons"):
+                regex = re.compile("commons-(.*)\.")
+                return regex.findall(file)[0]
+
+    # TODO: Redundant of Advanced Panel implementation, very inaccessible here
+    def getWaybackVersion(self):
+        for file in os.listdir(tomcatPath + "/webapps/lib/"):
+              if file.startswith("openwayback-core"):
+                regex = re.compile("core-(.*)\.")
+                return regex.findall(file)[0]
     
     # TODO: move layout management to responsibility of sub-panels, UNUSED now
     class UpdateSoftwarePanel(wx.Frame):
@@ -1866,10 +1880,10 @@ class UpdateSoftwareWindow(wx.Frame):
     def __init__(self,parent,id):
         currentVersion_wail = "0.2015.10.11"
         latestVersion_wail = "0.2015.12.25"
-        currentVersion_heritrix = "0.2015.10.11"
-        latestVersion_heritrix = "0.2015.12.25"
-        currentVersion_wayback = "0.2015.10.11"
-        latestVersion_wayback = "0.2015.12.25"
+        currentVersion_heritrix = self.getHeritrixVersion()
+        latestVersion_heritrix = self.getHeritrixVersion()
+        currentVersion_wayback = self.getWaybackVersion()
+        latestVersion_wayback = self.getWaybackVersion()
 
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
@@ -1915,25 +1929,32 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos1[1], updateFrameText_version_size)
 
         wx.StaticText(self, 100, currentVersion_wail, updateFrameText_version_value_pos1[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, currentVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, latestVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
 
         # Panel 2
         wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos2[0], updateFrameText_version_size)
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos2[1], updateFrameText_version_size)
 
         wx.StaticText(self, 100, currentVersion_heritrix, updateFrameText_version_value_pos2[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, currentVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, latestVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
 
         # Panel 3
         wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos3[0], updateFrameText_version_size)
         wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos3[1], updateFrameText_version_size)
 
         wx.StaticText(self, 100, currentVersion_wayback, updateFrameText_version_value_pos3[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, currentVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, latestVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
 
         self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[0]), size=(75,20))
         self.updateButton_heritrix = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[1]), size=(75,20))
         self.updateButton_wayback = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[2]), size=(75,20))
+
+        if currentVersion_wail == latestVersion_wail:
+          self.updateButton_wail.Disable()
+        if currentVersion_wayback == latestVersion_wayback:
+          self.updateButton_wayback.Disable()
+        if currentVersion_heritrix == latestVersion_heritrix:
+          self.updateButton_heritrix.Disable()
 
         img = wx.Image(updateFrame_panels_icons[0], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(self, -1, img, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]), (img.GetWidth(), img.GetHeight()))
