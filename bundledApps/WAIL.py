@@ -649,9 +649,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print tail(heritrixJobPath + active + "/job.log")
             jobLaunches = Heritrix().getJobLaunches(active)
             self.statusMsg.SetLabel(
-                str(tail(heritrixJobPath+active+"/job.log"))
-                 + "\n" + str(len(jobLaunches)) + " job launches\n"
-                 +  Heritrix().getCurrentStats(active)
+                #str(tail(heritrixJobPath+active+"/job.log"))
+                 #+ "\n" + str(len(jobLaunches)) + " job launches\n"
+                 #+
+                 Heritrix().getCurrentStats(active)
                  )
 
         def launchWebUI(self, button):
