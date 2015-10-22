@@ -636,6 +636,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
+            self.panelUpdater = None # For updating stats UI
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
             list.reverse() # set to reverse chronological so newest jobs are at the top
@@ -648,13 +649,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
             active = self.listbox.GetString(self.listbox.GetSelection())
             print tail(heritrixJobPath + active + "/job.log")
             jobLaunches = Heritrix().getJobLaunches(active)
-            self.statusMsg.SetLabel(
-                #str(tail(heritrixJobPath+active+"/job.log"))
-                 #+ "\n" + str(len(jobLaunches)) + " job launches\n"
-                 #+
-                 Heritrix().getCurrentStats(active)
-                 )
-
+            if self.panelUpdater: # Kill any currently running timer
+               self.panelUpdater.cancel()
+               self.panelUpdater = None
+            self.updateInfoPanel(active)
+        def updateInfoPanel(self, active):
+            self.statusMsg.SetLabel(Heritrix().getCurrentStats(active))
+            self.panelUpdater = threading.Timer(1.0, self.updateInfoPanel, [active])
+            self.panelUpdater.daemon = True
+            self.panelUpdater.start()
+            
         def launchWebUI(self, button):
             self.launchWebUIButton.SetLabel(buttonLabel_heritrix_launchWebUI_launching)
             self.launchWebUIButton.Disable()
