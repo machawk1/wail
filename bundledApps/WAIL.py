@@ -742,6 +742,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrlLabel = wx.StaticText(self, -1, "Enter one URI per line to crawl", pos=(135, 0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
             self.newCrawlTextCtrl = wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90), style=multiLineAndNoWrapStyle)
+            
+            self.newCrawlDepthTextCtrlLabel = wx.StaticText(self, -1, "Depth", pos=(135, 112))
+            self.newCrawlDepthTextCtrl = wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
+            self.newCrawlDepthTextCtrl.SetValue("1")
+            self.newCrawlDepthTextCtrl.Bind(wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
+            self.newCrawlDepthTextCtrl.Bind(wx.EVT_CHAR, self.handleCrawlDepthKeypress)
+            
             #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))
             self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(265, 110))
             self.startCrawlButton.SetDefault()
@@ -749,6 +756,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.showNewCrawlUIElements()
 
+        def handleCrawlDepthKeypress(self, event):
+          keycode = event.GetKeyCode()
+          if keycode < 255:
+              # valid ASCII
+              if chr(keycode).isdigit():
+                  # Valid alphanumeric character
+                  event.Skip()
+
+        def validateCrawlDepth(self, event):
+            print len(self.newCrawlDepthTextCtrl.GetValue())
+            if len(self.newCrawlDepthTextCtrl.GetValue()) == 0:
+              self.newCrawlDepthTextCtrl.SetValue("1")
+            event.Skip()
         def hideNewCrawlUIElements(self):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
             self.newCrawlTextCtrlLabel.Hide()
@@ -764,7 +784,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def crawlURIsListed(self, evt):
             uris = self.newCrawlTextCtrl.GetValue().split("\n")
-            self.hJob = HeritrixJob(uris)
+            depth = self.newCrawlDepthTextCtrl.GetValue()
+            self.hJob = HeritrixJob(uris, depth)
             self.hJob.write()
             self.populateListboxWithJobs()
 
@@ -1077,7 +1098,7 @@ class Heritrix(Service):
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
-        path = heritrixJobPath+self.jobNumber
+        path = heritrixJobPath + self.jobNumber
         if not os.path.exists(path): os.makedirs(path)
         beansFilePath = path
         if sys.platform.startswith('win32'):
@@ -1102,7 +1123,7 @@ class HeritrixJob:
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
-    def __init__(self, uris):
+    def __init__(self, uris, depth=1):
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE
@@ -1242,7 +1263,7 @@ metadata.description=Basic crawl starting with useful defaults
     </bean>
     <!-- ...but REJECT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TooManyHopsDecideRule">
-       <property name="maxHops" value="1" />
+       <property name="maxHops" value="''' + depth + '''" />
     </bean>
     <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
