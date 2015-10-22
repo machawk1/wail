@@ -14,10 +14,12 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
-        wayback.basedir=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
+        wail.basedir=/Applications/WAIL.app
+        wayback.basedir=${wayback.basedir}/bundledApps/tomcat/webapps/ROOT
+        
         
         wayback.archivedir.1=${wayback.basedir}/files1/
-        wayback.archivedir.2=${wayback.basedir}/files2/
+        wayback.archivedir.2=${wail.basedir}/archives/
         
         wayback.url.scheme=http
         wayback.url.host=localhost
@@ -36,9 +38,9 @@
 -->
 
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.BDBResourceFileLocationDB">
-    <property name="bdbPath" value="${wayback.basedir}/file-db/db/" />
+    <property name="bdbPath" value="${wail.basedir}/archiveIndexes/file-db/db/" />
     <property name="bdbName" value="DB1" />
-    <property name="logPath" value="${wayback.basedir}/file-db/db.log" />
+    <property name="logPath" value="${wail.basedir}/archiveIndexes/file-db/db.log" />
   </bean>
 
 <!--

@@ -40,27 +40,23 @@ if [ -d "$DIRECTORY" ]; then
 fi
 
 
-#arch -i386 python ../build/pyinstaller-2.0/pyinstaller.py WAIL.py --onefile --windowed
-# Above no longer works on OS X>10.8.5 though it might be a homebrew vs. Apple python issue.
-pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns" #--distpath="/Applications"
+pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns"
 
+# Replace default version and icon information from pyinstaller 
 cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
 
-todaysVersion="1.0" #$(date "+0.%Y.%m.%d") #This is bad practice, as the source code specifies a version internally, too. Unify this to one src. Until then, duct tape!
-# OS X (& other BSDs) requires an empty string after the -i flag so it doesn't invoke unix "d" command
-sed -i "" "s/0.0.0/$todaysVersion by Radon/g" "./dist/WAIL.app/Contents/Info.plist"
-
 # Copy the bundledApps and support directories to inside WAIL.app/
-cp -r ./bundledApps ./support ./build ./dist/WAIL.app/
+cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
 
 rm -rf /Applications/WAIL.app
 mv ./dist/WAIL.app /Applications/
-mv ./dist/WAIL /Applications/WAILX
+mv ./dist/WAIL /Applications/WAIL_cli
 
-#remove installation remnants
+# Remove installation remnants
 rm -r ./dist
 rm -r ./build/WAIL
 
+# Instruct the system to update the version string
 defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null
 
 #cleanup
