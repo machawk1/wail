@@ -162,7 +162,7 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
     heritrixJobPath = heritrixPath+"jobs/"
     fontSize = 10
     tomcatPath = wailPath + "/bundledApps/tomcat"
-    warcsFolder = tomcatPath + "/webapps/ROOT/files1"
+    warcsFolder = wailPath + "/archives"
     tomcatPathStart = tomcatPath + "/bin/startup.sh"
     tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
 
@@ -189,7 +189,7 @@ elif sys.platform.startswith('win32'):
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     tomcatPath = "C:/WAIL/bundledApps/tomcat"
-    warcsFolder = tomcatPath + "/webapps/ROOT/files1"
+    warcsFolder = wailPathPath + "archives"
     tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
 ###############################
