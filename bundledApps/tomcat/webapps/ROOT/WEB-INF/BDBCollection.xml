@@ -61,7 +61,7 @@
     <property name="source">
       <bean class="org.archive.wayback.resourceindex.bdb.BDBIndex">
         <property name="bdbName" value="DB1" />
-        <property name="bdbPath" value="${wail.basedir}/archiveIndexes/index/" />
+        <property name="bdbPath" value="${wayback.basedir}/index/" />
       </bean>
     </property>
     <property name="maxRecords" value="100000000" />
@@ -72,7 +72,7 @@
     An IndexQueue implementation required for automatic indexing.
 -->
   <bean id="indexqueue" class="org.archive.wayback.resourcestore.indexer.DirectoryIndexQueue">
-    <property name="path" value="${wail.basedir}/archiveIndexes/index-data/queue" />
+    <property name="path" value="${wayback.basedir}/index-data/queue" />
   </bean>
 
   <bean id="localbdbcollection" class="org.archive.wayback.webapp.WaybackCollection">
@@ -89,7 +89,7 @@
       <list>
          <!-- This thread notices new files appearing in your resourcefilesources -->
          <bean id="resourcefilesourceupdater" class="org.archive.wayback.resourcestore.resourcefile.ResourceFileSourceUpdater">
-          <property name="target" value="${wail.basedir}/archiveIndexes/file-db/incoming" />
+          <property name="target" value="${wayback.basedir}/file-db/incoming" />
           <property name="interval" value="100000" />
           <property name="sources" ref="datadirs" />
         </bean>
@@ -98,8 +98,8 @@
         <bean id="resourcefilelocationdbupdater" class="org.archive.wayback.resourcestore.locationdb.ResourceFileLocationDBUpdater">
           <property name="interval" value="1000" />
           <property name="db" ref="resourcefilelocationdb" />
-          <property name="incomingDir" value="${wail.basedir}/archiveIndexes/file-db/incoming" />
-          <property name="stateDir" value="${wail.basedir}/archiveIndexes/file-db/state" />
+          <property name="incomingDir" value="${wayback.basedir}/file-db/incoming" />
+          <property name="stateDir" value="${wayback.basedir}/file-db/state" />
         </bean>
         
         <!-- This thread notices new files arriving in the filelocationdb, and queues them for indexing -->
@@ -107,7 +107,7 @@
           <property name="db" ref="resourcefilelocationdb" />
           <property name="queue" ref="indexqueue" />
           <property name="interval" value="1000" />
-          <property name="lastMark" value="${wail.basedir}/archiveIndexes/index-data/queue.mark" />
+          <property name="lastMark" value="${wayback.basedir}/index-data/queue.mark" />
         </bean>
       
         <!-- This thread checks the to-be-indexed queue for files needing indexing, indexes them, and hands off the results for merging with the ResourceIndex -->
@@ -117,8 +117,8 @@
           <property name="interval" value="1000" />
           <property name="target">
             <bean class="org.archive.wayback.resourceindex.updater.IndexClient">
-              <property name="tmpDir" value="${wail.basedir}/archiveIndexes/index-data/tmp/" />
-              <property name="target" value="${wail.basedir}/archiveIndexes/index-data/incoming/" />
+              <property name="tmpDir" value="${wayback.basedir}/index-data/tmp/" />
+              <property name="target" value="${wayback.basedir}/index-data/incoming/" />
             </bean>
           </property>
           <property name="canonicalizer" ref="waybackCanonicalizer"/>
@@ -128,9 +128,9 @@
         <bean class="org.archive.wayback.resourceindex.updater.LocalResourceIndexUpdater">
 
           <property name="index" ref="localbdbresourceindex" />
-          <property name="incoming" value="${wail.basedir}/archiveIndexes/index-data/incoming/" />
-          <property name="failed" value="${wail.basedir}/archiveIndexes/index-data/failed/" />
-          <property name="merged" value="${wail.basedir}/archiveIndexes/index-data/merged/" />
+          <property name="incoming" value="${wayback.basedir}/index-data/incoming/" />
+          <property name="failed" value="${wayback.basedir}/index-data/failed/" />
+          <property name="merged" value="${wayback.basedir}/index-data/merged/" />
           <property name="runInterval" value="1000" />
         </bean>
       </list>

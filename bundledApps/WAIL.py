@@ -199,7 +199,7 @@ elif sys.platform.startswith('win32'):
 
 class TabController(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title=groupLabel_window, size=wailWindowSize)
+        wx.Frame.__init__(self, None, title=groupLabel_window, size=wailWindowSize, style=wx.DEFAULT_FRAME_STYLE ^ wx.RESIZE_BORDER)
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
 
