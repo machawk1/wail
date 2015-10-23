@@ -28,6 +28,7 @@ from urlparse import urlparse
 # from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
+from subprocess import check_output
 
 # For a more asynchronous UI, esp with accessible()s
 from multiprocessing import Pool as Thread
@@ -168,6 +169,9 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
+    memGatorPath = wailPath + "/bundledApps/memgator"
+    archivesJSON = wailPath + "/config/archives.json"
+    
     # Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart, 0744)
     os.chmod(tomcatPathStop, 0744)
@@ -275,6 +279,34 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.ensureEnvironmentVariablesAreSet()
         
         self.status = wx.StaticText(self, -1, "", pos=(5, 65))
+        
+        # Bind changes in URI to query MemGator
+        self.memgatorDelayTimer = None
+        self.fetchMementos()
+        self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
+    def fetchMementos(self):
+        # TODO: Use CDXJ for counting the mementos
+        out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
+        
+        # TODO: Once we are using the local web service, we can curl -I to get a 
+        self.status.SetLabel(str(out.count("memento")) + " mementos available (more info button)")
+        # TODO: cache the TM
+    def uriChanged(self, event):
+       self.status.SetLabel("Fetching memento count...")
+       
+       if self.memgatorDelayTimer: # Kill any currently running timer
+           self.memgatorDelayTimer.cancel()
+           self.memgatorDelayTimer = None
+       
+       self.memgatorDelayTimer = threading.Timer(1.0, thread.start_new_thread, [self.fetchMementos, ()])
+       self.memgatorDelayTimer.daemon = True
+       self.memgatorDelayTimer.start()
+            
+       # TODO: start timer on below, kill if another key is hit
+       #thread.start_new_thread(self.fetchMementos,())
+       event.Skip()
+       
+    
     def testCallback(self):
         print "callback executed!"
 
