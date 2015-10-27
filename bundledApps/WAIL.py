@@ -278,7 +278,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
         
-        self.status = wx.StaticText(self, -1, "", pos=(5, 65))
+        #self.status = wx.StaticText(self, -1, "", pos=(5, 65))
+        self.status = wx.HyperlinkCtrl(self, -1, label=" ", url=" ", pos=(5, 65), size=(300,20))
+        self.status.SetNormalColour(wx.Colour(0,0,255))
+        self.status.SetVisitedColour(wx.Colour(0,0,255))
+        self.status.SetHoverColour(wx.Colour(0,0,255))
         
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
@@ -289,7 +293,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
         
         # TODO: Once we are using the local web service, we can curl -I to get a 
-        self.status.SetLabel(str(out.count("memento")) + " mementos available (more info button)")
+        self.status.SetLabel(str(out.count("memento")) + " mementos available")
         # TODO: cache the TM
     def uriChanged(self, event):
        self.status.SetLabel("Fetching memento count...")
