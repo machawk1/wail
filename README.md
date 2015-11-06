@@ -1,4 +1,4 @@
-Web Archiving Integration Layer (WAIL)
+<img src="https://github.com/machawk1/wail/blob/osagnostic/build/icons/whale_64.png" />&nbsp;Web Archiving Integration Layer (WAIL)
 ====
 <i>"One-Click User Instigated Preservation"</i>
 
