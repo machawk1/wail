@@ -845,7 +845,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
-            #self.testUpdate.Disable()
+            self.testUpdate.Disable()
 
         def openArchivesFolder(self, button):
             if not os.path.exists(warcsFolder): os.makedirs(warcsFolder)
