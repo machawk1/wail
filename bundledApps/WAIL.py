@@ -286,7 +286,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
-        self.fetchMementos()
+        # TODO: make fetchMementos Async
+
+        self.status.SetLabel("Fetching mementos...")
+        thread.start_new_thread(self.fetchMementos,())
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
