@@ -1302,7 +1302,7 @@ metadata.description=Basic crawl starting with useful defaults
     </bean>
     <!-- ...but REJECT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TooManyHopsDecideRule">
-       <property name="maxHops" value="''' + depth + '''" />
+       <property name="maxHops" value="''' + str(depth) + '''" />
     </bean>
     <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
