@@ -80,6 +80,7 @@ msg_uriInArchives_body = ("This URL is currently in the archives!"
 msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
+msg_fetchingMementos = "Fetching memento count from public archives..."
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -289,13 +290,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
         
-        self.setMessage("Fetching mementos...")
+        self.setMessage(msg_fetchingMementos)
         
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
-        # TODO: make fetchMementos Async
 
-        #self.status.SetLabel("Fetching mementos...")
         thread.start_new_thread(self.fetchMementos,())
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
     
@@ -306,7 +305,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         #self.status.SetNormalColour(wx.Colour(0,0,255))
         #self.status.SetVisitedColour(wx.Colour(0,0,255))
         #self.status.SetHoverColour(wx.Colour(0,0,255))   
-        self.status = wx.StaticText(self, -1, label=str(count) + " mementos available", pos=(5, 65), size=(300,20))
+        self.status = wx.StaticText(self, -1, label="Public archives: " + str(count) + " mementos available", pos=(5, 65), size=(300,20))
     
     def setMessage(self, msg):
         if hasattr(self,'status'):
@@ -321,7 +320,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.setMementoCount(out.count("memento"))
         # TODO: cache the TM
     def uriChanged(self, event):
-       self.setMessage("Fetching memento count...")
+       self.setMessage(msg_fetchingMementos)
        
        if self.memgatorDelayTimer: # Kill any currently running timer
            self.memgatorDelayTimer.cancel()
