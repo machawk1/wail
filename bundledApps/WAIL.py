@@ -225,8 +225,9 @@ class TabController(wx.Frame):
         self.Notebook.AddPage(self.advConfig, tabLabel_advanced)
         self.createMenu()
 
-        threading.Timer(INDEX_TIMER_SECONDS,Wayback().index).start()
-        print "scheduled!"
+        self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
+        self.indexingTimer.daemon = True
+        self.indexingTimer.start()
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
@@ -261,7 +262,11 @@ class TabController(wx.Frame):
             #sys.exit()
 
     def quit(self, button):
-        sys.exit()
+        print "Quitting!"
+        if mainAppWindow.indexingTimer:
+          mainAppWindow.indexingTimer.cancel()
+        #os._exit(0) #Quit without buffer cleanup
+        sys.exit(1) #Be a good citizen. Cleanup your memory footprint
 
 
 class WAILGUIFrame_Basic(wx.Panel):
@@ -297,16 +302,16 @@ class WAILGUIFrame_Basic(wx.Panel):
     def setMementoCount(self, count):
         if hasattr(self,'status'):
           self.status.Destroy()
-        self.status = wx.HyperlinkCtrl(self, -1, label=str(count) + " mementos available", url=" ", pos=(5, 65), size=(300,20))
-        self.status.SetNormalColour(wx.Colour(0,0,255))
-        self.status.SetVisitedColour(wx.Colour(0,0,255))
-        self.status.SetHoverColour(wx.Colour(0,0,255))    
+        #self.status = wx.HyperlinkCtrl(self, -1, label=str(count) + " mementos available", url=" ", pos=(5, 65), size=(300,20))
+        #self.status.SetNormalColour(wx.Colour(0,0,255))
+        #self.status.SetVisitedColour(wx.Colour(0,0,255))
+        #self.status.SetHoverColour(wx.Colour(0,0,255))   
+        self.status = wx.StaticText(self, -1, label=str(count) + " mementos available", pos=(5, 65), size=(300,20))
     
     def setMessage(self, msg):
         if hasattr(self,'status'):
           self.status.Destroy()
-        self.status = wx.StaticText(self, -1, "", pos=(5, 65), size=(300,20))
-        self.status.SetLabel(msg)
+        self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300,20))
     
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
@@ -410,7 +415,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         return (noJava not in stdout) and (noJava not in stderr)
 
     def launchHeritrix(self):
-        cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
+        cmd = heritrixBinPath + " -a " + heritrixCredentials_username + ":" + heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
@@ -544,7 +549,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             rowHeight = 20
             col1 = 65+colWidth*1
             cellSize = (40, rowHeight)
-            serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
             
             if hasattr(self,'status_heritrix'):
                 self.status_heritrix.Destroy()
@@ -555,7 +559,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             rowHeight = 20
             col1 = 65+colWidth*1
             cellSize = (40, rowHeight)
-            serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
             
             if hasattr(self,'status_wayback'):
                 self.status_wayback.Destroy()
@@ -988,7 +991,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
     def launchHeritrix(self, button):
         #self.heritrixStatus.SetLabel("Launching Heritrix")
-        cmd = heritrixBinPath+" -a "+heritrixCredentials_username+":"+heritrixCredentials_password
+        cmd = heritrixBinPath + " -a " + heritrixCredentials_username + ":" + heritrixCredentials_password
         #TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat
@@ -1154,7 +1157,11 @@ class Wayback(Service):
         print "Done creating sorted CDX file!"
         
         # Queue next iteration of indexing
-        threading.Timer(INDEX_TIMER_SECONDS,Wayback().index).start()
+        if mainAppWindow.indexingTimer:
+          mainAppWindow.indexingTimer.cancel()
+        mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
+        mainAppWindow.indexingTimer.daemon = True
+        mainAppWindow.indexingTimer.start()
 
 class Tomcat(Service):
     uri = uri_wayback
