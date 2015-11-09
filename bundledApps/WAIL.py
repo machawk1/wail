@@ -539,6 +539,28 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #pool.apply_async(self.updateServiceStatuses)
             thread.start_new_thread(self.updateServiceStatuses,())
 
+        def setHeritrixStatus(self, status):
+            colWidth = 60
+            rowHeight = 20
+            col1 = 65+colWidth*1
+            cellSize = (40, rowHeight)
+            serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
+            
+            if hasattr(self,'status_heritrix'):
+                self.status_heritrix.Destroy()
+            self.status_heritrix = wx.StaticText(self, 100, status,                   (col1,    rowHeight*2),      cellSize)
+        
+        def setWaybackStatus(self, status):
+            colWidth = 60
+            rowHeight = 20
+            col1 = 65+colWidth*1
+            cellSize = (40, rowHeight)
+            serviceEnabled = {True: serviceEnabledLabel_YES, False: serviceEnabledLabel_NO}
+            
+            if hasattr(self,'status_wayback'):
+                self.status_wayback.Destroy()
+            self.status_wayback = wx.StaticText(self, 100, status,       (col1,    rowHeight*1),      cellSize)
+        
         def getHeritrixVersion(self, abbr=True):
             for file in os.listdir(heritrixPath + "lib/"):
               if file.startswith("heritrix-commons"):
@@ -585,24 +607,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Update a transitional status and short circuit
             if serviceId and transitionalStatus:
               if serviceId is "wayback":
-                self.status_wayback.SetLabel(transitionalStatus)
+                self.setWaybackStatus(transitionalStatus)
                 return
               elif serviceId is "heritrix":
-                self.status_heritrix.SetLabel(transitionalStatus)
+                self.setHeritrixStatus((transitionalStatus)
                 return
               else:
                 print "Invalid transitional service id specified. Updating status per usual."
             
 
+            if not hasattr(self,'stateLabel'):
+                self.stateLabel = wx.StaticText(self, 100, "STATE",          (col1,    rowHeight*0),      cellSize)
 
-            if hasattr(self,'status_heritrix'):
-                #print "foooo"
-                self.status_heritrix.SetLabel(heritrixAccessible)
-                self.status_wayback.SetLabel(tomcatAccessible)
-            else:
-                wx.StaticText(self, 100, "STATE",          (col1,    rowHeight*0),      cellSize)
-                self.status_wayback = wx.StaticText(self, 100, tomcatAccessible,       (col1,    rowHeight*1),      cellSize)
-                self.status_heritrix = wx.StaticText(self, 100, heritrixAccessible,                   (col1,    rowHeight*2),      cellSize)
+            self.setHeritrixStatus(heritrixAccessible)
+            self.setWaybackStatus(tomcatAccessible)
+
                 
 
                 #For eventual icons instead of text
@@ -895,8 +914,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.waybackPanel = WAILGUIFrame_Advanced.WaybackPanel(self.Notebook)
         self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.Notebook)
         self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(self.Notebook)
-        # Add advanced config page/tab
-    	#self.advConfig = WAILGUIFrame_Advanced(self.Notebook) #PDA2013 advanced tab
 
         self.Notebook.AddPage(self.generalPanel, tabLabel_advanced_general)
         self.Notebook.AddPage(self.waybackPanel, tabLabel_advanced_wayback)

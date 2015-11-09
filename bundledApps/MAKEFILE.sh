@@ -48,6 +48,8 @@ cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
 # Copy the bundledApps and support directories to inside WAIL.app/
 cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
 
+#pkgbuild --install-location=/Applications --component ./dist/WAIL.app ~/Downloads/WAIL.pkg
+
 rm -rf /Applications/WAIL.app
 mv ./dist/WAIL.app /Applications/
 mv ./dist/WAIL /Applications/WAIL_cli
