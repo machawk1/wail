@@ -610,7 +610,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.setWaybackStatus(transitionalStatus)
                 return
               elif serviceId is "heritrix":
-                self.setHeritrixStatus((transitionalStatus)
+                self.setHeritrixStatus(transitionalStatus)
                 return
               else:
                 print "Invalid transitional service id specified. Updating status per usual."
