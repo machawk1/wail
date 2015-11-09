@@ -11,6 +11,7 @@ import subprocess
 import shlex
 import webbrowser
 import os
+import schedule
 import time
 import sys
 import datetime
@@ -38,6 +39,9 @@ import threading  # Necessary for polling/indexing
 import thread  # For a more responsive UI
 from requests.auth import HTTPDigestAuth
 
+from os import listdir
+from os.path import isfile, join
+
 import wxversion
 
 import tarfile  # For updater
@@ -47,7 +51,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 #  from pync import Notifier # OS X notifications
 
 WAIL_VERSION = "-1"
-
+INDEX_TIMER_SECONDS = 10.0
 
 try:
   with open ("/Applications/WAIL.app/Contents/Info.plist", "r") as myfile:
@@ -221,6 +225,8 @@ class TabController(wx.Frame):
         self.Notebook.AddPage(self.advConfig, tabLabel_advanced)
         self.createMenu()
 
+        threading.Timer(INDEX_TIMER_SECONDS,Wayback().index).start()
+        print "scheduled!"
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
@@ -1064,14 +1070,63 @@ class Wayback(Service):
         #mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def index(self):
-        paths = [fn+"\t"+os.path.join(warcsFolder,fn) for fn in next(os.walk(warcsFolder))[2]] #could probably put some .warc restrcitions here
+        self.generatePathIndex()
+        self.generateCDX()
 
-        f = open(warcsFolder+"/../path-index.txt", 'w+')
-        f.write("\n".join(paths))
+    def generatePathIndex(self):
+        dest = "/Applications/WAIL.app/config/path-index.txt"
+        warcsPath = "/Applications/WAIL.app/archives/"
+        
+        outputContents = ""
+        for file in listdir(warcsPath):
+            if file.endswith(".warc"):
+              outputContents += file + "\t" + join(warcsPath,file) + "\n"
 
-        #TODO: check if the file was updated. If so, invoke cdx-indexer
-        threading.Timer(5.0, Wayback().index).start()
-
+        print "Writing path-index.txt file"
+        pathIndexFile = open(dest, "w")
+        pathIndexFile.write(outputContents)
+        pathIndexFile.close()
+        print "Done writing path-index.txt file"
+    
+    def generateCDX(self):
+        #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
+        dest = "/Applications/WAIL.app/config/path-index.txt"
+        warcsPath = "/Applications/WAIL.app/archives/"
+        
+        outputContents = ""
+        for file in listdir(warcsPath):
+            if file.endswith(".warc"):
+              cdxFilePath = "/Applications/WAIL.app/archiveIndexes/" + file.replace('.warc','.cdx')
+              process = subprocess.Popen(["/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer",join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
+        stdout, stderr = process.communicate()
+        
+        # Combine CDX files
+        filenames = glob.glob("/Applications/WAIL.app/archiveIndexes/*.cdx")
+        cdxHeaderIncluded = False
+        print "CDX files generated for each WARC, merging..."
+        with open('/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt', 'w') as outfile:
+            for fname in filenames:
+                with open(fname) as infile:
+                    for i,line in enumerate(infile):
+                      if i>0:
+                        outfile.write(line)
+                      elif not cdxHeaderIncluded: #Only include first CDX header
+                        outfile.write(line)
+                        cdxHeaderIncluded = True
+        print "Done merging CDX files, removing old source CDX files."
+        filelist = glob.glob("/Applications/WAIL.app/archiveIndexes/*.cdx")
+        for f in filelist:
+            os.remove(f)
+        
+        print "Sorting CDX entries"
+        os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
+        print "Removing unsorted temp file"
+        os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
+        
+        print "Done creating sorted CDX file!"
+        
+        # Queue next iteration of indexing
+        threading.Timer(INDEX_TIMER_SECONDS,Wayback().index).start()
 
 class Tomcat(Service):
     uri = uri_wayback

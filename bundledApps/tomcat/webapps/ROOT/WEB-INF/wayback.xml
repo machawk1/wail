@@ -14,16 +14,30 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
+        <!-- Customize these basic placeholders. -->
         wail.basedir=/Applications/WAIL.app
-        wayback.basedir=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
-        
+        wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
+        wayback.url.scheme.default=http
+        wayback.url.host.default=localhost
+        wayback.url.port.default=8080
+
+        <!-- Environment variables (if present) override defaults. No need to customize these. -->
+        wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }
+        wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }
+        wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }
+        wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }
+
+        <!-- No need to edit this setting unless deploying in a non-ROOT context
+             or using a load balancer, in which case configure it with the frontend URL prefix. -->
+        wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}
+
+        <!-- Environment variable (if present) overrides default. No need to customize this. -->
+        wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }
+
+        <!-- Customize or add additional placeholders if needed to use elsewhere.
+             Check BDBCollection.xml for following placeholders being used. -->
         wayback.archivedir.1=${wayback.basedir}/files1/
-        wayback.archivedir.2=${wail.basedir}/archives/
-        
-        wayback.url.scheme=http
-        wayback.url.host=localhost
-        wayback.url.port=8080
-        wayback.url.prefix=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}
+        wayback.archivedir.2=${wayback.basedir}/files2/
       </value>
     </property>
   </bean>
@@ -34,22 +48,22 @@
 <!--
 	The ResourceFileLocationDB implementation to use for mapping ARC/WARC names
 	to absolute paths/URLs via a BDBJE database.
--->
 
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.BDBResourceFileLocationDB">
     <property name="bdbPath" value="${wayback.basedir}/file-db/db/" />
     <property name="bdbName" value="DB1" />
     <property name="logPath" value="${wayback.basedir}/file-db/db.log" />
   </bean>
-
+  -->
 <!--
 	The following bean provides an alternate flat-file based LocationDB
 	implementation.
+-->
 
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.FlatFileResourceFileLocationDB">
-    <property name="path" value="${wayback.basedir}/path-index.txt" />
+    <property name="path" value="${wail.basedir}/config/path-index.txt" />
   </bean>
-  -->
+
 <!--
     To enable manual management of, or remote access to the above locationDB,
     uncomment the following bean.
@@ -77,11 +91,10 @@
 	example implementations of WaybackCollections. To specify where your 
 	ARC/WARC files are located, see the file BDBCollection.xml.
 -->
-
-
-  <import resource="BDBCollection.xml"/>
-<!--  
+  
   <import resource="CDXCollection.xml"/>
+<!--
+  <import resource="BDBCollection.xml"/>
   <import resource="RemoteCollection.xml"/>
   <import resource="NutchCollection.xml"/>
 -->
@@ -136,6 +149,8 @@
   </bean>
 -->
 
+<!--<import resource="CDXServerCollection.xml"/>-->
+
 <!--
     This is the only AccessPoint defined by default within this wayback.xml
     Spring configuration file, providing an ArchivalURL Replay UI to the
@@ -155,7 +170,7 @@
     get them back on track.
   -->
   <bean name="+" class="org.archive.wayback.webapp.ServerRelativeArchivalRedirect">
-    <property name="matchPort" value="8080" />
+    <property name="matchPort" value="${wayback.url.port}" />
     <property name="useCollection" value="true" />
   </bean>
 
@@ -185,12 +200,12 @@
 	<!--
     <property name="exactHostMatch" value="true" />
 	-->
-
    
+   <!-- 
     <property name="collection" ref="localbdbcollection" />
-<!-- 
-    <property name="collection" ref="localcdxcollection" />
 -->
+    <property name="collection" ref="localcdxcollection" />
+
 
     <property name="replay" ref="archivalurlreplay" />
     <property name="query">
@@ -307,12 +322,13 @@
 <!--
   <import resource="ProxyReplay.xml"/>
   <bean name="proxyaccesspoint" parent="standardaccesspoint">
+    <property name="accessPointPath" value="8090"/>
+
     <property name="internalPort" value="8090"/>
     <property name="serveStatic" value="true" />
     <property name="bounceToReplayPrefix" value="false" />
     <property name="bounceToQueryPrefix" value="false" />
     <property name="refererAuth" value="" />
-    <property name="accessPointPath" value="8090"/>
 
     <property name="staticPrefix" value="http://localhost:8090/" />
     <property name="replayPrefix" value="http://localhost:8090/" />
@@ -337,4 +353,11 @@
   </bean>
 -->
 
+<!--
+    Set the minimum year that is handled by this server. If commented out the vaule of the
+    start year will default to 1996.
+  -->
+  <bean name="minimumYearAllowed" class="org.archive.wayback.util.Timestamp">
+    <property name="startYear" value="1996" />
+  </bean>
 </beans>

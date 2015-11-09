@@ -43,7 +43,7 @@
 	A single CDX SearchResultSource example.
 -->
           <bean class="org.archive.wayback.resourceindex.cdx.CDXIndex">
-            <property name="path" value="${wayback.basedir}/cdx-index/index.cdx" />
+            <property name="path" value="${wail.basedir}/archiveIndexes/index.cdx" />
           </bean>
 
 <!--
