@@ -284,28 +284,39 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
         
-        #self.status = wx.StaticText(self, -1, "", pos=(5, 65))
-        self.status = wx.HyperlinkCtrl(self, -1, label=" ", url=" ", pos=(5, 65), size=(300,20))
-        self.status.SetNormalColour(wx.Colour(0,0,255))
-        self.status.SetVisitedColour(wx.Colour(0,0,255))
-        self.status.SetHoverColour(wx.Colour(0,0,255))
+        self.setMessage("Fetching mementos...")
         
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
         # TODO: make fetchMementos Async
 
-        self.status.SetLabel("Fetching mementos...")
+        #self.status.SetLabel("Fetching mementos...")
         thread.start_new_thread(self.fetchMementos,())
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
+    
+    def setMementoCount(self, count):
+        if hasattr(self,'status'):
+          self.status.Destroy()
+        self.status = wx.HyperlinkCtrl(self, -1, label=str(count) + " mementos available", url=" ", pos=(5, 65), size=(300,20))
+        self.status.SetNormalColour(wx.Colour(0,0,255))
+        self.status.SetVisitedColour(wx.Colour(0,0,255))
+        self.status.SetHoverColour(wx.Colour(0,0,255))    
+    
+    def setMessage(self, msg):
+        if hasattr(self,'status'):
+          self.status.Destroy()
+        self.status = wx.StaticText(self, -1, "", pos=(5, 65), size=(300,20))
+        self.status.SetLabel(msg)
+    
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
         
         # TODO: Once we are using the local web service, we can curl -I to get a 
-        self.status.SetLabel(str(out.count("memento")) + " mementos available")
+        self.setMementoCount(out.count("memento"))
         # TODO: cache the TM
     def uriChanged(self, event):
-       self.status.SetLabel("Fetching memento count...")
+       self.setMessage("Fetching memento count...")
        
        if self.memgatorDelayTimer: # Kill any currently running timer
            self.memgatorDelayTimer.cancel()
@@ -354,31 +365,31 @@ class WAILGUIFrame_Basic(wx.Panel):
         sys.exit()
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow_initializing)
-        self.status.SetLabel('Starting Archiving Process...');
+        self.setMessage('Starting Archiving Process...');
         self.archiveNowButton.Disable()
         thread.start_new_thread(self.archiveNow2Async,())
 
     def archiveNow2Async(self):
-        self.status.SetLabel('Writing Crawl Configuration...');
+        self.setMessage('Writing Crawl Configuration...');
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
-          self.status.SetLabel('Launching Crawler...');
+          self.setMessage('Launching Crawler...');
           if not Heritrix().accessible():
             self.launchHeritrix()
-          self.status.SetLabel('Launching Wayback...');
+          self.setMessage('Launching Wayback...');
           mainAppWindow.advConfig.startTomcat(None)
           # time.sleep(4)
-          self.status.SetLabel('Initializing Crawl Job...');
+          self.setMessage('Initializing Crawl Job...');
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
-          self.status.SetLabel('Crawl of ' + self.uri.GetValue() + ' Started!');
+          self.setMessage('Crawl of ' + self.uri.GetValue() + ' Started!');
           wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
           #if sys.platform.startswith('darwin'): #show a notification of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
         else:
           print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
-          self.status.SetLabel('Archive Now failed due to Java JRE Requirements');
+          self.setMessage('Archive Now failed due to Java JRE Requirements');
           
         wx.CallAfter(self.onLongRunDone)
 
@@ -1098,7 +1109,7 @@ class Wayback(Service):
             if file.endswith(".warc"):
               cdxFilePath = "/Applications/WAIL.app/archiveIndexes/" + file.replace('.warc','.cdx')
               process = subprocess.Popen(["/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer",join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
-        stdout, stderr = process.communicate()
+              stdout, stderr = process.communicate()
         
         # Combine CDX files
         filenames = glob.glob("/Applications/WAIL.app/archiveIndexes/*.cdx")
