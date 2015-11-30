@@ -17,6 +17,19 @@
 <string>whale_1024.icns</string>
 <key>CFBundlePackageType</key>
 <string>APPL</string>
+<key>CFBundleDocumentTypes</key>
+<array>
+	<dict>
+		<key>CFBundleTypeExtensions</key>
+		<array>
+			<string>warc</string>
+		</array>
+		<key>LSHandlerRank</key>
+		<string>Owner</string>
+		<key>CFBundleTypeRole</key>
+		<string>Viewer</string>
+	</dict>
+</array>
 <key>LSBackgroundOnly</key>
 <string>1</string>
 <key>CFBundleSignature</key>

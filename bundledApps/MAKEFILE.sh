@@ -60,6 +60,8 @@ rm -r ./build/WAIL
 
 # Instruct the system to update the version string
 defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null
+/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
+killall Finder
 
 #cleanup
 #rm -r dist
