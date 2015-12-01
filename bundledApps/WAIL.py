@@ -56,7 +56,7 @@ INDEX_TIMER_SECONDS = 10.0
 try:
   with open ("/Applications/WAIL.app/Contents/Info.plist", "r") as myfile:
     data=myfile.read()
-    m = re.search(r"<key>CFBundleShortVersionString</key>\n<string>(.*)</string>",
+    m = re.search(r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>",
       data)
     WAIL_VERSION =  m.groups()[0].strip()
 except:
@@ -2177,6 +2177,12 @@ class UpdateSoftwareWindow(wx.Frame):
 mainAppWindow = None
 
 if __name__ == "__main__":
+    #if len(sys.argv) > 1:
+    #  '''A WARC file was drag-and-dropped onto WAIL'''
+    #  print "WAIL was launched with file parameters."
+    #else:
+    #  print "WAIL was launched without any file parameters."
+
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
