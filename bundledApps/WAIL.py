@@ -757,6 +757,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if self.listbox.GetCount() == 0: # Do not show context menu without context
                 return
             
+            # Start of fix for #233
+            #print evt.GetPosition()
+            #print self.listbox.GetPosition().x
+            #print self.listbox.GetPosition().y
+            # Require right button mouseup to be performed on WAIL UI
+            #if evt.GetPosition()[0] < 0 or evt.GetPosition()[0] > wailWindowSize[0] or \
+            #   evt.GetPosition()[1] < 0 or evt.GetPosition()[1] > wailWindowSize[1]:
+            #    return
+            
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             self.clickedListboxItem(None)
             
