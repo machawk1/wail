@@ -315,6 +315,10 @@ class WAILGUIFrame_Basic(wx.Panel):
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
+        print "memgator command:"
+        print memGatorPath+" -a " + archivesJSON + self.uri.GetValue()
+        
+        # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which results in 0 mementos, which MemGator throws exception
         
         # TODO: Once we are using the local web service, we can curl -I to get a 
         self.setMementoCount(out.count("memento"))
