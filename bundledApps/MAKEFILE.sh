@@ -39,30 +39,80 @@ if [ -d "$DIRECTORY" ]; then
   done
 fi
 
+read -p "Would you like to install binary, create dmg, or both? (i/d/b) " ans
 
-pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns"
+case "$ans" in
+  i|d|b)
+    ;;
+  *)
+    echo "Invalid choice, choose one of i/d/b"
+    exit
+    ;;
+esac
 
-# Replace default version and icon information from pyinstaller 
-cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
 
-# Copy the bundledApps and support directories to inside WAIL.app/
-cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
 
-#pkgbuild --install-location=/Applications --component ./dist/WAIL.app ~/Downloads/WAIL.pkg
+createBinary ()
+{
+  pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns"
+  # Replace default version and icon information from pyinstaller 
+  cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
+  # Copy the bundledApps and support directories to inside WAIL.app/
+  cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
+  #pkgbuild --install-location=/Applications --component ./dist/WAIL.app ~/Downloads/WAIL.pkg
+}
 
-rm -rf /Applications/WAIL.app
-mv ./dist/WAIL.app /Applications/
-mv ./dist/WAIL /Applications/WAIL_cli
+deleteBinary ()
+{
+  rm -rf /Applications/WAIL.app
+}
 
-# Remove installation remnants
-rm -r ./dist
-rm -r ./build/WAIL
+mvProducts ()
+{
+  mv ./dist/WAIL.app /Applications/
+  mv ./dist/WAIL /Applications/WAIL_cli
+}
 
-# Instruct the system to update the version string
-defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null
+cleanupByproducts ()
+{
+  # Remove installation remnants
+  rm -r ./dist
+  rm -r ./build/WAIL
+}
 
-# Associate defined file types with WAIL
-/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
+buildDiskImage ()
+{
+  # Create a dmg
+  dmgbuild -s ./build/dmgbuild_settings.py "WAIL" WAIL.dmg
+}
+
+tweakOS ()
+{
+  # Instruct the system to update the version string
+  defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null
+
+  # Associate defined file types with WAIL
+  /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
+}
+
+createBinary
+deleteBinary # Remove previous version
+mvProducts
+cleanupByproducts
+
+# install binary, create dmg, or both? (i/d/b) 
+
+# Just build dmg, delete binary, no system tweaks required
+if [ $ans = "b" ] || [ $ans = "d" ]; then
+  buildDiskImage
+  if [ $ans = "b" ]; then
+    deleteBinary
+  fi
+fi
+
+if [ $ans = "i" ] || [ $ans = "d" ]; then # Tweak system for binary
+  tweakOS
+fi
 #killall Finder
 
 #cleanup
