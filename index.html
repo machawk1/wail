@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="style.css">
+<title>Web Archiving Integration Layer (WAIL)</title>
+</head>
+
+<body>
+<div id="head">
+<img src="images/whale_512.png" id="logo" alt="Web Archiving Integration Layer (WAIL)" />
+<h1>WAIL</h1>
+<h2>Web Archiving Integration Layer</h2>
+<h3>One-Click User Instigated Preservation</h3>
+</div>
+
+<h3>What Is It?</h3>
+<p>Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools
+intended to be used as an easy way for anyone to preserve and replay web pages.</p>
+
+<p>Tools included and accessible through the GUI are <a href="https://webarchive.jira.com/wiki/display/Heritrix/Heritrix">Heritrix 3.2.0</a> and <a href="https://github.com/internetarchive/wayback">Wayback 2.2.0</a>.
+Support packages include <a href="http://tomcat.apache.org/">Apache Tomcat</a> and <a href="http://www.pyinstaller.org/">pyinstaller</a>.
+
+<p>WAIL is written in Python.</p>
+
+<h3>Screenshots</h3>
+<img src="images/wail_0.2015.5.4_basic.png" class="halfPage" alt="Screenshot depicting the 'basic' interface of WAIL" />
+<img src="images/wail_0.2015.10.21_advanced.png" class="halfPage" alt="Screenshot depicting the 'advanced' interface of WAIL" />
+
+<h3>Basic Use Case</h3>
+<div class="center">
+<div class="thirdPage">
+	<div><img src="images/cnn_wail_2015.5.4.png" alt="Screenshot depicting cnn.com being loaded into the basic WAIL interface." /></div>
+	<p>"Archive Now!" button sets up crawl, initiates crawl and puts archive file in correct location to be indexed.<br /><br />
+	Wayback consumption can be checked with "Check Archive Status" button.</p>
+</div>
+<div class="thirdPage">
+	<div><img src="images/cnn_replay.png" alt="Wayback columned interface showing that an archived instance has been created from cnn.com." /></div>
+	<p>Once indexed, "View Archive" buttons shows all archives for URL in local Wayback.
+</div>
+<div class="thirdPage">
+	<div><img src="images/cnn_wayback.png" alt="CNN.com displayed in local Wayback." /></div>
+	<p>Selecting the date in local Wayback displays the preserved webpage.
+</div>
+</div>
+
+<div id="vid"><iframe width="560" height="315" src="https://www.youtube.com/embed/9-k21TXFNdI" frameborder="0" allowfullscreen></iframe></div>
+
+<h3>Usage</h3>
+<ul>
+	<li>MacOS X<ol>
+			<li><a href="#download">Download</a> and mount the DMG</li>
+			<li>Drag the WAIL icon from the disk image to the <code>/Applications</code> directory (thus creating <code>/Applications/WAIL.app</code>)</li>
+			<li>Launch WAIL.app</li>
+		</ol></li>
+	<li>Windows (7+)
+		<ol>
+			<li><a href="#download">Download</a> and unzip the file</li>
+			<li>Drag the WAIL folder to your <code>C:/</code> drive (thus creating <code>C:/WAIL/</code>)</li>
+			<li>Launch WAIL.exe</li>
+		</ol></li>
+	<!--<li>Linux</li>-->
+</ul>
+
+<h3 id="download">Download <a href="release/changes.txt">(changes)</a></h3>
+<ul>
+	<li><a href="https://github.com/machawk1/wail/releases/download/v0.2016.01.12/WAIL_v0.2016.01.12_MacOSX.dmg">MacOS X, version 0.2016.01.12</a></li>
+	<li><a href="http://matkelly.com/wail/release/WAIL%200.2013.2.19.zip">Windows 7+, version 0.2013.2.19</a></li>
+	<li>Linux (coming soon)</li>
+</ul>
+
+<h3>License</h3>
+<p>All tools aggregated in this software maintain their respective licenses. WAIL is licensed under a <a rel="license" href="http://www.gnu.org/licenses/lgpl-3.0.txt">GNU Lesser General Public License v3.0</a>. WAIL's source is available on <a href="https://github.com/machawk1/wail">GitHub</a>.
+
+<p>Send all questions, comments, and bug reports to <a href="mailto:wail@matkelly.com">Mat Kelly</a>.</p>
+
+<a href="https://github.com/machawk1/wail"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a>
+
+</body>
+</html>
