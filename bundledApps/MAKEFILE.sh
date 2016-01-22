@@ -105,7 +105,7 @@ cleanupByproducts
 # Just build dmg, delete binary, no system tweaks required
 if [ $ans = "b" ] || [ $ans = "d" ]; then
   buildDiskImage
-  if [ $ans = "b" ]; then
+  if [ $ans = "d" ]; then # Remove the installed binary if only making dmg
     deleteBinary
   fi
 fi
