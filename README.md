@@ -32,6 +32,9 @@ From the Windows shell:
 <blockquote>"./bundledApps/MAKEFILE.bat"</blockquote>
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
+<h2>Experiencing Problems</h2>
+<p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
+
 <h2>Contact</h2>
 WAIL is a project of the Web Science and Digital Libraries (WS-DL) research group at Old Dominion University (ODU), created by Mat Kelly.
 
