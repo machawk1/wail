@@ -290,7 +290,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
         
-        self.setMessage(msg_fetchingMementos)
+        self.setMementoCount(None)
+        #self.setMessage("Type a URL and click \"Archive Now!\" to begin archiving");
         
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
@@ -299,13 +300,20 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
     
     def setMementoCount(self, count):
-        if hasattr(self,'status'):
-          self.status.Destroy()
+        if hasattr(self,'mementoStatus'):
+          self.mementoStatus.Destroy()
+          
+        if count:
+          memCountMsg = "Public archives: " + str(count) + " mementos available"
+        else:
+          memCountMsg = msg_fetchingMementos
         #self.status = wx.HyperlinkCtrl(self, -1, label=str(count) + " mementos available", url=" ", pos=(5, 65), size=(300,20))
         #self.status.SetNormalColour(wx.Colour(0,0,255))
         #self.status.SetVisitedColour(wx.Colour(0,0,255))
         #self.status.SetHoverColour(wx.Colour(0,0,255))   
-        self.status = wx.StaticText(self, -1, label="Public archives: " + str(count) + " mementos available", pos=(5, 65), size=(300,20))
+        self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(5, 85), size=(300,20))
+    
+    
     
     def setMessage(self, msg):
         if hasattr(self,'status'):
@@ -324,7 +332,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.setMementoCount(out.count("memento"))
         # TODO: cache the TM
     def uriChanged(self, event):
-       self.setMessage(msg_fetchingMementos)
+       self.setMementoCount(None)
        
        if self.memgatorDelayTimer: # Kill any currently running timer
            self.memgatorDelayTimer.cancel()
