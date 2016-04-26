@@ -1,16 +1,20 @@
-<img src="https://github.com/machawk1/wail/blob/osagnostic/build/icons/whale_64.png" />&nbsp;Web Archiving Integration Layer (WAIL)
-====
-<i>"One-Click User Instigated Preservation"</i>
+<h2 align="center">
+ <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/build/icons/whale_256.png" alt="WAIL logo" /></a><br />&nbsp;Web Archiving Integration Layer (WAIL)</h2>
+<p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
 
 Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web pages.
 
-Tools included and accessible through the GUI are Heritrix 3.2.0 and Wayback 2.3.0. Support packages include Apache Tomcat and <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>.
+Tools included and accessible through the GUI are <a href="https://github.com/internetarchive/heritrix3">Heritrix 3.2.0</a> and <a href="https://github.com/iipc/openwayback">OpenWayback 2.3.0</a>. Support packages include Apache Tomcat, <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>, and <a href="https://github.com/oduwsdl/memgator">MemGator</a>.
 
 WAIL is written in Python and compiled to a native executable using `pyInstaller`.
 
-For more information and to download a binary, see http://matkelly.com/wail .
+<h2>Installing WAIL</h2>
+
+See the <a href="http://machawk1.github.io/wail/#download">download section on the WAIL homepage</a> to download the application, install it, and for basic usage.
 
 <h2>Running WAIL</h2>
+This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
+
 End-user execution is meant to be accessed through the binary file, either WAIL.app on MacOS X or WAIL.exe on Windows (7+).
 To run it using Python for testing, run the following from the root of the WAIL source directory:
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
