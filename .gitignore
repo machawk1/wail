@@ -14,3 +14,5 @@ WAIL.spec
 
 # Mac meta
 .DS_Store
+
+electron/node_modules/*
