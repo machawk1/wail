@@ -35,9 +35,16 @@
       "browser": true
     }
   },
-  "babel":{
-    "presets": ["es2015", "stage-0", "react", "node6"],
-    "plugins": ["transform-runtime"]
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react",
+      "node6"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
@@ -65,6 +72,7 @@
     "babel-register": "^6.9.0",
     "babel-runtime": "6.9.0",
     "babelify": "^7.3.0",
+    "bluebird": "^3.4.0",
     "bootstrap": "^3.3.6",
     "classnames": "^2.2.5",
     "concurrently": "^2.1.0",
@@ -73,15 +81,13 @@
     "electron-compile": "3.2.0",
     "electron-compilers": "3.1.0",
     "electron-prebuilt": "^1.2.0",
-    "electron-reload": "^0.3.0",
+    "electron-reload": "^1.0.0",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
-    "gulp": "^3.9.1",
-    "gulp-atom-electron": "^1.6.1",
-    "gulp-babel": "^6.1.2",
-    "gulp-rename": "^1.2.2",
+    "fs-extra": "^0.30.0",
     "json-loader": "^0.5.4",
+    "keymirror": "^0.1.1",
     "mkdirp": "^0.5.1",
     "run-sequence": "^1.2.1",
     "standard": "^7.1.1",

@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import ArchiveUrl from './archive-url'
+import {ButtonGroup,Button} from 'react-bootstrap'
 
 
 export default class Basic extends Component{
@@ -12,7 +13,16 @@ export default class Basic extends Component{
       console.log("hehehe dasass ")
       console.log("hehehe dasass e ")
       return(
-         <ArchiveUrl />
+          <div class="container-fluid">
+             <ArchiveUrl />
+             <ButtonGroup>
+                <Button>Left</Button>
+                <Button>Middle</Button>
+                <Button>Right</Button>
+             </ButtonGroup>
+          </div>
+
+
       )
    }
 }

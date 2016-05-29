@@ -16,3 +16,7 @@ WAIL.spec
 .DS_Store
 
 electron/node_modules/*
+electron/public/icons
+
+.idea
+.idea/*
