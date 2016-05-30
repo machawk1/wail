@@ -1,9 +1,10 @@
 import React, {Component, PropTypes} from 'react'
 import validUrl from 'valid-url'
 import TextField from 'material-ui/TextField'
-import  {urlUpdated} from '../actions/archive-url-actions'
-import {blue500} from 'material-ui/styles/colors';
-import UrlStore from '../stores/urlStore'
+import  {urlUpdated} from '../../actions/archive-url-actions'
+import {blue500} from 'material-ui/styles/colors'
+import {Row} from 'react-cellblock'
+import UrlStore from '../../stores/urlStore'
 
 
 const styles = {
@@ -43,15 +44,21 @@ export default class ArchiveUrl extends Component {
 
     render() {
         return (
-            <TextField
-                name="what"
-                floatingLabelText="Enter URL"
-                hintText="http://matkelly.com/wail"
-                id="archive-url-input"
-                floatingLabelFixed={false}
-                value={this.state.uri}
-                onChange={this.handleChange}
-            />
+           <Row>
+               <TextField
+                  disabled={false}
+                  error={false}
+                  ref="aui"
+                  name="what"
+                  floatingLabelText="Enter URL"
+                  hintText="http://matkelly.com/wail"
+                  id="archive-url-input"
+                  floatingLabelFixed={false}
+                  value={this.state.uri}
+                  onChange={this.handleChange}
+               />
+           </Row>
+           
 
         )
     }

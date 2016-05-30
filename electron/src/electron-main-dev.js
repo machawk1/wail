@@ -24,6 +24,7 @@ function createWindow () {
 
    if (process.env.NODE_ENV === 'development') {
       mainWindow.openDevTools()
+      
    }
    // Emitted when the window is closed.
    mainWindow.on('closed',  () => {

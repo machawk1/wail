@@ -2,7 +2,8 @@ import React, {Component, PropTypes} from 'react'
 import darkBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {Tabs, Tab} from 'material-ui/Tabs'
-import Basic from './basic'
+import BasicTab from './basic/basic-tab'
+import AdvancedTab from './advanced/advancedTab'
 
 const baseTheme = getMuiTheme(darkBaseTheme)
 
@@ -32,16 +33,10 @@ class Wail extends Component {
             onChange={this.handleChange}
          >
             <Tab label="Basic" value="basic">
-               < Basic/>
+               <BasicTab />
             </Tab>
             <Tab label="Advanced" value="advanced">
-               <div>
-                  <p>
-                     This is another example of a controllable tab. Remember, if you
-                     use controllable Tabs, you need to give all of your tabs values or else
-                     you wont be able to select them.
-                  </p>
-               </div>
+               <AdvancedTab />
             </Tab>
          </Tabs>
 

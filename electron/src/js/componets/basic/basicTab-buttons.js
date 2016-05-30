@@ -1,69 +1,61 @@
 import React, {Component, PropTypes} from 'react'
-import ArchiveUrl from './archive-url'
 import RaisedButton from 'material-ui/RaisedButton'
-import Paper from 'material-ui/Paper'
+import {Row} from 'react-cellblock'
 
 const styles = {
    button: {
       margin: 12,
    },
-   exampleImageInput: {
-      cursor: 'pointer',
-      position: 'absolute',
-      top: 0,
-      bottom: 0,
-      right: 0,
-      left: 0,
-      width: '100%',
-      opacity: 0,
-   },
 }
 
-export default class Basic extends Component {
+export default class BasicTabButtons extends Component {
    constructor(props, context) {
       super(props, context)
-      this.onClick = this.onClick.bind(this)
+      this.onClickArchiveNow = this.onClickArchiveNow.bind(this)
+      this.onClickCheckArchive = this.onClickCheckArchive.bind(this)
+      this.onClickViewArchive = this.onClickViewArchive.bind(this)
    }
 
-   onClick(event) {
+   onClickArchiveNow(event) {
+      console.log('archive now')
+   }
 
-      console.log(event)
+   onClickCheckArchive(event) {
+      console.log('check archive')
+
+   }
+
+   onClickViewArchive(event) {
+      console.log('view archive')
+
    }
 
    render() {
-      console.log("HI hellow")
-      console.log("hehehe dasass ")
-      console.log("hehehe dasass e ")
       return (
-         <div>
-            <Paper zDepth={3}>
-               <ArchiveUrl />
-
-               <div>
+        
+            <Row>
                <RaisedButton
                   label="Archive Now!"
                   labelPosition="before"
                   primary={true}
                   style={styles.button}
+                  onMouseDown={this.onClickArchiveNow}
                />
                <RaisedButton
                   label="Check Archived Status"
                   labelPosition="before"
                   primary={true}
                   style={styles.button}
+                  onMouseDown={this.onClickCheckArchive}
                />
                <RaisedButton
                   label="View Archive"
                   labelPosition="before"
                   primary={true}
                   style={styles.button}
+                  onMouseDown={this.onClickViewArchive}
                />
-              </div>
-            </Paper>
-         </div>
-
-
+            </Row>
       )
    }
 }
-
