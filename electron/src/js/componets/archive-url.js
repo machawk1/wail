@@ -44,12 +44,13 @@ export default class ArchiveUrl extends Component {
     render() {
         return (
             <TextField
+                name="what"
+                floatingLabelText="Enter URL"
+                hintText="http://matkelly.com/wail"
+                id="archive-url-input"
                 floatingLabelFixed={false}
                 value={this.state.uri}
                 onChange={this.handleChange}
-                floatingLabelText="Enter URL"
-                hintText="http://matkelly.com/wail"
-                id="text-field-controlled"
             />
 
         )
