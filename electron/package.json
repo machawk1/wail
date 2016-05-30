@@ -30,7 +30,10 @@
     "react-tap-event-plugin": "^1.0.0",
     "react-toolbox": "^0.16.2",
     "request": "^2.72.0",
+    "request-promise": "^3.0.0",
+    "requests": "^0.1.7",
     "roboto-fontface": "^0.4.5",
+    "shelljs": "^0.7.0",
     "valid-url": "^1.0.9"
   },
   "standard": {

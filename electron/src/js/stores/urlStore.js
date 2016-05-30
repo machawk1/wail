@@ -1,6 +1,7 @@
 import EventEmitter from 'eventemitter3'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import wailConstants from '../constants/wail-constants'
+import * as urlActions from '../actions/archive-url-actions'
 
 
 const EventTypes = wailConstants.EventTypes;
@@ -8,26 +9,38 @@ const EventTypes = wailConstants.EventTypes;
 export default class urlStore extends EventEmitter {
     constructor() {
         super()
-        this.url = 'http://matkelly.com/wail'
-        this.handleAction = this.handleAction.bind(this)
+        this.urlMemento = { url:'', mementos:0}
+        this.handleEvent = this.handleEvent.bind(this)
+        this.getUrl = this.getUrl.bind(this)
+        this.getMementoCount = this.getMementoCount.bind(this)
 
     }
 
-    handleAction(action){
-        console.log("Got an action",action)
-        switch (action.type){
+    handleEvent(event){
+        console.log("Got an event",event)
+        switch (event.type){
             case EventTypes.HAS_VAILD_URI: {
-                this.url = action.url
-                this.emit('url-updated')
+                if(this.urlMemento.url != event.url){
+                    this.urlMemento.url = event.url
+                    urlActions.askMemgator(event.url)
+                }
+
                 break
             }
                 
         }
 
     }
+    getUrl(){
+        return this.urlMemento.url
+    }
+
+    getMementoCount(){
+        return this.urlMemento.mementos
+    }
 
 }
 
 const UrlStore = new urlStore;
-UrlDispatcher.register(UrlStore.handleAction)
+UrlDispatcher.register(UrlStore.handleEvent)
 export default UrlStore;

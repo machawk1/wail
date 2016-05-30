@@ -1,12 +1,14 @@
 import React, {Component, PropTypes} from 'react'
-import darkBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import BasicTab from './basic/basic-tab'
 import AdvancedTab from './advanced/advancedTab'
 
-const baseTheme = getMuiTheme(darkBaseTheme)
 
+
+const baseTheme = getMuiTheme(lightBaseTheme)
+console.log(baseTheme)
 class Wail extends Component {
    constructor(props, context) {
       super(props, context)
@@ -26,7 +28,6 @@ class Wail extends Component {
    render() {
       console.log("HI hellow")
       console.log("hehehe dasass ")
-      console.log("hehehe dasass e ")
       return (
          <Tabs
             value={this.state.value}
