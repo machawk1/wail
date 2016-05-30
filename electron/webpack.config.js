@@ -21,8 +21,8 @@ module.exports = {
          },
          { test: /\.css$/, loader: "style!css" },
          {
-            test: /\.less$/,
-            loader: 'style!css!less'
+            test: /(\.scss|\.css)$/,
+            loader: 'style!css!less|scss'
          },
          {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,

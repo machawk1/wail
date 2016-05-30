@@ -10,11 +10,11 @@ export default class urlStore extends EventEmitter {
         super()
         this.url = 'http://matkelly.com/wail'
         this.handleAction = this.handleAction.bind(this)
-        UrlDispatcher.register(this.handleAction)
+
     }
 
     handleAction(action){
-        console.log("Got an action",action);
+        console.log("Got an action",action)
         switch (action.type){
             case EventTypes.HAS_VAILD_URI: {
                 this.url = action.url
@@ -29,5 +29,5 @@ export default class urlStore extends EventEmitter {
 }
 
 const UrlStore = new urlStore;
-
+UrlDispatcher.register(UrlStore.handleAction)
 export default UrlStore;

@@ -15,9 +15,6 @@ function createWindow () {
    // and load the index.html of the app.
    mainWindow.loadURL(`file://${__dirname}/wail.html`)
 
-   // Open the DevTools.
-   mainWindow.webContents.openDevTools()
-
 
 
    // mainWindow.webContents.on('did-finish-load', () => {
