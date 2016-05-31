@@ -1,7 +1,7 @@
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import wailConstants from '../constants/wail-constants'
 import shelljs from 'shelljs'
-import UrlStore from '../stores/urlStore'
+
 
 const EventTypes = wailConstants.EventTypes
 const Paths = wailConstants.Paths
@@ -15,9 +15,14 @@ export function urlUpdated(url) {
 }
 
 export async function askMemgator(url) {
-    console.log('askingMemegator')
+    console.log('askingMemegator',url)
     shelljs.exec(`${Paths.memgator} -a ${Paths.archives} ${url}`,(code,output,err) => {
         console.log(code,output,err)
+        console.log((output.match(/memento/g) || []).length)
+        UrlDispatcher.dispatch({
+            type: EventTypes.GOT_MEMENTO_COUNT,
+            mementos: (output.match(/memento/g) || []).length
+        })
     })
     
 }

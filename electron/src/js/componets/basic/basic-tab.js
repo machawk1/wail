@@ -27,7 +27,6 @@ export default class BasicTab extends Component {
 
    }
 
-
    render() {
       console.log("HI hellow")
       console.log("hehehe dasass ")

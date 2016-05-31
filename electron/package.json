@@ -17,6 +17,7 @@
     "electron-react-devtools": "^0.2.3",
     "eventemitter3": "^1.2.0",
     "flux": "2.1.1",
+    "google-auth-library": "^0.9.8",
     "googleapis": "^7.1.0",
     "material-design-icons-iconfont": "^2.0.5",
     "material-ui": "^0.15.0",

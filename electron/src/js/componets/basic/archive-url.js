@@ -3,7 +3,7 @@ import validUrl from 'valid-url'
 import TextField from 'material-ui/TextField'
 import {urlUpdated} from '../../actions/archive-url-actions'
 import {Row} from 'react-cellblock'
-import {red500, blue500} from 'material-ui/styles/colors';
+import {red500, blue500} from 'material-ui/styles/colors'
 
 
 
@@ -19,8 +19,7 @@ const styles = {
 export default class ArchiveUrl extends Component {
     constructor(props, context) {
         super(props, context)
-        this.errorText = "Invalid URL"
-        this.state = {uri: " ",underlineStyle:styles.underlineStyle}
+        this.state = { uri: "", underlineStyle: styles.underlineStyle }
         this.handleChange = this.handleChange.bind(this)
         this.focusLost = this.focusLost.bind(this)
 
@@ -28,18 +27,20 @@ export default class ArchiveUrl extends Component {
 
 
     handleChange(e) {
+        console.log('setState')
         console.log(e.target.value)
         let value = e.target.value
         let err = styles.underlineStyleError
-        if (validUrl.is_web_uri(value)) {
+        if (validUrl.is_web_uri(value) || validUrl.isUri(value)) {
             err = styles.underlineStyle
         }
-        this.setState({uri: value,underlineStyle:err})
+        this.setState({uri: value, underlineStyle:err})
     }
 
 
     focusLost(event) {
-        if (validUrl.is_web_uri(this.state.uri)) {
+        console.log('focus lost',this.state.uri)
+        if (validUrl.is_web_uri(this.state.uri) || validUrl.isUri(this.state.uri)) {
             urlUpdated(this.state.uri)
         }
     }
