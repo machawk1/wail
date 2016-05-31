@@ -87,7 +87,7 @@
     "concurrently": "^2.1.0",
     "copy-webpack-plugin": "^3.0.0",
     "del": "2.2.0",
-    "electron-compile": "3.2.2",
+    "electron-compile": "3.2.3",
     "electron-compilers": "3.1.0",
     "electron-prebuilt": "^1.2.0",
     "electron-reload": "^1.0.0",
