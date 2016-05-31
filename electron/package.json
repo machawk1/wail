@@ -6,12 +6,14 @@
     "start-electron-dev": "HOT=1 NODE_ENV=development electron -r babel-register src/electron-main-dev.js",
     "dev": "webpack-dev-server --content-base src --inline --hot",
     "start-dev": "concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
-    "copy-resources": "babel-node tools/copy"
+    "copy-resources": "babel-node tools/copy",
+    "test-xml": "babel-node tools/test-xml"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
   "dependencies": {
+    "cheerio": "^0.20.0",
     "css-loader": "^0.23.1",
     "electron-debug": "^1.0.0",
     "electron-react-devtools": "^0.2.3",
@@ -19,9 +21,11 @@
     "flux": "2.1.1",
     "google-auth-library": "^0.9.8",
     "googleapis": "^7.1.0",
+    "libxmljs": "^0.18.0",
     "material-design-icons-iconfont": "^2.0.5",
     "material-ui": "^0.15.0",
     "normalize.css": "^4.1.1",
+    "pixl-xml": "^1.0.6",
     "react": "15.1.0",
     "react-addons-css-transition-group": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
@@ -32,10 +36,10 @@
     "react-toolbox": "^0.16.2",
     "request": "^2.72.0",
     "request-promise": "^3.0.0",
-    "requests": "^0.1.7",
     "roboto-fontface": "^0.4.5",
     "shelljs": "^0.7.0",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "xml-stream": "^0.4.5"
   },
   "standard": {
     "parser": "babel-eslint",

@@ -4,11 +4,12 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import BasicTab from './basic/basic-tab'
 import AdvancedTab from './advanced/advancedTab'
-
+import Debug from './debug-element'
 
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 console.log(baseTheme)
+
 class Wail extends Component {
    constructor(props, context) {
       super(props, context)
@@ -29,6 +30,7 @@ class Wail extends Component {
       console.log("HI hellow")
       console.log("hehehe dasass ")
       return (
+         <div>
          <Tabs
             value={this.state.value}
             onChange={this.handleChange}
@@ -40,6 +42,8 @@ class Wail extends Component {
                <AdvancedTab />
             </Tab>
          </Tabs>
+            <Debug/>
+          </div>
 
       )
    }

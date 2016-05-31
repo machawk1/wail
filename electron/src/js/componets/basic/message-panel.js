@@ -32,7 +32,7 @@ export default class MessagePanel extends Component {
     }
 
    render() {
-       const progressOrCount = this.state.mementoCount == -1 ?  <CircularProgress size={0.5}/> :  <p>{this.state.mementoCount}</p>
+      const progressOrCount = this.state.mementoCount == -1 ?  <CircularProgress size={0.5}/> :  <p>{this.state.mementoCount}</p>
       return (
             <Paper zDepth={3}>
                 <Grid>

@@ -1,12 +1,12 @@
 import EventEmitter from 'eventemitter3'
-import UrlDispatcher from '../dispatchers/url-dispatcher'
+import HeritrixDispatcher from '../dispatchers/heritrix-dispatcher'
 import wailConstants from '../constants/wail-constants'
-import * as urlActions from '../actions/archive-url-actions'
+import * as heritrixActions from '../actions/heritrix-actions'
 
 
 const EventTypes = wailConstants.EventTypes
 
-export default class urlStore extends EventEmitter {
+export default class CrawlStore extends EventEmitter {
    constructor() {
       super()
       this.urlMemento = {url: '', mementos: 0}
@@ -23,7 +23,7 @@ export default class urlStore extends EventEmitter {
          {
             if (this.urlMemento.url != event.url) {
                this.urlMemento.url = event.url
-               urlActions.askMemgator(event.url)
+               heritrixActions.askMemgator(event.url)
                this.emit('url-updated')
             }
 
@@ -50,6 +50,6 @@ export default class urlStore extends EventEmitter {
 
 }
 
-const UrlStore = new urlStore;
-UrlDispatcher.register(UrlStore.handleEvent)
-export default UrlStore;
+const HeritrixStore = new CrawlStore;
+HeritrixDispatcher.register(HeritrixStore.handleEvent)
+export default HeritrixStore;
