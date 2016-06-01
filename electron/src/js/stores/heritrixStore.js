@@ -9,11 +9,19 @@ const EventTypes = wailConstants.EventTypes
 export default class CrawlStore extends EventEmitter {
    constructor() {
       super()
-      this.urlMemento = {url: '', mementos: 0}
-      this.handleEvent = this.handleEvent.bind(this)
-      this.getUrl = this.getUrl.bind(this)
-      this.getMementoCount = this.getMementoCount.bind(this)
+      this.jobs = {}
 
+   }
+
+   createJob(id,pth){
+      this.jobs[id] = {
+         jobID: id,
+         path: pth,
+         discovered: 0,
+         queued: 0,
+         downloaded: 0,
+      }
+      this.emit('job-created')
    }
 
    handleEvent(event) {
@@ -23,7 +31,6 @@ export default class CrawlStore extends EventEmitter {
          {
             if (this.urlMemento.url != event.url) {
                this.urlMemento.url = event.url
-               heritrixActions.askMemgator(event.url)
                this.emit('url-updated')
             }
 
@@ -31,6 +38,7 @@ export default class CrawlStore extends EventEmitter {
          }
          case EventTypes.GOT_MEMENTO_COUNT:
          {
+            
             this.urlMemento.mementos = event.mementos
             this.emit('memento-count-updated')
             break

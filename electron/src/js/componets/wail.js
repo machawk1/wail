@@ -8,7 +8,6 @@ import Debug from './debug-element'
 
 
 const baseTheme = getMuiTheme(lightBaseTheme)
-console.log(baseTheme)
 
 class Wail extends Component {
    constructor(props, context) {
@@ -28,8 +27,6 @@ class Wail extends Component {
    }
 
    render() {
-      console.log("HI hellow")
-      console.log("hehehe dasass ")
       return (
          <div>
          <Tabs

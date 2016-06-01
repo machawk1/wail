@@ -7,6 +7,8 @@ import Popover from 'material-ui/Popover'
 import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import * as Heritrix from '../actions/heritrix-actions'
 
+import NewCrawlDialog from '../componets/advanced/heritrix/newCrawlDialog'
+
 
 
 export default class Debug extends Component {
@@ -58,6 +60,7 @@ export default class Debug extends Component {
                onTouchTap={this.handleTouchTap}
                label="Heritrix"
             />
+            <NewCrawlDialog />
          </ToolbarGroup>
       </Toolbar>
          <Popover
@@ -70,7 +73,7 @@ export default class Debug extends Component {
             <Menu>
                <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
                <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
-               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf(['ss'])} primaryText="make job"/>
+               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('ss',15000)} primaryText="make job"/>
             </Menu>
          </Popover>
          </div>
