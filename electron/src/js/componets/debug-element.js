@@ -70,6 +70,7 @@ export default class Debug extends Component {
             <Menu>
                <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
                <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
+               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf(['ss'])} primaryText="make job"/>
             </Menu>
          </Popover>
          </div>

@@ -10,11 +10,14 @@ fs.readFileAsync(path.join(path.resolve('./'),'crawler-beans.cxml'), "utf8")
       let doc = cheerio.load(data,{
          xmlMode: true
       })
-      console.log(doc.xml())
-      console.log(doc('bean[id="longerOverrides"]').text())
-      // console.log(doc.childNodes())
-      // console.log(root.name())
-      // console.log(root.text())
+       // console.log(doc.xml())
+       'bean[id="warcWriter"]'
+       let urls = doc('bean[id="longerOverrides"]')
+       // console.log(doc.childNodes())
+       // console.log(root.name())
+       // console.log(root.text())
+       console.log(urls.text())
+       // console.log(urls.xml())
 
    })
 

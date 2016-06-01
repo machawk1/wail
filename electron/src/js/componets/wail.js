@@ -14,6 +14,7 @@ class Wail extends Component {
    constructor(props, context) {
       super(props, context)
       this.state = {key: 'basic'}
+      
       this.handleSelect = this.handleSelect.bind(this)
    }
 

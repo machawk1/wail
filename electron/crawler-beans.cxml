@@ -56,7 +56,7 @@ metadata.description=Basic crawl starting with useful defaults
     <prop key="seeds.textSource.value">
 
 # URLS HERE
-http://matkelly.com/wail
+
     </prop>
    </props>
   </property>
@@ -345,8 +345,7 @@ http://matkelly.com/wail
   <!-- <property name="directory" value="C:\WAIL\tomcat\webapps\ROOT\" /> -->
    <property name="storePaths">
         <list>
-        
-        </list>
+          </list>
        </property>
   <!-- <property name="writeRequests" value="true" /> -->
   <!-- <property name="writeMetadata" value="true" /> -->

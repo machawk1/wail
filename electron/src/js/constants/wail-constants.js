@@ -8,6 +8,7 @@ export default {
       GOT_MEMENTO_COUNT: null,
    }),
    Paths: {
+     
       memgator: path.join(path.resolve('../'), 'bundledApps/memgator'),
       archives: path.join(path.resolve('../'), 'config/archives.json'),
       heritrix: path.join(path.resolve('../'), 'bundledApps/heritrix-3.2.0'),
@@ -23,7 +24,8 @@ export default {
    Heritrix: {
 
       username: "lorem",
-      password: "ipsum"
+      password: "ipsum",
+      jobConf:  path.join(path.resolve('./'),'crawler-beans.cxml')
         
 
    },
