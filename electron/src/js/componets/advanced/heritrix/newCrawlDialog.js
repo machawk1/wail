@@ -2,8 +2,15 @@ import React, {Component, PropTypes} from 'react'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Grid,Row,Column} from 'react-cellblock'
-import CrawlUrls from './enterUrls'
+import {Grid} from 'react-cellblock'
+import CrawlUrls from './crawlUrls'
+import CrawlDepth from './crawlDepth'
+// import * as heritrixActions from '../../../actions/heritrix-actions'
+
+const style = {
+   height: '500px',
+   maxHeight: 'none',
+}
 
 
 export default class NewCrawlDialog extends Component {
@@ -13,13 +20,17 @@ export default class NewCrawlDialog extends Component {
       this.state = {
          open: false,
          urls: [],
+         depth: 0,
+
       }
       this.handleOpen = this.handleOpen.bind(this)
       this.handleClose = this.handleClose.bind(this)
+      this.crawlConfigured = this.crawlConfigured.bind(this)
       this.urlChanged = this.urlChanged.bind(this)
+      this.depthAdded = this.depthAdded.bind(this)
    }
 
-   handleOpen () {
+   handleOpen() {
       this.setState({open: true})
    }
 
@@ -27,8 +38,21 @@ export default class NewCrawlDialog extends Component {
       this.setState({open: false})
    }
 
-   urlChanged(url){
-      console.log(url)
+   crawlConfigured() {
+      this.setState({open: false})
+      // heritrixActions.makeHeritrixJobConf(this.state.urls,this.state.depth)
+   }
+
+   urlChanged(url) {
+      console.log("crawl url added", url)
+      let urls = this.state.urls
+      urls.push(url)
+      this.setState({urls: urls})
+   }
+
+   depthAdded(depth) {
+      console.log("crawl depth added", depth)
+      this.setState({depth: depth})
    }
 
    render() {
@@ -39,23 +63,28 @@ export default class NewCrawlDialog extends Component {
             onTouchTap={this.handleClose}
          />,
          <FlatButton
-            label="Ok"
+            label="Start Crawl"
             primary={true}
-            onTouchTap={this.handleClose}
+            onTouchTap={this.crawlConfigured}
          />,
       ]
 
       return (
          <div>
-            <RaisedButton label="Dialog With Date Picker" onTouchTap={this.handleOpen} />
+            <RaisedButton label="New Crawl" onTouchTap={this.handleOpen}/>
             <Dialog
-               title="Dialog With Date Picker"
+               title="Set up new crawl"
                actions={actions}
-               modal={false}
+               modal={true}
+               autoDetectWindowHeight={false}
+               autoScrollBodyContent={true}
                open={this.state.open}
                onRequestClose={this.handleClose}
             >
-              <CrawlUrls urlAdded={this.urlChanged}/>
+               <Grid>
+                  <CrawlUrls urlAdded={this.urlChanged}/>
+                  <CrawlDepth depthAdded={this.depthAdded}/>
+               </Grid>
             </Dialog>
          </div>
       )

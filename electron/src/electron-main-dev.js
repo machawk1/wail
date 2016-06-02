@@ -1,5 +1,7 @@
 const {app,BrowserWindow} = require('electron')
-
+var realFs = require('fs')
+var gracefulFs = require('graceful-fs')
+gracefulFs.gracefulify(realFs)
 
 let mainWindow = null
 
@@ -26,6 +28,16 @@ function createWindow () {
       mainWindow.openDevTools()
       
    }
+
+   mainWindow.on('unresponsive', () => {
+      console.log('we are unresponsive')
+   })
+
+   mainWindow.webContents.on('crashed', () => {
+      console.log("we crashed")
+   })
+
+   // BrowserWindow.addDevToolsExtension('/home/john/.config/google-chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.14.10_0')
    // Emitted when the window is closed.
    mainWindow.on('closed',  () => {
       // Dereference the window object, usually you would store windows
@@ -51,4 +63,8 @@ app.on('activate',  ()  => {
    if (mainWindow === null) {
       createWindow()
    }
+})
+
+process.on('uncaughtException', (err) => {
+   console.log(`Caught exception: ${err}`);
 })

@@ -2,8 +2,13 @@ import React, {Component, PropTypes} from 'react'
 import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import TextField from 'material-ui/TextField'
-import {Grid,Row,Column} from 'react-cellblock'
+import {Grid, Row, Column} from 'react-cellblock'
 
+const style = {
+   height: "100px",
+   overflowX: "hidden",
+   "overflowY": "scroll"
+}
 
 export default class CrawlUrls extends Component {
    static propTypes = {
@@ -15,7 +20,7 @@ export default class CrawlUrls extends Component {
       this.state = {
          open: false,
          urls: [],
-         text:'',
+         text: '',
       }
       this.handleOpen = this.handleOpen.bind(this)
       this.handleClose = this.handleClose.bind(this)
@@ -23,22 +28,23 @@ export default class CrawlUrls extends Component {
       this.handleChange = this.handleChange.bind(this)
    }
 
-   handleOpen () {
+   handleOpen(event) {
       this.setState({open: true})
    }
 
-   handleClose() {
+   handleClose(event) {
       this.setState({open: false})
    }
 
-   checkKeyCode(event){
+   checkKeyCode(event) {
       console.log(event.keyCode)
-      if(event.keyCode == 13){
+      if (event.keyCode == 13) {
          let uris = this.state.urls
          uris.push(<ListItem key={uris.length+1} primaryText={this.state.text}/>)
-         uris.push(<Divider key={uris.length+1} />)
+         uris.push(<Divider key={uris.length+1}/>)
          console.log("enter")
-         this.setState({urls: uris,text:''})
+         this.props.urlAdded(this.state.text)
+         this.setState({urls: uris, text: ''})
       }
 
    }
@@ -48,31 +54,25 @@ export default class CrawlUrls extends Component {
       this.setState({text: e.target.value})
    }
 
-   buildList(){
-
-   }
 
    render() {
       return (
-        <Grid>
-           <Row>
-              <Column width="1/2">
-                 <TextField
-                    floatingLabelText="Enter URI to crawl"
-                    hintText="http://matkelly.com/wail"
-                    id="url-input"
-                    value={this.state.text}
-                    onKeyDown={this.checkKeyCode}
-                    onChange={this.handleChange}
-                 />
-                 </Column>
-              <Column width="1/2">
-                 <List style={{height:"200px",overflowX: "hidden","overflowY": "scroll"}} children={ this.state.urls }/>
-              </Column>
 
-              </Row>
-
-        </Grid>
+         <Row>
+            <Column width="1/2">
+               <TextField
+                  floatingLabelText="Enter URI to crawl"
+                  hintText="http://matkelly.com/wail"
+                  id="url-input"
+                  value={this.state.text}
+                  onKeyDown={this.checkKeyCode}
+                  onChange={this.handleChange}
+               />
+            </Column>
+            <Column width="1/2">
+               <List style={style} children={ this.state.urls }/>
+            </Column>
+         </Row>
       )
    }
 }

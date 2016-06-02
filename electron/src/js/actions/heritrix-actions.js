@@ -1,12 +1,8 @@
 import wailConstants from '../constants/wail-constants'
 import child_process from 'child_process'
+import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
-import rp from 'request-promise'
-import Promise from 'bluebird'
-Promise.promisifyAll(fs)
-
-
 
 
 const heritrix = wailConstants.Heritrix
@@ -98,6 +94,34 @@ export async function launchHeritrixJob(jobId) {
       },
       form: {
          action: "launch"
+      },
+      auth: {
+         usr: heritrix.username,
+         pass: heritrix.password
+      },
+      resolveWithFullResponse: true,
+   }
+
+   rp(options)
+      .then(response => {
+         // POST succeeded...
+      })
+      .catch(err => {
+         // POST failed...
+      })
+}
+
+export async function sendActionToHeritrix(act, jobId) {
+
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${jobId}`,
+      headers: {
+         Accept: "application/xml",
+         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
+      },
+      form: {
+         action: act
       },
       auth: {
          usr: heritrix.username,

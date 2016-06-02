@@ -16,12 +16,15 @@ export default class Debug extends Component {
    constructor(props,context) {
       super(props,context)
       this.state = {
-         open: false
+         hopen: false,
+         copen: false,
       }
       this.handleTouchTap = this.handleTouchTap.bind(this)
       this.handleRequestClose= this.handleRequestClose.bind(this)
       this.launchHeritrix = this.launchHeritrix.bind(this)
       this.killHeritrix = this.killHeritrix.bind(this)
+      this.crawl = this.crawl.bind(this)
+      this.cClose = this.cClose.bind(this)
 
    }
 
@@ -29,14 +32,20 @@ export default class Debug extends Component {
    handleTouchTap(event){
       event.preventDefault()
       this.setState({
-         open: true,
+         hopen: true,
          anchorEl: event.currentTarget,
       })
    }
 
    handleRequestClose()  {
       this.setState({
-         open: false,
+         hopen: false,
+      })
+   }
+
+   cClose() {
+      this.setState({
+         copen: false,
       })
    }
 
@@ -44,9 +53,18 @@ export default class Debug extends Component {
       console.log("Launch Heritrix")
       Heritrix.launchHeritrix()
    }
+
    killHeritrix(){
       console.log("Launch Heritrix")
       Heritrix.killHeritrix()
+   }
+
+   crawl(event) {
+      event.preventDefault()
+      this.setState({
+         copen: true,
+         anchorElc: event.currentTarget,
+      })
    }
 
 
@@ -61,10 +79,11 @@ export default class Debug extends Component {
                label="Heritrix"
             />
             <NewCrawlDialog />
+
          </ToolbarGroup>
       </Toolbar>
          <Popover
-            open={this.state.open}
+            open={this.state.hopen}
             anchorEl={this.state.anchorEl}
             anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
             targetOrigin={{horizontal: 'left', vertical: 'top'}}
