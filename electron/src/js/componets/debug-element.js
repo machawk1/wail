@@ -6,6 +6,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import Popover from 'material-ui/Popover'
 import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import * as Heritrix from '../actions/heritrix-actions'
+import * as Wayback from '../actions/wayback-actions'
 
 import NewCrawlDialog from '../componets/advanced/heritrix/newCrawlDialog'
 
@@ -18,6 +19,7 @@ export default class Debug extends Component {
       this.state = {
          hopen: false,
          copen: false,
+         wopen: false,
       }
       this.handleTouchTap = this.handleTouchTap.bind(this)
       this.handleRequestClose= this.handleRequestClose.bind(this)
@@ -25,6 +27,8 @@ export default class Debug extends Component {
       this.killHeritrix = this.killHeritrix.bind(this)
       this.crawl = this.crawl.bind(this)
       this.cClose = this.cClose.bind(this)
+      this.wayBackButton = this.wayBackButton.bind(this)
+      this.wpopclose = this.wpopclose.bind(this)
 
    }
 
@@ -49,13 +53,19 @@ export default class Debug extends Component {
       })
    }
 
+   wpopclose() {
+      this.setState({
+         wopen: false,
+      })
+   }
+
    launchHeritrix(){
-      console.log("Launch Heritrix")
+      console.log("Launch HeritrixTab")
       Heritrix.launchHeritrix()
    }
 
    killHeritrix(){
-      console.log("Launch Heritrix")
+      console.log("Launch HeritrixTab")
       Heritrix.killHeritrix()
    }
 
@@ -68,6 +78,14 @@ export default class Debug extends Component {
    }
 
 
+   wayBackButton(event) {
+      event.preventDefault()
+      this.setState({
+         wopen: true,
+         anchorElw: event.currentTarget,
+      })
+   }
+
 
    render() {
       return (
@@ -79,7 +97,10 @@ export default class Debug extends Component {
                label="Heritrix"
             />
             <NewCrawlDialog />
-
+            <RaisedButton
+               onTouchTap={this.wayBackButton}
+               label="Wayback"
+            />
          </ToolbarGroup>
       </Toolbar>
          <Popover
@@ -93,6 +114,18 @@ export default class Debug extends Component {
                <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
                <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
                <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('ss',15000)} primaryText="make job"/>
+            </Menu>
+         </Popover>
+         <Popover
+            open={this.state.wopen}
+            anchorEl={this.state.anchorElw}
+            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            onRequestClose={this.wpopclose}
+         >
+            <Menu>
+               <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText="Start Wayback"/>
+               <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText="Kill Wayback"/>
             </Menu>
          </Popover>
          </div>

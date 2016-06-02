@@ -15,7 +15,7 @@ export async function launchHeritrix() {
 }
 
 export async function killHeritrix() {
-   child_process.exec("ps ax | grep 'heritrix' | grep -v grep | awk '{print \"kill -9 \" $1}'\" | sh", (err, stdout, stderr) => {
+   child_process.exec("ps ax | grep \'heritrix\' | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh", (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }

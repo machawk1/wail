@@ -52,7 +52,7 @@ module.exports = {
    output: {
       path: __dirname,
       filename: "main.js",
-      publicPath: 'http://localhost:8080/'
+      publicPath: 'http://localhost:9000/'
    },
    target: 'electron-renderer',
 

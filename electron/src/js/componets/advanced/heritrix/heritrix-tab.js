@@ -9,7 +9,7 @@ const styles = {
    },
 }
 
-export default class Heritrix extends Component {
+export default class HeritrixTab extends Component {
    constructor(props, context) {
       super(props, context)
       this.onClickNewCrawl = this.onClickNewCrawl.bind(this)

@@ -64,7 +64,7 @@ export async function generateCDX() {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
       let cdxFile = `${paths.cdx}/${cdx}`
-      child_process.exec(`${paths.cdxIndexer} ${paths.warcs}/${worf.path} ${cdxFile}`, (err, stdout, stderr) => {
+      child_process.exec(`${paths.cdxIndexer} ${paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
          console.log(err, stdout, stderr)
          fs.readFile(cdx, 'utf8', (err, value)=> {
             fs.unlink(cdx, err => {

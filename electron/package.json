@@ -4,7 +4,7 @@
   "main": "src/electron-main.js",
   "scripts": {
     "start-electron-dev": "HOT=1 NODE_ENV=development electron -r babel-register src/electron-main-dev.js",
-    "dev": "webpack-dev-server --content-base src --inline --hot",
+    "dev": "webpack-dev-server --port 9000 --content-base src --inline --hot",
     "start-dev": "concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
     "copy-resources": "babel-node tools/copy",
     "test-xml": "babel-node tools/test-xml"

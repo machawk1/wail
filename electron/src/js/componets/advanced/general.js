@@ -24,11 +24,11 @@ export default class General extends Component {
    }
 
    heritrixFix(event){
-      console.log("Heritrix fix")
+      console.log("HeritrixTab fix")
    }
 
    heritrixKill(event){
-      console.log("Heritrix fix")
+      console.log("HeritrixTab fix")
    }
 
    render() {

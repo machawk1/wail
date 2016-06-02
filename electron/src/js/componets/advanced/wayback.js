@@ -8,7 +8,7 @@ const styles = {
    },
 }
 
-export default class General extends Component {
+export default class WayBackTab extends Component {
    constructor(props, context) {
       super(props, context)
       this.onClickViewWayback = this.onClickViewWayback.bind(this)

@@ -1,8 +1,8 @@
 import React, {Component, PropTypes} from 'react'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import General from './general'
-import Wayback from './wayback'
-import Heritrix from './heritrix/heritrix'
+import WayBackTab from './wayback'
+import HeritrixTab  from './heritrix/heritrix-tab'
 import Miscellaneous from './miscellaneous'
 
 export default class AdvancedTab extends Component {
@@ -27,10 +27,10 @@ export default class AdvancedTab extends Component {
                <General/>
             </Tab>
             <Tab label="Wayback" value="wayback">
-               <Wayback />
+               <WayBackTab />
             </Tab>
             <Tab label="Heritrix" value="heritrix">
-               <Heritrix />
+               <HeritrixTab />
             </Tab>
             <Tab label="Miscellaneous" value="miscellaneous">
                <Miscellaneous />
