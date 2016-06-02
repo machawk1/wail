@@ -9,6 +9,7 @@ import * as Heritrix from '../actions/heritrix-actions'
 import * as Wayback from '../actions/wayback-actions'
 
 import NewCrawlDialog from '../componets/advanced/heritrix/newCrawlDialog'
+import ServiceStore from '../stores/serviceStore'
 
 
 
@@ -114,6 +115,7 @@ export default class Debug extends Component {
                <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
                <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
                <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('ss',15000)} primaryText="make job"/>
+               <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText="test-status"/>
             </Menu>
          </Popover>
          <Popover

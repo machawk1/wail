@@ -7,9 +7,12 @@ export default {
    EventTypes: keyMirror({
       HAS_VAILD_URI: null,
       GOT_MEMENTO_COUNT: null,
+      BUILD_CRAWL_JOB: null,
+      BUILT_CRAWL_JOB: null,
+      HERITRIX_STATUS_UPDATE: null,
+      WAYBACK_STATUS_UPDATE: null,
    }),
    Paths: {
-
       memgator: path.join(path.resolve(base), 'bundledApps/memgator'),
       archives: path.join(path.resolve(base), 'config/archives.json'),
       heritrix: path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0'),
@@ -27,14 +30,13 @@ export default {
 
    },
    Heritrix: {
-
+      uri_heritrix: "https://127.0.0.1:8443",
       username: "lorem",
       password: "ipsum",
       jobConf:  path.join(path.resolve('./'),'crawler-beans.cxml')
-        
-
    },
    Wayback: {
-      uri_tomcat: ""
+      uri_tomcat: "http://localhost:8080/",
+      uri_wayback: "http://localhost:8080/wayback/"
    },
 }

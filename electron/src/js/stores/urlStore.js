@@ -6,18 +6,17 @@ import * as urlActions from '../actions/archive-url-actions'
 
 const EventTypes = wailConstants.EventTypes
 
-export default class urlStore extends EventEmitter {
+class urlStore extends EventEmitter {
    constructor() {
       super()
       this.urlMemento = {url: '', mementos: 0}
       this.handleEvent = this.handleEvent.bind(this)
       this.getUrl = this.getUrl.bind(this)
       this.getMementoCount = this.getMementoCount.bind(this)
-
    }
 
    handleEvent(event) {
-      console.log("Got an event", event)
+      console.log("Got an event url store", event)
       switch (event.type) {
          case EventTypes.HAS_VAILD_URI:
          {
@@ -31,6 +30,7 @@ export default class urlStore extends EventEmitter {
          }
          case EventTypes.GOT_MEMENTO_COUNT:
          {
+            console.log('Got Memento count in store', event)
             this.urlMemento.mementos = event.mementos
             this.emit('memento-count-updated')
             break

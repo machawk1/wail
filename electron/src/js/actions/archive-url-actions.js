@@ -1,7 +1,6 @@
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import wailConstants from '../constants/wail-constants'
 import child_process from 'child_process'
-import UrlStore from '../stores/urlStore'
 
 const EventTypes = wailConstants.EventTypes
 const Paths = wailConstants.Paths
@@ -18,10 +17,11 @@ export async function askMemgator(url) {
     console.log('askingMemegator')
     child_process.exec(`${Paths.memgator} -a ${Paths.archives} ${url}`, (err, stdout, stderr) => {
         console.log(err, stdout, stderr)
-        console.log((stdout.match(/memento/g) || []).length)
+        let mementoCount = (stdout.match(/memento/g) || []).length
+        console.log(mementoCount)
         UrlDispatcher.dispatch({
             type: EventTypes.GOT_MEMENTO_COUNT,
-            mementos: url
+            mementos: mementoCount
         })
     })
     

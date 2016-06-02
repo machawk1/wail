@@ -3,24 +3,56 @@ import child_process from 'child_process'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import CrawlDispatcher from '../dispatchers/service-dispatcher'
 
 
+const EventTypes = wailConstants.EventTypes
 const heritrix = wailConstants.Heritrix
 const paths = wailConstants.Paths
 
-export async function launchHeritrix() {
+export function heritrixAccesible() {
+   console.log("checking heritrix accessibility")
+   // ServiceDispatcher.dispatch({
+   //    type: EventTypes.HERITRIX_STATUS_UPDATE,
+   //    status: true,
+   // })
+   rp(heritrix.uri_heritrix)
+      .then(success => {
+         console.log("heritrix success", success)
+         ServiceDispatcher.dispatch({
+            type: EventTypes.HERITRIX_STATUS_UPDATE,
+            status: true,
+         })
+      })
+      .catch(err => {
+         console.log("heritrix err", err)
+         ServiceDispatcher.dispatch({
+            type: EventTypes.HERITRIX_STATUS_UPDATE,
+            status: false,
+         })
+      }).finally(() => console.log("heritrix finally"))
+}
+
+export function launchHeritrix() {
    child_process.exec(`sh ${paths.heritrixBin} -a=${heritrix.username}:${heritrix.password}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
+      let wasError = !err
+
+      ServiceDispatcher.dispatch({
+         type: EventTypes.HERITRIX_STATUS_UPDATE,
+         status: wasError,
+      })
    })
 }
 
-export async function killHeritrix() {
+export function killHeritrix() {
    child_process.exec("ps ax | grep \'heritrix\' | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh", (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
 
-export async function makeHeritrixJobConf(urls, hops) {
+export function makeHeritrixJobConf(urls, hops) {
    fs.readFileAsync(heritrix.jobConf, "utf8")
       .then(data => {
          let doc = cheerio.load(data, {
@@ -38,7 +70,6 @@ export async function makeHeritrixJobConf(urls, hops) {
          }
          urlConf.text(urlText)
 
-
          // <property name="maxHops" value="''' + str(depth) + '''" />
          let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
          maxHops.attr('value', `${hops}`)
@@ -48,13 +79,18 @@ export async function makeHeritrixJobConf(urls, hops) {
          let confPath = `${paths.heritrixJob}/${jobId}`
          fs.ensureDir(confPath, er => {
             fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => console.log(error))
+            CrawlDispatcher.dispatch({
+               event: EventTypes.BUILT_CRAWL_JOB,
+               id: jobId,
+               path: confPath
+            })
          })
 
 
       })
 }
 
-export async function buildHeritrixJob(jobId) {
+export function buildHeritrixJob(jobId) {
    let data = {action: "launch"}
    let options = {
       method: 'POST',
@@ -83,7 +119,7 @@ export async function buildHeritrixJob(jobId) {
 
 }
 
-export async function launchHeritrixJob(jobId) {
+export function launchHeritrixJob(jobId) {
 
    let options = {
       method: 'POST',
@@ -111,7 +147,7 @@ export async function launchHeritrixJob(jobId) {
       })
 }
 
-export async function sendActionToHeritrix(act, jobId) {
+export function sendActionToHeritrix(act, jobId) {
 
    let options = {
       method: 'POST',

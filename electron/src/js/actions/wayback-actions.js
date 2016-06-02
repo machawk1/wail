@@ -4,25 +4,47 @@ import rp from 'request-promise'
 import fs from 'fs-extra'
 import through2 from 'through2'
 import path from 'path'
-import Promise from 'bluebird'
 import S from 'string'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
 
-
+const EventTypes = wailConstants.EventTypes
+const Wayback = wailConstants.Wayback
 const paths = wailConstants.Paths
 
-export async function startWayback() {
+
+export function waybackAccesible() {
+   console.log("checking wayback accessibility")
+
+   rp({uri: Wayback.uri_wayback})
+      .then(success => {
+         console.log("wayback success", success)
+         ServiceDispatcher.dispatch({
+            type: EventTypes.WAYBACK_STATUS_UPDATE,
+            status: true,
+         })
+      }).catch(err => {
+      console.log("wayback err", err)
+      ServiceDispatcher.dispatch({
+         type: EventTypes.WAYBACK_STATUS_UPDATE,
+         status: false,
+      })
+   }).finally(() => console.log("wayback finally"))
+}
+
+
+export function startWayback() {
    child_process.exec(`sh ${paths.tomcatStart}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
 
-export async function killWayback() {
+export function killWayback() {
    child_process.exec(`sh ${paths.tomcatStop}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
 
-export async function generatePathIndex() {
+export function generatePathIndex() {
    let onlyWarf = through2.obj(function (item, enc, next) {
       if (!item.stats.isDirectory() && path.extname(item.path) === '.warc')
          this.push(item)
@@ -47,7 +69,7 @@ export async function generatePathIndex() {
 }
 
 
-export async function generateCDX() {
+export function generateCDX() {
    let replace = /.warc+$/g
    let cdxData = []
    let worfs = []
