@@ -4,8 +4,7 @@ var path = require('path')
 
 
 module.exports = {
-   context: path.join(__dirname, "src"),
-   entry: "./main.js",
+   entry: "./src/main.js",
    module: {
       noParse: /node_modules\/json-schema\/lib\/validate\.js/,
       loaders: [
@@ -22,7 +21,8 @@ module.exports = {
          {test: /\.css$/, loader: "style!css"},
          {
             test: /(\.scss|\.css)$/,
-            loader: 'style!css!less|scss'
+            loaders: ['style!css!less|scss', 'style-loader',
+               'css-loader?sourceMap']
          },
          {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,
@@ -50,9 +50,9 @@ module.exports = {
       }),
    ],
    output: {
-      path: __dirname,
-      filename: "main.js",
-      publicPath: 'http://localhost:9000/'
+      path: path.join(__dirname, 'dist'),
+      filename: 'bundle.js',
+      publicPath: 'http://localhost:9000/dist/'
    },
    target: 'electron-renderer',
 

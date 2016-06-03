@@ -36,8 +36,8 @@ export function heritrixAccesible() {
 }
 
 export function launchHeritrix() {
-   console.log(`sh ${paths.heritrixBin} -a lorem:ipsum`)
-   child_process.exec(`${paths.heritrixBin}  -a lorem:ipsum`, (err, stdout, stderr) => {
+   console.log(`sh ${ wailConstants.Paths.heritrixBin} -a lorem:ipsum`)
+   child_process.exec(`${ wailConstants.Paths.heritrixBin}  -a lorem:ipsum`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let wasError = !err
 
@@ -78,8 +78,8 @@ export function makeHeritrixJobConf(urls, hops) {
          maxHops.attr('value', `${hops}`)
          // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
          let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-         warFolder.append(`<value>${paths.warcs}</value>`)
-         let confPath = `${paths.heritrixJob}/${jobId}`
+         warFolder.append(`<value>${ wailConstants.Paths.warcs}</value>`)
+         let confPath = `${ wailConstants.Paths.heritrixJob}/${jobId}`
          fs.ensureDir(confPath, er => {
             fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
                console.log("done writting file", error)

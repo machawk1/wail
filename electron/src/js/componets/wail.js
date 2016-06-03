@@ -52,23 +52,3 @@ Wail.childContextTypes = {
 }
 
 export default Wail
-
-
-/*
- <Tab.Container id="theTabs" onSelect={this.handleSelect} activeKey={this.state.key}>
- <div>
- <Nav bsStyle="tabs" justified pullLeft>
- <NavItem eventKey={'basic'}>Basic</NavItem>
- <NavItem eventKey={'advanced'}>Advanced</NavItem>
- </Nav>
- <Tab.Content animation>
- <Tab.Pane animation eventKey={'basic'}>
- <Basic />
- </Tab.Pane>
- <Tab.Pane animation eventKey={'advanced'}>
- <p>HI</p>
- </Tab.Pane>
- </Tab.Content>
- </div>
- </Tab.Container>
- */

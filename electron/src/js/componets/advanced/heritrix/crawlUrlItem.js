@@ -18,9 +18,9 @@ export default class CrawlUrlItem extends Component {
    static propTypes = {
       deleteMe: PropTypes.func.isRequired,
       textChanged: PropTypes.func.isRequired,
-      id: PropTypes.number.isRequired,
       url: PropTypes.string.isRequired,
       idx: PropTypes.number.isRequired,
+      num: PropTypes.number.isRequired,
    }
 
    constructor(props, context) {
@@ -86,12 +86,12 @@ export default class CrawlUrlItem extends Component {
             onKeyDown={this.checkKeyCode}
             id={this.state.url}
             value={this.state.url}
-            key={this.props.key+2}
+            key={this.props.num+2}
          />
       )
       return (
          <ListItem
-            key={this.props.key}
+            key={this.props.num}
             primaryText={editUrlInList}
             rightIconButton={rightIconMenu}
          />

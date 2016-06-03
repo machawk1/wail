@@ -33,13 +33,13 @@ export function waybackAccesible() {
 
 
 export function startWayback() {
-   child_process.exec(`sh ${paths.tomcatStart}`, (err, stdout, stderr) => {
+   child_process.exec(`sh ${ wailConstants.Paths.tomcatStart}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
 
 export function killWayback() {
-   child_process.exec(`sh ${paths.tomcatStop}`, (err, stdout, stderr) => {
+   child_process.exec(`sh ${ wailConstants.Paths.tomcatStop}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
@@ -85,8 +85,8 @@ export function generateCDX() {
    let worfToCdx = through2.obj(function (item, enc, next) {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
-      let cdxFile = `${paths.cdx}/${cdx}`
-      child_process.exec(`sh ${paths.cdxIndexer} ${paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+      let cdxFile = `${ wailConstants.Paths.cdx}/${cdx}`
+      child_process.exec(`sh ${ wailConstants.Paths.cdxIndexer} ${ wailConstants.Paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
          console.log(err, stdout, stderr)
          fs.readFile(cdx, 'utf8', (errr, value)=> {
             console.log(errr, value)
@@ -114,14 +114,14 @@ export function generateCDX() {
    })
 
 
-   fs.walk(paths.warcs)
+   fs.walk(wailConstants.Paths.warcs)
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
       .pipe(onlyWorf)
       .pipe(worfToCdx)
       .pipe(cdxToLines)
-      .pipe(fs.createWriteStream(paths.cdxTemp))
+      .pipe(fs.createWriteStream(wailConstants.Paths.cdxTemp))
       .on('end', () => {
-         child_process.exec(`export LC_ALL=C; sort -u ${paths.cdxTemp} > ${paths.cdx}/index.cdx`, (err, stdout, stderr) => {
+         child_process.exec(`export LC_ALL=C; sort -u ${ wailConstants.Paths.cdxTemp} > ${ wailConstants.Paths.cdx}/index.cdx`, (err, stdout, stderr) => {
             console.log(err, stdout, stderr)
 
          })

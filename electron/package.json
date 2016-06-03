@@ -1,13 +1,21 @@
 {
   "name": "wail-electron",
   "version": "0.0.1",
-  "main": "src/electron-main.js",
+  "main": "electron-main.js",
+  "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
   "scripts": {
-    "start-electron-dev": "HOT=1 NODE_ENV=development electron -r babel-register src/electron-main-dev.js",
-    "dev": "webpack-dev-server --port 9000 --content-base src --inline --hot",
-    "start-dev": "concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
-    "copy-resources": "babel-node tools/copy",
-    "test-xml": "babel-node tools/test-xml"
+    "start-electron-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register electron-main-dev.js",
+    "dev": "cross-env webpack-dev-server --port 9000 --content-base src --inline --hot",
+    "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
+    "copy-resources": "cross-env babel-node tools/copy",
+    "test-xml": "cross-env babel-node tools/test-xml",
+    "prepair-build": "cross-env babel-node tools/prepairBuild",
+    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
+    "build": "npm run build-main && npm run build-renderer",
+    "package": "cross-env NODE_ENV=production node -r babel-register package.js",
+    "package-all": "npm run package -- --all",
+    "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -31,7 +39,9 @@
     "material-design-icons-iconfont": "^2.0.5",
     "material-ui": "^0.15.0",
     "mz": "^2.4.0",
+    "keymirror": "^0.1.1",
     "normalize.css": "^4.1.1",
+    "postcss": "^5.0.21",
     "react": "15.1.0",
     "react-addons-css-transition-group": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
@@ -46,9 +56,13 @@
     "request-promise": "^3.0.0",
     "roboto-fontface": "^0.4.5",
     "shelljs": "^0.7.0",
+    "source-map-support": "^0.4.0",
     "string": "^3.3.1",
     "through2": "^2.0.1",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "mkdirp": "^0.5.1",
+    "ncp": "^2.0.0",
+    "del": "2.2.0"
   },
   "standard": {
     "parser": "babel-eslint",
@@ -69,6 +83,7 @@
     ]
   },
   "devDependencies": {
+    "asar": "^0.11.0",
     "assets-webpack-plugin": "^3.4.0",
     "autoprefixer": "^6.3.6",
     "babel-cli": "^6.9.0",
@@ -98,19 +113,22 @@
     "classnames": "^2.2.5",
     "concurrently": "^2.1.0",
     "copy-webpack-plugin": "^3.0.1",
-    "del": "2.2.0",
+    "cross-env": "^1.0.8",
     "devtron": "^1.1.2",
     "electron-compile": "3.2.3",
     "electron-compilers": "3.1.0",
+    "electron-packager": "^7.0.3",
     "electron-prebuilt": "^1.2.1",
     "electron-react-devtools": "0.3.0",
+    "electron-rebuild": "^1.1.5",
     "electron-reload": "^1.0.0",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
+    "fbjs-scripts": "^0.7.1",
     "file-loader": "^0.8.5",
     "json-loader": "^0.5.4",
-    "keymirror": "^0.1.1",
-    "mkdirp": "^0.5.1",
+    "minimist": "^1.2.0",
+    "node-libs-browser": "^1.0.0",
     "node-sass": "^3.7.0",
     "run-sequence": "^1.2.1",
     "sass-loader": "^3.2.0",
@@ -123,6 +141,11 @@
     "webpack-dev-server": "1.14.1",
     "webpack-hot-middleware": "^2.10.0",
     "webpack-middleware": "^1.5.1",
-    "webpack-typescript": "^0.5.6"
+    "webpack-typescript": "^0.5.6",
+    "font-awesome": "^4.6.3"
+  },
+  "devEngines": {
+    "node": "5.x || 6.x",
+    "npm": "2.x || 3.x"
   }
 }

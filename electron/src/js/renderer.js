@@ -6,5 +6,5 @@
 // add the script that contains react. if we are run with HOT=1 then we know that we are hot loading changes
 // otherwise we would be running a production version
 const script = document.createElement('script')
-script.src = (process.env.HOT) ? 'http://localhost:9000/main.js' : '../dist/main.js'
+script.src = (process.env.HOT) ? 'http://localhost:9000/main.js' : './main.js'
 document.write(script.outerHTML)

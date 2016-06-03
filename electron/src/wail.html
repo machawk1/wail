@@ -2,17 +2,19 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <link  rel="stylesheet" type="text/css"  href="public/css/material-design-icons.css"/>
-    <link  rel="stylesheet" type="text/css"  href="public/css/roboto-fontface.css"/>
+    <link rel="stylesheet" type="text/css"
+          href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"/>
+    <link rel="stylesheet" type="text/css" href="../node_modules/roboto-fontface/css/roboto-fontface.css"/>
 </head>
 <body>
 <div id="wail"></div>
 </body>
 
 <script>
-    // You can also require other files to run in this process
-    console.log(__dirname)
-//    require('electron-react-devtools').inject()
-    require(`${__dirname}/js/renderer.js`)
+    (function () {
+        const script = document.createElement('script');
+        script.src = (process.env.HOT) ? 'http://localhost:9000/dist/bundle.js' : '../dist/bundle.js';
+        document.write(script.outerHTML);
+    }());
 </script>
 </html>

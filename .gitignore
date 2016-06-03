@@ -20,3 +20,13 @@ electron/public/icons
 
 .idea
 .idea/*
+
+electron/build/app
+electron/build/dist
+
+electron/release
+
+*.map
+
+electron/electron-main.js*
+

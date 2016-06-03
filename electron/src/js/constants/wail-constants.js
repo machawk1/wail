@@ -1,9 +1,21 @@
 import keyMirror from 'keymirror'
 import path from 'path'
+const ipcRenderer = require('electron').ipcRenderer
 
-const base = '../'
+ipcRenderer.send('getPath', '/')
 
-export default {
+let base = (process.env.HOT) ? '../' : './'
+
+const consts = {
+   pather: function () {
+      console.log(path.basename(__filename))
+      console.log(__filename)
+      console.log(path.resolve(__filename, ''))
+      console.log(path.resolve('./'))
+      console.log(path.resolve('.'))
+      console.log(path.resolve('.'))
+      console.log(path.resolve('.'))
+   },
    From: keyMirror({
       BASIC_ARCHIVE_NOW: null,
       NEW_CRAWL_DIALOG: null,
@@ -48,3 +60,14 @@ export default {
       uri_wayback: "http://localhost:8080/wayback/"
    },
 }
+
+
+ipcRenderer.on('gotPath', (event, arg)=> {
+   console.log(event, arg)
+   console.log('const before', consts)
+   consts.Paths = arg.p
+   consts.Heritrix = arg.Heritrix
+   console.log('const after', consts)
+})
+
+export default consts
