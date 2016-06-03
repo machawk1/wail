@@ -4,11 +4,17 @@ import path from 'path'
 const base = '../'
 
 export default {
+   From: keyMirror({
+      BASIC_ARCHIVE_NOW: null,
+      NEW_CRAWL_DIALOG: null,
+   }),
    EventTypes: keyMirror({
       HAS_VAILD_URI: null,
       GOT_MEMENTO_COUNT: null,
       BUILD_CRAWL_JOB: null,
+      BUILT_CRAWL_CONF: null,
       BUILT_CRAWL_JOB: null,
+      LAUNCHED_CRAWL_JOB: null,
       HERITRIX_STATUS_UPDATE: null,
       WAYBACK_STATUS_UPDATE: null,
    }),
@@ -29,11 +35,13 @@ export default {
       cdxTemp: path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'),
 
    },
+
    Heritrix: {
       uri_heritrix: "https://127.0.0.1:8443",
-      username: "lorem",
-      password: "ipsum",
-      jobConf:  path.join(path.resolve('./'),'crawler-beans.cxml')
+      username: 'lorem',
+      password: 'ipsum',
+      jobConf: path.join(path.resolve('./'), 'crawler-beans.cxml'),
+      web_ui: "https://lorem:ipsum@localhost:8443",
    },
    Wayback: {
       uri_tomcat: "http://localhost:8080/",

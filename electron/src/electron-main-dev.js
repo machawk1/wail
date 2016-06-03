@@ -1,4 +1,4 @@
-const {app,BrowserWindow} = require('electron')
+const {app, BrowserWindow, shell} = require('electron')
 var realFs = require('fs')
 var gracefulFs = require('graceful-fs')
 gracefulFs.gracefulify(realFs)
@@ -35,6 +35,10 @@ function createWindow () {
 
    mainWindow.webContents.on('crashed', () => {
       console.log("we crashed")
+   })
+   mainWindow.webContents.on('new-window', (event, url) => {
+      event.preventDefault()
+      shell.openExternal(url)
    })
 
    // BrowserWindow.addDevToolsExtension('/home/john/.config/google-chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.14.10_0')

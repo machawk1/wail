@@ -63,7 +63,7 @@ export function generatePathIndex() {
          index.push(`${path.basename(item.path)}\t${item.path}`)
       })
       .on('end', () => {
-         fs.writeFile(paths.index, index.join('\n'), 'utf8', err => console.log(err))
+         fs.writeFile(paths.index, index.join('\n'), 'utf8', err => console.log('done generating path index', err))
       })
 
 }
@@ -86,10 +86,12 @@ export function generateCDX() {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
       let cdxFile = `${paths.cdx}/${cdx}`
-      child_process.exec(`${paths.cdxIndexer} ${paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+      child_process.exec(`sh ${paths.cdxIndexer} ${paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
          console.log(err, stdout, stderr)
-         fs.readFile(cdx, 'utf8', (err, value)=> {
-            fs.unlink(cdx, err => {
+         fs.readFile(cdx, 'utf8', (errr, value)=> {
+            console.log(errr, value)
+            fs.remove(cdx, errrr => {
+               console.log(errrr)
                through.push(value)
                next()
             })

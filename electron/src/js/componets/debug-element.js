@@ -81,6 +81,7 @@ export default class Debug extends Component {
 
    wayBackButton(event) {
       event.preventDefault()
+
       this.setState({
          wopen: true,
          anchorElw: event.currentTarget,
@@ -97,11 +98,11 @@ export default class Debug extends Component {
                onTouchTap={this.handleTouchTap}
                label="Heritrix"
             />
-            <NewCrawlDialog />
             <RaisedButton
                onTouchTap={this.wayBackButton}
                label="Wayback"
             />
+            <NewCrawlDialog />
          </ToolbarGroup>
       </Toolbar>
          <Popover
@@ -114,7 +115,8 @@ export default class Debug extends Component {
             <Menu>
                <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
                <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
-               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('ss',15000)} primaryText="make job"/>
+               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('http://matkelly.com',1)}
+                         primaryText="make job"/>
                <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText="test-status"/>
             </Menu>
          </Popover>
@@ -128,6 +130,8 @@ export default class Debug extends Component {
             <Menu>
                <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText="Start Wayback"/>
                <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText="Kill Wayback"/>
+               <MenuItem onTouchTap={(e) => Wayback.generatePathIndex()} primaryText="Generate Index"/>
+               <MenuItem onTouchTap={(e) => Wayback.generateCDX()} primaryText="Generate CDX"/>
             </Menu>
          </Popover>
          </div>

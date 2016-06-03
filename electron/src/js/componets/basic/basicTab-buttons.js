@@ -11,6 +11,7 @@ const styles = {
    },
 }
 
+const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
 
 export default class BasicTabButtons extends Component {
@@ -28,6 +29,7 @@ export default class BasicTabButtons extends Component {
    }
 
    onClickArchiveNow(event) {
+      event.preventDefault()
       console.log('archive now')
       this.setState({
          open: !this.state.open,
@@ -35,7 +37,8 @@ export default class BasicTabButtons extends Component {
       })
 
       CrawlDispatcher.dispatch({
-         event: EventTypes.BUILD_CRAWL_JOB,
+         type: EventTypes.BUILD_CRAWL_JOB,
+         from: From.BASIC_ARCHIVE_NOW
       })
    }
 

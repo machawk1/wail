@@ -5,12 +5,20 @@ import RaisedButton from 'material-ui/RaisedButton'
 import {Grid} from 'react-cellblock'
 import CrawlUrls from './crawlUrls'
 import CrawlDepth from './crawlDepth'
+import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
+import WailConstants from '../../../constants/wail-constants'
 // import * as heritrixActions from '../../../actions/heritrix-actions'
 
 const style = {
    height: '500px',
    maxHeight: 'none',
+   button: {
+      margin: 12,
+   },
 }
+
+const Events = WailConstants.EventTypes
+const From = WailConstants.From
 
 
 export default class NewCrawlDialog extends Component {
@@ -20,7 +28,7 @@ export default class NewCrawlDialog extends Component {
       this.state = {
          open: false,
          urls: [],
-         depth: 0,
+         depth: 1,
 
       }
       this.handleOpen = this.handleOpen.bind(this)
@@ -40,13 +48,26 @@ export default class NewCrawlDialog extends Component {
 
    crawlConfigured() {
       this.setState({open: false})
+      CrawlDispatcher.dispatch({
+         type: Events.BUILD_CRAWL_JOB,
+         from: From.NEW_CRAWL_DIALOG,
+         urls: this.state.urls,
+         depth: this.state.depth,
+      })
       // heritrixActions.makeHeritrixJobConf(this.state.urls,this.state.depth)
    }
 
    urlChanged(url) {
-      console.log("crawl url added", url)
       let urls = this.state.urls
-      urls.push(url)
+      console.log("crawl url added", url, urls)
+      if (url.edit) {
+         console.log("Edit")
+         urls[url.edit] = url.url
+      } else {
+         urls.push(url)
+      }
+      console.log('added crawl url', urls)
+      
       this.setState({urls: urls})
    }
 
@@ -71,7 +92,13 @@ export default class NewCrawlDialog extends Component {
 
       return (
          <div>
-            <RaisedButton label="New Crawl" onTouchTap={this.handleOpen}/>
+            <RaisedButton
+               label="New Crawl"
+               onTouchTap={this.handleOpen}
+               labelPosition="before"
+               primary={true}
+               style={style.button}
+            />
             <Dialog
                title="Set up new crawl"
                actions={actions}

@@ -3,12 +3,15 @@ import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import TextField from 'material-ui/TextField'
 import {Grid, Row, Column} from 'react-cellblock'
+import _ from 'lodash'
+import CrawlUrlItem from './crawlUrlItem'
 
 const style = {
    height: "100px",
    overflowX: "hidden",
    "overflowY": "scroll"
 }
+
 
 export default class CrawlUrls extends Component {
    static propTypes = {
@@ -21,6 +24,7 @@ export default class CrawlUrls extends Component {
          open: false,
          urls: [],
          text: '',
+         keys: 0,
       }
       this.handleOpen = this.handleOpen.bind(this)
       this.handleClose = this.handleClose.bind(this)
@@ -36,26 +40,47 @@ export default class CrawlUrls extends Component {
       this.setState({open: false})
    }
 
+
    checkKeyCode(event) {
       console.log(event.keyCode)
       if (event.keyCode == 13) {
          let uris = this.state.urls
-         uris.push(<ListItem key={uris.length+1} primaryText={this.state.text}/>)
-         uris.push(<Divider key={uris.length+1}/>)
-         console.log("enter")
+         let keyNum = this.state.keys
+         let text = this.state.text
+
+
+         let deleteAction = (event) => {
+            let list = this.state.urls
+            let newUrls = _.remove(list, elem => parseInt(elem.id) != keyNum)
+            this.setState({urls: newUrls})
+         }
+         deleteAction = deleteAction.bind(this)
+
+
+         uris.push(
+            <CrawlUrlItem
+               textChanged={this.props.urlAdded}
+               idx={uris.length}
+               id={keyNum}
+               key={keyNum}
+               deleteMe={deleteAction}
+               url={text}
+            />
+         )
+         uris.push(<Divider key={keyNum+3}/>)
          this.props.urlAdded(this.state.text)
-         this.setState({urls: uris, text: ''})
+         this.setState({urls: uris, text: '', keys: keyNum + 4})
       }
 
    }
 
    handleChange(e) {
-      console.log(e.target.value)
       this.setState({text: e.target.value})
    }
 
 
    render() {
+
       return (
 
          <Row>
@@ -63,8 +88,9 @@ export default class CrawlUrls extends Component {
                <TextField
                   floatingLabelText="Enter URI to crawl"
                   hintText="http://matkelly.com/wail"
-                  id="url-input"
+                  id="crawl-url-input"
                   value={this.state.text}
+                  tooltip="press enter"
                   onKeyDown={this.checkKeyCode}
                   onChange={this.handleChange}
                />

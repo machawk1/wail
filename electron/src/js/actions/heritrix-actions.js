@@ -4,9 +4,10 @@ import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
-import CrawlDispatcher from '../dispatchers/service-dispatcher'
+import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const EventTypes = wailConstants.EventTypes
 const heritrix = wailConstants.Heritrix
 const paths = wailConstants.Paths
@@ -35,7 +36,8 @@ export function heritrixAccesible() {
 }
 
 export function launchHeritrix() {
-   child_process.exec(`sh ${paths.heritrixBin} -a=${heritrix.username}:${heritrix.password}`, (err, stdout, stderr) => {
+   console.log(`sh ${paths.heritrixBin} -a lorem:ipsum`)
+   child_process.exec(`${paths.heritrixBin}  -a lorem:ipsum`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let wasError = !err
 
@@ -53,6 +55,7 @@ export function killHeritrix() {
 }
 
 export function makeHeritrixJobConf(urls, hops) {
+   console.log('in makeHeritrixJobConf')
    fs.readFileAsync(heritrix.jobConf, "utf8")
       .then(data => {
          let doc = cheerio.load(data, {
@@ -78,43 +81,64 @@ export function makeHeritrixJobConf(urls, hops) {
          warFolder.append(`<value>${paths.warcs}</value>`)
          let confPath = `${paths.heritrixJob}/${jobId}`
          fs.ensureDir(confPath, er => {
-            fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => console.log(error))
-            CrawlDispatcher.dispatch({
-               event: EventTypes.BUILT_CRAWL_JOB,
-               id: jobId,
-               path: confPath
+            fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
+               console.log("done writting file", error)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.BUILT_CRAWL_CONF,
+                  id: jobId,
+                  path: confPath
+               })
             })
-         })
 
+         })
 
       })
 }
 
 export function buildHeritrixJob(jobId) {
    let data = {action: "launch"}
+   console.log('building heritrix job')
+   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
    let options = {
       method: 'POST',
       uri: `https://localhost:8443/engine/job/${jobId}`,
       headers: {
          Accept: "application/xml",
-         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
+         'Content-type': 'application/x-www-form-urlencoded',
       },
       form: {
          action: "build"
       },
-      auth: {
-         usr: heritrix.username,
-         pass: heritrix.password
+      'auth': {
+         'username': 'lorem',
+         'password': 'ipsum',
+         'sendImmediately': false
       },
+      rejectUnauthorized: false,
       resolveWithFullResponse: true,
    }
 
    rp(options)
       .then(response => {
          // POST succeeded...
+         console.log("sucess in building job", response)
+         CrawlDispatcher.dispatch({
+            type: EventTypes.BUILT_CRAWL_JOB,
+            id: jobId,
+         })
       })
       .catch(err => {
-         // POST failed...
+         if (err.statusCode == 303) {
+            console.log("303 sucess in building job", err)
+            CrawlDispatcher.dispatch({
+               type: EventTypes.BUILT_CRAWL_JOB,
+               id: jobId,
+            })
+         } else {
+            // POST failed...
+            console.log("failur in building job", err)
+         }
+
       })
 
 }
@@ -132,19 +156,39 @@ export function launchHeritrixJob(jobId) {
          action: "launch"
       },
       auth: {
-         usr: heritrix.username,
-         pass: heritrix.password
+         'username': 'lorem',
+         'password': 'ipsum',
+         'sendImmediately': false
       },
+      rejectUnauthorized: false,
       resolveWithFullResponse: true,
    }
 
    rp(options)
       .then(response => {
          // POST succeeded...
+         console.log("sucess in launching job", response)
+         CrawlDispatcher.dispatch({
+            type: EventTypes.LAUNCHED_CRAWL_JOB,
+            id: jobId,
+         })
       })
       .catch(err => {
+
+         if (err.statusCode == 303) {
+            console.log("303 sucess in launch job", err)
+            CrawlDispatcher.dispatch({
+               type: EventTypes.LAUNCHED_CRAWL_JOB,
+               id: jobId,
+            })
+         } else {
+            // POST failed...
+            console.log("failur in launching job", err)
+         }
          // POST failed...
+
       })
+
 }
 
 export function sendActionToHeritrix(act, jobId) {

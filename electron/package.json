@@ -41,6 +41,8 @@
     "react-tap-event-plugin": "^1.0.0",
     "react-toolbox": "^0.16.2",
     "request": "^2.72.0",
+    "request-debug": "^0.2.0",
+    "request-digest": "^1.0.5",
     "request-promise": "^3.0.0",
     "roboto-fontface": "^0.4.5",
     "shelljs": "^0.7.0",

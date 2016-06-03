@@ -15,7 +15,7 @@ export default class HeritrixJobList extends Component {
    }
 
    getJobs() {
-      this.setState({jobs: CrawlStore.jobs()})
+      this.setState({jobs: CrawlStore.jobs()}) 
    }
 
    componentDidMount() {
@@ -32,8 +32,6 @@ export default class HeritrixJobList extends Component {
       return (
          <List>
             {JobItems}
-            <ListItem primaryText="test1"/>
-            <ListItem primaryText="test2"/>
          </List>
       )
    }
