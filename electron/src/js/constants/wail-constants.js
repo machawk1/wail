@@ -1,10 +1,12 @@
 import keyMirror from 'keymirror'
 import path from 'path'
 const ipcRenderer = require('electron').ipcRenderer
+let base =  '../'
 
-ipcRenderer.send('getPath', '/')
+if(process.env.NODE_ENV !== 'development'){
+   ipcRenderer.send('getPath', '/')
+}
 
-let base = (process.env.HOT) ? '../' : './'
 
 const consts = {
    pather: function () {
