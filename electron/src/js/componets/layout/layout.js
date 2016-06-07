@@ -27,8 +27,6 @@ export default class Layout extends Component {
 
 
    render() {
-      this.count += 1
-      console.log('layout', this.count)
       return (
          <div>
             <Header/>

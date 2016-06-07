@@ -28,12 +28,10 @@ export default class BasicTab extends Component {
    }
 
    render() {
-      this.count += 1
-      console.log("basic tab", this.count)
       return (
          <div>
             <Paper zDepth={3}>
-               <Grid>
+               <Grid flexible>
                   <ArchiveUrl />
                   <BasicTabButtons />
                </Grid>

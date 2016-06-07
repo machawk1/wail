@@ -15,7 +15,9 @@
     "build": "npm run build-main && npm run build-renderer",
     "package": "cross-env NODE_ENV=production node -r babel-register package.js",
     "package-all": "npm run package -- --all",
-    "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json"
+    "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
+    "standard": "standard --verbose | snazzy",
+    "format-standard": "standard-format -w"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -39,6 +41,7 @@
     "googleapis": "^7.1.0",
     "graceful-fs": "^4.1.4",
     "history": "^3.0.0",
+    "insafe": "^0.3.0",
     "keymirror": "^0.1.1",
     "lodash": "^4.13.1",
     "material-design-icons-iconfont": "^2.0.5",
@@ -67,11 +70,28 @@
     "split2": "^2.1.0",
     "string": "^3.3.1",
     "through2": "^2.0.1",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "validator": "^5.3.0"
+  },
+  "eslintConfig": {
+    "extends": [
+      "standard",
+      "standard-react"
+    ]
   },
   "standard": {
     "parser": "babel-eslint",
-    "ignore": [],
+    "ignore": [
+      "webpack.*",
+      "node_modules/*",
+      "tools/*",
+      "release/*",
+      "*.cxml",
+      "*.xml",
+      "package.js",
+      "dist/*",
+      "README.md"
+    ],
     "env": {
       "browser": true
     }
@@ -127,6 +147,10 @@
     "electron-react-devtools": "0.3.1",
     "electron-rebuild": "^1.1.5",
     "electron-reload": "^1.0.0",
+    "eslint-config-standard": "^5.3.1",
+    "eslint-config-standard-jsx": "^1.2.1",
+    "eslint-config-standard-react": "^2.4.0",
+    "eslint-plugin-react": "^5.1.1",
     "express": "^4.13.4",
     "extract-text-webpack-plugin": "^1.0.1",
     "fbjs-scripts": "^0.7.1",
@@ -139,7 +163,9 @@
     "raw-loader": "^0.5.1",
     "run-sequence": "^1.2.1",
     "sass-loader": "^3.2.0",
+    "snazzy": "^4.0.0",
     "standard": "^7.1.2",
+    "standard-format": "^2.2.1",
     "standard-react": "^2.0.1",
     "style-loader": "0.13.1",
     "url-loader": "^0.5.7",

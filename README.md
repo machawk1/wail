@@ -8,11 +8,27 @@ Tools included and accessible through the GUI are <a href="https://github.com/in
 
 WAIL is written in Python and compiled to a native executable using `pyInstaller`.
 
+# Electron Wail
+To run/build the electron portion of wail without going into directory electron.
+The scrip **doElectron.sh** can be run with the following commands
+
+    1. install: installs the required packages from npm
+
+    2. start-dev: start the webpack dev server and starts up electron with the dev flag
+       (runs both the dev and start-electron-dev commands)
+
+    3. install-start: executes both install and start-dev
+
+    4. package: build wail electron for the current os
+
+    5. package-all: builds wail electron for all supported os
+
 <h2>Installing WAIL</h2>
 
 See the <a href="http://machawk1.github.io/wail/#download">download section on the WAIL homepage</a> to download the application, install it, and for basic usage.
 
 <h2>Running WAIL</h2>
+
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
 End-user execution is meant to be accessed through the binary file, either WAIL.app on MacOS X or WAIL.exe on Windows (7+).

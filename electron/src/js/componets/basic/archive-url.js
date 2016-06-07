@@ -1,10 +1,10 @@
-import React, {Component} from "react";
-import validUrl from "valid-url";
-import TextField from "material-ui/TextField";
-import {urlUpdated} from "../../actions/archive-url-actions";
-import {Row} from "react-cellblock";
-import {red500, blue500} from "material-ui/styles/colors";
-
+import React, {Component} from "react"
+import TextField from "material-ui/TextField"
+import {urlUpdated} from "../../actions/archive-url-actions"
+import {Row, Column} from "react-cellblock"
+import RaisedButton from 'material-ui/RaisedButton'
+import {red500, blue500} from "material-ui/styles/colors"
+import validator from 'validator'
 
 const styles = {
     underlineStyle: {
@@ -13,6 +13,12 @@ const styles = {
     underlineStyleError: {
         borderColor: red500,
     },
+    button: {
+        // padding: '10px',
+        right: '0px',
+        margin: 12,
+    },
+
 }
 
 export default class ArchiveUrl extends Component {
@@ -30,7 +36,7 @@ export default class ArchiveUrl extends Component {
         console.log(e.target.value)
         let value = e.target.value
         let err = styles.underlineStyleError
-        if (validUrl.is_web_uri(value) || validUrl.isUri(value)) {
+        if (validator.isURL(value)) {
             err = styles.underlineStyle
         }
         this.setState({uri: value, underlineStyle:err})
@@ -39,7 +45,7 @@ export default class ArchiveUrl extends Component {
 
     focusLost(event) {
         console.log('focus lost',this.state.uri)
-        if (validUrl.is_web_uri(this.state.uri) || validUrl.isUri(this.state.uri)) {
+        if (validator.isURL(this.state.uri)) {
             urlUpdated(this.state.uri)
         }
     }
@@ -53,8 +59,12 @@ export default class ArchiveUrl extends Component {
                   hintText="http://matkelly.com/wail"
                   id="archive-url-input"
                   value={this.state.uri}
-                  onBlur={this.focusLost}
                   onChange={this.handleChange}
+               />
+               <RaisedButton
+                  label="Get Memento Count"
+                  onTouchTap={this.focusLost}
+                  style={styles.button}
                />
            </Row>
            

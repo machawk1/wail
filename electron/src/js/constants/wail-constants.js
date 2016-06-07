@@ -9,15 +9,6 @@ if(process.env.NODE_ENV !== 'development'){
 
 
 const consts = {
-   pather: function () {
-      console.log(path.basename(__filename))
-      console.log(__filename)
-      console.log(path.resolve(__filename, ''))
-      console.log(path.resolve('./'))
-      console.log(path.resolve('.'))
-      console.log(path.resolve('.'))
-      console.log(path.resolve('.'))
-   },
    From: keyMirror({
       BASIC_ARCHIVE_NOW: null,
       NEW_CRAWL_DIALOG: null,
@@ -78,6 +69,8 @@ ipcRenderer.on('gotPath', (event, arg)=> {
    console.log('const before', consts)
    consts.Paths = arg.p
    consts.Heritrix = arg.Heritrix
+   consts.Code.crawlerBean = arg.Code.crawlerBean
+   consts.Code.wayBackConf = arg.Code.wayBackConf
    console.log('const after', consts)
 })
 

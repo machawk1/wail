@@ -19,8 +19,6 @@ export default class AdvancedTab extends Component {
    }
 
    render() {
-      this.count += 1
-      console.log('advanced tab', this.count)
       return (
          <Tabs
             value={this.state.value}

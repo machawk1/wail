@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from "react";
-import Snackbar from "material-ui/Snackbar";
-import TextField from "material-ui/TextField";
-import {Row, Column} from "react-cellblock";
+import React, {Component, PropTypes} from "react"
+import Snackbar from "material-ui/Snackbar"
+import TextField from "material-ui/TextField"
+import {Row, Column} from "react-cellblock"
 
 
 export default class CrawlDepth extends Component {

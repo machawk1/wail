@@ -8,7 +8,14 @@ import * as Heritrix from "../actions/heritrix-actions";
 import * as Wayback from "../actions/wayback-actions";
 import NewCrawlDialog from "../componets/advanced/heritrix/newCrawlDialog";
 import ServiceStore from "../stores/serviceStore";
+import wc from "../constants/wail-constants"
+import EditorPopup from "../componets/editor/editor-popup"
 
+const styles = {
+   button: {
+      margin: 12,
+   },
+}
 
 export default class Debug extends Component {
 
@@ -100,6 +107,12 @@ export default class Debug extends Component {
                label="Wayback"
             />
             <NewCrawlDialog />
+            <EditorPopup
+               title={"Editing Wayback Configuration"}
+               buttonLabel={"Edit Wayback Configuration"}
+               codeToLoad={wc.Code.which.WBC}
+               buttonStyle={styles.button}
+            />
          </ToolbarGroup>
       </Toolbar>
          <Popover

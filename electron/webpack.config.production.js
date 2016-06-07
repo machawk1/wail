@@ -27,7 +27,14 @@ const config = {
                plugins: ['react-html-attrs', 'transform-class-properties',
                   'transform-runtime', "add-module-exports"],
             },
-         }, {
+         }, {test: /\.css$/, loader: "style!css"},
+         {
+            test: /\.scss$/,
+            loaders: ['style!css!less|scss', 'style-loader',
+               'css-loader?sourceMap']
+         },
+
+         {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,
             loader: 'url-loader?limit=10000',
          }, {
@@ -36,7 +43,10 @@ const config = {
          }, {
             test: /\.(eot|ttf|wav|mp3|tex)$/,
             loader: 'file-loader',
-         },
+         }, {
+            test: /\.(txt|xml|cxml)$/,
+            loader: 'raw',
+         }
       ]
    },
 
