@@ -60,7 +60,6 @@ export default {
    },
 
    externals: [
-      'font-awesome',
       'source-map-support',
       'material-design-icons-iconfont',
       'roboto-fontface'

@@ -1,11 +1,11 @@
-import React, {Component, PropTypes} from 'react'
-import {ListItem} from 'material-ui/List'
-import {grey400, darkBlack, lightBlack} from 'material-ui/styles/colors'
-import IconButton from 'material-ui/IconButton'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-import IconMenu from 'material-ui/IconMenu'
-import MenuItem from 'material-ui/MenuItem'
-import Divider from 'material-ui/Divider'
+import React, {Component, PropTypes} from "react";
+import {ListItem} from "material-ui/List";
+import {grey400} from "material-ui/styles/colors";
+import IconButton from "material-ui/IconButton";
+import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
+import IconMenu from "material-ui/IconMenu";
+import MenuItem from "material-ui/MenuItem";
+import Divider from "material-ui/Divider";
 
 const iconButtonElement = (
    <IconButton

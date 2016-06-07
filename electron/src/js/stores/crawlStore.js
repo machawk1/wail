@@ -1,9 +1,8 @@
-import EventEmitter from 'eventemitter3'
-import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
-import wailConstants from '../constants/wail-constants'
-import * as heritrixActions from '../actions/heritrix-actions'
-import UrlStore from '../stores/urlStore'
-import _ from 'lodash'
+import EventEmitter from "eventemitter3";
+import CrawlDispatcher from "../dispatchers/crawl-dispatcher";
+import wailConstants from "../constants/wail-constants";
+import * as heritrixActions from "../actions/heritrix-actions";
+import UrlStore from "../stores/urlStore";
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -15,6 +14,7 @@ class crawlStore extends EventEmitter {
       this.handleEvent = this.handleEvent.bind(this)
       this.createJob = this.createJob.bind(this)
       this.latestJob = this.latestJob.bind(this)
+      this.jobs = this.jobs.bind(this)
    }
 
    createJob(id, pth) {

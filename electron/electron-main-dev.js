@@ -1,11 +1,14 @@
-const {app, BrowserWindow, shell} = require('electron')
+const {app, BrowserWindow, shell, ipcMain} = require('electron')
 const path = require('path')
-const ipcMain = require('electron').ipcMain
+
 let mainWindow = null
 
 
+
 if (process.env.NODE_ENV === 'development') {
-   require('electron-debug')()
+   require('electron-debug')({
+      showDevTools: true
+   })
 }
 
 const base = path.resolve(__filename, '../')
@@ -44,25 +47,18 @@ function createWindow () {
 
    // and load the index.html of the app.
    mainWindow.loadURL(`file://${__dirname}/src/wail.html`)
-   console.log(path.resolve(__filename, './'))
-   console.log(path.resolve(__filename, '../'))
+
 
    ipcMain.on('getPath', function (event, arg) {
       event.sender.send('gotPath', realPaths)
    })
 
 
+   mainWindow.webContents.on('did-finish-load', () => {
+      mainWindow.show()
+      mainWindow.focus()
+   })
 
-   // mainWindow.webContents.on('did-finish-load', () => {
-   //    mainWindow.show()
-   //    mainWindow.focus()
-   // })
-
-   // if (process.env.NODE_ENV === 'development') {
-   //    mainWindow.openDevTools()
-   //
-   // }
-   mainWindow.openDevTools()
 
    mainWindow.on('unresponsive', () => {
       console.log('we are unresponsive')
@@ -71,12 +67,16 @@ function createWindow () {
    mainWindow.webContents.on('crashed', () => {
       console.log("we crashed")
    })
+
    mainWindow.webContents.on('new-window', (event, url) => {
       event.preventDefault()
       shell.openExternal(url)
    })
 
-   // BrowserWindow.addDevToolsExtension('/home/john/.config/google-chrome/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/0.14.10_0')
+   mainWindow.webContents.on('did-navigate-in-page', (event, url) => {
+      console.log('did-navigate-in-page', url)
+   })
+
    // Emitted when the window is closed.
    mainWindow.on('closed',  () => {
       // Dereference the window object, usually you would store windows

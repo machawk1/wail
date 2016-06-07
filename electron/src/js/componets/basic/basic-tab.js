@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react'
-import Paper from 'material-ui/Paper'
-import {Grid} from 'react-cellblock'
-import ArchiveUrl from './archive-url'
-import BasicTabButtons from './basicTab-buttons'
-import MessagePanel from './message-panel'
+import React, {Component} from "react";
+import Paper from "material-ui/Paper";
+import {Grid} from "react-cellblock";
+import ArchiveUrl from "./archive-url";
+import BasicTabButtons from "./basicTab-buttons";
+import MessagePanel from "./message-panel";
 
 const styles = {
    button: {
@@ -24,13 +24,12 @@ const styles = {
 export default class BasicTab extends Component {
    constructor(props, context) {
       super(props, context)
-
+      this.count = 0
    }
 
    render() {
-      console.log("HI hellow")
-      console.log("hehehe dasass ")
-      console.log("hehehe dasass e ")
+      this.count += 1
+      console.log("basic tab", this.count)
       return (
          <div>
             <Paper zDepth={3}>

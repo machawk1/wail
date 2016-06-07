@@ -1,17 +1,13 @@
-import React, { Component } from 'react'
-import Drawer from 'material-ui/Drawer'
-import Menu from 'material-ui/Menu'
-import MenuItem from 'material-ui/MenuItem'
-import RaisedButton from 'material-ui/RaisedButton'
-import Popover from 'material-ui/Popover'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import * as Heritrix from '../actions/heritrix-actions'
-import * as Wayback from '../actions/wayback-actions'
-import wc from '../constants/wail-constants'
-
-import NewCrawlDialog from '../componets/advanced/heritrix/newCrawlDialog'
-import ServiceStore from '../stores/serviceStore'
-
+import React, {Component} from "react";
+import Menu from "material-ui/Menu";
+import MenuItem from "material-ui/MenuItem";
+import RaisedButton from "material-ui/RaisedButton";
+import Popover from "material-ui/Popover";
+import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
+import * as Heritrix from "../actions/heritrix-actions";
+import * as Wayback from "../actions/wayback-actions";
+import NewCrawlDialog from "../componets/advanced/heritrix/newCrawlDialog";
+import ServiceStore from "../stores/serviceStore";
 
 
 export default class Debug extends Component {
@@ -102,12 +98,6 @@ export default class Debug extends Component {
             <RaisedButton
                onTouchTap={this.wayBackButton}
                label="Wayback"
-            />
-            <RaisedButton
-               onTouchTap={()=>{
-                  wc.pather()
-               }}
-               label="Pather"
             />
             <NewCrawlDialog />
          </ToolbarGroup>

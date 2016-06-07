@@ -1,11 +1,11 @@
-import React, {Component, PropTypes} from 'react'
-import RaisedButton from 'material-ui/RaisedButton'
-import Paper from 'material-ui/Paper'
-import HeritrixJobList from './heritrix-joblist'
-import NewCrawlDialog from './newCrawlDialog'
-import {Grid, Row, Column} from 'react-cellblock'
-import child_process from 'child_process'
-import wailConstants from '../../../constants/wail-constants'
+import React, {Component} from "react";
+import RaisedButton from "material-ui/RaisedButton";
+import Paper from "material-ui/Paper";
+import HeritrixJobList from "./heritrix-joblist";
+import NewCrawlDialog from "./newCrawlDialog";
+import {Grid, Row, Column} from "react-cellblock";
+import child_process from "child_process";
+import wailConstants from "../../../constants/wail-constants";
 
 const styles = {
    button: {

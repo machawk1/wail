@@ -4,7 +4,7 @@ var path = require('path')
 
 
 module.exports = {
-   entry: "./src/main.js",
+   entry: "./src/wail.js",
    module: {
       noParse: /node_modules\/json-schema\/lib\/validate\.js/,
       loaders: [
@@ -20,7 +20,7 @@ module.exports = {
          },
          {test: /\.css$/, loader: "style!css"},
          {
-            test: /(\.scss|\.css)$/,
+            test: /\.scss$/,
             loaders: ['style!css!less|scss', 'style-loader',
                'css-loader?sourceMap']
          },
@@ -33,7 +33,10 @@ module.exports = {
          }, {
             test: /\.(eot|ttf|wav|mp3|tex)$/,
             loader: 'file-loader',
-         },
+         }, {
+            test: /\.(txt|xml|cxml)$/,
+            loader: 'raw',
+         }
          // {test: /\.tsx?$/, loader: 'webpack-typescript?target=ES6'},
       ]
 

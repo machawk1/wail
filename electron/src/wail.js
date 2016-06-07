@@ -1,6 +1,6 @@
-import React from "react"
+import React from 'react'
+import {Router, hashHistory} from 'react-router'
 import ReactDOM from "react-dom"
-import Wail from './js/componets/wail'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fsreal from 'fs'
 import gracefulFs from 'graceful-fs'
@@ -9,11 +9,21 @@ import fs from 'fs-extra'
 import Promise from 'bluebird'
 Promise.promisifyAll(fs)
 
+import Routes from './js/componets/routes'
+
 
 injectTapEventPlugin()
 
 const wail = document.getElementById('wail')
 
 
+ReactDOM.render(
+   <Router
+      history={hashHistory}
+      routes={Routes}
+   />
+   ,
+   wail)
 
-ReactDOM.render(<Wail />, wail)
+
+// window.React = React

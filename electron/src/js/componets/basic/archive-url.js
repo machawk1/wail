@@ -1,10 +1,9 @@
-import React, {Component, PropTypes} from 'react'
-import validUrl from 'valid-url'
-import TextField from 'material-ui/TextField'
-import {urlUpdated} from '../../actions/archive-url-actions'
-import {Row} from 'react-cellblock'
-import {red500, blue500} from 'material-ui/styles/colors'
-
+import React, {Component} from "react";
+import validUrl from "valid-url";
+import TextField from "material-ui/TextField";
+import {urlUpdated} from "../../actions/archive-url-actions";
+import {Row} from "react-cellblock";
+import {red500, blue500} from "material-ui/styles/colors";
 
 
 const styles = {

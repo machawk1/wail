@@ -1,11 +1,15 @@
-import wailConstants from '../constants/wail-constants'
-import child_process from 'child_process'
-import rp from 'request-promise'
-import fs from 'fs-extra'
-import through2 from 'through2'
-import path from 'path'
-import S from 'string'
-import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import child_process from "child_process";
+import rp from "request-promise";
+import fs from "fs-extra";
+import through2 from "through2";
+import path from "path";
+import S from "string";
+import os from "os";
+import del from "del";
+import streamSort from "sort-stream2";
+import {encode, compare} from "bytewise";
+import wailConstants from "../constants/wail-constants";
+import ServiceDispatcher from "../dispatchers/service-dispatcher";
 
 const EventTypes = wailConstants.EventTypes
 const Wayback = wailConstants.Wayback
@@ -68,11 +72,13 @@ export function generatePathIndex() {
 
 }
 
+//implements bytewise sorting of export LC_ALL=C; sort
+function unixSort(a, b) {
+   return compare(encode(a), encode(b))
+}
 
 export function generateCDX() {
    let replace = /.warc+$/g
-   let cdxData = []
-   let worfs = []
    let cdxHeaderIncluded = false
 
    let onlyWorf = through2.obj(function (item, enc, next) {
@@ -85,48 +91,51 @@ export function generateCDX() {
    let worfToCdx = through2.obj(function (item, enc, next) {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
-      let cdxFile = `${ wailConstants.Paths.cdx}/${cdx}`
-      child_process.exec(`sh ${ wailConstants.Paths.cdxIndexer} ${ wailConstants.Paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
-         console.log(err, stdout, stderr)
-         fs.readFile(cdx, 'utf8', (errr, value)=> {
-            console.log(errr, value)
-            fs.remove(cdx, errrr => {
-               console.log(errrr)
-               through.push(value)
-               next()
-            })
+      let cdxFile = `${wailConstants.Paths.cdx}/${cdx}`
+      child_process.exec(`${ wailConstants.Paths.cdxIndexer} ${ wailConstants.Paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+         fs.readFile(cdxFile, 'utf8', (errr, value)=> {
+            console.log(errr)
+            through.push(value)
+            next()
          })
       })
    })
 
+   let uniqueLines = new Set()
 
    let cdxToLines = through2.obj(function (item, enc, next) {
       let through = this
       S(item).lines().forEach((line, index) => {
-         if (index > 0) {
-            through.push(line)
-         } else if (!cdxHeaderIncluded) {
-            through.push(line)
-            cdxHeaderIncluded = true
+         if (!uniqueLines.has(line)) {
+            if (index > 0) {
+               through.push(line + os.EOL)
+            } else if (!cdxHeaderIncluded) {
+               through.push(line + os.EOL)
+               cdxHeaderIncluded = true
+            }
+            uniqueLines.add(line)
          }
       })
       next()
    })
 
 
+   let writeStream = fs.createWriteStream(wailConstants.Paths.indexCDX)
+   
    fs.walk(wailConstants.Paths.warcs)
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
       .pipe(onlyWorf)
+      .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
       .pipe(worfToCdx)
       .pipe(cdxToLines)
-      .pipe(fs.createWriteStream(wailConstants.Paths.cdxTemp))
-      .on('end', () => {
-         child_process.exec(`export LC_ALL=C; sort -u ${ wailConstants.Paths.cdxTemp} > ${ wailConstants.Paths.cdx}/index.cdx`, (err, stdout, stderr) => {
-            console.log(err, stdout, stderr)
+      .pipe(streamSort(unixSort))
+      .pipe(writeStream)
+      .on('close', () => {
+         writeStream.destroy()
+         console.log('we have closed')
+         del([`${wailConstants.Paths.cdx}/*.cdx`, `!${wailConstants.Paths.cdx}/index.cdx`], {force: true})
+            .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
 
-         })
       })
-
-
 }
 

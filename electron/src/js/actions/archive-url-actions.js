@@ -1,6 +1,6 @@
-import UrlDispatcher from '../dispatchers/url-dispatcher'
-import wailConstants from '../constants/wail-constants'
-import child_process from 'child_process'
+import UrlDispatcher from "../dispatchers/url-dispatcher";
+import wailConstants from "../constants/wail-constants";
+import child_process from "child_process";
 
 const EventTypes = wailConstants.EventTypes
 const Paths = wailConstants.Paths

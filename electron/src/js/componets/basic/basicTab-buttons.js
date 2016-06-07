@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react'
-import Snackbar from 'material-ui/Snackbar'
-import RaisedButton from 'material-ui/RaisedButton'
-import {Row} from 'react-cellblock'
-import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
-import wailConstants from '../../constants/wail-constants'
+import React, {Component} from "react";
+import Snackbar from "material-ui/Snackbar";
+import RaisedButton from "material-ui/RaisedButton";
+import {Row} from "react-cellblock";
+import CrawlDispatcher from "../../dispatchers/crawl-dispatcher";
+import wailConstants from "../../constants/wail-constants";
 
 const styles = {
    button: {

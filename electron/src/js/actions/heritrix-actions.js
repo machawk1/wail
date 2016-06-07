@@ -1,10 +1,10 @@
-import wailConstants from '../constants/wail-constants'
-import child_process from 'child_process'
-import rp from 'request-promise'
-import cheerio from 'cheerio'
-import fs from 'fs-extra'
-import ServiceDispatcher from '../dispatchers/service-dispatcher'
-import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
+import wailConstants from "../constants/wail-constants";
+import child_process from "child_process";
+import rp from "request-promise";
+import cheerio from "cheerio";
+import fs from "fs-extra";
+import ServiceDispatcher from "../dispatchers/service-dispatcher";
+import CrawlDispatcher from "../dispatchers/crawl-dispatcher";
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"

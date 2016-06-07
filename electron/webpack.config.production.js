@@ -5,7 +5,7 @@ import path from 'path'
 const config = {
    devtool: 'source-map',
 
-   entry: './src/main',
+   entry: './src/wail',
 
    output: {
       // filename: "main.js",

@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react'
-import {List, ListItem} from 'material-ui/List'
-import CrawlStore from '../.././../stores/crawlStore'
-import HeritrixJobItem from './heritrixJobItem'
+import React, {Component} from "react";
+import {List} from "material-ui/List";
+import CrawlStore from "../.././../stores/crawlStore";
+import HeritrixJobItem from "./heritrixJobItem";
 
 
 export default class HeritrixJobList extends Component {

@@ -1,5 +1,5 @@
-import keyMirror from 'keymirror'
-import path from 'path'
+import keyMirror from "keymirror";
+import path from "path";
 const ipcRenderer = require('electron').ipcRenderer
 let base =  '../'
 
@@ -44,9 +44,10 @@ const consts = {
       catalina: path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh'),
       warcs: path.join(path.resolve(base), '/archives'),
       index: path.join(path.resolve(base), '/config/path-index.txt'),
-      cdxIndexer: path.join(path.resolve(base), 'bundledApps/tomcat/bin/cdx-indexer'),
+      cdxIndexer: path.join(path.resolve(base), 'bundledApps/tomcat/webapps/bin/cdx-indexer'),
       cdx: path.join(path.resolve(base), 'archiveIndexes'),
       cdxTemp: path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'),
+      indexCDX: path.join(path.resolve(base), 'archiveIndexes/index.cdx'),
 
    },
 
@@ -61,6 +62,14 @@ const consts = {
       uri_tomcat: "http://localhost:8080/",
       uri_wayback: "http://localhost:8080/wayback/"
    },
+   Code: {
+      crawlerBean: path.join(path.resolve('./'), 'crawler-beans.cxml'),
+      wayBackConf: path.join(path.resolve('../'), 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'),
+      which: keyMirror({
+         WBC: null,
+         CRAWLBEAN: null,
+      }),
+   }
 }
 
 

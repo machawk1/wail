@@ -1,6 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import RaisedButton from 'material-ui/RaisedButton'
-import Paper from 'material-ui/Paper'
+import React, {Component} from "react";
+import RaisedButton from "material-ui/RaisedButton";
+import Paper from "material-ui/Paper";
+import EditorPopup from "../editor/editor-popup";
+import wc from "../../constants/wail-constants";
 
 const styles = {
    button: {
@@ -33,12 +35,11 @@ export default class WayBackTab extends Component {
                style={styles.button}
                onMouseDown={this.onClickViewWayback}
             />
-            <RaisedButton
-               label="Edit Wayback Configuration"
-               labelPosition="before"
-               primary={true}
-               style={styles.button}
-               onMouseDown={this.onClickEditWayback}
+            <EditorPopup
+               title={"Editing Wayback Configuration"}
+               buttonLabel={"Edit Wayback Configuration"}
+               codeToLoad={wc.Code.which.WBC}
+               buttonStyle={styles.button}
             />
          </Paper>
       )

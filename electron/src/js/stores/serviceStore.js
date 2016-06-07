@@ -1,8 +1,8 @@
-import EventEmitter from 'eventemitter3'
-import ServiceDispatcher from '../dispatchers/service-dispatcher'
-import wailConstants from '../constants/wail-constants'
-import {heritrixAccesible} from '../actions/heritrix-actions'
-import {waybackAccesible} from '../actions/wayback-actions'
+import EventEmitter from "eventemitter3";
+import ServiceDispatcher from "../dispatchers/service-dispatcher";
+import wailConstants from "../constants/wail-constants";
+import {heritrixAccesible} from "../actions/heritrix-actions";
+import {waybackAccesible} from "../actions/wayback-actions";
 
 const EventTypes = wailConstants.EventTypes
 
