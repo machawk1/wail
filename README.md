@@ -6,22 +6,52 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 
 Tools included and accessible through the GUI are <a href="https://github.com/internetarchive/heritrix3">Heritrix 3.2.0</a> and <a href="https://github.com/iipc/openwayback">OpenWayback 2.3.0</a>. Support packages include Apache Tomcat, <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>, and <a href="https://github.com/oduwsdl/memgator">MemGator</a>.
 
-WAIL is written in Python and compiled to a native executable using `pyInstaller`.
-
 # Electron Wail
-To run/build the electron portion of wail without going into directory electron.
-The scrip **doElectron.sh** can be run with the following commands
 
-    1. install: installs the required packages from npm
+## Scripts
+    1.  copy-resources: Copies resources required to function and the script to do that is
+        tools/copy.js. In this file are two variables dirsRequired and resourcesToCopy.
+        The dirsRequired is an array of paths to folders needed to be present
+        before the copy. Likewise with resourcesToCopy but has objects
+        with from and two as keys.  Add to thes if you need to have more
+        items copied.
 
-    2. start-dev: start the webpack dev server and starts up electron with the dev flag
-       (runs both the dev and start-electron-dev commands)
+    2. start-dev: Runs both the dev and start-electron-dev commands
 
-    3. install-start: executes both install and start-dev
+    3. dev: Runs the webpack dev server with hot module replacement enabled
 
-    4. package: build wail electron for the current os
+    4. start-electron-dev: Start electron
 
-    5. package-all: builds wail electron for all supported os
+## Package
+
+```bash
+$ npm run package
+```
+
+To package apps for all platforms:
+
+```bash
+$ npm run package-all
+```
+
+#### Options
+
+- --name, -n: Application name (default: ElectronReact)
+- --version, -v: Electron version (default: latest version)
+- --asar, -a: [asar](https://github.com/atom/asar) support (default: false)
+- --icon, -i: Application icon
+- --all: pack for all platforms
+
+Use `electron-packager` to pack your app with `--all` options for darwin (osx), linux and win32 (windows) platform. After build, you will find them in `release` folder. Otherwise, you will only find one for your os.
+
+`test`, `tools`, `release` folder and devDependencies in `package.json` will be ignored by default.
+
+Powered by Electron and React.
+[Modeled after this boiler plate](https://github.co
+
+#Wailpy
+
+WAIL is written in Python and compiled to a native executable using `pyInstaller`.
 
 <h2>Installing WAIL</h2>
 

@@ -15,18 +15,23 @@ WAIL.spec
 # Mac meta
 .DS_Store
 
-electron/node_modules/*
-electron/public/icons
+node_modules/
+node_modules/*
+src/public
 
 .idea
 .idea/*
 
-electron/build/app
+build
+build/*
 electron/build/dist
 
-electron/release
+release
 
 *.map
 
-electron/electron-main.js*
+electron-main.js*
+
+backUp
+dist
 
