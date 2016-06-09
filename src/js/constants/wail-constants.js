@@ -12,6 +12,7 @@ if(process.env.NODE_ENV !== 'development'){
    ipcRenderer.send('getPath', '/')
 }
 
+console.log(path.resolve(base))
 
 const consts = {
    pather: function () {

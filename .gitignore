@@ -16,17 +16,18 @@ WAIL.spec
 .DS_Store
 
 node_modules/
-node_modules/*
+
 src/public
 
 .idea
-.idea/*
+
 
 build
-build/*
+
 electron/build/dist
 
 release
+zips
 
 *.map
 

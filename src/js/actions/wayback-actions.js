@@ -1,15 +1,15 @@
-import child_process from "child_process";
-import rp from "request-promise";
-import fs from "fs-extra";
-import through2 from "through2";
-import path from "path";
-import S from "string";
-import os from "os";
-import del from "del";
-import streamSort from "sort-stream2";
-import {encode, compare} from "bytewise";
-import wailConstants from "../constants/wail-constants";
-import ServiceDispatcher from "../dispatchers/service-dispatcher";
+import child_process from "child_process"
+import rp from "request-promise"
+import fs from "fs-extra"
+import through2 from "through2"
+import path from "path"
+import S from "string"
+import os from "os"
+import del from "del"
+import streamSort from "sort-stream2"
+import bytewise from "bytewise"
+import wailConstants from "../constants/wail-constants"
+import ServiceDispatcher from "../dispatchers/service-dispatcher"
 
 const EventTypes = wailConstants.EventTypes
 const Wayback = wailConstants.Wayback
@@ -74,7 +74,7 @@ export function generatePathIndex() {
 
 //implements bytewise sorting of export LC_ALL=C; sort
 function unixSort(a, b) {
-   return compare(encode(a), encode(b))
+   return bytewise.compare(bytewise.encode(a), bytewise.encode(b))
 }
 
 export function generateCDX() {
@@ -92,9 +92,8 @@ export function generateCDX() {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
       let cdxFile = `${wailConstants.Paths.cdx}/${cdx}`
-      child_process.exec(`${ wailConstants.Paths.cdxIndexer} ${ wailConstants.Paths.warcs}/${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+      child_process.exec(`${wailConstants.Paths.cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
          fs.readFile(cdxFile, 'utf8', (errr, value)=> {
-            console.log(errr)
             through.push(value)
             next()
          })

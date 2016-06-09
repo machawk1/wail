@@ -1,4 +1,4 @@
-import wailConstants from "../constants/wail-constants";
+import wc from "../constants/wail-constants";
 import child_process from "child_process";
 import rp from "request-promise";
 import cheerio from "cheerio";
@@ -8,9 +8,9 @@ import CrawlDispatcher from "../dispatchers/crawl-dispatcher";
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-const EventTypes = wailConstants.EventTypes
-const heritrix = wailConstants.Heritrix
-const paths = wailConstants.Paths
+const EventTypes = wc.EventTypes
+const heritrix = wc.Heritrix
+const paths = wc.Paths
 
 export function heritrixAccesible() {
    console.log("checking heritrix accessibility")
@@ -18,7 +18,7 @@ export function heritrixAccesible() {
    //    type: EventTypes.HERITRIX_STATUS_UPDATE,
    //    status: true,
    // })
-   rp(heritrix.uri_heritrix)
+   rp(wc.Heritrix.uri_heritrix)
       .then(success => {
          console.log("heritrix success", success)
          ServiceDispatcher.dispatch({
@@ -36,8 +36,8 @@ export function heritrixAccesible() {
 }
 
 export function launchHeritrix() {
-   console.log(`sh ${ wailConstants.Paths.heritrixBin} -a lorem:ipsum`)
-   child_process.exec(`${ wailConstants.Paths.heritrixBin}  -a lorem:ipsum`, (err, stdout, stderr) => {
+   console.log(`sh ${ wc.Paths.heritrixBin} -a lorem:ipsum`)
+   child_process.exec(`${wc.Paths.heritrixBin}  -a lorem:ipsum`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let wasError = !err
 
@@ -56,7 +56,7 @@ export function killHeritrix() {
 
 export function makeHeritrixJobConf(urls, hops) {
    console.log('in makeHeritrixJobConf')
-   fs.readFileAsync(heritrix.jobConf, "utf8")
+   fs.readFileAsync(wc.Heritrix.jobConf, "utf8")
       .then(data => {
          let doc = cheerio.load(data, {
             xmlMode: true
@@ -78,8 +78,8 @@ export function makeHeritrixJobConf(urls, hops) {
          maxHops.attr('value', `${hops}`)
          // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
          let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-         warFolder.append(`<value>${ wailConstants.Paths.warcs}</value>`)
-         let confPath = `${ wailConstants.Paths.heritrixJob}/${jobId}`
+         warFolder.append(`<value>${ wc.Paths.warcs}</value>`)
+         let confPath = `${ wc.Paths.heritrixJob}/${jobId}`
          fs.ensureDir(confPath, er => {
             fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
                console.log("done writting file", error)
