@@ -53,6 +53,11 @@ const realPaths = {
   }
 }
 
+
+ipcMain.on('getPath', function (event, arg) {
+  event.sender.send('gotPath', realPaths)
+})
+
 function createWindow () {
 
   // Create the browser window.
@@ -66,9 +71,6 @@ function createWindow () {
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/src/wail.html`)
 
-  ipcMain.on('getPath', function (event, arg) {
-    event.sender.send('gotPath', realPaths)
-  })
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()

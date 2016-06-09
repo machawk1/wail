@@ -46,7 +46,7 @@ class editorStore extends EventEmitter {
       console.log("Got an event in editor store", event)
       switch (event.type) {
          case EventTypes.FETCH_CODE:
-            this.getWayBackConf()
+            this.loadWaybackConf()
             break
       }
 

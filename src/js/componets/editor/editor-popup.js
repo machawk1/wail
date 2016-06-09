@@ -46,6 +46,7 @@ export default class EditorPopup extends Component {
    }
 
    storeUpdate(){
+      console.log('code add')
       this.setState({codeText: EditorStore.getCode(this.props.codeToLoad)})
    }
 
