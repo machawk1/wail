@@ -47,7 +47,7 @@ Use `electron-packager` to pack your app with `--all` options for darwin (osx), 
 `test`, `tools`, `release` folder and devDependencies in `package.json` will be ignored by default.
 
 Powered by Electron and React.
-[Modeled after this boiler plate](https://github.co
+
 
 #Wailpy
 
