@@ -107,8 +107,8 @@ export function makeHeritrixJobConf(urls, hops, jobId) {
          maxHops.attr('value', `${hops}`)
          // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
          let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-         warFolder.append(`<value>${ wc.Paths.warcs}</value>`)
-         let confPath = `${ wc.Paths.heritrixJob}/${jobId}`
+         warFolder.append(`<value>${wc.Paths.warcs}</value>`)
+         let confPath = `${wc.Paths.heritrixJob}/${jobId}`
          fs.ensureDir(confPath, er => {
             fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
                console.log("done writting file", error)

@@ -22,7 +22,7 @@ class urlStore extends EventEmitter {
          {
             if (this.urlMemento.url != event.url) {
                this.urlMemento.url = event.url
-               urlActions.askMemgator(event.url)
+               console.log("url updated ")
                this.emit('url-updated')
             }
 
@@ -34,6 +34,12 @@ class urlStore extends EventEmitter {
             this.urlMemento.mementos = event.mementos
             this.emit('memento-count-updated')
             break
+         }
+         case EventTypes.GET_MEMENTO_COUNT:{
+            urlActions.askMemgator(this.urlMemento.url)
+
+            break
+
          }
 
       }

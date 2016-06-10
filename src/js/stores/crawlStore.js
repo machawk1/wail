@@ -4,6 +4,7 @@ import wailConstants from "../constants/wail-constants"
 import * as heritrixActions from "../actions/heritrix-actions"
 import UrlStore from "../stores/urlStore"
 import _ from 'lodash'
+import { readCode } from '../actions/editor-actions'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -26,6 +27,7 @@ class crawlStore extends EventEmitter {
          path: pth,
          runs: [],
          urls: urls,
+         crawlBean: readCode( `${wailConstants.Paths.heritrixJob}/${id.toString()}/crawler-beans.cxml`)
       })
 
       this.emit('job-created')
@@ -82,7 +84,7 @@ class crawlStore extends EventEmitter {
             switch (event.from) {
                case From.BASIC_ARCHIVE_NOW:
                {
-                  urls = UrlStore.getUrl() + '\nWith depth of 1'
+                  urls = UrlStore.getUrl()
                   heritrixActions.makeHeritrixJobConf(urls, 1)
                   break
                }

@@ -5,6 +5,7 @@ import {Row, Column} from "react-cellblock"
 import RaisedButton from 'material-ui/RaisedButton'
 import {red500, blue500} from "material-ui/styles/colors"
 import validator from 'validator'
+import * as aua from '../../actions/archive-url-actions'
 
 const styles = {
     underlineStyle: {
@@ -27,7 +28,7 @@ export default class ArchiveUrl extends Component {
         this.state = { uri: "", underlineStyle: styles.underlineStyle }
         this.handleChange = this.handleChange.bind(this)
         this.focusLost = this.focusLost.bind(this)
-
+        this.attemptMementoGet = this.attemptMementoGet.bind(this)
     }
 
 
@@ -42,13 +43,21 @@ export default class ArchiveUrl extends Component {
         this.setState({uri: value, underlineStyle:err})
     }
 
-
-    focusLost(event) {
-        console.log('focus lost',this.state.uri)
-        if (validator.isURL(this.state.uri)) {
-            urlUpdated(this.state.uri)
+    attemptMementoGet(){
+        if(validator.isURL(this.state.uri)){
+            aua.getMementos(this.state.uri)
         }
     }
+
+    focusLost(event) {
+        console.log('checking uri for archiving',this.state.uri,event.target.value)
+        if (validator.isURL(event.target.value)) {
+            console.log("its valid")
+            aua.urlUpdated(event.target.value)
+        }
+    }
+    
+    
 
     render() {
         return (
@@ -59,11 +68,12 @@ export default class ArchiveUrl extends Component {
                   hintText="http://matkelly.com/wail"
                   id="archive-url-input"
                   value={this.state.uri}
+                  onBlur={this.focusLost}
                   onChange={this.handleChange}
                />
                <RaisedButton
                   label="Get Memento Count"
-                  onTouchTap={this.focusLost}
+                  onTouchTap={this.attemptMementoGet}
                   style={styles.button}
                />
            </Row>
@@ -72,22 +82,3 @@ export default class ArchiveUrl extends Component {
         )
     }
 }
-
-/*
- <label for="archive-url-input">URL:   </label>
- <ValidatedInput
- type='text'
- label='Email'
- // Each input that you need validated should have
- // the "name" prop
- name='email'
- // Validation rules separated with comma
- validate='required,isEmail'
- // Error messages for each error type
- errorHelp={{
- required: 'Please enter your email',
- isEmail: 'Email is invalid'
- }}
- />
-
- */

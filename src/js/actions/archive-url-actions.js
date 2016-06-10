@@ -6,6 +6,13 @@ const EventTypes = wailConstants.EventTypes
 const Paths = wailConstants.Paths
 
 
+export function getMementos(url) {
+   UrlDispatcher.dispatch({
+      type: EventTypes.GET_MEMENTO_COUNT,
+      url: url,
+   })
+}
+
 export function urlUpdated(url) {
    UrlDispatcher.dispatch({
       type: EventTypes.HAS_VAILD_URI,

@@ -31,6 +31,7 @@ const consts = {
    EventTypes: keyMirror({
       HAS_VAILD_URI: null,
       GOT_MEMENTO_COUNT: null,
+      GET_MEMENTO_COUNT: null,
       BUILD_CRAWL_JOB: null,
       BUILT_CRAWL_CONF: null,
       BUILT_CRAWL_JOB: null,
