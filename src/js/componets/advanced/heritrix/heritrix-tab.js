@@ -1,11 +1,13 @@
-import React, {Component} from "react";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import HeritrixJobList from "./heritrix-joblist";
-import NewCrawlDialog from "./newCrawlDialog";
-import {Grid, Row, Column} from "react-cellblock";
-import child_process from "child_process";
-import wailConstants from "../../../constants/wail-constants";
+import React, {Component} from "react"
+import RaisedButton from "material-ui/RaisedButton"
+import Paper from "material-ui/Paper"
+import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
+import {Grid, Row, Column} from "react-cellblock"
+import child_process from "child_process"
+import wailConstants from "../../../constants/wail-constants"
+import HeritrixJobList from "./heritrix-joblist"
+import NewCrawlDialog from "./newCrawlDialog"
+import HeritrixJobInfo from "./heritrixJobInfo"
 
 const styles = {
    button: {
@@ -53,29 +55,31 @@ export default class HeritrixTab extends Component {
    render() {
       return (
          <Paper zdepth={3}>
-            <Grid flexible={true}>
+            <Grid flexible={true} gutterWidth={100}>
                <Row>
                   <Column width="1/2">
                      <HeritrixJobList />
                   </Column>
                   <Column width="1/2">
-                  </Column>
-               </Row>
-               <Row>
-                  <Column width="1/2">
-                     <NewCrawlDialog />
-                  </Column>
-                  <Column width="1/2">
-                     <RaisedButton
-                        label="Launch Web UI"
-                        labelPosition="before"
-                        primary={true}
-                        style={styles.button}
-                        onMouseDown={this.onClickLaunchWebUI}
-                     />
+                     <HeritrixJobInfo/>
                   </Column>
                </Row>
             </Grid>
+            <Toolbar>
+               <ToolbarGroup >
+                  <NewCrawlDialog />
+               </ToolbarGroup>
+               <ToolbarGroup>
+                  <RaisedButton
+                     label="Launch Web UI"
+                     labelPosition="before"
+                     primary={true}
+                     style={styles.button}
+                     onMouseDown={this.onClickLaunchWebUI}
+                  />
+               </ToolbarGroup>
+            </Toolbar>
+            
          </Paper>
       )
    }

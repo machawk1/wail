@@ -20,6 +20,10 @@ import validUrl from 'valid-url'
 import validator from 'validator'
 import keyMirror from 'keymirror'
 import rp from "request-promise"
+import _ from 'lodash'
+import moment from 'moment'
+
+import named from 'named-regexp'
 
 let base = '.'
 const tomcatStart = path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh')
@@ -27,33 +31,123 @@ const tomcatStop = path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdow
 const jdkhome = path.join(path.resolve(base), 'bundledApps/openjdk7u80')
 const jrehome = path.join(path.resolve(base), 'bundledApps/openjdk7u80/jre')
 const catalina = path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh')
+const heritrixJob = path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs')
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
+const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
 
-let options = {
-   uri: "https://localhost:8443/engine",
-   'auth': {
-      'username': 'lorem',
-      'password': 'ipsum',
-      'sendImmediately': false
-   },
-   transform: body => cheerio.load(body),
-   rejectUnauthorized: false,
-   resolveWithFullResponse: true,
-}
+
+let jobs = {}
+
+let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
+   let didMath = jobLaunch.exec(item.path)
+   if (didMath) {
+      jobs[didMath.capture('job')].log = true
+      jobs[didMath.capture('job')].launch = didMath.capture('launch')
+      jobs[didMath.capture('job')].path = item.path
+      this.push(jobs[didMath.capture('job')])
+   } else {
+      if (item.stats.isDirectory()) {
+         let jid = job.exec(item.path)
+         if (jid) {
+            jobs[jid.capture('job')] = {
+               log: false,
+               jobId: jid.capture('job'),
+               launch: '',
+               path: '',
+               progress: [],
+               crawlBean: fs.readFileSync(`${heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8"),
+
+            }
+         }
+      }
+   }
+
+   next()
+})
+
+
+let launchStats = through2.obj(function (item, enc, next) {
+   fs.readFile(item.path, "utf8", (err, data)=> {
+      if (err) throw err
+      // console.log(data)
+      let lines = data.trim().split('\n')
+      let lastLine = S(lines[lines.length - 1])
+
+      if (lastLine.contains('Ended by operator')) {
+         // jobs[item.jobId].progress.ended = true
+         let nextToLast = S(lines[lines.length - 2])
+         let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+         jobs[item.jobId].progress.push({
+            ended: true,
+            endedOn: moment(lastLine.collapseWhitespace().s).format("MM/DD/YYYY, h:mm:ssa"),
+            timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+            discovered: nextLastfields[1],
+            queued: nextLastfields[2],
+            downloaded: nextLastfields[3],
+         })
+
+      } else {
+         let fields = lastLine.collapseWhitespace().s.split(' ')
+         jobs[item.jobId].progress.push({
+            ended: false,
+            endedOn: '',
+            timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+            discovered: fields[1],
+            queued: fields[2],
+            downloaded: fields[3],
+         })
+
+      }
+
+   })
+   this.push(item)
+   next()
+})
+
+
+fs.walk(heritrixJob)
+   .pipe(onlyJobLaunchsProgress)
+   .pipe(launchStats)
+   .on('data', item => {
+      return
+   })
+   .on('end', function () {
+      // console.log('end', jobs)
+      // console.log(_.values(jobs))
+      _.forOwn(jobs, jb => console.log(jb))
+   })
+   .on('error', function (err, item) {
+      console.log(err.message)
+      console.log(item.path) // the file the error occurred on
+   })
+
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+//
+// let options = {
+//    uri: "https://localhost:8443/engine",
+//    'auth': {
+//       'username': 'lorem',
+//       'password': 'ipsum',
+//       'sendImmediately': false
+//    },
+//    transform: body => cheerio.load(body),
+//    rejectUnauthorized: false,
+//    resolveWithFullResponse: true,
+// }
 
 // rp( options)
 //    .then(data=>{
 //       console.log(data)
 //    })
 
-child_process.exec(`sh ${tomcatStop}`, (err, stdout, stderr) => {
-   console.log(err, stdout, stderr)
-})
-
-child_process.exec(`export JAVA_HOME=${jdkhome}; export JRE_HOME=${jrehome} ${tomcatStart}`, (err, stdout, stderr) => {
-   console.log(err, stdout, stderr)
-})
+// child_process.exec(`sh ${tomcatStop}`, (err, stdout, stderr) => {
+//    console.log(err, stdout, stderr)
+// })
+//
+// child_process.exec(`export JAVA_HOME=${jdkhome}; export JRE_HOME=${jrehome} ${tomcatStart}`, (err, stdout, stderr) => {
+//    console.log(err, stdout, stderr)
+// })
 
 
 // const consts = {

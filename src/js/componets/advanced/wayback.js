@@ -1,8 +1,9 @@
-import React, {Component} from "react";
-import RaisedButton from "material-ui/RaisedButton";
-import Paper from "material-ui/Paper";
-import EditorPopup from "../editor/editor-popup";
-import wc from "../../constants/wail-constants";
+import React, {Component} from "react"
+import RaisedButton from "material-ui/RaisedButton"
+import Paper from "material-ui/Paper"
+import EditorPopup from "../editor/editor-popup"
+import child_process from "child_process"
+import wc from "../../constants/wail-constants"
 import {Grid, Row, Column, observeGrid} from 'react-cellblock'
 
 const styles = {
@@ -15,17 +16,27 @@ export default class WayBackTab extends Component {
    constructor(props, context) {
       super(props, context)
       this.onClickViewWayback = this.onClickViewWayback.bind(this)
-      this.onClickEditWayback = this.onClickEditWayback.bind(this)
+      
    }
 
    onClickViewWayback(event) {
       console.log('View Wayback')
+      switch (process.platform) {
+         case 'linux':
+            child_process.exec(`xdg-open ${wc.Wayback.uri_wayback}`)
+            break
+         case 'darwin':
+            child_process.exec(`open ${wc.Wayback.uri_wayback}`)
+            break
+         case 'win32':
+            child_process.exec(`start ${wc.Wayback.uri_wayback}`)
+            break
+
+      }
+
    }
 
-   onClickEditWayback(event) {
-      console.log('Edit Wayback')
 
-   }
 
    render() {
       return (
@@ -45,7 +56,8 @@ export default class WayBackTab extends Component {
                      <EditorPopup
                         title={"Editing Wayback Configuration"}
                         buttonLabel={"Edit Wayback Configuration"}
-                        codeToLoad={wc.Code.which.WBC}
+                        useButton={true}
+                        codeToLoad={{codeToLoad: wc.Code.which.WBC}}
                         buttonStyle={styles.button}
                      />
                   </Column>

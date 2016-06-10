@@ -70,7 +70,7 @@ export default class Debug extends Component {
    }
 
    killHeritrix(){
-      console.log("Launch HeritrixTab")
+      console.log("Kill HeritrixTab")
       Heritrix.killHeritrix()
    }
 
@@ -110,8 +110,9 @@ export default class Debug extends Component {
             <EditorPopup
                title={"Editing Wayback Configuration"}
                buttonLabel={"Edit Wayback Configuration"}
-               codeToLoad={wc.Code.which.WBC}
+               codeToLoad={{codeToLoad: wc.Code.which.WBC}}
                buttonStyle={styles.button}
+               useButton={true}
             />
          </ToolbarGroup>
       </Toolbar>

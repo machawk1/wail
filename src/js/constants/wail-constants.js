@@ -38,6 +38,9 @@ const consts = {
       HERITRIX_STATUS_UPDATE: null,
       WAYBACK_STATUS_UPDATE: null,
       FETCH_CODE: null,
+      HERITRIX_CRAWL_ALL_STATUS: null,
+      VIEW_HERITRIX_JOB: null,
+      
    }),
    Paths: {
       memgator: path.join(path.resolve(base), 'bundledApps/memgator'),

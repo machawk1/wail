@@ -1,7 +1,8 @@
-import React, {Component} from "react";
-import {List} from "material-ui/List";
-import CrawlStore from "../.././../stores/crawlStore";
-import HeritrixJobItem from "./heritrixJobItem";
+import React, {Component} from "react"
+import {List} from "material-ui/List"
+import CrawlStore from "../.././../stores/crawlStore"
+import HeritrixJobItem from "./heritrixJobItem"
+
 
 
 export default class HeritrixJobList extends Component {
@@ -20,10 +21,12 @@ export default class HeritrixJobList extends Component {
 
    componentDidMount() {
       CrawlStore.on('job-created', this.getJobs)
+      CrawlStore.on('jobs-restored', this.getJobs)
    }
 
    componentWillUnmount() {
       CrawlStore.removeListener('job-created', this.getJobs)
+      CrawlStore.removeListener('jobs-restored', this.getJobs)
    }
 
    render() {

@@ -1,58 +1,134 @@
-import React, {Component, PropTypes} from "react";
-import {ListItem} from "material-ui/List";
-import {grey400} from "material-ui/styles/colors";
-import IconButton from "material-ui/IconButton";
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert";
-import IconMenu from "material-ui/IconMenu";
-import MenuItem from "material-ui/MenuItem";
-import Divider from "material-ui/Divider";
+import React, {Component, PropTypes} from "react"
+import {ListItem} from "material-ui/List"
+import {grey400} from "material-ui/styles/colors"
+import IconButton from "material-ui/IconButton"
+import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
+import IconMenu from "material-ui/IconMenu"
+import MenuItem from "material-ui/MenuItem"
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
+import wc from '../../../constants/wail-constants'
+import EditorPopup from "../../editor/editor-popup"
+import JobInfoDispatcher from '../../../dispatchers/jobInfoDispatcher'
 
-const iconButtonElement = (
-   <IconButton
-      touch={true}
-      tooltip="more"
-      tooltipPosition="bottom-left"
-   >
-      <MoreVertIcon color={grey400}/>
-   </IconButton>
-)
-
-const rightIconMenu = (
-   <IconMenu iconButtonElement={iconButtonElement}>
-      <MenuItem>Reply</MenuItem>
-      <MenuItem>Forward</MenuItem>
-      <MenuItem>Delete</MenuItem>
-   </IconMenu>
-)
+const styles = {
+   button: {
+      margin: 12,
+   },
+}
 
 export default class HeritrixJobItem extends Component {
 
+
    static propTypes = {
-      jobId: PropTypes.number.isRequired,
+      jobId: PropTypes.string.isRequired,
+      crawlBean: PropTypes.string.isRequired,
+      runs: PropTypes.array.isRequired,
       path: PropTypes.string.isRequired,
+      urls: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
    }
 
    constructor(props, context) {
       super(props, context)
+
       this.state = {
          jobId: this.props.jobId,
-         discovered: 0,
-         queued: 0,
-         downloaded: 0,
+         runs: this.props.runs,
          path: this.props.path,
+         urls: this.props.urls,
+         crawlBean: this.props.crawlBean,
+         openEditor: false,
       }
+      this.itemClicked = this.itemClicked.bind(this)
+      this.start = this.start.bind(this)
+      this.restart = this.restart.bind(this)
+      this.kill = this.kill.bind(this)
+      this.deleteJob = this.deleteJob.bind(this)
+      this.viewConf = this.viewConf.bind(this)
+      this.onOpenChange = this.onOpenChange.bind(this)
+   }
+
+   itemClicked(event) {
+      console.log('clicked on jobitem')
+      JobInfoDispatcher.dispatch({
+         type: wc.EventTypes.VIEW_HERITRIX_JOB,
+         state: this.state
+      })
+   }
+
+   viewConf(event) {
+      this.setState({openEditor: !this.state.openEditor})
+   }
+
+   start(event) {
+      console.log("stat")
+   }
+
+   restart(event) {
+
+   }
+
+   kill(event) {
+
+   }
+
+   deleteJob(event) {
+
+   }
+
+   onOpenChange(event) {
+      this.setState({openEditor: !this.state.openEditor})
    }
 
 
    render() {
+      const iconButtonElement = (
+         <IconButton
+            touch={true}
+            tooltip="more"
+            tooltipPosition="bottom-left"
+         >
+            <MoreVertIcon color={grey400}/>
+         </IconButton>
+      )
+
+      const rightIconMenu = (
+         <IconMenu iconButtonElement={iconButtonElement}
+                   anchorOrigin={{horizontal: 'left', vertical: 'top'}}
+                   targetOrigin={{horizontal: 'left', vertical: 'top'}}
+         >
+            <MenuItem
+               primaryText="Actions"
+               rightIcon={<ArrowDropRight />}
+               menuItems={[
+                  <MenuItem onTouchTap={this.start} primaryText="Start"/>,
+                  <MenuItem onTouchTap={this.restart} primaryText="Restart"/>,
+                  <MenuItem onTouchTap={this.kill} primaryText="Kill"/>,
+                  <MenuItem onTouchTap={this.deleteJob} primaryText="Delete"/>,
+               ]}
+            />
+            <MenuItem onTouchTap={this.viewConf} primaryText="View Config"/>
+         </IconMenu>
+      )
       return (
          <div>
             <ListItem
                primaryText={this.state.jobId}
+               onTouchTap={this.itemClicked}
                rightIconButton={rightIconMenu}
             />
-            <Divider />
+            <EditorPopup
+               title={"Editing Wayback Configuration"}
+               codeToLoad={{  
+                  which:wc.Code.which.CRAWLBEAN, 
+                  codetoLoad: this.state.crawlBean,
+                  codePath:`${wc.Paths.heritrixJob}/${this.props.jobId}/crawler-beans.cxml`,
+                }}
+               useButton={false}
+               onOpenChange={this.onOpenChange}
+               openFromParent={this.state.openEditor}
+            />
          </div>
+
       )
    }
 }

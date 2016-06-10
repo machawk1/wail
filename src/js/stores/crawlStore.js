@@ -1,8 +1,9 @@
-import EventEmitter from "eventemitter3";
-import CrawlDispatcher from "../dispatchers/crawl-dispatcher";
-import wailConstants from "../constants/wail-constants";
-import * as heritrixActions from "../actions/heritrix-actions";
-import UrlStore from "../stores/urlStore";
+import EventEmitter from "eventemitter3"
+import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
+import wailConstants from "../constants/wail-constants"
+import * as heritrixActions from "../actions/heritrix-actions"
+import UrlStore from "../stores/urlStore"
+import _ from 'lodash'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -15,18 +16,50 @@ class crawlStore extends EventEmitter {
       this.createJob = this.createJob.bind(this)
       this.latestJob = this.latestJob.bind(this)
       this.jobs = this.jobs.bind(this)
+      this.populateJobsFromPrevious = this.populateJobsFromPrevious.bind(this)
+      heritrixActions.getHeritrixJobsState()
    }
 
-   createJob(id, pth) {
+   createJob(id, pth, urls) {
       this.crawlJobs.push({
-         jobId: id,
+         jobId: id.toString(),
          path: pth,
-         discovered: 0,
-         queued: 0,
-         downloaded: 0,
+         runs: [],
+         urls: urls,
       })
 
       this.emit('job-created')
+   }
+
+   populateJobsFromPrevious(jobs) {
+      console.log('building previous jobs')
+      _.forOwn(jobs, jb => {
+         let job = {
+            jobId: jb.jobId,
+            path: `${wailConstants.Paths.heritrixJob}/${jb.jobId}`,
+            urls: '',
+            runs: [],
+            crawlBean: jb.crawlBean
+         }
+         if (jb.log) {
+            jb.progress.forEach(run => {
+               job.runs.push({
+                  discovered: run.discovered,
+                  downloaded: run.downloaded,
+                  ended: run.ended,
+                  endedOn: run.endedOn,
+                  queued: run.queued,
+                  timestap: run.timestamp,
+               })
+            })
+
+         }
+         // console.log('adding job',job)
+         this.crawlJobs.push(job)
+      })
+
+
+      this.emit('jobs-restored')
    }
 
    latestJob() {
@@ -75,7 +108,7 @@ class crawlStore extends EventEmitter {
          case EventTypes.BUILT_CRAWL_CONF:
          {
             console.log('Built crawl conf', event)
-            this.createJob(event.id, event.path)
+            this.createJob(event.id, event.path, event.urls)
             heritrixActions.buildHeritrixJob(event.id)
             new Notification('Built the Heritrix Crawl Config', {
                body: `Job id: ${event.id}\nJob location${event.path}`
@@ -102,6 +135,10 @@ class crawlStore extends EventEmitter {
             // this.createJob(event.id, event.path)
             break
          }
+         case EventTypes.HERITRIX_CRAWL_ALL_STATUS:
+         {
+            this.populateJobsFromPrevious(event.jobReport)
+         }
 
       }
 
@@ -111,6 +148,8 @@ class crawlStore extends EventEmitter {
 
 }
 
-const CrawlStore = new crawlStore;
+const CrawlStore = new crawlStore
+
+window.CrawlStore = CrawlStore
 CrawlDispatcher.register(CrawlStore.handleEvent)
 export default CrawlStore;

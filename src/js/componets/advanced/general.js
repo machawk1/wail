@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table";
-import RaisedButton from "material-ui/RaisedButton";
-import {launchHeritrix, killHeritrix} from "../../actions/heritrix-actions";
-import {startWayback, killWayback} from "../../actions/wayback-actions";
-import ServiceStore from "../../stores/serviceStore";
+import React, {Component} from "react"
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from "material-ui/Table"
+import RaisedButton from "material-ui/RaisedButton"
+import {launchHeritrix, killHeritrix} from "../../actions/heritrix-actions"
+import {startWayback, killWayback} from "../../actions/wayback-actions"
+import ServiceStore from "../../stores/serviceStore"
 
 
 export default class General extends Component {
