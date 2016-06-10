@@ -1,4 +1,6 @@
-# [![WAIL logo](https://cdn.rawgit.com/machawk1/wail/osagnostic/build/icons/whale_256.png)](http://github.com/machawk1/wail)<br>
+<h2 align="center">
+ <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/build/icons/whale_256.png" alt="WAIL logo" /></a><br />&nbsp;Web Archiving Integration Layer (WAIL)</h2>
+<p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
 
 Web Archiving Integration Layer (WAIL)
 
@@ -19,22 +21,56 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 
 ### Packaging
 
-Package for current platfom: `bash $ npm run-script package` To package for all platforms: `bash $ npm run-script package-all`
+Package for current platfom: `npm run-script package` To package for all platforms: `npm run-script package-all`
 
-## Tasks still to be completed
+## Major Tasks
 
 ### Status monitoring
-
-- [ ] heritrix progress updating(queued,downloaded,...) per job
+- [ ] heritrix crawl progress updating(queued,downloaded,...) per job
 - [ ] reachability of wayback and heritrix
 
 ### Heritrix
-
 - [x] start/stop
 - [x] configure and launch single seed crawl
-- [ ] post initial launch execution control(teardown terminate,...)
-- [ ] multi-uri crawl config
-- [ ] saving of edits post maid by in app editor of crawl config after in
+- [x] launch web ui in default browser
+- [ ] job crawl
+  - [x] configure one off crawl
+  - [x] launch one off crawl
+  - [x] view with in app editor
+  - [ ] edit and save with in app editor
+  - [ ] multi uri crawl
+- [ ] job status
+    - [x] on app start previous crawl status displayed
+    - [ ] background monitoring
+- [ ] post initial launch control
+
+### Wayback
+- [x] start/stop
+- [x] replay of local archives(java7 runtimes only)
+- [x] index CDX generation
+- [ ] wayback config
+  - [x] view in app editor
+  - [ ] edit and save with in app editor
+- [ ] fix dependancy for java7
+  - [ ] pywb?
+  - [ ] roll your own jvm?
+
+### Memgator
+- [ ] I can haz memento
+    - [x] local memegator(linux only)
+    - [ ] compile version for windows and osx
+
+### OS support
+  - [x] Linux!!!!
+  - [x] OSX
+  - [ ] Windows
+    - [ ] add os detection for operations
+    - [x] in theory it works
+
+### Misc
+  - [ ] ui (move from dev ui to finalized ui)
+  - [ ] make monitoring and file sytem actions electron background processes
+
 
 Powered by Electron and React.
 
