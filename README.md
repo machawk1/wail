@@ -57,7 +57,7 @@ Package for current platfom: `npm run-script package` To package for all platfor
 
 ### Memgator
 - [ ] I can haz memento
-    - [x] local memegator(linux only)
+    - [x] local memgator(linux only)
     - [ ] compile version for windows and osx
 
 ### OS support
