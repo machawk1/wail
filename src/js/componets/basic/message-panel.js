@@ -39,7 +39,8 @@ export default class MessagePanel extends Component {
                     <Row>
                         <Column  width="1/2">
                             <p>
-                                Fetching memento count from public archives...
+                                Fetching memento count
+                                from public archives...
                             </p>
                         </Column>
                         <Column  width="1/2">

@@ -75,7 +75,6 @@ function createWindow () {
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
     mainWindow.focus()
-    mainWindow.openDevTools()
   })
 
   mainWindow.on('unresponsive', () => {

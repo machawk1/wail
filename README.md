@@ -13,14 +13,18 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
 ### Scripts
+1. start-dev: Runs both the dev and start-electron-dev commands
+2. dev: Runs the webpack dev server with hot module replacement enabled
+3. start-electron-dev: Start electron
 
-1. copy-resources: Copies resources required to function and the script to do that is tools/copy.js. In this file are two variables dirsRequired and resourcesToCopy. The dirsRequired is an array of paths to folders needed to be present before the copy. Likewise with resourcesToCopy but has objects with from and two as keys. Add to thes if you need to have more items copied.
-2. start-dev: Runs both the dev and start-electron-dev commands
-3. dev: Runs the webpack dev server with hot module replacement enabled
-4. start-electron-dev: Start electron
+### Running in development mode
+If you have not done so all ready `npm install`
+ and then run `npm run-script start-dev`.
 
-### Packaging
+We use webpack-dev server with `--inline --hot` and requires port 9000 to be free.
 
+
+### Package
 Package for current platfom: `npm run-script package` To package for all platforms: `npm run-script package-all`
 
 ## Major Tasks
@@ -71,6 +75,9 @@ Package for current platfom: `npm run-script package` To package for all platfor
   - [ ] ui (move from dev ui to finalized ui)
   - [ ] make monitoring and file sytem actions electron background processes
 
+
+![Wail Electron Advanced](/images/wailFront.png?raw=true "Basic")
+![Wail Electron Advanced](/images/wail-advanced.png?raw=true "Advanced")
 
 Powered by Electron and React.
 
