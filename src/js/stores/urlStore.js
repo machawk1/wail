@@ -37,7 +37,7 @@ class urlStore extends EventEmitter {
          }
          case EventTypes.GET_MEMENTO_COUNT:{
             urlActions.askMemgator(this.urlMemento.url)
-
+            this.emit('memento-count-fetch')
             break
 
          }

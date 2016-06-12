@@ -9,26 +9,48 @@ export default class MessagePanel extends Component {
       super(props, context)
        this.updateMementoCount = this.updateMementoCount.bind(this)
        this.urlUpdated =  this.urlUpdated.bind(this)
-       this.state = {mementoCount: -1}
+       this.state = {
+           mementoCount: -1,
+           message: this.fetchingMementoMsg()
+       }
+
+
 
    }
 
+    fetchingMementoMsg(){
+        return (
+            <p>
+                Fetching memento count
+                from public archives...
+            </p>
+        )
+    }
+
+    gotMementoMsg(){
+        return (
+            <p>
+                Mementos available from public archives:
+            </p>
+        )
+    }
+
     updateMementoCount(){
-        this.setState({mementoCount: UrlStore.getMementoCount()})
+        this.setState({mementoCount: UrlStore.getMementoCount(), message: this.gotMementoMsg()})
     }
 
     urlUpdated(){
-        this.setState({mementoCount: -1})
+        this.setState({mementoCount: -1,message: this.fetchingMementoMsg()})
     }
 
     componentDidMount() {
         UrlStore.on('memento-count-updated',this.updateMementoCount)
-        UrlStore.on('url-updated',this.urlUpdated)
+        UrlStore.on('memento-count-fetch',this.urlUpdated)
     }
 
     componentWillUnmount() {
         UrlStore.removeListener('memento-count-updated',this.updateMementoCount)
-        UrlStore.removeListener('url-updated',this.urlUpdated)
+        UrlStore.removeListener('memento-count-fetch',this.urlUpdated)
     }
 
    render() {
@@ -38,10 +60,7 @@ export default class MessagePanel extends Component {
                 <Grid>
                     <Row>
                         <Column  width="1/2">
-                            <p>
-                                Fetching memento count
-                                from public archives...
-                            </p>
+                            {this.state.message}
                         </Column>
                         <Column  width="1/2">
                             {progressOrCount}
