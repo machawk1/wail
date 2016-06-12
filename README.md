@@ -75,6 +75,7 @@ Package for current platfom: `npm run-script package` To package for all platfor
   - [ ] ui (move from dev ui to finalized ui)
   - [ ] make monitoring and file sytem actions electron background processes
 
+### Screen shots
 
 ![Wail Electron Advanced](/images/wailFront.png?raw=true "Basic")
 ![Wail Electron Advanced](/images/wail-advanced.png?raw=true "Advanced")
