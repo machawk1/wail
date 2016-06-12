@@ -38,6 +38,7 @@ const DEFAULT_OPTS = {
       '^/tools($|/)',
       '^/release($|/)',
       '^/electron-main-dev.js',
+      '^/zips($|/)',
    ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
       .concat(
          deps.filter(name => !electronCfg.externals.includes(name))

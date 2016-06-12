@@ -73,6 +73,7 @@ function createWindow () {
 
 
   mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.openDevTools()
     mainWindow.show()
     mainWindow.focus()
   })
