@@ -69,11 +69,14 @@ Package for current platfom: `npm run-script package` To package for all platfor
   - [x] OSX
   - [ ] Windows
     - [ ] add os detection for operations
-    - [x] in theory it works
+    - [x] works
 
 ### Misc
   - [ ] ui (move from dev ui to finalized ui)
   - [ ] make monitoring and file sytem actions electron background processes
+  - [ ] hook into Google APIs
+  - [ ] save to local or public archive
+ 
 
 ### Screen shots
 
