@@ -83,6 +83,9 @@ Package for current platfom: `npm run-script package` To package for all platfor
 ![Wail Electron Advanced](/images/wailFront.png?raw=true "Basic")
 ![Wail Electron Advanced](/images/wail-advanced.png?raw=true "Advanced")
 
+### Slides from Archives Unleased 2.0
+[Are Wails Electric?](http://www.slideshare.net/JohnBerlin3/are-wails-electric)
+
 Powered by Electron and React.
 
 # Wailpy
