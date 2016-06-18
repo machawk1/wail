@@ -9,6 +9,7 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import wc from '../../../constants/wail-constants'
 import EditorPopup from "../../editor/editor-popup"
 import JobInfoDispatcher from '../../../dispatchers/jobInfoDispatcher'
+import  {sendActionToHeritrix} from '../../../actions/heritrix-actions'
 
 const styles = {
    button: {
@@ -61,6 +62,7 @@ export default class HeritrixJobItem extends Component {
 
    start(event) {
       console.log("stat")
+      
    }
 
    restart(event) {

@@ -96,7 +96,7 @@ export function makeHeritrixJobConf(urls, hops, jobId) {
          let urlText
          if (Array.isArray(urls)) {
             console.log('array')
-            urlText = urls.join("\r\n")
+            urlText = `\r\n${urls.join("\r\n")}\r\n`
          } else {
             urlText = `\r\n${urls}\r\n`
          }

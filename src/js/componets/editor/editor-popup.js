@@ -144,6 +144,7 @@ export default class EditorPopup extends Component {
             modal={true}
             contentStyle={style.dialog}
             open={this.props.openFromParent}
+            autoScrollBodyContent={true}
          >
             <Editor
                ref='editor'

@@ -39,7 +39,7 @@ export default class NewCrawlDialog extends Component {
    }
 
    handleOpen() {
-      this.setState({open: true})
+      this.setState({open: true,urls:[]})
    }
 
    handleClose() {

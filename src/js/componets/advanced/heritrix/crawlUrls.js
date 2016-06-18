@@ -51,8 +51,10 @@ export default class CrawlUrls extends Component {
 
          let deleteAction = (event) => {
             let list = this.state.urls
-            list.forEach(elem => console.log(elem))
+            let removeUrl = ""
+            // list.forEach(elem => console.log(elem))
             let newUrls = _.remove(list, elem => parseInt(elem.key) != keyNum)
+            // this.state.urls.
             this.setState({urls: newUrls})
          }
          deleteAction = deleteAction.bind(this)

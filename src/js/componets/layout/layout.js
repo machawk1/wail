@@ -31,7 +31,7 @@ export default class Layout extends Component {
          <div>
             <Header/>
             {this.props.children}
-
+            <Debug/>
          </div>
 
       )
