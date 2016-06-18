@@ -320,7 +320,7 @@ export function getHeritrixJobsState() {
             jobs[item.jobId].progress.push({
                ended: false,
                endedOn: '',
-               timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+               timestap: moment(fields[0]).format("MM/DD/YYYY, h:mm:ssa"),
                discovered: fields[1],
                queued: fields[2],
                downloaded: fields[3],
