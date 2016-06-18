@@ -42,7 +42,7 @@ Package for current platfom: `npm run-script package` To package for all platfor
   - [x] launch one off crawl
   - [x] view with in app editor
   - [ ] edit and save with in app editor
-  - [ ] multi uri crawl
+  - [x] multi uri crawl
 - [ ] job status
     - [x] on app start previous crawl status displayed
     - [ ] background monitoring
