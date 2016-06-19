@@ -55,12 +55,12 @@ export default class HeritrixTab extends Component {
    render() {
       return (
          <Paper zdepth={3}>
-            <Grid flexible={true} gutterWidth={100}>
+            <Grid breakpoints={[12]}  gutterWidth={50}>
                <Row>
-                  <Column width="1/2">
+                  <Column width="1/4">
                      <HeritrixJobList />
                   </Column>
-                  <Column width="1/2">
+                  <Column width="3/4">
                      <HeritrixJobInfo/>
                   </Column>
                </Row>
@@ -84,3 +84,16 @@ export default class HeritrixTab extends Component {
       )
    }
 }
+
+/*
+ <Grid flexible={true} gutterWidth={100}>
+ <Row>
+ <Column width="1/2">
+ <HeritrixJobList />
+ </Column>
+ <Column width="1/2">
+ <HeritrixJobInfo/>
+ </Column>
+ </Row>
+ </Grid>
+ */

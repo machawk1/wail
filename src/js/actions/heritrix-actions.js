@@ -1,14 +1,16 @@
-import wc from "../constants/wail-constants";
-import child_process from "child_process";
-import rp from "request-promise";
-import cheerio from "cheerio";
-import fs from "fs-extra";
-import ServiceDispatcher from "../dispatchers/service-dispatcher";
-import CrawlDispatcher from "../dispatchers/crawl-dispatcher";
+import 'babel-polyfill'
+import wc from "../constants/wail-constants"
+import child_process from "child_process"
+import rp from "request-promise"
+import cheerio from "cheerio"
+import fs from "fs-extra"
+import ServiceDispatcher from "../dispatchers/service-dispatcher"
+import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
 import moment from 'moment'
+
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const EventTypes = wc.EventTypes
@@ -36,6 +38,34 @@ export function heritrixAccesible() {
             status: false,
          })
       }).finally(() => console.log("heritrix finally"))
+}
+
+function* sequentialActions(actions, jobId) {
+   let index = 0
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${jobId}`,
+      headers: {
+         Accept: "application/xml",
+         'Content-type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+         action: ''
+      },
+      auth: {
+         username: 'lorem',
+         password: 'ipsum',
+         sendImmediately: false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
+
+   while (index < actions.length) {
+      options.form.action = actions[index++]
+      yield options
+   }
+
 }
 
 export function launchHeritrix() {
@@ -225,36 +255,72 @@ export function restartHeritrixJob(jobId) {
 
 }
 
+export function forceCrawlFinish(jobId) {
+   sendActionToHeritrix(sequentialActions(["terminate", "teardown"], jobId))
+}
+
+export function restartJob(jobId) {
+   buildHeritrixJob(jobId)
+}
+
 export function deleteHeritrixJob(jobId) {
 
 }
 
 export function sendActionToHeritrix(act, jobId) {
 
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/job/${jobId}`,
-      headers: {
-         Accept: "application/xml",
-         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
-      },
-      form: {
-         action: act
-      },
-      auth: {
-         usr: heritrix.username,
-         pass: heritrix.password
-      },
-      resolveWithFullResponse: true,
+   let options
+
+   let isActionGenerator = act instanceof sequentialActions
+   let notDone = false
+
+   if (isActionGenerator) {
+      let nextAction = act.next()
+      console.log('We have a actionGenerator', nextAction)
+      notDone = !nextAction.done
+      if (nextAction.done)
+         return
+      options = nextAction.value
+      console.log(options)
+   } else {
+      options = {
+         method: 'POST',
+         uri: `https://localhost:8443/engine/job/${jobId}`,
+         headers: {
+            Accept: "application/xml",
+            'Content-type': 'application/x-www-form-urlencoded',
+         },
+         form: {
+            action: act
+         },
+         auth: {
+            username: 'lorem',
+            password: 'ipsum',
+            sendImmediately: false
+         },
+         rejectUnauthorized: false,
+         resolveWithFullResponse: true,
+      }
    }
 
    rp(options)
       .then(response => {
          // POST succeeded...
+         console.log(`post succeeded in sendAction ${act} to heritrix`, response)
+         if (isActionGenerator && notDone) {
+            console.log("we have next in action generator")
+            sendActionToHeritrix(act, jobId)
+         }
       })
       .catch(err => {
-         // POST failed...
+         console.log(`post failed? in sendAction ${act} to heritrix`, err)
+         if (isActionGenerator && notDone) {
+            console.log("we have next in action generator", `is done? ${notDone}`)
+            sendActionToHeritrix(act, jobId)
+         }
+
       })
+
 }
 
 export function getHeritrixJobsState() {
@@ -263,7 +329,6 @@ export function getHeritrixJobsState() {
 
    let jobs = {}
    let count = 0
-
 
    let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
       let didMath = jobLaunch.exec(item.path)
@@ -285,7 +350,6 @@ export function getHeritrixJobsState() {
                   path: '',
                   progress: [],
                   crawlBean: fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
-
                }
             }
          }
@@ -308,8 +372,8 @@ export function getHeritrixJobsState() {
             let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
             jobs[item.jobId].progress.push({
                ended: true,
-               endedOn: moment(lastLine.collapseWhitespace().s).format("MM/DD/YYYY, h:mm:ssa"),
-               timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+               endedOn: moment(lastLine.collapseWhitespace().s),
+               timestamp: moment(nextLastfields[0]),
                discovered: nextLastfields[1],
                queued: nextLastfields[2],
                downloaded: nextLastfields[3],
@@ -319,8 +383,7 @@ export function getHeritrixJobsState() {
             let fields = lastLine.collapseWhitespace().s.split(' ')
             jobs[item.jobId].progress.push({
                ended: false,
-               endedOn: '',
-               timestap: moment(fields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+               timestamp: moment(fields[0]),
                discovered: fields[1],
                queued: fields[2],
                downloaded: fields[3],

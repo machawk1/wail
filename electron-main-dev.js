@@ -7,6 +7,7 @@ const {
    Tray
 } = require('electron')
 const path = require('path')
+import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 
 let mainWindow = null
 
@@ -18,7 +19,6 @@ if (process.env.NODE_ENV === 'development') {
 
 
 const base = __dirname
-console.log(__dirname)
 
 const realPaths = {
   p: {
@@ -58,22 +58,25 @@ ipcMain.on('getPath', function (event, arg) {
   event.sender.send('gotPath', realPaths)
 })
 
-function createWindow () {
 
+
+function createWindow () {
+  installExtension(REACT_DEVELOPER_TOOLS)
+     .then((name) => console.log(`Added Extension:  ${name}`))
+     .catch((err) => console.log('An error occurred: ', err))
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
     height: 800,
-    title: 'Wail Archiving Integration Layer',
+    title: 'Web Archiving Integration Layer',
     show: false,
   })
-  console.log(path.join(__dirname, 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'))
+
   // and load the index.html of the app.
   mainWindow.loadURL(`file://${__dirname}/src/wail.html`)
 
 
   mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.openDevTools()
     mainWindow.show()
     mainWindow.focus()
   })

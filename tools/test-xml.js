@@ -1,29 +1,64 @@
-// import 'babel-polyfill'
-// var realFs = require('fs')
-// var gracefulFs = require('graceful-fs')
-// gracefulFs.gracefulify(realFs)
-// import fs from 'fs-extra'
-// import path from 'path'
-// import Promise from 'bluebird'
-// Promise.promisifyAll(fs)
-// import cheerio from 'cheerio'
-// import through2 from 'through2'
-// import S from 'string'
-// import child_process from 'child_process'
-// import split2 from 'split2'
-// import os from 'os'
-// import del from 'del'
-// import streamSort from 'sort-stream2'
-// import {encode, compare} from 'bytewise'
-// import shelljs from 'shelljs'
-// import validUrl from 'valid-url'
-// import validator from 'validator'
-// import keyMirror from 'keymirror'
-// import rp from "request-promise"
-// import _ from 'lodash'
-// import moment from 'moment'
-//
-// import named from 'named-regexp'
+import 'babel-polyfill'
+var realFs = require('fs')
+var gracefulFs = require('graceful-fs')
+gracefulFs.gracefulify(realFs)
+import fs from 'fs-extra'
+import path from 'path'
+import Promise from 'bluebird'
+Promise.promisifyAll(fs)
+import cheerio from 'cheerio'
+import through2 from 'through2'
+import S from 'string'
+import child_process from 'child_process'
+import split2 from 'split2'
+import os from 'os'
+import del from 'del'
+import streamSort from 'sort-stream2'
+import {encode, compare} from 'bytewise'
+import shelljs from 'shelljs'
+import validUrl from 'valid-url'
+import validator from 'validator'
+import keyMirror from 'keymirror'
+import rp from "request-promise"
+import _ from 'lodash'
+import moment from 'moment'
+import named from 'named-regexp'
+
+
+function* sequentialActions(actions) {
+   let index = 0
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${12213}`,
+      headers: {
+         Accept: "application/xml",
+         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
+      },
+      form: {
+         action: ''
+      },
+      auth: {
+         usr: 'asdas',
+         pass: 'asdas'
+      },
+      resolveWithFullResponse: true,
+   }
+   while(index < actions.length){
+      options.form.action = actions[index++]
+      yield options
+   }
+
+
+}
+
+let actions = sequentialActions(['hi','hello','goodBy'])
+let a
+while(!(a = actions.next()).done){
+   console.log(a)
+}
+
+console.log(typeof actions,actions instanceof  sequentialActions)
+
 //
 // let base = '.'
 // const tomcatStart = path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh')
@@ -92,7 +127,7 @@
 //          jobs[item.jobId].progress.push({
 //             ended: false,
 //             endedOn: '',
-//             timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+//             timestap: moment(fields[0]).format("MM/DD/YYYY, h:mm:ssa"),
 //             discovered: fields[1],
 //             queued: fields[2],
 //             downloaded: fields[3],
@@ -121,7 +156,7 @@
 //       console.log(err.message)
 //       console.log(item.path) // the file the error occurred on
 //    })
-//
+
 // // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // //
 // // let options = {
@@ -390,31 +425,34 @@
 // // lines.forEach((line, index)=> {
 // //    console.log(line, index)
 // // })
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-var Nightmare = require('nightmare');
-var nightmare = Nightmare({
-    show: true,
-    switches: {
-        'ignore-certificate-errors': true
-    }
-})
 
-/*
- 'username': 'lorem',
- 'password': 'ipsum',
- https://localhost:8443/engine/
- */
 
-nightmare
-    .goto('https://lorem:ipsum@localhost:8443/engine/')
-    .wait('#main')
-    .evaluate(function () {
-       return document.querySelector('#main .searchCenterMiddle li a').href
-    })
-    .end()
-    .then(function (result) {
-       console.log(result)
-    })
-    .catch(function (error) {
-       console.error('Search failed:', error);
-    });
+
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+// var Nightmare = require('nightmare');
+// var nightmare = Nightmare({
+//     show: true,
+//     switches: {
+//         'ignore-certificate-errors': true
+//     }
+// })
+//
+// /*
+//  'username': 'lorem',
+//  'password': 'ipsum',
+//  https://localhost:8443/engine/
+//  */
+//
+// nightmare
+//     .goto('https://lorem:ipsum@localhost:8443/engine/')
+//     .wait('#main')
+//     .evaluate(function () {
+//        return document.querySelector('#main .searchCenterMiddle li a').href
+//     })
+//     .end()
+//     .then(function (result) {
+//        console.log(result)
+//     })
+//     .catch(function (error) {
+//        console.error('Search failed:', error);
+//     });

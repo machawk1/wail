@@ -12,10 +12,8 @@ import Subheader from 'material-ui/Subheader'
 
 const style = {
    dialog: {
-      width: '75%',
-      height: '75%',
+      width: '100%',
       maxWidth: 'none',
-      maxHeight: 'none',
    },
    button: {
       margin: 12,
@@ -113,6 +111,7 @@ export default class EditorPopup extends Component {
                modal={true}
                contentStyle={style.dialog}
                open={this.state.open}
+               autoScrollBodyContent={true}
             >
                <Editor
                   ref='editor'
@@ -180,6 +179,7 @@ export default class EditorPopup extends Component {
             onTouchTap={this.saveCode}
          />,
       ]
+      console.log(`Use Buttons? ${this.props.useButton}`)
       const editorElement = this.props.useButton ? this.editorWithButton(actions) : this.editorNoButton(actions)
       return (editorElement)
    }

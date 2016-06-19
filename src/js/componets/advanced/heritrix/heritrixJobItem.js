@@ -9,7 +9,7 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import wc from '../../../constants/wail-constants'
 import EditorPopup from "../../editor/editor-popup"
 import JobInfoDispatcher from '../../../dispatchers/jobInfoDispatcher'
-import  {sendActionToHeritrix} from '../../../actions/heritrix-actions'
+import  {forceCrawlFinish} from '../../../actions/heritrix-actions'
 
 const styles = {
    button: {
@@ -70,7 +70,7 @@ export default class HeritrixJobItem extends Component {
    }
 
    kill(event) {
-
+      forceCrawlFinish(this.state.jobId)
    }
 
    deleteJob(event) {
@@ -104,7 +104,7 @@ export default class HeritrixJobItem extends Component {
                menuItems={[
                   <MenuItem onTouchTap={this.start} primaryText="Start"/>,
                   <MenuItem onTouchTap={this.restart} primaryText="Restart"/>,
-                  <MenuItem onTouchTap={this.kill} primaryText="Kill"/>,
+                  <MenuItem onTouchTap={this.kill} primaryText="Terminate Crawl"/>,
                   <MenuItem onTouchTap={this.deleteJob} primaryText="Delete"/>,
                ]}
             />
@@ -114,7 +114,7 @@ export default class HeritrixJobItem extends Component {
       return (
          <div>
             <ListItem
-               primaryText={this.state.jobId}
+               primaryText={<p>{this.state.jobId}</p>}
                onTouchTap={this.itemClicked}
                rightIconButton={rightIconMenu}
             />
