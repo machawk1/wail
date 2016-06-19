@@ -5,7 +5,7 @@ import wailConstants from "../constants/wail-constants"
 import * as heritrixActions from "../actions/heritrix-actions"
 import UrlStore from "../stores/urlStore"
 import _ from 'lodash'
-import { readCode } from '../actions/editor-actions'
+import {readCode} from '../actions/editor-actions'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -28,7 +28,7 @@ class crawlStore extends EventEmitter {
          path: pth,
          runs: [],
          urls: urls,
-         crawlBean: readCode( `${wailConstants.Paths.heritrixJob}/${id.toString()}/crawler-beans.cxml`)
+         crawlBean: readCode(`${wailConstants.Paths.heritrixJob}/${id.toString()}/crawler-beans.cxml`)
       })
 
       this.emit('job-created')
@@ -36,33 +36,10 @@ class crawlStore extends EventEmitter {
 
    populateJobsFromPrevious(jobs) {
       console.log('building previous jobs')
-      
-      _.forOwn(jobs, jb => {
-         let job = {
-            jobId: jb.jobId,
-            path: `${wailConstants.Paths.heritrixJob}/${jb.jobId}`,
-            urls: '',
-            runs: [],
-            crawlBean: jb.crawlBean
-         }
-         if (jb.log) {
-            jb.progress.forEach(run => {
-               job.runs.push({
-                  discovered: run.discovered,
-                  downloaded: run.downloaded,
-                  ended: run.ended,
-                  endedOn: run.endedOn,
-                  queued: run.queued,
-                  timestap: run.timestamp,
-               })
-            })
-
-         }
-         // console.log('adding job',job)
-         this.crawlJobs.push(job)
-      })
-
-
+      this.crawlJobs = jobs
+      // _.forOwn(jobs, jb => {
+      //    this.crawlJobs.push(jb)
+      // })
       this.emit('jobs-restored')
    }
 
@@ -141,7 +118,12 @@ class crawlStore extends EventEmitter {
          }
          case EventTypes.HERITRIX_CRAWL_ALL_STATUS:
          {
-            this.populateJobsFromPrevious(event.jobReport)
+            // this.populateJobsFromPrevious(event.jobReport)
+            this.crawlJobs = event.jobReport
+            // _.forOwn(jobs, jb => {
+            //    this.crawlJobs.push(jb)
+            // })
+            this.emit('jobs-restored')
          }
 
       }
@@ -154,6 +136,8 @@ class crawlStore extends EventEmitter {
 
 const CrawlStore = new crawlStore
 
+//noinspection JSAnnotator
 window.CrawlStore = CrawlStore
 CrawlDispatcher.register(CrawlStore.handleEvent)
-export default CrawlStore;
+
+export default CrawlStore

@@ -44,42 +44,41 @@ export default class HeritrixJobInfo extends Component {
       })
    }
 
+   sortJobs(j1, j2) {
+
+   }
+
    buildRows() {
       let runs = this.state.runs
       let count = 0
       if (runs.length > 0) {
-         runs.sort((j1, j2) => {
-            if (j1.ended)
-               return j1.endedOn.isBefore(j2.ended ? j2.endedOn : j2.timestamp)
-            else
-               return j1.timestamp.isBefore(j2.ended ? j2.endedOn : j2.timestamp)
-         })
-         return runs.map((job, idx) => {
-            let status = job.ended ? "Ended" : "Running"
-            let discovered = job.discovered || ''
-            let queued = job.queued || ''
-            let downloaded = job.downloaded || ''
-            let tStamp = job.ended ? job.endedOn : job.timestamp
-            return (
-               <TableRow key={`${this.state.jobId}${count++}`} displayBorder={false}>
-                  <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
-                     {status}
-                  </TableRowColumn>
-                  <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
-                     {tStamp.format("MM/DD/YYYY h:mm:ssa")}
-                  </TableRowColumn>
-                  <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
-                     {discovered.trim()}
-                  </TableRowColumn>
-                  <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
-                     {queued.trim()}
-                  </TableRowColumn>
-                  <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
-                     {downloaded.trim()}
-                  </TableRowColumn>
-               </TableRow>
-            )
-         })
+         // runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
+         let job = runs[0]
+         let status = job.ended ? "Ended" : "Running"
+         let discovered = job.discovered || ''
+         let queued = job.queued || ''
+         let downloaded = job.downloaded || ''
+
+         return (
+            <TableRow key={`${this.state.jobId}${count++}`} displayBorder={false}>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
+                  {status}
+               </TableRowColumn>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
+                  {job.timestamp.format("MM/DD/YYYY h:mm:ssa")}
+               </TableRowColumn>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
+                  {discovered.trim()}
+               </TableRowColumn>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
+                  {queued.trim()}
+               </TableRowColumn>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>
+                  {downloaded.trim()}
+               </TableRowColumn>
+            </TableRow>
+         )
+
       } else {
          return (
             <TableRow key={`${this.state.jobId}${count++}`}>

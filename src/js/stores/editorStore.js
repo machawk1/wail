@@ -60,22 +60,22 @@ class editorStore extends EventEmitter {
             })
             break
          case EventTypes.SAVE_CODE:
-            let path =''
+            let path = ''
             switch (event.which) {
                case WhichCode.WBC:
                   path = wailConstants.Code.wayBackConf
-                  this.code.set(WhichCode.WBC,event.code)
+                  this.code.set(WhichCode.WBC, event.code)
                   break
                case WhichCode.CRAWLBEAN:
                   path = event.savePath
-                  this.code.set(event.jid,event.code)
+                  this.code.set(event.jid, event.code)
                   break
             }
             EditorActions.saveCode(path, event.code, error => {
-               if(error){
-                  console.log(`Error saving code ${error}`,event)
+               if (error) {
+                  console.log(`Error saving code ${error}`, event)
                } else {
-                  console.log(`Save success`,event)
+                  console.log(`Save success`, event)
                }
             })
             break
@@ -86,6 +86,6 @@ class editorStore extends EventEmitter {
 
 }
 
-const EditorStore = new editorStore;
+const EditorStore = new editorStore
 EditorDispatcher.register(EditorStore.handleEvent)
-export default EditorStore;
+export default EditorStore

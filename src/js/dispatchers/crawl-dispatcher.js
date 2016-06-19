@@ -4,5 +4,4 @@ import {Dispatcher} from "flux"
 //if desired
 const CrawlDispatcher = new Dispatcher()
 
-
 export default CrawlDispatcher

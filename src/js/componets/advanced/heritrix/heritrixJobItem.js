@@ -5,6 +5,7 @@ import IconButton from "material-ui/IconButton"
 import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
 import IconMenu from "material-ui/IconMenu"
 import MenuItem from "material-ui/MenuItem"
+import Divider from 'material-ui/Divider'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import wc from '../../../constants/wail-constants'
 import EditorPopup from "../../editor/editor-popup"
@@ -93,9 +94,12 @@ export default class HeritrixJobItem extends Component {
 
       const rightIconMenu = (
          <IconMenu iconButtonElement={iconButtonElement}
-                   anchorOrigin={{horizontal: 'left', vertical: 'top'}}
-                   targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                   anchorOrigin={{ vertical: 'top', horizontal: 'left',}}
+                   targetOrigin={{ vertical: 'top', horizontal: 'left',}}
          >
+
+            <MenuItem onTouchTap={this.viewConf} primaryText="View Config"/>
+            <Divider />
             <MenuItem
                primaryText="Actions"
                rightIcon={<ArrowDropRight />}
@@ -106,7 +110,7 @@ export default class HeritrixJobItem extends Component {
                   <MenuItem onTouchTap={this.deleteJob} primaryText="Delete"/>,
                ]}
             />
-            <MenuItem onTouchTap={this.viewConf} primaryText="View Config"/>
+
          </IconMenu>
       )
       let cp = `${wc.Paths.heritrixJob}/${this.props.jobId}/crawler-beans.cxml`

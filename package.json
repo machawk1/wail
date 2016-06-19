@@ -4,6 +4,7 @@
   "main": "electron-main.js",
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
   "scripts": {
+    "nightmare": "cross-env babel-node tools/testNightmare",
     "start-electron-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register electron-main-dev.js",
     "dev": "cross-env webpack-dev-server --port 9000 --content-base src --inline --hot",
     "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
@@ -19,13 +20,51 @@
     "format-standard": "standard-format -w",
     "get-ojdk": "cross-env babel-node tools/downloadOpenJDK",
     "get-ojdk-all": "cross-env babel-node tools/downloadOpenJDK --all"
+
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
+  "eslintConfig": {
+    "extends": [
+      "standard",
+      "standard-react"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "webpack.*",
+      "node_modules/*",
+      "tools/*",
+      "release/*",
+      "*.cxml",
+      "*.xml",
+      "package.js",
+      "dist/*",
+      "README.md",
+      "zips/*",
+      "support",
+      "config",
+      "bundledApps"
+    ],
+    "env": {
+      "browser": true
+    }
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0",
+      "react",
+      "node6"
+    ],
+    "plugins": [
+      "transform-runtime"
+    ]
+  },
   "dependencies": {
     "bluebird": "^3.4.1",
-    "bunyan": "^1.8.1",
     "bytewise": "^1.1.0",
     "checksum": "^0.1.1",
     "cheerio": "^0.20.0",
@@ -35,6 +74,7 @@
     "css-loader": "^0.23.1",
     "del": "2.2.0",
     "electron-debug": "^1.0.1",
+    "electron-process": "^0.2.0",
     "electron-react-devtools": "^0.3.1",
     "eventemitter3": "^1.2.0",
     "extract-zip": "^1.5.0",
@@ -70,6 +110,7 @@
     "request-promise": "^3.0.0",
     "roboto-fontface": "^0.5.0",
     "shelljs": "^0.7.0",
+    "sliced": "^1.0.1",
     "sort-stream2": "^1.0.0",
     "source-map-support": "^0.4.0",
     "split2": "^2.1.0",
@@ -79,40 +120,6 @@
     "valid-url": "^1.0.9",
     "validator": "^5.4.0",
     "winston": "^2.2.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "standard",
-      "standard-react"
-    ]
-  },
-  "standard": {
-    "parser": "babel-eslint",
-    "ignore": [
-      "webpack.*",
-      "node_modules/*",
-      "tools/*",
-      "release/*",
-      "*.cxml",
-      "*.xml",
-      "package.js",
-      "dist/*",
-      "README.md"
-    ],
-    "env": {
-      "browser": true
-    }
-  },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0",
-      "react",
-      "node6"
-    ],
-    "plugins": [
-      "transform-runtime"
-    ]
   },
   "devDependencies": {
     "asar": "^0.11.0",
@@ -147,9 +154,9 @@
     "cross-env": "^1.0.8",
     "debug": "^2.2.0",
     "devtron": "^1.2.1",
-    "electron-compile": "3.2.5",
+    "electron-compile": "3.2.6",
     "electron-compilers": "3.1.1",
-    "electron-devtools-installer": "^1.1.1",
+    "electron-devtools-installer": "^1.1.2",
     "electron-packager": "^7.0.4",
     "electron-prebuilt": "^1.2.3",
     "electron-react-devtools": "0.3.1",
@@ -159,7 +166,6 @@
     "eslint-config-standard-jsx": "^1.2.1",
     "eslint-config-standard-react": "^2.4.0",
     "eslint-plugin-react": "^5.2.2",
-    "express": "^4.14.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "fbjs-scripts": "^0.7.1",
     "file-loader": "^0.8.5",

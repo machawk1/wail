@@ -1,8 +1,8 @@
-import EventEmitter from "eventemitter3";
-import ServiceDispatcher from "../dispatchers/service-dispatcher";
-import wailConstants from "../constants/wail-constants";
-import {heritrixAccesible} from "../actions/heritrix-actions";
-import {waybackAccesible} from "../actions/wayback-actions";
+import EventEmitter from "eventemitter3"
+import ServiceDispatcher from "../dispatchers/service-dispatcher"
+import wailConstants from "../constants/wail-constants"
+import {heritrixAccesible} from "../actions/heritrix-actions"
+import {waybackAccesible} from "../actions/wayback-actions"
 
 const EventTypes = wailConstants.EventTypes
 
@@ -12,7 +12,6 @@ class serviceStore extends EventEmitter {
       this.serviceStatus = {
          heritrix: false,
          wayback: false,
-
       }
       this.waybackStatus = this.waybackStatus.bind(this)
       this.heritrixStatus = this.heritrixStatus.bind(this)
@@ -61,4 +60,4 @@ const ServiceStore = new serviceStore;
 
 ServiceDispatcher.register(ServiceStore.handleEvent)
 
-export default ServiceStore;
+export default ServiceStore

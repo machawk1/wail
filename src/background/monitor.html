@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script>
+        const background = require('electron-process').background
+        background.registerModule(require('./monitors'))
+    </script>
+</head>
+<body>
+    <h1>State Monitoring</h1>
+</body>
+</html>

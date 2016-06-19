@@ -8,6 +8,7 @@ import wailConstants from "../../../constants/wail-constants"
 import HeritrixJobList from "./heritrix-joblist"
 import NewCrawlDialog from "./newCrawlDialog"
 import HeritrixJobInfo from "./heritrixJobInfo"
+import {shell} from 'electron'
 
 const styles = {
    button: {
@@ -36,18 +37,19 @@ export default class HeritrixTab extends Component {
    onClickLaunchWebUI(event) {
       console.log('Edit Wayback')
       console.log(process.platform)
-      switch (process.platform) {
-         case 'linux':
-            child_process.exec(`xdg-open ${Heritrix.web_ui}`)
-            break
-         case 'darwin':
-            child_process.exec(`open ${Heritrix.web_ui}`)
-            break
-         case 'win32':
-            child_process.exec(`start ${Heritrix.web_ui}`)
-            break
-
-      }
+      shell.openExternal(Heritrix.web_ui)
+      // switch (process.platform) {
+      //    case 'linux':
+      //       child_process.exec(`xdg-open ${Heritrix.web_ui}`)
+      //       break
+      //    case 'darwin':
+      //       child_process.exec(`open ${Heritrix.web_ui}`)
+      //       break
+      //    case 'win32':
+      //       child_process.exec(`start ${Heritrix.web_ui}`)
+      //       break
+      //
+      // }
 
 
    }

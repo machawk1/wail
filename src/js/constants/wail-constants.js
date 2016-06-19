@@ -82,7 +82,6 @@ const consts = {
          WBC: null,
          CRAWLBEAN: null,
       }),
-
    }
 }
 
