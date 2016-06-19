@@ -12,6 +12,7 @@ import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-insta
 let mainWindow = null
 
 if (process.env.NODE_ENV === 'development') {
+
   require('electron-debug')({
     showDevTools: true
   })
@@ -61,9 +62,11 @@ ipcMain.on('getPath', function (event, arg) {
 
 
 function createWindow () {
-  installExtension(REACT_DEVELOPER_TOOLS)
-     .then((name) => console.log(`Added Extension:  ${name}`))
-     .catch((err) => console.log('An error occurred: ', err))
+  if(process.env.NODE_ENV === 'development'){
+    installExtension(REACT_DEVELOPER_TOOLS)
+       .then((name) => console.log(`Added Extension:  ${name}`))
+       .catch((err) => console.log('An error occurred: ', err))
+  }
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,

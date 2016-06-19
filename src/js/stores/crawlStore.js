@@ -1,5 +1,6 @@
 import EventEmitter from "eventemitter3"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
+
 import wailConstants from "../constants/wail-constants"
 import * as heritrixActions from "../actions/heritrix-actions"
 import UrlStore from "../stores/urlStore"
@@ -35,6 +36,7 @@ class crawlStore extends EventEmitter {
 
    populateJobsFromPrevious(jobs) {
       console.log('building previous jobs')
+      
       _.forOwn(jobs, jb => {
          let job = {
             jobId: jb.jobId,

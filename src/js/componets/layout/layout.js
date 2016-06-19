@@ -3,6 +3,7 @@ import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme"
 import getMuiTheme from "material-ui/styles/getMuiTheme"
 import Header from "./header"
 import Debug from "../debug-element"
+
 // import Editor from  '../editor/editor'
 // import wb from '../editor/wayback.xml'
 

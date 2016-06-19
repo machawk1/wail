@@ -1,11 +1,11 @@
-import React, {Component} from "react";
-import Dialog from "material-ui/Dialog";
-import RaisedButton from "material-ui/RaisedButton";
-import FlatButton from "material-ui/FlatButton";
-import * as EditorActions from "../../actions/editor-actions";
-import Editor from "./editor";
-import EditorStore from "../../stores/editorStore";
-
+import React, {Component} from "react"
+import Dialog from "material-ui/Dialog"
+import RaisedButton from "material-ui/RaisedButton"
+import FlatButton from "material-ui/FlatButton"
+import EditorDispatcher from "../../dispatchers/editorDispatcher"
+import Editor from "./editor"
+import EditorStore from "../../stores/editorStore"
+import wc from '../../constants/wail-constants'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 
@@ -38,10 +38,12 @@ export default class EditorPopup extends Component {
    constructor(props, context) {
       super(props, context)
       let loadCode = this.props.codeToLoad
+      console.log(loadCode)
 
       this.state = {
          open: false,
-         codeText: Reflect.has(this.props.codeToLoad, "which") ? loadCode.codetoLoad : EditorStore.getCode(loadCode.codeToLoad)
+         codeText: Reflect.has(this.props.codeToLoad, "which") ?
+            EditorStore.getCode(loadCode.which, loadCode.jid) : EditorStore.getCode(loadCode.codeToLoad)
       }
 
       this.handleOpen = this.handleOpen.bind(this)
@@ -52,20 +54,25 @@ export default class EditorPopup extends Component {
 
    }
 
-   storeUpdate(){
+   storeUpdate() {
       console.log('code add')
       this.setState({codeText: EditorStore.getCode(this.props.codeToLoad)})
    }
 
 
-   componentDidMount() {
-      EditorStore.on('code-fetched',this.storeUpdate)
+   componentWillMount() {
+      if (this.props.useButton) {
+         EditorStore.on('wbc-fetched', this.storeUpdate)
+      }
+
    }
 
    componentWillUnmount() {
-      EditorStore.removeListener('code-fetched',this.storeUpdate)
+      if (this.props.useButton) {
+         EditorStore.removeListener('wbc-fetched', this.storeUpdate)
+      }
    }
-   
+
    handleOpen() {
       this.setState({open: true})
    }
@@ -76,23 +83,33 @@ export default class EditorPopup extends Component {
       } else {
          this.props.onOpenChange()
       }
-       
-      
    }
 
-   handleCodeChange(code) {
-      this.setState({code})
+   handleCodeChange(codeText) {
+      console.log("Code changed")
+      this.setState({codeText})
    }
 
    saveCode() {
+      let savePath = ''
+      let which = ''
       if (this.props.useButton) {
          this.setState({open: false})
+         which = this.props.codeToLoad
       } else {
          this.props.onOpenChange()
+         savePath = this.props.codeToLoad.codePath
+         which =  this.props.codeToLoad.which
       }
-      EditorActions.saveCode(this.props.codePath, this.state.code, error => {
-         console.log('error in editor popup', error)
+      console.log(savePath)
+      EditorDispatcher.dispatch({
+         type: wc.EventTypes.SAVE_CODE,
+         which: which,
+         savePath: savePath,
+         code: this.state.codeText,
+         jid: this.props.codeToLoad.jid,
       })
+     
    }
 
    editorWithButton(actions) {

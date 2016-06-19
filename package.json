@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "bluebird": "^3.4.1",
+    "bunyan": "^1.8.1",
     "bytewise": "^1.1.0",
     "checksum": "^0.1.1",
     "cheerio": "^0.20.0",
@@ -55,6 +56,7 @@
     "ncp": "^2.0.0",
     "nightmare": "^2.5.1",
     "normalize.css": "^4.1.1",
+    "pkginfo": "^0.4.0",
     "postcss": "^5.0.21",
     "react": "15.1.0",
     "react-addons-css-transition-group": "^15.1.0",

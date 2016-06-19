@@ -22,7 +22,6 @@ export default class HeritrixJobItem extends Component {
 
    static propTypes = {
       jobId: PropTypes.string.isRequired,
-      crawlBean: PropTypes.string.isRequired,
       runs: PropTypes.array.isRequired,
       path: PropTypes.string.isRequired,
       urls: PropTypes.oneOfType([PropTypes.string, PropTypes.array]).isRequired,
@@ -36,7 +35,6 @@ export default class HeritrixJobItem extends Component {
          runs: this.props.runs,
          path: this.props.path,
          urls: this.props.urls,
-         crawlBean: this.props.crawlBean,
          openEditor: false,
       }
       this.itemClicked = this.itemClicked.bind(this)
@@ -55,7 +53,7 @@ export default class HeritrixJobItem extends Component {
          state: this.state
       })
    }
-
+   
    viewConf(event) {
       this.setState({openEditor: !this.state.openEditor})
    }
@@ -111,6 +109,8 @@ export default class HeritrixJobItem extends Component {
             <MenuItem onTouchTap={this.viewConf} primaryText="View Config"/>
          </IconMenu>
       )
+      let cp = `${wc.Paths.heritrixJob}/${this.props.jobId}/crawler-beans.cxml`
+      let id = this.props.jobId
       return (
          <div>
             <ListItem
@@ -119,11 +119,11 @@ export default class HeritrixJobItem extends Component {
                rightIconButton={rightIconMenu}
             />
             <EditorPopup
-               title={"Editing Wayback Configuration"}
+               title={`Editing Heritrix Job ${this.props.jobId} Configuration`}
                codeToLoad={{  
-                  which:wc.Code.which.CRAWLBEAN, 
-                  codetoLoad: this.state.crawlBean,
-                  codePath:`${wc.Paths.heritrixJob}/${this.props.jobId}/crawler-beans.cxml`,
+                  which: wc.Code.which.CRAWLBEAN,
+                  jid: id,
+                  codePath: cp,
                 }}
                useButton={false}
                onOpenChange={this.onOpenChange}

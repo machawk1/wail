@@ -6,6 +6,7 @@ import cheerio from "cheerio"
 import fs from "fs-extra"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
+import EditorDispatcher from "../dispatchers/editorDispatcher"
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -329,7 +330,7 @@ export function getHeritrixJobsState() {
 
    let jobs = {}
    let count = 0
-
+   let jobsConfs = {}
    let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
       let didMath = jobLaunch.exec(item.path)
       if (didMath) {
@@ -339,17 +340,18 @@ export function getHeritrixJobsState() {
          this.push(jobs[didMath.capture('job')])
       } else {
          if (item.stats.isDirectory()) {
-
             let jid = job.exec(item.path)
+
             if (jid) {
                count += 1
+               jobsConfs[jid.capture('job')] = 
+                  fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
                jobs[jid.capture('job')] = {
                   log: false,
                   jobId: jid.capture('job'),
                   launch: '',
                   path: '',
                   progress: [],
-                  crawlBean: fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
                }
             }
          }
@@ -404,6 +406,11 @@ export function getHeritrixJobsState() {
       })
       .on('end', function () {
          if (count > 0) {
+
+            EditorDispatcher.dispatch({
+               type: EventTypes.STORE_HERITRIX_JOB_CONFS,
+               confs: jobsConfs
+            })
             CrawlDispatcher.dispatch({
                type: EventTypes.HERITRIX_CRAWL_ALL_STATUS,
                jobReport: jobs,

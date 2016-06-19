@@ -24,138 +24,144 @@ import _ from 'lodash'
 import moment from 'moment'
 import named from 'named-regexp'
 
-
-function* sequentialActions(actions) {
-   let index = 0
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/job/${12213}`,
-      headers: {
-         Accept: "application/xml",
-         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
-      },
-      form: {
-         action: ''
-      },
-      auth: {
-         usr: 'asdas',
-         pass: 'asdas'
-      },
-      resolveWithFullResponse: true,
-   }
-   while(index < actions.length){
-      options.form.action = actions[index++]
-      yield options
-   }
-
-
-}
-
-let actions = sequentialActions(['hi','hello','goodBy'])
-let a
-while(!(a = actions.next()).done){
-   console.log(a)
-}
-
-console.log(typeof actions,actions instanceof  sequentialActions)
-
 //
-// let base = '.'
-// const tomcatStart = path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh')
-// const tomcatStop = path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdown.sh')
-// const jdkhome = path.join(path.resolve(base), 'bundledApps/openjdk7u80')
-// const jrehome = path.join(path.resolve(base), 'bundledApps/openjdk7u80/jre')
-// const catalina = path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh')
-// const heritrixJob = path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs')
-//
-// const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
-// const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
-//
-//
-// let jobs = {}
-//
-// let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
-//    let didMath = jobLaunch.exec(item.path)
-//    if (didMath) {
-//       jobs[didMath.capture('job')].log = true
-//       jobs[didMath.capture('job')].launch = didMath.capture('launch')
-//       jobs[didMath.capture('job')].path = item.path
-//       this.push(jobs[didMath.capture('job')])
-//    } else {
-//       if (item.stats.isDirectory()) {
-//          let jid = job.exec(item.path)
-//          if (jid) {
-//             jobs[jid.capture('job')] = {
-//                log: false,
-//                jobId: jid.capture('job'),
-//                launch: '',
-//                path: '',
-//                progress: [],
-//                crawlBean: fs.readFileSync(`${heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8"),
-//
-//             }
-//          }
-//       }
+// function* sequentialActions(actions) {
+//    let index = 0
+//    let options = {
+//       method: 'POST',
+//       uri: `https://localhost:8443/engine/job/${12213}`,
+//       headers: {
+//          Accept: "application/xml",
+//          /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
+//       },
+//       form: {
+//          action: ''
+//       },
+//       auth: {
+//          usr: 'asdas',
+//          pass: 'asdas'
+//       },
+//       resolveWithFullResponse: true,
+//    }
+//    while(index < actions.length){
+//       options.form.action = actions[index++]
+//       yield options
 //    }
 //
-//    next()
-// })
 //
+// }
 //
-// let launchStats = through2.obj(function (item, enc, next) {
-//    fs.readFile(item.path, "utf8", (err, data)=> {
-//       if (err) throw err
-//       // console.log(data)
-//       let lines = data.trim().split('\n')
-//       let lastLine = S(lines[lines.length - 1])
+// let actions = sequentialActions(['hi','hello','goodBy'])
+// let a
+// while(!(a = actions.next()).done){
+//    console.log(a)
+// }
 //
-//       if (lastLine.contains('Ended by operator')) {
-//          // jobs[item.jobId].progress.ended = true
-//          let nextToLast = S(lines[lines.length - 2])
-//          let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
-//          jobs[item.jobId].progress.push({
-//             ended: true,
-//             endedOn: moment(lastLine.collapseWhitespace().s).format("MM/DD/YYYY, h:mm:ssa"),
-//             timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
-//             discovered: nextLastfields[1],
-//             queued: nextLastfields[2],
-//             downloaded: nextLastfields[3],
-//          })
-//
-//       } else {
-//          let fields = lastLine.collapseWhitespace().s.split(' ')
-//          jobs[item.jobId].progress.push({
-//             ended: false,
-//             endedOn: '',
-//             timestap: moment(fields[0]).format("MM/DD/YYYY, h:mm:ssa"),
-//             discovered: fields[1],
-//             queued: fields[2],
-//             downloaded: fields[3],
-//          })
-//
-//       }
-//
-//    })
-//    this.push(item)
-//    next()
-// })
-//
-//
-// fs.walk(heritrixJob)
-//    .pipe(onlyJobLaunchsProgress)
-//    .pipe(launchStats)
-//    .on('data', item => {
-//       return
-//    })
-//    .on('end', function () {
-//       // console.log('end', jobs)
-//       // console.log(_.values(jobs))
-//       _.forOwn(jobs, jb => console.log(jb))
-//    })
-//    .on('error', function (err, item) {
-//       console.log(err.message)
-//       console.log(item.path) // the file the error occurred on
-//    })
+// console.log(typeof actions,actions instanceof  sequentialActions)
+
+
+let base = '.'
+const tomcatStart = path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh')
+const tomcatStop = path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdown.sh')
+const jdkhome = path.join(path.resolve(base), 'bundledApps/openjdk7u80')
+const jrehome = path.join(path.resolve(base), 'bundledApps/openjdk7u80/jre')
+const catalina = path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh')
+const heritrixJob = path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs')
+
+const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
+const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
+
+
+let jobs = {}
+
+let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
+   let didMath = jobLaunch.exec(item.path)
+   if (didMath) {
+      jobs[didMath.capture('job')].log = true
+      jobs[didMath.capture('job')].launch = didMath.capture('launch')
+      jobs[didMath.capture('job')].path = item.path
+      this.push(jobs[didMath.capture('job')])
+   } else {
+      if (item.stats.isDirectory()) {
+         let jid = job.exec(item.path)
+         if (jid) {
+            jobs[jid.capture('job')] = {
+               log: false,
+               jobId: jid.capture('job'),
+               launch: '',
+               path: '',
+               progress: [],
+               crawlBean: fs.readFileSync(`${heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8"),
+
+            }
+         }
+      }
+   }
+
+   next()
+})
+
+
+let launchStats = through2.obj(function (item, enc, next) {
+   fs.readFile(item.path, "utf8", (err, data)=> {
+      if (err) throw err
+      // console.log(data)
+      let lines = data.trim().split('\n')
+      let lastLine = S(lines[lines.length - 1])
+
+      if (lastLine.contains('Ended by operator')) {
+         // jobs[item.jobId].progress.ended = true
+         let nextToLast = S(lines[lines.length - 2])
+         let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+         jobs[item.jobId].progress.push({
+            ended: true,
+            endedOn: moment(lastLine.collapseWhitespace().s).format("MM/DD/YYYY, h:mm:ssa"),
+            timestap: moment(nextLastfields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+            discovered: nextLastfields[1],
+            queued: nextLastfields[2],
+            downloaded: nextLastfields[3],
+         })
+
+      } else {
+         let fields = lastLine.collapseWhitespace().s.split(' ')
+         jobs[item.jobId].progress.push({
+            ended: false,
+            endedOn: '',
+            timestap: moment(fields[0]).format("MM/DD/YYYY, h:mm:ssa"),
+            discovered: fields[1],
+            queued: fields[2],
+            downloaded: fields[3],
+         })
+
+      }
+
+   })
+   this.push(item)
+   next()
+})
+
+
+fs.walk(heritrixJob)
+   .pipe(onlyJobLaunchsProgress)
+   .pipe(launchStats)
+   .on('data', item => {
+      return
+   })
+   .on('end', function () {
+      // console.log('end', jobs)
+      // console.log(_.values(jobs))
+      let jobsConfs = {}
+      _.forOwn(jobs, jb => {
+         jobsConfs[jb.jobId] = jb.crawlBean
+      })
+      
+      
+     
+   })
+   .on('error', function (err, item) {
+      console.log(err.message)
+      console.log(item.path) // the file the error occurred on
+   })
 
 // // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // //
