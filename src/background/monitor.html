@@ -3,8 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <script>
-        const background = require('electron-process').background
-        background.registerModule(require('./monitors'))
+        (function () {
+            const script = document.createElement('script');
+            script.src = (process.env.HOT) ? 'http://localhost:9000/dist/monitors.bundle.js' : '../dist/monitor.bundle.js';
+            document.write(script.outerHTML);
+        }());
     </script>
 </head>
 <body>

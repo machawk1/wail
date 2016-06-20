@@ -1,9 +1,9 @@
-import React, {Component} from "react";
-import Paper from "material-ui/Paper";
-import {Grid} from "react-cellblock";
-import ArchiveUrl from "./archive-url";
-import BasicTabButtons from "./basicTab-buttons";
-import MessagePanel from "./message-panel";
+import React, {Component} from "react"
+import Paper from "material-ui/Paper"
+import {Grid} from "react-cellblock"
+import ArchiveUrl from "./archive-url"
+import BasicTabButtons from "./basicTab-buttons"
+import MessagePanel from "./message-panel"
 
 const styles = {
    button: {

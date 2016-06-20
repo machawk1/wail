@@ -8,6 +8,7 @@ import os from "os"
 import del from "del"
 import streamSort from "sort-stream2"
 import bytewise from "bytewise"
+import Promise from 'bluebird'
 import wailConstants from "../constants/wail-constants"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 
@@ -16,23 +17,37 @@ const Wayback = wailConstants.Wayback
 const paths = wailConstants.Paths
 
 
-export function waybackAccesible() {
+export function waybackAccesible(forground = true) {
    console.log("checking wayback accessibility")
+   if (forground) {
+      rp({uri: Wayback.uri_wayback})
+         .then(success => {
+            console.log("wayback success", success)
+            ServiceDispatcher.dispatch({
+               type: EventTypes.WAYBACK_STATUS_UPDATE,
+               status: true,
+            })
 
-   rp({uri: Wayback.uri_wayback})
-      .then(success => {
-         console.log("wayback success", success)
-         ServiceDispatcher.dispatch({
-            type: EventTypes.WAYBACK_STATUS_UPDATE,
-            status: true,
          })
-      }).catch(err => {
-      console.log("wayback err", err)
-      ServiceDispatcher.dispatch({
-         type: EventTypes.WAYBACK_STATUS_UPDATE,
-         status: false,
+         .catch(err => {
+            console.log("wayback err", err)
+            ServiceDispatcher.dispatch({
+               type: EventTypes.WAYBACK_STATUS_UPDATE,
+               status: false,
+            })
+         }).finally(() => console.log("wayback finally"))
+   } else {
+      return new Promise((resolve, reject)=> {
+         rp({uri: Wayback.uri_wayback})
+            .then(success => {
+               resolve({status: true})
+            })
+            .catch(err => {
+               reject({status: false, error: err})
+            })
       })
-   }).finally(() => console.log("wayback finally"))
+   }
+
 }
 
 
@@ -120,7 +135,7 @@ export function generateCDX() {
 
 
    let writeStream = fs.createWriteStream(wailConstants.Paths.indexCDX)
-   
+
    fs.walk(wailConstants.Paths.warcs)
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
       .pipe(onlyWorf)

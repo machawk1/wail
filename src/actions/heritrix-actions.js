@@ -12,28 +12,54 @@ import through2 from 'through2'
 import S from 'string'
 import moment from 'moment'
 import _ from 'lodash'
+import Promise from 'bluebird'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const EventTypes = wc.EventTypes
 const heritrix = wc.Heritrix
 const paths = wc.Paths
 
-export function heritrixAccesible() {
+export function heritrixAccesible(forground = true) {
    console.log("checking heritrix accessibility")
-   rp(wc.Heritrix.uri_heritrix)
-      .then(success => {
-         console.log("heritrix success", success)
-         ServiceDispatcher.dispatch({
-            type: EventTypes.HERITRIX_STATUS_UPDATE,
-            status: true,
+   let optionEngine = {
+      method: 'GET',
+      uri: `https://localhost:8443/engine`,
+      auth: {
+         username: 'lorem',
+         password: 'ipsum',
+         sendImmediately: false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
+
+   if (forground) {
+      rp(optionEngine)
+         .then(success => {
+            console.log("heritrix success", success)
+            ServiceDispatcher.dispatch({
+               type: EventTypes.HERITRIX_STATUS_UPDATE,
+               status: true,
+            })
          })
+         .catch(err => {
+            ServiceDispatcher.dispatch({
+               type: EventTypes.HERITRIX_STATUS_UPDATE,
+               status: false,
+            })
+         }).finally(() => console.log("heritrix finally"))
+   } else {
+      return new Promise((resolve, reject)=> {
+         rp(optionEngine)
+            .then(success => {
+               resolve({status: true})
+            })
+            .catch(err => {
+               reject({status: false, error: err})
+            })
       })
-      .catch(err => {
-         ServiceDispatcher.dispatch({
-            type: EventTypes.HERITRIX_STATUS_UPDATE,
-            status: false,
-         })
-      }).finally(() => console.log("heritrix finally"))
+   }
+
 }
 
 function* sequentialActions(actions, jobId) {
@@ -317,110 +343,105 @@ export function sendActionToHeritrix(act, jobId) {
 }
 
 export function getHeritrixJobsState() {
-   const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
-   const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
+   return new Promise((resolve, reject) => {
+      const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
+      const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
+      
+      let jobs = {}
+      let count = 0
+      let jobsConfs = {}
+      
+      let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
+         let didMath = jobLaunch.exec(item.path)
+         if (didMath) {
+            jobs[didMath.capture('job')].log = true
+            jobs[didMath.capture('job')].launch = didMath.capture('launch')
+            jobs[didMath.capture('job')].logPath = item.path
+            this.push(jobs[didMath.capture('job')])
+         } else {
+            if (item.stats.isDirectory()) {
+               let jid = job.exec(item.path)
 
-
-   let jobs = {}
-   let count = 0
-   let jobsConfs = {}
-   let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
-      let didMath = jobLaunch.exec(item.path)
-      if (didMath) {
-         jobs[didMath.capture('job')].log = true
-         jobs[didMath.capture('job')].launch = didMath.capture('launch')
-         jobs[didMath.capture('job')].logPath = item.path
-         this.push(jobs[didMath.capture('job')])
-      } else {
-         if (item.stats.isDirectory()) {
-            let jid = job.exec(item.path)
-
-            if (jid) {
-               count += 1
-               jobsConfs[jid.capture('job')] =
-                  fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
-               jobs[jid.capture('job')] = {
-                  log: false,
-                  jobId: jid.capture('job'),
-                  launch: '',
-                  path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
-                  logPath: ' ',
-                  urls: '',
-                  runs: [],
+               if (jid) {
+                  count += 1
+                  jobsConfs[jid.capture('job')] =
+                     fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+                  jobs[jid.capture('job')] = {
+                     log: false,
+                     jobId: jid.capture('job'),
+                     launch: '',
+                     path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
+                     logPath: ' ',
+                     urls: '',
+                     runs: [],
+                  }
                }
             }
          }
-      }
 
-      next()
-   })
-
-
-   let launchStats = through2.obj(function (item, enc, next) {
-      fs.readFile(item.logPath, "utf8", (err, data)=> {
-         if (err) throw err
-         // console.log(data)
-         let lines = data.trim().split('\n')
-         let lastLine = S(lines[lines.length - 1])
-
-         if (lastLine.contains('Ended by operator')) {
-            // jobs[item.jobId].progress.ended = true
-            let nextToLast = S(lines[lines.length - 2])
-            let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
-            jobs[item.jobId].runs.push({
-               ended: true,
-               timestamp: moment(nextLastfields[0]),
-               discovered: nextLastfields[1],
-               queued: nextLastfields[2],
-               downloaded: nextLastfields[3],
-            })
-
-         } else {
-            let fields = lastLine.collapseWhitespace().s.split(' ')
-            jobs[item.jobId].runs.push({
-               ended: false,
-               timestamp: moment(fields[0]),
-               discovered: fields[1],
-               queued: fields[2],
-               downloaded: fields[3],
-            })
-
-         }
+         next()
       })
-      this.push(item)
-      next()
-   })
+      
+      let launchStats = through2.obj(function (item, enc, next) {
+         fs.readFile(item.logPath, "utf8", (err, data)=> {
+            if (err) throw err
+            // console.log(data)
+            let lines = data.trim().split('\n')
+            let lastLine = S(lines[lines.length - 1])
 
-
-   fs.walk(wc.Paths.heritrixJob)
-      .pipe(onlyJobLaunchsProgress)
-      .pipe(launchStats)
-      .on('data', item => {})
-      .on('end', function () {
-         if (count > 0) {
-            let sortedJobs = _.chain(jobs)
-               .toPairs()
-               .map(job => {
-                  job[1].runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
-                  //nothing nonthihng dsaldsjkl ajsdklj alfjaklj eklj
-                  ///dska jlksdj aklsjf;fhlequj wj
-                  return job[1]
+            if (lastLine.contains('Ended by operator')) {
+               // jobs[item.jobId].progress.ended = true
+               let nextToLast = S(lines[lines.length - 2])
+               let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+               jobs[item.jobId].runs.push({
+                  ended: true,
+                  timestamp: moment(nextLastfields[0]),
+                  discovered: nextLastfields[1],
+                  queued: nextLastfields[2],
+                  downloaded: nextLastfields[3],
                })
-               .value()
 
-            EditorDispatcher.dispatch({
-               type: EventTypes.STORE_HERITRIX_JOB_CONFS,
-               confs: jobsConfs
-            })
-            CrawlDispatcher.dispatch({
-               type: EventTypes.HERITRIX_CRAWL_ALL_STATUS,
-               jobReport: sortedJobs,
-            })
-         }
+            } else {
+               let fields = lastLine.collapseWhitespace().s.split(' ')
+               jobs[item.jobId].runs.push({
+                  ended: false,
+                  timestamp: moment(fields[0]),
+                  discovered: fields[1],
+                  queued: fields[2],
+                  downloaded: fields[3],
+               })
 
+            }
+         })
+         this.push(item)
+         next()
       })
-      .on('error', function (err, item) {
-         console.log(err.message)
-         console.log(item.path) // the file the error occurred on
-      })
+
+      //return { confs: jobsConfs, obs: sortedJobs, }
+      fs.walk(wc.Paths.heritrixJob)
+         .pipe(onlyJobLaunchsProgress)
+         .pipe(launchStats)
+         .on('data', item => {
+         })
+         .on('end', function () {
+            if (count > 0) {
+               let sortedJobs = _.chain(jobs)
+                  .toPairs()
+                  .map(job => {
+                     job[1].runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
+                     return job[1]
+                  })
+                  .value()
+               resolve({ confs: jobsConfs, jobs: sortedJobs, })
+            } else {
+               reject({ error: "count zero", count: 0})
+            }
+         })
+         .on('error', function (err, item) {
+            console.log(err.message)
+            console.log(item.path) // the file the error occurred on
+            reject({error: err, failedOn: item})
+         })
+   })
+  
 }

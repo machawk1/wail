@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<!--[if IE 8]> 				 <html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Heritrix Engine 3.2.0</title>
+    <link rel="stylesheet" href="/engine/static/css/normalize.css">
+    <link rel="stylesheet" href="/engine/static/css/foundation.min.css">
+    <link rel="stylesheet" href="/engine/static/css/heritrix.css">
+    <script src="/engine/static/js/vendor/custom.modernizr.js"></script>
+
+    <base href="https://localhost:8443/engine/">
+
+</head>
+
+<body>
+<div class="contain-to-grid">
+    <nav class="top-bar">
+        <ul class="title-area">
+            <!-- Title Area -->
+            <li class=" name">
+                <h1>
+                    <span style="color:#FFFFFF"><span class="hide-for-medium-up">Heritrix</span><img alt="Heritrix" class="hide-for-small" style="padding-top:4px; padding-right:10px;" src="/engine/static/img/heritrix-logo.gif"> 3.2.0</span>
+                </h1>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <!--flashed message -->
+        <h2>Engine</h2>
+        <div class="row">
+            <form method="POST">
+                <div class="large-12 columns">
+                    <div class="panel">
+                        <ul class="no-bullet">
+                            <li>Memory:
+                                <ul class="no-bullet">
+                                    <li>20568 KiB used; 148480 KiB current heap; 233472 KiB max heap
+                                        <button class="small" type="submit" name="action" value="gc">run garbage collector</button>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>Jobs Directory:
+                                <ul class="no-bullet">
+                                    <li><a href="jobsdir">/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/jobs</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div></form>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+    <form method="POST">
+        <div class="large-12 columns">
+            <h2>Job Directories</h2>
+            <div class="row">
+                <div class="large-12 columns">
+                    <div class="panel">
+                        (2) detected <input class="small" type="submit" name="action" value="rescan">
+                        <hr>
+                        <ul class="no-bullet">
+                            <li>
+                                <div>
+                                    <a href="/engine/job/1466291299295">1466291299295</a>
+                                    &#xAB;Ready&#xBB;
+                                    8 launches
+                                </div>
+                                <ul class="no-bullet">
+                                    <li>
+                                        <div style="color:#666">
+                                            /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/jobs/1466291299295/crawler-beans.cxml
+                                        </div>
+                                    </li>
+                                    <li><div>(last at 2016-06-18T23:38:37.905Z)</div></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div>
+                                    <a href="/engine/job/1466291161104">1466291161104</a>
+                                    0 launches
+                                </div>
+                                <ul class="no-bullet">
+                                    <li>
+                                        <div style="color:#666">
+                                            /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/jobs/1466291161104/crawler-beans.cxml
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <h2>Add Job Directory</h2>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="panel">
+                    <form method="POST">
+                        Create new job directory with recommended starting configuration<br>
+                        <b>Path:</b> /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/jobs/
+                        <input name="createpath">
+                        <input type="submit" name="action" value="create">
+                    </form>
+                    <form method="POST">
+                        Specify a path to a pre-existing job directory<br>
+                        <b>Path:</b> <input size="53" name="addpath">
+                        <input type="submit" name="action" value="add">
+                    </form>
+                    <p>
+                        You may also compose or copy a valid job directory into the main jobs directory via outside means, then use the &apos;rescan&apos; button above to make it appear in this interface. Or, use the &apos;copy&apos; functionality at the botton of any existing job&apos;s detail page.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="large-12 columns">
+        <h2>Exit Java</h2>
+        <div class="row">
+            <div class="large-12 columns">
+                <div class="panel">
+                    <p>This exits the Java process running Heritrix. To restart
+                       will then require access to the hosting machine. You should
+                       cleanly terminate and teardown any jobs in progress first.</p>
+                    <hr>
+                    <form method="POST">
+                        <ul class="no-bullet">
+                            <li>
+                                <h6>Job 1466291299295 still &#xAB; Ready &#xBB;</h6>
+                                <ul class="no-bullet">
+                                    <li>
+                                        <label for="ignore__1466291299295">
+                                            <input type="checkbox" id="ignore__1466291299295" name="ignore__1466291299295"> Ignore job &apos;1466291299295&apos; and exit anyway
+                                        </label>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <input type="submit" name="action" value="Exit Java Process">
+                                <ul class="no-bullet">
+                                    <li>
+                                        <label for="im_sure">
+                                            <input class="inline" type="checkbox" name="im_sure" id="im_sure"> I&apos;m sure
+                                        </label>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

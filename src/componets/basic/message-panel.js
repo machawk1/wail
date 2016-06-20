@@ -1,8 +1,8 @@
-import React, {Component} from "react";
-import Paper from "material-ui/Paper";
-import {Grid, Row, Column} from "react-cellblock";
-import CircularProgress from "material-ui/CircularProgress";
-import UrlStore from "../../stores/urlStore";
+import React, {Component} from "react"
+import Paper from "material-ui/Paper"
+import {Grid, Row, Column} from "react-cellblock"
+import CircularProgress from "material-ui/CircularProgress"
+import UrlStore from "../../stores/urlStore"
 
 export default class MessagePanel extends Component {
    constructor(props, context) {

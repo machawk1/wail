@@ -9,14 +9,18 @@ gracefulFs.gracefulify(fsreal)
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 
-import logger from './logger'
 Promise.promisifyAll(fs)
-import Routes from './js/componets/routes'
-
-
+import Routes from './componets/routes'
 
 injectTapEventPlugin()
-console.log(module.exports)
+
+import {ipcRenderer} from "electron"
+
+ipcRenderer.send("start-test","ping")
+ipcRenderer.on("pong",pong => console.log(pong))
+ipcRenderer.on("test-status-update", update  => console.log(update))
+
+
 const wail = document.getElementById('wail')
 
 

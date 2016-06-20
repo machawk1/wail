@@ -4,7 +4,10 @@ var path = require('path')
 
 
 module.exports = {
-   entry: "./src/wail.js",
+   entry: {
+      wail: "./src/wail",
+      monitors: './src/background/monitor-entry'
+   },
    module: {
       noParse: /node_modules\/json-schema\/lib\/validate\.js/,
       loaders: [
@@ -53,7 +56,8 @@ module.exports = {
    ],
    output: {
       path: path.join(__dirname, 'dist'),
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
+      // chunkFilename: "[id].chunk.js",
       publicPath: 'http://localhost:9000/dist/'
    },
    target: 'electron-renderer',
