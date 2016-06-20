@@ -5,11 +5,14 @@ import path from 'path'
 const config = {
    devtool: 'source-map',
 
-   entry: './src/wail',
+   entry: {
+      wail: "./src/wail",
+      monitors: './src/background/monitor-entry'
+   },
 
    output: {
       // filename: "main.js",
-      filename: 'bundle.js',
+      filename: '[name].bundle.js',
       path: path.join(__dirname, 'dist'),
       publicPath: './dist/'
    },
