@@ -1,10 +1,12 @@
 import EventEmitter from "eventemitter3"
+import {ipcRenderer} from "electron"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import wailConstants from "../constants/wail-constants"
 import {heritrixAccesible} from "../actions/heritrix-actions"
 import {waybackAccesible} from "../actions/wayback-actions"
 
 const EventTypes = wailConstants.EventTypes
+
 
 class serviceStore extends EventEmitter {
    constructor() {
@@ -17,6 +19,16 @@ class serviceStore extends EventEmitter {
       this.heritrixStatus = this.heritrixStatus.bind(this)
       this.checkStatues = this.checkStatues.bind(this)
       this.handleEvent = this.handleEvent.bind(this)
+      this.updateStatues = this.updateStatues.bind(this)
+      ipcRenderer.on("service-status-update", this.updateStatues)
+   }
+
+
+   updateStatues(update){
+      this.serviceStatus.heritrix = update.heritrix
+      this.serviceStatus.wayback = update.wayback
+      this.emit('monitor-status-update')
+      
    }
 
    checkStatues() {
@@ -24,7 +36,11 @@ class serviceStore extends EventEmitter {
       waybackAccesible()
    }
 
-
+   
+   serviceStatuses(){
+      return this.serviceStatus
+   }
+   
    heritrixStatus() {
       return this.serviceStatus.heritrix
    }

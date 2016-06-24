@@ -47,7 +47,7 @@ class crawlStore extends EventEmitter {
             }
          })
 
-      ipcRenderer.send("start-crawljob-monitoring")
+     
       ipcRenderer.on("crawljob-status-update", crawlStatus => this.checkStatusUpdate(crawlStatus))
    }
 

@@ -8,7 +8,7 @@ const styles = {
    },
 }
 
-export default class Heritrix extends Component {
+export default class Misc extends Component {
    constructor(props, context) {
       super(props, context)
       this.onClickViewArchiveFiles = this.onClickViewArchiveFiles.bind(this)

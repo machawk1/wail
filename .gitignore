@@ -10,6 +10,7 @@ build/*
 !build/version.txt
 !build/Info.plist
 bundledApps/waybackConfigWriter.pyc
+bundledApps/openjdk
 WAIL.spec
 
 # Mac meta

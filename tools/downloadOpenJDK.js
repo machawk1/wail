@@ -4,6 +4,8 @@ import gracefulFs from 'graceful-fs'
 gracefulFs.gracefulify(realFs)
 import fs from 'fs-extra'
 import path from 'path'
+import del from 'del'
+import ncp from 'ncp'
 import Promise from 'bluebird'
 Promise.promisifyAll(fs)
 import rp from "request-promise"
@@ -54,85 +56,109 @@ const jdks = [
 // console.log(currentOSArch, idxs[currentOSArch])
 // console.log(path.resolve('./', 'zips'))
 let zips = path.resolve('./', 'zips')
+let bapps = path.resolve('./','bundledApps')
 
-if (argv.all) {
+console.log(zips,bapps)
 
+fs.ensureDir(`${bapps}/openjdk`, err2 => {
+   console.log('ensuring dir error', err2)
+   ncp(`${zips}/openjdk-1.7.0-u80-unofficial-linux-amd64-image`,`${bapps}/openjdk`,err3 => {
+      console.log('done moving was err?',err3)
+      // del([`${zips}/openjdk*`],{force:true})
+      //     .then(paths => {
+      //        console.log('Files and folders that would be deleted:\n', paths.join('\n'));
+      //     })
 
-   jdks.forEach(vm => {
-      let opts = {
-         method: 'GET',
-         uri: vm,
-         headers: {
-            "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
-            "accept-encoding": "gzip,deflate,compress,application/zip",
-         }
-      }
-      let req = request(opts)
-
-
-      req.on('response', function (res) {
-         let namrex = /['a-zA-z\s=;]+"([a-zA-z0-9.-]+)"/g
-         if (res.statusCode !== 200) throw new Error('Status not 200')
-         console.log(res.headers)
-         var encoding = res.headers['content-type']
-         var name = namrex.exec(res.headers['content-disposition'])[1]
-
-         if (encoding == 'application/zip') {
-            console.log('application/zip')
-            res.pipe(fs.createWriteStream(`${zips}/${name}`))
-         }
-      })
-      req.on('error', function (err) {
-         throw err;
-      })
    })
-
-} else {
-   let opts = {
-      method: 'GET',
-      uri: jdks[idxs[currentOSArch]],
-      headers: {
-         "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
-         "accept-encoding": "gzip,deflate,compress,application/zip",
-      }
-   }
-
-   let req = request(opts)
-
-
-   req.on('response', function (res) {
-      let namrex = /['a-zA-z\s=;]+"([a-zA-z0-9.-]+)"/g
-      if (res.statusCode !== 200) throw new Error('Status not 200')
-      console.log(res.headers)
-      var encoding = res.headers['content-type']
-      var name = namrex.exec(res.headers['content-disposition'])[1]
-
-      if (encoding == 'application/zip') {
-         console.log('application/zip')
-         res.pipe(fs.createWriteStream(`${zips}/${name}`))
-      }
-   })
-   req.on('error', function (err) {
-      throw err;
-   })
-
-}
-let namrex = /.zip/
-let onlyZip = through2.obj(function (item, enc, next) {
-   if (!item.stats.isDirectory() && path.extname(item.path) === '.zip')
-      this.push(item)
-   next()
 })
 
+// fs.ensureDir(zips, err => console.log(err))
+// let namrex = /.zip/
+// let onlyZip = through2.obj(function (item, enc, next) {
+//    if (!item.stats.isDirectory() && path.extname(item.path) === '.zip')
+//       this.push(item)
+//    next()
+// })
+//
+// if (argv.all) {
+//
+//
+//    jdks.forEach(vm => {
+//       let opts = {
+//          method: 'GET',
+//          uri: vm,
+//          headers: {
+//             "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
+//             "accept-encoding": "gzip,deflate,compress,application/zip",
+//          }
+//       }
+//       let req = request(opts)
+//
+//       req.on('response', function (res) {
+//          let namrex = /['a-zA-z\s=;]+"([a-zA-z0-9.-]+)"/g
+//          if (res.statusCode !== 200) throw new Error('Status not 200')
+//          console.log(res.headers)
+//          var encoding = res.headers['content-type']
+//          var name = namrex.exec(res.headers['content-disposition'])[1]
+//
+//          if (encoding == 'application/zip') {
+//             console.log('application/zip')
+//             res.pipe(fs.createWriteStream(`${zips}/${name}`))
+//          }
+//       })
+//       req.on('error', function (err) {
+//          throw err;
+//       })
+//    })
+//
+// } else {
+//    let opts = {
+//       method: 'GET',
+//       uri: jdks[idxs[currentOSArch]],
+//       headers: {
+//          "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2",
+//          "accept-encoding": "gzip,deflate,compress,application/zip",
+//       }
+//    }
+//
+//    let req = request(opts)
+//
+//    req.on('response', function (res) {
+//       let namrex = /['a-zA-z\s=;]+"([a-zA-z0-9.-]+)"/g
+//       if (res.statusCode !== 200) throw new Error('Status not 200')
+//       console.log(res.headers)
+//       var encoding = res.headers['content-type']
+//       var name = namrex.exec(res.headers['content-disposition'])[1]
+//
+//       if (encoding == 'application/zip') {
+//          console.log('application/zip')
+//          res.pipe(fs.createWriteStream(`${zips}/${name}`))
+//              .on('close', () => {
+//                 console.log('we have closed')
+//                 fs.walk(zips)
+//                     .pipe(onlyZip)
+//                     .on('data', item => {
+//                        console.log(path.basename(item.path))
+//
+//                        let name = path.basename(item.path).replace(namrex, '')
+//                        extract(item.path, {dir: `${zips}`}, err1 => {
+//                           console.log(err1)
+//
+//                        })
+//
+//                        console.log(name)
+//                     })
+//
+//              })
+//
+//       }
+//    })
+//    req.on('error', function (err) {
+//       throw err;
+//    })
+// }
 
-fs.walk(zips)
-   .pipe(onlyZip)
-   .on('data', item => {
-      console.log(path.basename(item.path))
 
-      let name = path.basename(item.path).replace(namrex, '')
-      extract(item.path, {dir: `${zips}`}, err => {
-         console.log(err)
-      })
-      console.log(name)
-   })
+
+
+

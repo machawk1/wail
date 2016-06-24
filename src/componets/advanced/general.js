@@ -20,17 +20,26 @@ export default class General extends Component {
       this.heritrixKill = this.heritrixKill.bind(this)
       this.updateWaybackStatus = this.updateWaybackStatus.bind(this)
       this.updateHeritrixStatus = this.updateHeritrixStatus.bind(this)
+      this.servicesUpdated = this.servicesUpdated.bind(this)
    }
 
 
-   componentDidMount() {
+   componentWillMount() {
       ServiceStore.on('heritrix-status-update', this.updateHeritrixStatus)
       ServiceStore.on('wayback-status-update', this.updateWaybackStatus)
+      ServiceStore.on('monitor-status-update', this.servicesUpdated)
    }
 
    componentWillUnmount() {
       ServiceStore.removeListener('heritrix-status-update', this.updateHeritrixStatus)
       ServiceStore.removeListener('wayback-status-update', this.updateWaybackStatus)
+      ServiceStore.removeListener('monitor-status-update', this.servicesUpdated)
+   }
+
+   servicesUpdated(){
+      let status =  ServiceStore.serviceStatus
+      this.setState({wbGood: status.wayback,hGood:status.heritrix})
+
    }
 
    updateWaybackStatus() {

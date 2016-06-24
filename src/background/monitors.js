@@ -48,7 +48,10 @@ class monitors {
                   waybackAccesible(false)
                      .then(wba => statues.wayback = wba.status)
                      .catch(wbdown => statues.wayback = wbdown.status)
-                     .finally(() => console.log("Done with status checks ", statues))
+                     .finally(() => {
+                        cb(statues)
+                        console.log("Done with status checks ", statues)
+                     })
                )
          }))
          this.started.reachability = true

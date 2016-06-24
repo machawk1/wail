@@ -419,7 +419,9 @@ export function getHeritrixJobsState() {
 
       //return { confs: jobsConfs, obs: sortedJobs, }
       fs.walk(wc.Paths.heritrixJob)
+          .on('error', (err) => onlyJobLaunchsProgress.emit('error', err)) // forward the error on
          .pipe(onlyJobLaunchsProgress)
+          .on('error', (err) => onlyJobLaunchsProgress.emit('error', err)) // forward the error on
          .pipe(launchStats)
          .on('data', item => {
          })

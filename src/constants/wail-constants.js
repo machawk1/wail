@@ -62,8 +62,8 @@ const consts = {
       cdx: path.join(path.resolve(base), 'archiveIndexes'),
       cdxTemp: path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'),
       indexCDX: path.join(path.resolve(base), 'archiveIndexes/index.cdx'),
-      jdk: path.join(path.resolve(base),'bundledApps/openjdk7u80'),
-      jre: path.join(path.resolve(base),'bundledApps/openjdk7u80/jre'),
+      jdk: path.join(path.resolve(base),'bundledApps/openjdk'),
+      jre: path.join(path.resolve(base),'bundledApps/openjdk/jre'),
 
    },
 
