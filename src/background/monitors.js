@@ -36,7 +36,7 @@ class monitors {
    checkReachability(cb) {
       if (!this.started.reachability) {
          //every two minutes
-         this.schedules.push(schedule.scheduleJob('*    */5    *    *    *    *', () => {
+         this.schedules.push(schedule.scheduleJob('*/5 * * * *', () => {
             let statues = {
                heritrix: false,
                wayback: false
@@ -61,7 +61,7 @@ class monitors {
    checkJobStatuses(cb) {
       if (!this.started.jobs) {
          //every two minutes
-         this.schedules.push(schedule.scheduleJob('*    */3    *    *    *    *', () => {
+         this.schedules.push(schedule.scheduleJob('*/3 * * * *', () => {
             getHeritrixJobsState()
                .then(status => {
                   cb(status)
