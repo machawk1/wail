@@ -23,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 const base = __dirname
 
 const realPaths = {
+   base: base,
    p: {
       memgator: path.join(base, 'bundledApps/memgator'),
       archives: path.join(base, 'config/archives.json'),

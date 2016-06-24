@@ -16,9 +16,9 @@ injectTapEventPlugin()
 
 import {ipcRenderer} from "electron"
 
-ipcRenderer.send("start-test","ping")
-ipcRenderer.on("pong",pong => console.log(pong))
-ipcRenderer.on("test-status-update", update  => console.log(update))
+// ipcRenderer.send("start-test","ping")
+// ipcRenderer.on("pong",pong => console.log(pong))
+// ipcRenderer.on("test-status-update", update  => console.log(update))
 
 
 const wail = document.getElementById('wail')

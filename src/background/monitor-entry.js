@@ -2,11 +2,12 @@ import Monitor from "./monitors"
 import {ipcRenderer} from "electron"
 
 
-ipcRenderer.on("start-crawljob-monitoring", (event) =>
-   Monitor.checkJobStatuses(statues => {
-      ipcRenderer.send("crawljob-status-update", statues)
-   })
-)
+ipcRenderer.on("start-crawljob-monitoring", (event) =>{
+      console.log('Monitor get start crawljob monitoring')
+      Monitor.checkJobStatuses(statues => {
+         ipcRenderer.send("crawljob-status-update", statues)
+      })
+})
 
 ipcRenderer.on("start-reachability-monitoring", (event) =>
    Monitor.checkReachability((statues) => {

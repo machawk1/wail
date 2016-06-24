@@ -46,6 +46,7 @@ const consts = {
       GET_HERITRIX_JOB_CONF: null,
    }),
    Paths: {
+      base: path.resolve(base),
       memgator: path.join(path.resolve(base), 'bundledApps/memgator'),
       archives: path.join(path.resolve(base), 'config/archives.json'),
       heritrix: path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0'),
@@ -61,6 +62,8 @@ const consts = {
       cdx: path.join(path.resolve(base), 'archiveIndexes'),
       cdxTemp: path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'),
       indexCDX: path.join(path.resolve(base), 'archiveIndexes/index.cdx'),
+      jdk: path.join(path.resolve(base),'bundledApps/openjdk7u80'),
+      jre: path.join(path.resolve(base),'bundledApps/openjdk7u80/jre'),
 
    },
 
@@ -90,6 +93,7 @@ ipcRenderer.on('gotPath', (event, arg)=> {
    console.log(event, arg)
    console.log('const before', consts)
    consts.Paths = arg.p
+   consts.Paths.base = arg.base
    consts.Heritrix = arg.Heritrix
    consts.Code.crawlerBean = arg.Code.crawlerBean
    consts.Code.wayBackConf = arg.Code.wayBackConf

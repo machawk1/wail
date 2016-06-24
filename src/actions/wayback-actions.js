@@ -9,13 +9,49 @@ import del from "del"
 import streamSort from "sort-stream2"
 import bytewise from "bytewise"
 import Promise from 'bluebird'
-import wailConstants from "../constants/wail-constants"
+import wc from "../constants/wail-constants"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
+import cheerio from 'cheerio'
 
-const EventTypes = wailConstants.EventTypes
-const Wayback = wailConstants.Wayback
-const paths = wailConstants.Paths
+const EventTypes = wc.EventTypes
+const Wayback = wc.Wayback
+const paths = wc.Paths
 
+
+
+export function writeWaybackConf() {
+   let wayBackConflines = [
+      '\nwayback.url.scheme.default=http',
+      'wayback.url.host.default=localhost',
+      'wayback.url.port.default=8080',
+      "wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }",
+      "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
+      "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",
+      "wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }",
+      "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}" ,
+      "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
+      'wayback.archivedir.1=${wayback.basedir}/files1/',
+      'wayback.archivedir.2=${wayback.basedir}/files2/',
+   ]
+   fs.readFile(wc.Code.wayBackConf,'utf8',(err,val)=>{
+      if(err){
+         console.error(err)
+      }
+      /*
+       'wail.basedir=/Applications/WAIL.app',
+       'wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT',
+       */
+      let $ = cheerio.load(val,{ xmlMode: true})
+      let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
+      wayBackConflines.push(`wail.basedir=${wc.Paths.base}`)
+      wayBackConflines.push(`wayback.basedir.default=${wc.Paths.base}/bundledApps/tomcat/webapps/ROOT\n`)
+      config.text(wayBackConflines.join('\n'))
+      fs.writeFile(wc.Code.wayBackConf,$.xml(),err => {
+         console.log(err)
+      })
+   })
+
+}
 
 export function waybackAccesible(forground = true) {
    console.log("checking wayback accessibility")
@@ -52,13 +88,14 @@ export function waybackAccesible(forground = true) {
 
 
 export function startWayback() {
-   child_process.exec(`sh ${ wailConstants.Paths.tomcatStart}`, (err, stdout, stderr) => {
+   let command = `export JAVA_HOME=${wc.Paths.jdk}; export JRE_HOME=${wc.Paths.jre}; sh ${ wc.Paths.tomcatStart}`
+   child_process.exec(command, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
 
 export function killWayback() {
-   child_process.exec(`sh ${ wailConstants.Paths.tomcatStop}`, (err, stdout, stderr) => {
+   child_process.exec(`sh ${ wc.Paths.tomcatStop}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
    })
 }
@@ -106,8 +143,8 @@ export function generateCDX() {
    let worfToCdx = through2.obj(function (item, enc, next) {
       let through = this //hope this ensures that this is through2.obj
       let cdx = path.basename(item.path).replace(replace, '.cdx')
-      let cdxFile = `${wailConstants.Paths.cdx}/${cdx}`
-      child_process.exec(`${wailConstants.Paths.cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+      let cdxFile = `${wc.Paths.cdx}/${cdx}`
+      child_process.exec(`${wc.Paths.cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
          fs.readFile(cdxFile, 'utf8', (errr, value)=> {
             through.push(value)
             next()
@@ -134,9 +171,9 @@ export function generateCDX() {
    })
 
 
-   let writeStream = fs.createWriteStream(wailConstants.Paths.indexCDX)
+   let writeStream = fs.createWriteStream(wc.Paths.indexCDX)
 
-   fs.walk(wailConstants.Paths.warcs)
+   fs.walk(wc.Paths.warcs)
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
       .pipe(onlyWorf)
       .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
@@ -147,7 +184,7 @@ export function generateCDX() {
       .on('close', () => {
          writeStream.destroy()
          console.log('we have closed')
-         del([`${wailConstants.Paths.cdx}/*.cdx`, `!${wailConstants.Paths.cdx}/index.cdx`], {force: true})
+         del([`${wc.Paths.cdx}/*.cdx`, `!${wc.Paths.cdx}/index.cdx`], {force: true})
             .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
 
       })
