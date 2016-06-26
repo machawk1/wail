@@ -39,7 +39,6 @@ class urlStore extends EventEmitter {
             urlActions.askMemgator(this.urlMemento.url)
             this.emit('memento-count-fetch')
             break
-
          }
 
       }
@@ -56,6 +55,8 @@ class urlStore extends EventEmitter {
 
 }
 
-const UrlStore = new urlStore
+
+const UrlStore = new urlStore()
+
 UrlDispatcher.register(UrlStore.handleEvent)
 export default UrlStore

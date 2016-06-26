@@ -79,7 +79,7 @@ export function waybackAccesible(forground = true) {
                resolve({status: true})
             })
             .catch(err => {
-               reject({status: false, error: err})
+               resolve({status: false, error: err})
             })
       })
    }

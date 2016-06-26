@@ -1,14 +1,14 @@
 import "babel-polyfill"
-const {
+import {
    app,
    BrowserWindow,
    shell,
    ipcMain,
-} = require('electron')
+} from 'electron'
 
 import installExtension, {REACT_DEVELOPER_TOOLS} from 'electron-devtools-installer'
-const path = require('path')
-
+import path from 'path'
+import settings from './src/constants/settings'
 let mainWindow = null
 let backgroundWindow = null
 
@@ -20,7 +20,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 
+
 const base = __dirname
+
+config(base)
 
 const realPaths = {
    base: base,
@@ -56,6 +59,37 @@ const realPaths = {
    }
 }
 
+
+function config() {
+   if(settings.get('configed')){
+      console.log('we are configed')
+      return settings
+   } else {
+      console.log('We are not configed')
+      settings.set('base',base)
+      settings.set('memgator',path.join(path.resolve(base), 'bundledApps/memgator'))
+      settings.set('archives',path.join(path.resolve(base), 'config/archives.json'))
+      settings.set('heritrix',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0'))
+      settings.set('heritrixBin',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/bin/heritrix'))
+      settings.set('heritrixJob',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs'))
+      settings.set('tomcat',path.join(path.resolve(base), 'bundledApps/tomcat'))
+      settings.set('tomcatStart',path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh'))
+      settings.set('tomcatStop',path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdown.sh'))
+      settings.set('catalina',path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh'))
+      settings.set('warcs',path.join(path.resolve(base), '/archives'))
+      settings.set('index',path.join(path.resolve(base), '/config/path-index.txt'))
+      settings.set('cdxIndexer',path.join(path.resolve(base), 'bundledApps/tomcat/webapps/bin/cdx-indexer'))
+      settings.set('cdx',path.join(path.resolve(base), 'archiveIndexes'))
+      settings.set('cdxTemp',path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'))
+      settings.set('indexCDX',path.join(path.resolve(base), 'archiveIndexes/index.cdx'))
+      settings.set('jdk',path.join(path.resolve(base),'bundledApps/openjdk'))
+      settings.set('jre',path.join(path.resolve(base),'bundledApps/openjdk/jre'))
+      settings.set('jobConf',path.join(base, 'crawler-beans.cxml'))
+      settings.set('wayBackConf',path.join(base, 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'))
+      settings.set('configed',true)
+      console.log(base)
+   }
+}
 
 function createWindow() {
    if (process.env.NODE_ENV === 'development') {
@@ -102,6 +136,7 @@ function createWindow() {
    // Emitted when the window is closed.
    mainWindow.on('closed', () => {
       console.log("closed")
+      // mainWindow.webContents.send("cleanUp")
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
@@ -119,8 +154,14 @@ function createBackgroundWindow() {
    backgroundWindow.webContents.on('did-finish-load', () => {
       backgroundWindow.show()
    })
+
+   backgroundWindow.on('close',() => {
+      backgroundWindow = null
+   })
    
 }
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -194,5 +235,6 @@ ipcMain.on("pong", (event, payload) => {
    console.log("got pong",payload)
    mainWindow.webContents.send("pong", payload)
 })
+
 
 

@@ -24,7 +24,10 @@ export default class General extends Component {
    }
 
 
+
+
    componentWillMount() {
+      console.log("general tab will mount")
       ServiceStore.on('heritrix-status-update', this.updateHeritrixStatus)
       ServiceStore.on('wayback-status-update', this.updateWaybackStatus)
       ServiceStore.on('monitor-status-update', this.servicesUpdated)

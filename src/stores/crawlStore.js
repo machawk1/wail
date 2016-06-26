@@ -14,7 +14,7 @@ import {
    launchHeritrixJob
 } from "../actions/heritrix-actions"
 
-import {ipcRenderer} from "electron"
+import { ipcRenderer } from "electron"
 
 
 const EventTypes = wailConstants.EventTypes
@@ -29,26 +29,23 @@ class crawlStore extends EventEmitter {
       this.latestJob = this.latestJob.bind(this)
       this.jobs = this.jobs.bind(this)
       this.populateJobsFromPrevious = this.populateJobsFromPrevious.bind(this)
-      this.checkStatusUpdate = this.checkStatusUpdate.bind(this)
       getHeritrixJobsState()
          .then(status => {
-            EditorDispatcher.dispatch({
-               type: EventTypes.STORE_HERITRIX_JOB_CONFS,
-               confs: status.confs
-            })
-            this.crawlJobs = status.jobs
-            this.emit('jobs-restored')
+            if(status.count > 0) {
+               EditorDispatcher.dispatch({
+                  type: EventTypes.STORE_HERITRIX_JOB_CONFS,
+                  confs: status.confs
+               })
+               this.crawlJobs = status.jobs
+               this.emit('jobs-restored')
+            }
          })
          .catch(error => {
-            if(Reflect.has(error,'count')){
-               console.log("Initial Heritrix Job State failed because there was no jobs",error)
-            } else {
-               console.log("Initial Heritrix Job State failed but there was jobs",error)
-            }
+            console.log('There was an error in getting the configs',error)
          })
 
      
-      ipcRenderer.on("crawljob-status-update", crawlStatus => this.checkStatusUpdate(crawlStatus))
+      ipcRenderer.on("crawljob-status-update", (event,crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
    }
 
    createJob(id, pth, urls) {
@@ -63,13 +60,14 @@ class crawlStore extends EventEmitter {
       this.emit('job-created')
    }
 
-   checkStatusUpdate(crawlStatus) {
-      console.log("Got event from background checking crawl job status updates",crawlStatus)
-   }
 
    populateJobsFromPrevious(jobs) {
       console.log('building previous jobs')
-      this.crawlJobs = jobs
+      this.crawlJobs = jobs.jobs
+      EditorDispatcher.dispatch({
+         type: EventTypes.STORE_HERITRIX_JOB_CONFS,
+         confs: jobs.confs
+      })
       this.emit('jobs-restored')
    }
 
@@ -82,18 +80,19 @@ class crawlStore extends EventEmitter {
    }
 
    handleEvent(event) {
-      console.log("Got an event in crawl store", event, heritrixActions)
+      console.log("Got an event in crawl store", event)
 
       switch (event.type) {
          case EventTypes.BUILD_CRAWL_JOB:
          {
             console.log('Build crawl job')
-            let urls = ''
+            let urls
 
             switch (event.from) {
                case From.BASIC_ARCHIVE_NOW:
                {
                   urls = UrlStore.getUrl()
+                  console.log('crawlstore archiving the url is ',urls)
                   makeHeritrixJobConf(urls, 1)
                   break
                }
@@ -104,7 +103,6 @@ class crawlStore extends EventEmitter {
                      let temp = 'Urls: '
                      event.urls.forEach(url => temp += `${url}\n`)
                      urls = temp + `With depth of ${event.depth}`
-
                   }
                   break
                }

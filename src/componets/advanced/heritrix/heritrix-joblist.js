@@ -17,7 +17,7 @@ export default class HeritrixJobList extends Component {
 
    getJobs() {
       console.log("Get jobs crawlstore")
-      this.setState({jobs: CrawlStore.jobs()})
+      this.setState({ jobs: CrawlStore.jobs() })
    }
 
    componentWillMount() {
@@ -31,6 +31,7 @@ export default class HeritrixJobList extends Component {
    }
 
    render() {
+      console.log('rendering the joblist',this.state)
       let {jobs} = this.state
       let JobItems = jobs.length > 0 ? jobs.map(job => <HeritrixJobItem key={job.jobId} {...job}/>) :
          <ListItem primaryText="No Jobs To Display"/>

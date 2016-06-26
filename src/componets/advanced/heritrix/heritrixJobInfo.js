@@ -43,10 +43,7 @@ export default class HeritrixJobInfo extends Component {
          runs: clickedItem.state.runs,
       })
    }
-
-   sortJobs(j1, j2) {
-
-   }
+    
 
    buildRows() {
       let runs = this.state.runs

@@ -2,9 +2,6 @@
 
 base=$(pwd)
 
-cd "$base/electron"
-pwd
-
 if [ ! -z "$1" -a "$1" = "start-dev"  ]; then
     echo start dev
     npm "run-script start-dev"

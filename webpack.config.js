@@ -57,7 +57,7 @@ module.exports = {
    output: {
       path: path.join(__dirname, 'dist'),
       filename: '[name].bundle.js',
-      // chunkFilename: "[id].chunk.js",
+      chunkFilename: "[id].chunk.js",
       publicPath: 'http://localhost:9000/dist/'
    },
    target: 'electron-renderer',

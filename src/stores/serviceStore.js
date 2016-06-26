@@ -20,11 +20,12 @@ class serviceStore extends EventEmitter {
       this.checkStatues = this.checkStatues.bind(this)
       this.handleEvent = this.handleEvent.bind(this)
       this.updateStatues = this.updateStatues.bind(this)
-      ipcRenderer.on("service-status-update", this.updateStatues)
+      ipcRenderer.on("service-status-update", (event,update)=>this.updateStatues(update))
    }
 
 
    updateStatues(update){
+      console.log("service updated")
       this.serviceStatus.heritrix = update.heritrix
       this.serviceStatus.wayback = update.wayback
       this.emit('monitor-status-update')

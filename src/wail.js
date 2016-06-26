@@ -10,8 +10,13 @@ import Promise from 'bluebird'
 import {ipcRenderer} from "electron"
 Promise.promisifyAll(fs)
 import Routes from './componets/routes'
-
+import settings from './constants/settings'
 injectTapEventPlugin()
+
+Promise.onPossiblyUnhandledRejection(function(error){
+   throw error;
+})
+
 
 ipcRenderer.send("start-crawljob-monitoring")
 ipcRenderer.send("start-service-monitoring")
@@ -24,6 +29,7 @@ ipcRenderer.send("start-service-monitoring")
 
 const wail = document.getElementById('wail')
 
+console.log(settings.get('configed'))
 
 ReactDOM.render(
    <Router
