@@ -10,8 +10,8 @@ export default class General extends Component {
    constructor(props, context) {
       super(props, context)
       this.state = {
-         wbGood: false,
-         hGood: false,
+         wbGood: ServiceStore.waybackStatus(),
+         hGood: ServiceStore.heritrixStatus()
       }
 
       this.wayBackFix = this.wayBackFix.bind(this)
