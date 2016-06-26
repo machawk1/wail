@@ -10,7 +10,7 @@ import Promise from 'bluebird'
 import {ipcRenderer} from "electron"
 Promise.promisifyAll(fs)
 import Routes from './componets/routes'
-import settings from './constants/settings'
+import settings from './settings/settings'
 injectTapEventPlugin()
 
 Promise.onPossiblyUnhandledRejection(function(error){
@@ -29,7 +29,7 @@ ipcRenderer.send("start-service-monitoring")
 
 const wail = document.getElementById('wail')
 
-console.log(settings.get('configed'))
+console.log(settings.get('configed'),settings)
 
 ReactDOM.render(
    <Router

@@ -38,20 +38,6 @@ export default class HeritrixTab extends Component {
       console.log('Edit Wayback')
       console.log(process.platform)
       shell.openExternal(Heritrix.web_ui)
-      // switch (process.platform) {
-      //    case 'linux':
-      //       child_process.exec(`xdg-open ${Heritrix.web_ui}`)
-      //       break
-      //    case 'darwin':
-      //       child_process.exec(`open ${Heritrix.web_ui}`)
-      //       break
-      //    case 'win32':
-      //       child_process.exec(`start ${Heritrix.web_ui}`)
-      //       break
-      //
-      // }
-
-
    }
 
    render() {

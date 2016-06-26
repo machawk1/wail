@@ -20,268 +20,267 @@ const heritrix = wc.Heritrix
 const paths = wc.Paths
 
 export function heritrixAccesible(forground = true) {
-    console.log("checking heritrix accessibility")
-    let optionEngine = {
-        method: 'GET',
-        uri: `https://localhost:8443/engine`,
-        auth: {
-            username: 'lorem',
-            password: 'ipsum',
-            sendImmediately: false
-        },
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-    }
+   console.log("checking heritrix accessibility")
+   let optionEngine = {
+      method: 'GET',
+      uri: `https://localhost:8443/engine`,
+      auth: {
+         username: 'lorem',
+         password: 'ipsum',
+         sendImmediately: false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
 
-    if (forground) {
-        rp(optionEngine)
+   if (forground) {
+      rp(optionEngine)
+         .then(success => {
+            console.log("heritrix success", success)
+            ServiceDispatcher.dispatch({
+               type: EventTypes.HERITRIX_STATUS_UPDATE,
+               status: true,
+            })
+         })
+         .catch(err => {
+            ServiceDispatcher.dispatch({
+               type: EventTypes.HERITRIX_STATUS_UPDATE,
+               status: false,
+            })
+         }).finally(() => console.log("heritrix finally"))
+   } else {
+      return new Promise((resolve, reject)=> {
+         rp(optionEngine)
             .then(success => {
-                console.log("heritrix success", success)
-                ServiceDispatcher.dispatch({
-                    type: EventTypes.HERITRIX_STATUS_UPDATE,
-                    status: true,
-                })
+               resolve({status: true})
             })
             .catch(err => {
-                ServiceDispatcher.dispatch({
-                    type: EventTypes.HERITRIX_STATUS_UPDATE,
-                    status: false,
-                })
-            }).finally(() => console.log("heritrix finally"))
-    } else {
-        return new Promise((resolve, reject)=> {
-            rp(optionEngine)
-                .then(success => {
-                    resolve({status: true})
-                })
-                .catch(err => {
-                    resolve({status: false, error: err})
-                })
-        })
-    }
+               resolve({status: false, error: err})
+            })
+      })
+   }
 
 }
 
 function* sequentialActions(actions, jobId) {
-    let index = 0
-    let options = {
-        method: 'POST',
-        uri: `https://localhost:8443/engine/job/${jobId}`,
-        headers: {
-            Accept: "application/xml",
-            'Content-type': 'application/x-www-form-urlencoded',
-        },
-        form: {
-            action: ''
-        },
-        auth: {
-            username: 'lorem',
-            password: 'ipsum',
-            sendImmediately: false
-        },
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-    }
+   let index = 0
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${jobId}`,
+      headers: {
+         Accept: "application/xml",
+         'Content-type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+         action: ''
+      },
+      auth: {
+         username: 'lorem',
+         password: 'ipsum',
+         sendImmediately: false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
 
-    while (index < actions.length) {
-        options.form.action = actions[index++]
-        yield options
-    }
+   while (index < actions.length) {
+      options.form.action = actions[index++]
+      yield options
+   }
 
 }
 
 export function launchHeritrix() {
-    console.log(`sh ${ wc.Paths.heritrixBin} -a lorem:ipsum`)
-    let command = `export JAVA_HOME=${wc.Paths.jdk}; export JRE_HOME=${wc.Paths.jre}; sh ${wc.Paths.heritrixBin}  -a lorem:ipsum`
-    child_process.exec(command, (err, stdout, stderr) => {
-        console.log(err, stdout, stderr)
-        let wasError = !err
+   console.log(`sh ${ wc.Paths.heritrixBin} -a lorem:ipsum`)
+   let command = `export JAVA_HOME=${wc.Paths.jdk}; export JRE_HOME=${wc.Paths.jre}; sh ${wc.Paths.heritrixBin}  -a lorem:ipsum`
+   child_process.exec(command, (err, stdout, stderr) => {
+      console.log(err, stdout, stderr)
+      let wasError = !err
 
-        ServiceDispatcher.dispatch({
-            type: EventTypes.HERITRIX_STATUS_UPDATE,
-            status: wasError,
-        })
-    })
+      ServiceDispatcher.dispatch({
+         type: EventTypes.HERITRIX_STATUS_UPDATE,
+         status: wasError,
+      })
+   })
 }
 
 export function killHeritrix() {
-    // child_process.exec("ps ax | grep \'heritrix\' | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh", (err, stdout, stderr) => {
-    //    console.log(err, stdout, stderr)
-    // })
-    let options = {
-        method: 'POST',
-        uri: `https://localhost:8443/engine/`,
-        form: {
-            action: "Exit Java Process",
-            im_sure: "on"
-        },
-        auth: {
-            'username': 'lorem',
-            'password': 'ipsum',
-            'sendImmediately': false
-        },
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-    }
+   // child_process.exec("ps ax | grep \'heritrix\' | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh", (err, stdout, stderr) => {
+   //    console.log(err, stdout, stderr)
+   // })
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/`,
+      form: {
+         action: "Exit Java Process",
+         im_sure: "on"
+      },
+      auth: {
+         'username': 'lorem',
+         'password': 'ipsum',
+         'sendImmediately': false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
 
-    rp(options)
-        .then(response => {
-            console.log("this should never ever be reached", response)
-        })
-        .catch(err => {
+   rp(options)
+      .then(response => {
+         console.log("this should never ever be reached", response)
+      })
+      .catch(err => {
 
-            console.log("herritrix kills itself and never replies", err)
-            // POST failed...
+         console.log("herritrix kills itself and never replies", err)
+         // POST failed...
 
-        })
+      })
 }
 
 export function makeHeritrixJobConf(urls, hops, jobId) {
-    console.log('in makeHeritrixJobConf')
-    fs.readFileAsync(wc.Heritrix.jobConf, "utf8")
-        .then(data => {
-            console.log('writting heritrix job conf with url',urls)
-            let doc = cheerio.load(data, {
-                xmlMode: true
-            })
-            let jobId = new Date().getTime()
-            // console.log(doc.xml())
-            let urlConf = doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]')
-            let urlText
-            if (Array.isArray(urls)) {
-                console.log('array')
-                urlText = `\r\n${urls.join("\r\n")}\r\n`
-            } else {
-                urlText = `\r\n${urls}\r\n`
-            }
-            urlConf.text(urlText)
+   console.log('in makeHeritrixJobConf')
+   fs.readFileAsync(wc.Heritrix.jobConf, "utf8")
+      .then(data => {
+         let doc = cheerio.load(data, {
+            xmlMode: true
+         })
+         let jobId = new Date().getTime()
+         // console.log(doc.xml())
+         let urlConf = doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]')
+         let urlText
+         if (Array.isArray(urls)) {
+            console.log('array')
+            urlText = `\r\n${urls.join("\r\n")}\r\n`
+         } else {
+            urlText = `\r\n${urls}\r\n`
+         }
+         urlConf.text(urlText)
 
-            // <property name="maxHops" value="''' + str(depth) + '''" />
-            let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
-            maxHops.attr('value', `${hops}`)
-            // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
-            let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-            warFolder.append(`<value>${wc.Paths.warcs}</value>`)
-            let confPath = `${wc.Paths.heritrixJob}/${jobId}`
-            fs.ensureDir(confPath, er => {
-                fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
-                    console.log("done writting file", error)
-                    CrawlDispatcher.dispatch({
-                        type: EventTypes.BUILT_CRAWL_CONF,
-                        id: jobId,
-                        path: confPath,
-                        urls: urls,
-                    })
-                })
-
+         // <property name="maxHops" value="''' + str(depth) + '''" />
+         let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
+         maxHops.attr('value', `${hops}`)
+         // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
+         let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
+         warFolder.append(`<value>${wc.Paths.warcs}</value>`)
+         let confPath = `${wc.Paths.heritrixJob}/${jobId}`
+         fs.ensureDir(confPath, er => {
+            fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
+               console.log("done writting file", error)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.BUILT_CRAWL_CONF,
+                  id: jobId,
+                  path: confPath,
+                  urls: urls,
+               })
             })
 
-        })
+         })
+
+      })
 }
 
 export function buildHeritrixJob(jobId) {
-    let data = {action: "launch"}
-    console.log('building heritrix job')
-    //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-    let options = {
-        method: 'POST',
-        uri: `https://localhost:8443/engine/job/${jobId}`,
-        headers: {
-            Accept: "application/xml",
-            'Content-type': 'application/x-www-form-urlencoded',
-        },
-        form: {
-            action: "build"
-        },
-        'auth': {
-            'username': 'lorem',
-            'password': 'ipsum',
-            'sendImmediately': false
-        },
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-    }
+   let data = {action: "launch"}
+   console.log('building heritrix job')
+   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${jobId}`,
+      headers: {
+         Accept: "application/xml",
+         'Content-type': 'application/x-www-form-urlencoded',
+      },
+      form: {
+         action: "build"
+      },
+      'auth': {
+         'username': 'lorem',
+         'password': 'ipsum',
+         'sendImmediately': false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
 
-    rp(options)
-        .then(response => {
-            // POST succeeded...
-            console.log("sucess in building job", response)
+   rp(options)
+      .then(response => {
+         // POST succeeded...
+         console.log("sucess in building job", response)
+         CrawlDispatcher.dispatch({
+            type: EventTypes.BUILT_CRAWL_JOB,
+            id: jobId,
+         })
+      })
+      .catch(err => {
+         if (err.statusCode == 303) {
+            console.log("303 sucess in building job", err)
             CrawlDispatcher.dispatch({
-                type: EventTypes.BUILT_CRAWL_JOB,
-                id: jobId,
+               type: EventTypes.BUILT_CRAWL_JOB,
+               id: jobId,
             })
-        })
-        .catch(err => {
-            if (err.statusCode == 303) {
-                console.log("303 sucess in building job", err)
-                CrawlDispatcher.dispatch({
-                    type: EventTypes.BUILT_CRAWL_JOB,
-                    id: jobId,
-                })
-            } else {
-                // POST failed...
-                console.log("failur in building job", err)
-            }
+         } else {
+            // POST failed...
+            console.log("failur in building job", err)
+         }
 
-        })
+      })
 
 }
 
 export function launchHeritrixJob(jobId) {
 
-    let options = {
-        method: 'POST',
-        uri: `https://localhost:8443/engine/job/${jobId}`,
-        headers: {
-            Accept: "application/xml",
-            /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
-        },
-        form: {
-            action: "launch"
-        },
-        auth: {
-            'username': 'lorem',
-            'password': 'ipsum',
-            'sendImmediately': false
-        },
-        rejectUnauthorized: false,
-        resolveWithFullResponse: true,
-    }
+   let options = {
+      method: 'POST',
+      uri: `https://localhost:8443/engine/job/${jobId}`,
+      headers: {
+         Accept: "application/xml",
+         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
+      },
+      form: {
+         action: "launch"
+      },
+      auth: {
+         'username': 'lorem',
+         'password': 'ipsum',
+         'sendImmediately': false
+      },
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+   }
 
-    rp(options)
-        .then(response => {
-            // POST succeeded...
-            console.log("sucess in launching job", response)
+   rp(options)
+      .then(response => {
+         // POST succeeded...
+         console.log("sucess in launching job", response)
+         CrawlDispatcher.dispatch({
+            type: EventTypes.LAUNCHED_CRAWL_JOB,
+            id: jobId,
+         })
+      })
+      .catch(err => {
+
+         if (err.statusCode == 303) {
+            console.log("303 sucess in launch job", err)
             CrawlDispatcher.dispatch({
-                type: EventTypes.LAUNCHED_CRAWL_JOB,
-                id: jobId,
+               type: EventTypes.LAUNCHED_CRAWL_JOB,
+               id: jobId,
             })
-        })
-        .catch(err => {
-
-            if (err.statusCode == 303) {
-                console.log("303 sucess in launch job", err)
-                CrawlDispatcher.dispatch({
-                    type: EventTypes.LAUNCHED_CRAWL_JOB,
-                    id: jobId,
-                })
-            } else {
-                // POST failed...
-                console.log("failur in launching job", err)
-            }
+         } else {
             // POST failed...
+            console.log("failur in launching job", err)
+         }
+         // POST failed...
 
-        })
+      })
 
 }
 
 
 export function forceCrawlFinish(jobId) {
-    sendActionToHeritrix(sequentialActions(["terminate", "teardown"], jobId))
+   sendActionToHeritrix(sequentialActions(["terminate", "teardown"], jobId))
 }
 
 export function restartJob(jobId) {
-    buildHeritrixJob(jobId)
+   buildHeritrixJob(jobId)
 }
 
 export function deleteHeritrixJob(jobId) {
@@ -290,167 +289,168 @@ export function deleteHeritrixJob(jobId) {
 
 export function sendActionToHeritrix(act, jobId) {
 
-    let options
+   let options
 
-    let isActionGenerator = act instanceof sequentialActions
-    let notDone = false
+   let isActionGenerator = act instanceof sequentialActions
+   let notDone = false
 
-    if (isActionGenerator) {
-        let nextAction = act.next()
-        console.log('We have a actionGenerator', nextAction)
-        notDone = !nextAction.done
-        if (nextAction.done)
-            return
-        options = nextAction.value
-        console.log(options)
-    } else {
-        options = {
-            method: 'POST',
-            uri: `https://localhost:8443/engine/job/${jobId}`,
-            headers: {
-                Accept: "application/xml",
-                'Content-type': 'application/x-www-form-urlencoded',
-            },
-            form: {
-                action: act
-            },
-            auth: {
-                username: 'lorem',
-                password: 'ipsum',
-                sendImmediately: false
-            },
-            rejectUnauthorized: false,
-            resolveWithFullResponse: true,
-        }
-    }
+   if (isActionGenerator) {
+      let nextAction = act.next()
+      console.log('We have a actionGenerator', nextAction)
+      notDone = !nextAction.done
+      if (nextAction.done)
+         return
+      options = nextAction.value
+      console.log(options)
+   } else {
+      options = {
+         method: 'POST',
+         uri: `https://localhost:8443/engine/job/${jobId}`,
+         headers: {
+            Accept: "application/xml",
+            'Content-type': 'application/x-www-form-urlencoded',
+         },
+         form: {
+            action: act
+         },
+         auth: {
+            username: 'lorem',
+            password: 'ipsum',
+            sendImmediately: false
+         },
+         rejectUnauthorized: false,
+         resolveWithFullResponse: true,
+      }
+   }
 
-    rp(options)
-        .then(response => {
-            // POST succeeded...
-            console.log(`post succeeded in sendAction ${act} to heritrix`, response)
-            if (isActionGenerator && notDone) {
-                console.log("we have next in action generator")
-                sendActionToHeritrix(act, jobId)
-            }
-        })
-        .catch(err => {
-            console.log(`post failed? in sendAction ${act} to heritrix`, err)
-            if (isActionGenerator && notDone) {
-                console.log("we have next in action generator", `is done? ${notDone}`)
-                sendActionToHeritrix(act, jobId)
-            }
+   rp(options)
+      .then(response => {
+         // POST succeeded...
+         console.log(`post succeeded in sendAction ${act} to heritrix`, response)
+         if (isActionGenerator && notDone) {
+            console.log("we have next in action generator")
+            sendActionToHeritrix(act, jobId)
+         }
+      })
+      .catch(err => {
+         console.log(`post failed? in sendAction ${act} to heritrix`, err)
+         if (isActionGenerator && notDone) {
+            console.log("we have next in action generator", `is done? ${notDone}`)
+            sendActionToHeritrix(act, jobId)
+         }
 
-        })
+      })
 
 }
 
 export function getHeritrixJobsState() {
-    return new Promise((resolve, reject) => {
-        const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
-        const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
+   return new Promise((resolve, reject) => {
+      const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
+      const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
 
-        let jobs = {}
-        let counter = 0
-        let jobsConfs = {}
+      let jobs = {}
+      let counter = 0
+      let jobsConfs = {}
 
-        let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
-            let didMath = jobLaunch.exec(item.path)
-            if (didMath) {
-                jobs[didMath.capture('job')].log = true
-                jobs[didMath.capture('job')].launch = didMath.capture('launch')
-                jobs[didMath.capture('job')].logPath = item.path
-                this.push(jobs[didMath.capture('job')])
-            } else {
-                if (item.stats.isDirectory()) {
-                    let jid = job.exec(item.path)
+      let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
+         let didMath = jobLaunch.exec(item.path)
+         if (didMath) {
+            jobs[didMath.capture('job')].log = true
+            jobs[didMath.capture('job')].launch = didMath.capture('launch')
+            jobs[didMath.capture('job')].logPath = item.path
+            this.push(jobs[didMath.capture('job')])
+         } else {
+            if (item.stats.isDirectory()) {
+               let jid = job.exec(item.path)
 
-                    if (jid) {
-                        counter += 1
-                        jobsConfs[jid.capture('job')] =
-                            fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
-                        jobs[jid.capture('job')] = {
-                            log: false,
-                            jobId: jid.capture('job'),
-                            launch: '',
-                            path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
-                            logPath: ' ',
-                            urls: '',
-                            runs: [],
-                        }
-                    }
-                }
+               if (jid) {
+                  counter += 1
+                  jobsConfs[jid.capture('job')] =
+                     fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+                  jobs[jid.capture('job')] = {
+                     log: false,
+                     jobId: jid.capture('job'),
+                     launch: '',
+                     path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
+                     logPath: ' ',
+                     urls: '',
+                     runs: [],
+                  }
+               }
             }
+         }
 
-            next()
-        })
+         next()
+      })
 
-        let launchStats = through2.obj(function (item, enc, next) {
-            fs.readFile(item.logPath, "utf8", (err, data)=> {
-                if (err) throw err
-                // console.log(data)
-                let lines = data.trim().split('\n')
-                let lastLine = S(lines[lines.length - 1])
+      let launchStats = through2.obj(function (item, enc, next) {
+         fs.readFile(item.logPath, "utf8", (err, data)=> {
+            if (err) throw err
+            // console.log(data)
+            let lines = data.trim().split('\n')
+            let lastLine = S(lines[lines.length - 1])
 
-                if (lastLine.contains('Ended by operator')) {
-                    // jobs[item.jobId].progress.ended = true
-                    let nextToLast = S(lines[lines.length - 2])
-                    let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
-                    jobs[item.jobId].runs.push({
-                        ended: true,
-                        timestamp: moment(nextLastfields[0]),
-                        discovered: nextLastfields[1],
-                        queued: nextLastfields[2],
-                        downloaded: nextLastfields[3],
-                    })
+            if (lastLine.contains('Ended by operator')) {
+               // jobs[item.jobId].progress.ended = true
+               let nextToLast = S(lines[lines.length - 2])
+               let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+               jobs[item.jobId].runs.push({
+                  ended: true,
+                  timestamp: moment(nextLastfields[0]),
+                  discovered: nextLastfields[1],
+                  queued: nextLastfields[2],
+                  downloaded: nextLastfields[3],
+               })
 
-                } else {
-                    let fields = lastLine.collapseWhitespace().s.split(' ')
-                    jobs[item.jobId].runs.push({
-                        ended: false,
-                        timestamp: moment(fields[0]),
-                        discovered: fields[1],
-                        queued: fields[2],
-                        downloaded: fields[3],
-                    })
-
-                }
-            })
-            this.push(item)
-            next()
-        })
-
-        //return { confs: jobsConfs, obs: sortedJobs, }
-        fs.ensureDir(wc.Paths.heritrixJob, err => {
-            if (err) {
-                reject(err)
             } else {
-                fs.walk(wc.Paths.heritrixJob)
-                    .pipe(onlyJobLaunchsProgress)
-                    .pipe(launchStats)
-                    .on('data', item => {})
-                    .on('end', function () {
-                        if (counter > 0) {
-                            let sortedJobs = _.chain(jobs)
-                                .toPairs()
-                                .map(job => {
-                                    job[1].runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
-                                    return job[1]
-                                })
-                                .value()
-                            resolve({ count: counter, confs: jobsConfs, jobs: sortedJobs,})
-                        } else {
-                            resolve({error: "count zero", count: 0, stack: 'ere'})
-                        }
-                    })
-                    .on('error', function (error, item) {
-                        console.log(error.message)
-                        console.log(item.path) // the file the error occurred on
-                        reject(error)
-                    })
+               let fields = lastLine.collapseWhitespace().s.split(' ')
+               jobs[item.jobId].runs.push({
+                  ended: false,
+                  timestamp: moment(fields[0]),
+                  discovered: fields[1],
+                  queued: fields[2],
+                  downloaded: fields[3],
+               })
+
             }
-        })
+         })
+         this.push(item)
+         next()
+      })
+
+      //return { confs: jobsConfs, obs: sortedJobs, }
+      fs.ensureDir(wc.Paths.heritrixJob, err => {
+         if (err) {
+            reject(err)
+         } else {
+            fs.walk(wc.Paths.heritrixJob)
+               .pipe(onlyJobLaunchsProgress)
+               .pipe(launchStats)
+               .on('data', item => {
+               })
+               .on('end', function () {
+                  if (counter > 0) {
+                     let sortedJobs = _.chain(jobs)
+                        .toPairs()
+                        .map(job => {
+                           job[1].runs.sort((j1, j2) => j1.timestamp.isAfter(j2.timestamp))
+                           return job[1]
+                        })
+                        .value()
+                     resolve({count: counter, confs: jobsConfs, jobs: sortedJobs,})
+                  } else {
+                     resolve({error: "count zero", count: 0, stack: 'ere'})
+                  }
+               })
+               .on('error', function (error, item) {
+                  console.log(error.message)
+                  console.log(item.path) // the file the error occurred on
+                  reject(error)
+               })
+         }
+      })
 
 
-    })
+   })
 
 }

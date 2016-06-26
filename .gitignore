@@ -18,6 +18,8 @@ WAIL.spec
 
 node_modules/
 
+newbinaries
+
 src/public
 src/public/*
 

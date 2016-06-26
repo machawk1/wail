@@ -14,6 +14,9 @@ if(process.env.NODE_ENV !== 'development'){
 
 console.log(path.resolve(base))
 
+
+
+
 const consts = {
    pather: function () {
       console.log(path.basename(__filename))

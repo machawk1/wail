@@ -8,22 +8,37 @@ import {
 
 import installExtension, {REACT_DEVELOPER_TOOLS} from 'electron-devtools-installer'
 import path from 'path'
-import settings from './src/constants/settings'
+import {configSettings} from './settings/settings'
+
 let mainWindow = null
 let backgroundWindow = null
+let base = path.resolve('./')
+
+let mWindowURL
+let bWindowURL
 
 if (process.env.NODE_ENV === 'development') {
 
    require('electron-debug')({
       showDevTools: true
    })
+
+   base = __dirname
+   mWindowURL = `file://${base}/wail.html`
+   bWindowURL = `file://${base}/background/monitor.html`
+} else {
+   mWindowURL = `file://${base}/src/wail.html`
+   bWindowURL = `file://${base}/src/background/monitor.html`
 }
 
 
 
-const base = __dirname
 
-config(base)
+console.log(`one dot ${path.resolve('./')}`,`two dot ${path.resolve('../')}`)
+
+configSettings(base)
+
+
 
 const realPaths = {
    base: base,
@@ -60,37 +75,6 @@ const realPaths = {
 }
 
 
-function config() {
-   if(settings.get('configed')){
-      console.log('we are configed')
-      return settings
-   } else {
-      console.log('We are not configed')
-      settings.set('base',base)
-      settings.set('memgator',path.join(path.resolve(base), 'bundledApps/memgator'))
-      settings.set('archives',path.join(path.resolve(base), 'config/archives.json'))
-      settings.set('heritrix',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0'))
-      settings.set('heritrixBin',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/bin/heritrix'))
-      settings.set('heritrixJob',path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs'))
-      settings.set('tomcat',path.join(path.resolve(base), 'bundledApps/tomcat'))
-      settings.set('tomcatStart',path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh'))
-      settings.set('tomcatStop',path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdown.sh'))
-      settings.set('catalina',path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh'))
-      settings.set('warcs',path.join(path.resolve(base), '/archives'))
-      settings.set('index',path.join(path.resolve(base), '/config/path-index.txt'))
-      settings.set('cdxIndexer',path.join(path.resolve(base), 'bundledApps/tomcat/webapps/bin/cdx-indexer'))
-      settings.set('cdx',path.join(path.resolve(base), 'archiveIndexes'))
-      settings.set('cdxTemp',path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'))
-      settings.set('indexCDX',path.join(path.resolve(base), 'archiveIndexes/index.cdx'))
-      settings.set('jdk',path.join(path.resolve(base),'bundledApps/openjdk'))
-      settings.set('jre',path.join(path.resolve(base),'bundledApps/openjdk/jre'))
-      settings.set('jobConf',path.join(base, 'crawler-beans.cxml'))
-      settings.set('wayBackConf',path.join(base, 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'))
-      settings.set('configed',true)
-      console.log(base)
-   }
-}
-
 function createWindow() {
    if (process.env.NODE_ENV === 'development') {
       installExtension(REACT_DEVELOPER_TOOLS)
@@ -108,11 +92,12 @@ function createWindow() {
 
 
    // and load the index.html of the app.
-   mainWindow.loadURL(`file://${__dirname}/src/wail.html`)
+   mainWindow.loadURL(mWindowURL)
 
 
    mainWindow.webContents.on('did-finish-load', () => {
       mainWindow.show()
+      mainWindow.openDevTools()
       mainWindow.focus()
    })
 
@@ -140,6 +125,7 @@ function createWindow() {
       // Dereference the window object, usually you would store windows
       // in an array if your app supports multi windows, this is the time
       // when you should delete the corresponding element.
+      backgroundWindow.close()
       mainWindow = null
       backgroundWindow = null
    })
@@ -150,14 +136,15 @@ function createWindow() {
 
 function createBackgroundWindow() {
    backgroundWindow = new BrowserWindow({show: false})
-   backgroundWindow.loadURL(`file://${__dirname}/src/background/monitor.html`)
+   backgroundWindow.loadURL(bWindowURL)
    backgroundWindow.webContents.on('did-finish-load', () => {
       backgroundWindow.show()
+      backgroundWindow.openDevTools()
    })
 
-   backgroundWindow.on('close',() => {
-      backgroundWindow = null
-   })
+   // backgroundWindow.on('close',() => {
+   //    backgroundWindow = null
+   // })
    
 }
 
@@ -177,6 +164,8 @@ app.on('window-all-closed', () => {
 })
 
 app.on('activate', () => {
+
+   
    // On OS X it's common to re-create a window in the app when the
    // dock icon is clicked and there are no other windows open.
    if (mainWindow === null) {
@@ -186,7 +175,6 @@ app.on('activate', () => {
    if (backgroundWindow === null) {
       createBackgroundWindow()
    }
-   
 })
 
 // app.on('activate-with-no-open-windows', () => {
@@ -198,6 +186,7 @@ app.on('activate', () => {
 
 process.on('uncaughtException', (err) => {
    console.log(`Caught exception: ${err}`)
+   app.quit()
 })
 
 

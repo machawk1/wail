@@ -20,7 +20,7 @@ class serviceStore extends EventEmitter {
       this.checkStatues = this.checkStatues.bind(this)
       this.handleEvent = this.handleEvent.bind(this)
       this.updateStatues = this.updateStatues.bind(this)
-      ipcRenderer.on("service-status-update", (event,update)=>this.updateStatues(update))
+      ipcRenderer.on("service-status-update", (event,update) => this.updateStatues(update))
    }
 
 

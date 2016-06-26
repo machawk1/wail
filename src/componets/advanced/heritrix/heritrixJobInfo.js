@@ -36,7 +36,7 @@ export default class HeritrixJobInfo extends Component {
    }
 
    viewingItem(clickedItem) {
-      console.log("viewing job item")
+      console.log("viewing job item",clickedItem)
       this.setState({
          jobId: clickedItem.state.jobId,
          path: clickedItem.state.path,
@@ -55,6 +55,7 @@ export default class HeritrixJobInfo extends Component {
          let discovered = job.discovered || ''
          let queued = job.queued || ''
          let downloaded = job.downloaded || ''
+         console.log('the job being displayed',job)
 
          return (
             <TableRow key={`${this.state.jobId}${count++}`} displayBorder={false}>

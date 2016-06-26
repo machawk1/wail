@@ -28,13 +28,12 @@ export default {
    },
    devtool: 'source-map',
 
-   entry: './electron-main-dev',
-
+   entry: './src/electron-main-dev',
    output: {
-      path: __dirname,
-      filename: './electron-main.js'
+      filename: 'electron-main.js',
+      path: path.join(__dirname, 'dist'),
    },
-
+   
    plugins: [
       new webpack.optimize.UglifyJsPlugin({
          compressor: {
