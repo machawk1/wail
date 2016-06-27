@@ -51,6 +51,7 @@ export default class Header extends Component {
             <AppBar
                title="Wail"
                onLeftIconButtonTouchTap={this.handleToggle}
+               zDepth={0}
             />
             <Drawer
                docked={false}

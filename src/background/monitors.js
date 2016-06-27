@@ -192,7 +192,7 @@ class monitors {
    checkReachability(cb) {
       if (!this.started.reachability) {
          //every two minutes
-         this.schedules.push(schedule.scheduleJob('*/5 * * * *', () => {
+         this.schedules.push(schedule.scheduleJob('*/2 * * * *', () => {
 
             heritrixAccesible(false)
                .then(ha => this.statues.heritrix = ha.status)

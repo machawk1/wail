@@ -107,6 +107,12 @@ export default class Debug extends Component {
                onTouchTap={this.wayBackButton}
                label="Wayback"
             />
+            <RaisedButton
+               onTouchTap={()=>{
+                  wc.pather()
+               }}
+               label="Pather"
+            />
             <NewCrawlDialog />
             <EditorPopup
                title={"Editing Wayback Configuration"}

@@ -1,5 +1,4 @@
 import React, {Component} from "react"
-import Paper from "material-ui/Paper"
 import {Grid} from "react-cellblock"
 import ArchiveUrl from "./archive-url"
 import BasicTabButtons from "./basicTab-buttons"
@@ -30,16 +29,12 @@ export default class BasicTab extends Component {
    render() {
       return (
          <div>
-            <Paper zDepth={3}>
-               <Grid flexible>
-                  <ArchiveUrl />
-                  <BasicTabButtons />
-               </Grid>
-            </Paper>
+            <Grid flexible>
+               <ArchiveUrl />
+               <BasicTabButtons />
+            </Grid>
             <MessagePanel />
          </div>
-
-
       )
    }
 }

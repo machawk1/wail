@@ -128,14 +128,10 @@ function createWindow() {
 function createBackgroundWindow() {
    backgroundWindow = new BrowserWindow({show: false})
    backgroundWindow.loadURL(bWindowURL)
-   backgroundWindow.webContents.on('did-finish-load', () => {
-      backgroundWindow.show()
-      backgroundWindow.openDevTools()
-   })
 
-   // backgroundWindow.on('close',() => {
-   //    backgroundWindow = null
-   // })
+   backgroundWindow.on('close',() => {
+      backgroundWindow = null
+   })
    
 }
 

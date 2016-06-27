@@ -1,6 +1,5 @@
 import React, {Component} from "react"
 import RaisedButton from "material-ui/RaisedButton"
-import Paper from "material-ui/Paper"
 
 const styles = {
    button: {
@@ -26,7 +25,7 @@ export default class Misc extends Component {
 
    render() {
       return (
-         <Paper zdepth={3}>
+         <div>
                <RaisedButton
                   label="View Archive Files"
                   labelPosition="before"
@@ -41,7 +40,7 @@ export default class Misc extends Component {
                   style={styles.button}
                   onMouseDown={this.onClickCheckForUpdates}
                />
-         </Paper>
+         </div>
       )
    }
 }

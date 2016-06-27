@@ -1,8 +1,6 @@
 import React, {Component} from "react"
 import { shell } from 'electron'
 import RaisedButton from "material-ui/RaisedButton"
-import Paper from "material-ui/Paper"
-import child_process from "child_process"
 import {Grid, Row, Column, observeGrid} from 'react-cellblock'
 
 import settings from '../../settings/settings'
@@ -44,7 +42,6 @@ export default class WayBackTab extends Component {
 
    render() {
       return (
-         <Paper zdepth={3}>
             <Grid>
                <Row>
                   <Column width="1/2">
@@ -67,7 +64,6 @@ export default class WayBackTab extends Component {
                   </Column>
                </Row>
             </Grid>
-         </Paper>
       )
    }
 }
