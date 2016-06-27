@@ -4,6 +4,7 @@ import EditorDispatcher from "../dispatchers/editorDispatcher"
 import wailConstants from "../constants/wail-constants"
 import * as EditorActions from "../actions/editor-actions"
 import _ from 'lodash'
+import settings from '../settings/settings'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -25,7 +26,7 @@ class editorStore extends EventEmitter {
    }
 
    loadWaybackConf() {
-      this.code.set(WhichCode.WBC, EditorActions.readCode(wailConstants.Code.wayBackConf))
+      this.code.set(WhichCode.WBC, EditorActions.readCode(settings.get('wayBackConf')))
       this.emit('wbc-fetched')
    }
 
@@ -63,7 +64,7 @@ class editorStore extends EventEmitter {
             let path = ''
             switch (event.which) {
                case WhichCode.WBC:
-                  path = wailConstants.Code.wayBackConf
+                  path = settings.get('wayBackConf')
                   this.code.set(WhichCode.WBC, event.code)
                   break
                case WhichCode.CRAWLBEAN:

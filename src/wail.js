@@ -13,9 +13,7 @@ import Routes from './componets/routes'
 import settings from './settings/settings'
 injectTapEventPlugin()
 
-Promise.onPossiblyUnhandledRejection(function(error){
-   throw error;
-})
+
 
 
 ipcRenderer.send("start-crawljob-monitoring")

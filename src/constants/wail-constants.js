@@ -48,42 +48,7 @@ const consts = {
       STORE_HERITRIX_JOB_CONFS: null,
       GET_HERITRIX_JOB_CONF: null,
    }),
-   Paths: {
-      base: path.resolve(base),
-      memgator: path.join(path.resolve(base), 'bundledApps/memgator'),
-      archives: path.join(path.resolve(base), 'config/archives.json'),
-      heritrix: path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0'),
-      heritrixBin: path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/bin/heritrix'),
-      heritrixJob: path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs'),
-      tomcat: path.join(path.resolve(base), 'bundledApps/tomcat'),
-      tomcatStart: path.join(path.resolve(base), 'bundledApps/tomcat/bin/startup.sh'),
-      tomcatStop: path.join(path.resolve(base), 'bundledApps/tomcat/bin/shutdown.sh'),
-      catalina: path.join(path.resolve(base), 'bundledApps/tomcat/bin/catalina.sh'),
-      warcs: path.join(path.resolve(base), '/archives'),
-      index: path.join(path.resolve(base), '/config/path-index.txt'),
-      cdxIndexer: path.join(path.resolve(base), 'bundledApps/tomcat/webapps/bin/cdx-indexer'),
-      cdx: path.join(path.resolve(base), 'archiveIndexes'),
-      cdxTemp: path.join(path.resolve(base), 'archiveIndexes/combined_unsorted.cdxt'),
-      indexCDX: path.join(path.resolve(base), 'archiveIndexes/index.cdx'),
-      jdk: path.join(path.resolve(base),'bundledApps/openjdk'),
-      jre: path.join(path.resolve(base),'bundledApps/openjdk/jre'),
-
-   },
-
-   Heritrix: {
-      uri_heritrix: "https://127.0.0.1:8443",
-      username: 'lorem',
-      password: 'ipsum',
-      jobConf: path.join(path.resolve('./'), 'crawler-beans.cxml'),
-      web_ui: "https://lorem:ipsum@localhost:8443",
-   },
-   Wayback: {
-      uri_tomcat: "http://localhost:8080/",
-      uri_wayback: "http://localhost:8080/wayback/"
-   },
    Code: {
-      crawlerBean: path.join(path.resolve('./'), 'crawler-beans.cxml'),
-      wayBackConf: path.join(path.resolve('./'), 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'),
       which: keyMirror({
          WBC: null,
          CRAWLBEAN: null,

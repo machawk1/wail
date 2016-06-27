@@ -1,6 +1,7 @@
 import 'babel-polyfill'
 import EventEmitter from "eventemitter3"
 import _ from 'lodash'
+import os from 'os'
 
 import UrlStore from "../stores/urlStore"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
@@ -101,7 +102,7 @@ class crawlStore extends EventEmitter {
                   makeHeritrixJobConf(event.urls, event.depth)
                   if (Array.isArray(event.urls)) {
                      let temp = 'Urls: '
-                     event.urls.forEach(url => temp += `${url}\n`)
+                     event.urls.forEach(url => temp += `${url}${os.EOL}`)
                      urls = temp + `With depth of ${event.depth}`
                   }
                   break

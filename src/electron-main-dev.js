@@ -22,23 +22,14 @@ if (process.env.NODE_ENV === 'development') {
    require('electron-debug')({
       showDevTools: true
    })
-
-   base = __dirname
-   mWindowURL = `file://${base}/wail.html`
-   bWindowURL = `file://${base}/background/monitor.html`
+   mWindowURL = `file://${__dirname}/wail.html`
+   bWindowURL = `file://${__dirname}/background/monitor.html`
 } else {
    mWindowURL = `file://${base}/src/wail.html`
    bWindowURL = `file://${base}/src/background/monitor.html`
 }
 
-
-
-
-console.log(`one dot ${path.resolve('./')}`,`two dot ${path.resolve('../')}`)
-
 configSettings(base)
-
-
 
 const realPaths = {
    base: base,

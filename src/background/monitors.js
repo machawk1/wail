@@ -13,19 +13,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 function heritrixAccesible() {
    console.log("checking heritrix accessibility")
-   let optionEngine = {
-      method: 'GET',
-      uri: `https://localhost:8443/engine`,
-      auth: {
-         username: 'lorem',
-         password: 'ipsum',
-         sendImmediately: false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
-
-
+   let optionEngine =  settings.get('heritrix.optionEngine')
    return new Promise((resolve, reject)=> {
       rp(optionEngine)
          .then(success => {
@@ -35,19 +23,19 @@ function heritrixAccesible() {
             resolve({status: false, error: err})
          })
    })
-
-
 }
 
 function getHeritrixJobsState() {
    return new Promise((resolve, reject) => {
-      const jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
-      const job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
-
+      let jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
+      let job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
+      
       let jobs = {}
       let counter = 0
       let jobsConfs = {}
-
+      
+      let heritrixJobP = settings.get('heritrixJob')
+      
       let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
          let didMath = jobLaunch.exec(item.path)
          if (didMath) {
@@ -62,12 +50,12 @@ function getHeritrixJobsState() {
                if (jid) {
                   counter += 1
                   jobsConfs[jid.capture('job')] =
-                     fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+                     fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
                   jobs[jid.capture('job')] = {
                      log: false,
                      jobId: jid.capture('job'),
                      launch: '',
-                     path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
+                     path: `${heritrixJobP}/${jid.capture('job')}`,
                      logPath: ' ',
                      urls: '',
                      runs: [],
@@ -113,13 +101,13 @@ function getHeritrixJobsState() {
          this.push(item)
          next()
       })
-      let hJobPath = settings.get('heritrixJob')
+
       //return { confs: jobsConfs, obs: sortedJobs, }
-      fs.ensureDir(hJobPath, err => {
+      fs.ensureDir(heritrixJobP, err => {
          if (err) {
             reject(err)
          } else {
-            fs.walk(hJobPath)
+            fs.walk(heritrixJobP)
                .pipe(onlyJobLaunchsProgress)
                .pipe(launchStats)
                .on('data', item => {
@@ -146,14 +134,15 @@ function getHeritrixJobsState() {
          }
       })
 
-
    })
+
 }
 
 function waybackAccesible() {
    console.log("checking wayback accessibility")
+   let wburi = settings.get('wayback.uri_wayback')
    return new Promise((resolve, reject)=> {
-      rp({uri: Wayback.uri_wayback})
+      rp({uri: wburi})
          .then(success => {
             resolve({status: true})
          })

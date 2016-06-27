@@ -1,9 +1,10 @@
 import UrlDispatcher from "../dispatchers/url-dispatcher"
 import wailConstants from "../constants/wail-constants"
 import child_process from "child_process"
+import settings from '../settings/settings'
 
 const EventTypes = wailConstants.EventTypes
-const Paths = wailConstants.Paths
+
 
 
 export function getMementos(url) {
@@ -22,7 +23,7 @@ export function urlUpdated(url) {
 
 export async function askMemgator(url) {
    console.log('askingMemegator')
-   child_process.exec(`${Paths.memgator} -a ${Paths.archives} ${url}`, (err, stdout, stderr) => {
+   child_process.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let mementoCount = (stdout.match(/memento/g) || []).length
       console.log(mementoCount)
@@ -31,6 +32,5 @@ export async function askMemgator(url) {
          mementos: mementoCount
       })
    })
-
 }
 

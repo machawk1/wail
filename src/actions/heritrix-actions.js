@@ -1,37 +1,27 @@
 import 'babel-polyfill'
-import wc from "../constants/wail-constants"
 import child_process from "child_process"
 import rp from "request-promise"
 import cheerio from "cheerio"
 import fs from "fs-extra"
-import ServiceDispatcher from "../dispatchers/service-dispatcher"
-import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
-import EditorDispatcher from "../dispatchers/editorDispatcher"
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
 import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
+import os from 'os'
+import wc from "../constants/wail-constants"
+import ServiceDispatcher from "../dispatchers/service-dispatcher"
+import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
+import settings from '../settings/settings'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const EventTypes = wc.EventTypes
-const heritrix = wc.Heritrix
-const paths = wc.Paths
+
 
 export function heritrixAccesible(forground = true) {
    console.log("checking heritrix accessibility")
-   let optionEngine = {
-      method: 'GET',
-      uri: `https://localhost:8443/engine`,
-      auth: {
-         username: 'lorem',
-         password: 'ipsum',
-         sendImmediately: false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
+   let optionEngine = settings.get('heritrix.optionEngine')
 
    if (forground) {
       rp(optionEngine)
@@ -64,36 +54,16 @@ export function heritrixAccesible(forground = true) {
 
 function* sequentialActions(actions, jobId) {
    let index = 0
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/job/${jobId}`,
-      headers: {
-         Accept: "application/xml",
-         'Content-type': 'application/x-www-form-urlencoded',
-      },
-      form: {
-         action: ''
-      },
-      auth: {
-         username: 'lorem',
-         password: 'ipsum',
-         sendImmediately: false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
-
+   let options = settings.get('heritrix.sendActionOptions')
+   options.uri = `${options.uri}${jobId}`
    while (index < actions.length) {
       options.form.action = actions[index++]
       yield options
    }
-
 }
 
 export function launchHeritrix() {
-   console.log(`sh ${ wc.Paths.heritrixBin} -a lorem:ipsum`)
-   let command = `export JAVA_HOME=${wc.Paths.jdk}; export JRE_HOME=${wc.Paths.jre}; sh ${wc.Paths.heritrixBin}  -a lorem:ipsum`
-   child_process.exec(command, (err, stdout, stderr) => {
+   child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let wasError = !err
 
@@ -105,40 +75,19 @@ export function launchHeritrix() {
 }
 
 export function killHeritrix() {
-   // child_process.exec("ps ax | grep \'heritrix\' | grep -v grep | awk \'{print \"kill -9 \" $1}\' | sh", (err, stdout, stderr) => {
-   //    console.log(err, stdout, stderr)
-   // })
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/`,
-      form: {
-         action: "Exit Java Process",
-         im_sure: "on"
-      },
-      auth: {
-         'username': 'lorem',
-         'password': 'ipsum',
-         'sendImmediately': false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
-
+   let options = settings.get('heritrix.killOptions')
    rp(options)
       .then(response => {
          console.log("this should never ever be reached", response)
       })
       .catch(err => {
-
          console.log("herritrix kills itself and never replies", err)
-         // POST failed...
-
       })
 }
 
 export function makeHeritrixJobConf(urls, hops, jobId) {
    console.log('in makeHeritrixJobConf')
-   fs.readFileAsync(wc.Heritrix.jobConf, "utf8")
+   fs.readFileAsync(settings.get('heritrix.jobConf'), "utf8")
       .then(data => {
          let doc = cheerio.load(data, {
             xmlMode: true
@@ -149,9 +98,9 @@ export function makeHeritrixJobConf(urls, hops, jobId) {
          let urlText
          if (Array.isArray(urls)) {
             console.log('array')
-            urlText = `\r\n${urls.join("\r\n")}\r\n`
+            urlText = `${os.EOL}${urls.join(os.EOL)}${os.EOL}`
          } else {
-            urlText = `\r\n${urls}\r\n`
+            urlText = `${os.EOL}${urls}${os.EOL}`
          }
          urlConf.text(urlText)
 
@@ -160,8 +109,10 @@ export function makeHeritrixJobConf(urls, hops, jobId) {
          maxHops.attr('value', `${hops}`)
          // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
          let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-         warFolder.append(`<value>${wc.Paths.warcs}</value>`)
-         let confPath = `${wc.Paths.heritrixJob}/${jobId}`
+         // warFolder.append(`<value>${wc.Paths.warcs}</value>`)
+         warFolder.append(`<value>${settings.get('warcs')}</value>`)
+         // let confPath = `${wc.Paths.heritrixJob}/${jobId}`
+         let confPath = `${settings.get('heritrixJob')}/${jobId}`
          fs.ensureDir(confPath, er => {
             fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
                console.log("done writting file", error)
@@ -182,24 +133,8 @@ export function buildHeritrixJob(jobId) {
    let data = {action: "launch"}
    console.log('building heritrix job')
    //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/job/${jobId}`,
-      headers: {
-         Accept: "application/xml",
-         'Content-type': 'application/x-www-form-urlencoded',
-      },
-      form: {
-         action: "build"
-      },
-      'auth': {
-         'username': 'lorem',
-         'password': 'ipsum',
-         'sendImmediately': false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
+   let options = settings.get('heritrix.buildOptions')
+   options.uri = `${options.uri}${jobId}`
 
    rp(options)
       .then(response => {
@@ -228,24 +163,8 @@ export function buildHeritrixJob(jobId) {
 
 export function launchHeritrixJob(jobId) {
 
-   let options = {
-      method: 'POST',
-      uri: `https://localhost:8443/engine/job/${jobId}`,
-      headers: {
-         Accept: "application/xml",
-         /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
-      },
-      form: {
-         action: "launch"
-      },
-      auth: {
-         'username': 'lorem',
-         'password': 'ipsum',
-         'sendImmediately': false
-      },
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true,
-   }
+   let options = settings.get('heritrix.launchOptions')
+   options.uri = `${options.uri}${jobId}`
 
    rp(options)
       .then(response => {
@@ -303,24 +222,9 @@ export function sendActionToHeritrix(act, jobId) {
       options = nextAction.value
       console.log(options)
    } else {
-      options = {
-         method: 'POST',
-         uri: `https://localhost:8443/engine/job/${jobId}`,
-         headers: {
-            Accept: "application/xml",
-            'Content-type': 'application/x-www-form-urlencoded',
-         },
-         form: {
-            action: act
-         },
-         auth: {
-            username: 'lorem',
-            password: 'ipsum',
-            sendImmediately: false
-         },
-         rejectUnauthorized: false,
-         resolveWithFullResponse: true,
-      }
+      options = settings.get('heritrix.sendActionOptions')
+      options.uri = `${options.uri}${jobId}`
+      options.form.action = act
    }
 
    rp(options)
@@ -351,7 +255,7 @@ export function getHeritrixJobsState() {
       let jobs = {}
       let counter = 0
       let jobsConfs = {}
-
+      let heritrixJobP = settings.get('heritrixJob')
       let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
          let didMath = jobLaunch.exec(item.path)
          if (didMath) {
@@ -366,12 +270,12 @@ export function getHeritrixJobsState() {
                if (jid) {
                   counter += 1
                   jobsConfs[jid.capture('job')] =
-                     fs.readFileSync(`${wc.Paths.heritrixJob}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+                     fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
                   jobs[jid.capture('job')] = {
                      log: false,
                      jobId: jid.capture('job'),
                      launch: '',
-                     path: `${wc.Paths.heritrixJob}/${jid.capture('job')}`,
+                     path: `${heritrixJobP}/${jid.capture('job')}`,
                      logPath: ' ',
                      urls: '',
                      runs: [],
@@ -419,11 +323,11 @@ export function getHeritrixJobsState() {
       })
 
       //return { confs: jobsConfs, obs: sortedJobs, }
-      fs.ensureDir(wc.Paths.heritrixJob, err => {
+      fs.ensureDir(heritrixJobP, err => {
          if (err) {
             reject(err)
          } else {
-            fs.walk(wc.Paths.heritrixJob)
+            fs.walk(heritrixJobP)
                .pipe(onlyJobLaunchsProgress)
                .pipe(launchStats)
                .on('data', item => {
@@ -449,8 +353,7 @@ export function getHeritrixJobsState() {
                })
          }
       })
-
-
+      
    })
 
 }
