@@ -6,7 +6,7 @@ var path = require('path')
 module.exports = {
    entry: {
       wail: "./src/wail",
-      // monitors: './src/background/monitor-entry'
+      monitors: './src/background/monitor-entry'
    },
    module: {
       noParse: /node_modules\/json-schema\/lib\/validate\.js/,
