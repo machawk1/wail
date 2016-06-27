@@ -38,6 +38,8 @@ const DEFAULT_OPTS = {
       '^/tools($|/)',
       '^/newbinaries($|/)',
       '^/release($|/)',
+      '^/archives/*.(cdxt|warc|warc\.open)$',
+      '^/archiveIndexes/*.cdxt4$',
       '^/electron-main-dev.js',
       '^/zips($|/)',
    ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))

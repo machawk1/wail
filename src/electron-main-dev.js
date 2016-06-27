@@ -17,6 +17,7 @@ let base = path.resolve('./')
 let mWindowURL
 let bWindowURL
 
+
 if (process.env.NODE_ENV === 'development') {
 
    require('electron-debug')({
@@ -25,6 +26,7 @@ if (process.env.NODE_ENV === 'development') {
    mWindowURL = `file://${__dirname}/wail.html`
    bWindowURL = `file://${__dirname}/background/monitor.html`
 } else {
+   base = app.getAppPath()
    mWindowURL = `file://${base}/src/wail.html`
    bWindowURL = `file://${base}/src/background/monitor.html`
 }
