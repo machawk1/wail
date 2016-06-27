@@ -138,27 +138,6 @@ export function configSettings(base) {
    managed.paths.forEach(p => {
       settings.set(p.name, path.join(base, p.path))
    })
-   let exeType = '.sh'
-   let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
-   let command = 'sh'
-   if (os.platform() == 'win32') {
-      command = ''
-      exeType = '.bat'
-      cmdexport = `set JAVA_HOME=${settings.get('jdk')} & set JRE_HOME=${settings.get('jre')} &`
-   }
-   managed.commands.forEach(cmd => {
-      switch (cmd.name) {
-         case 'memgator':
-            settings.set('memgatorQuery', `${settings.get('memgator')} -a ${settings.get('archives')}`)
-            break
-         case 'tomcatStop':
-            settings.set(cmd.name, `${command} ${path.join(base, cmd.path)}${exeType}`)
-            break
-         default:
-            settings.set(cmd.name, `${cmdexport} ${command} ${path.join(base, cmd.path)}${exeType}`)
-            break
-      }
-   })
 
    let heritrix = managed.heritrix
    heritrix.jobConf = path.join(base, heritrix.jobConf)
@@ -171,6 +150,44 @@ export function configSettings(base) {
    code.crawlerBean = path.join(base, code.crawlerBean)
    code.wayBackConf = path.join(base, code.wayBackConf)
 
+   let exeType = '.sh'
+   let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
+   let command = 'sh'
+   let isWindows = os.platform() == 'win32'
+   settings.set('isWindows', isWindows)
+
+   managed.commands.forEach(cmd => {
+      switch (cmd.name) {
+         case 'memgator':
+            settings.set('memgatorQuery', `${settings.get('memgator')} -a ${settings.get('archives')}`)
+            break
+         case 'tomcatStart':
+            if (!isWindows) {
+               settings.set(cmd.name, `${command} ${path.join(base, cmd.path)}${exeType}`)
+            } else {
+               settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
+            }
+            break
+         case 'tomcatStop':
+            if (!isWindows) {
+               settings.set(cmd.name, `${command} ${path.join(base, cmd.path)}${exeType}`)
+            } else {
+               settings.set(cmd.name, `${path.join(base, 'bundledApps/wayback.bat')} stop`)
+            }
+            break
+         case 'heritrixStart':
+            let heritrixLogin = `-a ${settings.get('username')}:${settings.get('heritrix.password')}`
+            if (isWindows) {
+               settings.set('heritrixStart', `${path.join(base, 'bundledApps/heritrix.bat')} ${heritrixLogin}`)
+            } else {
+               settings.set(cmd.name, `${cmdexport} ${command} ${path.join(base, cmd.path)}${exeType} ${heritrixLogin}`)
+            }
+            break
+         default:
+            settings.set(cmd.name, `${cmdexport} ${command} ${path.join(base, cmd.path)}${exeType}`)
+            break
+      }
+   })
 
    console.log(base, settings)
 }

@@ -1,4 +1,5 @@
 import React, {Component} from "react"
+import { remote } from 'electron'
 import AppBar from "material-ui/AppBar"
 import Drawer from "material-ui/Drawer"
 import MenuItem from "material-ui/MenuItem"
@@ -26,7 +27,7 @@ export default class Header extends Component {
       this.state = {open: false,location:"Basic"}
       this.handleToggle = this.handleToggle.bind(this)
       this.handleClose = this.handleClose.bind(this)
-
+      this.hacky = '\t\t\t\t\t\t\t\t\t'
    }
 
    handleToggle() {
@@ -36,7 +37,8 @@ export default class Header extends Component {
    }
 
    handleClose(event,toWhere) {
-      this.setState({open: false,location: toWhere})
+      remote.getCurrentWindow().setTitle(`Web Archiving Integration Layer${this.hacky}${toWhere}`)
+      this.setState({open: false})
       console.log(toWhere)
    }
 
@@ -49,7 +51,6 @@ export default class Header extends Component {
             <AppBar
                title="Wail"
                onLeftIconButtonTouchTap={this.handleToggle}
-               iconElementRight={<p>{this.state.location}</p>}
             />
             <Drawer
                docked={false}

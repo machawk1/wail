@@ -4,11 +4,14 @@ import Paper from "material-ui/Paper"
 import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
 import {Grid, Row, Column} from "react-cellblock"
 import child_process from "child_process"
+import {shell} from 'electron'
+
+import settings from '../../../settings/settings'
 import wailConstants from "../../../constants/wail-constants"
 import HeritrixJobList from "./heritrix-joblist"
 import NewCrawlDialog from "./newCrawlDialog"
 import HeritrixJobInfo from "./heritrixJobInfo"
-import {shell} from 'electron'
+
 
 const styles = {
    button: {
@@ -35,24 +38,25 @@ export default class HeritrixTab extends Component {
    }
 
    onClickLaunchWebUI(event) {
-      console.log('Edit Wayback')
       console.log(process.platform)
-      shell.openExternal(Heritrix.web_ui)
+      shell.openExternal(settings.get('heritrix.web_ui'))
    }
+   /*
+    <Grid breakpoints={[12]}  gutterWidth={50}>
+    <Row>
+    <Column width="1/4">
 
+    </Column>
+    <Column width="3/4">
+    <HeritrixJobInfo/>
+    </Column>
+    </Row>
+    </Grid>
+    */
    render() {
       return (
          <Paper zdepth={3}>
-            <Grid breakpoints={[12]}  gutterWidth={50}>
-               <Row>
-                  <Column width="1/4">
-                     <HeritrixJobList />
-                  </Column>
-                  <Column width="3/4">
-                     <HeritrixJobInfo/>
-                  </Column>
-               </Row>
-            </Grid>
+            <HeritrixJobList />
             <Toolbar>
                <ToolbarGroup >
                   <NewCrawlDialog />

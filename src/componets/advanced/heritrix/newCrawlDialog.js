@@ -1,12 +1,12 @@
-import React, {Component} from "react";
-import Dialog from "material-ui/Dialog";
-import FlatButton from "material-ui/FlatButton";
-import RaisedButton from "material-ui/RaisedButton";
-import {Grid} from "react-cellblock";
-import CrawlUrls from "./crawlUrls";
-import CrawlDepth from "./crawlDepth";
-import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher";
-import WailConstants from "../../../constants/wail-constants";
+import React, {Component} from "react"
+import Dialog from "material-ui/Dialog"
+import FlatButton from "material-ui/FlatButton"
+import RaisedButton from "material-ui/RaisedButton"
+import {Grid} from "react-cellblock"
+import CrawlUrls from "./crawlUrls"
+import CrawlDepth from "./crawlDepth"
+import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher"
+import WailConstants from "../../../constants/wail-constants"
 // import * as heritrixActions from '../../../actions/heritrix-actions'
 
 const style = {

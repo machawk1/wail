@@ -1,11 +1,13 @@
 import React, {Component} from "react"
+import { shell } from 'electron'
 import RaisedButton from "material-ui/RaisedButton"
 import Paper from "material-ui/Paper"
-import EditorPopup from "../editor/editor-popup"
 import child_process from "child_process"
-import wc from "../../constants/wail-constants"
 import {Grid, Row, Column, observeGrid} from 'react-cellblock'
 
+import settings from '../../settings/settings'
+import EditorPopup from "../editor/editor-popup"
+import wc from "../../constants/wail-constants"
 
 const styles = {
    button: {
@@ -22,18 +24,19 @@ export default class WayBackTab extends Component {
 
    onClickViewWayback(event) {
       console.log('View Wayback')
-      switch (process.platform) {
-         case 'linux':
-            child_process.exec(`xdg-open ${wc.Wayback.uri_wayback}`)
-            break
-         case 'darwin':
-            child_process.exec(`open ${wc.Wayback.uri_wayback}`)
-            break
-         case 'win32':
-            child_process.exec(`start ${wc.Wayback.uri_wayback}`)
-            break
-
-      }
+      shell.openExternal(settings.get('wayback.uri_wayback'))
+      // switch (process.platform) {
+      //    case 'linux':
+      //       child_process.exec(`xdg-open ${wc.Wayback.uri_wayback}`)
+      //       break
+      //    case 'darwin':
+      //       child_process.exec(`open ${wc.Wayback.uri_wayback}`)
+      //       break
+      //    case 'win32':
+      //       child_process.exec(`start ${wc.Wayback.uri_wayback}`)
+      //       break
+      //
+      // }
 
    }
 

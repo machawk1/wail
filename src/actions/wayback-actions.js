@@ -17,8 +17,6 @@ import settings from '../settings/settings'
 const EventTypes = wc.EventTypes
 
 
-
-
 export function writeWaybackConf() {
    let wayBackConflines = [
       '\nwayback.url.scheme.default=http',
@@ -28,27 +26,27 @@ export function writeWaybackConf() {
       "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
       "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",
       "wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }",
-      "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}" ,
+      "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}",
       "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
       'wayback.archivedir.1=${wayback.basedir}/files1/',
       'wayback.archivedir.2=${wayback.basedir}/files2/',
    ]
    let wbConfPath = settings.get('wayBackConf')
    let base = settings.get('base')
-   fs.readFile(wbConfPath,'utf8',(err,val)=>{
-      if(err){
+   fs.readFile(wbConfPath, 'utf8', (err, val)=> {
+      if (err) {
          console.error(err)
       }
       /*
        'wail.basedir=/Applications/WAIL.app',
        'wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT',
        */
-      let $ = cheerio.load(val,{ xmlMode: true})
+      let $ = cheerio.load(val, {xmlMode: true})
       let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
       wayBackConflines.push(`wail.basedir=${base}`)
-      wayBackConflines.push(`wayback.basedir.default=${base}/bundledApps/tomcat/webapps/ROOT\n`)
-      config.text(wayBackConflines.join('\n'))
-      fs.writeFile(wbConfPath,$.xml(),err => {
+      wayBackConflines.push(`wayback.basedir.default=${base}/bundledApps/tomcat/webapps/ROOT${os.EOL}`)
+      config.text(wayBackConflines.join(os.EOL))
+      fs.writeFile(wbConfPath, $.xml(), err => {
          console.log(err)
       })
    })
@@ -121,7 +119,7 @@ export function generatePathIndex() {
          index.push(`${path.basename(item.path)}\t${item.path}`)
       })
       .on('end', () => {
-         fs.writeFile(settings.get('index'), index.join('\n'), 'utf8', err => console.log('done generating path index', err))
+         fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => console.log('done generating path index', err))
       })
 
 }
@@ -149,7 +147,7 @@ export function generateCDX() {
       let cdx = path.basename(item.path).replace(replace, '.cdx')
       let cdxFile = `${cdxp}/${cdx}`
       child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
-         console.log('worfToCdx err,stdout,stderr',err,stdout,stderr)
+         console.log('worfToCdx err,stdout,stderr', err, stdout, stderr)
          fs.readFile(cdxFile, 'utf8', (errr, value)=> {
             through.push(value)
             next()

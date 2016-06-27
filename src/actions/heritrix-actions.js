@@ -194,19 +194,20 @@ export function launchHeritrixJob(jobId) {
 }
 
 
-export function forceCrawlFinish(jobId) {
-   sendActionToHeritrix(sequentialActions(["terminate", "teardown"], jobId))
+export function forceCrawlFinish(jobId, cb) {
+   sendActionToHeritrix(sequentialActions(["terminate", "teardown"], jobId), jobId, cb)
 }
 
 export function restartJob(jobId) {
    buildHeritrixJob(jobId)
 }
 
-export function deleteHeritrixJob(jobId) {
 
+export function deleteHeritrixJob(jobId, cb) {
+   forceCrawlFinish(jobId, cb)
 }
 
-export function sendActionToHeritrix(act, jobId) {
+export function sendActionToHeritrix(act, jobId, cb) {
 
    let options
 
@@ -217,8 +218,13 @@ export function sendActionToHeritrix(act, jobId) {
       let nextAction = act.next()
       console.log('We have a actionGenerator', nextAction)
       notDone = !nextAction.done
-      if (nextAction.done)
+      if (nextAction.done) {
+         if (cb) {
+            cb()
+         }
          return
+      }
+
       options = nextAction.value
       console.log(options)
    } else {
@@ -353,7 +359,7 @@ export function getHeritrixJobsState() {
                })
          }
       })
-      
+
    })
 
 }

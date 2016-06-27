@@ -22,7 +22,10 @@ const style = {
 }
 
 export default class HeritrixJobInfo extends Component {
-
+   static propTypes = {
+      
+   }
+   
    constructor(props, context) {
       super(props, context)
       this.state = {

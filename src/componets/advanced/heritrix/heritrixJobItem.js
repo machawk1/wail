@@ -7,15 +7,26 @@ import IconMenu from "material-ui/IconMenu"
 import MenuItem from "material-ui/MenuItem"
 import Divider from 'material-ui/Divider'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
+import {Grid, Row, Column} from "react-cellblock"
+import del from 'del'
+import path from 'path'
+
+import settings from '../../../settings/settings'
 import wc from '../../../constants/wail-constants'
 import EditorPopup from "../../editor/editor-popup"
-import JobInfoDispatcher from '../../../dispatchers/jobInfoDispatcher'
-import  {forceCrawlFinish} from '../../../actions/heritrix-actions'
+import  {forceCrawlFinish, deleteHeritrixJob,restartJob} from '../../../actions/heritrix-actions'
 
 const styles = {
    button: {
       margin: 12,
    },
+   wrapper: {
+      display: 'flex',
+      flexWrap: 'wrap',
+   },
+   text: {
+      fontSize: 'small'
+   }
 }
 
 export default class HeritrixJobItem extends Component {
@@ -45,35 +56,123 @@ export default class HeritrixJobItem extends Component {
       this.deleteJob = this.deleteJob.bind(this)
       this.viewConf = this.viewConf.bind(this)
       this.onOpenChange = this.onOpenChange.bind(this)
+      this.makeItSoNumberOne = this.makeItSoNumberOne.bind(this)
+   }
+
+   makeItSoNumberOne(id) {
+      let runs = this.state.runs
+      let count = 0
+      if (runs.length > 0) {
+         // runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
+         let job = runs[0]
+         let status = job.ended ? "Ended" : "Running"
+         let discovered = job.discovered || ''
+         let queued = job.queued || ''
+         let downloaded = job.downloaded || ''
+         console.log('the job being displayed', job)
+
+         return (
+            <Grid flexible={true}>
+               <Row>
+                  <Column width="1/6">
+                     <p style={styles.text}>ID: {id}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Status: {status}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Timestamp: {job.timestamp.format("MM/DD/YYYY h:mm:ssa")}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Discovered: {discovered}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Queued: {queued}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Downloaded: {downloaded}</p>
+                  </Column>
+               </Row>
+            </Grid>
+         )
+      } else {
+         return (
+            <Grid flexible={true}>
+               <Row>
+                  <Column width="1/6" style={styles.text}>
+                     <p>ID: {id}</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Status: Not Started</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Timestamp: Not Started</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Discovered: 0</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Queued: 0</p>
+                  </Column>
+                  <Column width="1/6" style={styles.text}>
+                     <p>Downloaded: 0</p>
+                  </Column>
+               </Row>
+            </Grid>
+         )
+      }
    }
 
    itemClicked(event) {
       console.log('clicked on jobitem')
-      JobInfoDispatcher.dispatch({
-         type: wc.EventTypes.VIEW_HERITRIX_JOB,
-         state: this.state
-      })
    }
-   
+
    viewConf(event) {
       this.setState({openEditor: !this.state.openEditor})
    }
 
    start(event) {
       console.log("stat")
-      
+      let runs = this.state.runs
+      if (runs.length > 0) {
+         if (runs[0].ended) {
+            restartJob(this.state.jobId)
+         }
+      }
+
    }
 
    restart(event) {
+      let runs = this.state.runs
+      if (runs.length > 0) {
+         if (!runs[0].ended) {
+            forceCrawlFinish(this.state.jobId, () => restartJob(this.state.jobId))
+         } else {
+            restartJob(this.state.jobId)
+         }
+      }
+
 
    }
 
-   kill(event) {
-      forceCrawlFinish(this.state.jobId)
+   kill(event,cb) {
+      forceCrawlFinish(this.state.jobId,cb)
    }
 
    deleteJob(event) {
+      let runs = this.state.runs
+      if (runs.length > 0) {
+         if (!runs[0].ended) {
+            // hehe this function is only local to the !runs[0].ended scope
+            let cb = () => {
+               del([`${settings.get('heritrixJob')}${path.sep}${this.state.jobId}`], {force: true})
+                  .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
+            }
+            cb = cb.bind(this)
+            deleteHeritrixJob(this.state.jobId,cb)
+         }
 
+      }
    }
 
    onOpenChange(event) {
@@ -97,7 +196,6 @@ export default class HeritrixJobItem extends Component {
                    anchorOrigin={{ vertical: 'top', horizontal: 'left',}}
                    targetOrigin={{ vertical: 'top', horizontal: 'left',}}
          >
-
             <MenuItem onTouchTap={this.viewConf} primaryText="View Config"/>
             <Divider />
             <MenuItem
@@ -110,15 +208,16 @@ export default class HeritrixJobItem extends Component {
                   <MenuItem onTouchTap={this.deleteJob} primaryText="Delete"/>,
                ]}
             />
-
          </IconMenu>
       )
-      let cp = `${wc.Paths.heritrixJob}/${this.props.jobId}/crawler-beans.cxml`
+
+
+      let cp = `${settings.get('heritrixJob')}/${this.props.jobId}/crawler-beans.cxml`
       let id = this.props.jobId
       return (
          <div>
             <ListItem
-               primaryText={<p>{this.state.jobId}</p>}
+               primaryText={this.makeItSoNumberOne(this.state.jobId)}
                onTouchTap={this.itemClicked}
                rightIconButton={rightIconMenu}
             />

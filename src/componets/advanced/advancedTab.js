@@ -37,7 +37,6 @@ export default class AdvancedTab extends Component {
                <Miscellaneous />
             </Tab>
          </Tabs>
-
       )
    }
 }

@@ -1,15 +1,16 @@
-import React, {Component} from "react";
-import Menu from "material-ui/Menu";
-import MenuItem from "material-ui/MenuItem";
-import RaisedButton from "material-ui/RaisedButton";
-import Popover from "material-ui/Popover";
-import {Toolbar, ToolbarGroup} from "material-ui/Toolbar";
-import * as Heritrix from "../actions/heritrix-actions";
-import * as Wayback from "../actions/wayback-actions";
-import NewCrawlDialog from "../componets/advanced/heritrix/newCrawlDialog";
-import ServiceStore from "../stores/serviceStore";
+import React, {Component} from "react"
+import Menu from "material-ui/Menu"
+import MenuItem from "material-ui/MenuItem"
+import RaisedButton from "material-ui/RaisedButton"
+import Popover from "material-ui/Popover"
+import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
+import * as Heritrix from "../actions/heritrix-actions"
+import * as Wayback from "../actions/wayback-actions"
+import NewCrawlDialog from "../componets/advanced/heritrix/newCrawlDialog"
+import ServiceStore from "../stores/serviceStore"
 import wc from "../constants/wail-constants"
 import EditorPopup from "../componets/editor/editor-popup"
+import settings from "../settings/settings"
 
 const styles = {
    button: {
