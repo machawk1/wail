@@ -1,9 +1,12 @@
 import React, {Component} from "react"
+import {shell} from 'electron'
 import Snackbar from "material-ui/Snackbar"
 import RaisedButton from "material-ui/RaisedButton"
 import {Row} from "react-cellblock"
 import CrawlDispatcher from "../../dispatchers/crawl-dispatcher"
+import UrlDispatcher from "../../dispatchers/url-dispatcher"
 import wailConstants from "../../constants/wail-constants"
+import settings from "../../settings/settings"
 
 const styles = {
    button: {
@@ -41,9 +44,12 @@ export default class BasicTabButtons extends Component {
          from: From.BASIC_ARCHIVE_NOW
       })
    }
-
+ 
    onClickCheckArchive(event) {
       console.log('check archive')
+      UrlDispatcher.dispatch({
+         type: EventTypes.CHECK_URI_IN_ARCHIVE,
+      })
       this.setState({
          open: !this.state.open,
          message: "Checking Archive"
@@ -53,6 +59,9 @@ export default class BasicTabButtons extends Component {
 
    onClickViewArchive(event) {
       console.log('view archive')
+      UrlDispatcher.dispatch({
+         type: EventTypes.VIEW_ARCHIVED_URI,
+      })
       this.setState({
          open: !this.state.open,
          message: "Viewing Archive"

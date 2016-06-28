@@ -11,6 +11,7 @@ import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
 import wc from "../constants/wail-constants"
+import ServiceStore from '../stores/serviceStore'
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
 import settings from '../settings/settings'
@@ -19,36 +20,24 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const EventTypes = wc.EventTypes
 
 
-export function heritrixAccesible(forground = true) {
+export function heritrixAccesible() {
    console.log("checking heritrix accessibility")
    let optionEngine = settings.get('heritrix.optionEngine')
 
-   if (forground) {
-      rp(optionEngine)
-         .then(success => {
-            console.log("heritrix success", success)
-            ServiceDispatcher.dispatch({
-               type: EventTypes.HERITRIX_STATUS_UPDATE,
-               status: true,
-            })
+   rp(optionEngine)
+      .then(success => {
+         console.log("heritrix success", success)
+         ServiceDispatcher.dispatch({
+            type: EventTypes.HERITRIX_STATUS_UPDATE,
+            status: true,
          })
-         .catch(err => {
-            ServiceDispatcher.dispatch({
-               type: EventTypes.HERITRIX_STATUS_UPDATE,
-               status: false,
-            })
-         }).finally(() => console.log("heritrix finally"))
-   } else {
-      return new Promise((resolve, reject)=> {
-         rp(optionEngine)
-            .then(success => {
-               resolve({status: true})
-            })
-            .catch(err => {
-               resolve({status: false, error: err})
-            })
       })
-   }
+      .catch(err => {
+         ServiceDispatcher.dispatch({
+            type: EventTypes.HERITRIX_STATUS_UPDATE,
+            status: false,
+         })
+      }).finally(() => console.log("heritrix finally"))
 
 }
 
@@ -62,10 +51,14 @@ function* sequentialActions(actions, jobId) {
    }
 }
 
-export function launchHeritrix() {
+export function launchHeritrix(cb) {
+   console.log('launching heritrix',settings.get('heritrixStart'))
    child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let wasError = !err
+      if (cb) {
+         cb()
+      }
 
       ServiceDispatcher.dispatch({
          type: EventTypes.HERITRIX_STATUS_UPDATE,
@@ -131,66 +124,114 @@ export function makeHeritrixJobConf(urls, hops, jobId) {
 
 export function buildHeritrixJob(jobId) {
    let data = {action: "launch"}
-   console.log('building heritrix job')
    //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
    let options = settings.get('heritrix.buildOptions')
    options.uri = `${options.uri}${jobId}`
-
-   rp(options)
-      .then(response => {
-         // POST succeeded...
-         console.log("sucess in building job", response)
-         CrawlDispatcher.dispatch({
-            type: EventTypes.BUILT_CRAWL_JOB,
-            id: jobId,
-         })
+   console.log('building heritrix job')
+   if (!ServiceStore.heritrixStatus()) {
+      launchHeritrix(() => {
+         rp(options)
+            .then(response => {
+               // POST succeeded...
+               console.log("sucess in building job", response)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.BUILT_CRAWL_JOB,
+                  id: jobId,
+               })
+            })
+            .catch(err => {
+               if (err.statusCode == 303) {
+                  console.log("303 sucess in building job", err)
+                  CrawlDispatcher.dispatch({
+                     type: EventTypes.BUILT_CRAWL_JOB,
+                     id: jobId,
+                  })
+               } else {
+                  // POST failed...
+                  console.log("failur in building job", err)
+               }
+            })
       })
-      .catch(err => {
-         if (err.statusCode == 303) {
-            console.log("303 sucess in building job", err)
+   } else {
+      rp(options)
+         .then(response => {
+            // POST succeeded...
+            console.log("sucess in building job", response)
             CrawlDispatcher.dispatch({
                type: EventTypes.BUILT_CRAWL_JOB,
                id: jobId,
             })
-         } else {
-            // POST failed...
-            console.log("failur in building job", err)
-         }
-
-      })
-
+         })
+         .catch(err => {
+            if (err.statusCode == 303) {
+               console.log("303 sucess in building job", err)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.BUILT_CRAWL_JOB,
+                  id: jobId,
+               })
+            } else {
+               // POST failed...
+               console.log("failur in building job", err)
+            }
+         })
+   }
 }
 
 export function launchHeritrixJob(jobId) {
 
-   let options = settings.get('heritrix.launchOptions')
+   let options = settings.get('heritrix.launchJobOptions')
    options.uri = `${options.uri}${jobId}`
+   if (!ServiceStore.heritrixStatus()) {
+      launchHeritrix(() => {
+         rp(options)
+            .then(response => {
+               // POST succeeded...
+               console.log("sucess in launching job", response)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.LAUNCHED_CRAWL_JOB,
+                  id: jobId,
+               })
+            })
+            .catch(err => {
 
-   rp(options)
-      .then(response => {
-         // POST succeeded...
-         console.log("sucess in launching job", response)
-         CrawlDispatcher.dispatch({
-            type: EventTypes.LAUNCHED_CRAWL_JOB,
-            id: jobId,
-         })
+               if (err.statusCode == 303) {
+                  console.log("303 sucess in launch job", err)
+                  CrawlDispatcher.dispatch({
+                     type: EventTypes.LAUNCHED_CRAWL_JOB,
+                     id: jobId,
+                  })
+               } else {
+                  // POST failed...
+                  console.log("failur in launching job", err)
+               }
+               // POST failed...
+
+            })
       })
-      .catch(err => {
-
-         if (err.statusCode == 303) {
-            console.log("303 sucess in launch job", err)
+   } else {
+      rp(options)
+         .then(response => {
+            // POST succeeded...
+            console.log("sucess in launching job", response)
             CrawlDispatcher.dispatch({
                type: EventTypes.LAUNCHED_CRAWL_JOB,
                id: jobId,
             })
-         } else {
-            // POST failed...
-            console.log("failur in launching job", err)
-         }
-         // POST failed...
+         })
+         .catch(err => {
 
-      })
-
+            if (err.statusCode == 303) {
+               console.log("303 sucess in launch job", err)
+               CrawlDispatcher.dispatch({
+                  type: EventTypes.LAUNCHED_CRAWL_JOB,
+                  id: jobId,
+               })
+            } else {
+               // POST failed...
+               console.log("failur in launching job", err)
+            }
+         })
+   }
 }
 
 
@@ -208,7 +249,13 @@ export function deleteHeritrixJob(jobId, cb) {
 }
 
 export function sendActionToHeritrix(act, jobId, cb) {
-
+   if(!ServiceStore.heritrixStatus()){
+      if(cb){
+         cb()
+      }
+      return
+   }
+      
    let options
 
    let isActionGenerator = act instanceof sequentialActions
@@ -251,6 +298,18 @@ export function sendActionToHeritrix(act, jobId, cb) {
 
       })
 
+}
+
+function sortJobs(j1, j2) {
+   if(j1.timestamp.isBefore(j2.timestamp)){
+      return 1
+   }
+
+   if(j1.timestamp.isAfter(j2.timestamp)){
+      return -1
+   }
+
+   return 0
 }
 
 export function getHeritrixJobsState() {
@@ -343,7 +402,7 @@ export function getHeritrixJobsState() {
                      let sortedJobs = _.chain(jobs)
                         .toPairs()
                         .map(job => {
-                           job[1].runs.sort((j1, j2) => j1.timestamp.isAfter(j2.timestamp))
+                           job[1].runs.sort(sortJobs)
                            return job[1]
                         })
                         .value()

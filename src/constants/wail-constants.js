@@ -39,6 +39,7 @@ const consts = {
       BUILT_CRAWL_CONF: null,
       BUILT_CRAWL_JOB: null,
       LAUNCHED_CRAWL_JOB: null,
+      CRAWL_JOB_DELETED: null,
       HERITRIX_STATUS_UPDATE: null,
       WAYBACK_STATUS_UPDATE: null,
       FETCH_CODE: null,
@@ -47,6 +48,8 @@ const consts = {
       VIEW_HERITRIX_JOB: null,
       STORE_HERITRIX_JOB_CONFS: null,
       GET_HERITRIX_JOB_CONF: null,
+      CHECK_URI_IN_ARCHIVE: null,
+      VIEW_ARCHIVED_URI: null,
    }),
    Code: {
       which: keyMirror({

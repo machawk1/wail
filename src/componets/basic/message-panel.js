@@ -8,9 +8,10 @@ export default class MessagePanel extends Component {
       super(props, context)
       this.updateMementoCount = this.updateMementoCount.bind(this)
       this.urlUpdated = this.urlUpdated.bind(this)
+      let mc = UrlStore.getMementoCount()
       this.state = {
-         mementoCount: -1,
-         message: this.fetchingMementoMsg()
+         mementoCount: mc,
+         message: mc == -1 ? this.fetchingMementoMsg() : this.gotMementoMsg()
       }
 
 

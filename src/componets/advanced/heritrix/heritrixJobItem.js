@@ -14,6 +14,7 @@ import path from 'path'
 import settings from '../../../settings/settings'
 import wc from '../../../constants/wail-constants'
 import EditorPopup from "../../editor/editor-popup"
+import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher"
 import  {forceCrawlFinish, deleteHeritrixJob,restartJob} from '../../../actions/heritrix-actions'
 
 const styles = {
@@ -138,6 +139,8 @@ export default class HeritrixJobItem extends Component {
          if (runs[0].ended) {
             restartJob(this.state.jobId)
          }
+      } else {
+         restartJob(this.state.jobId)
       }
 
    }
@@ -161,18 +164,29 @@ export default class HeritrixJobItem extends Component {
 
    deleteJob(event) {
       let runs = this.state.runs
-      if (runs.length > 0) {
-         if (!runs[0].ended) {
-            // hehe this function is only local to the !runs[0].ended scope
-            let cb = () => {
-               del([`${settings.get('heritrixJob')}${path.sep}${this.state.jobId}`], {force: true})
-                  .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
-            }
-            cb = cb.bind(this)
-            deleteHeritrixJob(this.state.jobId,cb)
-         }
+      let cb = () => {
+         
+         del([`${settings.get('heritrixJob')}${path.sep}${this.state.jobId}`], {force: true})
+            .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
 
       }
+      cb = cb.bind(this)
+      if (runs.length > 0) {
+         if (!runs[0].ended) {
+            console.log("We have runs and the running one has not ended")
+            deleteHeritrixJob(this.state.jobId,cb)
+         } else {
+            console.log("We have runs and the run has ended")
+         }
+      } else {
+         console.log("We have no runs delete ok")
+         deleteHeritrixJob(this.state.jobId,cb)
+      }
+
+      CrawlDispatcher.dispatch({
+         type: wc.EventTypes.CRAWL_JOB_DELETED,
+         jobId: this.state.jobId
+      })
    }
 
    onOpenChange(event) {

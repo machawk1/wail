@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+        (function () {
+            const script = document.createElement('script');
+            script.src = (process.env.HOT) ? 'http://localhost:9000/dist/indexer.bundle.js' : '../../dist/indexer.bundle.js';
+            document.write(script.outerHTML);
+        }());
+    </script>
+</head>
+<body>
+    <h1>Indexer Service</h1>
+</body>
+</html>

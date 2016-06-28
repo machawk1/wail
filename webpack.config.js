@@ -6,7 +6,10 @@ var path = require('path')
 module.exports = {
    entry: {
       wail: "./src/wail",
-      monitors: './src/background/monitor-entry'
+      // monitors: './src/background/monitor-entry'
+      accessibility: './src/background/accessibility',
+      indexer: './src/background/indexer',
+      jobs: './src/background/jobs',
    },
    module: {
       noParse: /node_modules\/json-schema\/lib\/validate\.js/,
@@ -18,7 +21,7 @@ module.exports = {
             query: {
                presets: ['react', 'es2015', 'stage-0', 'node6', "react-hmre"],
                plugins: ['react-html-attrs', 'transform-class-properties',
-                  'transform-runtime', "add-module-exports"],
+                  'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          },
          {test: /\.css$/, loader: "style!css"},
@@ -46,7 +49,6 @@ module.exports = {
    },
 
    plugins: [
-      new webpack.optimize.DedupePlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
       new webpack.DefinePlugin({
          __DEV__: true,
@@ -55,6 +57,24 @@ module.exports = {
       }),
    ],
    devtool: 'source-map',
+   // devServer: {
+   //    stats: {
+   //       colors: true,
+   //       hash: false,
+   //       version: false,
+   //       timings: false,
+   //       assets: false,
+   //       chunks: false,
+   //       modules: false,
+   //       reasons: false,
+   //       children: false,
+   //       source: false,
+   //       errors: false,
+   //       errorDetails: false,
+   //       warnings: false,
+   //       publicPath: false
+   //    }
+   // },
    output: {
       path: path.join(__dirname, 'dist'),
       filename: '[name].bundle.js',

@@ -7,7 +7,10 @@ const config = {
 
    entry: {
       wail: "./src/wail",
-      monitors: './src/background/monitor-entry'
+      // monitors: './src/background/monitor-entry'
+      accessibility: './src/background/accessibility',
+      indexer: './src/background/indexer',
+      jobs: './src/background/jobs',
    },
 
    output: {
@@ -28,7 +31,7 @@ const config = {
             query: {
                presets: ['react', 'es2015', 'stage-0', 'node6'],
                plugins: ['react-html-attrs', 'transform-class-properties',
-                  'transform-runtime', "add-module-exports"],
+                  'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          }, {test: /\.css$/, loader: "style!css"},
          {

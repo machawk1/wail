@@ -13,7 +13,7 @@ export default {
             query: {
                presets: ['react', 'es2015', 'stage-0', 'node6'],
                plugins: ['react-html-attrs', 'transform-class-properties',
-                  'transform-runtime', "add-module-exports"],
+                  'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          }, {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,

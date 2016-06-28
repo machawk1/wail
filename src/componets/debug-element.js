@@ -148,8 +148,7 @@ export default class Debug extends Component {
             <Menu>
                <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText="Start Wayback"/>
                <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText="Kill Wayback"/>
-               <MenuItem onTouchTap={(e) => Wayback.generatePathIndex()} primaryText="Generate Index"/>
-               <MenuItem onTouchTap={(e) => Wayback.generateCDX()} primaryText="Generate CDX"/>
+
             </Menu>
          </Popover>
          </div>
@@ -157,3 +156,7 @@ export default class Debug extends Component {
       )
    }
 }
+/*
+ <MenuItem onTouchTap={(e) => Wayback.generatePathIndex()} primaryText="Generate Index"/>
+ <MenuItem onTouchTap={(e) => Wayback.generateCDX()} primaryText="Generate CDX"/>
+ */

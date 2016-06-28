@@ -2,12 +2,13 @@ import 'babel-polyfill'
 import EventEmitter from "eventemitter3"
 import _ from 'lodash'
 import os from 'os'
-
+import moment from 'moment'
 import UrlStore from "../stores/urlStore"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
 import EditorDispatcher from "../dispatchers/editorDispatcher"
 import wailConstants from "../constants/wail-constants"
 import {readCode} from '../actions/editor-actions'
+import settings from '../settings/settings'
 import {
    getHeritrixJobsState,
    makeHeritrixJobConf,
@@ -15,7 +16,7 @@ import {
    launchHeritrixJob
 } from "../actions/heritrix-actions"
 
-import { ipcRenderer } from "electron"
+import {ipcRenderer} from "electron"
 
 
 const EventTypes = wailConstants.EventTypes
@@ -25,6 +26,7 @@ class crawlStore extends EventEmitter {
    constructor() {
       super()
       this.crawlJobs = []
+      this.jobIndex = new Map()
       this.handleEvent = this.handleEvent.bind(this)
       this.createJob = this.createJob.bind(this)
       this.latestJob = this.latestJob.bind(this)
@@ -32,21 +34,26 @@ class crawlStore extends EventEmitter {
       this.populateJobsFromPrevious = this.populateJobsFromPrevious.bind(this)
       getHeritrixJobsState()
          .then(status => {
-            if(status.count > 0) {
+            if (status.count > 0) {
                EditorDispatcher.dispatch({
                   type: EventTypes.STORE_HERITRIX_JOB_CONFS,
                   confs: status.confs
                })
+               this.jobIndex.clear()
+               status.jobs.forEach((jrb, idx)=> {
+                  this.jobIndex.set(jrb.jobId, idx)
+               })
+               console.log(status.jobs)
                this.crawlJobs = status.jobs
                this.emit('jobs-restored')
             }
          })
          .catch(error => {
-            console.log('There was an error in getting the configs',error)
+            console.log('There was an error in getting the configs', error)
          })
 
-     
-      ipcRenderer.on("crawljob-status-update", (event,crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
+
+      ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
    }
 
    createJob(id, pth, urls) {
@@ -55,21 +62,24 @@ class crawlStore extends EventEmitter {
          path: pth,
          runs: [],
          urls: urls,
-         crawlBean: readCode(`${wailConstants.Paths.heritrixJob}/${id.toString()}/crawler-beans.cxml`)
+         crawlBean: readCode(`${settings.get("heritrixJob")}/${id.toString()}/crawler-beans.cxml`)
       })
+      this.jobIndex.set(id.toString(), this.crawlJobs.length - 1)
 
-      this.emit('job-created')
+      this.emit('jobs-updated')
    }
 
 
    populateJobsFromPrevious(jobs) {
-      console.log('building previous jobs')
+      console.log('building previous jobs', jobs.jobs)
       this.crawlJobs = jobs.jobs
+      
       EditorDispatcher.dispatch({
          type: EventTypes.STORE_HERITRIX_JOB_CONFS,
          confs: jobs.confs
       })
-      this.emit('jobs-restored')
+      this.emit('jobs-updated')
+      
    }
 
    latestJob() {
@@ -93,7 +103,7 @@ class crawlStore extends EventEmitter {
                case From.BASIC_ARCHIVE_NOW:
                {
                   urls = UrlStore.getUrl()
-                  console.log('crawlstore archiving the url is ',urls)
+                  console.log('crawlstore archiving the url is ', urls)
                   makeHeritrixJobConf(urls, 1)
                   break
                }
@@ -147,13 +157,14 @@ class crawlStore extends EventEmitter {
          }
          case EventTypes.HERITRIX_CRAWL_ALL_STATUS:
          {
-            // this.populateJobsFromPrevious(event.jobReport)
             this.crawlJobs = event.jobReport
-            // _.forOwn(jobs, jb => {
-            //    this.crawlJobs.push(jb)
-            // })
-            this.emit('jobs-restored')
+            this.emit('jobs-updated')
+            break
          }
+         case EventTypes.CRAWL_JOB_DELETED:
+            this.crawlJobs = _.filter(this.crawlJobs, jb => jb.jobId != event.jobId)
+            this.emit('jobs-updated')
+            break
 
       }
 

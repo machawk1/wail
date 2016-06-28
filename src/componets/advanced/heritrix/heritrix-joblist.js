@@ -21,13 +21,11 @@ export default class HeritrixJobList extends Component {
    }
 
    componentWillMount() {
-      CrawlStore.on('jobs-restored', this.getJobs)
-      CrawlStore.on('job-created', this.getJobs)
+      CrawlStore.on('jobs-updated', this.getJobs)
    }
 
    componentWillUnmount() {
-      CrawlStore.removeListener('jobs-restored', this.getJobs)
-      CrawlStore.removeListener('job-created', this.getJobs)
+      CrawlStore.removeListener('jobs-updated', this.getJobs)
    }
 
    render() {

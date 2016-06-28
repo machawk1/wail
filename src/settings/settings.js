@@ -116,13 +116,13 @@ const managed = {
    wayback: {
       uri_tomcat: "http://localhost:8080/",
       uri_wayback: "http://localhost:8080/wayback/",
-      allCDX: "/*.cdx",
-      notIndexCDX: "/index.cdx"
+      allCDX: `${path.sep}*.cdx`,
+      notIndexCDX: `${path.sep}index.cdx`
    },
    commands: [
-      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina'},
-      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup'},
-      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown'},
+      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh'},
+      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh'},
+      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh'},
       {name: 'heritrixStart', path: 'bundledApps/heritrix-3.2.0/bin/heritrix'},
       {name: 'memgator'},
    ],
@@ -136,21 +136,20 @@ export function configSettings(base) {
    console.log('We are not configed')
    settings.set('base', base)
    managed.paths.forEach(p => {
-      settings.set(p.name, path.join(base, p.path))
+      settings.set(p.name, path.normalize(path.join(base, p.path)))
    })
 
    let heritrix = managed.heritrix
-   heritrix.jobConf = path.join(base, heritrix.jobConf)
+   heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
    settings.set('heritrix', heritrix)
    let wb = managed.wayback
    wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
    wb.notIndexCDX = `!${settings.get('cdx')}${wb.notIndexCDX}`
    settings.set('wayback', wb)
    let code = managed.code
-   code.crawlerBean = path.join(base, code.crawlerBean)
-   code.wayBackConf = path.join(base, code.wayBackConf)
+   code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
+   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
 
-   let exeType = '.sh'
    let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
    let command = 'sh'
    let isWindows = os.platform() == 'win32'
@@ -161,30 +160,37 @@ export function configSettings(base) {
          case 'memgator':
             settings.set('memgatorQuery', `${settings.get('memgator')} -a ${settings.get('archives')}`)
             break
+         case 'catalina':
+            if (!isWindows) {
+               settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+            } else {
+               settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
+            }
+            break
          case 'tomcatStart':
             if (!isWindows) {
-               settings.set(cmd.name, `${command} ${path.join(base, cmd.path)}${exeType}`)
+               settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
             } else {
                settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
             }
             break
          case 'tomcatStop':
             if (!isWindows) {
-               settings.set(cmd.name, `${command} ${path.join(base, cmd.path)}${exeType}`)
+               settings.set(cmd.name, `${command} ${path.normalize(path.join(base, cmd.path))}`)
             } else {
-               settings.set(cmd.name, `${path.join(base, 'bundledApps/wayback.bat')} stop`)
+               settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} stop`)
             }
             break
          case 'heritrixStart':
-            let heritrixLogin = `-a ${settings.get('username')}:${settings.get('heritrix.password')}`
+            let heritrixLogin = `-a ${settings.get('heritrix.username')}:${settings.get('heritrix.password')}`
             if (isWindows) {
-               settings.set('heritrixStart', `${path.join(base, 'bundledApps/heritrix.bat')} ${heritrixLogin}`)
+               settings.set('heritrixStart', `${path.normalize(path.join(base, 'bundledApps/heritrix.bat'))} ${heritrixLogin}`)
             } else {
-               settings.set(cmd.name, `${cmdexport} ${command} ${path.join(base, cmd.path)}${exeType} ${heritrixLogin}`)
+               settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))} ${heritrixLogin}`)
             }
             break
          default:
-            settings.set(cmd.name, `${cmdexport} ${command} ${path.join(base, cmd.path)}${exeType}`)
+            settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
             break
       }
    })

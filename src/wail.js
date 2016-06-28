@@ -13,11 +13,15 @@ import Routes from './componets/routes'
 import settings from './settings/settings'
 injectTapEventPlugin()
 
+import {writeWaybackConf} from "./actions/wayback-actions"
 
 
 
+ipcRenderer.send("start-index-indexing")
 ipcRenderer.send("start-crawljob-monitoring")
 ipcRenderer.send("start-service-monitoring")
+
+writeWaybackConf()
 
 // ipcRenderer.send("start-test","ping")
 // ipcRenderer.on("pong",pong => console.log(pong))
@@ -27,7 +31,7 @@ ipcRenderer.send("start-service-monitoring")
 
 const wail = document.getElementById('wail')
 
-console.log(settings.get('configed'),settings)
+console.log(settings)
 
 ReactDOM.render(
    <Router

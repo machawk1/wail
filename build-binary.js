@@ -38,10 +38,12 @@ const DEFAULT_OPTS = {
       '^/tools($|/)',
       '^/newbinaries($|/)',
       '^/release($|/)',
-      '^/archives/*.(cdxt|warc|warc\.open)$',
-      '^/archiveIndexes/*.cdxt4$',
+      '^/archives/',
+      '^/archiveIndexes/',
+      '^/bundledApps/heritrix-3.2.0/jobs/',
       '^/electron-main-dev.js',
       '^/zips($|/)',
+      '^/memgators($|/)',
    ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
       .concat(
          deps.filter(name => !electronCfg.externals.includes(name))
@@ -134,10 +136,12 @@ function pack(plat, arch, cb) {
    });
    const moveTo = `release/${plat}-${arch}/wail-electron-${plat}-${arch}/resources/app/bundledApps`;
    const realsePath = path.join(path.resolve('.'), moveTo);
+   let archs = `${plat}-${opts.arch}`
    let myCB = () => {
       cb();
-      console.log(`you might be here for a bit copying wail/bundledApps/ to ${moveTo}`)
-      ncp(basePath, realsePath);
+      console.log(`moving jdk and memgator for respective os to ${moveTo}`)
+      console.log(archs)
+      // ncp(basePath, realsePath);
    };
 
    packager(opts, myCB)

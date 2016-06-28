@@ -1,4 +1,6 @@
-import schedule from 'node-schedule'
+import child_process from "child_process"
+import os from 'os'
+import path from 'path'
 import rp from 'request-promise'
 import named from 'named-regexp'
 import through2 from 'through2'
@@ -7,13 +9,150 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import fs from 'fs-extra'
+import del from "del"
+import streamSort from "sort-stream2"
+import bytewise from "bytewise"
+import cron from 'cron'
+import ReadWriteLock from 'rwlock'
 import settings from '../settings/settings'
+import schedule from 'node-schedule'
+const indexLock = new ReadWriteLock()
+const jobLock = new ReadWriteLock()
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
+
+
+
+function generatePathIndex(genCdx) {
+   let index = []
+   let count = 0
+   let onlyWarf = through2.obj(function (item, enc, next) {
+      if (!item.stats.isDirectory() && path.extname(item.path) === '.warc') {
+         this.push(item)
+         count++
+      }
+      next()
+   })
+   indexLock.readLock('pindex', warcReadRelease => {
+      console.log("Aquiring pindex readlock")
+      fs.walk(settings.get('warcs'))
+         .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
+         .pipe(onlyWarf)
+         .on('data', item => {
+            index.push(`${path.basename(item.path)}\t${item.path}`)
+         })
+         .on('end', () => {
+            console.log("Aquiring pindex writelock")
+            indexLock.writeLock('pindex', indexWriteRelease => {
+               if (count > 0) {
+                  console.log('The count was greater than zero')
+                  fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
+                     console.log("Releasing pindex writelock")
+                     if (err) {
+                        indexWriteRelease()
+                        console.error('generating path index with error', err)
+                        throw  err
+                     } else {
+
+                        console.log('done generating path index no error')
+                        genCdx()
+                     }
+                  })
+               } else {
+                  console.log("There were no warcs to index")
+                  indexWriteRelease()
+               }
+
+            })
+            console.log("Releasing pindex readlock")
+            warcReadRelease()
+         })
+   })
+}
+
+//implements bytewise sorting of export LC_ALL=C; sort
+function unixSort(a, b) {
+   return bytewise.compare(bytewise.encode(a), bytewise.encode(b))
+}
+
+function generateCDX() {
+   let replace = /.warc+$/g
+   let cdxHeaderIncluded = false
+
+   let onlyWorf = through2.obj(function (item, enc, next) {
+      if (!item.stats.isDirectory() && path.extname(item.path) === '.warc')
+         this.push(item)
+      next()
+   })
+
+   let cdxp = settings.get('cdx')
+   let cdxIndexer = settings.get('cdxIndexer')
+
+   let worfToCdx = through2.obj(function (item, enc, next) {
+      let through = this //hope this ensures that this is through2.obj
+      let cdx = path.basename(item.path).replace(replace, '.cdx')
+      let cdxFile = `${cdxp}/${cdx}`
+      child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+         if (err) {
+            throw err
+         }
+         fs.readFile(cdxFile, 'utf8', (errr, value)=> {
+            if (errr) {
+               throw errr
+            }
+            through.push(value)
+            next()
+         })
+      })
+   })
+
+   let uniqueLines = new Set()
+
+   let cdxToLines = through2.obj(function (item, enc, next) {
+      let through = this
+      S(item).lines().forEach((line, index) => {
+         if (!uniqueLines.has(line)) {
+            if (index > 0) {
+               through.push(line + os.EOL)
+            } else if (!cdxHeaderIncluded) {
+               through.push(line + os.EOL)
+               cdxHeaderIncluded = true
+            }
+            uniqueLines.add(line)
+         }
+      })
+      next()
+   })
+
+
+   let writeStream = fs.createWriteStream(settings.get('indexCDX'))
+   indexLock.writeLock('indedxCDX', indexCDXWriteRelease => {
+      console.log('Acquiring write lock for indexCDX')
+      fs.walk(settings.get('warcs'))
+         .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
+         .pipe(onlyWorf)
+         .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
+         .pipe(worfToCdx)
+         .pipe(cdxToLines)
+         .pipe(streamSort(unixSort))
+         .pipe(writeStream)
+         .on('close', () => {
+            writeStream.destroy()
+            console.log('we have closed')
+            del([settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX')], {force: true})
+               .then(paths => {
+                  console.log('Releaseing write lock for indexCDX')
+                  console.log('Deleted files and folders:\n', paths.join('\n'))
+                  indexCDXWriteRelease()
+               })
+         })
+   })
+
+}
 
 function heritrixAccesible() {
    console.log("checking heritrix accessibility")
-   let optionEngine =  settings.get('heritrix.optionEngine')
+   let optionEngine = settings.get('heritrix.optionEngine')
    return new Promise((resolve, reject)=> {
       rp(optionEngine)
          .then(success => {
@@ -29,13 +168,13 @@ function getHeritrixJobsState() {
    return new Promise((resolve, reject) => {
       let jobLaunch = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/)
       let job = named.named(/[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/)
-      
+
       let jobs = {}
       let counter = 0
       let jobsConfs = {}
-      
+
       let heritrixJobP = settings.get('heritrixJob')
-      
+
       let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
          let didMath = jobLaunch.exec(item.path)
          if (didMath) {
@@ -165,11 +304,95 @@ function waybackAccesible() {
  └───────────────────────── second (0 - 59, OPTIONAL)
 
  */
+
+
+export class Indexer {
+   constructor() {
+      this.schedule = null
+      this.started = false
+      this.indexer = this.indexer.bind(this)
+   }
+
+   indexer() {
+      if (!this.started) {
+         this.schedules = new cron.CronJob('*/10 * * * * *', () => {
+            generatePathIndex(generateCDX)
+         }, null, true)
+         this.started = true
+      }
+   }
+}
+
+export class JobMonitor {
+   constructor() {
+      this.schedule = null
+      this.started = false
+      this.checkJobStatuses = this.checkJobStatuses.bind(this)
+   }
+
+   checkJobStatuses(cb) {
+      if (!this.started) {
+         this.schedule = new cron.CronJob('*/20 * * * *', () => {
+            jobLock.writeLock(release => {
+               getHeritrixJobsState()
+                  .then(status => {
+                     release()
+                     cb(status)
+                  })
+                  .catch(error => {
+                     release()
+                     cb(error)
+                  })
+            })
+
+         }, null, true)
+         this.started = true
+      }
+   }
+}
+
+export class StatusMonitor {
+   constructor() {
+      this.job = null
+      this.started = false
+      this.checkReachability = this.checkReachability.bind(this)
+      this.statues = {
+         heritrix: false,
+         wayback: false
+      }
+   }
+
+   checkReachability(cb) {
+      if (!this.started) {
+         //every two minutes
+         let rule   = new schedule.RecurrenceRule()
+         rule.second = [0, 10, 20,30,40, 50]
+         this.job = schedule.scheduleJob(rule,function () {
+            heritrixAccesible()
+               .then(ha => this.statues.heritrix = ha.status)
+               .catch(hdown => this.statues.heritrix = hdown.status)
+               .finally(() =>
+                  waybackAccesible()
+                     .then(wba => this.statues.wayback = wba.status)
+                     .catch(wbdown => this.statues.wayback = wbdown.status)
+                     .finally(() => {
+                        cb(this.statues)
+                        console.log("Done with status checks ", this.statues)
+                     })
+               )
+         })
+         this.started = true
+      }
+   }
+}
+
+
 class monitors {
    constructor() {
       this.schedules = []
       this.started = {
          jobs: false,
+         index: false,
          reachability: false,
          test: false,
       }
@@ -181,7 +404,7 @@ class monitors {
 
       this.checkJobStatuses = this.checkJobStatuses.bind(this)
       this.checkReachability = this.checkReachability.bind(this)
-      this.simpleTest = this.simpleTest.bind(this)
+      this.indexer = this.indexer.bind(this)
       this.cancelAll = this.cancelAll.bind(this)
    }
 
@@ -189,16 +412,25 @@ class monitors {
       this.schedules.forEach(s => s.cancel())
    }
 
+   indexer() {
+      if (!this.started.index) {
+         this.schedules.push(new cron.CronJob('*/10 * * * * *', () => {
+            generatePathIndex(generateCDX)
+         }, null, true))
+         this.started.index = true
+      }
+   }
+
    checkReachability(cb) {
       if (!this.started.reachability) {
          //every two minutes
-         this.schedules.push(schedule.scheduleJob('*/2 * * * *', () => {
+         this.schedules.push(new cron.CronJob('*/5 * * * *', () => {
 
-            heritrixAccesible(false)
+            heritrixAccesible()
                .then(ha => this.statues.heritrix = ha.status)
                .catch(hdown => this.statues.heritrix = hdown.status)
                .finally(() =>
-                  waybackAccesible(false)
+                  waybackAccesible()
                      .then(wba => this.statues.wayback = wba.status)
                      .catch(wbdown => this.statues.wayback = wbdown.status)
                      .finally(() => {
@@ -206,7 +438,7 @@ class monitors {
                         console.log("Done with status checks ", this.statues)
                      })
                )
-         }))
+         }, null, true))
          this.started.reachability = true
       }
    }
@@ -214,32 +446,23 @@ class monitors {
    checkJobStatuses(cb) {
       if (!this.started.jobs) {
          //every two minutes
-         this.schedules.push(schedule.scheduleJob('*/1 * * * *', () => {
-            getHeritrixJobsState()
-               .then(status => {
-                  cb(status)
-               })
-               .catch(error => {
-                  cb(error)
-               })
-         }))
+         this.schedules.push(new cron.CronJob('*/20 * * * *', () => {
+            jobLock.writeLock(release => {
+               getHeritrixJobsState()
+                  .then(status => {
+                     release()
+                     cb(status)
+                  })
+                  .catch(error => {
+                     release()
+                     cb(error)
+                  })
+            })
+
+         }, null, true))
          this.started.jobs = true
       }
    }
 
-   simpleTest(cb) {
-      console.log("simple test")
-      if (!this.started.test) {
-         //every two minutes
-         this.schedules.push(schedule.scheduleJob('*/2    *    *    *    *    *', () => {
-            console.log("firing simple test")
-            cb(`From the background ${Date.now()}`)
-         }))
-         this.started.test = true
-      }
-   }
 }
-
-const Monitors = new monitors
-export default Monitors
 

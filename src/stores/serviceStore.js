@@ -2,8 +2,8 @@ import EventEmitter from "eventemitter3"
 import {ipcRenderer} from "electron"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import wailConstants from "../constants/wail-constants"
-import {heritrixAccesible} from "../actions/heritrix-actions"
-import {waybackAccesible} from "../actions/wayback-actions"
+import {heritrixAccesible,launchHeritrix} from "../actions/heritrix-actions"
+import {waybackAccesible,startWayback} from "../actions/wayback-actions"
 
 const EventTypes = wailConstants.EventTypes
 
@@ -20,16 +20,33 @@ class serviceStore extends EventEmitter {
       this.checkStatues = this.checkStatues.bind(this)
       this.handleEvent = this.handleEvent.bind(this)
       this.updateStatues = this.updateStatues.bind(this)
-      ipcRenderer.on("service-status-update", (event,update) => this.updateStatues(update))
+      ipcRenderer.on("service-status-update", (event, update) => this.updateStatues(update))
    }
 
 
-   updateStatues(update){
+   updateStatues(update) {
       console.log("service updated")
-      this.serviceStatus.heritrix = update.heritrix
-      this.serviceStatus.wayback = update.wayback
-      this.emit('monitor-status-update')
-      
+      let actualUpdate = false
+      if (this.serviceStatus.heritrix != update.heritrix) {
+         this.serviceStatus.heritrix = update.heritrix
+         actualUpdate = true
+      }
+
+      if (this.serviceStatus.wayback != update.wayback) {
+         this.serviceStatus.wayback = update.wayback
+         actualUpdate = true
+      }
+
+
+      if (actualUpdate) {
+         if(!this.serviceStatus.heritrix){
+            launchHeritrix()
+         }
+         if(!this.serviceStatus.wayback){
+            startWayback()
+         }
+         this.emit('monitor-status-update')
+      }
    }
 
    checkStatues() {
@@ -37,11 +54,11 @@ class serviceStore extends EventEmitter {
       waybackAccesible()
    }
 
-   
-   serviceStatuses(){
+
+   serviceStatuses() {
       return this.serviceStatus
    }
-   
+
    heritrixStatus() {
       return this.serviceStatus.heritrix
    }
@@ -66,11 +83,8 @@ class serviceStore extends EventEmitter {
             this.emit('wayback-status-update')
             break
          }
-
       }
-
    }
-
 }
 
 const ServiceStore = new serviceStore;
