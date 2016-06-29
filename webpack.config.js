@@ -4,15 +4,16 @@ var path = require('path')
 
 
 module.exports = {
+  
    entry: {
-      wail: "./src/wail",
+      wail: path.join(__dirname,"src/wail"),
       // monitors: './src/background/monitor-entry'
-      accessibility: './src/background/accessibility',
-      indexer: './src/background/indexer',
-      jobs: './src/background/jobs',
+      accessibility: path.join(__dirname,'src/background/accessibility'),
+      indexer: path.join(__dirname,'src/background/indexer'),
+      jobs: path.join(__dirname,'src/background/jobs'),
    },
    module: {
-      noParse: /node_modules\/json-schema\/lib\/validate\.js/,
+      noParse: /node_modules\\json-schema\\lib\\validate\.js/,
       loaders: [
          {
             test: /\.jsx?$/,
@@ -56,25 +57,7 @@ module.exports = {
          
       }),
    ],
-   devtool: 'source-map',
-   // devServer: {
-   //    stats: {
-   //       colors: true,
-   //       hash: false,
-   //       version: false,
-   //       timings: false,
-   //       assets: false,
-   //       chunks: false,
-   //       modules: false,
-   //       reasons: false,
-   //       children: false,
-   //       source: false,
-   //       errors: false,
-   //       errorDetails: false,
-   //       warnings: false,
-   //       publicPath: false
-   //    }
-   // },
+   devtool: 'inline-source-map',
    output: {
       path: path.join(__dirname, 'dist'),
       filename: '[name].bundle.js',

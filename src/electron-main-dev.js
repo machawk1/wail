@@ -146,8 +146,12 @@ function createWindow() {
       // backgroundWindow.show()
       // backgroundWindow.openDevTools()
       if (process.env.NODE_ENV === 'development') {
-         // jobbWindow.openDevTools()
-         // accessibilityWindow.openDevTools()
+         jobbWindow.show()
+         accessibilityWindow.show()
+         indexWindow.show()
+         mainWindow.show()
+         jobbWindow.show()
+         accessibilityWindow.openDevTools()
          indexWindow.openDevTools()
          mainWindow.openDevTools()
       }

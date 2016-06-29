@@ -14,15 +14,84 @@ import _ from 'lodash'
 import schedule from 'node-schedule'
 import cron from 'cron'
 import cparser from 'cron-parser'
-
+import child_process from 'child_process'
+import drivelist from 'drivelist'
+import os from 'os'
 
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // "http://localhost:8080/wayback/*/" + self.uri.GetValue()
-let base = '.'
-const heritrixJob = path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs')
-console.log()
-fs.walk(heritrixJob)
+// let base = '.'
+// const heritrixJob = path.join(path.resolve(base), 'bundledApps/heritrix-3.2.0/jobs')
+// console.log()
+// fs.walk(heritrixJob)
+
+let drive = "A:\\wail-electron\\bundledApps\\heritrix.bat -a lorem:ipsum"[0]
+console.log(drive)
+
+
+//A:\wail-electron\bundledApps
+/*
+ `/${drive} ${path.normalize("A:\\wail-electron\\bundledApps\\heritrix.bat")}`,['-a lorem:ipsum'], (err, stdout, stderr) => {
+ console.log(err, stdout, stderr)
+
+ }
+ .spawn('cmd.exe',[`/${drive}`,`${path.normalize("A:\\wail-electron\\bundledApps\\heritrix.bat")} -a lorem:ipsum`])
+
+ */
+
+// child_process.exec("heritrix.bat -a lorem:ipsum",{cwd:`${path.normalize("A:\\wail-electron\\bundledApps")}`,shell: 'cmd.exe'}, (err, stdout, stderr) => {
+//    console.log(err, stdout, stderr)
+//
+// })
+
+
+var heritrixPath = path.normalize("A:\\wail-electron\\bundledApps\\heritrix-3.2.0")
+let opts = {
+    cwd: heritrixPath,
+    env: {
+        JAVA_HOME: "A:\\wail-electron\\bundledApps\\openjdk",
+        JRE_HOME: "A:\\wail-electron\\bundledApps\\openjdk\\jre",
+        HERITRIX_HOME: "A:\\wail-electron\\bundledApps\\heritrix-3.2.0",
+    },
+    detached: true,
+    shell: false,
+    stdio: ['ignore', 'ignore', 'ignore']
+}
+var heritrix = child_process.spawn("bin\\heritrix.cmd", ['-a', 'lorem:ipsum'], opts)
+heritrix.unref()
+console.log('done')
+
+
+
+
+// console.log('done')
+
+// heritrix.on('exit', function (code) {
+//    console.log('child process exited with code ' + code);
+// })
+//
+// setTimeout(function() {
+//    console.log('Ending terminal session')
+//    heritrix.stdin.write('blah blah\n')
+//    heritrix.stdin.end()
+//    heritrix.kill()
+// }, 2000)
+
+
+// let command = child_process.spawn('cmd.exe',[`/${drive}`,`${path.normalize("A:\\wail-electron\\bundledApps\\heritrix.bat")} -a lorem:ipsum`])
+//
+// command.stdout.on('data', function (data) {
+//    console.log('stdout: ' + data);
+// });
+//
+// command.stderr.on('data', function (data) {
+//    console.log('stderr: ' + data);
+// });
+//
+// command.on('exit', function (code) {
+//    console.log('child process exited with code ' + code);
+// });
 //
 // function tNightmare() {
 //
@@ -102,8 +171,8 @@ fs.walk(heritrixJob)
 //          .finally(() => console.log("Done with status checks ",statues))
 //    )
 var options = {
-   currentDate: Date.now(),
-   iterator: true
+    currentDate: Date.now(),
+    iterator: true
 };
 let count = 0
 //

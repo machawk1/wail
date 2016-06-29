@@ -1,10 +1,14 @@
-@echo off 
+@echo off
+
 set here=%cd%
-set JAVA_HOME=%here%/openjdk
-set JRE_HOME=%here%/openjdk/jre
-set CATALINA_HOME=%here%/tomcat
-set start=%CATALINA_HOME%/bin/startup.bat
-set stop=%CATALINA_HOME%/bin/shutdown.bat
+set JAVA_HOME=%here%\openjdk
+set JRE_HOME=%here%\openjdk\jre
+set CATALINA_HOME=%here%\tomcat
+set start=%CATALINA_HOME%\bin\startup.bat
+set stop=%CATALINA_HOME%\bin\shutdown.bat
+
+echo %here%
+
 
 if "%1" == "start" goto runWayback
 if "%1" == "stop" goto killWayback

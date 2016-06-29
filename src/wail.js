@@ -21,6 +21,10 @@ ipcRenderer.send("start-index-indexing")
 ipcRenderer.send("start-crawljob-monitoring")
 ipcRenderer.send("start-service-monitoring")
 
+
+console.log('sads sdas sdas')
+console.log('sads sdas sdas')
+
 writeWaybackConf()
 
 // ipcRenderer.send("start-test","ping")
@@ -31,7 +35,6 @@ writeWaybackConf()
 
 const wail = document.getElementById('wail')
 
-console.log(settings)
 
 ReactDOM.render(
    <Router

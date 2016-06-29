@@ -62,7 +62,7 @@ console.log(zips,bapps)
 
 fs.ensureDir(`${bapps}/openjdk`, err2 => {
    console.log('ensuring dir error', err2)
-   ncp(`${zips}/openjdk-1.7.0-u80-unofficial-linux-amd64-image`,`${bapps}/openjdk`,err3 => {
+   ncp(`${zips}/openjdk-1.7.0-u80-unofficial-windows-amd64-image`,`${bapps}/openjdk`,err3 => {
       console.log('done moving was err?',err3)
       // del([`${zips}/openjdk*`],{force:true})
       //     .then(paths => {
