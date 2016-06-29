@@ -30,22 +30,22 @@ Package for current platfom: `npm run-script package` To package for all platfor
 ## Major Tasks
 
 ### Status monitoring
-- [ ] heritrix crawl progress updating(queued,downloaded,...) per job
-- [ ] reachability of wayback and heritrix
+- [X] heritrix crawl progress updating(queued,downloaded,...) per job
+- [X] reachability of wayback and heritrix
 
 ### Heritrix
 - [x] start/stop
 - [x] configure and launch single seed crawl
 - [x] launch web ui in default browser
-- [ ] job crawl
+- [X] job crawl
   - [x] configure one off crawl
   - [x] launch one off crawl
   - [x] view with in app editor
-  - [ ] edit and save with in app editor
+  - [X] edit and save with in app editor
   - [x] multi uri crawl
-- [ ] job status
+- [X] job status
     - [x] on app start previous crawl status displayed
-    - [ ] background monitoring
+    - [X] background monitoring
 - [ ] post initial launch control
 
 ### Wayback
@@ -67,8 +67,8 @@ Package for current platfom: `npm run-script package` To package for all platfor
 ### OS support
   - [x] Linux!!!!
   - [x] OSX
-  - [ ] Windows
-    - [ ] add os detection for operations
+  - [X] Windows
+    - [X] add os detection for operations
     - [x] works
 
 ### Misc
