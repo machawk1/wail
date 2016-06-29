@@ -4,16 +4,15 @@ var path = require('path')
 
 
 module.exports = {
-  
    entry: {
-      wail: path.join(__dirname,"src/wail"),
+      wail: "./src/wail",
       // monitors: './src/background/monitor-entry'
-      accessibility: path.join(__dirname,'src/background/accessibility'),
-      indexer: path.join(__dirname,'src/background/indexer'),
-      jobs: path.join(__dirname,'src/background/jobs'),
+      accessibility: './src/background/accessibility',
+      indexer: './src/background/indexer',
+      jobs: './src/background/jobs',
    },
    module: {
-      noParse: /node_modules\\json-schema\\lib\\validate\.js/,
+      noParse: /node_modules\/json-schema\/lib\/validate\.js/,
       loaders: [
          {
             test: /\.jsx?$/,
