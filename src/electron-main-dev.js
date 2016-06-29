@@ -38,9 +38,9 @@ if (process.env.NODE_ENV === 'development') {
    base = app.getAppPath()
    mWindowURL = `file://${base}/src/wail.html`
    bWindowURL = `file://${base}/src/background/monitor.html`
-   accessibilityWindowURL = `file://${base}/background/accessibility.html`
-   indexWindowURL = `file://${base}/background/indexer.html`
-   jobbWindowURL = `file://${base}/background/jobs.html`
+   accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
+   indexWindowURL = `file://${base}/src/background/indexer.html`
+   jobbWindowURL = `file://${base}/src/background/jobs.html`
 }
 
 configSettings(base)
@@ -104,6 +104,24 @@ function stopMonitoring() {
    jobbWindow.webContents.send("stop")
 }
 
+function cleanUp() {
+   stopMonitoring()
+   // mainWindow.webContents.send("cleanUp")
+   // Dereference the window object, usually you would store windows
+   // in an array if your app supports multi windows, this is the time
+   // when you should delete the corresponding element.
+   backgroundWindow.close()
+   accessibilityWindow.close()
+   indexWindow.close()
+   jobbWindow.close()
+
+   mainWindow = null
+   backgroundWindow = null
+   accessibilityWindow = null
+   indexWindow = null
+   jobbWindow = null
+}
+
 function checkBackGroundWindows() {
    if (accessibilityWindow === null) {
       accessibilityWindow = new BrowserWindow({show: false})
@@ -146,15 +164,17 @@ function createWindow() {
       // backgroundWindow.show()
       // backgroundWindow.openDevTools()
       if (process.env.NODE_ENV === 'development') {
-         jobbWindow.show()
-         accessibilityWindow.show()
-         indexWindow.show()
-         mainWindow.show()
-         jobbWindow.show()
+         jobbWindow.openDevTools()
          accessibilityWindow.openDevTools()
          indexWindow.openDevTools()
          mainWindow.openDevTools()
       }
+
+      // jobbWindow.open()
+      // accessibilityWindow.show()
+      // accessibilityWindow.openDevTools()
+      // // indexWindow.openDevTools()
+      // mainWindow.openDevTools()
       mainWindow.focus()
    })
 
@@ -178,21 +198,7 @@ function createWindow() {
    // Emitted when the window is closed.
    mainWindow.on('closed', () => {
       console.log("closed")
-      stopMonitoring()
-      // mainWindow.webContents.send("cleanUp")
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      backgroundWindow.close()
-      accessibilityWindow.close()
-      indexWindow.close()
-      jobbWindow.close()
-
-      mainWindow = null
-      backgroundWindow = null
-      accessibilityWindow = null
-      indexWindow = null
-      jobbWindow = null
+      cleanUp()
    })
 
 
@@ -235,6 +241,7 @@ app.on('activate', () => {
 
 process.on('uncaughtException', (err) => {
    console.log(`Caught exception: ${err}`)
+   cleanUp()
    app.quit()
 })
 
