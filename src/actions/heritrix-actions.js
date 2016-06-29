@@ -52,9 +52,9 @@ function* sequentialActions(actions, jobId) {
 }
 
 export function launchHeritrix(cb) {
-   console.log('launching heritrix',settings.get('heritrixStart'))
    if(process.platform === 'win32'){
-      let heritrixPath = settings.get('heritrix')
+      let heritrixPath = settings.get('heritrix.path')
+      console.log(heritrixPath)
       let opts = {
          cwd: heritrixPath,
          env: {

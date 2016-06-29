@@ -31,6 +31,7 @@ const managed = {
       port: "8843",
       username: 'lorem',
       password: 'ipsum',
+      path: '',
       jobConf: 'crawler-beans.cxml',
       web_ui: "https://lorem:ipsum@localhost:8443",
       sendActionOptions: {
@@ -141,6 +142,7 @@ export function configSettings(base) {
    })
 
    let heritrix = managed.heritrix
+   heritrix.path = settings.get('heritrix')
    heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
    settings.set('heritrix', heritrix)
    let wb = managed.wayback
