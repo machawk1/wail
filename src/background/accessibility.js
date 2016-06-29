@@ -62,6 +62,7 @@ class StatusMonitor {
                      .catch(wbdown => this.statues.wayback = wbdown.status)
                      .finally(() => {
                         if(cache.accessibility){
+                           console.log("Accessibility cache is here ",cache)
                            let wasUpdate = false
                            if(this.statues.wayback != cache.accessibility.get('wayback')){
                               wasUpdate = true
@@ -72,14 +73,15 @@ class StatusMonitor {
                            }
                            
                            if(wasUpdate){
-                              console.log('there was an update to service statuses')
+                              console.log('there was an update to service statuses',cache,this.statues)
                               cb(this.statues)
                            } else {
-                              console.log("no update to service statuses")
+                              console.log("no update to service statuses",cache,this.statues)
                            }
                            
                           
                         } else {
+                           console.log("Cache has not been created making it")
                            cache.accessibility = new Map()
                            cache.accessibility.set('wayback',this.statues.wayback)
                            cache.accessibility.set('heritrix',this.statues.heritrix)
