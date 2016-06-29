@@ -53,18 +53,39 @@ function* sequentialActions(actions, jobId) {
 
 export function launchHeritrix(cb) {
    console.log('launching heritrix',settings.get('heritrixStart'))
-   child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
-      console.log(err, stdout, stderr)
-      let wasError = !err
+   if(process.platform === 'win32'){
+      let heritrixPath = settings.get('heritrix')
+      let opts = {
+         cwd: heritrixPath,
+         env: {
+            JAVA_HOME: settings.get('jdk'),
+            JRE_HOME: settings.get('jre'),
+            HERITRIX_HOME: heritrixPath,
+         },
+         detached: true,
+         shell: false,
+         stdio: ['ignore', 'ignore', 'ignore']
+      }
+      let usrpwrd = `${settings.get("heritrix.username")}:${settings.get("heritrix.password")}`
+      let heritrix = child_process.spawn("bin\\heritrix.cmd", ['-a',`${usrpwrd}`], opts)
+      heritrix.unref()
       if (cb) {
          cb()
       }
-
-      ServiceDispatcher.dispatch({
-         type: EventTypes.HERITRIX_STATUS_UPDATE,
-         status: wasError,
+   } else {
+      child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
+         console.log(err, stdout, stderr)
+         let wasError = !err
+         if (cb) {
+            cb()
+         }
+         ServiceDispatcher.dispatch({
+            type: EventTypes.HERITRIX_STATUS_UPDATE,
+            status: wasError,
+         })
       })
-   })
+   }
+
 }
 
 export function killHeritrix() {

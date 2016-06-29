@@ -67,20 +67,44 @@ export function waybackAccesible() {
          })
          startWayback()
       }).finally(() => console.log("wayback finally"))
-
-
 }
 
 
 export function startWayback() {
-   child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
-      console.log(err, stdout, stderr)
-   })
+   if(process.platform === 'win32'){
+      let basePath = settings.get('bundledApps')
+      let opts = {
+         cwd:  basePath,
+         detached: true,
+         shell: false,
+         stdio: ['ignore', 'ignore', 'ignore']
+      }
+      let wayback = child_process.spawn("wayback.bat", ["start"], opts)
+      wayback.unref()
+   } else {
+      child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
+         console.log(err, stdout, stderr)
+      })
+   }
+
 }
 
 export function killWayback() {
-   child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
-      console.log(err, stdout, stderr)
-   })
+   if(process.platform === 'win32'){
+      let basePath = settings.get('bundledApps')
+      let opts = {
+         cwd:  basePath,
+         detached: true,
+         shell: false,
+         stdio: ['ignore', 'ignore', 'ignore']
+      }
+      let wayback = child_process.spawn("wayback.bat", ["stop"], opts)
+      wayback.unref()
+   } else {
+      child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
+         console.log(err, stdout, stderr)
+      })
+   }
+
 }
 

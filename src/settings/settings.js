@@ -6,6 +6,7 @@ const settings = new ElectronSettings()
 
 const managed = {
    paths: [
+      {name: "bundledApps", path: "bundledApps"},
       {name: 'archives', path: 'config/archives.json'},
       {name: 'cdxIndexer', path: 'bundledApps/tomcat/webapps/bin/cdx-indexer'},
       {name: 'cdx', path: 'archiveIndexes'},
