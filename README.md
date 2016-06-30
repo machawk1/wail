@@ -15,17 +15,25 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 ### Scripts
 1. start-dev: Runs both the dev and start-electron-dev commands
 2. dev: Runs the webpack dev server with hot module replacement enabled
-3. start-electron-dev: Start electron
+3. dev-electron: Start electron
+4. download-externals: Will download the required openjdk and memgator version for current os
+5. download-externals-all: Will download the required opendjk and memgator for all version supported by this tool
 
 ### Running in development mode
-If you have not done so all ready `npm install`
- and then run `npm run-script start-dev`.
+If you have not done so all ready `npm install`, `npm run-script download-externals` and copy the downloaded openjdk
+and memgator to the bundled apps directory and finally run `npm run-script start-dev`.
 
+### Externals
+Currently for development and production we do not copy the downloaded  externals to the bundled app director or the respective realse directory.
+
+
+### Ports used
 We use webpack-dev server with `--inline --hot` and requires port 9000 to be free.
 
 
 ### Package
 Package for current platfom: `npm run-script package` To package for all platforms: `npm run-script package-all`
+
 
 ## Major Tasks
 
