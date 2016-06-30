@@ -13,7 +13,7 @@
     "nightmare": "cross-env babel-node tools/testNightmare",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
-    "postinstall": "npm run check-dev-engines && npm run download-externals",
+    "postinstall": "npm run check-dev-engines",
     "standard": "standard --verbose | snazzy",
     "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
     "test-xml": "cross-env babel-node tools/test-xml"

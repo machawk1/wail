@@ -103,7 +103,7 @@ export function launchHeritrix (cb) {
 
       let wasError = !err
       if (wasError) {
-        logger.log('error', logStringError, `linux/osx launch ${stderr}`, err.stack)
+        logger.log('error', logStringError, `linux/osx launch ${stderr}`, err)
       }
 
       if (cb) {

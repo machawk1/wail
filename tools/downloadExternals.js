@@ -187,7 +187,6 @@ if (argv.all) {
               let name = path.basename(item.path).replace(zipRE, '')
               extract(item.path, { dir: `${zips}` }, err1 => {
                 console.log(`Done extracting jdk for ${currentOSArch}`)
-                moveThem({ to: bapps, arch: currentOSArch })
               })
             })
         })

@@ -96,7 +96,7 @@ export function startWayback () {
   } else {
     child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.log('error', logStringError, `linux/osx launch wayback ${stderr}`, err.stack)
+      logger.log('error', logStringError, `linux/osx launch wayback ${stderr}`, err)
     })
   }
 
@@ -121,7 +121,7 @@ export function killWayback () {
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.log('error', logStringError, `linux/osx kill heritrix ${stderr}`, err.stack)
+      logger.log('error', logStringError, `linux/osx kill heritrix ${stderr}`, err)
     })
   }
 
