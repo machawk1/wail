@@ -13,10 +13,12 @@ import electronCfg  from './webpack.config.electron.js'
 import cfg  from './webpack.config.production.js'
 import packager from 'electron-packager'
 import del  from 'del'
+import pkg  from './package.json'
+import ProgressBar from 'progress'
 const exec = require('child_process').exec;
 const argv = require('minimist')(process.argv.slice(2));
-import pkg  from './package.json'
 
+const currentOSArch = `${os.platform()}${os.arch()}`
 const basePath = path.join(path.resolve('.'), 'bundledApps')
 
 const deps = Object.keys(pkg.dependencies);
@@ -34,9 +36,12 @@ const DEFAULT_OPTS = {
    name: appName,
    asar: shouldUseAsar,
    ignore: [
+       '^/.idea($|/)',
+       '^/waillogs($|/)',
       '^/test($|/)',
       '^/tools($|/)',
       '^/newbinaries($|/)',
+      '^/memgators($|/)',
       '^/release($|/)',
       '^/archives/',
       '^/archiveIndexes/',

@@ -1,27 +1,28 @@
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import path from 'path'
+import WebpackStrip from 'strip-loader'
+
+let noParseRe = process.platform === 'win32' ?  /node_modules\\json-schema\\lib\\validate\.js/ :   /node_modules\/json-schema\/lib\/validate\.js/
 
 const config = {
    devtool: 'source-map',
 
    entry: {
       wail: "./src/wail",
-      // monitors: './src/background/monitor-entry'
       accessibility: './src/background/accessibility',
       indexer: './src/background/indexer',
       jobs: './src/background/jobs',
    },
 
    output: {
-      // filename: "main.js",
       filename: '[name].bundle.js',
       path: path.join(__dirname, 'dist'),
       publicPath: './dist/'
    },
 
    module: {
-      noParse: /node_modules\/json-schema\/lib\/validate\.js/,
+      noParse: noParseRe,
 
       loaders: [
          {
@@ -33,7 +34,14 @@ const config = {
                plugins: ['react-html-attrs', 'transform-class-properties',
                   'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
-         }, {test: /\.css$/, loader: "style!css"},
+         },
+         { test: /\.jsx?$/, loader: WebpackStrip.loader('console.log') },
+         {
+            test: /\.jsx?$/,
+            exclude: /(node_modules|bower_components)/,
+            loader: WebpackStrip.loader('debug', 'console.log'),
+         },
+         {test: /\.css$/, loader: "style!css"},
          {
             test: /\.scss$/,
             loaders: ['style!css!less|scss', 'style-loader',

@@ -16,6 +16,8 @@ WAIL.spec
 # Mac meta
 .DS_Store
 
+waillogs
+memgators
 node_modules/
 
 newbinaries

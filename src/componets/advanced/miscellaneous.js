@@ -1,47 +1,47 @@
-import React, {Component} from "react"
+import React, { Component } from "react"
 import RaisedButton from "material-ui/RaisedButton"
 
 const styles = {
-   button: {
-      margin: 12,
-   },
+  button: {
+    margin: 12,
+  },
 }
 
 export default class Misc extends Component {
-   constructor(props, context) {
-      super(props, context)
-      this.onClickViewArchiveFiles = this.onClickViewArchiveFiles.bind(this)
-      this.onClickCheckForUpdates = this.onClickCheckForUpdates.bind(this)
-   }
+  constructor (props, context) {
+    super(props, context)
+    this.onClickViewArchiveFiles = this.onClickViewArchiveFiles.bind(this)
+    this.onClickCheckForUpdates = this.onClickCheckForUpdates.bind(this)
+  }
 
-   onClickViewArchiveFiles(event) {
-      console.log('View Archive Files')
-   }
+  onClickViewArchiveFiles (event) {
+    console.log('View Archive Files')
+  }
 
-   onClickCheckForUpdates(event) {
-      console.log('Check Updates')
+  onClickCheckForUpdates (event) {
+    console.log('Check Updates')
 
-   }
+  }
 
-   render() {
-      return (
-         <div>
-               <RaisedButton
-                  label="View Archive Files"
-                  labelPosition="before"
-                  primary={true}
-                  style={styles.button}
-                  onMouseDown={this.onClickViewArchiveFiles}
-               />
-               <RaisedButton
-                  label="Check Updates"
-                  labelPosition="before"
-                  primary={true}
-                  style={styles.button}
-                  onMouseDown={this.onClickCheckForUpdates}
-               />
-         </div>
-      )
-   }
+  render () {
+    return (
+      <div>
+        <RaisedButton
+          label="View Archive Files"
+          labelPosition="before"
+          primary={true}
+          style={styles.button}
+          onMouseDown={this.onClickViewArchiveFiles}
+        />
+        <RaisedButton
+          label="Check Updates"
+          labelPosition="before"
+          primary={true}
+          style={styles.button}
+          onMouseDown={this.onClickCheckForUpdates}
+        />
+      </div>
+    )
+  }
 }
 

@@ -8,7 +8,6 @@ Promise.promisifyAll(fs)
 import path from 'path'
 import ncp from 'ncp'
 
-
 const buildPath = path.join(path.resolve('../'), 'electron/build')
 const basePath = path.join(path.resolve('../'), 'electron/src')
 const actions = path.join(basePath, 'js/actions')
@@ -18,7 +17,6 @@ const dispatchers = path.join(basePath, 'js/dispatchers')
 const stores = path.join(basePath, 'js/stores')
 const pub = path.join(basePath, 'public')
 const app = path.join(buildPath, 'app')
-
 
 console.log(basePath)
 fs.ensureDir(app, err => console.log(err))

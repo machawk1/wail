@@ -1,24 +1,22 @@
 {
-  "name": "wail-electron",
-  "version": "0.9.0",
+  "name": "Wail",
+  "version": "0.9.9",
   "main": "./dist/electron-main.js",
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
   "scripts": {
+    "check-dev-engines": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
+    "dev": "cross-env webpack-dev-server --port 9000 --content-base ./src/ --hot --inline",
+    "dev-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./src/electron-main-dev.js",
+    "download-externals": "cross-env babel-node tools/downloadExternals",
+    "download-externals-all": "cross-env babel-node tools/downloadExternals --all",
+    "format-standard": "standard-format -w",
     "nightmare": "cross-env babel-node tools/testNightmare",
-    "start-electron-dev": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./src/electron-main-dev.js",
-    "dev": "cross-env webpack-dev-server --port 9000 --content-base src --inline --hot",
-    "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
-    "test-xml": "cross-env babel-node tools/test-xml",
-    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
-    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
-    "build": "npm run build-main && npm run build-renderer",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
-    "postinstall": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
+    "postinstall": "npm run check-dev-engines && npm run download-externals",
     "standard": "standard --verbose | snazzy",
-    "format-standard": "standard-format -w",
-    "get-ojdk": "cross-env babel-node tools/downloadOpenJDK",
-    "get-ojdk-all": "cross-env babel-node tools/downloadOpenJDK --all"
+    "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
+    "test-xml": "cross-env babel-node tools/test-xml"
   },
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -51,16 +49,9 @@
     }
   },
   "babel": {
-    "presets": [
-      "es2015",
-      "stage-0",
-      "react",
-      "node6"
-    ],
-    "plugins": [
-      "transform-runtime",
-      "transform-es2015-destructuring"
-    ]
+    "presets": ["react", "es2015", "stage-0", "node6", "react-hmre"],
+    "plugins": ["react-html-attrs", "transform-class-properties",
+      "transform-runtime", "add-module-exports","transform-es2015-destructuring"]
   },
   "dependencies": {
     "any-promise": "^1.3.0",
@@ -76,6 +67,7 @@
     "css-loader": "^0.23.1",
     "del": "2.2.1",
     "dimas-parallel": "^1.1.3",
+    "drivelist": "^3.2.0",
     "electron-debug": "^1.0.1",
     "electron-react-devtools": "^0.3.1",
     "electron-settings": "^1.0.4",
@@ -102,6 +94,7 @@
     "normalize.css": "^4.1.1",
     "pkginfo": "^0.4.0",
     "postcss": "^5.0.21",
+    "progress": "^1.1.8",
     "react": "15.1.0",
     "react-addons-css-transition-group": "^15.1.0",
     "react-addons-test-utils": "^15.1.0",
@@ -160,7 +153,7 @@
     "cross-env": "^1.0.8",
     "debug": "^2.2.0",
     "devtron": "^1.2.1",
-    "electron-compile": "3.2.6",
+    "electron-compile": "3.3.0",
     "electron-compilers": "3.1.2",
     "electron-devtools-installer": "^1.1.4",
     "electron-packager": "^7.1.0",
@@ -187,6 +180,7 @@
     "standard": "^7.1.2",
     "standard-format": "^2.2.2",
     "standard-react": "^2.1.0",
+    "strip-loader": "^0.1.2",
     "style-loader": "0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
