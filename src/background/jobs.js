@@ -12,7 +12,7 @@ import schedule from 'node-schedule'
 import os from 'os'
 import { remote } from 'electron'
 
-const logger = remote.getGlobal('logger')
+// const logger = remote.getGlobal('logger')
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
 
@@ -169,7 +169,7 @@ function getHeritrixJobsState () {
       let through = this
       fs.readFile(item.logPath, "utf8", (err, data)=> {
         if (err) {
-          logger.log('error', logStringError, `launchStats ${item.logPath}`, err.stack)
+//           logger.log('error', logStringError, `launchStats ${item.logPath}`, err.stack)
           through.push(item)
         }
         // console.log(data)
@@ -211,7 +211,7 @@ function getHeritrixJobsState () {
     //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
-        logger.log('error', logStringError, `  ensure dir heritrixJobP`, err.stack)
+//         logger.log('error', logStringError, `  ensure dir heritrixJobP`, err.stack)
         reject(err)
       } else {
         fs.walk(heritrixJobP)
@@ -254,7 +254,7 @@ function getHeritrixJobsState () {
           .on('error', function (error, item) {
             console.log(error.message)
             console.log(item.path) // the file the error occurred on
-            logger.log('error', logStringError, `getHeritrixJobsState ${item.path}`, error.stack)
+//             logger.log('error', logStringError, `getHeritrixJobsState ${item.path}`, error.stack)
             reject(error)
           })
       }
@@ -287,7 +287,7 @@ class JobMonitor {
             })
             .catch(error => {
               console.log("Done Checking job stats with error")
-              logger.log('error', logStringError, `checkJobStatuses`, error.stack)
+//               logger.log('error', logStringError, `checkJobStatuses`, error.stack)
               release()
               cb({ change: false })
             })

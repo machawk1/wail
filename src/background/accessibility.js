@@ -7,7 +7,7 @@ import { remote } from 'electron'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-const logger = remote.getGlobal('logger')
+// const logger = remote.getGlobal('logger')
 const logString = "accessibilityMonitor %s"
 const cache = {
   accessibility: null
@@ -78,19 +78,19 @@ class StatusMonitor {
                   }
 
                   if (wasUpdate) {
-                    logger.log('info', logString, `there was an update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+//                     logger.log('info', logString, `there was an update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                     cache.accessibility.set('wayback', this.statues.wayback)
                     cache.accessibility.set('heritrix', this.statues.heritrix)
                     console.log('there was an update to service statuses', cache, this.statues)
                     cb(this.statues)
                   } else {
                     console.log("no update to service statuses", cache, this.statues)
-                    logger.log('info', logString, `no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+//                     logger.log('info', logString, `no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                   }
 
                 } else {
                   console.log("Cache has not been created making it")
-                  logger.log('info', logString, `cache has not been created making it: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+//                   logger.log('info', logString, `cache has not been created making it: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                   cache.accessibility = new Map()
                   cache.accessibility.set('wayback', this.statues.wayback)
                   cache.accessibility.set('heritrix', this.statues.heritrix)

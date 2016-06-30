@@ -8,7 +8,7 @@ import cheerio from 'cheerio'
 import settings from '../settings/settings'
 import { remote } from 'electron'
 
-const logger = remote.getGlobal('logger')
+// const logger = remote.getGlobal('logger')
 const logString = "wayback-actions %s"
 const logStringError = "wayback-actions error where[ %s ] stack [ %s ]"
 
@@ -33,7 +33,7 @@ export function writeWaybackConf () {
   fs.readFile(wbConfPath, 'utf8', (err, val)=> {
     if (err) {
       console.error(err)
-      logger.log('error', logStringError, `reading WBConf ${err.message}`, err.stack)
+//       logger.log('error', logStringError, `reading WBConf ${err.message}`, err.stack)
     }
     /*
      'wail.basedir=/Applications/WAIL.app',
@@ -47,7 +47,7 @@ export function writeWaybackConf () {
     fs.writeFile(wbConfPath, $.xml(), err => {
       if (err) {
         console.error(err)
-        logger.log('error', logStringError, "writting WBConf", err.stack)
+//         logger.log('error', logStringError, "writting WBConf", err.stack)
       }
     })
   })
@@ -90,13 +90,13 @@ export function startWayback () {
       let wayback = child_process.spawn("wayback.bat", [ "start" ], opts)
       wayback.unref()
     } catch (err) {
-      logger.log('error', logStringError, "win32 launch wayback", err.stack)
+//       logger.log('error', logStringError, "win32 launch wayback", err.stack)
     }
 
   } else {
     child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.log('error', logStringError, `linux/osx launch wayback ${stderr}`, err)
+//       logger.log('error', logStringError, `linux/osx launch wayback ${stderr}`, err)
     })
   }
 
@@ -115,13 +115,13 @@ export function killWayback () {
       let wayback = child_process.spawn("wayback.bat", [ "stop" ], opts)
       wayback.unref()
     } catch (err) {
-      logger.log('error', logStringError, "win32 kill wayback", err.stack)
+//       logger.log('error', logStringError, "win32 kill wayback", err.stack)
     }
 
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.log('error', logStringError, `linux/osx kill heritrix ${stderr}`, err)
+//       logger.log('error', logStringError, `linux/osx kill heritrix ${stderr}`, err)
     })
   }
 

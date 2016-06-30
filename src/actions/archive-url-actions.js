@@ -6,7 +6,7 @@ import rp from 'request-promise'
 import { remote } from 'electron'
 
 const EventTypes = wailConstants.EventTypes
-const logger = remote.getGlobal('logger')
+// // const logger = remote.getGlobal('logger')
 const logString = "archive-url-actions %s "
 const logStringError = "archive-url-actions error where[ %s ], stack[ %s ]"
 
@@ -20,7 +20,7 @@ export function checkUriIsInArchive (uri) {
       })
       .catch(err => {
         console.log('error in querying wayback', err)
-        logger.log('error', logStringError, "checkUriIsInArchive", err.stack)
+// //         logger.log('error', logStringError, "checkUriIsInArchive", err.stack)
         resolve({ inArchive: false, uri: uri })
       })
 
@@ -45,7 +45,7 @@ export async function askMemgator (url) {
   console.log('askingMemegator')
   child_process.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
-      logger.log('error', logStringError, "askMemgator", err.stack)
+// //       logger.log('error', logStringError, "askMemgator", err.stack)
     }
     let mementoCount = (stdout.match(/memento/g) || []).length
     UrlDispatcher.dispatch({

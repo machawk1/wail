@@ -1,5 +1,5 @@
 import "babel-polyfill"
-import logger from 'winston'
+// import logger from 'winston'
 import {
   app,
   BrowserWindow,
@@ -55,10 +55,10 @@ if (process.env.NODE_ENV === 'development') {
 fs.ensureDirSync(logPath)
 logPath = path.join(logPath, 'wail.log')
 
-logger.add(logger.transports.File, { filename: logPath })
-logger.remove(logger.transports.Console)
+// logger.add(logger.transports.File, { filename: logPath })
+// logger.remove(logger.transports.Console)
 
-global.logger = logger
+// global.logger = logger
 
 function createBackgroundWindow () {
   backgroundWindow = new BrowserWindow({ show: false })
@@ -209,7 +209,7 @@ app.on('activate', () => {
 
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`)
-  logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
+//   logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
   cleanUp()
   app.quit()
 })

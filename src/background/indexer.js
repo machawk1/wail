@@ -14,7 +14,7 @@ import schedule from 'node-schedule'
 const indexLock = new ReadWriteLock()
 import { remote } from 'electron'
 
-const logger = remote.getGlobal('logger')
+// const logger = remote.getGlobal('logger')
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
 
@@ -48,7 +48,7 @@ function generatePathIndex (genCdx) {
               if (err) {
                 indexWriteRelease()
                 console.error('generating path index with error', err)
-                logger.log('error', logStringError, "generate path index on end", err.stack)
+//                 logger.log('error', logStringError, "generate path index on end", err.stack)
               } else {
 
                 console.log('done generating path index no error')
@@ -64,7 +64,7 @@ function generatePathIndex (genCdx) {
         console.log("Releasing pindex readlock")
         warcReadRelease()
       })
-      .on('error', err => logger.log('error', logStringError, 'generateIndexPath on error', err.stack))
+//       .on('error', err => logger.log('error', logStringError, 'generateIndexPath on error', err.stack))
   })
 }
 
@@ -92,11 +92,11 @@ function generateCDX () {
     let cdxFile = `${cdxp}/${cdx}`
     child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
-        logger.log('error', logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack)
+//         logger.log('error', logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack)
       }
       fs.readFile(cdxFile, 'utf8', (errr, value)=> {
         if (errr) {
-          logger.log('error', logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack)
+//           logger.log('error', logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack)
         }
         through.push(value)
         next()
@@ -143,7 +143,7 @@ function generateCDX () {
             indexCDXWriteRelease()
           })
       })
-      .on('error', err => logger.log('error', logStringError, 'generateCDX on error', err.stack))
+//       .on('error', err => logger.log('error', logStringError, 'generateCDX on error', err.stack))
   })
 
 }
