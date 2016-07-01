@@ -1,7 +1,6 @@
 import webpack from 'webpack';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import path from 'path'
-import WebpackStrip from 'strip-loader'
 
 let noParseRe = process.platform === 'win32' ?  /node_modules\\json-schema\\lib\\validate\.js/ :   /node_modules\/json-schema\/lib\/validate\.js/
 
@@ -18,12 +17,12 @@ const config = {
    output: {
       filename: '[name].bundle.js',
       path: path.join(__dirname, 'dist'),
-      publicPath: './dist/'
+      publicPath: './dist/',
+      libraryTarget: 'commonjs2'
    },
 
    module: {
       noParse: noParseRe,
-
       loaders: [
          {
             test: /\.jsx?$/,
@@ -34,11 +33,6 @@ const config = {
                plugins: ['react-html-attrs', 'transform-class-properties',
                   'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
-         },
-         {
-            test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components)/,
-            loader: WebpackStrip.loader('debug', 'console.log'),
          },
          {test: /\.css$/, loader: "style!css"},
          {

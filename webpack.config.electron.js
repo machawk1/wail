@@ -1,7 +1,5 @@
 import webpack from 'webpack'
 import path from 'path'
-import CopyWebpackPlugin from 'copy-webpack-plugin'
-import WebpackStrip from 'strip-loader'
 
 let noParseRe = process.platform === 'win32' ?  /node_modules\\json-schema\\lib\\validate\.js/ :   /node_modules\/json-schema\/lib\/validate\.js/
 
@@ -19,11 +17,7 @@ export default {
                   'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          },
-         {
-            test: /\.jsx?$/,
-            exclude: /(node_modules|bower_components)/,
-            loader: WebpackStrip.loader('debug', 'console.log'),
-         },
+
          {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,
             loader: 'url-loader?limit=10000',
@@ -41,6 +35,8 @@ export default {
    output: {
       filename: 'electron-main.js',
       path: path.join(__dirname, 'dist'),
+      publicPath: './dist/',
+      libraryTarget: 'commonjs2'
    },
 
    plugins: [

@@ -99,6 +99,7 @@ export function launchHeritrix (cb) {
   } else {
 
     child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
+      console.log(settings.get('heritrixStart'))
       console.log(err, stdout, stderr)
 
       let wasError = !err

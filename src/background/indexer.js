@@ -1,4 +1,4 @@
-import { ipcRenderer } from "electron"
+import { ipcRenderer, remote } from "electron"
 import child_process from "child_process"
 import os from 'os'
 import path from 'path'
@@ -11,11 +11,16 @@ import bytewise from "bytewise"
 import ReadWriteLock from 'rwlock'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
-import { remote } from 'electron'
 import util from 'util'
+import logger from 'electron-log'
+
 
 const indexLock = new ReadWriteLock()
-const logger = remote.getGlobal('logger')
+logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
+logger.transports.file.maxSize = 5 * 1024 * 1024
+logger.transports.file.file = remote.getGlobal('indexLogPath')
+logger.transports.file.streamConfig = {flags: 'a'}
+
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
 

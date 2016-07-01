@@ -1,4 +1,4 @@
-import { ipcRenderer } from "electron"
+import { ipcRenderer, remote } from "electron"
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -10,10 +10,16 @@ import ReadWriteLock from 'rwlock'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import os from 'os'
-import { remote } from 'electron'
 import util from 'util'
+import logger from 'electron-log'
 
-const logger = remote.getGlobal('logger')
+
+
+logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
+logger.transports.file.maxSize = 5 * 1024 * 1024
+logger.transports.file.file = remote.getGlobal('jobLogPath')
+logger.transports.file.streamConfig = {flags: 'a'}
+
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
 

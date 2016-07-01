@@ -1,15 +1,22 @@
-import { ipcRenderer } from "electron"
+import { ipcRenderer, remote } from "electron"
 import rp from 'request-promise'
 import Promise from 'bluebird'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
-import { remote } from 'electron'
 import util from 'util'
+import logger from 'electron-log'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-const logger = remote.getGlobal('logger')
+
+
+logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
+logger.transports.file.maxSize = 5 * 1024 * 1024
+logger.transports.file.file = remote.getGlobal('accessLogPath')
+logger.transports.file.streamConfig = {flags: 'a'}
+
 const logString = "accessibilityMonitor "
+
 const cache = {
   accessibility: null
 }

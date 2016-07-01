@@ -187,11 +187,10 @@ export function configSettings (base) {
         }
         break
       case "heritrixStart":
-        let heritrixLogin = `-a ${settings.get("heritrix.username")}:${settings.get("heritrix.password")}`
         if (isWindows) {
           settings.set("heritrixStart", `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
         } else {
-          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
+          settings.set(cmd.name, `${cmdexport}  ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
         }
         break
       default:
