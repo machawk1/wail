@@ -1,9 +1,9 @@
 import webpack from 'webpack'
 import path from 'path'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 import WebpackStrip from 'strip-loader'
 
 let noParseRe = process.platform === 'win32' ?  /node_modules\\json-schema\\lib\\validate\.js/ :   /node_modules\/json-schema\/lib\/validate\.js/
-
 
 export default {
    module: {
@@ -19,7 +19,11 @@ export default {
                   'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          },
-         { test: /\.jsx?$/, loader: WebpackStrip.loader('console.log') },
+         {
+            test: /\.jsx?$/,
+            exclude: /(node_modules|bower_components)/,
+            loader: WebpackStrip.loader('debug', 'console.log'),
+         },
          {
             test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,
             loader: 'url-loader?limit=10000',
@@ -38,7 +42,7 @@ export default {
       filename: 'electron-main.js',
       path: path.join(__dirname, 'dist'),
    },
-   
+
    plugins: [
       new webpack.optimize.UglifyJsPlugin({
          compressor: {
@@ -66,6 +70,6 @@ export default {
    externals: [
       'source-map-support',
       'material-design-icons-iconfont',
-      'roboto-fontface'
+      'roboto-fontface',
    ]
 }

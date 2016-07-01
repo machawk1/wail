@@ -33,7 +33,7 @@ export default class HeritrixJobList extends Component {
     let JobItems = jobs.length > 0 ? jobs.map(job => <HeritrixJobItem key={job.jobId} {...job}/>) :
       <ListItem primaryText="No Jobs To Display"/>
     return (
-      <List>
+      <List style ={{"overflow":"hidden", "overflow-y":"scroll"}}>
         {JobItems}
       </List>
     )

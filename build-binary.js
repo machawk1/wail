@@ -27,7 +27,9 @@ const devDeps = Object.keys(pkg.devDependencies);
 const appName = argv.name || argv.n || pkg.productName;
 const shouldUseAsar = argv.asar || argv.a || false;
 const shouldBuildAll = argv.all || false;
-
+const shouldBuildWindows = argv.win || false
+const shouldBuildOSX = argv.osx || false
+const shouldBuildLinux = argv.linux || false
 
 console.log(argv);
 
@@ -36,8 +38,8 @@ const DEFAULT_OPTS = {
    name: appName,
    asar: shouldUseAsar,
    ignore: [
-       '^/.idea($|/)',
-       '^/waillogs($|/)',
+      '^/.idea($|/)',
+      '^/waillogs($|/)',
       '^/test($|/)',
       '^/tools($|/)',
       '^/newbinaries($|/)',
@@ -98,8 +100,8 @@ function startPack() {
       .then(paths => {
          if (shouldBuildAll) {
             // build for all platforms
-            const archs = ['ia32', 'x64']
-            const platforms = ['linux', 'win32', 'darwin']
+            let  archs = ['ia32', 'x64']
+            let  platforms = ['linux', 'win32', 'darwin']
 
             platforms.forEach(plat => {
                archs.forEach(arch => {
@@ -107,8 +109,39 @@ function startPack() {
                })
             })
          } else {
-            // build for current platform only
-            pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+           
+            if(shouldBuildLinux){
+               let archs = ['ia32', 'x64']
+               let  platforms = ['linux',]
+
+               platforms.forEach(plat => {
+                  archs.forEach(arch => {
+                     pack(plat, arch, log(plat, arch));
+                  })
+               })
+            } else if(shouldBuildOSX) {
+               let archs = ['ia32', 'x64']
+               let  platforms = ['darwin',]
+
+               platforms.forEach(plat => {
+                  archs.forEach(arch => {
+                     pack(plat, arch, log(plat, arch));
+                  })
+               })
+            } else if(shouldBuildWindows) {
+               let  archs = ['ia32', 'x64']
+               let  platforms = ['win32']
+
+               platforms.forEach(plat => {
+                  archs.forEach(arch => {
+                     pack(plat, arch, log(plat, arch));
+                  })
+               })
+            } else {
+               pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+            }
+
+           
          }
       })
       .catch(err => {
@@ -144,9 +177,9 @@ function pack(plat, arch, cb) {
    let archs = `${plat}-${opts.arch}`
    let myCB = () => {
       cb();
-      console.log(`moving jdk and memgator for respective os to ${moveTo}`)
+      // console.log(`moving jdk and memgator for respective os to ${moveTo}`)
       console.log(archs)
-      // ncp(basePath, realsePath);
+      // ncp(basePath, realsePath)
    };
 
    packager(opts, myCB)

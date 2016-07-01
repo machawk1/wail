@@ -13,6 +13,9 @@
     "nightmare": "cross-env babel-node tools/testNightmare",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
+    "package-windows": "npm run package -- --win",
+    "package-linux": "npm run package -- --linux ",
+    "package-osx": "npm run package -- --osx",
     "postinstall": "npm run check-dev-engines",
     "standard": "standard --verbose | snazzy",
     "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
@@ -49,9 +52,20 @@
     }
   },
   "babel": {
-    "presets": ["react", "es2015", "stage-0", "node6", "react-hmre"],
-    "plugins": ["react-html-attrs", "transform-class-properties",
-      "transform-runtime", "add-module-exports","transform-es2015-destructuring"]
+    "presets": [
+      "react",
+      "es2015",
+      "stage-0",
+      "node6",
+      "react-hmre"
+    ],
+    "plugins": [
+      "react-html-attrs",
+      "transform-class-properties",
+      "transform-runtime",
+      "add-module-exports",
+      "transform-es2015-destructuring"
+    ]
   },
   "dependencies": {
     "any-promise": "^1.3.0",
@@ -69,6 +83,7 @@
     "dimas-parallel": "^1.1.3",
     "drivelist": "^3.2.0",
     "electron-debug": "^1.0.1",
+    "electron-log": "^1.0.14",
     "electron-react-devtools": "^0.3.1",
     "electron-settings": "^1.0.4",
     "eventemitter3": "^1.2.0",
@@ -91,7 +106,7 @@
     "ncp": "^2.0.0",
     "node-cron": "^1.1.1",
     "node-schedule": "^1.1.1",
-    "normalize.css": "^4.1.1",
+    "normalize.css": "^4.2.0",
     "pkginfo": "^0.4.0",
     "postcss": "^5.0.21",
     "progress": "^1.1.8",
@@ -110,7 +125,7 @@
     "shelljs": "^0.7.0",
     "sliced": "^1.0.1",
     "sort-stream2": "^1.0.0",
-    "source-map-support": "^0.4.0",
+    "source-map-support": "^0.4.1",
     "split2": "^2.1.0",
     "string": "^3.3.1",
     "through2": "^2.0.1",
@@ -141,7 +156,7 @@
     "babel-preset-es2015": "^6.9.0",
     "babel-preset-node5": "^11.1.0",
     "babel-preset-node6": "^11.0.0",
-    "babel-preset-react": "^6.5.0",
+    "babel-preset-react": "^6.11.1",
     "babel-preset-react-hmre": "^1.1.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.9.0",
@@ -174,8 +189,8 @@
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",
     "raw-loader": "^0.5.1",
-    "run-sequence": "^1.2.1",
-    "sass-loader": "^3.2.2",
+    "run-sequence": "^1.2.2",
+    "sass-loader": "^4.0.0",
     "snazzy": "^4.0.0",
     "standard": "^7.1.2",
     "standard-format": "^2.2.2",
@@ -186,7 +201,7 @@
     "webpack": "^1.13.1",
     "webpack-dev-middleware": "^1.6.1",
     "webpack-dev-server": "1.14.1",
-    "webpack-hot-middleware": "^2.11.0",
+    "webpack-hot-middleware": "^2.12.0",
     "webpack-middleware": "^1.5.1",
     "webpack-typescript": "^0.5.6"
   },

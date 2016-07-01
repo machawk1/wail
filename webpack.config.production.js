@@ -35,7 +35,6 @@ const config = {
                   'transform-runtime', "add-module-exports","transform-es2015-destructuring"],
             },
          },
-         { test: /\.jsx?$/, loader: WebpackStrip.loader('console.log') },
          {
             test: /\.jsx?$/,
             exclude: /(node_modules|bower_components)/,
@@ -78,7 +77,6 @@ const config = {
       }),
       new ExtractTextPlugin('style.css', {allChunks: true})
    ],
-
    target: 'electron-renderer'
 };
 

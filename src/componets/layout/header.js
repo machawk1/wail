@@ -34,7 +34,7 @@ export default class Header extends Component {
   }
 
   handleClose (event, toWhere) {
-    remote.getCurrentWindow().setTitle(`Web Archiving Integration Layer${this.hacky}${toWhere}`)
+    remote.getCurrentWindow().setTitle(`Web Archiving Integration Layer: ${toWhere}`)
     this.setState({ open: false })
   }
 

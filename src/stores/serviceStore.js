@@ -5,8 +5,9 @@ import wailConstants from "../constants/wail-constants"
 import { heritrixAccesible, launchHeritrix } from "../actions/heritrix-actions"
 import { waybackAccesible, startWayback } from "../actions/wayback-actions"
 import { remote } from 'electron'
+import util from 'util'
 
-// const logger = remote.getGlobal('logger')
+const logger = remote.getGlobal('logger')
 
 const EventTypes = wailConstants.EventTypes
 
@@ -34,11 +35,11 @@ class serviceStore extends EventEmitter {
     this.serviceStatus.wayback = update.wayback
 
     if (!this.serviceStatus.heritrix) {
-//       logger.log('info', logString, "heritrix was down attempting to restart")
+      logger.info(util.format(logString,"heritrix was down attempting to restart"))
       launchHeritrix()
     }
     if (!this.serviceStatus.wayback) {
-//       logger.log('info', logString, "wayback was down attempting to restart")
+      logger.info(util.format(logString,"wayback was down attempting to restart"))
       startWayback()
     }
     this.emit('monitor-status-update')

@@ -11,10 +11,11 @@ import bytewise from "bytewise"
 import ReadWriteLock from 'rwlock'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
-const indexLock = new ReadWriteLock()
 import { remote } from 'electron'
+import util from 'util'
 
-// const logger = remote.getGlobal('logger')
+const indexLock = new ReadWriteLock()
+const logger = remote.getGlobal('logger')
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
 
@@ -48,7 +49,7 @@ function generatePathIndex (genCdx) {
               if (err) {
                 indexWriteRelease()
                 console.error('generating path index with error', err)
-//                 logger.log('error', logStringError, "generate path index on end", err.stack)
+                logger.error(util.format(logStringError,"generate path index on end",err.stack))
               } else {
 
                 console.log('done generating path index no error')
@@ -64,7 +65,7 @@ function generatePathIndex (genCdx) {
         console.log("Releasing pindex readlock")
         warcReadRelease()
       })
-//       .on('error', err => logger.log('error', logStringError, 'generateIndexPath on error', err.stack))
+      .on('error', err => logger.error(util.format(logStringError, 'generateIndexPath on error',err.stack)))
   })
 }
 
@@ -92,11 +93,11 @@ function generateCDX () {
     let cdxFile = `${cdxp}/${cdx}`
     child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
-//         logger.log('error', logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack)
+        logger.error(util.format(logStringError,`generateCDX exec cdxinder ${stderr}`,err.stack))
       }
       fs.readFile(cdxFile, 'utf8', (errr, value)=> {
         if (errr) {
-//           logger.log('error', logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack)
+          logger.error(util.format(logStringError,`generateCDX exec cdxinder read ${cdxFile}`,errr.stack))
         }
         through.push(value)
         next()
@@ -143,7 +144,7 @@ function generateCDX () {
             indexCDXWriteRelease()
           })
       })
-//       .on('error', err => logger.log('error', logStringError, 'generateCDX on error', err.stack))
+      .on('error', err => logger.error(util.format(logStringError,'generateCDX on error', err.stack)))
   })
 
 }
@@ -171,6 +172,7 @@ let indexer = new Indexer()
 
 ipcRenderer.on("start-index-indexing", (event) => {
   console.log('Monitor get start indexing monitoring')
+  ipcRenderer.send('got-it',{ from: 'indexer' ,yes: true})
   indexer.indexer()
 })
 

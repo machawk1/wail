@@ -1,5 +1,5 @@
 import "babel-polyfill"
-// import logger from 'winston'
+
 import {
   app,
   BrowserWindow,
@@ -7,10 +7,13 @@ import {
   ipcMain,
 } from 'electron'
 
+import logger from 'electron-log'
 import fs from 'fs-extra'
 import installExtension, { REACT_DEVELOPER_TOOLS } from 'electron-devtools-installer'
 import path from 'path'
 import { configSettings } from './settings/settings'
+
+
 
 let mainWindow = null
 let backgroundWindow = null
@@ -30,6 +33,7 @@ if (process.env.NODE_ENV === 'development') {
   require('electron-debug')({
     showDevTools: true
   })
+
   mWindowURL = `file://${__dirname}/wail.html`
   bWindowURL = `file://${__dirname}/background/monitor.html`
   accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
@@ -52,13 +56,20 @@ if (process.env.NODE_ENV === 'development') {
   logPath = path.join(app.getPath('userData'), "waillogs")
 }
 
+
 fs.ensureDirSync(logPath)
 logPath = path.join(logPath, 'wail.log')
+logger.transports.console = false
+logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
+logger.transports.file.maxSize = 5 * 1024 * 1024
+logger.transports.file.file = logPath
+logger.transports.file.streamConfig = {flags: 'a'}
+
 
 // logger.add(logger.transports.File, { filename: logPath })
 // logger.remove(logger.transports.Console)
-
-// global.logger = logger
+//
+global.logger = logger
 
 function createBackgroundWindow () {
   backgroundWindow = new BrowserWindow({ show: false })
@@ -80,9 +91,15 @@ function createBackGroundWindows () {
 }
 
 function stopMonitoring () {
-  accessibilityWindow.webContents.send("stop")
-  indexWindow.webContents.send("stop")
-  jobbWindow.webContents.send("stop")
+  if(accessibilityWindow != null){
+    accessibilityWindow.webContents.send("stop")
+  }
+  if(indexWindow != null){
+    indexWindow.webContents.send("stop")
+  }
+  if(jobbWindow != null){
+    jobbWindow.webContents.send("stop")
+  }
 }
 
 function cleanUp () {
@@ -90,9 +107,16 @@ function cleanUp () {
   // in an array if your app supports multi windows, this is the time
   // when you should delete the corresponding element.
   stopMonitoring()
-  accessibilityWindow.close()
-  indexWindow.close()
-  jobbWindow.close()
+  if(accessibilityWindow != null){
+    accessibilityWindow.close()
+  }
+  if(indexWindow != null){
+    indexWindow.close()
+  }
+
+  if(jobbWindow != null){
+    jobbWindow.close()
+  }
 
   mainWindow = null
   backgroundWindow = null
@@ -142,8 +166,8 @@ function createWindow () {
 
     if (process.env.NODE_ENV === 'development') {
       jobbWindow.openDevTools()
-      // accessibilityWindow.openDevTools()
-      // indexWindow.openDevTools()
+      accessibilityWindow.openDevTools()
+      indexWindow.openDevTools()
       mainWindow.openDevTools()
     }
     mainWindow.focus()
@@ -212,6 +236,11 @@ process.on('uncaughtException', (err) => {
 //   logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
   cleanUp()
   app.quit()
+})
+
+
+ipcMain.on('got-it',(event, payload) => {
+  console.log(payload)
 })
 
 ipcMain.on("start-test", (event, payload) => {

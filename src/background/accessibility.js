@@ -4,11 +4,12 @@ import Promise from 'bluebird'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import { remote } from 'electron'
+import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-// const logger = remote.getGlobal('logger')
-const logString = "accessibilityMonitor %s"
+const logger = remote.getGlobal('logger')
+const logString = "accessibilityMonitor "
 const cache = {
   accessibility: null
 }
@@ -78,19 +79,19 @@ class StatusMonitor {
                   }
 
                   if (wasUpdate) {
-//                     logger.log('info', logString, `there was an update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+                    logger.info(`${logString} there was an update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                     cache.accessibility.set('wayback', this.statues.wayback)
                     cache.accessibility.set('heritrix', this.statues.heritrix)
                     console.log('there was an update to service statuses', cache, this.statues)
                     cb(this.statues)
                   } else {
                     console.log("no update to service statuses", cache, this.statues)
-//                     logger.log('info', logString, `no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+                    logger.info( `${logString} no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                   }
 
                 } else {
                   console.log("Cache has not been created making it")
-//                   logger.log('info', logString, `cache has not been created making it: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+                  logger.info(`${logString} cache has not been created making it: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                   cache.accessibility = new Map()
                   cache.accessibility.set('wayback', this.statues.wayback)
                   cache.accessibility.set('heritrix', this.statues.heritrix)
@@ -110,6 +111,7 @@ let Status = new StatusMonitor()
 
 ipcRenderer.on("start-service-monitoring", (event) => {
     console.log('Monitor got start-service-monitoring')
+  ipcRenderer.send('got-it',{ from: 'accessibility' ,yes: true})
     Status.checkReachability((statues) => {
       ipcRenderer.send("service-status-update", statues)
     })

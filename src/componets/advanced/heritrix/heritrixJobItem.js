@@ -74,90 +74,7 @@ export default class HeritrixJobItem extends Component {
     this.deleteJob = this.deleteJob.bind(this)
     this.viewConf = this.viewConf.bind(this)
     this.onOpenChange = this.onOpenChange.bind(this)
-    this.makeItSoNumberOne = this.makeItSoNumberOne.bind(this)
-  }
 
-  makeItSoNumberOne (id) {
-    let runs = this.state.runs
-    let count = 0
-    if (runs.length > 0) {
-      // runs.sort((j1, j2) => j1.timestamp.isBefore(j2.timestamp))
-      let job = runs[ 0 ]
-      let status = job.ended ? "Ended" : "Running"
-      let discovered = job.discovered || ''
-      let queued = job.queued || ''
-      let downloaded = job.downloaded || ''
-      console.log('the job being displayed', job)
-
-      return (
-        <Table>
-          <TableHeader
-            displaySelectAll={false}
-            adjustForCheckbox={false}
-            style={styles.tableHeader}
-          >
-            <TableRow displayBorder={false}>
-              <TableHeaderColumn style={styles.tableHeaderCol}>ID</TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderCol}>Status</TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderCol}>Timestamp</TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderCol}>Discovered</TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderCol}>Queued</TableHeaderColumn>
-              <TableHeaderColumn style={styles.tableHeaderCol}>Downloaded</TableHeaderColumn>
-            </TableRow>
-          </TableHeader>
-          <TableBody
-            displayRowCheckbox={false}
-            showRowHover={true}
-          >
-            <TableRow displayBorder={false}>
-              <TableRowColumn style={styles.tableRowCol}>
-                {id}
-              </TableRowColumn>
-              <TableRowColumn style={styles.tableRowCol}>
-                {status}
-              </TableRowColumn>
-              <TableRowColumn style={styles.tableRowCol}>
-                {moment(job.timestamp).format("MM/DD/YYYY h:mm:ssa")}
-              </TableRowColumn>
-              <TableRowColumn style={styles.tableRowCol}>
-                {discovered.trim()}
-              </TableRowColumn>
-              <TableRowColumn style={styles.tableRowCol}>
-                {queued.trim()}
-              </TableRowColumn>
-              <TableRowColumn style={styles.tableRowCol}>
-                {downloaded.trim()}
-              </TableRowColumn>
-            </TableRow>
-          </TableBody>
-        </Table>
-      )
-    } else {
-      return (
-        <Grid flexible={true}>
-          <Row>
-            <Column width="1/6" style={styles.text}>
-              <p>ID: {id}</p>
-            </Column>
-            <Column width="1/6" style={styles.text}>
-              <p>Status: Not Started</p>
-            </Column>
-            <Column width="1/6" style={styles.text}>
-              <p>Timestamp: Not Started</p>
-            </Column>
-            <Column width="1/6" style={styles.text}>
-              <p>Discovered: 0</p>
-            </Column>
-            <Column width="1/6" style={styles.text}>
-              <p>Queued: 0</p>
-            </Column>
-            <Column width="1/6" style={styles.text}>
-              <p>Downloaded: 0</p>
-            </Column>
-          </Row>
-        </Grid>
-      )
-    }
   }
 
   itemClicked (event) {
@@ -193,6 +110,8 @@ export default class HeritrixJobItem extends Component {
       } else {
         restartJob(this.state.jobId)
       }
+    } else {
+      restartJob(this.state.jobId)
     }
 
   }
@@ -266,7 +185,6 @@ export default class HeritrixJobItem extends Component {
     let cp = `${settings.get('heritrixJob')}/${this.props.jobId}/crawler-beans.cxml`
     let id = this.props.jobId
 
-    // primaryText={this.makeItSoNumberOne(this.state.jobId)}
     return (
       <div>
         <ListItem

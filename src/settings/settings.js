@@ -1,6 +1,6 @@
 import ElectronSettings from "electron-settings"
-import path from 'path'
-import os from 'os'
+import path from "path"
+import os from "os"
 
 const settings = new ElectronSettings()
 
@@ -8,68 +8,69 @@ const managed = {
   paths: [
     { name: "bundledApps", path: "bundledApps" },
     { name: "logs", path: "waillogs/wail.log" },
-    { name: 'archives', path: 'config/archives.json' },
-    { name: 'cdxIndexer', path: 'bundledApps/tomcat/webapps/bin/cdx-indexer' },
-    { name: 'cdx', path: 'archiveIndexes' },
-    { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
-    { name: 'crawlerBean', path: 'crawler-beans.cxml' },
-    { name: 'heritrixBin', path: 'bundledApps/heritrix-3.2.0/bin/heritrix' },
-    { name: 'heritrixJob', path: 'bundledApps/heritrix-3.2.0/jobs' },
-    { name: 'heritrix', path: 'bundledApps/heritrix-3.2.0' },
-    { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
-    { name: 'index', path: '/config/path-index.txt' },
-    { name: 'jdk', path: 'bundledApps/openjdk' },
-    { name: 'jobConf', path: 'crawler-beans.cxml' },
-    { name: 'jre', path: 'bundledApps/openjdk/jre' },
-    { name: 'memgator', path: 'bundledApps/memgator' },
-    { name: 'tomcat', path: 'bundledApps/tomcat' },
-    { name: 'warcs', path: '/archives' },
-    { name: 'wayBackConf', path: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml' },
+    { name: "archives", path: "config/archives.json" },
+    { name: "cdxIndexer", path: "bundledApps/tomcat/webapps/bin/cdx-indexer" },
+    { name: "cdx", path: "archiveIndexes" },
+    { name: "cdxTemp", path: "archiveIndexes/combined_unsorted.cdxt" },
+    { name: "crawlerBean", path: "crawler-beans.cxml" },
+    { name: "heritrixBin", path: "bundledApps/heritrix-3.2.0/bin/heritrix" },
+    { name: "heritrixJob", path: "bundledApps/heritrix-3.2.0/jobs" },
+    { name: "heritrix", path: "bundledApps/heritrix-3.2.0" },
+    { name: "indexCDX", path: "archiveIndexes/index.cdx" },
+    { name: "index", path: "/config/path-index.txt" },
+    { name: "jdk", path: "bundledApps/openjdk" },
+    { name: "jobConf", path: "crawler-beans.cxml" },
+    { name: "jre", path: "bundledApps/openjdk/jre" },
+    { name: "memgator", path: "bundledApps/memgator" },
+    { name: "tomcat", path: "bundledApps/tomcat" },
+    { name: "warcs", path: "/archives" },
+    { name: "wayBackConf", path: "bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml" },
   ],
   heritrix: {
     uri_heritrix: "https://127.0.0.1:8443",
     uir_engine: "https://localhost:8443/engine/",
     port: "8843",
-    username: 'lorem',
-    password: 'ipsum',
-    path: '',
-    jobConf: 'crawler-beans.cxml',
+    username: "lorem",
+    password: "ipsum",
+    login: "-a lorem:ipsum",
+    path: "",
+    jobConf: "crawler-beans.cxml",
     web_ui: "https://lorem:ipsum@localhost:8443",
     sendActionOptions: {
-      method: 'POST',
+      method: "POST",
       uri: "https://localhost:8443/engine/job/",
       headers: {
         Accept: "application/xml",
-        'Content-type': 'application/x-www-form-urlencoded',
+        "Content-type": "application/x-www-form-urlencoded",
       },
       form: {
-        action: ''
+        action: ""
       },
       auth: {
-        username: 'lorem',
-        password: 'ipsum',
+        username: "lorem",
+        password: "ipsum",
         sendImmediately: false
       },
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     killOptions: {
-      method: 'POST',
+      method: "POST",
       uri: "https://localhost:8443/engine/",
       form: {
         action: "Exit Java Process",
         im_sure: "on"
       },
       auth: {
-        'username': 'lorem',
-        'password': 'ipsum',
-        'sendImmediately': false
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
       },
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     launchJobOptions: {
-      method: 'POST',
+      method: "POST",
       uri: "https://localhost:8443/engine/job/",
       headers: {
         Accept: "application/xml",
@@ -78,38 +79,38 @@ const managed = {
         action: "launch"
       },
       auth: {
-        'username': 'lorem',
-        'password': 'ipsum',
-        'sendImmediately': false
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
       },
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     optionEngine: {
-      method: 'GET',
+      method: "GET",
       uri: "https://localhost:8443/engine",
       auth: {
-        username: 'lorem',
-        password: 'ipsum',
+        username: "lorem",
+        password: "ipsum",
         sendImmediately: false
       },
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     buildOptions: {
-      method: 'POST',
+      method: "POST",
       uri: "https://localhost:8443/engine/job/",
       headers: {
         Accept: "application/xml",
-        'Content-type': 'application/x-www-form-urlencoded',
+        "Content-type": "application/x-www-form-urlencoded",
       },
       form: {
         action: "build"
       },
-      'auth': {
-        'username': 'lorem',
-        'password': 'ipsum',
-        'sendImmediately': false
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
       },
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
@@ -123,74 +124,74 @@ const managed = {
     notIndexCDX: `${path.sep}index.cdx`
   },
   commands: [
-    { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
-    { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
-    { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-    { name: 'heritrixStart', path: 'bundledApps/heritrix-3.2.0/bin/heritrix' },
-    { name: 'memgator' },
+    { name: "catalina", path: "bundledApps/tomcat/bin/catalina.sh" },
+    { name: "tomcatStart", path: "bundledApps/tomcat/bin/startup.sh" },
+    { name: "tomcatStop", path: "bundledApps/tomcat/bin/shutdown.sh" },
+    { name: "heritrixStart", path: "bundledApps/heritrix-3.2.0/bin/heritrix" },
+    { name: "memgator" },
   ],
   code: {
-    crawlerBean: 'crawler-beans.cxml',
-    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
+    crawlerBean: "crawler-beans.cxml",
+    wayBackConf: "bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml",
   }
 }
 
 export function configSettings (base) {
-  console.log('We are not configed')
-  settings.set('base', base)
+  console.log("We are not configed")
+  settings.set("base", base)
   managed.paths.forEach(p => {
     settings.set(p.name, path.normalize(path.join(base, p.path)))
   })
 
   let heritrix = managed.heritrix
-  heritrix.path = settings.get('heritrix')
+  heritrix.path = settings.get("heritrix")
   heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
-  settings.set('heritrix', heritrix)
+  settings.set("heritrix", heritrix)
   let wb = managed.wayback
-  wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
-  wb.notIndexCDX = `!${settings.get('cdx')}${wb.notIndexCDX}`
-  settings.set('wayback', wb)
+  wb.allCDX = `${settings.get("cdx")}${wb.allCDX}`
+  wb.notIndexCDX = `!${settings.get("cdx")}${wb.notIndexCDX}`
+  settings.set("wayback", wb)
   let code = managed.code
   code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
 
-  let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
-  let command = 'sh'
-  let isWindows = os.platform() == 'win32'
-  settings.set('isWindows', isWindows)
+  let cmdexport = `export JAVA_HOME=${settings.get("jdk")}; export JRE_HOME=${settings.get("jre")};`
+  let command = "sh"
+  let isWindows = os.platform() == "win32"
+  settings.set("isWindows", isWindows)
 
   managed.commands.forEach(cmd => {
     switch (cmd.name) {
-      case 'memgator':
-        settings.set('memgatorQuery', `${settings.get('memgator')} -a ${settings.get('archives')}`)
+      case "memgator":
+        settings.set("memgatorQuery", `${settings.get("memgator")} -a ${settings.get("archives")}`)
         break
-      case 'catalina':
+      case "catalina":
         if (!isWindows) {
           settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
-          settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
         }
         break
-      case 'tomcatStart':
+      case "tomcatStart":
         if (!isWindows) {
           settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
-          settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
         }
         break
-      case 'tomcatStop':
+      case "tomcatStop":
         if (!isWindows) {
           settings.set(cmd.name, `${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
-          settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} stop`)
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} stop`)
         }
         break
-      case 'heritrixStart':
-        let heritrixLogin = `-a ${settings.get('heritrix.username')}:${settings.get('heritrix.password')}`
+      case "heritrixStart":
+        let heritrixLogin = `-a ${settings.get("heritrix.username")}:${settings.get("heritrix.password")}`
         if (isWindows) {
-          settings.set('heritrixStart', `${path.normalize(path.join(base, 'bundledApps/heritrix.bat'))} ${heritrixLogin}`)
+          settings.set("heritrixStart", `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
         } else {
-          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))} ${heritrixLogin}`)
+          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
         }
         break
       default:
