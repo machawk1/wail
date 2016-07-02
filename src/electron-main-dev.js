@@ -267,40 +267,40 @@ ipcMain.on('got-it', (event, payload) => {
     console.log(payload)
 })
 
-// ipcMain.on("start-test", (event, payload) => {
-//     console.log("Got start-test")
-//     backgroundWindow.webContents.send("start-test", payload)
-// })
-//
-// ipcMain.on("start-service-monitoring", (event, payload) => {
-//     console.log("Got start-service-monitoring")
-//     accessibilityWindow.webContents.send("start-service-monitoring", payload)
-// })
-//
-// ipcMain.on("start-crawljob-monitoring", (event, payload) => {
-//     console.log("got start-crawljob-monitoring")
-//     jobbWindow.webContents.send("start-crawljob-monitoring", payload)
-// })
-//
-// ipcMain.on("start-index-indexing", (event, payload) => {
-//     console.log("got start-index-indexing")
-//     indexWindow.webContents.send("start-index-indexing", payload)
-// })
-//
-// ipcMain.on("service-status-update", (event, payload) => {
-//     console.log("got test-status-update", payload)
-//     mainWindow.webContents.send("service-status-update", payload)
-// })
-//
-// ipcMain.on("crawljob-status-update", (event, payload) => {
-//     console.log("got crawljob-status-update", payload)
-//     mainWindow.webContents.send("crawljob-status-update", payload)
-// })
-//
-// ipcMain.on("pong", (event, payload) => {
-//     console.log("got pong", payload)
-//     mainWindow.webContents.send("pong", payload)
-// })
+ipcMain.on("start-test", (event, payload) => {
+    console.log("Got start-test")
+    backgroundWindow.webContents.send("start-test", payload)
+})
+
+ipcMain.on("start-service-monitoring", (event, payload) => {
+    console.log("Got start-service-monitoring")
+    accessibilityWindow.webContents.send("start-service-monitoring", payload)
+})
+
+ipcMain.on("start-crawljob-monitoring", (event, payload) => {
+    console.log("got start-crawljob-monitoring")
+    jobbWindow.webContents.send("start-crawljob-monitoring", payload)
+})
+
+ipcMain.on("start-index-indexing", (event, payload) => {
+    console.log("got start-index-indexing")
+    indexWindow.webContents.send("start-index-indexing", payload)
+})
+
+ipcMain.on("service-status-update", (event, payload) => {
+    console.log("got test-status-update", payload)
+    mainWindow.webContents.send("service-status-update", payload)
+})
+
+ipcMain.on("crawljob-status-update", (event, payload) => {
+    console.log("got crawljob-status-update", payload)
+    mainWindow.webContents.send("crawljob-status-update", payload)
+})
+
+ipcMain.on("pong", (event, payload) => {
+    console.log("got pong", payload)
+    mainWindow.webContents.send("pong", payload)
+})
 
 
 

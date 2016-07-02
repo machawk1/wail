@@ -18,5 +18,8 @@ elif [ ! -z "$1" -a "$1" = "install-start" ]; then
     echo "npm install && npm run-script start-dev"
     npm "install"
     npm "run-script start-dev"
+elif [ ! -z "$1" -a "$1" = "run-release-linux" ]; then
+    $(release/linux-x64/Wail-linux-x64/Wail)
+
 fi
 
