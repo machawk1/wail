@@ -1,3 +1,5 @@
+import "babel-polyfill"
+import autobind from 'autobind-decorator'
 import { ipcRenderer, remote } from "electron"
 import named from 'named-regexp'
 import through2 from 'through2'
@@ -275,9 +277,9 @@ class JobMonitor {
   constructor () {
     this.job = null
     this.started = false
-    this.checkJobStatuses = this.checkJobStatuses.bind(this)
   }
-
+  
+  @autobind
   checkJobStatuses (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()

@@ -39,7 +39,7 @@ base = path.resolve('./')
 if (process.env.NODE_ENV === 'development') {
 
     require('electron-debug')({
-        showDevTools: "undocked",
+        showDevTools: true,
     })
 
     mWindowURL = `file://${__dirname}/wail.html`
@@ -69,16 +69,29 @@ let accessLogP = path.join(logPath, 'accessibility.log')
 let jobLogP = path.join(logPath, 'jobs.log')
 let indexLogP = path.join(logPath, 'index.log')
 
-fs.ensureFileSync(accessLogP)
-fs.ensureFileSync(jobLogP)
-fs.ensureFileSync(indexLogP)
+fs.ensureFileSync(accessLogP, err => {
+    if(err) {
+        console.error('we have error accesslogp')
+    }
+})
+fs.ensureFile(jobLogP, err => {
+    if(err){
+        console.error('we have error jobLogP')
+    }
+})
+  
+fs.ensureFile(indexLogP, err => {
+    if(err){
+        console.error('we have error indexLogP')
+    }
+})
 global.accessLogPath = accessLogP
 global.jobLogPath = accessLogP
 global.indexLogPath = accessLogP
 
 
 logPath = path.join(logPath, 'wail.log')
-fs.ensureFileSync(logPath)
+fs.ensureFile(logPath, err => console.error(err))
 
 logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
 logger.transports.file.maxSize = 5 * 1024 * 1024
@@ -184,23 +197,6 @@ function createWindow() {
 
     mainWindow.webContents.on('did-finish-load', () => {
         mainWindow.show()
-
-        // if (process.env.NODE_ENV === 'development') {
-        //   // if(openBackGroundWindows){
-        //   //   jobbWindow.show()
-        //   //   accessibilityWindow.show()
-        //   //   indexWindow.show()
-        //   // }
-        //   //
-        //
-        // }
-        // jobbWindow.show()
-        // accessibilityWindow.show()
-        // indexWindow.show()
-        // jobbWindow.openDevTools()
-        // accessibilityWindow.openDevTools()
-        // indexWindow.openDevTools()
-        // mainWindow.openDevTools()
         mainWindow.focus()
     })
 
@@ -233,7 +229,7 @@ function createWindow() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-    createBackGroundWindows()
+    // createBackGroundWindows()
     createWindow()
 })
 
@@ -271,40 +267,40 @@ ipcMain.on('got-it', (event, payload) => {
     console.log(payload)
 })
 
-ipcMain.on("start-test", (event, payload) => {
-    console.log("Got start-test")
-    backgroundWindow.webContents.send("start-test", payload)
-})
-
-ipcMain.on("start-service-monitoring", (event, payload) => {
-    console.log("Got start-service-monitoring")
-    accessibilityWindow.webContents.send("start-service-monitoring", payload)
-})
-
-ipcMain.on("start-crawljob-monitoring", (event, payload) => {
-    console.log("got start-crawljob-monitoring")
-    jobbWindow.webContents.send("start-crawljob-monitoring", payload)
-})
-
-ipcMain.on("start-index-indexing", (event, payload) => {
-    console.log("got start-index-indexing")
-    indexWindow.webContents.send("start-index-indexing", payload)
-})
-
-ipcMain.on("service-status-update", (event, payload) => {
-    console.log("got test-status-update", payload)
-    mainWindow.webContents.send("service-status-update", payload)
-})
-
-ipcMain.on("crawljob-status-update", (event, payload) => {
-    console.log("got crawljob-status-update", payload)
-    mainWindow.webContents.send("crawljob-status-update", payload)
-})
-
-ipcMain.on("pong", (event, payload) => {
-    console.log("got pong", payload)
-    mainWindow.webContents.send("pong", payload)
-})
+// ipcMain.on("start-test", (event, payload) => {
+//     console.log("Got start-test")
+//     backgroundWindow.webContents.send("start-test", payload)
+// })
+//
+// ipcMain.on("start-service-monitoring", (event, payload) => {
+//     console.log("Got start-service-monitoring")
+//     accessibilityWindow.webContents.send("start-service-monitoring", payload)
+// })
+//
+// ipcMain.on("start-crawljob-monitoring", (event, payload) => {
+//     console.log("got start-crawljob-monitoring")
+//     jobbWindow.webContents.send("start-crawljob-monitoring", payload)
+// })
+//
+// ipcMain.on("start-index-indexing", (event, payload) => {
+//     console.log("got start-index-indexing")
+//     indexWindow.webContents.send("start-index-indexing", payload)
+// })
+//
+// ipcMain.on("service-status-update", (event, payload) => {
+//     console.log("got test-status-update", payload)
+//     mainWindow.webContents.send("service-status-update", payload)
+// })
+//
+// ipcMain.on("crawljob-status-update", (event, payload) => {
+//     console.log("got crawljob-status-update", payload)
+//     mainWindow.webContents.send("crawljob-status-update", payload)
+// })
+//
+// ipcMain.on("pong", (event, payload) => {
+//     console.log("got pong", payload)
+//     mainWindow.webContents.send("pong", payload)
+// })
 
 
 

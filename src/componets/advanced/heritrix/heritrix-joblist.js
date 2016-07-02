@@ -1,7 +1,9 @@
 import React, { Component } from "react"
 import { List, ListItem } from "material-ui/List"
+import autobind from "autobind-decorator"
 import CrawlStore from "../.././../stores/crawlStore"
 import HeritrixJobItem from "./heritrixJobItem"
+
 
 export default class HeritrixJobList extends Component {
 
@@ -10,10 +12,9 @@ export default class HeritrixJobList extends Component {
     this.state = {
       jobs: CrawlStore.jobs(),
     }
-    this.getJobs = this.getJobs.bind(this)
-
   }
 
+  @autobind
   getJobs () {
     console.log("Get jobs crawlstore")
     this.setState({ jobs: CrawlStore.jobs() })

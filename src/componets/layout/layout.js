@@ -4,8 +4,6 @@ import getMuiTheme from "material-ui/styles/getMuiTheme"
 import Header from "./header"
 import Debug from "../debug-element"
 
-// import Editor from  '../editor/editor'
-// import wb from '../editor/wayback.xml'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -17,7 +15,6 @@ export default class Layout extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.count = 0
   }
 
   getChildContext () {
@@ -32,7 +29,6 @@ export default class Layout extends Component {
         {this.props.children}
         <Debug/>
       </div>
-
     )
   }
 }

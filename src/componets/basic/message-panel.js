@@ -1,21 +1,20 @@
 import React, { Component } from "react"
-import { Grid, Row, Column } from "react-cellblock"
+import { Row, Column } from "react-cellblock"
+import Avatar from 'material-ui/Avatar'
+import autobind from 'autobind-decorator'
 import CircularProgress from "material-ui/CircularProgress"
 import UrlStore from "../../stores/urlStore"
-
 let first = true
 
 export default class MessagePanel extends Component {
   constructor (props, context) {
     super(props, context)
-    this.updateMementoCount = this.updateMementoCount.bind(this)
-    this.urlUpdated = this.urlUpdated.bind(this)
     let mc = UrlStore.getMementoCount()
     let tState
     if (first) {
       tState = {
         mementoCount: -1,
-        message: ""
+        message: this.defaultMessage()
       }
     } else {
       tState = {
@@ -27,6 +26,16 @@ export default class MessagePanel extends Component {
 
   }
 
+  @autobind
+  defaultMessage(){
+    return (
+      <p>
+        Enter URL to fetch mementos
+      </p>
+    )
+  }
+
+  @autobind
   fetchingMementoMsg () {
     return (
       <p>
@@ -36,6 +45,7 @@ export default class MessagePanel extends Component {
     )
   }
 
+  @autobind
   gotMementoMsg () {
     return (
       <p>
@@ -44,10 +54,12 @@ export default class MessagePanel extends Component {
     )
   }
 
+  @autobind
   updateMementoCount () {
     this.setState({ mementoCount: UrlStore.getMementoCount(), message: this.gotMementoMsg() })
   }
 
+  @autobind
   urlUpdated () {
     this.setState({ mementoCount: -1, message: this.fetchingMementoMsg() })
   }
@@ -72,7 +84,6 @@ export default class MessagePanel extends Component {
         <p>{this.state.mementoCount}</p>
     }
     return (
-      <Grid>
         <Row>
           <Column width="1/2">
             {this.state.message}
@@ -81,7 +92,6 @@ export default class MessagePanel extends Component {
             {progressOrCount}
           </Column>
         </Row>
-      </Grid>
     )
   }
 }

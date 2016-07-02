@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import autobind from 'autobind-decorator'
 import { remote } from 'electron'
 import AppBar from "material-ui/AppBar"
 import Drawer from "material-ui/Drawer"
@@ -18,21 +19,23 @@ const style = {
   }
 }
 
+
 export default class Header extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = { open: false, location: "Basic" }
-    this.handleToggle = this.handleToggle.bind(this)
-    this.handleClose = this.handleClose.bind(this)
     this.hacky = '\t\t\t\t\t\t\t\t\t'
   }
 
+  @autobind
   handleToggle () {
-    if (!this.state.open)
+    if (!this.state.open){
       console.log('we are opening the drawer')
+    }
     this.setState({ open: !this.state.open })
   }
 
+  @autobind
   handleClose (event, toWhere) {
     remote.getCurrentWindow().setTitle(`Web Archiving Integration Layer: ${toWhere}`)
     this.setState({ open: false })

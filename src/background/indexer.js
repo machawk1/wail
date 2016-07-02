@@ -1,4 +1,6 @@
-import { ipcRenderer, remote } from "electron"
+import "babel-polyfill"
+import autobind from 'autobind-decorator'
+import {ipcRenderer, remote} from "electron"
 import child_process from "child_process"
 import os from 'os'
 import path from 'path'
@@ -14,12 +16,11 @@ import schedule from 'node-schedule'
 import util from 'util'
 import logger from 'electron-log'
 
-
 const indexLock = new ReadWriteLock()
 logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
 logger.transports.file.maxSize = 5 * 1024 * 1024
 logger.transports.file.file = remote.getGlobal('indexLogPath')
-logger.transports.file.streamConfig = {flags: 'a'}
+logger.transports.file.streamConfig = { flags: 'a' }
 
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
@@ -54,7 +55,7 @@ function generatePathIndex (genCdx) {
               if (err) {
                 indexWriteRelease()
                 console.error('generating path index with error', err)
-                logger.error(util.format(logStringError,"generate path index on end",err.stack))
+                logger.error(util.format(logStringError, "generate path index on end", err.stack))
               } else {
 
                 console.log('done generating path index no error')
@@ -70,7 +71,7 @@ function generatePathIndex (genCdx) {
         console.log("Releasing pindex readlock")
         warcReadRelease()
       })
-      .on('error', err => logger.error(util.format(logStringError, 'generateIndexPath on error',err.stack)))
+      .on('error', err => logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack)))
   })
 }
 
@@ -98,11 +99,11 @@ function generateCDX () {
     let cdxFile = `${cdxp}/${cdx}`
     child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
-        logger.error(util.format(logStringError,`generateCDX exec cdxinder ${stderr}`,err.stack))
+        logger.error(util.format(logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack))
       }
       fs.readFile(cdxFile, 'utf8', (errr, value)=> {
         if (errr) {
-          logger.error(util.format(logStringError,`generateCDX exec cdxinder read ${cdxFile}`,errr.stack))
+          logger.error(util.format(logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack))
         }
         through.push(value)
         next()
@@ -149,7 +150,7 @@ function generateCDX () {
             indexCDXWriteRelease()
           })
       })
-      .on('error', err => logger.error(util.format(logStringError,'generateCDX on error', err.stack)))
+      .on('error', err => logger.error(util.format(logStringError, 'generateCDX on error', err.stack)))
   })
 
 }
@@ -158,9 +159,9 @@ class Indexer {
   constructor () {
     this.job = null
     this.started = false
-    this.indexer = this.indexer.bind(this)
   }
-
+  
+  @autobind
   indexer () {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
@@ -177,7 +178,7 @@ let indexer = new Indexer()
 
 ipcRenderer.on("start-index-indexing", (event) => {
   console.log('Monitor get start indexing monitoring')
-  ipcRenderer.send('got-it',{ from: 'indexer' ,yes: true})
+  ipcRenderer.send('got-it', { from: 'indexer', yes: true })
   indexer.indexer()
 })
 

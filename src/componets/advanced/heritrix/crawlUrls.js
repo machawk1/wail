@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react"
+import autobind from 'autobind-decorator' 
 import { List } from "material-ui/List"
 import Divider from "material-ui/Divider"
 import TextField from "material-ui/TextField"
@@ -25,20 +26,20 @@ export default class CrawlUrls extends Component {
       text: '',
       keys: 0,
     }
-    this.handleOpen = this.handleOpen.bind(this)
-    this.handleClose = this.handleClose.bind(this)
-    this.checkKeyCode = this.checkKeyCode.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+   
   }
 
+  @autobind
   handleOpen (event) {
     this.setState({ open: true })
   }
 
+  @autobind
   handleClose (event) {
     this.setState({ open: false })
   }
 
+  @autobind
   checkKeyCode (event) {
     console.log(event.keyCode)
     if (event.keyCode == 13) {
@@ -74,6 +75,7 @@ export default class CrawlUrls extends Component {
 
   }
 
+  @autobind
   handleChange (e) {
     this.setState({ text: e.target.value })
   }

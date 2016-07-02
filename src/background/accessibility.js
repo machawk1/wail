@@ -1,4 +1,6 @@
-import { ipcRenderer, remote } from "electron"
+import "babel-polyfill"
+import autobind from 'autobind-decorator'
+import {ipcRenderer, remote} from "electron"
 import rp from 'request-promise'
 import Promise from 'bluebird'
 import settings from '../settings/settings'
@@ -8,12 +10,10 @@ import logger from 'electron-log'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-
-
 logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
 logger.transports.file.maxSize = 5 * 1024 * 1024
 logger.transports.file.file = remote.getGlobal('accessLogPath')
-logger.transports.file.streamConfig = {flags: 'a'}
+logger.transports.file.streamConfig = { flags: 'a' }
 
 const logString = "accessibilityMonitor "
 
@@ -57,9 +57,9 @@ class StatusMonitor {
       heritrix: false,
       wayback: false
     }
-    this.checkReachability = this.checkReachability.bind(this)
   }
-
+  
+  @autobind
   checkReachability (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
@@ -93,7 +93,7 @@ class StatusMonitor {
                     cb(this.statues)
                   } else {
                     console.log("no update to service statuses", cache, this.statues)
-                    logger.info( `${logString} no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
+                    logger.info(`${logString} no update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                   }
 
                 } else {
@@ -118,7 +118,7 @@ let Status = new StatusMonitor()
 
 ipcRenderer.on("start-service-monitoring", (event) => {
     console.log('Monitor got start-service-monitoring')
-  ipcRenderer.send('got-it',{ from: 'accessibility' ,yes: true})
+    ipcRenderer.send('got-it', { from: 'accessibility', yes: true })
     Status.checkReachability((statues) => {
       ipcRenderer.send("service-status-update", statues)
     })

@@ -92,7 +92,7 @@ export default class Debug extends Component {
   }
 
   render () {
-    if (process.env.NODE_ENV === 'development') {
+    if (false){//process.env.NODE_ENV === 'development') {
       return (
         <div>
           <Toolbar>

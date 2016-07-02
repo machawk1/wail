@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react"
+import autobind from 'autobind-decorator'
 import { ListItem } from "material-ui/List"
 import TextField from "material-ui/TextField"
 import { grey400 } from "material-ui/styles/colors"
@@ -28,31 +29,28 @@ export default class CrawlUrlItem extends Component {
       url: this.props.url,
       editable: false
     }
-
-    this.handleChange = this.handleChange.bind(this)
-    this.editCrawlUrl = this.editCrawlUrl.bind(this)
-    this.checkKeyCode = this.checkKeyCode.bind(this)
+    
   }
 
+  @autobind
   editCrawlUrl (event) {
     if (!this.state.editable)
       this.setState({ editable: true })
 
   }
 
+  @autobind
   checkKeyCode (event) {
     if (event.keyCode == 13) {
       if (this.state.editable) {
         this.setState({ editable: false })
         console.log(this.state.url, this.props.idx)
         this.props.textChanged({ url: this.state.url, edit: this.props.idx })
-
       }
-
     }
-
   }
 
+  @autobind
   handleChange (e) {
     console.log(e.target.value)
     this.setState({ url: e.target.value })

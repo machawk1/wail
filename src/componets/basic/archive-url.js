@@ -1,36 +1,20 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import TextField from "material-ui/TextField"
-import { urlUpdated } from "../../actions/archive-url-actions"
-import { Row, Column } from "react-cellblock"
+import autobind from 'autobind-decorator'
+import {Row, Column} from "react-cellblock"
+import Avatar from 'material-ui/Avatar'
 import RaisedButton from 'material-ui/RaisedButton'
-import { red500, blue500 } from "material-ui/styles/colors"
 import validator from 'validator'
 import * as aua from '../../actions/archive-url-actions'
-
-const styles = {
-  underlineStyle: {
-    borderColor: blue500,
-  },
-  underlineStyleError: {
-    borderColor: red500,
-  },
-  button: {
-    // padding: '10px',
-    right: '0px',
-    margin: 12,
-  },
-
-}
+import styles from '../styles/styles'
 
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = { uri: "", underlineStyle: styles.underlineStyle }
-    this.handleChange = this.handleChange.bind(this)
-    this.focusLost = this.focusLost.bind(this)
-    this.attemptMementoGet = this.attemptMementoGet.bind(this)
   }
 
+  @autobind
   handleChange (e) {
     console.log('setState')
     console.log(e.target.value)
@@ -42,12 +26,14 @@ export default class ArchiveUrl extends Component {
     this.setState({ uri: value, underlineStyle: err })
   }
 
+  @autobind
   attemptMementoGet () {
     if (validator.isURL(this.state.uri)) {
       aua.getMementos(this.state.uri)
     }
   }
 
+  @autobind
   focusLost (event) {
     console.log('checking uri for archiving', this.state.uri, event.target.value)
     if (validator.isURL(event.target.value)) {
@@ -67,15 +53,16 @@ export default class ArchiveUrl extends Component {
           value={this.state.uri}
           onBlur={this.focusLost}
           onChange={this.handleChange}
+          style={styles.urlInput}
         />
         <RaisedButton
           label="Get Memento Count"
+          labelPosition="before"
           onTouchTap={this.attemptMementoGet}
-          style={styles.button}
+          icon={<Avatar src="icons/memento.ico" size={30}/>}
+          style={styles.buttonMemento}
         />
       </Row>
-
-
     )
   }
 }
