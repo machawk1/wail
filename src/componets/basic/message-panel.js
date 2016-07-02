@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import { Row, Column } from "react-cellblock"
-import Avatar from 'material-ui/Avatar'
 import autobind from 'autobind-decorator'
 import CircularProgress from "material-ui/CircularProgress"
 import UrlStore from "../../stores/urlStore"
@@ -26,7 +25,7 @@ export default class MessagePanel extends Component {
 
   }
 
-  @autobind
+  
   defaultMessage(){
     return (
       <p>
@@ -34,8 +33,7 @@ export default class MessagePanel extends Component {
       </p>
     )
   }
-
-  @autobind
+  
   fetchingMementoMsg () {
     return (
       <p>
@@ -45,7 +43,7 @@ export default class MessagePanel extends Component {
     )
   }
 
-  @autobind
+
   gotMementoMsg () {
     return (
       <p>

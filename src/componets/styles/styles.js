@@ -13,7 +13,7 @@ export default {
   },
   buttonMemento: {
     // left: '5px',
-    left: '15%',
+    marginTop: 35,
   },
   buttonPad: {
     right: '0px',

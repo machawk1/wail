@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { Grid } from "react-cellblock"
+import { Grid , Row} from "react-cellblock"
 import ArchiveUrl from "./archive-url"
 import BasicTabButtons from "./basicTab-buttons"
 import MessagePanel from "./message-panel"

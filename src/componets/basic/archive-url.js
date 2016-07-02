@@ -45,23 +45,28 @@ export default class ArchiveUrl extends Component {
   render () {
     return (
       <Row>
-        <TextField
-          floatingLabelText="URL"
-          underlineStyle={this.state.underlineStyle}
-          hintText="http://matkelly.com/wail"
-          id="archive-url-input"
-          value={this.state.uri}
-          onBlur={this.focusLost}
-          onChange={this.handleChange}
-          style={styles.urlInput}
-        />
-        <RaisedButton
-          label="Get Memento Count"
-          labelPosition="before"
-          onTouchTap={this.attemptMementoGet}
-          icon={<Avatar src="icons/memento.ico" size={30}/>}
-          style={styles.buttonMemento}
-        />
+
+        <Column width="1/2">
+          <TextField
+            floatingLabelText="URL"
+            underlineStyle={this.state.underlineStyle}
+            hintText="http://matkelly.com/wail"
+            id="archive-url-input"
+            value={this.state.uri}
+            onBlur={this.focusLost}
+            onChange={this.handleChange}
+            style={styles.urlInput}
+          />
+        </Column>
+        <Column width="1/2">
+          <RaisedButton
+            label="Get Memento Count"
+            labelPosition="before"
+            onTouchTap={this.attemptMementoGet}
+            icon={<Avatar src="icons/memento.ico" size={30}/>}
+            style={styles.buttonMemento}
+          />
+        </Column>
       </Row>
     )
   }
