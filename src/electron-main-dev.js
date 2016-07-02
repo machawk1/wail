@@ -161,9 +161,12 @@ function checkBackGroundWindows() {
 function createWindow() {
     if (process.env.NODE_ENV === 'development') {
         let installExtension = require('electron-devtools-installer')
-        installExtension(installExtension.REACT_DEVELOPER_TOOLS)
-            .then((name) => console.log(`Added Extension:  ${name}`))
-            .catch((err) => console.log('An error occurred: ', err))
+        try {
+            installExtension.default(installExtension['REACT_DEVELOPER_TOOLS'])
+        } catch (e){
+            console.error(e)
+        }
+        
     }
 
     let iconp = path.join(base, path.normalize('build/icons/whale.ico'))
