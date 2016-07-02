@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table"
+import autobind from "autobind-decorator"
 import RaisedButton from "material-ui/RaisedButton"
 import { launchHeritrix, killHeritrix } from "../../actions/heritrix-actions"
 import { startWayback, killWayback } from "../../actions/wayback-actions"
@@ -12,16 +13,9 @@ export default class General extends Component {
       wbGood: ServiceStore.waybackStatus(),
       hGood: ServiceStore.heritrixStatus()
     }
-
-    this.wayBackFix = this.wayBackFix.bind(this)
-    this.wayBackKill = this.wayBackKill.bind(this)
-    this.heritrixFix = this.heritrixFix.bind(this)
-    this.heritrixKill = this.heritrixKill.bind(this)
-    this.updateWaybackStatus = this.updateWaybackStatus.bind(this)
-    this.updateHeritrixStatus = this.updateHeritrixStatus.bind(this)
-    this.servicesUpdated = this.servicesUpdated.bind(this)
   }
-
+  
+  
   componentWillMount () {
     ServiceStore.on('heritrix-status-update', this.updateHeritrixStatus)
     ServiceStore.on('wayback-status-update', this.updateWaybackStatus)
@@ -34,16 +28,19 @@ export default class General extends Component {
     ServiceStore.removeListener('monitor-status-update', this.servicesUpdated)
   }
 
+  @autobind
   servicesUpdated () {
     let status = ServiceStore.serviceStatus
     this.setState({ wbGood: status.wayback, hGood: status.heritrix })
 
   }
 
+  @autobind
   updateWaybackStatus () {
     this.setState({ wbGood: ServiceStore.waybackStatus() })
   }
 
+  @autobind
   updateHeritrixStatus () {
     this.setState({ hGood: ServiceStore.heritrixStatus() })
   }

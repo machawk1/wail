@@ -1,18 +1,18 @@
-import React, { Component } from "react";
-import { Tabs, Tab } from "material-ui/Tabs";
-import General from "./general";
-import WayBackTab from "./wayback";
-import HeritrixTab from "./heritrix/heritrix-tab";
-import Miscellaneous from "./miscellaneous";
+import React, { Component } from "react"
+import autobind from 'autobind-decorator'
+import { Tabs, Tab } from "material-ui/Tabs"
+import General from "./general"
+import WayBackTab from "./wayback"
+import HeritrixTab from "./heritrix/heritrix-tab"
+import Miscellaneous from "./miscellaneous"
 
 export default class AdvancedTab extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = { key: 'general' }
-    this.count = 0
-    this.handleSelect = this.handleSelect.bind(this)
   }
-
+  
+  @autobind
   handleSelect (selectedKey) {
     this.setState({ key: selectedKey })
   }

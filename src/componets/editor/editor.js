@@ -1,17 +1,17 @@
-import React, { Component } from "react";
-import CodeMirror from "codemirror";
-import style from "./style.css";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/material.css";
-import "codemirror/mode/xml/xml";
-import "codemirror/addon/dialog/dialog";
-import "codemirror/addon/dialog/dialog.css";
-import "codemirror/addon/search/searchcursor";
-import "codemirror/addon/search/search";
-import "codemirror/addon/scroll/annotatescrollbar";
-import "codemirror/addon/search/matchesonscrollbar";
-import "codemirror/addon/search/matchesonscrollbar.css";
-import "codemirror/addon/search/jump-to-line";
+import React, { Component } from "react"
+import CodeMirror from "codemirror"
+import style from "./style.css"
+import "codemirror/lib/codemirror.css"
+import "codemirror/theme/material.css"
+import "codemirror/mode/xml/xml"
+import "codemirror/addon/dialog/dialog"
+import "codemirror/addon/dialog/dialog.css"
+import "codemirror/addon/search/searchcursor"
+import "codemirror/addon/search/search"
+import "codemirror/addon/scroll/annotatescrollbar"
+import "codemirror/addon/search/matchesonscrollbar"
+import "codemirror/addon/search/matchesonscrollbar.css"
+import "codemirror/addon/search/jump-to-line"
 
 export default class Editor extends Component {
   static propTypes = {
