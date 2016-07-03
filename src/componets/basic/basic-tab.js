@@ -1,22 +1,21 @@
 import React, { Component } from "react"
-import { Grid , Row} from "react-cellblock"
+import { Grid, Row } from "react-cellblock"
 import ArchiveUrl from "./archive-url"
 import BasicTabButtons from "./basicTab-buttons"
-import MessagePanel from "./message-panel"
+import MementoMessagePanel from "./mementoMessage-panel"
 
 export default class BasicTab extends Component {
   constructor (props, context) {
     super(props, context)
   }
+
   render () {
     return (
-      <div>
-        <Grid flexible={true}>
-          <ArchiveUrl />
-          <MessagePanel />
-        </Grid>
+      <Grid flexible={true}>
+        <ArchiveUrl />
+        <MementoMessagePanel />
         <BasicTabButtons />
-      </div>
+      </Grid>
     )
   }
 }

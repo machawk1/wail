@@ -4,20 +4,8 @@ import { remote } from 'electron'
 import AppBar from "material-ui/AppBar"
 import Drawer from "material-ui/Drawer"
 import MenuItem from "material-ui/MenuItem"
-import { zIndex } from "material-ui/styles"
+import styles from '../styles/styles'
 import { Link, IndexLink, hashHistory } from "react-router"
-
-const style = {
-  appBar: {
-    position: 'fixed',
-    // Needed to overlap the examples
-    zIndex: zIndex.appBar + 1,
-    top: 0,
-  },
-  navDrawer: {
-    zIndex: zIndex.appBar - 1,
-  }
-}
 
 
 export default class Header extends Component {
@@ -48,6 +36,7 @@ export default class Header extends Component {
           title="Wail"
           onLeftIconButtonTouchTap={this.handleToggle}
           zDepth={0}
+          style={styles.appBar}
         />
         <Drawer
           docked={false}
@@ -77,7 +66,6 @@ export default class Header extends Component {
             onTouchTap={(e) => this.handleClose(e,"Misc")}/>
         </Drawer>
       </div>
-
     )
   }
 }

@@ -1,9 +1,8 @@
-import React, { Component, PropTypes } from "react"
+import React, {Component, PropTypes} from "react"
 import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme"
 import getMuiTheme from "material-ui/styles/getMuiTheme"
 import Header from "./header"
-import Debug from "../debug-element"
-
+import styles from "../styles/styles"
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -15,19 +14,20 @@ export default class Layout extends Component {
 
   constructor (props, context) {
     super(props, context)
+    this.state = { muiTheme: baseTheme }
   }
 
   getChildContext () {
-    return { muiTheme: getMuiTheme(baseTheme) }
+    return { muiTheme: this.state.muiTheme }
   }
 
   render () {
-
     return (
       <div>
         <Header/>
-        {this.props.children}
-        <Debug/>
+        <div style={styles.root}>
+          { this.props.children }
+        </div>
       </div>
     )
   }

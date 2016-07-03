@@ -248,6 +248,7 @@ function getHeritrixJobsState () {
 
               } else {
                 console.log('Job cache is null')
+                logger.info(util.format(logString,"the job cache is null. Setting it"))
                 jobCache.cache = sortedJobs
                 let len = sortedJobs.length
                 for (var i = 0; i < len; ++i) {
@@ -312,6 +313,7 @@ let jobMonitor = new JobMonitor()
 
 ipcRenderer.on("start-crawljob-monitoring", (event) => {
   console.log('Monitor get start crawljob monitoring')
+  logger.info(util.format(logString,"got start crawljob monitoring"))
   ipcRenderer.send('got-it',{ from: 'jobs' ,yes: true})
   jobMonitor.checkJobStatuses(statues => {
     if (statues.change) {
@@ -322,6 +324,7 @@ ipcRenderer.on("start-crawljob-monitoring", (event) => {
 
 ipcRenderer.on("stop", (event) => {
   console.log('Monitor get start indexing monitoring')
+  logger.info(util.format(logString,"got stop crawljob monitoring"))
   jobMonitor.job.cancel()
   jobMonitor.job = null
   jobMonitor = null

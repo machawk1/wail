@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import fsreal from 'fs'
 import gracefulFs from 'graceful-fs'
 gracefulFs.gracefulify(fsreal)

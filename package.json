@@ -18,7 +18,7 @@
     "package-osx": "npm run package -- --osx",
     "postinstall": "npm run check-dev-engines",
     "standard": "standard --verbose | snazzy",
-    "start-dev": "cross-env concurrently --kill-others \"npm run start-electron-dev\" \"npm run dev\"",
+    "start-dev": "cross-env concurrently --kill-others \"npm run dev-electron\" \"npm run dev\"",
     "test-xml": "cross-env babel-node tools/test-xml"
   },
   "bin": {
@@ -53,18 +53,16 @@
   },
   "babel": {
     "presets": [
-      "react",
       "es2015",
       "stage-0",
       "node6",
-      "react-hmre"
+      "react"
     ],
     "plugins": [
-      "react-html-attrs",
-      "transform-class-properties",
       "transform-runtime",
       "add-module-exports",
-      "transform-es2015-destructuring"
+      "react-html-attrs",
+      "transform-class-properties"
     ]
   },
   "dependencies": {
@@ -155,7 +153,6 @@
     "babel-preset-node6": "^11.0.0",
     "babel-preset-react": "^6.11.1",
     "babel-preset-react-hmre": "^1.1.1",
-    "babel-preset-react-optimize": "^1.0.1",
     "babel-preset-stage-0": "^6.5.0",
     "babel-register": "^6.9.0",
     "babel-runtime": "6.9.2",
@@ -188,6 +185,7 @@
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",
     "raw-loader": "^0.5.1",
+    "react-addons-perf": "^15.2.0",
     "run-sequence": "^1.2.2",
     "sass-loader": "^4.0.0",
     "snazzy": "^4.0.0",

@@ -2,7 +2,6 @@ import React, {Component} from "react"
 import TextField from "material-ui/TextField"
 import autobind from 'autobind-decorator'
 import {Row, Column} from "react-cellblock"
-import Avatar from 'material-ui/Avatar'
 import RaisedButton from 'material-ui/RaisedButton'
 import validator from 'validator'
 import * as aua from '../../actions/archive-url-actions'
@@ -45,7 +44,6 @@ export default class ArchiveUrl extends Component {
   render () {
     return (
       <Row>
-
         <Column width="1/2">
           <TextField
             floatingLabelText="URL"
@@ -59,13 +57,14 @@ export default class ArchiveUrl extends Component {
           />
         </Column>
         <Column width="1/2">
-          <RaisedButton
-            label="Get Memento Count"
-            labelPosition="before"
-            onTouchTap={this.attemptMementoGet}
-            icon={<Avatar src="icons/memento.ico" size={30}/>}
-            style={styles.buttonMemento}
-          />
+          <div style={styles.basicTapRightColPad}>
+            <RaisedButton
+              label="Get Memento Count"
+              labelPosition="before"
+              onTouchTap={this.attemptMementoGet}
+              style={styles.buttonMemento}
+            />
+          </div>
         </Column>
       </Row>
     )

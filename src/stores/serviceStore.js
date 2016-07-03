@@ -83,7 +83,7 @@ class serviceStore extends EventEmitter {
   }
 }
 
-const ServiceStore = new serviceStore;
+const ServiceStore = new serviceStore
 
 ServiceDispatcher.register(ServiceStore.handleEvent)
 

@@ -3,6 +3,7 @@ import {shell} from 'electron'
 import Snackbar from "material-ui/Snackbar"
 import RaisedButton from "material-ui/RaisedButton"
 import autobind from 'autobind-decorator'
+import {Row} from "react-cellblock"
 import CrawlDispatcher from "../../dispatchers/crawl-dispatcher"
 import UrlDispatcher from "../../dispatchers/url-dispatcher"
 import wailConstants from "../../constants/wail-constants"
@@ -76,7 +77,7 @@ export default class BasicTabButtons extends Component {
 
   render () {
     return (
-      <div>
+      <Row>
         <Toolbar>
           <ToolbarGroup firstChild={true}>
             <RaisedButton
@@ -86,6 +87,8 @@ export default class BasicTabButtons extends Component {
               style={styles.button}
               onMouseDown={this.onClickArchiveNow}
             />
+          </ToolbarGroup>
+          <ToolbarGroup >
             <RaisedButton
               label="Check Archived Status"
               labelPosition="before"
@@ -93,6 +96,8 @@ export default class BasicTabButtons extends Component {
               style={styles.button}
               onMouseDown={this.onClickCheckArchive}
             />
+          </ToolbarGroup>
+          <ToolbarGroup >
             <RaisedButton
               label="View Archive"
               labelPosition="before"
@@ -108,7 +113,7 @@ export default class BasicTabButtons extends Component {
           autoHideDuration={this.state.autoHideDuration}
           onRequestClose={this.closeNotification}
         />
-      </div>
+      </Row>
     )
   }
 }

@@ -8,7 +8,7 @@ const config = {
   devtool: 'source-map',
 
   entry: {
-    wail: "./src/wail",
+    wail: [ "babel-polyfill", "./src/wail" ],
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
     jobs: './src/background/jobs',
@@ -29,9 +29,10 @@ const config = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'react', 'es2015', 'stage-0', 'node6' ],
-          plugins: [ 'react-html-attrs', 'transform-class-properties',
-            'transform-runtime', "add-module-exports", 'babel-plugin-transform-remove-console'],
+          presets: [ 'es2015', 'stage-0', 'react', 'node6' ],
+          plugins: [ 'transform-runtime', "add-module-exports",
+            "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
+          ],
         },
       },
       { test: /\.css$/, loader: "style!css" },

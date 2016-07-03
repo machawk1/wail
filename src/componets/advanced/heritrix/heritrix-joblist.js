@@ -3,7 +3,7 @@ import { List, ListItem } from "material-ui/List"
 import autobind from "autobind-decorator"
 import CrawlStore from "../.././../stores/crawlStore"
 import HeritrixJobItem from "./heritrixJobItem"
-
+import styles from "../../styles/styles"
 
 export default class HeritrixJobList extends Component {
 
@@ -34,7 +34,7 @@ export default class HeritrixJobList extends Component {
     let JobItems = jobs.length > 0 ? jobs.map(job => <HeritrixJobItem key={job.jobId} {...job}/>) :
       <ListItem primaryText="No Jobs To Display"/>
     return (
-      <List style ={{"overflow":"hidden", "overflow-y":"scroll"}}>
+      <List style ={styles.heritrixJobList}>
         {JobItems}
       </List>
     )

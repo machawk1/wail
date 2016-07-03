@@ -13,6 +13,15 @@ Promise.promisifyAll(fs)
 import Routes from './routes'
 import { writeWaybackConf } from "./actions/wayback-actions"
 
+
+/*
+ logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
+ logger.transports.file.maxSize = 5 * 1024 * 1024
+ logger.transports.file.file = logPath
+ logger.transports.file.streamConfig = {flags: 'a'}
+ */
+window.React = React
+
 injectTapEventPlugin()
 
 ipcRenderer.send("start-index-indexing")
@@ -27,7 +36,5 @@ ReactDOM.render(
   <Router
     history={hashHistory}
     routes={Routes}
-  />
-  ,
+  />,
   wail)
-
