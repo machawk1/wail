@@ -1,3 +1,4 @@
+import "babel-polyfill"
 import realFs from 'fs'
 import gracefulFs from 'graceful-fs'
 gracefulFs.gracefulify(realFs)
@@ -11,6 +12,7 @@ import moveThem from './moveJDKMemgator'
 import through2 from 'through2'
 import request from 'request'
 import extract from 'extract-zip'
+import ProgressBar from "progress2"
 
 const zips = path.resolve('./', 'zips')
 const bapps = path.resolve('./', 'bundledApps')
@@ -69,15 +71,26 @@ const unpackedJDKs = [
 
 const titles = [
   'downloading openjdk-7u80-win-i586',
+  'done downloading openjdk-7u80-win-i586',
   'downloading openjdk7u80-win-amd64',
+  'done downloading openjdk7u80-win-amd64',
   'downloading openjdk7u80-linux-i586',
+  'done downloading openjdk7u80-linux-i586',
   'downloading openjdk7u80-linux-amd64',
+  'done downloading openjdk7u80-linux-amd64',
   'downloading openjdk7u80-darwin-x86_64',
+  'done downloading openjdk7u80-darwin-x86_64',
   'downloading memgator-win386',
+  'done downloading memgator-win386',
   'downloading memgator-wind-amd64',
+  'done downloading memgator-wind-amd64',
   'downloading memgator-linux-386',
+  'done downloading memgator-linux-386',
   'downloading memgator-linux-amd64',
+  'done downloading memgator-linux-amd64',
   'downloading memgator-darwin-amd64',
+  'done downloading memgator-darwin-amd64',
+  'downloading of externals complete'
 ]
 
 const zipRE = /.zip/
@@ -101,9 +114,10 @@ function downloadJDK (uri) {
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
       if (encoding == 'application/zip') {
+        console.log(titles[ titleC++ ])
         res.pipe(fs.createWriteStream(`${zips}/${name}`))
           .on('close', () => {
-            console.log(`downloading ${titles[ titleC++ ]}`)
+            console.log(titles[ titleC++ ])
             resolve()
           })
       }
@@ -130,9 +144,10 @@ function downloadMemgator (uri) {
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
       if (encoding == 'application/octet-stream') {
+        console.log(titles[ titleC++ ])
         res.pipe(fs.createWriteStream(`${memgatorsP}/${name}`))
           .on('close', () => {
-            console.log(`downloading ${titles[ titleC++ ]}`)
+            console.log(titles[ titleC++ ])
             resolve()
           })
       }
@@ -152,26 +167,26 @@ let onlyZip = through2.obj(function (item, enc, next) {
 })
 
 if (argv.all) {
-  
-  console.log(`downloading ${titles[ titleC++ ]}`)
+
   Promise.map(jdks, downloadJDK)
     .then(() => {
       Promise.map(memgators, downloadMemgator).then(() => {
         fs.walk(zips)
           .pipe(onlyZip)
           .on('data', item => {
+            fs.chmodSync(item.path, '777')
             let name = path.basename(item.path).replace(zipRE, '')
-            extract(item.path, { dir: `${zips}` }, err1 => {
+            extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, err1 => {
               if (err1) {
                 console.error(err1)
+              } else {
+                console.log(`done extracting ${name}`)
               }
-              console.log(`done extracting ${name}`)
             })
           })
       }).catch(err => console.error('there was an error downloading a jdk', err))
     })
     .catch(err => console.error('there was an error downloading a memgator', err))
-  
 } else {
 
   console.log(`Downloading jdk for ${currentOSArch}`)
@@ -185,8 +200,14 @@ if (argv.all) {
             .pipe(onlyZip)
             .on('data', item => {
               let name = path.basename(item.path).replace(zipRE, '')
-              extract(item.path, { dir: `${zips}` }, err1 => {
-                console.log(`Done extracting jdk for ${currentOSArch}`)
+              fs.chmodSync(item.path, '777')
+              extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777}, err1 => {
+                if(err1){
+                  console.error(`error extracting jdk for ${currentOSArch}`,err1)
+                } else {
+                  console.log(`Done extracting jdk for ${currentOSArch}`)
+                }
+
               })
             })
         })
