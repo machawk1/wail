@@ -27,6 +27,8 @@ const logger = remote.getGlobal('logger')
 const logString = "heritirx-actions %s"
 const logStringError = "heritirx-actions error where[ %s ] stack [ %s ]"
 
+const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+
 let jobLaunchRe
 let jobRe
 
@@ -423,10 +425,9 @@ export function getHeritrixJobsState () {
       fs.readFile(item.logPath, "utf8", (err, data)=> {
         if (err) throw err
         // console.log(data)
-        let lines = data.trim().split('\n')
+        let lines = data.trim().split(os.EOL)
         let lastLine = S(lines[ lines.length - 1 ])
-
-        if (lastLine.contains('Ended by operator')) {
+        if (jobEndStatus.test(lastLine.s)) {
           // jobs[item.jobId].progress.ended = true
           let nextToLast = S(lines[ lines.length - 2 ])
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
@@ -437,7 +438,6 @@ export function getHeritrixJobsState () {
             queued: nextLastfields[ 2 ],
             downloaded: nextLastfields[ 3 ],
           })
-
         } else {
           let fields = lastLine.collapseWhitespace().s.split(' ')
           jobs[ item.jobId ].runs.push({
@@ -470,6 +470,9 @@ export function getHeritrixJobsState () {
                 .toPairs()
                 .map(job => {
                   job[ 1 ].runs.sort(sortJobs)
+                  if (job[ 1 ].runs.length > 1) {
+                    job[ 1 ].runs = job[ 1 ].runs.slice(0, 1)
+                  }
                   return job[ 1 ]
                 })
                 .value()

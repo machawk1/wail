@@ -30,6 +30,20 @@ class crawlStore extends EventEmitter {
     this.intialJobStateLoad()
 
     ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
+    ipcRenderer.on("crawljob-configure-dialogue", (event, newCrawl) => {
+      makeHeritrixJobConf(newCrawl.urls, newCrawl.depth)
+      let urls 
+      if (Array.isArray(newCrawl.urls)) {
+        let temp = 'Urls: '
+        event.urls.forEach(url => temp += `${url}${os.EOL}`)
+        urls = temp + `With depth of ${newCrawl.depth}`
+      } else {
+        urls = `${newCrawl.urls} with depth of ${newCrawl.depth}`
+      }
+      new Notification('Building Heritrix Crawl', {
+        body: `Building the Job! for\n${urls}`
+      })
+    })
   }
 
   @autobind

@@ -1,9 +1,10 @@
-import React, { Component } from "react"
+import React, {Component} from "react"
 import RaisedButton from "material-ui/RaisedButton"
-import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
-import { Grid, Row, Column } from "react-cellblock"
-import { shell } from 'electron'
+import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
+import {Grid, Row, Column} from "react-cellblock"
+import {shell} from 'electron'
 import autobind from "autobind-decorator"
+import { ipcRenderer, remote } from "electron"
 import settings from '../../../settings/settings'
 import wailConstants from "../../../constants/wail-constants"
 import HeritrixJobList from "./heritrix-joblist"
@@ -29,7 +30,8 @@ export default class HeritrixTab extends Component {
   @autobind
   onClickNewCrawl (event) {
     console.log('New Crawl')
-    this.setState({ crawlConfigOpen: true })
+    // this.setState({ crawlConfigOpen: true })
+    ipcRenderer.send("open-newCrawl-window")
   }
 
   @autobind
@@ -52,13 +54,17 @@ export default class HeritrixTab extends Component {
         <Row>
           <Toolbar>
             <ToolbarGroup >
-              <NewCrawlDialog />
+              <RaisedButton
+                label="Configure New Crawl"
+                labelPosition="before"
+                style={styles.button}
+                onMouseDown={this.onClickNewCrawl}
+              />
             </ToolbarGroup>
             <ToolbarGroup>
               <RaisedButton
                 label="Launch Web UI"
                 labelPosition="before"
-                primary={true}
                 style={styles.button}
                 onMouseDown={this.onClickLaunchWebUI}
               />

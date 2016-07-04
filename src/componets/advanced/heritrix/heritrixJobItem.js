@@ -1,6 +1,5 @@
 import React, { Component, PropTypes } from "react"
 import { ListItem } from "material-ui/List"
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table"
 import { grey400 } from "material-ui/styles/colors"
 import IconButton from "material-ui/IconButton"
 import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
@@ -11,7 +10,7 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
 import { Grid, Row, Column } from "react-cellblock"
 import del from 'del'
 import path from 'path'
-import moment from 'moment'
+import autobind from 'autobind-decorator'
 
 import settings from '../../../settings/settings'
 import wc from '../../../constants/wail-constants'
@@ -67,16 +66,10 @@ export default class HeritrixJobItem extends Component {
       urls: this.props.urls,
       openEditor: false,
     }
-    this.itemClicked = this.itemClicked.bind(this)
-    this.start = this.start.bind(this)
-    this.restart = this.restart.bind(this)
-    this.kill = this.kill.bind(this)
-    this.deleteJob = this.deleteJob.bind(this)
-    this.viewConf = this.viewConf.bind(this)
-    this.onOpenChange = this.onOpenChange.bind(this)
-
+    
   }
-
+  
+  @autobind
   itemClicked (event) {
     console.log('clicked on jobitem')
     JobInfoDispatcher.dispatch({
@@ -85,10 +78,12 @@ export default class HeritrixJobItem extends Component {
     })
   }
 
+  @autobind
   viewConf (event) {
     this.setState({ openEditor: !this.state.openEditor })
   }
 
+  @autobind
   start (event) {
     console.log("stat")
     let runs = this.state.runs
@@ -102,6 +97,7 @@ export default class HeritrixJobItem extends Component {
 
   }
 
+  @autobind
   restart (event) {
     let runs = this.state.runs
     if (runs.length > 0) {
@@ -116,10 +112,12 @@ export default class HeritrixJobItem extends Component {
 
   }
 
+  @autobind
   kill (event, cb) {
     forceCrawlFinish(this.state.jobId, cb)
   }
 
+  @autobind
   deleteJob (event) {
     let runs = this.state.runs
     let cb = () => {
@@ -147,6 +145,7 @@ export default class HeritrixJobItem extends Component {
     })
   }
 
+  @autobind
   onOpenChange (event) {
     this.setState({ openEditor: !this.state.openEditor })
   }

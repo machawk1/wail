@@ -9,6 +9,7 @@ const config = {
 
   entry: {
     wail: [ "babel-polyfill", "./src/wail" ],
+    newCrawl: [ "babel-polyfill", "./src/childWindows/newCrawl/newCrawl" ],
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
     jobs: './src/background/jobs',

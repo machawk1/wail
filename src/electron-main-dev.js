@@ -18,22 +18,34 @@ process.on('uncaughtException', (err) => {
 })
 
 let mainWindow = null
+let newCrawlWindow = null
 let backgroundWindow = null
 let accessibilityWindow = null
 let indexWindow = null
 let jobbWindow = null
 let base
 let mWindowURL
+let newCrawlWindowURL
 let bWindowURL
 let accessibilityWindowURL
 let indexWindowURL
 let jobbWindowURL
-let notDebugUI = true
+let notDebugUI = false
 
 let openBackGroundWindows = true
 
-function setUp () {
+function showNewCrawlWindow (parent) {
+  newCrawlWindow =  new BrowserWindow({parent: parent, modal: true, show: false})
+  newCrawlWindow.loadURL(newCrawlWindowURL)
+  newCrawlWindow.once('ready-to-show', () => {
+    newCrawlWindow.show()
+  })
+  newCrawlWindow.on('closed',()=>{
+    newCrawlWindow = null
+  })
+}
 
+function setUpIPC () {
   if (notDebugUI) {
     ipcMain.on('got-it', (event, payload) => {
       console.log(payload)
@@ -75,13 +87,39 @@ function setUp () {
     })
   }
 
-  base = path.resolve('./')
+  ipcMain.on('open-newCrawl-window', (event, payload) => {
+    showNewCrawlWindow(mainWindow)
+  })
 
+  ipcMain.on('close-newCrawl-window', (event, payload) => {
+    if(newCrawlWindow != null){
+      newCrawlWindow.destroy()
+    }
+  })
+
+  //
+  ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
+    mainWindow.webContents.send("crawljob-status-update", payload)
+    if(newCrawlWindow != null){
+      newCrawlWindow.destroy()
+    }
+  })
+
+  //close-newCrawl-window-configured
+}
+
+function setUp () {
+
+  setUpIPC()
+  
+  base = path.resolve('./')
+  ///home/john/my-fork-wail/wail/src/childWindows/newCrawl/newCrawl.html
   if (process.env.NODE_ENV === 'development') {
     require('electron-debug')({
       showDevTools: true,
     })
     mWindowURL = `file://${__dirname}/wail.html`
+    newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
     bWindowURL = `file://${__dirname}/background/monitor.html`
     accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     indexWindowURL = `file://${__dirname}/background/indexer.html`
@@ -89,6 +127,7 @@ function setUp () {
   } else {
     base = app.getAppPath()
     mWindowURL = `file://${base}/src/wail.html`
+    newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
     bWindowURL = `file://${base}/src/background/monitor.html`
     accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
     indexWindowURL = `file://${base}/src/background/indexer.html`

@@ -157,6 +157,22 @@ function downloadMemgator (uri) {
   })
 }
 
+function extractZip (zipPath) {
+  return new Promise((resolve, reject) => {
+    let name = path.basename(zipPath).replace(zipRE, '')
+    extract(zipPath, { dir: `${zips}`}, zipError => {
+      if (zipError) {
+        console.error(zipError)
+        reject(zipError)
+      } else {
+        console.log(`done extracting ${name} ensuring content is not read only`)
+        console.log(`done ensuring not read only for ${name}`)
+        resolve()
+      }
+    })
+  })
+}
+
 fs.ensureDirSync(zips)
 fs.ensureDirSync(memgatorsP)
 let onlyZip = through2.obj(function (item, enc, next) {
@@ -165,34 +181,30 @@ let onlyZip = through2.obj(function (item, enc, next) {
   next()
 })
 
-let changePermisions = []
+let unzipPaths = []
 
 if (argv.all) {
   Promise.map(jdks, downloadJDK)
     .then(() => {
-      Promise.map(memgators, downloadMemgator).then(() => {
-        fs.walk(zips)
-          .pipe(onlyZip)
-          .on('data', item => {
-            shelljs.chmod('777',item.path)
-            let name = path.basename(item.path).replace(zipRE, '')
-            extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, zipError => {
-              if (zipError) {
-                console.error(zipError)
-              } else {
-                console.log(`done extracting ${name}`)
-                shelljs.chmod("-R","777",path.join(zips,name))
-              }
+      Promise.map(memgators, downloadMemgator)
+        .then(() => {
+          fs.walk(zips)
+            .pipe(onlyZip)
+            .on('data', item => {
+              shelljs.chmod('777', item.path)
+              unzipPaths.push(item.path)
             })
-          })
-          .on('end', () => console.log("Finished"))
-      }).catch(err => console.error('there was an error downloading a jdk', err))
+            .on('end', () =>
+              Promise.map(unzipPaths, extractZip)
+                .then(() => console.log("finished"))
+                .catch(error => console.error(error))
+            )
+        }).catch(err => console.error('there was an error downloading a jdk', err))
 
     })
     .catch(err => console.error('there was an error downloading a memgator', err))
 
 } else {
-
   console.log(`Downloading jdk for ${currentOSArch}`)
   downloadJDK(jdks[ idxs[ currentOSArch ] ])
     .then(() => {
@@ -203,15 +215,14 @@ if (argv.all) {
           fs.walk(zips)
             .pipe(onlyZip)
             .on('data', item => {
-              shelljs.chmod('777',item.path)
-              extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, zipError => {
+              shelljs.chmod('777', item.path)
+              extract(item.path, { dir: `${zips}`}, zipError => {
                 if (zipError) {
                   console.error(`error extracting jdk for ${currentOSArch}`, zipError)
                 } else {
                   let name = path.basename(item.path).replace(zipRE, '')
                   console.log(`Done extracting jdk for ${currentOSArch}`)
-                  shelljs.chmod("-R","777",path.join(zips,name))
-                  moveThem({arch: currentOSArch, to: bapps})
+                  moveThem({ arch: currentOSArch, to: bapps })
                 }
               })
             })

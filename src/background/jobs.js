@@ -24,6 +24,7 @@ logger.transports.file.streamConfig = {flags: 'a'}
 
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
+const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
 
 const jobLock = new ReadWriteLock()
 const jobCache = {
@@ -185,7 +186,7 @@ function getHeritrixJobsState () {
         let lines = data.trim().split('\n')
         let lastLine = S(lines[ lines.length - 1 ])
 
-        if (lastLine.contains('Ended by operator')) {
+        if (jobEndStatus.test(lastLine.s)) {
           // jobs[item.jobId].progress.ended = true
           let nextToLast = S(lines[ lines.length - 2 ])
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
@@ -237,6 +238,9 @@ function getHeritrixJobsState () {
                 .toPairs()
                 .map(job => {
                   job[ 1 ].runs.sort(sortJobs)
+                  if (job[ 1 ].runs.length > 1) {
+                    job[ 1 ].runs = job[ 1 ].runs.slice(0, 1)
+                  }
                   return job[ 1 ]
                 })
                 .value()

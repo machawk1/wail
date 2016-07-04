@@ -70,8 +70,3 @@ export default function moveThem (opts) {
     })
   })
 }
-
-
-
-
-

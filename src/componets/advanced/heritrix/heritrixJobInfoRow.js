@@ -1,5 +1,6 @@
 import React, { Component} from "react"
 import {  TableRow, TableRowColumn } from "material-ui/Table"
+import autobind from "autobind-decorator"
 import moment from 'moment'
 import JobInfoDispatcher from '../../../dispatchers/jobInfoDispatcher'
 
@@ -30,10 +31,10 @@ export default class HeritrixJobInfoRow extends Component {
          path: '',
          runs: [],
       }
-      this.viewingItem = this.viewingItem.bind(this)
       JobInfoDispatcher.register(this.viewingItem)
    }
-
+  
+  @autobind
    viewingItem (clickedItem) {
       console.log("viewing job item", clickedItem)
       this.setState({
@@ -76,7 +77,7 @@ export default class HeritrixJobInfoRow extends Component {
       } else {
          return (
             <TableRow key={`${this.state.jobId}${count++}`}>
-               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>NotStarted</TableRowColumn>
+               <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>Not Started</TableRowColumn>
                <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>Not
                                                                                                Started</TableRowColumn>
                <TableRowColumn key={`${this.state.jobId}${count++}`} style={style.tableRowCol}>0</TableRowColumn>
