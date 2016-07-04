@@ -74,6 +74,6 @@ const config = {
     new ExtractTextPlugin('style.css', { allChunks: true })
   ],
   target: 'electron-renderer'
-};
+}
 
-export default config;
+export default config

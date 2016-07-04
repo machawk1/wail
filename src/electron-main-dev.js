@@ -11,8 +11,8 @@ import path from 'path'
 import { configSettings } from './settings/settings'
 
 process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`,err)
-   // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
+  console.log(`Caught exception: ${err}`, err)
+  // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
   cleanUp()
   app.quit()
 })
@@ -30,17 +30,29 @@ let bWindowURL
 let accessibilityWindowURL
 let indexWindowURL
 let jobbWindowURL
-let notDebugUI = false
+let notDebugUI = true
 
-let openBackGroundWindows = true
+let debug = false
+let openBackGroundWindows = false
+
 
 function showNewCrawlWindow (parent) {
-  newCrawlWindow =  new BrowserWindow({parent: parent, modal: true, show: false})
+  let config = {
+    parent: parent,
+    modal: true,
+    show: false ,
+    closable: false,
+    minimizable: false,
+    autoHideMenuBar: true
+  }
+  newCrawlWindow = new BrowserWindow(config)
   newCrawlWindow.loadURL(newCrawlWindowURL)
   newCrawlWindow.once('ready-to-show', () => {
     newCrawlWindow.show()
+    // newCrawlWindow.webContents.openDevTools({ mode: "detach" })
   })
-  newCrawlWindow.on('closed',()=>{
+  
+  newCrawlWindow.on('closed', ()=> {
     newCrawlWindow = null
   })
 }
@@ -88,11 +100,14 @@ function setUpIPC () {
   }
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
+    console.log("got open-newCrawl-window")
     showNewCrawlWindow(mainWindow)
   })
 
   ipcMain.on('close-newCrawl-window', (event, payload) => {
-    if(newCrawlWindow != null){
+    console.log("got close-newCrawl-window")
+    if (newCrawlWindow != null) {
+      console.log("newCrawlWindow is not null")
       newCrawlWindow.destroy()
     }
   })
@@ -100,7 +115,7 @@ function setUpIPC () {
   //
   ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
     mainWindow.webContents.send("crawljob-status-update", payload)
-    if(newCrawlWindow != null){
+    if (newCrawlWindow != null) {
       newCrawlWindow.destroy()
     }
   })
@@ -111,7 +126,7 @@ function setUpIPC () {
 function setUp () {
 
   setUpIPC()
-  
+
   base = path.resolve('./')
   ///home/john/my-fork-wail/wail/src/childWindows/newCrawl/newCrawl.html
   if (process.env.NODE_ENV === 'development') {
@@ -169,40 +184,41 @@ function setUp () {
 
   logPath = path.join(logPath, 'wail.log')
   fs.ensureFile(logPath, err => {
-    if(err){
+    if (err) {
       console.error(err)
     }
   })
-  
+
   logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
   logger.transports.file.maxSize = 5 * 1024 * 1024
   logger.transports.file.file = logPath
-  logger.transports.file.streamConfig = {flags: 'a'}
-
+  logger.transports.file.streamConfig = { flags: 'a' }
 
   global.logger = logger
 
   global.wailLogp = logPath
 }
 
-function openDebug (all) {
-  if (all) {
-    if(accessibilityWindow != null){
-      accessibilityWindow.show()
-      accessibilityWindow.webContents.openDevTools({mode: "detach"})
-    }
-    if(indexWindow != null) {
-      indexWindow.show()
-      indexWindow.webContents.openDevTools({mode: "detach"})
-    }
+function openDebug () {
+  if(debug){
+    if (openBackGroundWindows) {
+      if (accessibilityWindow != null) {
+        accessibilityWindow.show()
+        accessibilityWindow.webContents.openDevTools({ mode: "detach" })
+      }
+      if (indexWindow != null) {
+        indexWindow.show()
+        indexWindow.webContents.openDevTools({ mode: "detach" })
+      }
 
-    if(jobbWindow != null){
-      jobbWindow.show()
-      jobbWindow.webContents.openDevTools({mode: "detach"})
+      if (jobbWindow != null) {
+        jobbWindow.show()
+        jobbWindow.webContents.openDevTools({ mode: "detach" })
+      }
+
     }
-    
+    mainWindow.webContents.openDevTools()
   }
-  mainWindow.webContents.openDevTools()
 }
 
 function createBackGroundWindows () {

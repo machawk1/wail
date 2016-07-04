@@ -101,7 +101,7 @@ function startPack () {
     })
     .then(() => {
       console.log("removing previous builds")
-      del('release')
+      del.sync('release')
     })
     .then(paths => {
       if (shouldBuildAll) {
@@ -195,7 +195,7 @@ function log (plat, arch) {
     if (err) return console.error(err)
     let moveTop
     if(plat === 'darwin') {
-      moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/wail.app/Contents/Resources/app`
+      moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/wail.app/Contents/Resources/app/bundledApps`
     } else {
       moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/resources/app/bundledApps`
     }

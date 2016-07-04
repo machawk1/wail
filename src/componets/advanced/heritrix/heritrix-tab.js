@@ -9,7 +9,6 @@ import settings from '../../../settings/settings'
 import wailConstants from "../../../constants/wail-constants"
 import HeritrixJobList from "./heritrix-joblist"
 import HeritrixJobInfo from "./heritrixJobInfo"
-import NewCrawlDialog from "./newCrawlDialog"
 
 const styles = {
   button: {
