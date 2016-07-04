@@ -207,7 +207,7 @@
     "winattr": "^1.1.0"
   },
   "devEngines": {
-    "node": "5.x || 6.x",
+    "node": "6.x",
     "npm": "2.x || 3.x"
   }
 }

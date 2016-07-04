@@ -7,7 +7,6 @@ import MenuItem from "material-ui/MenuItem"
 import styles from '../styles/styles'
 import { Link, IndexLink, hashHistory } from "react-router"
 
-
 export default class Header extends Component {
   constructor (props, context) {
     super(props, context)
@@ -17,7 +16,7 @@ export default class Header extends Component {
 
   @autobind
   handleToggle () {
-    if (!this.state.open){
+    if (!this.state.open) {
       console.log('we are opening the drawer')
     }
     this.setState({ open: !this.state.open })
