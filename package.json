@@ -110,6 +110,7 @@
     "react-addons-test-utils": "^15.1.0",
     "react-cellblock": "^2.0.0",
     "react-dom": "15.1.0",
+    "react-electron-webview": "^1.0.7",
     "react-router": "^2.5.1",
     "react-tap-event-plugin": "^1.0.0",
     "request": "^2.72.0",

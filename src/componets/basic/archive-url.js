@@ -4,14 +4,16 @@ import autobind from 'autobind-decorator'
 import {Row, Column} from "react-cellblock"
 import RaisedButton from 'material-ui/RaisedButton'
 import validator from 'validator'
+import UrlStore from "../../stores/urlStore"
 import * as aua from '../../actions/archive-url-actions'
 import styles from '../styles/styles'
 
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
     super(props, context)
-    this.state = { uri: "", underlineStyle: styles.underlineStyle }
+    this.state = { uri: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
   }
+
 
   @autobind
   handleChange (e) {
@@ -19,7 +21,7 @@ export default class ArchiveUrl extends Component {
     console.log(e.target.value)
     let value = e.target.value
     let err = styles.underlineStyleError
-    if (validator.isURL(value)) {
+    if (validator.isURL(value) || value.length == 0) {
       err = styles.underlineStyle
     }
     this.setState({ uri: value, underlineStyle: err })

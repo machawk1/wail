@@ -13,7 +13,6 @@ Promise.promisifyAll(fs)
 import Routes from './routes'
 import { writeWaybackConf } from "./actions/wayback-actions"
 
-
 /*
  logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
  logger.transports.file.maxSize = 5 * 1024 * 1024

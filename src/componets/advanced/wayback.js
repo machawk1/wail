@@ -1,11 +1,12 @@
 import React, { Component } from "react"
 import { shell } from 'electron'
 import RaisedButton from "material-ui/RaisedButton"
-import { Grid, Row, Column, observeGrid } from 'react-cellblock'
-
+import { Grid, Row, Column } from 'react-cellblock'
+import autobind from "autobind-decorator"
 import settings from '../../settings/settings'
 import EditorPopup from "../editor/editor-popup"
 import wc from "../../constants/wail-constants"
+import ServiceStore from "../../stores/serviceStore"
 
 const styles = {
   button: {
@@ -16,10 +17,13 @@ const styles = {
 export default class WayBackTab extends Component {
   constructor (props, context) {
     super(props, context)
-    this.onClickViewWayback = this.onClickViewWayback.bind(this)
-
+    this.state = {
+      showWayback: ServiceStore.waybackStatus()
+    }
   }
 
+
+  @autobind
   onClickViewWayback (event) {
     console.log('View Wayback')
     shell.openExternal(settings.get('wayback.uri_wayback'))

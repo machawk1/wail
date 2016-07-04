@@ -29,7 +29,7 @@ export default class HeritrixJobInfo extends Component {
 
   render () {
     return (
-      <Table height={'300px'}>
+      <Table height={'100px'}>
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}

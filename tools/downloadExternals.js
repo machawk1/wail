@@ -181,6 +181,7 @@ if (argv.all) {
                 console.error(zipError)
               } else {
                 console.log(`done extracting ${name}`)
+                shelljs.chmod("-R","777",path.join(zips,name))
               }
             })
           })
@@ -209,12 +210,10 @@ if (argv.all) {
                 } else {
                   let name = path.basename(item.path).replace(zipRE, '')
                   console.log(`Done extracting jdk for ${currentOSArch}`)
+                  shelljs.chmod("-R","777",path.join(zips,name))
+                  moveThem({arch: currentOSArch, to: bapps})
                 }
               })
-            })
-            .on('end', () => {
-              moveThem({arch: currentOSArch, to: bapps})
-              console.log("Finished moving required files for dev")
             })
         })
         .catch(err => {

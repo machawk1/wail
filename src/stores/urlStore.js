@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3"
+import autobind from "autobind-decorator"
 import UrlDispatcher from "../dispatchers/url-dispatcher"
 import wailConstants from "../constants/wail-constants"
 import * as urlActions from "../actions/archive-url-actions"
@@ -11,9 +12,6 @@ class urlStore extends EventEmitter {
   constructor () {
     super()
     this.urlMemento = { url: '', mementos: -1, inArchive: false }
-    this.handleEvent = this.handleEvent.bind(this)
-    this.getUrl = this.getUrl.bind(this)
-    this.getMementoCount = this.getMementoCount.bind(this)
   }
 
   /*
@@ -21,6 +19,7 @@ class urlStore extends EventEmitter {
    VIEW_ARCHIVED_URI: null,
    */
 
+  @autobind
   handleEvent (event) {
     console.log("Got an event url store", event)
     switch (event.type) {
@@ -28,7 +27,7 @@ class urlStore extends EventEmitter {
       {
         if (this.urlMemento.url != event.url) {
           this.urlMemento.url = event.url
-          console.log("url updated ")
+          console.log(`url updated ${event.url}`)
           this.emit('url-updated')
         }
 
@@ -79,10 +78,12 @@ class urlStore extends EventEmitter {
 
   }
 
+  @autobind
   getUrl () {
     return this.urlMemento.url
   }
 
+  @autobind
   getMementoCount () {
     return this.urlMemento.mementos
   }

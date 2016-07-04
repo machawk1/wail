@@ -11,7 +11,7 @@ import path from 'path'
 import { configSettings } from './settings/settings'
 
 process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`)
+  console.log(`Caught exception: ${err}`,err)
    // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
   cleanUp()
   app.quit()
@@ -148,12 +148,20 @@ function setUp () {
 
 function openDebug (all) {
   if (all) {
-    accessibilityWindow.show()
-    accessibilityWindow.webContents.openDevTools({mode: "detach"})
-    indexWindow.show()
-    indexWindow.webContents.openDevTools({mode: "detach"})
-    jobbWindow.show()
-    jobbWindow.webContents.openDevTools({mode: "detach"})
+    if(accessibilityWindow != null){
+      accessibilityWindow.show()
+      accessibilityWindow.webContents.openDevTools({mode: "detach"})
+    }
+    if(indexWindow != null) {
+      indexWindow.show()
+      indexWindow.webContents.openDevTools({mode: "detach"})
+    }
+
+    if(jobbWindow != null){
+      jobbWindow.show()
+      jobbWindow.webContents.openDevTools({mode: "detach"})
+    }
+    
   }
   mainWindow.webContents.openDevTools()
 }
@@ -168,13 +176,13 @@ function createBackGroundWindows () {
 }
 
 function stopMonitoring () {
-  if (accessibilityWindow !== null) {
+  if (accessibilityWindow != null) {
     accessibilityWindow.webContents.send("stop")
   }
-  if (indexWindow !== null) {
+  if (indexWindow != null) {
     indexWindow.webContents.send("stop")
   }
-  if (jobbWindow !== null) {
+  if (jobbWindow != null) {
     jobbWindow.webContents.send("stop")
   }
 }

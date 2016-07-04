@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import EventEmitter from "eventemitter3"
 import _ from 'lodash'
 import os from 'os'
-import moment from 'moment'
+import autobind from "autobind-decorator"
 import UrlStore from "../stores/urlStore"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
 import EditorDispatcher from "../dispatchers/editorDispatcher"
@@ -26,11 +26,14 @@ class crawlStore extends EventEmitter {
     super()
     this.crawlJobs = []
     this.jobIndex = new Map()
-    this.handleEvent = this.handleEvent.bind(this)
-    this.createJob = this.createJob.bind(this)
-    this.latestJob = this.latestJob.bind(this)
-    this.jobs = this.jobs.bind(this)
-    this.populateJobsFromPrevious = this.populateJobsFromPrevious.bind(this)
+
+    this.intialJobStateLoad()
+
+    ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
+  }
+
+  @autobind
+  intialJobStateLoad () {
     getHeritrixJobsState()
       .then(status => {
         console.log(status)
@@ -51,10 +54,9 @@ class crawlStore extends EventEmitter {
       .catch(error => {
         console.log('There was an error in getting the configs', error)
       })
-
-    ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
   }
 
+  @autobind
   createJob (id, pth, urls) {
     this.crawlJobs.push({
       jobId: id.toString(),
@@ -68,6 +70,7 @@ class crawlStore extends EventEmitter {
     this.emit('jobs-updated')
   }
 
+  @autobind
   populateJobsFromPrevious (jobs) {
     console.log('building previous jobs', jobs.jobs)
     this.crawlJobs = jobs.jobs
@@ -80,14 +83,17 @@ class crawlStore extends EventEmitter {
 
   }
 
+  @autobind
   latestJob () {
     return this.crawlJobs[ this.crawlJobs.length - 1 ]
   }
 
+  @autobind
   jobs () {
     return this.crawlJobs
   }
 
+  @autobind
   handleEvent (event) {
     console.log("Got an event in crawl store", event)
 
@@ -170,7 +176,7 @@ class crawlStore extends EventEmitter {
 
 }
 
-const CrawlStore = new crawlStore
+const CrawlStore = new crawlStore()
 
 //noinspection JSAnnotator
 window.CrawlStore = CrawlStore

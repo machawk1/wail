@@ -1,4 +1,5 @@
 import EventEmitter from "eventemitter3"
+import autobind from "autobind-decorator"
 import { ipcRenderer } from "electron"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import wailConstants from "../constants/wail-constants"
@@ -11,7 +12,7 @@ const logger = remote.getGlobal('logger')
 
 const EventTypes = wailConstants.EventTypes
 
-const logString = "service store %s "
+const logString = "service store %s"
 
 class serviceStore extends EventEmitter {
   constructor () {
@@ -20,14 +21,10 @@ class serviceStore extends EventEmitter {
       heritrix: false,
       wayback: false,
     }
-    this.waybackStatus = this.waybackStatus.bind(this)
-    this.heritrixStatus = this.heritrixStatus.bind(this)
-    this.checkStatues = this.checkStatues.bind(this)
-    this.handleEvent = this.handleEvent.bind(this)
-    this.updateStatues = this.updateStatues.bind(this)
     ipcRenderer.on("service-status-update", (event, update) => this.updateStatues(update))
   }
 
+  @autobind
   updateStatues (update) {
     console.log("service updated")
 //     logger.log('info', logString, "services updated")
@@ -35,34 +32,39 @@ class serviceStore extends EventEmitter {
     this.serviceStatus.wayback = update.wayback
 
     if (!this.serviceStatus.heritrix) {
-      logger.info(util.format(logString,"heritrix was down attempting to restart"))
+      logger.info(util.format(logString, "heritrix was down attempting to restart"))
       launchHeritrix()
     }
     if (!this.serviceStatus.wayback) {
-      logger.info(util.format(logString,"wayback was down attempting to restart"))
+      logger.info(util.format(logString, "wayback was down attempting to restart"))
       startWayback()
     }
     this.emit('monitor-status-update')
 
   }
 
+  @autobind
   checkStatues () {
     heritrixAccesible()
     waybackAccesible()
   }
 
+  @autobind
   serviceStatuses () {
     return this.serviceStatus
   }
 
+  @autobind
   heritrixStatus () {
     return this.serviceStatus.heritrix
   }
 
+  @autobind
   waybackStatus () {
     return this.serviceStatus.wayback
   }
 
+  @autobind
   handleEvent (event) {
     switch (event.type) {
       case EventTypes.HERITRIX_STATUS_UPDATE:
@@ -83,7 +85,7 @@ class serviceStore extends EventEmitter {
   }
 }
 
-const ServiceStore = new serviceStore
+const ServiceStore = new serviceStore()
 
 ServiceDispatcher.register(ServiceStore.handleEvent)
 

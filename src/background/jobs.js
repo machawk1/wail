@@ -200,6 +200,7 @@ function getHeritrixJobsState () {
           })
 
         } else {
+          // TODO: check if last line is empty
           let fields = lastLine.collapseWhitespace().s.split(' ')
           let tsm = moment(fields[ 0 ])
           jobs[ item.jobId ].runs.push({

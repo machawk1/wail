@@ -3,7 +3,7 @@ import RaisedButton from "material-ui/RaisedButton"
 import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
 import { Grid, Row, Column } from "react-cellblock"
 import { shell } from 'electron'
-
+import autobind from "autobind-decorator"
 import settings from '../../../settings/settings'
 import wailConstants from "../../../constants/wail-constants"
 import HeritrixJobList from "./heritrix-joblist"
@@ -24,16 +24,15 @@ export default class HeritrixTab extends Component {
     this.state = {
       crawlConfigOpen: false
     }
-    this.onClickNewCrawl = this.onClickNewCrawl.bind(this)
-    this.onClickLaunchWebUI = this.onClickLaunchWebUI.bind(this)
-
   }
 
+  @autobind
   onClickNewCrawl (event) {
     console.log('New Crawl')
     this.setState({ crawlConfigOpen: true })
   }
 
+  @autobind
   onClickLaunchWebUI (event) {
     console.log(process.platform)
     shell.openExternal(settings.get('heritrix.web_ui'))
@@ -41,32 +40,32 @@ export default class HeritrixTab extends Component {
 
   render () {
     return (
-      <div>
-        <Grid breakpoints={[12]} gutterWidth={10}>
-          <Row>
-            <Column width="1/4">
-              <HeritrixJobList />
-            </Column>
-            <Column width="3/4">
-              <HeritrixJobInfo/>
-            </Column>
-          </Row>
-        </Grid>
-        <Toolbar>
-          <ToolbarGroup >
-            <NewCrawlDialog />
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <RaisedButton
-              label="Launch Web UI"
-              labelPosition="before"
-              primary={true}
-              style={styles.button}
-              onMouseDown={this.onClickLaunchWebUI}
-            />
-          </ToolbarGroup>
-        </Toolbar>
-      </div>
+      <Grid gutterWidth={20} flexable={true} columnWidth={100}>
+        <Row>
+          <Column width="1/4">
+            <HeritrixJobList />
+          </Column>
+          <Column width="3/4">
+            <HeritrixJobInfo/>
+          </Column>
+        </Row>
+        <Row>
+          <Toolbar>
+            <ToolbarGroup >
+              <NewCrawlDialog />
+            </ToolbarGroup>
+            <ToolbarGroup>
+              <RaisedButton
+                label="Launch Web UI"
+                labelPosition="before"
+                primary={true}
+                style={styles.button}
+                onMouseDown={this.onClickLaunchWebUI}
+              />
+            </ToolbarGroup>
+          </Toolbar>
+        </Row>
+      </Grid>
     )
   }
 }
