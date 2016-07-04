@@ -3,16 +3,15 @@ import realFs from 'fs'
 import gracefulFs from 'graceful-fs'
 gracefulFs.gracefulify(realFs)
 import fs from 'fs-extra'
+import shelljs from "shelljs"
 import path from 'path'
-import ncp from 'ncp'
 import Promise from 'bluebird'
 Promise.promisifyAll(fs)
 import os from 'os'
 
 const zips = path.resolve('./', 'zips')
-
 const memgators = path.resolve('./', 'memgators')
-
+const bapps = path.resolve('./', 'bundledApps')
 const currentOSArch = `${os.platform()}${os.arch()}`
 
 const idxs = {
@@ -48,32 +47,28 @@ const memgatorNames = [
 ]
 
 export default function moveThem (opts) {
-
-  let memf = memgatorPaths[ idxs[ opts.arch ] ]
-  let memn = memgatorNames[ idxs[ opts.arch ] ]
-  let jdkpath = jdkPaths[ idxs[ opts.arch ] ]
-  let to = opts.to
-
-  console.log(`moving jdk for arch ${opts.arch} to ${to}/openjdk`)
-  fs.ensureDir(`${to}/openjdk`, err => {
-    if (err) {
-      console.error(`There was an error ensuring the jdk directory ${to}/openjdk for arch ${opts.arch} exists`)
-      throw err
+  if (!opts) {
+    opts = {
+      arch: currentOSArch,
+      to: bapps
     }
-    ncp(jdkpath, `${to}/openjdk`, err2 => {
-      if (err2) {
-        console.error(`There was an error moving the jdk for arch ${opts.arch} ${to}/openjdk`)
-        throw  err2
-      }
-      console.log(`done moving jdk for arch ${opts.arch} to ${to}/openjdk`)
-      console.log(`moving memgator for arch ${opts.arch} to ${to}/${memn}`)
-      fs.copy(memf, `${to}/${memn}`, err3 => {
-        if (err3) {
-          console.error(`There was an error moving the memgator for arch ${opts.arch} ${to}/${memn}`)
-          throw  err3
-        }
-        console.log(`done moving memgator for arch ${opts.arch} to ${to}/${memn}`)
-      })
+  }
+  
+  let to = opts.to
+  let memgatorFromPath = memgatorPaths[ idxs[ opts.arch ] ]
+  let memgatorToPath = path.join(to, memgatorNames[ idxs[ opts.arch ] ])
+  let jdkFromPath = jdkPaths[ idxs[ opts.arch ] ]
+  let jdkToPath = path.join(to, "openjdk")
+  console.log(`moving jdk ${jdkFromPath} to ${jdkToPath}`)
+  fs.copy(jdkFromPath, jdkToPath, { clobber: true }, (jdkError) => {
+    if (jdkError) return console.error(jdkError)
+    console.log("success in moving jdk!")
+    console.log(`moving memgator ${memgatorFromPath} to ${memgatorToPath}`)
+    fs.copy(memgatorFromPath, memgatorToPath, { clobber: true }, (memgatorError) => {
+      if (memgatorError) return console.error(memgatorError)
+      shelljs.chmod('777',memgatorToPath)
+      shelljs.chmod('-R','777',jdkToPath)
+      console.log("success in moving memgator!")
     })
   })
 }

@@ -12,7 +12,7 @@ import moveThem from './moveJDKMemgator'
 import through2 from 'through2'
 import request from 'request'
 import extract from 'extract-zip'
-import ProgressBar from "progress2"
+import shelljs from 'shelljs'
 
 const zips = path.resolve('./', 'zips')
 const bapps = path.resolve('./', 'bundledApps')
@@ -58,7 +58,6 @@ const memgators = [
   'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-386',
   'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-amd64',
   'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-darwin-amd64',
-
 ]
 
 const unpackedJDKs = [
@@ -167,48 +166,52 @@ let onlyZip = through2.obj(function (item, enc, next) {
 })
 
 if (argv.all) {
-
   Promise.map(jdks, downloadJDK)
     .then(() => {
       Promise.map(memgators, downloadMemgator).then(() => {
         fs.walk(zips)
           .pipe(onlyZip)
           .on('data', item => {
-            fs.chmodSync(item.path, '777')
+            shelljs.chmod('777',item.path)
             let name = path.basename(item.path).replace(zipRE, '')
-            extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, err1 => {
-              if (err1) {
-                console.error(err1)
+            extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, zipError => {
+              if (zipError) {
+                console.error(zipError)
               } else {
                 console.log(`done extracting ${name}`)
               }
             })
           })
+          .on('end', () => console.log("Finished"))
       }).catch(err => console.error('there was an error downloading a jdk', err))
+
     })
     .catch(err => console.error('there was an error downloading a memgator', err))
+
 } else {
 
   console.log(`Downloading jdk for ${currentOSArch}`)
   downloadJDK(jdks[ idxs[ currentOSArch ] ])
-    .then(done => {
+    .then(() => {
       console.log(`Downloading memgator for ${currentOSArch}`)
       downloadMemgator(memgators[ idxs[ currentOSArch ] ])
-        .then(done2 => {
+        .then(() => {
           console.log(`Done downloading memgator for ${currentOSArch} extracting jdk `)
           fs.walk(zips)
             .pipe(onlyZip)
             .on('data', item => {
-              let name = path.basename(item.path).replace(zipRE, '')
-              fs.chmodSync(item.path, '777')
-              extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777}, err1 => {
-                if(err1){
-                  console.error(`error extracting jdk for ${currentOSArch}`,err1)
+              shelljs.chmod('777',item.path)
+              extract(item.path, { dir: `${zips}`, defaultDirMode: 777, defaultFileMode: 777 }, zipError => {
+                if (zipError) {
+                  console.error(`error extracting jdk for ${currentOSArch}`, zipError)
                 } else {
                   console.log(`Done extracting jdk for ${currentOSArch}`)
                 }
-
               })
+            })
+            .on('end', () => {
+              moveThem({arch: currentOSArch, to: bapps})
+              console.log("Finished moving required files for dev")
             })
         })
         .catch(err => {

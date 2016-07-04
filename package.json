@@ -188,6 +188,7 @@
     "react-addons-perf": "^15.2.0",
     "run-sequence": "^1.2.2",
     "sass-loader": "^4.0.0",
+    "shelljs": "^0.7.0",
     "snazzy": "^4.0.0",
     "standard": "^7.1.2",
     "standard-format": "^2.2.2",
@@ -200,7 +201,8 @@
     "webpack-dev-server": "1.14.1",
     "webpack-hot-middleware": "^2.12.0",
     "webpack-middleware": "^1.5.1",
-    "webpack-typescript": "^0.5.6"
+    "webpack-typescript": "^0.5.6",
+    "winattr": "^1.1.0"
   },
   "devEngines": {
     "node": "5.x || 6.x",
