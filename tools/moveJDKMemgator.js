@@ -53,7 +53,6 @@ export default function moveThem (opts) {
       to: bapps
     }
   }
-  
   let to = opts.to
   let memgatorFromPath = memgatorPaths[ idxs[ opts.arch ] ]
   let memgatorToPath = path.join(to, memgatorNames[ idxs[ opts.arch ] ])
@@ -67,7 +66,6 @@ export default function moveThem (opts) {
     fs.copy(memgatorFromPath, memgatorToPath, { clobber: true }, (memgatorError) => {
       if (memgatorError) return console.error(memgatorError)
       shelljs.chmod('777',memgatorToPath)
-      shelljs.chmod('-R','777',jdkToPath)
       console.log("success in moving memgator!")
     })
   })

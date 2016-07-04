@@ -165,6 +165,8 @@ let onlyZip = through2.obj(function (item, enc, next) {
   next()
 })
 
+let changePermisions = []
+
 if (argv.all) {
   Promise.map(jdks, downloadJDK)
     .then(() => {
@@ -205,6 +207,7 @@ if (argv.all) {
                 if (zipError) {
                   console.error(`error extracting jdk for ${currentOSArch}`, zipError)
                 } else {
+                  let name = path.basename(item.path).replace(zipRE, '')
                   console.log(`Done extracting jdk for ${currentOSArch}`)
                 }
               })
