@@ -6,14 +6,12 @@ import Promise from 'bluebird'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import util from 'util'
-import logger from 'electron-log'
+import Logger from '../logger/logger'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
-logger.transports.file.maxSize = 5 * 1024 * 1024
-logger.transports.file.file = remote.getGlobal('accessLogPath')
-logger.transports.file.streamConfig = { flags: 'a' }
+
+const logger = new Logger({path: remote.getGlobal('accessLogPath')})
 
 const logString = "accessibilityMonitor "
 
@@ -126,7 +124,8 @@ ipcRenderer.on("start-service-monitoring", (event) => {
 )
 
 ipcRenderer.on("stop", (event) => {
-  console.log('Monitor get start indexing monitoring')
+  console.log('Monitor got stop indexing monitoring')
+  logger.cleanUp()
   Status.job.cancel()
   Status.job = null
   Status = null

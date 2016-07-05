@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from "react"
+import { shell } from 'electron'
 import { ListItem } from "material-ui/List"
 import { grey400 } from "material-ui/styles/colors"
 import IconButton from "material-ui/IconButton"
@@ -14,7 +15,6 @@ import autobind from 'autobind-decorator'
 
 import settings from '../../../settings/settings'
 import wc from '../../../constants/wail-constants'
-import EditorPopup from "../../editor/editor-popup"
 import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher"
 import JobInfoDispatcher from "../../../dispatchers/jobInfoDispatcher"
 import  { forceCrawlFinish, deleteHeritrixJob, restartJob } from '../../../actions/heritrix-actions'
@@ -64,11 +64,10 @@ export default class HeritrixJobItem extends Component {
       runs: this.props.runs,
       path: this.props.path,
       urls: this.props.urls,
-      openEditor: false,
     }
-    
+
   }
-  
+
   @autobind
   itemClicked (event) {
     console.log('clicked on jobitem')
@@ -80,7 +79,7 @@ export default class HeritrixJobItem extends Component {
 
   @autobind
   viewConf (event) {
-    this.setState({ openEditor: !this.state.openEditor })
+    shell.openItem(`${settings.get('heritrixJob')}/${this.props.jobId}/crawler-beans.cxml`)
   }
 
   @autobind
@@ -121,10 +120,8 @@ export default class HeritrixJobItem extends Component {
   deleteJob (event) {
     let runs = this.state.runs
     let cb = () => {
-
       del([ `${settings.get('heritrixJob')}${path.sep}${this.state.jobId}` ], { force: true })
         .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
-
     }
     cb = cb.bind(this)
     if (runs.length > 0) {
@@ -145,11 +142,6 @@ export default class HeritrixJobItem extends Component {
     })
   }
 
-  @autobind
-  onOpenChange (event) {
-    this.setState({ openEditor: !this.state.openEditor })
-  }
-
   render () {
     const iconButtonElement = (
       <IconButton
@@ -162,7 +154,7 @@ export default class HeritrixJobItem extends Component {
     )
 
     const rightIconMenu = (
-      <IconMenu iconButtonElement={iconButtonElement}
+      <IconMenu iconButtonElement={<MoreVertIcon color={grey400}/>}
                 anchorOrigin={{ vertical: 'top', horizontal: 'left',}}
                 targetOrigin={{ vertical: 'top', horizontal: 'left',}}
       >
@@ -181,29 +173,12 @@ export default class HeritrixJobItem extends Component {
       </IconMenu>
     )
 
-    let cp = `${settings.get('heritrixJob')}/${this.props.jobId}/crawler-beans.cxml`
-    let id = this.props.jobId
-
     return (
-      <div>
-        <ListItem
-          primaryText={<p>{this.state.jobId}</p>}
-          onTouchTap={this.itemClicked}
-          rightIconButton={rightIconMenu}
-        />
-        <EditorPopup
-          title={`Editing Heritrix Job ${this.props.jobId} Configuration`}
-          codeToLoad={{  
-                  which: wc.Code.which.CRAWLBEAN,
-                  jid: id,
-                  codePath: cp,
-                }}
-          useButton={false}
-          onOpenChange={this.onOpenChange}
-          openFromParent={this.state.openEditor}
-        />
-      </div>
-
+      <ListItem
+        primaryText={<p>{this.state.jobId}</p>}
+        onTouchTap={this.itemClicked}
+        rightIconButton={rightIconMenu}
+      />
     )
   }
 }

@@ -44,7 +44,8 @@ export default class General extends Component {
   updateHeritrixStatus () {
     this.setState({ hGood: ServiceStore.heritrixStatus() })
   }
-
+  
+  
   wayBackFix (event) {
     console.log("Wayback fix")
     startWayback()

@@ -5,7 +5,7 @@ import {
   ipcMain,
 } from 'electron'
 
-import logger from 'electron-log'
+import Logger from './logger/logger'
 import fs from 'fs-extra'
 import path from 'path'
 import { configSettings } from './settings/settings'
@@ -47,7 +47,7 @@ function showNewCrawlWindow (parent) {
   }
   newCrawlWindow = new BrowserWindow(config)
   newCrawlWindow.loadURL(newCrawlWindowURL)
-  newCrawlWindow.once('ready-to-show', () => {
+  newCrawlWindow.on('ready-to-show', () => {
     newCrawlWindow.show()
     // newCrawlWindow.webContents.openDevTools({ mode: "detach" })
   })
@@ -114,7 +114,7 @@ function setUpIPC () {
 
   //
   ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
-    mainWindow.webContents.send("crawljob-status-update", payload)
+    mainWindow.webContents.send("crawljob-configure-dialogue", payload)
     if (newCrawlWindow != null) {
       newCrawlWindow.destroy()
     }
@@ -189,12 +189,9 @@ function setUp () {
     }
   })
 
-  logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
-  logger.transports.file.maxSize = 5 * 1024 * 1024
-  logger.transports.file.file = logPath
-  logger.transports.file.streamConfig = { flags: 'a' }
+  
 
-  global.logger = logger
+  global.logger = new Logger({path: logPath})
 
   global.wailLogp = logPath
 }
@@ -355,6 +352,7 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   if (notDebugUI) {
     cleanUp()
+    global.logger.cleanUp()
   }
 
 })

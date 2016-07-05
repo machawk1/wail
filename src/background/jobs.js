@@ -13,14 +13,11 @@ import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import os from 'os'
 import util from 'util'
-import logger from 'electron-log'
+import Logger from '../logger/logger'
 
 
+const logger = new Logger({path: remote.getGlobal('jobLogPath')})
 
-logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
-logger.transports.file.maxSize = 5 * 1024 * 1024
-logger.transports.file.file = remote.getGlobal('jobLogPath')
-logger.transports.file.streamConfig = {flags: 'a'}
 
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
@@ -330,6 +327,7 @@ ipcRenderer.on("start-crawljob-monitoring", (event) => {
 ipcRenderer.on("stop", (event) => {
   console.log('Monitor get start indexing monitoring')
   logger.info(util.format(logString,"got stop crawljob monitoring"))
+  logger.cleanUp()
   jobMonitor.job.cancel()
   jobMonitor.job = null
   jobMonitor = null

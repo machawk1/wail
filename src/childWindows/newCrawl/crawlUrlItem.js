@@ -57,17 +57,8 @@ export default class CrawlUrlItem extends Component {
   }
 
   render () {
-    const iconButtonElement = (
-      <IconButton
-        touch={true}
-        tooltip="options"
-        tooltipPosition="bottom-left"
-      >
-        <MoreVertIcon color={grey400}/>
-      </IconButton>
-    )
     const rightIconMenu = (
-      <IconMenu iconButtonElement={iconButtonElement}>
+      <IconMenu iconButtonElement={<MoreVertIcon color={grey400}/>}>
         <MenuItem onTouchTap={this.editCrawlUrl}>Edit</MenuItem>
         <MenuItem onTouchTap={this.props.deleteMe}>Delete</MenuItem>
       </IconMenu>

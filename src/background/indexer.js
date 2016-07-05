@@ -14,13 +14,12 @@ import ReadWriteLock from 'rwlock'
 import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import util from 'util'
-import logger from 'electron-log'
+import Logger from '../logger/logger'
+
+const logger = new Logger({path: remote.getGlobal('indexLogPath')})
 
 const indexLock = new ReadWriteLock()
-logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
-logger.transports.file.maxSize = 5 * 1024 * 1024
-logger.transports.file.file = remote.getGlobal('indexLogPath')
-logger.transports.file.streamConfig = { flags: 'a' }
+
 
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
@@ -118,9 +117,9 @@ function generateCDX () {
     S(item).lines().forEach((line, index) => {
       if (!uniqueLines.has(line)) {
         if (index > 0) {
-          through.push(line + os.EOL)
+          through.push(`${line}${os.EOL}`)
         } else if (!cdxHeaderIncluded) {
-          through.push(line + os.EOL)
+          through.push(`${line}${os.EOL}`)
           cdxHeaderIncluded = true
         }
         uniqueLines.add(line)
@@ -184,6 +183,7 @@ ipcRenderer.on("start-index-indexing", (event) => {
 
 ipcRenderer.on("stop", (event) => {
   console.log('Monitor get start indexing monitoring')
+  logger.cleanUp()
   indexer.job.cancel()
   indexer.job = null
   indexer = null

@@ -4,8 +4,6 @@ import RaisedButton from "material-ui/RaisedButton"
 import { Grid, Row, Column } from 'react-cellblock'
 import autobind from "autobind-decorator"
 import settings from '../../settings/settings'
-import EditorPopup from "../editor/editor-popup"
-import wc from "../../constants/wail-constants"
 import ServiceStore from "../../stores/serviceStore"
 
 const styles = {
@@ -26,7 +24,12 @@ export default class WayBackTab extends Component {
   @autobind
   onClickViewWayback (event) {
     console.log('View Wayback')
-    shell.openExternal(settings.get('wayback.uri_wayback'))
+    shell.openExternal(settings.get("wayback.uri_wayback"))
+  }
+
+  @autobind
+  viewWaybackConf(event){
+    shell.openItem(settings.get("wayBackConf"))
   }
 
   render () {
@@ -37,18 +40,16 @@ export default class WayBackTab extends Component {
             <RaisedButton
               label="View Wayback in Browser"
               labelPosition="before"
-              primary={true}
               style={styles.button}
               onMouseDown={this.onClickViewWayback}
             />
           </Column>
           <Column width="1/2">
-            <EditorPopup
-              title={"Editing Wayback Configuration"}
-              buttonLabel={"Edit Wayback Configuration"}
-              useButton={true}
-              codeToLoad={{codeToLoad: wc.Code.which.WBC}}
-              buttonStyle={styles.button}
+            <RaisedButton
+              label="Edit Wayback Configuration"
+              labelPosition="before"
+              style={styles.button}
+              onMouseDown={this.viewWaybackConf}
             />
           </Column>
         </Row>

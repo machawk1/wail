@@ -46,7 +46,13 @@ export async function askMemgator (url) {
   console.log('askingMemegator')
   child_process.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
-      logger.error(util.format(logStringError,"askMemgator", stderr))
+      let stack
+      if(Reflect.has(err,'stack')){
+        stack  = `${stderr} ${err.stack}`
+      } else {
+        stack = `${stderr}`
+      }
+      logger.error(util.format(logStringError,`askMemgator ${stdout}`, stack))
     }
     let mementoCount = (stdout.match(/memento/g) || []).length
     UrlDispatcher.dispatch({

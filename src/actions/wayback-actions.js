@@ -70,6 +70,7 @@ export function waybackAccesible () {
     })
     .catch(err => {
       console.log("wayback err", err)
+      logger.error(util.format(logStringError,"waybackAccessible",err.stack))
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: false,
@@ -97,7 +98,13 @@ export function startWayback () {
   } else {
     child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.error(util.format(logStringError,`linux/osx launch wayback ${stderr}`,""))
+      let stack
+      if(Reflect.has(err,'stack')){
+        stack  = `${stderr} ${err.stack}`
+      } else {
+        stack = `${stderr}`
+      }
+      logger.error(util.format(logStringError,`linux/osx launch wayback ${stdout}`,stack))
     })
   }
 
@@ -122,7 +129,13 @@ export function killWayback () {
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      logger.error(util.format(logStringError,`linux/osx kill heritrix ${stderr}`,""))
+      let stack
+      if(Reflect.has(err,'stack')){
+          stack  = `${stdout} ${err.stack}`
+      } else {
+        stack = `${stdout}`
+      }
+      logger.error(util.format(logStringError,`linux/osx kill heritrix ${stderr}`,stack))
     })
   }
 

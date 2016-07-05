@@ -78,7 +78,7 @@ export default class NewCrawlDialog extends Component {
 
   render () {
     return (
-      <Grid>
+      <Grid flexible={true}>
         <CrawlUrls urlAdded={this.urlChanged}/>
         <CrawlDepth depthAdded={this.depthAdded}/>
         <Row>

@@ -75,7 +75,7 @@ export function launchHeritrix (cb) {
   if (process.platform === 'win32') {
 
     let heritrixPath = settings.get('heritrix.path')
-    logger.info(util.format(logString,"win32 launching heritrix"))
+    logger.info(util.format(logString, "win32 launching heritrix"))
     let opts = {
       cwd: heritrixPath,
       env: {
@@ -92,7 +92,7 @@ export function launchHeritrix (cb) {
       let heritrix = child_process.spawn("bin\\heritrix.cmd", [ '-a', `${usrpwrd}` ], opts)
       heritrix.unref()
     } catch (err) {
-      logger.error(util.format(logStringError,"win32 launch",err.stack))
+      logger.error(util.format(logStringError, "win32 launch", err.stack))
     }
 
     if (cb) {
@@ -106,7 +106,13 @@ export function launchHeritrix (cb) {
 
       let wasError = !err
       if (wasError) {
-        logger.error(util.format(logStringError,`linux/osx launch`,stderr))
+        let stack
+        if (Reflect.has(err, 'stack')) {
+          stack = `${stderr} ${err.stack}`
+        } else {
+          stack = `${stderr}`
+        }
+        logger.error(util.format(logStringError, `linux/osx launch ${stdout}`, stack))
       }
 
       if (cb) {
@@ -163,12 +169,12 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
       let confPath = `${settings.get('heritrixJob')}/${jobId}`
       fs.ensureDir(confPath, er => {
         if (er) {
-          logger.error(util.format(logStringError,`makeHeritrixJobConf ensureDir ${er.message}`,er.stack))
+          logger.error(util.format(logStringError, `makeHeritrixJobConf ensureDir ${er.message}`, er.stack))
         }
         fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
           console.log("done writting file", error)
           if (error) {
-            logger.error(util.format(logStringError,`makeHeritrixJobConf writeConf ${error.message}`,error.stack))
+            logger.error(util.format(logStringError, `makeHeritrixJobConf writeConf ${error.message}`, error.stack))
           }
           CrawlDispatcher.dispatch({
             type: EventTypes.BUILT_CRAWL_CONF,
@@ -182,7 +188,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 
     })
     .catch(error => {
-      logger.error(util.format(logStringError,`makeHeritrixJobConf readConf ${error.message}`,error.stack))
+      logger.error(util.format(logStringError, `makeHeritrixJobConf readConf ${error.message}`, error.stack))
     })
 }
 
@@ -191,7 +197,7 @@ export function buildHeritrixJob (jobId) {
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
   let options = settings.get('heritrix.buildOptions')
   options.uri = `${options.uri}${jobId}`
-  console.log('building heritrix job',options)
+  console.log('building heritrix job', options)
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       rp(options)
@@ -213,7 +219,7 @@ export function buildHeritrixJob (jobId) {
           } else {
             // POST failed...
             console.log("failur in building job", err)
-            logger.error(util.format(logStringError,`building hereitrix job ${err.message}`,err.stack))
+            logger.error(util.format(logStringError, `building hereitrix job ${err.message}`, err.stack))
           }
         })
     })
@@ -268,7 +274,7 @@ export function launchHeritrixJob (jobId) {
           } else {
             // POST failed...
             console.log("failur in launching job", err)
-              logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`,err.stack))
+            logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`, err.stack))
           }
           // POST failed...
 
@@ -295,7 +301,7 @@ export function launchHeritrixJob (jobId) {
         } else {
           // POST failed...
           console.log("failur in launching job", err)
-          logger.error(util.format(logStringError,`launching hereitrix job ${err.message}`,err.stack))
+          logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`, err.stack))
         }
       })
   }
@@ -356,7 +362,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
     })
     .catch(err => {
       console.log(`post failed? in sendAction ${act} to heritrix`, err)
-      logger.error(util.format(logStringError, `sendAction ${act} to heritrix ${err.message}`,err.stack))
+      logger.error(util.format(logStringError, `sendAction ${act} to heritrix ${err.message}`, err.stack))
       if (isActionGenerator && notDone) {
         console.log("we have next in action generator", `is done? ${notDone}`)
         sendActionToHeritrix(act, jobId)
@@ -457,7 +463,7 @@ export function getHeritrixJobsState () {
     //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
-        logger.error(util.format(logStringError, `ensuring ${heritrixJobP} ${err.message}`,err.stack))
+        logger.error(util.format(logStringError, `ensuring ${heritrixJobP} ${err.message}`, err.stack))
         reject(err)
       } else {
         fs.walk(heritrixJobP)
@@ -482,7 +488,7 @@ export function getHeritrixJobsState () {
             }
           })
           .on('error', function (error, item) {
-            logger.error(util.format(logStringError,`walking ${heritrixJobP} on item: ${item.path}, ${error.message}`,error.stack))
+            logger.error(util.format(logStringError, `walking ${heritrixJobP} on item: ${item.path}, ${error.message}`, error.stack))
             console.log(error.message)
             console.log(item.path) // the file the error occurred on
             reject(error)

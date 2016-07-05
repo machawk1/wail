@@ -61,6 +61,7 @@
     "plugins": [
       "transform-runtime",
       "add-module-exports",
+      "babel-plugin-transform-decorators-legacy",
       "react-html-attrs",
       "transform-class-properties"
     ]
