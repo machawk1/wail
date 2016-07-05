@@ -30,7 +30,7 @@ const config = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'es2015', 'stage-0', 'react', 'node6' ],
+          presets: [ 'es2015', 'stage-0', 'node6', 'react',"react-optimize" ],
           plugins: [ 'transform-runtime', "add-module-exports",
             "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
           ],

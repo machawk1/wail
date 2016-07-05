@@ -10,28 +10,20 @@ import fs from 'fs-extra'
 import path from 'path'
 import { configSettings } from './settings/settings'
 
-process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`, err)
-  // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
-  cleanUp()
-  app.quit()
-})
 
 let mainWindow = null
 let newCrawlWindow = null
-let backgroundWindow = null
 let accessibilityWindow = null
 let indexWindow = null
 let jobbWindow = null
 let base
 let mWindowURL
 let newCrawlWindowURL
-let bWindowURL
 let accessibilityWindowURL
 let indexWindowURL
 let jobbWindowURL
-let notDebugUI = true
 
+let notDebugUI = true
 let debug = false
 let openBackGroundWindows = false
 
@@ -52,7 +44,7 @@ function showNewCrawlWindow (parent) {
     // newCrawlWindow.webContents.openDevTools({ mode: "detach" })
   })
   
-  newCrawlWindow.on('closed', ()=> {
+  newCrawlWindow.on('closed', () => {
     newCrawlWindow = null
   })
 }
@@ -61,11 +53,6 @@ function setUpIPC () {
   if (notDebugUI) {
     ipcMain.on('got-it', (event, payload) => {
       console.log(payload)
-    })
-
-    ipcMain.on("start-test", (event, payload) => {
-      console.log("Got start-test")
-      backgroundWindow.webContents.send("start-test", payload)
     })
 
     ipcMain.on("start-service-monitoring", (event, payload) => {
@@ -135,7 +122,6 @@ function setUp () {
     })
     mWindowURL = `file://${__dirname}/wail.html`
     newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
-    bWindowURL = `file://${__dirname}/background/monitor.html`
     accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     indexWindowURL = `file://${__dirname}/background/indexer.html`
     jobbWindowURL = `file://${__dirname}/background/jobs.html`
@@ -143,7 +129,6 @@ function setUp () {
     base = app.getAppPath()
     mWindowURL = `file://${base}/src/wail.html`
     newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
-    bWindowURL = `file://${base}/src/background/monitor.html`
     accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
     indexWindowURL = `file://${base}/src/background/indexer.html`
     jobbWindowURL = `file://${base}/src/background/jobs.html`
@@ -255,7 +240,6 @@ function cleanUp () {
     jobbWindow.close()
   }
 
-  backgroundWindow = null
   accessibilityWindow = null
   indexWindow = null
   jobbWindow = null
@@ -286,14 +270,13 @@ function createWindow () {
     } catch (e) {
       console.error(e)
     }
-
   }
 
   let iconp = path.join(base, path.normalize('build/icons/whale.ico'))
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
-    height: 800,
+    height: 500,
     title: 'Web Archiving Integration Layer',
     show: false,
     icon: iconp,
@@ -332,6 +315,13 @@ function createWindow () {
   })
 
 }
+
+process.on('uncaughtException', (err) => {
+  console.log(`Caught exception: ${err}`, err,err.stack)
+  // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
+  cleanUp()
+  app.quit()
+})
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

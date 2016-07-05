@@ -6,11 +6,7 @@ import Popover from "material-ui/Popover"
 import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
 import * as Heritrix from "../actions/heritrix-actions"
 import * as Wayback from "../actions/wayback-actions"
-import NewCrawlDialog from "../componets/advanced/heritrix/newCrawlDialog"
 import ServiceStore from "../stores/serviceStore"
-import wc from "../constants/wail-constants"
-import EditorPopup from "../componets/editor/editor-popup"
-import settings from "../settings/settings"
 
 const styles = {
   button: {
@@ -105,14 +101,6 @@ export default class Debug extends Component {
                 onTouchTap={this.wayBackButton}
                 label="Wayback"
               />
-              <NewCrawlDialog />
-              <EditorPopup
-                title={"Editing Wayback Configuration"}
-                buttonLabel={"Edit Wayback Configuration"}
-                codeToLoad={{codeToLoad: wc.Code.which.WBC}}
-                buttonStyle={styles.button}
-                useButton={true}
-              />
             </ToolbarGroup>
           </Toolbar>
           <Popover
@@ -153,7 +141,3 @@ export default class Debug extends Component {
 
   }
 }
-/*
- <MenuItem onTouchTap={(e) => Wayback.generatePathIndex()} primaryText="Generate Index"/>
- <MenuItem onTouchTap={(e) => Wayback.generateCDX()} primaryText="Generate CDX"/>
- */

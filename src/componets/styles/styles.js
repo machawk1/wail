@@ -3,6 +3,9 @@ import spacing from 'material-ui/styles/spacing'
 import { zIndex } from "material-ui/styles"
 
 export default {
+  buttonBasic: {
+    margin: 12,
+  },
   underlineStyle: {
     borderColor: blue500,
   },
@@ -27,7 +30,8 @@ export default {
   },
   heritrixJobList: {
     overflow: "hidden",
-    overflowY: "scroll"
+    overflowY: "scroll",
+    height: 300,
   },
   root: {
     paddingTop: spacing.desktopKeylineIncrement,
@@ -55,6 +59,20 @@ export default {
   },
   mementoCount: {
     paddingLeft: 115
+  },
+  tableHeaderCol: {
+    paddingLeft: "12px",
+    paddingRight: "12px",
+  },
+  tableHeader: {
+    borderBottomStyle: "none"
+  },
+  tableRowCol: {
+    paddingLeft: "12px",
+    paddingRight: "12px",
+    wordWrap: "break-word",
+    textOverflow: "none",
+    whiteSpace: "normal",
   }
 
 }

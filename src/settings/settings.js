@@ -188,7 +188,7 @@ export function configSettings (base) {
         break
       case "heritrixStart":
         if (isWindows) {
-          settings.set("heritrixStart", `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
         } else {
           settings.set(cmd.name, `${cmdexport}  ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
         }

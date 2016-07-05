@@ -1,27 +1,14 @@
 import React, { Component, PropTypes } from "react"
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from "material-ui/Table"
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
-
-const style = {
-  tableHeaderCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-  },
-  tableHeader: {
-    borderBottomStyle: "none"
-  },
-  tableRowCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-    wordWrap: "break-word",
-    textOverflow: "none",
-    whiteSpace: "normal",
-  }
-
-}
+import styles from "../../styles/styles"
 
 export default class HeritrixJobInfo extends Component {
-
+  static propTypes = {
+    jobId: PropTypes.string.isRequired,
+    runs: PropTypes.array.isRequired,
+  }
+  
   constructor (props, context) {
     super(props, context)
   }
@@ -29,25 +16,40 @@ export default class HeritrixJobInfo extends Component {
 
   render () {
     return (
-      <Table height={'100px'}>
+      <Table key={`${this.props.jobId}-Table`} height={'50px'} width={"100%"}>
         <TableHeader
+          key={`${this.props.jobId}-TableHeader`}
           displaySelectAll={false}
           adjustForCheckbox={false}
-          style={style.tableHeader}
+          style={styles.tableHeader}
         >
-          <TableRow displayBorder={false}>
-            <TableHeaderColumn style={style.tableHeaderCol}>Status</TableHeaderColumn>
-            <TableHeaderColumn style={style.tableHeaderCol}>Timestamp</TableHeaderColumn>
-            <TableHeaderColumn style={style.tableHeaderCol}>Discovered</TableHeaderColumn>
-            <TableHeaderColumn style={style.tableHeaderCol}>Queued</TableHeaderColumn>
-            <TableHeaderColumn style={style.tableHeaderCol}>Downloaded</TableHeaderColumn>
+          <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColJID`}  style={styles.tableHeaderCol}>
+              Job Id
+            </TableHeaderColumn>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColStatus`} style={styles.tableHeaderCol}>
+              Status
+            </TableHeaderColumn>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColTstamp`} style={styles.tableHeaderCol}>
+              Timestamp
+            </TableHeaderColumn>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColDiscov`} style={styles.tableHeaderCol}>
+              Discovered
+            </TableHeaderColumn>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColQue`} style={styles.tableHeaderCol}>
+              Queued
+            </TableHeaderColumn>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColDL`} style={styles.tableHeaderCol}>
+              Downloaded
+            </TableHeaderColumn>
           </TableRow>
         </TableHeader>
         <TableBody
+          key={`${this.props.jobId}-TableBody`}
           displayRowCheckbox={false}
           showRowHover={true}
         >
-         <HeritrixJobInfoRow />
+         <HeritrixJobInfoRow key={ `${this.props.jobId}-HJobInfoRow` } {...this.props}/>
         </TableBody>
       </Table>
     )

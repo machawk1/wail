@@ -1,19 +1,14 @@
-import React, {Component} from "react"
-import {shell} from 'electron'
-import Snackbar from "material-ui/Snackbar"
+import React, { Component } from "react"
+import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
 import RaisedButton from "material-ui/RaisedButton"
 import autobind from 'autobind-decorator'
-import {Row} from "react-cellblock"
+import { Row } from "react-cellblock"
+import { shell } from 'electron'
 import CrawlDispatcher from "../../dispatchers/crawl-dispatcher"
 import UrlDispatcher from "../../dispatchers/url-dispatcher"
 import wailConstants from "../../constants/wail-constants"
-import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
+import styles from "../styles/styles"
 
-const styles = {
-  button: {
-    margin: 12,
-  },
-}
 
 const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
@@ -53,7 +48,6 @@ export default class BasicTabButtons extends Component {
       open: !this.state.open,
       message: "Checking Archive"
     })
-
   }
 
   @autobind
@@ -68,13 +62,6 @@ export default class BasicTabButtons extends Component {
     })
   }
 
-  @autobind
-  closeNotification () {
-    this.setState({
-      open: false
-    })
-  }
-
   render () {
     return (
       <Row>
@@ -84,7 +71,7 @@ export default class BasicTabButtons extends Component {
               label="Archive Now!"
               labelPosition="before"
               primary={true}
-              style={styles.button}
+              style={styles.buttonBasic}
               onMouseDown={this.onClickArchiveNow}
             />
           </ToolbarGroup>
@@ -93,7 +80,7 @@ export default class BasicTabButtons extends Component {
               label="Check Archived Status"
               labelPosition="before"
               primary={true}
-              style={styles.button}
+              style={styles.buttonBasic}
               onMouseDown={this.onClickCheckArchive}
             />
           </ToolbarGroup>
@@ -102,17 +89,11 @@ export default class BasicTabButtons extends Component {
               label="View Archive"
               labelPosition="before"
               primary={true}
-              style={styles.button}
+              style={styles.buttonBasic}
               onMouseDown={this.onClickViewArchive}
             />
           </ToolbarGroup>
         </Toolbar>
-        <Snackbar
-          open={this.state.open}
-          message={this.state.message}
-          autoHideDuration={this.state.autoHideDuration}
-          onRequestClose={this.closeNotification}
-        />
       </Row>
     )
   }

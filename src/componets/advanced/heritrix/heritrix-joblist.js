@@ -1,5 +1,6 @@
-import React, { Component } from "react"
-import { List, ListItem } from "material-ui/List"
+import React, {Component} from "react"
+import {List, ListItem} from "material-ui/List"
+import Divider from 'material-ui/Divider'
 import autobind from "autobind-decorator"
 import CrawlStore from "../.././../stores/crawlStore"
 import HeritrixJobItem from "./heritrixJobItem"
@@ -31,10 +32,24 @@ export default class HeritrixJobList extends Component {
   render () {
     console.log('rendering the joblist', this.state)
     let { jobs } = this.state
-    let JobItems = jobs.length > 0 ? jobs.map(job => <HeritrixJobItem key={job.jobId} {...job}/>) :
-      <ListItem primaryText="No Jobs To Display"/>
+    let JobItems
+
+    if (jobs.length > 0) {
+      JobItems = []
+      let len = jobs.length
+      let stopAddingDividers = len - 1
+      for (let i = 0; i < len; ++i) {
+        let job = jobs[ i ]
+        JobItems.push(<HeritrixJobItem key={job.jobId} {...job}/>)
+        if (i < stopAddingDividers) {
+          JobItems.push(<Divider key={`${job.jobId}-${i}`}/>)
+        }
+      }
+    } else {
+      JobItems = <ListItem primaryText="No Jobs To Display"/>
+    }
     return (
-      <List style ={styles.heritrixJobList}>
+      <List style={styles.heritrixJobList}>
         {JobItems}
       </List>
     )

@@ -1,14 +1,14 @@
-import React, { Component, PropTypes } from "react"
-import { shell } from 'electron'
-import { ListItem } from "material-ui/List"
-import { grey400 } from "material-ui/styles/colors"
-import IconButton from "material-ui/IconButton"
+import React, {Component, PropTypes} from "react"
+import {shell} from 'electron'
+import {ListItem} from "material-ui/List"
+import {grey400} from "material-ui/styles/colors"
+import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
 import IconMenu from "material-ui/IconMenu"
 import MenuItem from "material-ui/MenuItem"
 import Divider from 'material-ui/Divider'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-import { Grid, Row, Column } from "react-cellblock"
+import {Grid, Row, Column} from "react-cellblock"
 import del from 'del'
 import path from 'path'
 import autobind from 'autobind-decorator'
@@ -16,35 +16,14 @@ import autobind from 'autobind-decorator'
 import settings from '../../../settings/settings'
 import wc from '../../../constants/wail-constants'
 import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher"
-import JobInfoDispatcher from "../../../dispatchers/jobInfoDispatcher"
-import  { forceCrawlFinish, deleteHeritrixJob, restartJob } from '../../../actions/heritrix-actions'
+import  {forceCrawlFinish, deleteHeritrixJob, restartJob} from '../../../actions/heritrix-actions'
+import HeritrixJobInfo from "./heritrixJobInfo"
 
-const styles = {
-  button: {
-    margin: 12,
-  },
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  text: {
-    // fontSize: 'small',
-    height: "100%"
-  },
-  tableHeaderCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-  },
-  tableHeader: {
-    borderBottomStyle: "none"
-  },
-  tableRowCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-    wordWrap: "break-word",
-    textOverflow: "none",
-    whiteSpace: "normal",
-  }
+//hehe i love this syntax
+const genDeleteJobFun = (jid) => {
+  return () =>
+    del([ `${settings.get('heritrixJob')}${path.sep}${jid}` ], { force: true })
+      .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
 }
 
 export default class HeritrixJobItem extends Component {
@@ -58,23 +37,6 @@ export default class HeritrixJobItem extends Component {
 
   constructor (props, context) {
     super(props, context)
-
-    this.state = {
-      jobId: this.props.jobId,
-      runs: this.props.runs,
-      path: this.props.path,
-      urls: this.props.urls,
-    }
-
-  }
-
-  @autobind
-  itemClicked (event) {
-    console.log('clicked on jobitem')
-    JobInfoDispatcher.dispatch({
-      type: wc.EventTypes.VIEW_HERITRIX_JOB,
-      state: this.state
-    })
   }
 
   @autobind
@@ -85,68 +47,66 @@ export default class HeritrixJobItem extends Component {
   @autobind
   start (event) {
     console.log("stat")
-    let runs = this.state.runs
+    let runs = this.props.runs
     if (runs.length > 0) {
       if (runs[ 0 ].ended) {
-        restartJob(this.state.jobId)
+        restartJob(this.props.jobId)
       }
     } else {
-      restartJob(this.state.jobId)
+      restartJob(this.props.jobId)
     }
 
   }
 
   @autobind
   restart (event) {
-    let runs = this.state.runs
+    let runs = this.props.runs
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {
-        forceCrawlFinish(this.state.jobId, () => restartJob(this.state.jobId))
+        forceCrawlFinish(this.props.jobId, () => restartJob(this.props.jobId))
       } else {
-        restartJob(this.state.jobId)
+        restartJob(this.props.jobId)
       }
     } else {
-      restartJob(this.state.jobId)
+      restartJob(this.props.jobId)
     }
 
   }
 
   @autobind
   kill (event, cb) {
-    forceCrawlFinish(this.state.jobId, cb)
+    forceCrawlFinish(this.props.jobId, cb)
   }
+
 
   @autobind
   deleteJob (event) {
-    let runs = this.state.runs
-    let cb = () => {
-      del([ `${settings.get('heritrixJob')}${path.sep}${this.state.jobId}` ], { force: true })
-        .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
-    }
-    cb = cb.bind(this)
+    let runs = this.props.runs
+    let cb = genDeleteJobFun(this.props.jobId)
+
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {
         console.log("We have runs and the running one has not ended")
-        deleteHeritrixJob(this.state.jobId, cb)
+        deleteHeritrixJob(this.props.jobId, cb)
       } else {
         console.log("We have runs and the run has ended")
       }
     } else {
       console.log("We have no runs delete ok")
-      deleteHeritrixJob(this.state.jobId, cb)
+      deleteHeritrixJob(this.props.jobId, cb)
     }
 
     CrawlDispatcher.dispatch({
       type: wc.EventTypes.CRAWL_JOB_DELETED,
-      jobId: this.state.jobId
+      jobId: this.props.jobId
     })
   }
 
   render () {
-    const iconButtonElement = (
+    const actionIcon = (
       <IconButton
         touch={true}
-        tooltip="more"
+        tooltip="Actions"
         tooltipPosition="bottom-left"
       >
         <MoreVertIcon color={grey400}/>
@@ -154,7 +114,7 @@ export default class HeritrixJobItem extends Component {
     )
 
     const rightIconMenu = (
-      <IconMenu iconButtonElement={<MoreVertIcon color={grey400}/>}
+      <IconMenu iconButtonElement={actionIcon}
                 anchorOrigin={{ vertical: 'top', horizontal: 'left',}}
                 targetOrigin={{ vertical: 'top', horizontal: 'left',}}
       >
@@ -175,8 +135,9 @@ export default class HeritrixJobItem extends Component {
 
     return (
       <ListItem
-        primaryText={<p>{this.state.jobId}</p>}
-        onTouchTap={this.itemClicked}
+        key={`hjiLI-${this.props.jobId}`}
+        disabled={true}
+        primaryText={<HeritrixJobInfo jobId={this.props.jobId} runs={this.props.runs}/>}
         rightIconButton={rightIconMenu}
       />
     )
