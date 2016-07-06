@@ -14,6 +14,7 @@ import del  from 'del'
 import pkg  from './package.json'
 import moveTo from "./tools/moveJDKMemgator"
 
+fs.removeSync(path.join(path.resolve('.'), 'dist'))
 
 const exec = require('child_process').exec
 const argv = require('minimist')(process.argv.slice(2))
@@ -95,11 +96,11 @@ function build (cfg) {
 function startPack () {
   console.log('building webpack.config.electron')
   build(electronCfg)
-    .then(() => {
+    .then((stats) => {
       console.log('building webpack.config.production')
       build(cfg)
     })
-    .then(() => {
+    .then((stats) => {
       console.log("removing previous builds")
       del.sync('release')
     })

@@ -1,11 +1,11 @@
 import UrlDispatcher from "../dispatchers/url-dispatcher"
 import wailConstants from "../constants/wail-constants"
 import child_process from "child_process"
-import settings from '../settings/settings'
 import rp from 'request-promise'
 import { remote } from 'electron'
 import util from 'util'
 
+const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 const logger = remote.getGlobal('logger')
 const logString = "archive-url-actions %s"
@@ -32,6 +32,12 @@ export function getMementos (url) {
   UrlDispatcher.dispatch({
     type: EventTypes.GET_MEMENTO_COUNT,
     url: url,
+  })
+}
+
+export function emptyURL () {
+  UrlDispatcher.dispatch({
+    type: EventTypes.EMPTY_URL
   })
 }
 

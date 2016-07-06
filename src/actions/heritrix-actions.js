@@ -14,7 +14,6 @@ import wc from "../constants/wail-constants"
 import ServiceStore from '../stores/serviceStore'
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
-import settings from '../settings/settings'
 import { remote } from 'electron'
 import util from 'util'
 
@@ -23,6 +22,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 const isWindows = os.platform() == 'win32'
 const EventTypes = wc.EventTypes
 
+const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
 const logString = "heritirx-actions %s"
 const logStringError = "heritirx-actions error where[ %s ] stack [ %s ]"
@@ -105,7 +105,7 @@ export function launchHeritrix (cb) {
       console.log(err, stdout, stderr)
 
       let wasError = !err
-      if (wasError) {
+      if (err) {
         let stack
         if (Reflect.has(err, 'stack')) {
           stack = `${stderr} ${err.stack}`

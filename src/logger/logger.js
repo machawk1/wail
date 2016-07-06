@@ -7,6 +7,7 @@ export default class logger {
   constructor (options) {
     this.path = options.path
     this.endline = os.EOL
+    fs.ensureFileSync(this.path)
     this.fileStream = fs.createWriteStream(this.path,{flags: 'a'})
   }
 

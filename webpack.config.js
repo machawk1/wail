@@ -6,8 +6,8 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 
 module.exports = {
   entry: {
-    wail: [ "babel-polyfill", "./src/wail" ],
-    newCrawl: [ "babel-polyfill", "./src/childWindows/newCrawl/newCrawl" ],
+    wail:  "./src/wail" ,
+    newCrawl:  "./src/childWindows/newCrawl/newCrawl" ,
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
     jobs: './src/background/jobs',

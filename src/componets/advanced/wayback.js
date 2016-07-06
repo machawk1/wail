@@ -1,11 +1,12 @@
 import React, { Component } from "react"
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 import RaisedButton from "material-ui/RaisedButton"
 import { Grid, Row, Column } from 'react-cellblock'
 import autobind from "autobind-decorator"
-import settings from '../../settings/settings'
 import ServiceStore from "../../stores/serviceStore"
 
+
+const settings = remote.getGlobal('settings')
 const styles = {
   button: {
     margin: 12,

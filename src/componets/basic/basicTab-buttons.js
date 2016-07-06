@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator'
 import { Row } from "react-cellblock"
 import { shell } from 'electron'
 import CrawlDispatcher from "../../dispatchers/crawl-dispatcher"
+import GMessageDispatcher from "../../dispatchers/globalMessageDispatcher"
 import UrlDispatcher from "../../dispatchers/url-dispatcher"
 import wailConstants from "../../constants/wail-constants"
 import styles from "../styles/styles"
@@ -16,19 +17,14 @@ const EventTypes = wailConstants.EventTypes
 export default class BasicTabButtons extends Component {
   constructor (props, context) {
     super(props, context)
-    this.state = {
-      autoHideDuration: 2000,
-      message: 'Status Number 1',
-      open: false,
-    }
   }
 
   @autobind
   onClickArchiveNow (event) {
     event.preventDefault()
     console.log('archive now')
-    this.setState({
-      open: !this.state.open,
+    GMessageDispatcher.dispatch({
+      type: EventTypes.QUEUE_MESSAGE,
       message: "Archiving Now!"
     })
 
@@ -44,10 +40,11 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.CHECK_URI_IN_ARCHIVE,
     })
-    this.setState({
-      open: !this.state.open,
+    GMessageDispatcher.dispatch({
+      type: EventTypes.QUEUE_MESSAGE,
       message: "Checking Archive"
     })
+    
   }
 
   @autobind
@@ -56,8 +53,8 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.VIEW_ARCHIVED_URI,
     })
-    this.setState({
-      open: !this.state.open,
+    GMessageDispatcher.dispatch({
+      type: EventTypes.QUEUE_MESSAGE,
       message: "Viewing Archive"
     })
   }

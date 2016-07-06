@@ -1,14 +1,16 @@
+import "babel-polyfill"
 import {
   app,
   BrowserWindow,
+  Menu,
   shell,
   ipcMain,
 } from 'electron'
 
 import Logger from './logger/logger'
-import fs from 'fs-extra'
+import menuTemplate from './menu/mainMenu'
 import path from 'path'
-import { configSettings } from './settings/settings'
+import configSettings  from './settings/settings'
 
 
 let mainWindow = null
@@ -134,47 +136,24 @@ function setUp () {
     jobbWindowURL = `file://${base}/src/background/jobs.html`
   }
 
-  configSettings(base)
+
 
   let logPath
+  let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
     logPath = path.join(base, "waillogs")
+    settingsPath = logPath
   } else {
     logPath = path.join(app.getPath('userData'), "waillogs")
   }
 
-  let accessLogP = path.join(logPath, 'accessibility.log')
-  let jobLogP = path.join(logPath, 'jobs.log')
-  let indexLogP = path.join(logPath, 'index.log')
+  global.settings =  configSettings(base,settingsPath)
 
-  fs.ensureFile(accessLogP, err => {
-    if (err) {
-      console.error('we have error accesslogp')
-    }
-  })
-  fs.ensureFile(jobLogP, err => {
-    if (err) {
-      console.error('we have error jobLogP')
-    }
-  })
-
-  fs.ensureFile(indexLogP, err => {
-    if (err) {
-      console.error('we have error indexLogP')
-    }
-  })
-  global.accessLogPath = accessLogP
-  global.jobLogPath = accessLogP
-  global.indexLogPath = accessLogP
+  global.accessLogPath = path.join(logPath, 'accessibility.log')
+  global.jobLogPath = path.join(logPath, 'jobs.log')
+  global.indexLogPath = path.join(logPath, 'index.log')
 
   logPath = path.join(logPath, 'wail.log')
-  fs.ensureFile(logPath, err => {
-    if (err) {
-      console.error(err)
-    }
-  })
-
-  
 
   global.logger = new Logger({path: logPath})
 
@@ -287,7 +266,6 @@ function createWindow () {
 
   mainWindow.webContents.on('did-finish-load', () => {
     mainWindow.show()
-    mainWindow.focus()
     openDebug(openBackGroundWindows)
   })
 
@@ -327,6 +305,7 @@ process.on('uncaughtException', (err) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
   if (notDebugUI) {
     createBackGroundWindows()
@@ -342,8 +321,8 @@ app.on('window-all-closed', () => {
 app.on('before-quit', () => {
   if (notDebugUI) {
     cleanUp()
-    global.logger.cleanUp()
   }
+  global.logger.cleanUp()
 
 })
 

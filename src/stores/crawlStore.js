@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import EventEmitter from "eventemitter3"
+import { ipcRenderer,remote } from "electron"
 import _ from 'lodash'
 import os from 'os'
 import autobind from "autobind-decorator"
@@ -8,7 +9,6 @@ import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
 import EditorDispatcher from "../dispatchers/editorDispatcher"
 import wailConstants from "../constants/wail-constants"
 import { readCode } from '../actions/editor-actions'
-import settings from '../settings/settings'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -16,8 +16,7 @@ import {
   launchHeritrixJob
 } from "../actions/heritrix-actions"
 
-import { ipcRenderer } from "electron"
-
+const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
 

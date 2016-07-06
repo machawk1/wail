@@ -3,6 +3,7 @@ import TextField from "material-ui/TextField"
 import autobind from 'autobind-decorator'
 import {Row, Column} from "react-cellblock"
 import RaisedButton from 'material-ui/RaisedButton'
+import S from "string"
 import validator from 'validator'
 import UrlStore from "../../stores/urlStore"
 import * as aua from '../../actions/archive-url-actions'
@@ -21,7 +22,7 @@ export default class ArchiveUrl extends Component {
     console.log(e.target.value)
     let value = e.target.value
     let err = styles.underlineStyleError
-    if (validator.isURL(value) || value.length == 0) {
+    if (validator.isURL(value) || S(value).isEmpty()) {
       err = styles.underlineStyle
     }
     this.setState({ uri: value, underlineStyle: err })
@@ -40,6 +41,10 @@ export default class ArchiveUrl extends Component {
     if (validator.isURL(event.target.value)) {
       console.log("its valid")
       aua.urlUpdated(event.target.value)
+    } else {
+      if(S(event.target.value).isEmpty()){
+        aua.emptyURL()
+      }
     }
   }
 

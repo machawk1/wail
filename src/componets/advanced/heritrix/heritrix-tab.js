@@ -4,7 +4,6 @@ import {Toolbar, ToolbarGroup} from "material-ui/Toolbar"
 import {Grid, Row, Column} from "react-cellblock"
 import autobind from "autobind-decorator"
 import {ipcRenderer, remote, shell} from "electron"
-import settings from '../../../settings/settings'
 import HeritrixJobList from "./heritrix-joblist"
 
 
@@ -14,6 +13,8 @@ const styles = {
   },
 }
 
+
+const settings = remote.getGlobal('settings')
 
 export default class HeritrixTab extends Component {
   constructor (props, context) {

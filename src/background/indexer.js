@@ -11,16 +11,13 @@ import del from "del"
 import streamSort from "sort-stream2"
 import bytewise from "bytewise"
 import ReadWriteLock from 'rwlock'
-import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
 
+const settings = remote.getGlobal('settings')
 const logger = new Logger({path: remote.getGlobal('indexLogPath')})
-
 const indexLock = new ReadWriteLock()
-
-
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
 

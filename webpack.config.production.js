@@ -8,16 +8,16 @@ const config = {
   devtool: 'source-map',
 
   entry: {
-    wail: [ "babel-polyfill", "./src/wail" ],
-    newCrawl: [ "babel-polyfill", "./src/childWindows/newCrawl/newCrawl" ],
+    wail:  "./src/wail" ,
+    newCrawl:  "./src/childWindows/newCrawl/newCrawl" ,
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
     jobs: './src/background/jobs',
   },
 
   output: {
-    filename: '[name].bundle.js',
     path: path.join(__dirname, 'dist'),
+    filename: '[name].bundle.js',
     publicPath: './dist/',
     libraryTarget: 'commonjs2'
   },
@@ -30,7 +30,7 @@ const config = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'es2015', 'stage-0', 'node6', 'react',"react-optimize" ],
+          presets: [ 'es2015', 'stage-0', 'node6', 'react'],
           plugins: [ 'transform-runtime', "add-module-exports",
             "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
           ],

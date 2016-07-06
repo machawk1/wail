@@ -3,9 +3,9 @@ import autobind from "autobind-decorator"
 import UrlDispatcher from "../dispatchers/url-dispatcher"
 import wailConstants from "../constants/wail-constants"
 import * as urlActions from "../actions/archive-url-actions"
-import settings from "../settings/settings"
-import { shell } from 'electron'
+import { shell, remote } from 'electron'
 
+const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 
 class urlStore extends EventEmitter {
@@ -23,6 +23,12 @@ class urlStore extends EventEmitter {
   handleEvent (event) {
     console.log("Got an event url store", event)
     switch (event.type) {
+      case EventTypes.EMPTY_URL:
+      {
+        this.urlMemento = { url: '', mementos: -1, inArchive: false }
+        this.emit('emptyURL')
+        break
+      }
       case EventTypes.HAS_VAILD_URI:
       {
         if (this.urlMemento.url != event.url) {
@@ -44,6 +50,9 @@ class urlStore extends EventEmitter {
       {
         urlActions.askMemgator(this.urlMemento.url)
         this.emit('memento-count-fetch')
+        new Notification('Getting memento count for', {
+          body: `${this.urlMemento.url}`
+        })
         break
       }
 

@@ -9,16 +9,14 @@ import _ from 'lodash'
 import Promise from 'bluebird'
 import fs from 'fs-extra'
 import ReadWriteLock from 'rwlock'
-import settings from '../settings/settings'
 import schedule from 'node-schedule'
 import os from 'os'
 import util from 'util'
 import Logger from '../logger/logger'
 
 
+const settings = remote.getGlobal('settings')
 const logger = new Logger({path: remote.getGlobal('jobLogPath')})
-
-
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
 const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/

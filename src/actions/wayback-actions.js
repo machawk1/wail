@@ -5,10 +5,10 @@ import os from "os"
 import wc from "../constants/wail-constants"
 import ServiceDispatcher from "../dispatchers/service-dispatcher"
 import cheerio from 'cheerio'
-import settings from '../settings/settings'
 import { remote } from 'electron'
 import util from 'util'
 
+const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
 const logString = "wayback-actions %s"
 const logStringError = "wayback-actions error where[ %s ] stack [ %s ]"
@@ -98,16 +98,17 @@ export function startWayback () {
   } else {
     child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      let stack
-      if(Reflect.has(err,'stack')){
-        stack  = `${stderr} ${err.stack}`
-      } else {
-        stack = `${stderr}`
+      if(err) {
+        let stack
+        if(Reflect.has(err,'stack')){
+          stack  = `${stderr} ${err.stack}`
+        } else {
+          stack = `${stderr}`
+        }
+        logger.error(util.format(logStringError,`linux/osx launch wayback ${stdout}`,stack))
       }
-      logger.error(util.format(logStringError,`linux/osx launch wayback ${stdout}`,stack))
     })
   }
-
 }
 
 export function killWayback () {
@@ -125,7 +126,6 @@ export function killWayback () {
     } catch (err) {
       logger.error(util.format(logStringError,"win32 kill wayback",err.stack))
     }
-
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
@@ -138,6 +138,5 @@ export function killWayback () {
       logger.error(util.format(logStringError,`linux/osx kill heritrix ${stderr}`,stack))
     })
   }
-
 }
 
