@@ -1,9 +1,9 @@
-import EventEmitter from "eventemitter3"
-import autobind from "autobind-decorator"
-import UrlDispatcher from "../dispatchers/url-dispatcher"
-import wailConstants from "../constants/wail-constants"
-import * as urlActions from "../actions/archive-url-actions"
-import { shell, remote } from 'electron'
+import EventEmitter from 'eventemitter3'
+import autobind from 'autobind-decorator'
+import UrlDispatcher from '../dispatchers/url-dispatcher'
+import wailConstants from '../constants/wail-constants'
+import * as urlActions from '../actions/archive-url-actions'
+import {shell, remote} from 'electron'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes

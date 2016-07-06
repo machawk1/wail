@@ -1,9 +1,7 @@
-import ElectronSettings from "electron-settings"
-import path from "path"
-import fs from "fs-extra"
-import os from "os"
-
-
+import ElectronSettings from 'electron-settings'
+import path from 'path'
+import fs from 'fs-extra'
+import os from 'os'
 
 const managed = {
   paths: [
@@ -137,21 +135,21 @@ const managed = {
   }
 }
 
-export default function configSettings (base,userData) {
+export default function configSettings (base, userData) {
   let settings
-  let settingsDir = path.join(userData,'wail-settings')
+  let settingsDir = path.join(userData, 'wail-settings')
   try {
-    settings = new ElectronSettings({configDirPath: settingsDir})
+    settings = new ElectronSettings({ configDirPath: settingsDir })
   } catch (e) {
     // if something went terrible wrong during a config the json becomes malformed
     // electron settings does nothing to attempt to correct it
     fs.removeSync(settingsDir)
-    settings = new ElectronSettings({configDirPath: settingsDir})
+    settings = new ElectronSettings({ configDirPath: settingsDir })
   }
-  
-  if(!settings.get('configured')) {
+
+  if (!settings.get('configured')) {
     console.log("We are not configured")
-    settings.set('configured',true)
+    settings.set('configured', true)
     settings.set("base", base)
     managed.paths.forEach(p => {
       settings.set(p.name, path.normalize(path.join(base, p.path)))

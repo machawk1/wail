@@ -1,12 +1,12 @@
-import React, { Component } from "react"
-import Dialog from "material-ui/Dialog"
-import RaisedButton from "material-ui/RaisedButton"
-import FlatButton from "material-ui/FlatButton"
-import EditorDispatcher from "../../dispatchers/editorDispatcher"
-import Editor from "./editor"
-import EditorStore from "../../stores/editorStore"
+import React, {Component} from 'react'
+import Dialog from 'material-ui/Dialog'
+import RaisedButton from 'material-ui/RaisedButton'
+import FlatButton from 'material-ui/FlatButton'
+import EditorDispatcher from '../../dispatchers/editorDispatcher'
+import Editor from './editor'
+import EditorStore from '../../stores/editorStore'
 import wc from '../../constants/wail-constants'
-import { List, ListItem } from 'material-ui/List'
+import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 
 const style = {

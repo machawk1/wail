@@ -1,11 +1,11 @@
-import React, {Component} from "react"
-import TextField from "material-ui/TextField"
+import React, {Component} from 'react'
+import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import {Row, Column} from "react-cellblock"
+import {Row, Column} from 'react-cellblock'
 import RaisedButton from 'material-ui/RaisedButton'
-import S from "string"
+import S from 'string'
 import validator from 'validator'
-import UrlStore from "../../stores/urlStore"
+import UrlStore from '../../stores/urlStore'
 import * as aua from '../../actions/archive-url-actions'
 import styles from '../styles/styles'
 
@@ -14,7 +14,6 @@ export default class ArchiveUrl extends Component {
     super(props, context)
     this.state = { uri: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
   }
-
 
   @autobind
   handleChange (e) {
@@ -42,7 +41,7 @@ export default class ArchiveUrl extends Component {
       console.log("its valid")
       aua.urlUpdated(event.target.value)
     } else {
-      if(S(event.target.value).isEmpty()){
+      if (S(event.target.value).isEmpty()) {
         aua.emptyURL()
       }
     }

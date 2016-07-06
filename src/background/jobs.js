@@ -1,6 +1,6 @@
-import "babel-polyfill"
+import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import { ipcRenderer, remote } from "electron"
+import {ipcRenderer, remote} from 'electron'
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -14,9 +14,8 @@ import os from 'os'
 import util from 'util'
 import Logger from '../logger/logger'
 
-
 const settings = remote.getGlobal('settings')
-const logger = new Logger({path: remote.getGlobal('jobLogPath')})
+const logger = new Logger({ path: remote.getGlobal('jobLogPath') })
 const logString = "jobs %s"
 const logStringError = "jobs error where [ %s ] stack [ %s ]"
 const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
@@ -174,7 +173,7 @@ function getHeritrixJobsState () {
       let through = this
       fs.readFile(item.logPath, "utf8", (err, data)=> {
         if (err) {
-          logger.error(util.format(logStringError,`launchStats ${item.logPath}`,err.stack))
+          logger.error(util.format(logStringError, `launchStats ${item.logPath}`, err.stack))
           through.push(item)
         }
         // console.log(data)
@@ -217,7 +216,7 @@ function getHeritrixJobsState () {
     //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
-        logger.error(util.format(logStringError,"ensure dir heritrixJobP",err.stack))
+        logger.error(util.format(logStringError, "ensure dir heritrixJobP", err.stack))
         reject(err)
       } else {
         fs.walk(heritrixJobP)
@@ -248,7 +247,7 @@ function getHeritrixJobsState () {
 
               } else {
                 console.log('Job cache is null')
-                logger.info(util.format(logString,"the job cache is null. Setting it"))
+                logger.info(util.format(logString, "the job cache is null. Setting it"))
                 jobCache.cache = sortedJobs
                 let len = sortedJobs.length
                 for (var i = 0; i < len; ++i) {
@@ -264,7 +263,7 @@ function getHeritrixJobsState () {
           .on('error', function (error, item) {
             console.log(error.message)
             console.log(item.path) // the file the error occurred on
-            logger.error(util.format(logStringError,`getHeritrixJobsState ${item.path}`,error.stack))
+            logger.error(util.format(logStringError, `getHeritrixJobsState ${item.path}`, error.stack))
             reject(error)
           })
       }
@@ -279,7 +278,7 @@ class JobMonitor {
     this.job = null
     this.started = false
   }
-  
+
   @autobind
   checkJobStatuses (cb) {
     if (!this.started) {
@@ -297,7 +296,7 @@ class JobMonitor {
             })
             .catch(error => {
               console.log("Done Checking job stats with error")
-              logger.error(util.format(logStringError,"checkJobStatuses",error.stack))
+              logger.error(util.format(logStringError, "checkJobStatuses", error.stack))
               release()
               cb({ change: false })
             })
@@ -313,8 +312,8 @@ let jobMonitor = new JobMonitor()
 
 ipcRenderer.on("start-crawljob-monitoring", (event) => {
   console.log('Monitor get start crawljob monitoring')
-  logger.info(util.format(logString,"got start crawljob monitoring"))
-  ipcRenderer.send('got-it',{ from: 'jobs' ,yes: true})
+  logger.info(util.format(logString, "got start crawljob monitoring"))
+  ipcRenderer.send('got-it', { from: 'jobs', yes: true })
   jobMonitor.checkJobStatuses(statues => {
     if (statues.change) {
       ipcRenderer.send("crawljob-status-update", statues)
@@ -324,7 +323,7 @@ ipcRenderer.on("start-crawljob-monitoring", (event) => {
 
 ipcRenderer.on("stop", (event) => {
   console.log('Monitor get start indexing monitoring')
-  logger.info(util.format(logString,"got stop crawljob monitoring"))
+  logger.info(util.format(logString, "got stop crawljob monitoring"))
   logger.cleanUp()
   jobMonitor.job.cancel()
   jobMonitor.job = null

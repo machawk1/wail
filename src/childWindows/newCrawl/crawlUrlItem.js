@@ -1,12 +1,11 @@
-import React, { Component, PropTypes } from "react"
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import { ListItem } from "material-ui/List"
-import TextField from "material-ui/TextField"
-import { grey400 } from "material-ui/styles/colors"
-import IconButton from "material-ui/IconButton"
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
-import IconMenu from "material-ui/IconMenu"
-import MenuItem from "material-ui/MenuItem"
+import {ListItem} from 'material-ui/List'
+import TextField from 'material-ui/TextField'
+import {grey400} from 'material-ui/styles/colors'
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
 
 const style = {
   height: "100px",
@@ -29,7 +28,7 @@ export default class CrawlUrlItem extends Component {
       url: this.props.url,
       editable: false
     }
-    
+
   }
 
   @autobind

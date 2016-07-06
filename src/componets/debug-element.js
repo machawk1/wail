@@ -1,12 +1,12 @@
-import React, { Component } from "react"
-import Menu from "material-ui/Menu"
-import MenuItem from "material-ui/MenuItem"
-import RaisedButton from "material-ui/RaisedButton"
-import Popover from "material-ui/Popover"
-import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
-import * as Heritrix from "../actions/heritrix-actions"
-import * as Wayback from "../actions/wayback-actions"
-import ServiceStore from "../stores/serviceStore"
+import React, {Component} from 'react'
+import Menu from 'material-ui/Menu'
+import MenuItem from 'material-ui/MenuItem'
+import RaisedButton from 'material-ui/RaisedButton'
+import Popover from 'material-ui/Popover'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import * as Heritrix from '../actions/heritrix-actions'
+import * as Wayback from '../actions/wayback-actions'
+import ServiceStore from '../stores/serviceStore'
 
 const styles = {
   button: {
@@ -88,7 +88,7 @@ export default class Debug extends Component {
   }
 
   render () {
-    if (false){//process.env.NODE_ENV === 'development') {
+    if (false) {//process.env.NODE_ENV === 'development') {
       return (
         <div>
           <Toolbar>

@@ -1,17 +1,15 @@
-import "babel-polyfill"
+import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from "electron"
+import {ipcRenderer, remote} from 'electron'
 import rp from 'request-promise'
 import Promise from 'bluebird'
 import schedule from 'node-schedule'
-import util from 'util'
 import Logger from '../logger/logger'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
-
 const settings = remote.getGlobal('settings')
-const logger = new Logger({path: remote.getGlobal('accessLogPath')})
+const logger = new Logger({ path: remote.getGlobal('accessLogPath') })
 const logString = "accessibilityMonitor "
 
 const cache = {
@@ -55,7 +53,7 @@ class StatusMonitor {
       wayback: false
     }
   }
-  
+
   @autobind
   checkReachability (cb) {
     if (!this.started) {

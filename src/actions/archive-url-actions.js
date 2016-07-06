@@ -1,8 +1,8 @@
-import UrlDispatcher from "../dispatchers/url-dispatcher"
-import wailConstants from "../constants/wail-constants"
-import child_process from "child_process"
+import UrlDispatcher from '../dispatchers/url-dispatcher'
+import wailConstants from '../constants/wail-constants'
+import child_process from 'child_process'
 import rp from 'request-promise'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 
 const settings = remote.getGlobal('settings')
@@ -21,10 +21,9 @@ export function checkUriIsInArchive (uri) {
       })
       .catch(err => {
         console.log('error in querying wayback', err)
-        logger.error(util.format(logStringError,"checkUriIsInArchive", err.stack))
+        logger.error(util.format(logStringError, "checkUriIsInArchive", err.stack))
         resolve({ inArchive: false, uri: uri })
       })
-
   })
 }
 
@@ -53,12 +52,12 @@ export async function askMemgator (url) {
   child_process.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
       let stack
-      if(Reflect.has(err,'stack')){
-        stack  = `${stderr} ${err.stack}`
+      if (Reflect.has(err, 'stack')) {
+        stack = `${stderr} ${err.stack}`
       } else {
         stack = `${stderr}`
       }
-      logger.error(util.format(logStringError,`askMemgator ${stdout}`, stack))
+      logger.error(util.format(logStringError, `askMemgator ${stdout}`, stack))
     }
     let mementoCount = (stdout.match(/memento/g) || []).length
     UrlDispatcher.dispatch({

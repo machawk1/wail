@@ -1,22 +1,22 @@
-import "babel-polyfill"
+import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from "electron"
-import child_process from "child_process"
+import {ipcRenderer, remote} from 'electron'
+import childProcess from 'child_process'
 import os from 'os'
 import path from 'path'
 import through2 from 'through2'
 import S from 'string'
 import fs from 'fs-extra'
-import del from "del"
-import streamSort from "sort-stream2"
-import bytewise from "bytewise"
+import del from 'del'
+import streamSort from 'sort-stream2'
+import bytewise from 'bytewise'
 import ReadWriteLock from 'rwlock'
 import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
 
 const settings = remote.getGlobal('settings')
-const logger = new Logger({path: remote.getGlobal('indexLogPath')})
+const logger = new Logger({ path: remote.getGlobal('indexLogPath') })
 const indexLock = new ReadWriteLock()
 const logString = "indexer %s"
 const logStringError = "indexer error where[ %s ] stack [ %s ]"
@@ -93,7 +93,7 @@ function generateCDX () {
     let through = this //hope this ensures that this is through2.obj
     let cdx = path.basename(item.path).replace(replace, '.cdx')
     let cdxFile = `${cdxp}/${cdx}`
-    child_process.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
+    childProcess.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
         logger.error(util.format(logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack))
       }
@@ -156,7 +156,7 @@ class Indexer {
     this.job = null
     this.started = false
   }
-  
+
   @autobind
   indexer () {
     if (!this.started) {

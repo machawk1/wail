@@ -1,7 +1,6 @@
-import React, {Component, PropTypes} from "react"
-import {TableRow, TableRowColumn} from "material-ui/Table"
+import React, {Component, PropTypes} from 'react'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import moment from 'moment'
-
 
 const style = {
   tableHeaderCol: {
@@ -38,7 +37,6 @@ export default class HeritrixJobInfoRow extends Component {
   constructor (props, context) {
     super(props, context)
   }
-  
 
   render () {
     let runs = this.props.runs
@@ -88,5 +86,3 @@ export default class HeritrixJobInfoRow extends Component {
     }
   }
 }
-
-

@@ -1,11 +1,10 @@
-import EventEmitter from "eventemitter3"
-import { remote } from "electron"
-import autobind from "autobind-decorator"
-import EditorDispatcher from "../dispatchers/editorDispatcher"
-import wailConstants from "../constants/wail-constants"
-import * as EditorActions from "../actions/editor-actions"
+import EventEmitter from 'eventemitter3'
+import {remote} from 'electron'
+import autobind from 'autobind-decorator'
+import EditorDispatcher from '../dispatchers/editorDispatcher'
+import wailConstants from '../constants/wail-constants'
+import * as EditorActions from '../actions/editor-actions'
 import _ from 'lodash'
-
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes

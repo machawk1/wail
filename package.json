@@ -27,6 +27,9 @@
     "electron": "./node_modules/.bin/electron"
   },
   "eslintConfig": {
+    "env": {
+      "node": true
+    },
     "extends": [
       "standard",
       "standard-react"
@@ -50,7 +53,11 @@
       "bundledApps"
     ],
     "env": {
+      "node": true,
       "browser": true
+    },
+    "rules": {
+      "camelcase": "off"
     }
   },
   "dependencies": {
@@ -158,8 +165,8 @@
     "devtron": "^1.2.1",
     "electron-compile": "3.3.0",
     "electron-compilers": "3.1.2",
-    "electron-devtools-installer": "^1.1.4",
-    "electron-packager": "^7.1.0",
+    "electron-devtools-installer": "^1.1.5",
+    "electron-packager": "^7.2.0",
     "electron-prebuilt": "^1.2.5",
     "electron-react-devtools": "0.3.1",
     "electron-rebuild": "^1.1.5",

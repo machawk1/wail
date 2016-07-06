@@ -160,7 +160,7 @@ function downloadMemgator (uri) {
 function extractZip (zipPath) {
   return new Promise((resolve, reject) => {
     let name = path.basename(zipPath).replace(zipRE, '')
-    extract(zipPath, { dir: `${zips}`}, zipError => {
+    extract(zipPath, { dir: `${zips}` }, zipError => {
       if (zipError) {
         console.error(zipError)
         reject(zipError)
@@ -216,7 +216,7 @@ if (argv.all) {
             .pipe(onlyZip)
             .on('data', item => {
               shelljs.chmod('777', item.path)
-              extract(item.path, { dir: `${zips}`}, zipError => {
+              extract(item.path, { dir: `${zips}` }, zipError => {
                 if (zipError) {
                   console.error(`error extracting jdk for ${currentOSArch}`, zipError)
                 } else {

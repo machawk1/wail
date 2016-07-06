@@ -1,10 +1,9 @@
-import React, { Component } from "react"
-import { shell, remote } from 'electron'
-import RaisedButton from "material-ui/RaisedButton"
-import { Grid, Row, Column } from 'react-cellblock'
-import autobind from "autobind-decorator"
-import ServiceStore from "../../stores/serviceStore"
-
+import React, {Component} from 'react'
+import {shell, remote} from 'electron'
+import RaisedButton from 'material-ui/RaisedButton'
+import {Grid, Row, Column} from 'react-cellblock'
+import autobind from 'autobind-decorator'
+import ServiceStore from '../../stores/serviceStore'
 
 const settings = remote.getGlobal('settings')
 const styles = {
@@ -21,7 +20,6 @@ export default class WayBackTab extends Component {
     }
   }
 
-
   @autobind
   onClickViewWayback (event) {
     console.log('View Wayback')
@@ -29,7 +27,7 @@ export default class WayBackTab extends Component {
   }
 
   @autobind
-  viewWaybackConf(event){
+  viewWaybackConf (event) {
     shell.openItem(settings.get("wayBackConf"))
   }
 

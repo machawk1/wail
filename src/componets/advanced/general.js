@@ -1,10 +1,10 @@
-import React, { Component } from "react"
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from "material-ui/Table"
-import autobind from "autobind-decorator"
-import RaisedButton from "material-ui/RaisedButton"
-import { launchHeritrix, killHeritrix } from "../../actions/heritrix-actions"
-import { startWayback, killWayback } from "../../actions/wayback-actions"
-import ServiceStore from "../../stores/serviceStore"
+import React, {Component} from 'react'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import autobind from 'autobind-decorator'
+import RaisedButton from 'material-ui/RaisedButton'
+import {launchHeritrix, killHeritrix} from '../../actions/heritrix-actions'
+import {startWayback, killWayback} from '../../actions/wayback-actions'
+import ServiceStore from '../../stores/serviceStore'
 
 export default class General extends Component {
   constructor (props, context) {
@@ -14,8 +14,7 @@ export default class General extends Component {
       hGood: ServiceStore.heritrixStatus()
     }
   }
-  
-  
+
   componentWillMount () {
     ServiceStore.on('heritrix-status-update', this.updateHeritrixStatus)
     ServiceStore.on('wayback-status-update', this.updateWaybackStatus)
@@ -44,8 +43,7 @@ export default class General extends Component {
   updateHeritrixStatus () {
     this.setState({ hGood: ServiceStore.heritrixStatus() })
   }
-  
-  
+
   wayBackFix (event) {
     console.log("Wayback fix")
     startWayback()

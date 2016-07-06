@@ -1,13 +1,13 @@
-import React, {Component, PropTypes} from "react"
-import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme"
-import getMuiTheme from "material-ui/styles/getMuiTheme"
-import { ipcRenderer, remote } from "electron"
-import autobind from "autobind-decorator"
-import RaisedButton from "material-ui/RaisedButton"
+import React, {Component, PropTypes} from 'react'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import {ipcRenderer, remote} from 'electron'
+import autobind from 'autobind-decorator'
+import RaisedButton from 'material-ui/RaisedButton'
 import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import {Grid, Row} from "react-cellblock"
-import CrawlUrls from "./crawlUrls"
-import CrawlDepth from "./crawlDepth"
+import {Grid, Row} from 'react-cellblock'
+import CrawlUrls from './crawlUrls'
+import CrawlDepth from './crawlDepth'
 
 const style = {
   height: '500px',
@@ -23,7 +23,7 @@ export default class NewCrawlDialog extends Component {
   static childContextTypes = {
     muiTheme: PropTypes.object.isRequired,
   }
-  
+
   constructor (props, context) {
     super(props, context)
     this.state = {
@@ -36,7 +36,7 @@ export default class NewCrawlDialog extends Component {
   getChildContext () {
     return { muiTheme: this.state.muiTheme }
   }
-  
+
   @autobind
   handleOpen () {
     this.setState({ urls: [], depth: 1 })
@@ -44,12 +44,12 @@ export default class NewCrawlDialog extends Component {
 
   @autobind
   handleClose () {
-   ipcRenderer.send('close-newCrawl-window')
+    ipcRenderer.send('close-newCrawl-window')
   }
 
   @autobind
   crawlConfigured () {
-    ipcRenderer.send('close-newCrawl-window-configured',{
+    ipcRenderer.send('close-newCrawl-window-configured', {
       urls: this.state.urls,
       depth: this.state.depth,
     })

@@ -1,11 +1,11 @@
-import React, { Component } from "react"
+import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
-import { remote } from 'electron'
-import AppBar from "material-ui/AppBar"
-import Drawer from "material-ui/Drawer"
-import MenuItem from "material-ui/MenuItem"
+import {remote} from 'electron'
+import AppBar from 'material-ui/AppBar'
+import Drawer from 'material-ui/Drawer'
+import MenuItem from 'material-ui/MenuItem'
 import styles from '../styles/styles'
-import { Link, IndexLink, hashHistory } from "react-router"
+import {Link, IndexLink} from 'react-router'
 
 export default class Header extends Component {
   constructor (props, context) {

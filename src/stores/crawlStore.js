@@ -1,20 +1,20 @@
 import 'babel-polyfill'
-import EventEmitter from "eventemitter3"
-import { ipcRenderer,remote } from "electron"
+import EventEmitter from 'eventemitter3'
+import {ipcRenderer, remote} from 'electron'
 import _ from 'lodash'
 import os from 'os'
-import autobind from "autobind-decorator"
-import UrlStore from "../stores/urlStore"
-import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
-import EditorDispatcher from "../dispatchers/editorDispatcher"
-import wailConstants from "../constants/wail-constants"
-import { readCode } from '../actions/editor-actions'
+import autobind from 'autobind-decorator'
+import UrlStore from '../stores/urlStore'
+import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
+import EditorDispatcher from '../dispatchers/editorDispatcher'
+import wailConstants from '../constants/wail-constants'
+import {readCode} from '../actions/editor-actions'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
   buildHeritrixJob,
   launchHeritrixJob
-} from "../actions/heritrix-actions"
+} from '../actions/heritrix-actions'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -31,7 +31,7 @@ class crawlStore extends EventEmitter {
     ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
     ipcRenderer.on("crawljob-configure-dialogue", (event, newCrawl) => {
       makeHeritrixJobConf(newCrawl.urls, newCrawl.depth)
-      let urls 
+      let urls
       if (Array.isArray(newCrawl.urls)) {
         let temp = 'Urls: '
         event.urls.forEach(url => temp += `${url}${os.EOL}`)

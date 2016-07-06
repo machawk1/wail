@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from "react"
-import lightBaseTheme from "material-ui/styles/baseThemes/lightBaseTheme"
-import getMuiTheme from "material-ui/styles/getMuiTheme"
-import Header from "./header"
-import styles from "../styles/styles"
+import React, {Component, PropTypes} from 'react'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import Header from './header'
+import styles from '../styles/styles'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 

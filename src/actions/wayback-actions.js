@@ -1,11 +1,11 @@
-import child_process from "child_process"
-import rp from "request-promise"
-import fs from "fs-extra"
-import os from "os"
-import wc from "../constants/wail-constants"
-import ServiceDispatcher from "../dispatchers/service-dispatcher"
+import child_process from 'child_process'
+import rp from 'request-promise'
+import fs from 'fs-extra'
+import os from 'os'
+import wc from '../constants/wail-constants'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import cheerio from 'cheerio'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 
 const settings = remote.getGlobal('settings')
@@ -34,7 +34,7 @@ export function writeWaybackConf () {
   fs.readFile(wbConfPath, 'utf8', (err, val)=> {
     if (err) {
       console.error(err)
-      logger.error(util.format(logStringError,`reading WBConf ${err.message}`,err.stack))
+      logger.error(util.format(logStringError, `reading WBConf ${err.message}`, err.stack))
     }
     /*
      'wail.basedir=/Applications/WAIL.app',
@@ -48,7 +48,7 @@ export function writeWaybackConf () {
     fs.writeFile(wbConfPath, $.xml(), err => {
       if (err) {
         console.error(err)
-        logger.error(util.format(logStringError,"writting WBConf",err.stack))
+        logger.error(util.format(logStringError, "writting WBConf", err.stack))
       }
     })
   })
@@ -70,7 +70,7 @@ export function waybackAccesible () {
     })
     .catch(err => {
       console.log("wayback err", err)
-      logger.error(util.format(logStringError,"waybackAccessible",err.stack))
+      logger.error(util.format(logStringError, "waybackAccessible", err.stack))
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: false,
@@ -92,20 +92,20 @@ export function startWayback () {
       let wayback = child_process.spawn("wayback.bat", [ "start" ], opts)
       wayback.unref()
     } catch (err) {
-      logger.error(util.format(logStringError,"win32 launch wayback",err.stack))
+      logger.error(util.format(logStringError, "win32 launch wayback", err.stack))
     }
 
   } else {
     child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      if(err) {
+      if (err) {
         let stack
-        if(Reflect.has(err,'stack')){
-          stack  = `${stderr} ${err.stack}`
+        if (Reflect.has(err, 'stack')) {
+          stack = `${stderr} ${err.stack}`
         } else {
           stack = `${stderr}`
         }
-        logger.error(util.format(logStringError,`linux/osx launch wayback ${stdout}`,stack))
+        logger.error(util.format(logStringError, `linux/osx launch wayback ${stdout}`, stack))
       }
     })
   }
@@ -124,18 +124,18 @@ export function killWayback () {
       let wayback = child_process.spawn("wayback.bat", [ "stop" ], opts)
       wayback.unref()
     } catch (err) {
-      logger.error(util.format(logStringError,"win32 kill wayback",err.stack))
+      logger.error(util.format(logStringError, "win32 kill wayback", err.stack))
     }
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       let stack
-      if(Reflect.has(err,'stack')){
-          stack  = `${stdout} ${err.stack}`
+      if (Reflect.has(err, 'stack')) {
+        stack = `${stdout} ${err.stack}`
       } else {
         stack = `${stdout}`
       }
-      logger.error(util.format(logStringError,`linux/osx kill heritrix ${stderr}`,stack))
+      logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
     })
   }
 }

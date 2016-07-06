@@ -1,12 +1,11 @@
-import EventEmitter from "eventemitter3"
-import autobind from "autobind-decorator"
+import EventEmitter from 'eventemitter3'
+import autobind from 'autobind-decorator'
 import util from 'util'
-import { ipcRenderer, remote } from "electron"
-import ServiceDispatcher from "../dispatchers/service-dispatcher"
-import wailConstants from "../constants/wail-constants"
-import { heritrixAccesible, launchHeritrix } from "../actions/heritrix-actions"
-import { waybackAccesible, startWayback } from "../actions/wayback-actions"
-
+import {ipcRenderer, remote} from 'electron'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import wailConstants from '../constants/wail-constants'
+import {heritrixAccesible, launchHeritrix} from '../actions/heritrix-actions'
+import {waybackAccesible, startWayback} from '../actions/wayback-actions'
 
 const logger = remote.getGlobal('logger')
 

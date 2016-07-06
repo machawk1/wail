@@ -1,8 +1,8 @@
 import 'babel-polyfill'
-import child_process from "child_process"
-import rp from "request-promise"
-import cheerio from "cheerio"
-import fs from "fs-extra"
+import childProcess from 'child_process'
+import rp from 'request-promise'
+import cheerio from 'cheerio'
+import fs from 'fs-extra'
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -10,11 +10,11 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
-import wc from "../constants/wail-constants"
+import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
-import ServiceDispatcher from "../dispatchers/service-dispatcher"
-import CrawlDispatcher from "../dispatchers/crawl-dispatcher"
-import { remote } from 'electron'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
+import {remote} from 'electron'
 import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
@@ -89,7 +89,7 @@ export function launchHeritrix (cb) {
     }
     let usrpwrd = `${settings.get("heritrix.username")}:${settings.get("heritrix.password")}`
     try {
-      let heritrix = child_process.spawn("bin\\heritrix.cmd", [ '-a', `${usrpwrd}` ], opts)
+      let heritrix = childProcess.spawn("bin\\heritrix.cmd", [ '-a', `${usrpwrd}` ], opts)
       heritrix.unref()
     } catch (err) {
       logger.error(util.format(logStringError, "win32 launch", err.stack))
@@ -100,7 +100,7 @@ export function launchHeritrix (cb) {
     }
   } else {
 
-    child_process.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
+    childProcess.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
       console.log(settings.get('heritrixStart'))
       console.log(err, stdout, stderr)
 

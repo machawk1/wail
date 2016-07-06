@@ -14,18 +14,19 @@ const template = [
     label: 'View',
     submenu: [
       {
+        label: 'Toggle Developer Tools',
+        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+        click(item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.webContents.toggleDevTools()
+          }
+        }
+      },
+      {
         label: 'Reload',
         accelerator: 'CmdOrCtrl+R',
         click(item, focusedWindow) {
           if (focusedWindow) focusedWindow.reload()
-        }
-      },
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click(item, focusedWindow) {
-          if (focusedWindow)
-            focusedWindow.webContents.toggleDevTools()
         }
       },
     ]
@@ -93,7 +94,7 @@ if (process.platform === 'darwin') {
     ]
   })
   // Window menu.
-  template[3].submenu = [
+  template[ 3 ].submenu = [
     {
       label: 'Close',
       accelerator: 'CmdOrCtrl+W',

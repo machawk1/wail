@@ -1,11 +1,11 @@
-import React, { Component, PropTypes } from "react"
-import autobind from 'autobind-decorator' 
-import { List } from "material-ui/List"
-import Divider from "material-ui/Divider"
-import TextField from "material-ui/TextField"
-import { Grid, Row, Column } from "react-cellblock"
-import _ from "lodash"
-import CrawlUrlItem from "./crawlUrlItem"
+import React, {Component, PropTypes} from 'react'
+import autobind from 'autobind-decorator'
+import {List} from 'material-ui/List'
+import Divider from 'material-ui/Divider'
+import TextField from 'material-ui/TextField'
+import {Grid, Row, Column} from 'react-cellblock'
+import _ from 'lodash'
+import CrawlUrlItem from './crawlUrlItem'
 
 const style = {
   height: "100px",
@@ -26,7 +26,7 @@ export default class CrawlUrls extends Component {
       text: '',
       keys: 0,
     }
-   
+
   }
 
   @autobind

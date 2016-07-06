@@ -1,22 +1,21 @@
-import React, {Component, PropTypes} from "react"
+import React, {Component, PropTypes} from 'react'
 import {shell, remote} from 'electron'
-import {ListItem} from "material-ui/List"
-import {grey400} from "material-ui/styles/colors"
+import {ListItem} from 'material-ui/List'
+import {grey400} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
-import MoreVertIcon from "material-ui/svg-icons/navigation/more-vert"
-import IconMenu from "material-ui/IconMenu"
-import MenuItem from "material-ui/MenuItem"
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
+import IconMenu from 'material-ui/IconMenu'
+import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
 import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-import {Grid, Row, Column} from "react-cellblock"
+import {Grid, Row, Column} from 'react-cellblock'
 import del from 'del'
 import path from 'path'
 import autobind from 'autobind-decorator'
 import wc from '../../../constants/wail-constants'
-import CrawlDispatcher from "../../../dispatchers/crawl-dispatcher"
-import  {forceCrawlFinish, deleteHeritrixJob, restartJob} from '../../../actions/heritrix-actions'
-import HeritrixJobInfo from "./heritrixJobInfo"
-
+import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
+import {forceCrawlFinish, deleteHeritrixJob, restartJob} from '../../../actions/heritrix-actions'
+import HeritrixJobInfo from './heritrixJobInfo'
 
 const settings = remote.getGlobal('settings')
 //hehe i love this syntax
@@ -77,7 +76,6 @@ export default class HeritrixJobItem extends Component {
   kill (event, cb) {
     forceCrawlFinish(this.props.jobId, cb)
   }
-
 
   @autobind
   deleteJob (event) {

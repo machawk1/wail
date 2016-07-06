@@ -1,17 +1,9 @@
-import "babel-polyfill"
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  shell,
-  ipcMain,
-} from 'electron'
-
+import 'babel-polyfill'
+import {app, BrowserWindow, Menu, shell, ipcMain} from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
-import configSettings  from './settings/settings'
-
+import configSettings from './settings/settings'
 
 let mainWindow = null
 let newCrawlWindow = null
@@ -29,12 +21,11 @@ let notDebugUI = true
 let debug = false
 let openBackGroundWindows = false
 
-
 function showNewCrawlWindow (parent) {
   let config = {
     parent: parent,
     modal: true,
-    show: false ,
+    show: false,
     closable: false,
     minimizable: false,
     autoHideMenuBar: true
@@ -45,7 +36,7 @@ function showNewCrawlWindow (parent) {
     newCrawlWindow.show()
     // newCrawlWindow.webContents.openDevTools({ mode: "detach" })
   })
-  
+
   newCrawlWindow.on('closed', () => {
     newCrawlWindow = null
   })
@@ -136,8 +127,6 @@ function setUp () {
     jobbWindowURL = `file://${base}/src/background/jobs.html`
   }
 
-
-
   let logPath
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
@@ -147,7 +136,7 @@ function setUp () {
     logPath = path.join(app.getPath('userData'), "waillogs")
   }
 
-  global.settings =  configSettings(base,settingsPath)
+  global.settings = configSettings(base, settingsPath)
 
   global.accessLogPath = path.join(logPath, 'accessibility.log')
   global.jobLogPath = path.join(logPath, 'jobs.log')
@@ -155,13 +144,13 @@ function setUp () {
 
   logPath = path.join(logPath, 'wail.log')
 
-  global.logger = new Logger({path: logPath})
+  global.logger = new Logger({ path: logPath })
 
   global.wailLogp = logPath
 }
 
 function openDebug () {
-  if(debug){
+  if (debug) {
     if (openBackGroundWindows) {
       if (accessibilityWindow != null) {
         accessibilityWindow.show()
@@ -295,7 +284,7 @@ function createWindow () {
 }
 
 process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`, err,err.stack)
+  console.log(`Caught exception: ${err}`, err, err.stack)
   // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
   cleanUp()
   app.quit()

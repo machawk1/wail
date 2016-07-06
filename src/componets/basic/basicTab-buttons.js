@@ -1,15 +1,14 @@
-import React, { Component } from "react"
-import { Toolbar, ToolbarGroup } from "material-ui/Toolbar"
-import RaisedButton from "material-ui/RaisedButton"
+import React, {Component} from 'react'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import RaisedButton from 'material-ui/RaisedButton'
 import autobind from 'autobind-decorator'
-import { Row } from "react-cellblock"
-import { shell } from 'electron'
-import CrawlDispatcher from "../../dispatchers/crawl-dispatcher"
-import GMessageDispatcher from "../../dispatchers/globalMessageDispatcher"
-import UrlDispatcher from "../../dispatchers/url-dispatcher"
-import wailConstants from "../../constants/wail-constants"
-import styles from "../styles/styles"
-
+import {Row} from 'react-cellblock'
+import {shell} from 'electron'
+import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
+import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
+import UrlDispatcher from '../../dispatchers/url-dispatcher'
+import wailConstants from '../../constants/wail-constants'
+import styles from '../styles/styles'
 
 const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
@@ -44,7 +43,7 @@ export default class BasicTabButtons extends Component {
       type: EventTypes.QUEUE_MESSAGE,
       message: "Checking Archive"
     })
-    
+
   }
 
   @autobind

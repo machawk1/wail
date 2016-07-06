@@ -1,17 +1,17 @@
-import "babel-polyfill"
+import 'babel-polyfill'
 import React from 'react'
-import { Router, hashHistory } from 'react-router'
-import ReactDOM from "react-dom"
+import {Router, hashHistory} from 'react-router'
+import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fsreal from 'fs'
 import gracefulFs from 'graceful-fs'
-gracefulFs.gracefulify(fsreal)
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import { ipcRenderer } from "electron"
-Promise.promisifyAll(fs)
+import {ipcRenderer} from 'electron'
 import Routes from './routes'
-import { writeWaybackConf } from "./actions/wayback-actions"
+import {writeWaybackConf} from './actions/wayback-actions'
+gracefulFs.gracefulify(fsreal)
+Promise.promisifyAll(fs)
 
 /*
  logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'

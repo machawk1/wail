@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from "react"
-import { Row, Column } from "react-cellblock"
+import React, {Component, PropTypes} from 'react'
+import {Row, Column} from 'react-cellblock'
 import Avatar from 'material-ui/Avatar'
-import styles from "../styles/styles"
+import styles from '../styles/styles'
 
 export class DefaultMementoMessage extends Component {
   constructor (props, context) {

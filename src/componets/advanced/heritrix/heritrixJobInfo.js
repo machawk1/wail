@@ -1,18 +1,17 @@
-import React, { Component, PropTypes } from "react"
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from "material-ui/Table"
+import React, {Component, PropTypes} from 'react'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
-import styles from "../../styles/styles"
+import styles from '../../styles/styles'
 
 export default class HeritrixJobInfo extends Component {
   static propTypes = {
     jobId: PropTypes.string.isRequired,
     runs: PropTypes.array.isRequired,
   }
-  
+
   constructor (props, context) {
     super(props, context)
   }
-   
 
   render () {
     return (
@@ -24,7 +23,7 @@ export default class HeritrixJobInfo extends Component {
           style={styles.tableHeader}
         >
           <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
-            <TableHeaderColumn key={`${this.props.jobId}-TableHColJID`}  style={styles.tableHeaderCol}>
+            <TableHeaderColumn key={`${this.props.jobId}-TableHColJID`} style={styles.tableHeaderCol}>
               Job Id
             </TableHeaderColumn>
             <TableHeaderColumn key={`${this.props.jobId}-TableHColStatus`} style={styles.tableHeaderCol}>
@@ -49,7 +48,7 @@ export default class HeritrixJobInfo extends Component {
           displayRowCheckbox={false}
           showRowHover={true}
         >
-         <HeritrixJobInfoRow key={ `${this.props.jobId}-HJobInfoRow` } {...this.props}/>
+          <HeritrixJobInfoRow key={ `${this.props.jobId}-HJobInfoRow` } {...this.props}/>
         </TableBody>
       </Table>
     )

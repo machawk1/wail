@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from "react"
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import Snackbar from "material-ui/Snackbar"
-import TextField from "material-ui/TextField"
-import { Row, Column } from "react-cellblock"
+import Snackbar from 'material-ui/Snackbar'
+import TextField from 'material-ui/TextField'
+import {Row, Column} from 'react-cellblock'
 
 export default class CrawlDepth extends Component {
   static propTypes = {
@@ -18,7 +18,7 @@ export default class CrawlDepth extends Component {
     }
     this.depthCheck = /^[0-9]+$/
   }
-  
+
   @autobind
   checkKeyCode (event) {
     let depth = this.state.text

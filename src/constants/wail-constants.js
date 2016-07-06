@@ -1,4 +1,4 @@
-import keyMirror from "keymirror"
+import keyMirror from 'keymirror'
 
 const consts = {
   From: keyMirror({

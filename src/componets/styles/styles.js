@@ -1,6 +1,6 @@
-import { red500, blue500 } from "material-ui/styles/colors"
+import {red500, blue500} from 'material-ui/styles/colors'
 import spacing from 'material-ui/styles/spacing'
-import { zIndex } from "material-ui/styles"
+import {zIndex} from 'material-ui/styles'
 
 export default {
   buttonBasic: {
@@ -49,12 +49,12 @@ export default {
   basicTapRightColPad: {
     paddingLeft: 55
   },
-  mementoMessage: { 
-    paddingTop: 10, 
+  mementoMessage: {
+    paddingTop: 10,
     paddingLeft: 10
   },
   spinningMemento: {
-    paddingTop: 10, 
+    paddingTop: 10,
     paddingLeft: 115
   },
   mementoCount: {
