@@ -186,6 +186,7 @@
     "minimist": "^1.2.0",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",
+    "plist": "^1.2.0",
     "raw-loader": "^0.5.1",
     "react-addons-perf": "^15.2.0",
     "run-sequence": "^1.2.2",
@@ -211,6 +212,6 @@
     "npm": "3.x"
   },
   "binaryConfig": {
-    "iconPath":" sas"
+    "iconPath": " sas"
   }
 }
