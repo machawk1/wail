@@ -18,8 +18,8 @@ let indexWindowURL
 let jobbWindowURL
 
 let notDebugUI = true
-let debug = true
-let openBackGroundWindows = true
+let debug = false
+let openBackGroundWindows = false
 
 function showNewCrawlWindow (parent) {
   let config = {

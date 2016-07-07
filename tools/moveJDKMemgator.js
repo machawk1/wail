@@ -1,13 +1,10 @@
 import 'babel-polyfill'
-import realFs from 'fs'
-import gracefulFs from 'graceful-fs'
-gracefulFs.gracefulify(realFs)
 import fs from 'fs-extra'
-import shelljs from "shelljs"
+import shelljs from 'shelljs'
 import path from 'path'
 import Promise from 'bluebird'
-Promise.promisifyAll(fs)
 import os from 'os'
+Promise.promisifyAll(fs)
 
 const zips = path.resolve('./', 'zips')
 const memgators = path.resolve('./', 'memgators')
@@ -46,7 +43,7 @@ const memgatorNames = [
   'memgator',
 ]
 
-export default function moveThem (opts) {
+export default function moveThem (opts, cb) {
   if (!opts) {
     opts = {
       arch: currentOSArch,
@@ -65,8 +62,11 @@ export default function moveThem (opts) {
     console.log(`moving memgator ${memgatorFromPath} to ${memgatorToPath}`)
     fs.copy(memgatorFromPath, memgatorToPath, { clobber: true }, (memgatorError) => {
       if (memgatorError) return console.error(memgatorError)
-      shelljs.chmod('777',memgatorToPath)
+      shelljs.chmod('777', memgatorToPath)
       console.log("success in moving memgator!")
+      if (cb) {
+        cb()
+      }
     })
   })
 }

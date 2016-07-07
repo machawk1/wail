@@ -1,6 +1,6 @@
 languages:
    Ruby: false
-   JavaScript: false
+   JavaScript: true
    Python: true
    PHP: false
 exclude_paths:

@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs-extra'
 import os from 'os'
 
+
 const managed = {
   paths: [
     { name: "bundledApps", path: "bundledApps" },
@@ -135,6 +136,70 @@ const managed = {
   }
 }
 
+function writeSettings (base, settings) {
+  settings.set('configured', true)
+  settings.set("base", base)
+  managed.paths.forEach(p => {
+    settings.set(p.name, path.normalize(path.join(base, p.path)))
+  })
+
+  let heritrix = managed.heritrix
+  heritrix.path = settings.get("heritrix")
+  heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
+  settings.set("heritrix", heritrix)
+  let wb = managed.wayback
+  wb.allCDX = `${settings.get("cdx")}${wb.allCDX}`
+  wb.notIndexCDX = `!${settings.get("cdx")}${wb.notIndexCDX}`
+  settings.set("wayback", wb)
+  let code = managed.code
+  code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
+  code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
+
+  let cmdexport = `export JAVA_HOME=${settings.get("jdk")}; export JRE_HOME=${settings.get("jre")};`
+  let command = "sh"
+  let isWindows = os.platform() == "win32"
+  settings.set("isWindows", isWindows)
+
+  managed.commands.forEach(cmd => {
+    switch (cmd.name) {
+      case "memgator":
+        settings.set("memgatorQuery", `${settings.get("memgator")} -a ${settings.get("archives")}`)
+        break
+      case "catalina":
+        if (!isWindows) {
+          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+        } else {
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
+        }
+        break
+      case "tomcatStart":
+        if (!isWindows) {
+          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+        } else {
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
+        }
+        break
+      case "tomcatStop":
+        if (!isWindows) {
+          settings.set(cmd.name, `${command} ${path.normalize(path.join(base, cmd.path))}`)
+        } else {
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} stop`)
+        }
+        break
+      case "heritrixStart":
+        if (isWindows) {
+          settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
+        } else {
+          settings.set(cmd.name, `${cmdexport}  ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
+        }
+        break
+      default:
+        settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+        break
+    }
+  })
+}
+
 export default function configSettings (base, userData) {
   let settings
   let settingsDir = path.join(userData, 'wail-settings')
@@ -142,77 +207,25 @@ export default function configSettings (base, userData) {
     settings = new ElectronSettings({ configDirPath: settingsDir })
   } catch (e) {
     // if something went terrible wrong during a config the json becomes malformed
-    // electron settings does nothing to attempt to correct it
+    // electron settings throws an error in this case
     fs.removeSync(settingsDir)
     settings = new ElectronSettings({ configDirPath: settingsDir })
   }
 
   if (!settings.get('configured')) {
     console.log("We are not configured")
-    settings.set('configured', true)
-    settings.set("base", base)
-    managed.paths.forEach(p => {
-      settings.set(p.name, path.normalize(path.join(base, p.path)))
-    })
-
-    let heritrix = managed.heritrix
-    heritrix.path = settings.get("heritrix")
-    heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
-    settings.set("heritrix", heritrix)
-    let wb = managed.wayback
-    wb.allCDX = `${settings.get("cdx")}${wb.allCDX}`
-    wb.notIndexCDX = `!${settings.get("cdx")}${wb.notIndexCDX}`
-    settings.set("wayback", wb)
-    let code = managed.code
-    code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
-    code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
-
-    let cmdexport = `export JAVA_HOME=${settings.get("jdk")}; export JRE_HOME=${settings.get("jre")};`
-    let command = "sh"
-    let isWindows = os.platform() == "win32"
-    settings.set("isWindows", isWindows)
-
-    managed.commands.forEach(cmd => {
-      switch (cmd.name) {
-        case "memgator":
-          settings.set("memgatorQuery", `${settings.get("memgator")} -a ${settings.get("archives")}`)
-          break
-        case "catalina":
-          if (!isWindows) {
-            settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
-          } else {
-            settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
-          }
-          break
-        case "tomcatStart":
-          if (!isWindows) {
-            settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
-          } else {
-            settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} start`)
-          }
-          break
-        case "tomcatStop":
-          if (!isWindows) {
-            settings.set(cmd.name, `${command} ${path.normalize(path.join(base, cmd.path))}`)
-          } else {
-            settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/wayback.bat"))} stop`)
-          }
-          break
-        case "heritrixStart":
-          if (isWindows) {
-            settings.set(cmd.name, `${path.normalize(path.join(base, "bundledApps/heritrix.bat"))} ${settings.get('heritrix.login')}`)
-          } else {
-            settings.set(cmd.name, `${cmdexport}  ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
-          }
-          break
-        default:
-          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
-          break
-      }
-    })
-
+    writeSettings(base, settings)
     console.log(base, settings)
   } else {
+    if (settings.get('base') !== base) {
+      /*
+       If the user moves the application directory the settings will
+       will not be correct since I use absolute paths.
+       I did this to myself....
+       */
+      console.log("We are not configured due to binary directory being moved")
+      writeSettings(base, settings)
+    }
     console.log("We are configured")
   }
 

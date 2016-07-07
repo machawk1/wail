@@ -1,87 +1,127 @@
-import fsreal from 'fs'
-import gracefulFs from 'graceful-fs'
-gracefulFs.gracefulify(fsreal)
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-Promise.promisifyAll(fs)
 import path from 'path'
-import os  from 'os'
-import webpack  from 'webpack'
-import electronCfg  from './webpack.config.electron.js'
-import cfg  from './webpack.config.production.js'
+import os from 'os'
+import webpack from 'webpack'
+import electronCfg from './webpack.config.electron.js'
+import cfg from './webpack.config.production.js'
 import packager from 'electron-packager'
-import del  from 'del'
-import pkg  from './package.json'
-import moveTo from "./tools/moveJDKMemgator"
+import pkg from './package.json'
+import moveTo from './tools/moveJDKMemgator'
+Promise.promisifyAll(fs)
 
-fs.removeSync(path.join(path.resolve('.'), 'dist'))
 
-const exec = require('child_process').exec
 const argv = require('minimist')(process.argv.slice(2))
+const cwd = path.resolve('.')
 
-const currentOSArch = `${os.platform()}${os.arch()}`
-const basePath = path.join(path.resolve('.'), 'bundledApps')
+const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
+
+
+const darwinBuild = {
+  iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale_1024.icns')),
+  archiveIcon: 'archive.icns',
+  archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
+  extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist')),
+}
 
 const deps = Object.keys(pkg.dependencies)
 const devDeps = Object.keys(pkg.devDependencies)
 
-const appName = 'wail'
-const shouldUseAsar = argv.asar || argv.a || false
 const shouldBuildAll = argv.all || false
 const shouldBuildWindows = argv.win || false
 const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
+const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
-console.log(argv)
+const ignoreThese = [
+  '^/archiveIndexes/',
+  '^/archives/',
+  '^/.babelrc($|/)',
+  '^/build($|/)',
+  '^/build-binary.js$',
+  '^/build-binary-old.js$',
+  '^/bundledApps/heritrix-3.2.0/jobs/',
+  '^/bundledApps/memgator($|/)',
+  '^/bundledApps/openjdk($|/)',
+  '^/bundledApps/wailpy($|/)',
+  '^/.codeclimate.yml($|/)',
+  '^/doElectron.sh$',
+  '^/electron-main-dev.js$',
+  '^/.gitignore($|/)',
+  '^/.idea($|/)',
+  '^/images($|/)',
+  '^/memgators($|/)',
+  '^/newbinaries($|/)',
+  '^/README.md$',
+  '^/release($|/)',
+  '^/requirements.txt$',
+  '^/test($|/)',
+  '^/tools($|/)',
+  '^/waillogs($|/)',
+  '^/waillogs($|/)',
+  '^/webpack.config.*$',
+  '^/zips($|/)',
+].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
+  .concat(
+    deps.filter(name => !electronCfg.externals.includes(name))
+      .map(name => `/node_modules/${name}($|/)`)
+  )
 
 const DEFAULT_OPTS = {
-  dir: '.',
-  name: appName,
-  asar: shouldUseAsar,
-  ignore: [
-    '^/.idea($|/)',
-    '^/archives/',
-    '^/archiveIndexes/',
-    '^/bundledApps/heritrix-3.2.0/jobs/',
-    '^/bundledApps/memgator($|/)',
-    '^/bundledApps/openjdk($|/)',
-    '^/electron-main-dev.js',
-    '^/test($|/)',
-    '^/tools($|/)',
-    '^/newbinaries($|/)',
-    '^/memgators($|/)',
-    '^/release($|/)',
-    '^/waillogs($|/)',
-    '^/zips($|/)',
-  ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
-    .concat(
-      deps.filter(name => !electronCfg.externals.includes(name))
-        .map(name => `/node_modules/${name}($|/)`)
-    )
+  'app-version': pkg.version,
+  asar: false,
+  dir: cwd,
+  name: pkg.name,
+  ignore: ignoreThese,
+  overwrite: true,
+  out: 'release',
+  prune: true,
+  version: require('electron-prebuilt/package.json').version
 }
 
-const icon = argv.icon || argv.i || 'app/app'
+//OSX
+const darwinSpecificOpts = {
 
-if (icon) {
-  DEFAULT_OPTS.icon = icon
+  'app-bundle-id': 'wail.wsdl.cs.odu.edu',
+
+  // The application category type, as shown in the Finder via "View" -> "Arrange by
+  // Application Category" when viewing the Applications directory (OS X only).
+  'app-category-type': 'public.app-category.utilities',
+
+  // The bundle identifier to use in the application helper's plist (OS X only).
+  'helper-bundle-id': 'wail.wsdl.cs.odu.edu-helper',
+
+  'extend-info': darwinBuild.extendPlist,
+
+  // Application icon.
+  icon: darwinBuild.iconPath
 }
 
-const version = argv.version || argv.v
+const windowsSpecificOpts = {
+  'version-string': {
 
-if (version) {
-  DEFAULT_OPTS.version = version
-  startPack()
-} else {
-  // use the same version as the currently-installed electron-prebuilt
-  exec('npm list electron-prebuilt --dev', (err, stdout) => {
-    if (err) {
-      DEFAULT_OPTS.version = '1.2.5'
-    } else {
-      DEFAULT_OPTS.version = stdout.split('electron-prebuilt@')[ 1 ].replace(/\s/g, '')
-    }
+    // Company that produced the file.
+    CompanyName: 'wsdl.cs.odu.edu',
 
-    startPack()
-  })
+    // Name of the program, displayed to users
+    FileDescription: pkg.name,
+
+    // Original name of the file, not including a path. This information enables an
+    // application to determine whether a file has been renamed by a user. The format of
+    // the name depends on the file system for which the file was created.
+    OriginalFilename: `${pkg.name}.exe`,
+
+    // Name of the product with which the file is distributed.
+    ProductName: pkg.name,
+
+    // Internal name of the file, if one exists, for example, a module name if the file
+    // is a dynamic-link library. If the file has no internal name, this string should be
+    // the original filename, without extension. This string is required.
+    InternalName: pkg.name
+  },
+
+  // Application icon.
+  icon: iconPath
 }
 
 function build (cfg) {
@@ -93,100 +133,28 @@ function build (cfg) {
   })
 }
 
-function startPack () {
-  console.log('building webpack.config.electron')
-  build(electronCfg)
-    .then((stats) => {
-      console.log('building webpack.config.production')
-      build(cfg)
-    })
-    .then((stats) => {
-      console.log("removing previous builds")
-      del.sync('release')
-    })
-    .then(paths => {
-      if (shouldBuildAll) {
-        // build for all platforms
-        console.log("building for all platforms")
-        let archs = [ 'ia32', 'x64' ]
-        let platforms = [ 'linux', 'win32', 'darwin' ]
-
-        platforms.forEach(plat => {
-          archs.forEach(arch => {
-            console.log(`build the binary for ${plat}-${arch}`)
-            pack(plat, arch, log(plat, arch))
-          })
-        })
-      } else {
-
-        if (shouldBuildLinux) {
-          console.log("building for linux")
-          let archs = [ 'ia32', 'x64' ]
-          let platforms = [ 'linux', ]
-
-          platforms.forEach(plat => {
-            archs.forEach(arch => {
-              console.log(`build the binary for ${plat}-${arch}`)
-              pack(plat, arch, log(plat, arch))
-            })
-          })
-        } else if (shouldBuildOSX) {
-          console.log("building for OSX")
-          let archs = [ 'x64' ]
-          let platforms = [ 'darwin', ]
-
-          platforms.forEach(plat => {
-            archs.forEach(arch => {
-              console.log(`build the binary for ${plat}-${arch}`)
-              pack(plat, arch, log(plat, arch))
-            })
-          })
-        } else if (shouldBuildWindows) {
-          console.log("building for Windows")
-          let archs = [ 'ia32', 'x64' ]
-          let platforms = [ 'win32' ]
-
-          platforms.forEach(plat => {
-            archs.forEach(arch => {
-              console.log(`build the binary for ${plat}-${arch}`)
-              pack(plat, arch, log(plat, arch))
-            })
-          })
-        } else {
-          console.log(`build the binary for ${os.platform()}-${os.arch()}`)
-          pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-        }
-
-      }
-    })
-    .catch(err => {
-      console.error(err)
-    })
-}
-
 function pack (plat, arch, cb) {
   // there is no darwin ia32 electron
   if (plat === 'darwin' && arch === 'ia32') return
 
-  const iconObj = {
-    icon: DEFAULT_OPTS.icon + (() => {
-      let extension = '.png'
-      if (plat === 'darwin') {
-        extension = '.icns'
-      } else if (plat === 'win32') {
-        extension = '.ico'
-      }
-      return extension
-    })()
+  let opts
+  if (plat === 'darwin') {
+    opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
+      platform: plat,
+      arch
+    })
+  } else if (plat === 'win32') {
+    opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {
+      platform: plat,
+      arch
+    })
+  } else {
+    /* linux */
+    opts = Object.assign({}, DEFAULT_OPTS, {
+      platform: plat,
+      arch
+    })
   }
-
-  const opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
-    platform: plat,
-    arch,
-    prune: true,
-    'app-version': pkg.version || DEFAULT_OPTS.version,
-    out: `release/${plat}-${arch}`
-  })
 
   packager(opts, cb)
 }
@@ -194,14 +162,65 @@ function pack (plat, arch, cb) {
 function log (plat, arch) {
   return (err, filepath) => {
     if (err) return console.error(err)
-    let moveTop
-    if(plat === 'darwin') {
-      moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/wail.app/Contents/Resources/app/bundledApps`
+    let moveToPath
+    let cb
+    if (plat === 'darwin') {
+      moveToPath = `release/wail-${plat}-${arch}/wail.app/Contents/Resources/app/bundledApps`
+      let aIconPath = `release/wail-${plat}-${arch}/wail.app/Contents/Resources/${darwinBuild.archiveIcon}`
+      cb = () =>  {
+        fs.copySync(darwinBuild.archiveIconPath,path.normalize(path.join(cwd, aIconPath)))
+        console.log(`${plat}-${arch} finished!`)
+      }
     } else {
-      moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/resources/app/bundledApps`
+      moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
+      cb = () =>  console.log(`${plat}-${arch} finished!`)
     }
-    let realsePath = path.join(path.resolve('.'), moveTop)
-    moveTo({arch: `${plat}${arch}`,to: realsePath})
-    console.log(`${plat}-${arch} finished!`)
+    let releasePath = path.normalize(path.join(cwd, moveToPath))
+    moveTo({ arch: `${plat}${arch}`, to: releasePath },cb)
   }
 }
+
+fs.removeSync(path.join(cwd, 'dist'))
+fs.removeSync(path.join(cwd, 'release'))
+
+console.log('building webpack.config.electron')
+build(electronCfg)
+  .then((stats) => {
+    console.log('building webpack.config.production')
+    build(cfg)
+  })
+  .then((stats) => {
+    if (shouldBuildCurrent) {
+      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+    } else {
+      let archs
+      let platforms
+      if (shouldBuildAll) {
+        console.log('building for all platforms')
+        archs = [ 'ia32', 'x64' ]
+        platforms = [ 'linux', 'win32', 'darwin' ]
+      } else if (shouldBuildLinux) {
+        console.log('building for linux')
+        archs = [ 'ia32', 'x64' ]
+        platforms = [ 'linux' ]
+      } else if (shouldBuildOSX) {
+        console.log('building for OSX')
+        archs = [ 'x64' ]
+        platforms = [ 'darwin' ]
+      } else {
+        console.log('building for Windows')
+        archs = [ 'ia32', 'x64' ]
+        platforms = [ 'win32' ]
+      }
+      platforms.forEach(plat => {
+        archs.forEach(arch => {
+          console.log(`build the binary for ${plat}-${arch}`)
+          pack(plat, arch, log(plat, arch))
+        })
+      })
+    }
+  })
+  .catch(err => {
+    console.error(err)
+  })

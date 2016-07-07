@@ -1,8 +1,12 @@
 {
   "name": "wail",
-  "version": "0.9.9",
-  "main": "./dist/electron-main.js",
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
+  "license": "GNU LGPL v3.0",
+  "version": "0.9.9",
+  "bin": {
+    "electron": "./node_modules/.bin/electron"
+  },
+  "main": "./dist/electron-main.js",
   "scripts": {
     "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
@@ -23,9 +27,6 @@
     "standard": "standard --verbose | snazzy",
     "start-dev": "cross-env concurrently --kill-others \"npm run dev-electron\" \"npm run dev\"",
     "test-xml": "cross-env babel-node tools/test-xml"
-  },
-  "bin": {
-    "electron": "./node_modules/.bin/electron"
   },
   "eslintConfig": {
     "env": {
@@ -210,8 +211,5 @@
   "devEngines": {
     "node": "6.x",
     "npm": "3.x"
-  },
-  "binaryConfig": {
-    "iconPath": " sas"
   }
 }
