@@ -1,69 +1,78 @@
+let settingSubMenu = {
+  label: 'Settings',
+  submenu: [
+    {
+      label: 'View Or Edit',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.reload()
+      }
+    },
+  ]
+}
+
+let viewSubMenu = {
+  label: 'View',
+  submenu: [
+    {
+      label: 'Toggle Developer Tools',
+      accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+      click(item, focusedWindow) {
+        if (focusedWindow) {
+          focusedWindow.webContents.toggleDevTools()
+        }
+      }
+    },
+    {
+      label: 'Reload',
+      accelerator: 'CmdOrCtrl+R',
+      click(item, focusedWindow) {
+        if (focusedWindow) focusedWindow.reload()
+      }
+    },
+  ]
+}
+
+let windowSubMenu = {
+  role: 'window',
+  submenu: [
+    {
+      role: 'minimize'
+    },
+    {
+      role: 'close'
+    },
+  ]
+}
+
+let aboutSubMenu = {
+  label: 'About',
+  submenu: [
+    {
+      label: 'Wail',
+      click() { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
+    },
+    {
+      label: 'WSDL',
+      click() { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
+    },
+  ]
+}
+
+let helpSubMenu = {
+  role: 'help',
+  submenu: [
+    {
+      label: 'Submit Bug Report',
+      click() { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
+    },
+  ]
+}
+
 const template = [
-  {
-    label: 'Settings',
-    submenu: [
-      {
-        label: 'View Or Edit',
-        click(item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
-        }
-      },
-    ]
-  },
-  {
-    label: 'View',
-    submenu: [
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click(item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.webContents.toggleDevTools()
-          }
-        }
-      },
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click(item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
-        }
-      },
-    ]
-  },
-  {
-    role: 'window',
-    submenu: [
-      {
-        role: 'minimize'
-      },
-      {
-        role: 'close'
-      },
-    ]
-  },
-  {
-    label: 'About',
-    submenu: [
-      {
-        label: 'Wail',
-        click() { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
-      },
-      {
-        label: 'WSDL',
-        click() { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
-      },
-    ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Submit Bug Report',
-        click() { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
-      },
-    ]
-  },
+
+  {},
+  {},
+  {},
 ]
 
 if (process.platform === 'darwin') {

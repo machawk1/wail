@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {List, ListItem} from 'material-ui/List'
+import React, { Component } from 'react'
+import { List, ListItem } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import autobind from 'autobind-decorator'
 import CrawlStore from '../.././../stores/crawlStore'

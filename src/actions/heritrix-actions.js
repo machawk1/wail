@@ -3,6 +3,7 @@ import childProcess from 'child_process'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
+import path from 'path'
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -14,7 +15,7 @@ import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
@@ -164,17 +165,20 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
       // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
       let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
       // warFolder.append(`<value>${wc.Paths.warcs}</value>`)
-      warFolder.append(`<value>${settings.get('warcs')}</value>${os.EOL}`)
+      warFolder.append(`${os.EOL}<value>${settings.get('warcs')}</value>${os.EOL}`)
       // let confPath = `${wc.Paths.heritrixJob}/${jobId}`
-      let confPath = `${settings.get('heritrixJob')}/${jobId}`
+      let confPath = path.join(settings.get('heritrixJob'), `${jobId}`)
       fs.ensureDir(confPath, er => {
         if (er) {
           logger.error(util.format(logStringError, `makeHeritrixJobConf ensureDir ${er.message}`, er.stack))
         }
-        fs.writeFile(`${confPath}/crawler-beans.cxml`, doc.xml(), 'utf8', error => {
-          console.log("done writting file", error)
+        fs.writeFile(path.join(confPath, 'crawler-beans.cxml'), doc.xml(), 'utf8', error => {
+
           if (error) {
             logger.error(util.format(logStringError, `makeHeritrixJobConf writeConf ${error.message}`, error.stack))
+            console.log("done writting file with error", error)
+          } else {
+            console.log("done writting file")
           }
           CrawlDispatcher.dispatch({
             type: EventTypes.BUILT_CRAWL_CONF,
@@ -193,11 +197,12 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 }
 
 export function buildHeritrixJob (jobId) {
-  let data = { action: "launch" }
+
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
   let options = settings.get('heritrix.buildOptions')
   options.uri = `${options.uri}${jobId}`
-  console.log('building heritrix job', options)
+  console.log(`building heritrix job ${jobId} with options`, options)
+  logger.info(util.format(logString, `building heritrix job ${jobId} with options ${options}`))
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       rp(options)

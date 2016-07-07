@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import EventEmitter from 'eventemitter3'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import _ from 'lodash'
 import os from 'os'
 import autobind from 'autobind-decorator'
@@ -8,7 +8,7 @@ import UrlStore from '../stores/urlStore'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
-import {readCode} from '../actions/editor-actions'
+import { readCode } from '../actions/editor-actions'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,

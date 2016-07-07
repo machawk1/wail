@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
 
 const style = {

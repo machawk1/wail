@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import {Grid, Row, Column} from 'react-cellblock'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import { Grid, Row, Column } from 'react-cellblock'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote, shell} from 'electron'
+import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
 
 const styles = {

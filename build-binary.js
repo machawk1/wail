@@ -132,7 +132,7 @@ function startPack () {
           })
         } else if (shouldBuildOSX) {
           console.log("building for OSX")
-          let archs = [ 'ia32', 'x64' ]
+          let archs = [ 'x64' ]
           let platforms = [ 'darwin', ]
 
           platforms.forEach(plat => {

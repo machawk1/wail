@@ -2,10 +2,11 @@ import child_process from 'child_process'
 import rp from 'request-promise'
 import fs from 'fs-extra'
 import os from 'os'
+import path from 'path'
 import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import cheerio from 'cheerio'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 
 const settings = remote.getGlobal('settings')
@@ -43,8 +44,8 @@ export function writeWaybackConf () {
     let $ = cheerio.load(val, { xmlMode: true })
     let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
     wayBackConflines.push(`wail.basedir=${base}`)
-    wayBackConflines.push(`wayback.basedir.default=${base}/bundledApps/tomcat/webapps/ROOT${os.EOL}`)
-    config.text(wayBackConflines.join(os.EOL))
+    wayBackConflines.push(`wayback.basedir.default=${path.normalize(path.join(base, 'bundledApps/tomcat/webapps/ROOT'))}${os.EOL}`)
+    config.text(`${os.EOL}${wayBackConflines.join(os.EOL)}`)
     fs.writeFile(wbConfPath, $.xml(), err => {
       if (err) {
         console.error(err)

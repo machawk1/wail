@@ -6,6 +6,7 @@
   "scripts": {
     "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
+    "build-dmg": "babel-node tools/createDMG",
     "check-dev-engines": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "dev": "cross-env webpack-dev-server --port 9000 --content-base ./src/ --hot --inline",
     "dev-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./src/electron-main-dev.js",
@@ -160,14 +161,16 @@
     "concurrently": "^2.1.0",
     "copy-webpack-plugin": "^3.0.1",
     "cross-env": "^1.0.8",
+    "cross-zip": "^2.1.4",
     "css-loader": "^0.23.1",
     "debug": "^2.2.0",
     "devtron": "^1.2.1",
     "electron-compile": "3.3.0",
     "electron-compilers": "3.1.2",
     "electron-devtools-installer": "^1.1.5",
+    "electron-installer-dmg": "^0.1.1",
     "electron-packager": "^7.2.0",
-    "electron-prebuilt": "^1.2.5",
+    "electron-prebuilt": "^1.2.6",
     "electron-react-devtools": "0.3.1",
     "electron-rebuild": "^1.1.5",
     "electron-reload": "^1.0.0",
@@ -206,5 +209,8 @@
   "devEngines": {
     "node": "6.x",
     "npm": "3.x"
+  },
+  "binaryConfig": {
+    "iconPath":" sas"
   }
 }

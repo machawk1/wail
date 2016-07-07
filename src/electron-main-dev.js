@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import {app, BrowserWindow, Menu, shell, ipcMain} from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
@@ -18,8 +18,8 @@ let indexWindowURL
 let jobbWindowURL
 
 let notDebugUI = true
-let debug = false
-let openBackGroundWindows = false
+let debug = true
+let openBackGroundWindows = true
 
 function showNewCrawlWindow (parent) {
   let config = {

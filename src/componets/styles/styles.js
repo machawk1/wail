@@ -1,6 +1,6 @@
-import {red500, blue500} from 'material-ui/styles/colors'
+import { red500, blue500 } from 'material-ui/styles/colors'
 import spacing from 'material-ui/styles/spacing'
-import {zIndex} from 'material-ui/styles'
+import { zIndex } from 'material-ui/styles'
 
 export default {
   buttonBasic: {

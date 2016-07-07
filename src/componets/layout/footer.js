@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import schedule from 'node-schedule'

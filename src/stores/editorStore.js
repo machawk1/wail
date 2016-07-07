@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import autobind from 'autobind-decorator'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
