@@ -1,7 +1,7 @@
 {
   "name": "wail",
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
-  "license": "GNU LGPL v3.0",
+  "license": "LGPL-3.0",
   "version": "0.9.9",
   "bin": {
     "electron": "./node_modules/.bin/electron"
@@ -175,6 +175,7 @@
     "electron-react-devtools": "0.3.1",
     "electron-rebuild": "^1.1.5",
     "electron-reload": "^1.0.0",
+    "electron-winstaller": "^2.3.1",
     "eslint-config-standard": "^5.3.1",
     "eslint-config-standard-jsx": "^1.2.1",
     "eslint-config-standard-react": "^2.5.0",
@@ -185,6 +186,7 @@
     "highlight": "^0.2.4",
     "json-loader": "^0.5.4",
     "minimist": "^1.2.0",
+    "nobin-debian-installer": "0.0.10",
     "node-libs-browser": "^1.0.0",
     "node-sass": "^3.8.0",
     "plist": "^1.2.0",
@@ -206,7 +208,6 @@
     "webpack-hot-middleware": "^2.12.0",
     "webpack-middleware": "^1.5.1",
     "webpack-typescript": "^0.5.6",
-    "winattr": "^1.1.0"
   },
   "devEngines": {
     "node": "6.x",
