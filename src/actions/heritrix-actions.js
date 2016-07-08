@@ -199,9 +199,12 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 export function buildHeritrixJob (jobId) {
 
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-  let options = settings.get('heritrix.buildOptions')
+  let options = Object.assign({}, settings.get('heritrix.buildOptions'))
+  console.log(options)
   options.uri = `${options.uri}${jobId}`
-  console.log(`building heritrix job ${jobId} with options`, options)
+  console.log(`building heritrix job ${jobId} next console.log is options`)
+  console.log(options)
+  console.log('Options afteoptions.uri', options.uri)
   logger.info(util.format(logString, `building heritrix job ${jobId} with options ${options}`))
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
