@@ -21,11 +21,11 @@ Use `$ npm run-script <name>` to execute any of the script listed below
 
 1. External Dependancies
     * download-externals: Download the required openjdk and memgator version for current operating systems
-    * download-externals-all: Download the required opendjk and memgator for all operating systems supported by this tool
+    * download-externals-all: Same as above script but for all operating systems supported by this tool
 
 2. Development
     * start-dev: Runs both the dev and dev-electron commands
-    * dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
+    * dev: Runs the webpack dev server with hot module replacement enabled.
     * dev-electron: Start the electron shell for wail-electron
 
 3. Production
@@ -38,11 +38,25 @@ Use `$ npm run-script <name>` to execute any of the script listed below
 
 1. bootstrap.sh:
 
-   Executes npm install and npm run-script download-externals.
-   If you supply the argument build will also execute npm run-script package
+ Executes npm install and npm run-script download-externals.
+
+ If you supply the argument build will also execute npm run-script package
 
 
 2. doElectron.sh:
+
+    Executes any of the listed npm scripts whose name is given as an argument
+
+    Additional arguments
+    * install-start: runs npm install and npm run-script start-dev
+    * bootstrap: executes the script `bootstrap.sh`
+    * bootstrap-build: executes the script `bootstrap.sh` with the argument build
+
+
+
+
+
+
 
 ### Running in development mode
 If you have not done so all ready `npm install`, `npm run-script download-externals` and copy the downloaded openjdk
