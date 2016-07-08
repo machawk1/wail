@@ -31,6 +31,8 @@ export default class ArchiveUrl extends Component {
   attemptMementoGet () {
     if (validator.isURL(this.state.uri)) {
       aua.getMementos(this.state.uri)
+    } else {
+      console.log("This is not a valid uri", this.state.uri)
     }
   }
 

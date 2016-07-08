@@ -64,7 +64,7 @@ export function heritrixAccesible () {
 
 function* sequentialActions (actions, jobId) {
   let index = 0
-  let options = settings.get('heritrix.sendActionOptions')
+  let options = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
   options.uri = `${options.uri}${jobId}`
   while (index < actions.length) {
     options.form.action = actions[ index++ ]
@@ -199,7 +199,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 export function buildHeritrixJob (jobId) {
 
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-  let options = Object.assign({}, settings.get('heritrix.buildOptions'))
+  let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
   console.log(options)
   options.uri = `${options.uri}${jobId}`
   console.log(`building heritrix job ${jobId} next console.log is options`)
@@ -258,7 +258,7 @@ export function buildHeritrixJob (jobId) {
 
 export function launchHeritrixJob (jobId) {
 
-  let options = settings.get('heritrix.launchJobOptions')
+  let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
   options.uri = `${options.uri}${jobId}`
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
@@ -354,7 +354,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
     options = nextAction.value
     console.log(options)
   } else {
-    options = settings.get('heritrix.sendActionOptions')
+    options = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
     options.uri = `${options.uri}${jobId}`
     options.form.action = act
   }

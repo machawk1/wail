@@ -143,7 +143,7 @@ function setUp () {
   global.indexLogPath = path.join(logPath, 'index.log')
 
   logPath = path.join(logPath, 'wail.log')
-
+  //bdb
   global.logger = new Logger({ path: logPath })
 
   global.wailLogp = logPath
@@ -246,7 +246,6 @@ function createWindow () {
   } else {
     iconp = path.normalize(path.join(base, 'src/icons/whale.ico'))
   }
-
 
   // Create the browser window.
   mainWindow = new BrowserWindow({

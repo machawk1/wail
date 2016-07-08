@@ -28,8 +28,8 @@ class crawlStore extends EventEmitter {
 
     this.intialJobStateLoad()
 
-    ipcRenderer.on("crawljob-status-update", (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
-    ipcRenderer.on("crawljob-configure-dialogue", (event, newCrawl) => {
+    ipcRenderer.on('crawljob-status-update', (event, crawlStatus) => this.populateJobsFromPrevious(crawlStatus))
+    ipcRenderer.on('crawljob-configure-dialogue', (event, newCrawl) => {
       makeHeritrixJobConf(newCrawl.urls, newCrawl.depth)
       let urls
       if (Array.isArray(newCrawl.urls)) {
@@ -56,7 +56,7 @@ class crawlStore extends EventEmitter {
             confs: status.confs
           })
           this.jobIndex.clear()
-          status.jobs.forEach((jrb, idx)=> {
+          status.jobs.forEach((jrb, idx) => {
             this.jobIndex.set(jrb.jobId, idx)
           })
           console.log(status.jobs)
@@ -76,7 +76,7 @@ class crawlStore extends EventEmitter {
       path: pth,
       runs: [],
       urls: urls,
-      crawlBean: readCode(`${settings.get("heritrixJob")}/${id.toString()}/crawler-beans.cxml`)
+      crawlBean: readCode(`${settings.get('heritrixJob')}/${id.toString()}/crawler-beans.cxml`)
     })
     this.jobIndex.set(id.toString(), this.crawlJobs.length - 1)
 
@@ -108,7 +108,7 @@ class crawlStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
-    console.log("Got an event in crawl store", event)
+    console.log('Got an event in crawl store', event)
 
     switch (event.type) {
       case EventTypes.BUILD_CRAWL_JOB:
@@ -179,10 +179,9 @@ class crawlStore extends EventEmitter {
         break
       }
       case EventTypes.CRAWL_JOB_DELETED:
-        this.crawlJobs = _.filter(this.crawlJobs, jb => jb.jobId != event.jobId)
+        this.crawlJobs = _.filter(this.crawlJobs, jb => jb.jobId !== event.jobId)
         this.emit('jobs-updated')
         break
-
     }
 
   }

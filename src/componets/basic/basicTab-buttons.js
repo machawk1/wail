@@ -39,10 +39,10 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.CHECK_URI_IN_ARCHIVE,
     })
-    GMessageDispatcher.dispatch({
-      type: EventTypes.QUEUE_MESSAGE,
-      message: "Checking Archive"
-    })
+    // GMessageDispatcher.dispatch({
+    //   type: EventTypes.QUEUE_MESSAGE,
+    //   message: "Checking Archive"
+    // })
 
   }
 
@@ -52,10 +52,10 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.VIEW_ARCHIVED_URI,
     })
-    GMessageDispatcher.dispatch({
-      type: EventTypes.QUEUE_MESSAGE,
-      message: "Viewing Archive"
-    })
+    // GMessageDispatcher.dispatch({
+    //   type: EventTypes.QUEUE_MESSAGE,
+    //   message: "Viewing Archive"
+    // })
   }
 
   render () {

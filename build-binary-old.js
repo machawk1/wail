@@ -181,7 +181,7 @@ function pack (plat, arch, cb) {
     })()
   }
   let opts
-  if(plat === 'darwin') {
+  if (plat === 'darwin') {
     opts = Object.assign({}, DEFAULT_OPTS, iconObj, {
       platform: plat,
       arch,
@@ -200,7 +200,6 @@ function pack (plat, arch, cb) {
     })
   }
 
-
   packager(opts, cb)
 }
 
@@ -208,13 +207,13 @@ function log (plat, arch) {
   return (err, filepath) => {
     if (err) return console.error(err)
     let moveTop
-    if(plat === 'darwin') {
+    if (plat === 'darwin') {
       moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/wail.app/Contents/Resources/app/bundledApps`
     } else {
       moveTop = `release/${plat}-${arch}/wail-${plat}-${arch}/resources/app/bundledApps`
     }
     let realsePath = path.join(path.resolve('.'), moveTop)
-    moveTo({arch: `${plat}${arch}`,to: realsePath})
+    moveTo({ arch: `${plat}${arch}`, to: realsePath })
     console.log(`${plat}-${arch} finished!`)
   }
 }

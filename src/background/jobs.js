@@ -206,7 +206,6 @@ function getHeritrixJobsState () {
             queued: fields[ 2 ],
             downloaded: fields[ 3 ],
           })
-
         }
       })
       through.push(item)
@@ -285,7 +284,7 @@ class JobMonitor {
       let rule = new schedule.RecurrenceRule()
       rule.second = [ 0, 20, 40 ]
 
-      this.job = schedule.scheduleJob(rule, ()=> {
+      this.job = schedule.scheduleJob(rule, () => {
         console.log("Checking job stats")
         jobLock.writeLock(release => {
           getHeritrixJobsState()

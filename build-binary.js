@@ -29,6 +29,7 @@ const shouldBuildAll = argv.all || false
 const shouldBuildWindows = argv.win || false
 const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
+const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
 const ignore = [
@@ -86,8 +87,8 @@ const darwinSpecificOpts = {
   // Application Category" when viewing the Applications directory (OS X only).
   'app-category-type': 'public.app-category.utilities',
 
-  // The bundle identifier to use in the application helper's plist (OS X only).
-  'helper-bundle-id': 'wail.wsdl.cs.odu.edu-helper',
+  // // The bundle identifier to use in the application helper's plist (OS X only).
+  // 'helper-bundle-id': 'wail.wsdl.cs.odu.edu-helper',
 
   'extend-info': darwinBuild.extendPlist,
 
@@ -137,10 +138,18 @@ function pack (plat, arch, cb) {
 
   let opts
   if (plat === 'darwin') {
-    opts = Object.assign({}, DEFAULT_OPTS, {
-      platform: plat,
-      arch
-    })
+    if (shouldBuildWithExtra) {
+      opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
+        platform: plat,
+        arch
+      })
+    } else {
+      opts = Object.assign({}, DEFAULT_OPTS, {
+        platform: plat,
+        arch
+      })
+    }
+
   } else if (plat === 'win32') {
     opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {
       platform: plat,

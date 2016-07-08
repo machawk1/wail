@@ -21,9 +21,9 @@ window.React = React
 
 injectTapEventPlugin()
 
-ipcRenderer.send("start-index-indexing")
-ipcRenderer.send("start-crawljob-monitoring")
-ipcRenderer.send("start-service-monitoring")
+ipcRenderer.send('start-index-indexing')
+ipcRenderer.send('start-crawljob-monitoring')
+ipcRenderer.send('start-service-monitoring')
 
 writeWaybackConf()
 

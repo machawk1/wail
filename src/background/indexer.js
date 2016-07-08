@@ -33,7 +33,7 @@ function generatePathIndex (genCdx) {
     }
     next()
   })
-  indexLock.readLock('pindex', warcReadRelease => {
+  indexLock.readLock('pindex', (warcReadRelease) => {
     console.log("Aquiring pindex readlock")
     fs.walk(settings.get('warcs'))
       .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
@@ -43,7 +43,7 @@ function generatePathIndex (genCdx) {
       })
       .on('end', () => {
         console.log("Aquiring pindex writelock")
-        indexLock.writeLock('pindex', indexWriteRelease => {
+        indexLock.writeLock('pindex', (indexWriteRelease) => {
           if (count > 0) {
             console.log('The count was greater than zero')
             fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
@@ -53,7 +53,7 @@ function generatePathIndex (genCdx) {
                 console.error('generating path index with error', err)
                 logger.error(util.format(logStringError, "generate path index on end", err.stack))
               } else {
-
+                indexWriteRelease()
                 console.log('done generating path index no error')
                 genCdx()
               }
@@ -62,12 +62,18 @@ function generatePathIndex (genCdx) {
             console.log("There were no warcs to index")
             indexWriteRelease()
           }
-
         })
         console.log("Releasing pindex readlock")
         warcReadRelease()
       })
-      .on('error', err => logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack)))
+      .on('error', err => {
+        if (Reflect.has(err, 'stack')) {
+          logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack))
+        } else {
+          logger.error(util.format(logStringError, 'generateIndexPath on error', `${err.message} ${err.fileName} ${err.lineNumber} `))
+        }
+        console.error('generating path index with error', err)
+      })
   })
 }
 
@@ -114,7 +120,9 @@ function generateCDX () {
     S(item).lines().forEach((line, index) => {
       if (!uniqueLines.has(line)) {
         if (index > 0) {
-          through.push(`${line}${os.EOL}`)
+          if (!S(line).isEmpty()) {
+            through.push(`${line.trim()}${os.EOL}`)
+          }
         } else if (!cdxHeaderIncluded) {
           through.push(`${line}${os.EOL}`)
           cdxHeaderIncluded = true
@@ -126,7 +134,7 @@ function generateCDX () {
   })
 
   let writeStream = fs.createWriteStream(settings.get('indexCDX'))
-  indexLock.writeLock('indedxCDX', indexCDXWriteRelease => {
+  indexLock.writeLock('indedxCDX', (indexCDXWriteRelease) => {
     console.log('Acquiring write lock for indexCDX')
     fs.walk(settings.get('warcs'))
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
@@ -161,10 +169,12 @@ class Indexer {
   indexer () {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
-      rule.second = [ 0, 10, 20, 30, 40, 50 ]
-      this.job = schedule.scheduleJob(rule, function () {
+      // this process can take more than 10 seconds
+      // so check 3x a minute
+      rule.second = [ 10, 30, 50 ]
+      this.job = schedule.scheduleJob(rule, () =>
         generatePathIndex(generateCDX)
-      })
+      )
       this.started = true
     }
   }

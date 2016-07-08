@@ -27,6 +27,7 @@
     "download-externals-all": "babel-node tools/downloadExternals --all",
     "nightmare": "babel-node tools/testNightmare",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
+    "package-wextra": "cross-env NODE_ENV=production node -r babel-register build-binary.js --we",
     "package-all": "npm run package -- --all",
     "package-windows": "npm run package -- --win",
     "package-linux": "npm run package -- --linux ",
@@ -39,6 +40,10 @@
   "eslintConfig": {
     "env": {
       "node": true
+    },
+    "rules": {
+      "camelcase": "off",
+      "comma-dangle": "off"
     },
     "extends": [
       "standard",
@@ -67,7 +72,8 @@
       "browser": true
     },
     "rules": {
-      "camelcase": "off"
+      "camelcase": "off",
+      "comma-dangle": "off"
     }
   },
   "dependencies": {
