@@ -68,42 +68,26 @@ let helpSubMenu = {
   ]
 }
 
-const template = [
-
-  {},
-  {},
-  {},
-]
+let template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 
 if (process.platform === 'darwin') {
-  template.unshift({
-    label: "Wail",
-    submenu: [
-      {
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'quit'
-      },
-    ]
-  })
   // Window menu.
-  template[ 3 ].submenu = [
+  template[ 2 ].submenu = [
+    {
+      role: 'hide'
+    },
+    {
+      role: 'hideothers'
+    },
+    {
+      role: 'unhide'
+    },
+    {
+      type: 'separator'
+    },
+    {
+      role: 'quit'
+    },
     {
       label: 'Close',
       accelerator: 'CmdOrCtrl+W',

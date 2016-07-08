@@ -137,7 +137,7 @@ function pack (plat, arch, cb) {
 
   let opts
   if (plat === 'darwin') {
-    opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
+    opts = Object.assign({}, DEFAULT_OPTS, {
       platform: plat,
       arch
     })

@@ -239,8 +239,15 @@ function createWindow () {
       console.error(e)
     }
   }
+  let iconp
 
-  let iconp = path.join(base, path.normalize('build/icons/whale.ico'))
+  if (process.platform === 'darwin') {
+    iconp = path.normalize(path.join(base, 'src/icons/whale.icns'))
+  } else {
+    iconp = path.normalize(path.join(base, 'src/icons/whale.ico'))
+  }
+
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 800,
