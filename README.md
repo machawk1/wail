@@ -12,12 +12,23 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-### Scripts
-1. start-dev: Runs both the dev and start-electron-dev commands
-2. dev: Runs the webpack dev server with hot module replacement enabled
-3. dev-electron: Start electron
-4. download-externals: Will download the required openjdk and memgator version for current os
-5. download-externals-all: Will download the required opendjk and memgator for all version supported by this tool
+Requires node 6.x and npm 3.x see Electron 1.0 [documentation](http://electron.atom.io)
+
+### NPM Scripts
+Use `$ npm run-script name` to execute any of the script names listed below
+1. External Dependancies
+    * download-externals: Download the required openjdk and memgator version for current operating systems
+    * download-externals-all: Download the required opendjk and memgator for all operating systemss versions supported by this tool
+2. Development
+    * start-dev: Runs both the dev and dev-electron commands
+    * dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
+    * dev-electron: Start the electron shell for wail-electron
+3. Production
+    * package: Build wail-electron for the current operating systems
+    * package-all: Builds wail-electron for all supported operating systems
+    * package-[windows,linux,osx]: Builds wail-electron for a specific operating systems
+
+
 
 ### Running in development mode
 If you have not done so all ready `npm install`, `npm run-script download-externals` and copy the downloaded openjdk
@@ -54,23 +65,20 @@ Package for current platfom: `npm run-script package` To package for all platfor
 - [X] job status
     - [x] on app start previous crawl status displayed
     - [X] background monitoring
-- [ ] post initial launch control
+- [X] post initial launch control
 
 ### Wayback
 - [x] start/stop
 - [x] replay of local archives(java7 runtimes only)
 - [x] index CDX generation
-- [ ] wayback config
+- [X] wayback config
   - [x] view in app editor
-  - [ ] edit and save with in app editor
-- [ ] fix dependancy for java7
-  - [ ] pywb?
-  - [ ] roll your own jvm?
+  - [X] edit and save with in app editor
 
 ### Memgator
-- [ ] I can haz memento
+- [X] I can haz memento
     - [x] local memgator(linux only)
-    - [ ] compile version for windows and osx
+    - [X] compile version for windows and osx
 
 ### OS support
   - [x] Linux!!!!
@@ -81,7 +89,7 @@ Package for current platfom: `npm run-script package` To package for all platfor
 
 ### Misc
   - [ ] ui (move from dev ui to finalized ui)
-  - [ ] make monitoring and file sytem actions electron background processes
+  - [X] make monitoring and file sytem actions electron background processes
   - [ ] hook into Google APIs
   - [ ] save to local or public archive
  

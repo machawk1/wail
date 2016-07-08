@@ -110,10 +110,18 @@ function downloadJDK (uri) {
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
       if (encoding == 'application/zip') {
-        console.log(titles[ titleC++ ])
+        if (argv.all) {
+          console.log(titles[ titleC++ ])
+        } else {
+          console.log(`downloading jdk for ${currentOSArch}`)
+        }
         res.pipe(fs.createWriteStream(`${zips}/${name}`))
           .on('close', () => {
-            console.log(titles[ titleC++ ])
+            if (argv.all) {
+              console.log(titles[ titleC++ ])
+            } else {
+              console.log(`done downloading jdk for ${currentOSArch}`)
+            }
             resolve()
           })
       }
@@ -140,10 +148,18 @@ function downloadMemgator (uri) {
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
       if (encoding == 'application/octet-stream') {
-        console.log(titles[ titleC++ ])
+        if (argv.all) {
+          console.log(titles[ titleC++ ])
+        } else {
+          console.log(`downloading memgator for ${currentOSArch}`)
+        }
         res.pipe(fs.createWriteStream(`${memgatorsP}/${name}`))
           .on('close', () => {
-            console.log(titles[ titleC++ ])
+            if (argv.all) {
+              console.log(titles[ titleC++ ])
+            } else {
+              console.log(`done downloading memgator for ${currentOSArch}`)
+            }
             resolve()
           })
       }
@@ -170,7 +186,7 @@ function extractZip (zipPath) {
   })
 }
 
-fs.ensureDirSync(zips)
+console.log("Ensuring directory structure and clean download")
 fs.ensureDirSync(memgatorsP)
 let onlyZip = through2.obj(function (item, enc, next) {
   if (!item.stats.isDirectory() && path.extname(item.path) === '.zip')
@@ -181,6 +197,7 @@ let onlyZip = through2.obj(function (item, enc, next) {
 let unzipPaths = []
 
 if (argv.all) {
+  fs.emptyDirSync(zips)
   Promise.map(jdks, downloadJDK)
     .then(() => {
       Promise.map(memgators, downloadMemgator)
@@ -202,27 +219,21 @@ if (argv.all) {
     .catch(err => console.error('there was an error downloading a memgator', err))
 
 } else {
-  console.log(`Downloading jdk for ${currentOSArch}`)
+  fs.ensureDirSync(zips)
+  fs.removeSync(`${unpackedJDKs[ idxs[ currentOSArch ] ]}.zip`)
+  fs.removeSync(`${unpackedJDKs[ idxs[ currentOSArch ] ]}`)
   downloadJDK(jdks[ idxs[ currentOSArch ] ])
     .then(() => {
-      console.log(`Downloading memgator for ${currentOSArch}`)
       downloadMemgator(memgators[ idxs[ currentOSArch ] ])
         .then(() => {
           console.log(`Done downloading memgator for ${currentOSArch} extracting jdk `)
-          fs.walk(zips)
-            .pipe(onlyZip)
-            .on('data', item => {
-              shelljs.chmod('777', item.path)
-              extract(item.path, { dir: `${zips}` }, zipError => {
-                if (zipError) {
-                  console.error(`error extracting jdk for ${currentOSArch}`, zipError)
-                } else {
-                  let name = path.basename(item.path).replace(zipRE, '')
-                  console.log(`Done extracting jdk for ${currentOSArch}`)
-                  moveThem({ arch: currentOSArch, to: bapps })
-                }
-              })
+          shelljs.chmod('777', `${unpackedJDKs[ idxs[ currentOSArch ] ]}.zip`)
+          extractZip(`${unpackedJDKs[ idxs[ currentOSArch ] ]}.zip`)
+            .then(() => {
+              console.log(`Done extracting jdk for ${currentOSArch}`)
+              moveThem({ arch: currentOSArch, to: bapps })
             })
+            .catch(zipError => console.error(`error extracting jdk for ${currentOSArch}`, zipError))
         })
         .catch(err => {
           console.error("there was an error in downloading the memgator for the current os", err)
