@@ -20,18 +20,18 @@ Use node 6.x for best performance
 Use `$ npm run-script <name>` to execute any of the script listed below
 
 1. External Dependancies
-* download-externals: Download the required openjdk and memgator version for current operating systems
-* download-externals-all: Download the required opendjk and memgator for all operating systems supported by this tool
+    * download-externals: Download the required openjdk and memgator version for current operating systems
+    * download-externals-all: Download the required opendjk and memgator for all operating systems supported by this tool
 
 2. Development
-* start-dev: Runs both the dev and dev-electron commands
-* dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
-* dev-electron: Start the electron shell for wail-electron
+    * start-dev: Runs both the dev and dev-electron commands
+    * dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
+    * dev-electron: Start the electron shell for wail-electron
 
 3. Production
-* package: Build wail-electron for the current operating systems
-* package-all: Builds wail-electron for all supported operating systems
-* package-[windows,linux,osx]: Builds wail-electron for a specific operating systems
+    * package: Build wail-electron for the current operating systems
+    * package-all: Builds wail-electron for all supported operating systems
+    * package-[windows,linux,osx]: Builds wail-electron for a specific operating systems
 
 
 ### Shell scripts
