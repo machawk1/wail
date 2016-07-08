@@ -12,38 +12,44 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-Requires node 6.x and npm 3.x see Electron 1.0 [documentation](http://electron.atom.io)
+Requires node 6.x/5.x and npm 3.x see Electron 1.0 [documentation](http://electron.atom.io)
+
+Use node 6.x for best performance
 
 ### NPM Scripts
-Use `$ npm run-script name` to execute any of the script names listed below
+Use `$ npm run-script <name>` to execute any of the script listed below
+
 1. External Dependancies
-    * download-externals: Download the required openjdk and memgator version for current operating systems
-    * download-externals-all: Download the required opendjk and memgator for all operating systemss versions supported by this tool
+* download-externals: Download the required openjdk and memgator version for current operating systems
+* download-externals-all: Download the required opendjk and memgator for all operating systems supported by this tool
+
 2. Development
-    * start-dev: Runs both the dev and dev-electron commands
-    * dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
-    * dev-electron: Start the electron shell for wail-electron
+* start-dev: Runs both the dev and dev-electron commands
+* dev: Runs the webpack dev server with hot module replacement enabled. This serves the content in the src dirctory to the electron shell for the wail-elctron app
+* dev-electron: Start the electron shell for wail-electron
+
 3. Production
-    * package: Build wail-electron for the current operating systems
-    * package-all: Builds wail-electron for all supported operating systems
-    * package-[windows,linux,osx]: Builds wail-electron for a specific operating systems
+* package: Build wail-electron for the current operating systems
+* package-all: Builds wail-electron for all supported operating systems
+* package-[windows,linux,osx]: Builds wail-electron for a specific operating systems
 
 
+### Shell scripts
+
+1. bootstrap.sh:
+
+   Executes npm install and npm run-script download-externals.
+   If you supply the argument build will also execute npm run-script package
+
+
+2. doElectron.sh:
 
 ### Running in development mode
 If you have not done so all ready `npm install`, `npm run-script download-externals` and copy the downloaded openjdk
 and memgator to the bundled apps directory and finally run `npm run-script start-dev`.
 
-### Externals
-Currently for development and production we do not copy the downloaded  externals to the bundled app director or the respective realse directory.
-
-
-### Ports used
 We use webpack-dev server with `--inline --hot` and requires port 9000 to be free.
 
-
-### Package
-Package for current platfom: `npm run-script package` To package for all platforms: `npm run-script package-all`
 
 
 ## Major Tasks
