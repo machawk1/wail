@@ -68,7 +68,7 @@ let helpSubMenu = {
   ]
 }
 
-let template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
+const template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 
 if (process.platform === 'darwin') {
   // Window menu.
