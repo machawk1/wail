@@ -10,12 +10,10 @@ import pkg from './package.json'
 import moveTo from './tools/moveJDKMemgator'
 Promise.promisifyAll(fs)
 
-
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = path.resolve('.')
 
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
-
 
 const darwinBuild = {
   iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale_1024.icns')),
@@ -33,7 +31,7 @@ const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
-const ignoreThese = [
+const ignore = [
   '^/archiveIndexes/',
   '^/archives/',
   '^/.babelrc($|/)',
@@ -72,7 +70,7 @@ const DEFAULT_OPTS = {
   asar: false,
   dir: cwd,
   name: pkg.name,
-  ignore: ignoreThese,
+  ignore,
   overwrite: true,
   out: 'release',
   prune: true,
@@ -159,24 +157,90 @@ function pack (plat, arch, cb) {
   packager(opts, cb)
 }
 
+function createDMG (appPath, cb) {
+  let createDMG = require('electron-installer-dmg')
+  let out = path.normalize(path.join(cwd, `release/wail-darwin-dmg`))
+  fs.emptyDirSync(out)
+  let dmgOpts = {
+    appPath,
+    debug: true,
+    name: DEFAULT_OPTS.name,
+    icon: darwinSpecificOpts.icon,
+    overwrite: true,
+    out
+  }
+
+  createDMG(dmgOpts, error => {
+    if (error) {
+      console.error('There was an error in creating the dmg file', error)
+    } else {
+      if (cb) {
+        cb()
+      }
+    }
+  })
+}
+
+function createWindowsInstallers (plat, arch, cb) {
+  let winInstaller = require('electron-winstaller')
+  let outputDirectory = path.normalize(path.join(cwd, `release/wail-${plat}-${arch}-installer`))
+  fs.emptyDirSync(outputDirectory)
+  let winInstallerOpts = {
+    appDirectory: path.normalize(path.join(cwd, `release/wail-${plat}-${arch}`)),
+    authors: pkg.contributors,
+    description: pkg.description,
+    exe: `${DEFAULT_OPTS.name}.exe`,
+    iconUrl: iconPath,
+    loadingGif: path.normalize(path.join(cwd, 'buildResources/winLinux/mLogo_animated.gif')),
+    name: DEFAULT_OPTS.name,
+    noMsi: true,
+    outputDirectory,
+    productName: DEFAULT_OPTS.name,
+    setupExe: `${DEFAULT_OPTS.name}Setup.exe`,
+    setupIcon: iconPath,
+    title: DEFAULT_OPTS.name,
+    usePackageJson: false,
+    version: pkg.version
+  }
+
+  console.log(`Creating windows installer for ${arch}. This could take some time`)
+  winInstaller.createWindowsInstaller(winInstallerOpts)
+    .then(() => cb())
+    .catch(error => console.error(`There was an error in creating the windows installer for ${arch}`, error))
+}
+
 function log (plat, arch) {
   return (err, filepath) => {
     if (err) return console.error(err)
     let moveToPath
     let cb
     if (plat === 'darwin') {
-      moveToPath = `release/wail-${plat}-${arch}/wail.app/Contents/Resources/app/bundledApps`
-      let aIconPath = `release/wail-${plat}-${arch}/wail.app/Contents/Resources/${darwinBuild.archiveIcon}`
-      cb = () =>  {
-        fs.copySync(darwinBuild.archiveIconPath,path.normalize(path.join(cwd, aIconPath)))
-        console.log(`${plat}-${arch} finished!`)
+      let appPath = `release/wail-${plat}-${arch}/wail.app`
+      moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
+      let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
+      cb = () => {
+        fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
+        if (process.platform === 'darwin') {
+          console.log("Building dmg")
+          createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
+        } else {
+          console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
+          console.log(`${plat}-${arch} finished!`)
+        }
       }
     } else {
+      if (plat === 'win32') {
+        cb = () => {
+          createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
+        }
+      } else {
+        cb = () => console.log(`${plat}-${arch} finished!`)
+      }
       moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
-      cb = () =>  console.log(`${plat}-${arch} finished!`)
+
     }
     let releasePath = path.normalize(path.join(cwd, moveToPath))
-    moveTo({ arch: `${plat}${arch}`, to: releasePath },cb)
+    moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
   }
 }
 
@@ -194,28 +258,30 @@ build(electronCfg)
       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
     } else {
+      let buildFor
       let archs
       let platforms
       if (shouldBuildAll) {
-        console.log('building for all platforms')
+        buildFor = 'building for all platforms'
         archs = [ 'ia32', 'x64' ]
         platforms = [ 'linux', 'win32', 'darwin' ]
       } else if (shouldBuildLinux) {
-        console.log('building for linux')
+        buildFor = 'building for linux'
         archs = [ 'ia32', 'x64' ]
         platforms = [ 'linux' ]
       } else if (shouldBuildOSX) {
-        console.log('building for OSX')
+        buildFor = 'building for OSX'
         archs = [ 'x64' ]
         platforms = [ 'darwin' ]
       } else {
-        console.log('building for Windows')
-        archs = [ 'ia32', 'x64' ]
+        buildFor = 'building for Windows'
+        archs = [ 'x64' ]
         platforms = [ 'win32' ]
       }
+      console.log(buildFor)
       platforms.forEach(plat => {
         archs.forEach(arch => {
-          console.log(`build the binary for ${plat}-${arch}`)
+          console.log(`building the binary for ${plat}-${arch}`)
           pack(plat, arch, log(plat, arch))
         })
       })

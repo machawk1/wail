@@ -3,6 +3,16 @@
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
   "license": "LGPL-3.0",
   "version": "0.9.9",
+  "contributors": [
+    {
+      "name": "John Berlin",
+      "email": "jberlin@cs.odu.edu"
+    },
+    {
+      "name": "Mat Kelly",
+      "email": "mkelly@cs.odu.edu"
+    }
+  ],
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
@@ -10,13 +20,11 @@
   "scripts": {
     "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
-    "build-dmg": "babel-node tools/createDMG",
     "check-dev-engines": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
     "dev": "cross-env webpack-dev-server --port 9000 --content-base ./src/ --hot --inline",
     "dev-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./src/electron-main-dev.js",
     "download-externals": "cross-env babel-node tools/downloadExternals",
     "download-externals-all": "cross-env babel-node tools/downloadExternals --all",
-    "format-standard": "standard-format -w",
     "nightmare": "cross-env babel-node tools/testNightmare",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
