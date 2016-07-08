@@ -200,11 +200,10 @@ export function buildHeritrixJob (jobId) {
 
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
   let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
-  console.log(options)
+  console.log("options uri before setting", options.uri)
   options.uri = `${options.uri}${jobId}`
-  console.log(`building heritrix job ${jobId} next console.log is options`)
-  console.log(options)
-  console.log('Options afteoptions.uri', options.uri)
+  console.log(`building heritrix job ${jobId}`)
+  console.log('Options after setting options.uri', options.uri)
   logger.info(util.format(logString, `building heritrix job ${jobId} with options ${options}`))
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
