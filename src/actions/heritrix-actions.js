@@ -3,6 +3,7 @@ import childProcess from 'child_process'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
+import https from 'https'
 import path from 'path'
 import named from 'named-regexp'
 import through2 from 'through2'
@@ -20,6 +21,7 @@ import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
+// const httpsAgent = new https.Agent()
 const isWindows = os.platform() == 'win32'
 const EventTypes = wc.EventTypes
 
@@ -43,7 +45,8 @@ if (isWindows) {
 
 export function heritrixAccesible () {
   console.log("checking heritrix accessibility")
-  let optionEngine = settings.get('heritrix.optionEngine')
+  let optionEngine = _.cloneDeep(settings.get('heritrix.optionEngine'))
+  // optionEngine.agent = httpsAgent
 
   rp(optionEngine)
     .then(success => {
@@ -105,6 +108,7 @@ export function launchHeritrix (cb) {
       console.log(err, stdout, stderr)
 
       let wasError = !err
+      
       if (err) {
         let stack
         if (Reflect.has(err, 'stack')) {
@@ -114,28 +118,35 @@ export function launchHeritrix (cb) {
         }
         logger.error(util.format(logStringError, `linux/osx launch ${stdout}`, stack))
       }
-
-      if (cb) {
-        cb()
-      }
-
+      
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: wasError,
       })
+      
+      if (cb) {
+        cb()
+      }
     })
   }
 
 }
 
-export function killHeritrix () {
-  let options = settings.get('heritrix.killOptions')
+export function killHeritrix (cb) {
+  let options = _.cloneDeep(settings.get('heritrix.killOptions'))
+  // options.agent = httpsAgent
   rp(options)
     .then(response => {
       console.log("this should never ever be reached", response)
+      if(cb) {
+        cb()
+      }
     })
     .catch(err => {
       console.log("herritrix kills itself and never replies", err)
+      if(cb) {
+        cb()
+      }
     })
 }
 
@@ -197,6 +208,7 @@ export function buildHeritrixJob (jobId) {
   let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
   console.log("options uri before setting", options.uri)
   options.uri = `${options.uri}${jobId}`
+  // options.agent = httpsAgent
   console.log(`building heritrix job ${jobId}`)
   console.log('Options after setting options.uri', options.uri)
   logger.info(util.format(logString, `building heritrix job ${jobId} with options ${options}`))
@@ -251,8 +263,11 @@ export function buildHeritrixJob (jobId) {
 }
 
 export function launchHeritrixJob (jobId) {
+  console.log("launch heritrixJob")
   let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
   options.uri = `${options.uri}${jobId}`
+  // options.agent = httpsAgent
+  console.log(options)
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       rp(options)
@@ -347,6 +362,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
     options.uri = `${options.uri}${jobId}`
     options.form.action = act
   }
+  // options.agent = httpsAgent
 
   rp(options)
     .then(response => {

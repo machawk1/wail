@@ -2,6 +2,7 @@ import child_process from 'child_process'
 import rp from 'request-promise'
 import fs from 'fs-extra'
 import os from 'os'
+import http from 'http'
 import path from 'path'
 import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
@@ -9,6 +10,7 @@ import cheerio from 'cheerio'
 import { remote } from 'electron'
 import util from 'util'
 
+const httpAgent = new http.Agent()
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
 const logString = "wayback-actions %s"
@@ -18,7 +20,7 @@ const EventTypes = wc.EventTypes
 
 export function writeWaybackConf () {
   let wayBackConflines = [
-    `${os.EOL}wayback.url.scheme.default=http`,
+    'wayback.url.scheme.default=http',
     'wayback.url.host.default=localhost',
     'wayback.url.port.default=8080',
     "wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }",
@@ -43,9 +45,9 @@ export function writeWaybackConf () {
      */
     let $ = cheerio.load(val, { xmlMode: true })
     let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
-    wayBackConflines.push(`wail.basedir=${base}`)
-    wayBackConflines.push(`wayback.basedir.default=${path.normalize(path.join(base, 'bundledApps/tomcat/webapps/ROOT'))}${os.EOL}`)
-    config.text(`${os.EOL}${wayBackConflines.join(os.EOL)}`)
+    wayBackConflines.unshift(`wail.basedir=${base}`)
+    wayBackConflines.unshift(`wayback.basedir.default=${path.normalize(path.join(base, 'bundledApps/tomcat/webapps/ROOT'))}`)
+    config.text(`${os.EOL}${wayBackConflines.join(os.EOL)}${os.EOL}`)
     fs.writeFile(wbConfPath, $.xml(), err => {
       if (err) {
         console.error(err)
@@ -60,7 +62,7 @@ export function waybackAccesible () {
   console.log("checking wayback accessibility")
   let wburi = settings.get('wayback.uri_wayback')
 
-  rp({ uri: wburi })
+  rp({ uri: wburi,agent: httpAgent })
     .then(success => {
       console.log("wayback success", success)
       ServiceDispatcher.dispatch({
@@ -112,7 +114,7 @@ export function startWayback () {
   }
 }
 
-export function killWayback () {
+export function killWayback (cb) {
   if (process.platform === 'win32') {
     let basePath = settings.get('bundledApps')
     let opts = {
@@ -127,16 +129,25 @@ export function killWayback () {
     } catch (err) {
       logger.error(util.format(logStringError, "win32 kill wayback", err.stack))
     }
+    if(cb) {
+      cb()
+    }
   } else {
     child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      let stack
-      if (Reflect.has(err, 'stack')) {
-        stack = `${stdout} ${err.stack}`
-      } else {
-        stack = `${stdout}`
+      if(err){
+        let stack
+        if (Reflect.has(err, 'stack')) {
+          stack = `${stdout} ${err.stack}`
+        } else {
+          stack = `${stdout}`
+        }
+        logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
       }
-      logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
+     
+      if(cb) {
+        cb()
+      }
     })
   }
 }

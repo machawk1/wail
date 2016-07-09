@@ -38,10 +38,6 @@ const managed = {
     sendActionOptions: {
       method: "POST",
       uri: "https://localhost:8443/engine/job/",
-      headers: {
-        Accept: "application/xml",
-        "Content-type": "application/x-www-form-urlencoded",
-      },
       form: {
         action: ""
       },
@@ -50,6 +46,7 @@ const managed = {
         password: "ipsum",
         sendImmediately: false
       },
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
@@ -61,27 +58,26 @@ const managed = {
         im_sure: "on"
       },
       auth: {
-        "username": "lorem",
-        "password": "ipsum",
-        "sendImmediately": false
+        username: "lorem",
+        password: "ipsum",
+        sendImmediately: false
       },
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     launchJobOptions: {
       method: "POST",
       uri: "https://localhost:8443/engine/job/",
-      headers: {
-        Accept: "application/xml",
-      },
       form: {
         action: "launch"
       },
       auth: {
-        "username": "lorem",
-        "password": "ipsum",
-        "sendImmediately": false
+        username: "lorem",
+        password: "ipsum",
+        sendImmediately: false
       },
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
@@ -93,24 +89,22 @@ const managed = {
         password: "ipsum",
         sendImmediately: false
       },
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     buildOptions: {
       method: "POST",
       uri: "https://localhost:8443/engine/job/",
-      headers: {
-        Accept: "application/xml",
-        "Content-type": "application/x-www-form-urlencoded",
-      },
       form: {
         action: "build"
       },
-      "auth": {
-        "username": "lorem",
-        "password": "ipsum",
-        "sendImmediately": false
+      auth: {
+        username: "lorem",
+        password: "ipsum",
+        sendImmediately: false
       },
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },

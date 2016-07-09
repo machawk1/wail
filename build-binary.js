@@ -44,6 +44,8 @@ const ignore = [
   '^/bundledApps/memgator($|/)',
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
+  '^/bundledApps/heritrix-3.2.0/heritrix.pid$',
+  '^/bundledApps/heritrix-3.2.0/heritrix_out.log$',
   '^/.codeclimate.yml($|/)',
   '^/doElectron.sh$',
   '^/electron-main-dev.js$',
@@ -75,7 +77,6 @@ const DEFAULT_OPTS = {
   ignore,
   overwrite: true,
   out: path.normalize(path.join(cwd,'release')),
-  prune: true,
   version: require('electron-prebuilt/package.json').version
 }
 

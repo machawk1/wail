@@ -2,12 +2,12 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import NewCrawlDialog from './newCrawlDialog'
+import SettingsForm from './settingsForm'
 
 window.React = React
 
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <NewCrawlDialog />,
+  <SettingsForm  />,
   document.getElementById("settings"))

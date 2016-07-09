@@ -107,9 +107,8 @@ if (process.platform === 'darwin') {
       },
     ]
   }
-  template =  [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
- 
-  template[ 3 ].submenu = [
+  
+  windowSubMenu.submenu = [
     {
       role: 'hide'
     },
@@ -146,6 +145,9 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   ]
+  template =  [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
+ 
+
 } else {
   template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 }

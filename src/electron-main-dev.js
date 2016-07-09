@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import {app, BrowserWindow, Menu, shell, ipcMain} from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
@@ -10,12 +10,14 @@ let newCrawlWindow = null
 let accessibilityWindow = null
 let indexWindow = null
 let jobbWindow = null
+let settingsWindow = null
 let base
 let mWindowURL
 let newCrawlWindowURL
 let accessibilityWindowURL
 let indexWindowURL
 let jobbWindowURL
+let settingsWindowURL
 
 let notDebugUI = true
 let debug = false
@@ -34,11 +36,32 @@ function showNewCrawlWindow (parent) {
   newCrawlWindow.loadURL(newCrawlWindowURL)
   newCrawlWindow.on('ready-to-show', () => {
     newCrawlWindow.show()
-    // newCrawlWindow.webContents.openDevTools({ mode: "detach" })
+    // newCrawlWindow.webContents.openDevTools({ mode: 'detach' })
   })
 
   newCrawlWindow.on('closed', () => {
     newCrawlWindow = null
+  })
+}
+
+function showSettingsWindow (parent) {
+  let config = {
+    parent: parent,
+    modal: true,
+    show: false,
+    closable: false,
+    minimizable: false,
+    autoHideMenuBar: true
+  }
+  settingsWindow = new BrowserWindow(config)
+  settingsWindow.loadURL(newCrawlWindowURL)
+  settingsWindow.on('ready-to-show', () => {
+    settingsWindow.show()
+    settingsWindow.webContents.toggleDevTools()
+  })
+
+  settingsWindow.on('closed', () => {
+    settingsWindow = null
   })
 }
 
@@ -48,56 +71,77 @@ function setUpIPC () {
       console.log(payload)
     })
 
-    ipcMain.on("start-service-monitoring", (event, payload) => {
-      console.log("Got start-service-monitoring")
-      accessibilityWindow.webContents.send("start-service-monitoring", payload)
+    ipcMain.on('start-service-monitoring', (event, payload) => {
+      console.log('Got start-service-monitoring')
+      accessibilityWindow.webContents.send('start-service-monitoring', payload)
     })
 
-    ipcMain.on("start-crawljob-monitoring", (event, payload) => {
-      console.log("got start-crawljob-monitoring")
-      jobbWindow.webContents.send("start-crawljob-monitoring", payload)
+    ipcMain.on('start-crawljob-monitoring', (event, payload) => {
+      console.log('got start-crawljob-monitoring')
+      jobbWindow.webContents.send('start-crawljob-monitoring', payload)
     })
 
-    ipcMain.on("start-index-indexing", (event, payload) => {
-      console.log("got start-index-indexing")
-      indexWindow.webContents.send("start-index-indexing", payload)
+    ipcMain.on('start-index-indexing', (event, payload) => {
+      console.log('got start-index-indexing')
+      indexWindow.webContents.send('start-index-indexing', payload)
     })
 
-    ipcMain.on("service-status-update", (event, payload) => {
-      console.log("got test-status-update", payload)
-      mainWindow.webContents.send("service-status-update", payload)
+    ipcMain.on('service-status-update', (event, payload) => {
+      console.log('got test-status-update', payload)
+      mainWindow.webContents.send('service-status-update', payload)
     })
 
-    ipcMain.on("crawljob-status-update", (event, payload) => {
-      console.log("got crawljob-status-update", payload)
-      mainWindow.webContents.send("crawljob-status-update", payload)
+    ipcMain.on('crawljob-status-update', (event, payload) => {
+      console.log('got crawljob-status-update', payload)
+      mainWindow.webContents.send('crawljob-status-update', payload)
     })
 
-    ipcMain.on("pong", (event, payload) => {
-      console.log("got pong", payload)
-      mainWindow.webContents.send("pong", payload)
+    ipcMain.on('pong', (event, payload) => {
+      console.log('got pong', payload)
+      mainWindow.webContents.send('pong', payload)
     })
   }
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
-    console.log("got open-newCrawl-window")
+    console.log('got open-newCrawl-window')
     showNewCrawlWindow(mainWindow)
   })
 
+  ipcMain.on('open-settings-window', (event, payload) => {
+    console.log('got open-settings-window')
+    showSettingsWindow(mainWindow)
+  })
+
   ipcMain.on('close-newCrawl-window', (event, payload) => {
-    console.log("got close-newCrawl-window")
+    console.log('got close-newCrawl-window')
     if (newCrawlWindow != null) {
-      console.log("newCrawlWindow is not null")
+      console.log('newCrawlWindow is not null')
       newCrawlWindow.destroy()
+    }
+  })
+
+  ipcMain.on('close-settings-window', (event, payload) => {
+    console.log('got close-settings-window')
+    if (settingsWindow != null) {
+      console.log('newCrawlWindow is not null')
+      if (payload) {
+        console.log("It sent us ", payload)
+      }
+      settingsWindow.destroy()
     }
   })
 
   //
   ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
-    mainWindow.webContents.send("crawljob-configure-dialogue", payload)
+    mainWindow.webContents.send('crawljob-configure-dialogue', payload)
     if (newCrawlWindow != null) {
       newCrawlWindow.destroy()
     }
+  })
+
+  ipcMain.on('services-shutdown', (event, payload) => {
+    // we gracefully shutdown our services this only happens on window close
+    mainWindow = null
   })
 
   //close-newCrawl-window-configured
@@ -118,6 +162,7 @@ function setUp () {
     accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     indexWindowURL = `file://${__dirname}/background/indexer.html`
     jobbWindowURL = `file://${__dirname}/background/jobs.html`
+    settingsWindowURL = `file://${__dirname}/background/settingsW.html`
   } else {
     base = app.getAppPath()
     mWindowURL = `file://${base}/src/wail.html`
@@ -125,15 +170,16 @@ function setUp () {
     accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
     indexWindowURL = `file://${base}/src/background/indexer.html`
     jobbWindowURL = `file://${base}/src/background/jobs.html`
+    settingsWindowURL = `file://${base}/src/background/settingsW.html`
   }
 
   let logPath
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
-    logPath = path.join(base, "waillogs")
+    logPath = path.join(base, 'waillogs')
     settingsPath = logPath
   } else {
-    logPath = path.join(app.getPath('userData'), "waillogs")
+    logPath = path.join(app.getPath('userData'), 'waillogs')
   }
 
   global.settings = configSettings(base, settingsPath)
@@ -154,18 +200,17 @@ function openDebug () {
     if (openBackGroundWindows) {
       if (accessibilityWindow != null) {
         accessibilityWindow.show()
-        accessibilityWindow.webContents.openDevTools({ mode: "detach" })
+        accessibilityWindow.webContents.openDevTools({ mode: 'detach' })
       }
       if (indexWindow != null) {
         indexWindow.show()
-        indexWindow.webContents.openDevTools({ mode: "detach" })
+        indexWindow.webContents.openDevTools({ mode: 'detach' })
       }
 
       if (jobbWindow != null) {
         jobbWindow.show()
-        jobbWindow.webContents.openDevTools({ mode: "detach" })
+        jobbWindow.webContents.openDevTools({ mode: 'detach' })
       }
-
     }
     mainWindow.webContents.openDevTools()
   }
@@ -182,13 +227,13 @@ function createBackGroundWindows () {
 
 function stopMonitoring () {
   if (accessibilityWindow != null) {
-    accessibilityWindow.webContents.send("stop")
+    accessibilityWindow.webContents.send('stop')
   }
   if (indexWindow != null) {
-    indexWindow.webContents.send("stop")
+    indexWindow.webContents.send('stop')
   }
   if (jobbWindow != null) {
-    jobbWindow.webContents.send("stop")
+    jobbWindow.webContents.send('stop')
   }
 }
 
@@ -283,17 +328,19 @@ function createWindow () {
 
   // Emitted when the window is closed.
   mainWindow.on('closed', () => {
-    console.log("closed")
+    console.log('closed')
     cleanUp()
+    mainWindow = null
   })
 
 }
 
 process.on('uncaughtException', (err) => {
   console.log(`Caught exception: ${err}`, err, err.stack)
-  // logger.log('error', "electron-main error message[ %s ], stack[ %s ]", err.message, err.stack)
+  // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
   cleanUp()
   app.quit()
+
 })
 
 // This method will be called when Electron has finished
@@ -309,8 +356,9 @@ app.on('ready', () => {
 })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin')
+  if (process.platform !== 'darwin'){
     app.quit()
+  }
 })
 
 app.on('before-quit', () => {
@@ -331,7 +379,7 @@ app.on('activate', () => {
 })
 
 // app.on('activate-with-no-open-windows', () => {
-//    console.log("activate no windows")
+//    console.log('activate no windows')
 //    if (!mainWindow) {
 //       createWindow()
 //    }

@@ -14,7 +14,7 @@ import path from 'path'
 import autobind from 'autobind-decorator'
 import wc from '../../../constants/wail-constants'
 import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
-import { forceCrawlFinish, deleteHeritrixJob, restartJob } from '../../../actions/heritrix-actions'
+import { forceCrawlFinish, deleteHeritrixJob, restartJob,launchHeritrixJob } from '../../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
 
 const settings = remote.getGlobal('settings')
@@ -78,6 +78,11 @@ export default class HeritrixJobItem extends Component {
   }
 
   @autobind
+  launch(event) {
+    launchHeritrixJob(this.props.jobid)
+  }
+
+  @autobind
   deleteJob (event) {
     let runs = this.props.runs
     let cb = genDeleteJobFun(this.props.jobId)
@@ -123,6 +128,7 @@ export default class HeritrixJobItem extends Component {
           rightIcon={<ArrowDropRight />}
           menuItems={[
                   <MenuItem onTouchTap={this.start} primaryText="Start"/>,
+                  <MenuItem onTouchTap={this.launch} primaryText="Launch"/>,
                   <MenuItem onTouchTap={this.restart} primaryText="Restart"/>,
                   <MenuItem onTouchTap={this.kill} primaryText="Terminate Crawl"/>,
                   <MenuItem onTouchTap={this.deleteJob} primaryText="Delete"/>,

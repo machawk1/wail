@@ -7,6 +7,7 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 module.exports = {
   entry: {
     wail:  "./src/wail" ,
+    settingsW: './src/childWindows/settings/settingsW',
     newCrawl:  "./src/childWindows/newCrawl/newCrawl" ,
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
