@@ -3,23 +3,34 @@
 base=$(pwd)
 
 bs="$base/bootstrap.sh"
+release="$base/release/*"
 
 if [ ! -x "$bs" ]; then
-     chmod +x "$bs"
+     chmod +x ${bs}
 fi
 
 if [ ! -z "$1" ]; then
     echo $1
+    if [[ $1 == *"build"* ]]; then
+         echo cleaning the release directory
+        rm -rf ${release}
+    fi
+
+    if [[ $1 == *"package"* ]]; then
+         echo cleaning the release directory
+        rm -rf ${release}
+    fi
+
     if [ "$1" = "install-start" ]; then
         echo "npm install && npm run-script start-dev"
-        npm "install"
-        npm "run-script start-dev"
+        npm install
+        npm run-script start-dev
     elif [ "$1" = "bootstrap" ]; then
          echo running bootstrap.sh
-         $bs
+         ${bs}
     elif [ "$1" = "bootstrap-build" ]; then
          echo running bootstrap.sh
-         $bs "build"
+         ${bs} build
     else
         echo "npm run-script $1"
         npm run-script $1

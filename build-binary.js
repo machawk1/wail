@@ -93,10 +93,10 @@ const darwinSpecificOpts = {
 
   'extend-info': darwinBuild.extendPlist,
 
-  'extra-resource': [darwinBuild.archiveIconPath,darwinBuild.iconPath],
+  'extra-resource': [darwinBuild.archiveIconPath, darwinBuild.iconPath],
 
   // Application icon.
-  icon: darwinBuild.icon
+  icon: darwinBuild.iconPath
 }
 
 const windowsSpecificOpts = {
