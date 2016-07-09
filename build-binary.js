@@ -253,8 +253,8 @@ function log (plat, arch) {
   }
 }
 
-fs.removeSync(path.join(cwd, 'dist'))
-fs.removeSync(path.join(cwd, 'release'))
+fs.emptyDirSync(path.join(cwd, 'dist'))
+fs.emptyDirSync(path.join(cwd, 'release'))
 
 console.log('building webpack.config.electron')
 build(electronCfg)

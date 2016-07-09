@@ -55,11 +55,13 @@ export default function moveThem (opts, cb) {
   let memgatorToPath = path.join(to, memgatorNames[ idxs[ opts.arch ] ])
   let jdkFromPath = jdkPaths[ idxs[ opts.arch ] ]
   let jdkToPath = path.join(to, "openjdk")
+  fs.emptyDirSync(jdkToPath)
   console.log(`moving jdk ${jdkFromPath} to ${jdkToPath}`)
   fs.copy(jdkFromPath, jdkToPath, { clobber: true }, (jdkError) => {
     if (jdkError) return console.error(jdkError)
     console.log("success in moving jdk!")
     console.log(`moving memgator ${memgatorFromPath} to ${memgatorToPath}`)
+    fs.removeSync(memgatorToPath)
     fs.copy(memgatorFromPath, memgatorToPath, { clobber: true }, (memgatorError) => {
       if (memgatorError) return console.error(memgatorError)
       shelljs.chmod('777', memgatorToPath)
