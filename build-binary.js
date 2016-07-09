@@ -16,6 +16,7 @@ const cwd = path.resolve('.')
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
 
 const darwinBuild = {
+  icon:  'whale_1024.icns',
   iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale_1024.icns')),
   archiveIcon: 'archive.icns',
   archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
@@ -81,7 +82,7 @@ const DEFAULT_OPTS = {
 //OSX
 const darwinSpecificOpts = {
 
-  'app-bundle-id': 'wail.wsdl.cs.odu.edu',
+  'app-bundle-id': 'wsdl.cs.odu.edu.wail',
 
   // The application category type, as shown in the Finder via "View" -> "Arrange by
   // Application Category" when viewing the Applications directory (OS X only).
@@ -92,8 +93,10 @@ const darwinSpecificOpts = {
 
   'extend-info': darwinBuild.extendPlist,
 
+  'extra-resource': [darwinBuild.archiveIconPath,darwinBuild.iconPath],
+
   // Application icon.
-  icon: darwinBuild.iconPath
+  icon: darwinBuild.icon
 }
 
 const windowsSpecificOpts = {
@@ -228,7 +231,7 @@ function log (plat, arch) {
       moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
       let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
       cb = () => {
-        fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
+        // fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
         if (process.platform === 'darwin') {
           console.log("Building dmg")
           createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))

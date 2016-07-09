@@ -1,4 +1,4 @@
-const name = require('electron').remote.app.getName()
+const name = 'wail'
 
 
 let settingSubMenu = {
