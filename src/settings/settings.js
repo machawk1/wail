@@ -211,22 +211,24 @@ export default function configSettings (base, userData) {
     settings = new ElectronSettings({ configDirPath: settingsDir })
   }
 
-  if (!settings.get('configured')) {
-    console.log("We are not configured")
-    writeSettings(base, settings)
-    console.log(base, settings)
-  } else {
-    if (settings.get('base') !== base) {
-      /*
-       If the user moves the application directory the settings will
-       will not be correct since I use absolute paths.
-       I did this to myself....
-       */
-      console.log("We are not configured due to binary directory being moved")
-      writeSettings(base, settings)
-    }
-    console.log("We are configured")
-  }
+  writeSettings(base, settings)
+
+  // if (!settings.get('configured')) {
+  //   console.log("We are not configured")
+  //   writeSettings(base, settings)
+  //   console.log(base, settings)
+  // } else {
+  //   if (settings.get('base') !== base) {
+  //     /*
+  //      If the user moves the application directory the settings will
+  //      will not be correct since I use absolute paths.
+  //      I did this to myself....
+  //      */
+  //     console.log("We are not configured due to binary directory being moved")
+  //     writeSettings(base, settings)
+  //   }
+  //   console.log("We are configured")
+  // }
 
   return settings
 }

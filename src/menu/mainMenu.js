@@ -7,7 +7,7 @@ let settingSubMenu = {
     {
       label: 'View Or Edit',
       click(item, focusedWindow) {
-        if (focusedWindow) focusedWindow.reload()
+        if (focusedWindow) focusedWindow.webContents.send('open-settings-window')
       }
     },
   ]
@@ -71,11 +71,10 @@ let helpSubMenu = {
   ]
 }
 
-let template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
+let template
 
 if (process.platform === 'darwin') {
-  // Window menu.
-  template.unshift({
+  let darWinMenu = {
     label: name,
     submenu: [
       {
@@ -107,8 +106,10 @@ if (process.platform === 'darwin') {
         role: 'quit'
       },
     ]
-  })
-  template[ 2 ].submenu = [
+  }
+  template =  [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
+ 
+  template[ 3 ].submenu = [
     {
       role: 'hide'
     },
@@ -145,6 +146,10 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   ]
+} else {
+  template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 }
+
+ 
 
 export default template
