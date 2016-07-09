@@ -1,3 +1,6 @@
+const name = require('electron').remote.app.getName()
+
+
 let settingSubMenu = {
   label: 'Settings',
   submenu: [
@@ -48,7 +51,7 @@ let aboutSubMenu = {
   label: 'About',
   submenu: [
     {
-      label: 'Wail',
+      label: `Learn more about ${name}`,
       click() { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
     },
     {
@@ -68,10 +71,43 @@ let helpSubMenu = {
   ]
 }
 
-const template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
+let template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 
 if (process.platform === 'darwin') {
   // Window menu.
+  template.unshift({
+    label: name,
+    submenu: [
+      {
+        role: 'about'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'services',
+        submenu: []
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'hide'
+      },
+      {
+        role: 'hideothers'
+      },
+      {
+        role: 'unhide'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
+      },
+    ]
+  })
   template[ 2 ].submenu = [
     {
       role: 'hide'

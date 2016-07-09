@@ -74,7 +74,6 @@ function* sequentialActions (actions, jobId) {
 
 export function launchHeritrix (cb) {
   if (process.platform === 'win32') {
-
     let heritrixPath = settings.get('heritrix.path')
     logger.info(util.format(logString, "win32 launching heritrix"))
     let opts = {
@@ -173,7 +172,6 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
           logger.error(util.format(logStringError, `makeHeritrixJobConf ensureDir ${er.message}`, er.stack))
         }
         fs.writeFile(path.join(confPath, 'crawler-beans.cxml'), doc.xml(), 'utf8', error => {
-
           if (error) {
             logger.error(util.format(logStringError, `makeHeritrixJobConf writeConf ${error.message}`, error.stack))
             console.log("done writting file with error", error)
@@ -187,9 +185,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
             urls: urls,
           })
         })
-
       })
-
     })
     .catch(error => {
       logger.error(util.format(logStringError, `makeHeritrixJobConf readConf ${error.message}`, error.stack))
@@ -197,7 +193,6 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 }
 
 export function buildHeritrixJob (jobId) {
-
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
   let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
   console.log("options uri before setting", options.uri)
@@ -256,7 +251,6 @@ export function buildHeritrixJob (jobId) {
 }
 
 export function launchHeritrixJob (jobId) {
-
   let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
   options.uri = `${options.uri}${jobId}`
   if (!ServiceStore.heritrixStatus()) {
@@ -271,7 +265,6 @@ export function launchHeritrixJob (jobId) {
           })
         })
         .catch(err => {
-
           if (err.statusCode == 303) {
             console.log("303 sucess in launch job", err)
             CrawlDispatcher.dispatch({
@@ -283,8 +276,6 @@ export function launchHeritrixJob (jobId) {
             console.log("failur in launching job", err)
             logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`, err.stack))
           }
-          // POST failed...
-
         })
     })
   } else {
@@ -298,7 +289,6 @@ export function launchHeritrixJob (jobId) {
         })
       })
       .catch(err => {
-
         if (err.statusCode == 303) {
           console.log("303 sucess in launch job", err)
           CrawlDispatcher.dispatch({
@@ -374,7 +364,6 @@ export function sendActionToHeritrix (act, jobId, cb) {
         console.log("we have next in action generator", `is done? ${notDone}`)
         sendActionToHeritrix(act, jobId)
       }
-
     })
 
 }
@@ -430,7 +419,6 @@ export function getHeritrixJobsState () {
           }
         }
       }
-
       next()
     })
 
@@ -460,14 +448,12 @@ export function getHeritrixJobsState () {
             queued: fields[ 2 ],
             downloaded: fields[ 3 ],
           })
-
         }
       })
       this.push(item)
       next()
     })
 
-    //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
         logger.error(util.format(logStringError, `ensuring ${heritrixJobP} ${err.message}`, err.stack))
@@ -502,7 +488,5 @@ export function getHeritrixJobsState () {
           })
       }
     })
-
   })
-
 }
