@@ -73,7 +73,7 @@ const DEFAULT_OPTS = {
   name: pkg.name,
   ignore,
   overwrite: true,
-  out: 'release',
+  out: path.normalize(path.join(cwd,'release')),
   prune: true,
   version: require('electron-prebuilt/package.json').version
 }
