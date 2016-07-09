@@ -72,6 +72,7 @@ const ignore = [
 const DEFAULT_OPTS = {
   'app-version': pkg.version,
   asar: false,
+  prune: false,
   dir: cwd,
   name: pkg.name,
   ignore,
