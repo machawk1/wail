@@ -38,6 +38,8 @@ const managed = {
     sendActionOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 5000,
       form: {
         action: ""
       },
@@ -46,13 +48,15 @@ const managed = {
         password: 'ipsum',
         sendImmediately: false
       },
-      // strictSSL: false,
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     killOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/',
+      timeout: 5000,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
         action: "Exit Java Process",
         im_sure: 'on'
@@ -62,13 +66,15 @@ const managed = {
         password: 'ipsum',
         sendImmediately: false
       },
-      // strictSSL: false,
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     launchJobOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
+      timeout: 5000,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'launch'
       },
@@ -77,25 +83,29 @@ const managed = {
         password: 'ipsum',
         sendImmediately: false
       },
-      // strictSSL: false,
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     optionEngine: {
       method: 'GET',
       uri: 'https://localhost:8443/engine',
+      timeout: 5000,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       auth: {
         username: 'lorem',
         password: 'ipsum',
         sendImmediately: false
       },
-      // strictSSL: false,
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
     buildOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
+      timeout: 5000,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'build'
       },
@@ -104,7 +114,7 @@ const managed = {
         password: 'ipsum',
         sendImmediately: false
       },
-      // strictSSL: false,
+      strictSSL: false,
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },

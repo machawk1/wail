@@ -14,10 +14,15 @@ const EventTypes = wailConstants.EventTypes
 const logString = 'service store %s'
 const serviceDialogeTemplate = '%s %s down'
 
-const both = () =>
+const both = () => {
+  console.log("Both")
   startWayback(() => {
+    console.log("started wayback")
     launchHeritrix()
+    console.log("started heritrix")
   })
+}
+ 
 
 const wayback = () => startWayback()
 const heritrix = () => launchHeritrix()
@@ -41,6 +46,7 @@ class serviceStore extends EventEmitter {
     }
     
     ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
+    this.checkStatues()
   }
 
   @autobind
@@ -84,8 +90,9 @@ class serviceStore extends EventEmitter {
 
   @autobind
   checkStatues () {
-    heritrixAccesible()
-    waybackAccesible()
+    heritrixAccesible(true)
+    waybackAccesible(true)
+   
   }
 
   @autobind

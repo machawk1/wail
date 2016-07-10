@@ -20,8 +20,10 @@ let jobbWindowURL
 let settingsWindowURL
 
 let notDebugUI = true
-let debug = false
-let openBackGroundWindows = false
+let debug = true
+let openBackGroundWindows = true
+
+app.commandLine.appendSwitch('js-flags', '--expose_gc')
 
 function showNewCrawlWindow (parent) {
   let config = {
@@ -330,7 +332,7 @@ function createWindow () {
   mainWindow.on('closed', () => {
     console.log('closed')
     cleanUp()
-    mainWindow = null
+
   })
 
 }
@@ -347,6 +349,7 @@ process.on('uncaughtException', (err) => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
   if (notDebugUI) {
@@ -354,6 +357,12 @@ app.on('ready', () => {
   }
   createWindow()
 })
+
+// app.on('before-quite', (event) => {
+//   if (app.isQuitting) return
+//   app.isQuitting = true
+//   event.preventDefault()
+// })
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin'){

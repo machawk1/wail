@@ -18,6 +18,8 @@ import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import { remote } from 'electron'
 import util from 'util'
 
+require('request-debug')(rp)
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 // const httpsAgent = new https.Agent()
@@ -42,7 +44,7 @@ if (isWindows) {
   jobRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/
 }
 
-export function heritrixAccesible () {
+export function heritrixAccesible (startOnDown = false) {
   console.log('checking heritrix accessibility')
   let optionEngine = _.cloneDeep(settings.get('heritrix.optionEngine'))
   // optionEngine.agent = httpsAgent
@@ -54,12 +56,16 @@ export function heritrixAccesible () {
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: true,
       })
+
     })
     .catch(err => {
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: false,
       })
+      if (startOnDown) {
+        launchHeritrix()
+      }
     })
 
 }
@@ -101,13 +107,12 @@ export function launchHeritrix (cb) {
       cb()
     }
   } else {
-
     childProcess.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
       console.log(settings.get('heritrixStart'))
       console.log(err, stdout, stderr)
 
       let wasError = !err
-      
+
       if (err) {
         let stack
         if (Reflect.has(err, 'stack')) {
@@ -117,12 +122,12 @@ export function launchHeritrix (cb) {
         }
         logger.error(util.format(logStringError, `linux/osx launch ${stdout}`, stack))
       }
-      
+
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: wasError,
       })
-      
+
       if (cb) {
         cb()
       }
@@ -137,13 +142,13 @@ export function killHeritrix (cb) {
   rp(options)
     .then(response => {
       console.log('this should never ever be reached', response)
-      if(cb) {
+      if (cb) {
         cb()
       }
     })
     .catch(err => {
       console.log('herritrix kills itself and never replies', err)
-      if(cb) {
+      if (cb) {
         cb()
       }
     })

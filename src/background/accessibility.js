@@ -58,7 +58,10 @@ class StatusMonitor {
   checkReachability (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
-      rule.second = [ 0, 10, 20, 30, 40, 50 ]
+      rule.minute = []
+      for (let m = 2; m < 62; m += 2) {
+        rule.minute.push(m)
+      }
       this.job = schedule.scheduleJob(rule, () => {
         heritrixAccesible()
           .then(ha => this.statues.heritrix = ha.status)

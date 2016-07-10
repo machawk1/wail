@@ -56,18 +56,17 @@ export function writeWaybackConf () {
 
 }
 
-export function waybackAccesible () {
+export function waybackAccesible (startOnDown = false) {
   console.log("checking wayback accessibility")
   let wburi = settings.get('wayback.uri_wayback')
 
-  rp({ uri: wburi})
+  rp({ uri: wburi })
     .then(success => {
       console.log("wayback success", success)
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: true,
       })
-
     })
     .catch(err => {
       console.log("wayback err", err)
@@ -76,7 +75,9 @@ export function waybackAccesible () {
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: false,
       })
-      startWayback()
+      if (startOnDown) {
+        startWayback()
+      }
     })
 }
 
@@ -127,13 +128,13 @@ export function killWayback (cb) {
     } catch (err) {
       logger.error(util.format(logStringError, "win32 kill wayback", err.stack))
     }
-    if(cb) {
+    if (cb) {
       cb()
     }
   } else {
     childProcess.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
-      if(err){
+      if (err) {
         let stack
         if (Reflect.has(err, 'stack')) {
           stack = `${stdout} ${err.stack}`
@@ -142,8 +143,8 @@ export function killWayback (cb) {
         }
         logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
       }
-     
-      if(cb) {
+
+      if (cb) {
         cb()
       }
     })
