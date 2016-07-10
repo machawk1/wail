@@ -38,8 +38,8 @@ const managed = {
     sendActionOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      timeout: 5000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
       form: {
         action: ""
       },
@@ -55,11 +55,11 @@ const managed = {
     killOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/',
-      timeout: 5000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       form: {
-        action: "Exit Java Process",
-        im_sure: 'on'
+        action: 'exit+java+process',
+        'im_sure': 'on'
       },
       auth: {
         username: 'lorem',
@@ -73,8 +73,8 @@ const managed = {
     launchJobOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
-      timeout: 5000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'launch'
       },
@@ -90,8 +90,8 @@ const managed = {
     optionEngine: {
       method: 'GET',
       uri: 'https://localhost:8443/engine',
-      timeout: 5000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       auth: {
         username: 'lorem',
         password: 'ipsum',
@@ -104,8 +104,8 @@ const managed = {
     buildOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
-      timeout: 5000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'build'
       },

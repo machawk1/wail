@@ -5,6 +5,7 @@ import os from 'os'
 import path from 'path'
 import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import RequestDispatcher from '../dispatchers/requestDispatcher'
 import cheerio from 'cheerio'
 import { remote } from 'electron'
 import util from 'util'
@@ -58,17 +59,20 @@ export function writeWaybackConf () {
 
 export function waybackAccesible (startOnDown = false) {
   console.log("checking wayback accessibility")
-  let wburi = settings.get('wayback.uri_wayback')
+  // let wburi = settings.get('wayback.uri_wayback')
 
-  rp({ uri: wburi })
-    .then(success => {
+  let request = {
+    opts: { 
+      uri:  settings.get('wayback.uri_wayback')
+    },
+    success: (response) => {
       console.log("wayback success", success)
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: true,
       })
-    })
-    .catch(err => {
+    },
+    error: (err) => {
       console.log("wayback err", err)
       logger.error(util.format(logStringError, "waybackAccessible", err.stack))
       ServiceDispatcher.dispatch({
@@ -78,7 +82,33 @@ export function waybackAccesible (startOnDown = false) {
       if (startOnDown) {
         startWayback()
       }
-    })
+    }
+  }
+
+  RequestDispatcher.dispatch({
+    type: EventTypes.REQUEST,
+    request
+  })
+
+  // rp({ uri: wburi })
+  //   .then(success => {
+  //     console.log("wayback success", success)
+  //     ServiceDispatcher.dispatch({
+  //       type: EventTypes.WAYBACK_STATUS_UPDATE,
+  //       status: true,
+  //     })
+  //   })
+  //   .catch(err => {
+  //     console.log("wayback err", err)
+  //     logger.error(util.format(logStringError, "waybackAccessible", err.stack))
+  //     ServiceDispatcher.dispatch({
+  //       type: EventTypes.WAYBACK_STATUS_UPDATE,
+  //       status: false,
+  //     })
+  //     if (startOnDown) {
+  //       startWayback()
+  //     }
+  //   })
 }
 
 export function startWayback () {

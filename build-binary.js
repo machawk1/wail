@@ -1,5 +1,6 @@
 import fs from 'fs-extra'
 import Promise from 'bluebird'
+import util from 'util'
 import path from 'path'
 import os from 'os'
 import webpack from 'webpack'
@@ -16,7 +17,7 @@ const cwd = path.resolve('.')
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
 
 const darwinBuild = {
-  icon:  'whale_1024.icns',
+  icon: 'whale_1024.icns',
   iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale_1024.icns')),
   archiveIcon: 'archive.icns',
   archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
@@ -76,7 +77,7 @@ const DEFAULT_OPTS = {
   name: pkg.name,
   ignore,
   overwrite: true,
-  out: path.normalize(path.join(cwd,'release')),
+  out: path.normalize(path.join(cwd, 'release')),
   version: require('electron-prebuilt/package.json').version
 }
 
@@ -94,7 +95,7 @@ const darwinSpecificOpts = {
 
   'extend-info': darwinBuild.extendPlist,
 
-  'extra-resource': [darwinBuild.archiveIconPath, darwinBuild.iconPath],
+  'extra-resource': [ darwinBuild.archiveIconPath, darwinBuild.iconPath ],
 
   // Application icon.
   icon: darwinBuild.iconPath
@@ -263,42 +264,47 @@ fs.emptyDirSync(path.join(cwd, 'release'))
 console.log('building webpack.config.electron')
 build(electronCfg)
   .then((stats) => {
+    console.log(util.inspect(stats, { depth: null, colors: true }))
     console.log('building webpack.config.production')
     build(cfg)
-  })
-  .then((stats) => {
-    if (shouldBuildCurrent) {
-      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-    } else {
-      let buildFor
-      let archs
-      let platforms
-      if (shouldBuildAll) {
-        buildFor = 'building for all platforms'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux', 'win32', 'darwin' ]
-      } else if (shouldBuildLinux) {
-        buildFor = 'building for linux'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux' ]
-      } else if (shouldBuildOSX) {
-        buildFor = 'building for OSX'
-        archs = [ 'x64' ]
-        platforms = [ 'darwin' ]
-      } else {
-        buildFor = 'building for Windows'
-        archs = [ 'x64' ]
-        platforms = [ 'win32' ]
-      }
-      console.log(buildFor)
-      platforms.forEach(plat => {
-        archs.forEach(arch => {
-          console.log(`building the binary for ${plat}-${arch}`)
-          pack(plat, arch, log(plat, arch))
-        })
+      .then((stats) => {
+        console.log(util.inspect(stats, { depth: null, colors: true }))
+        if (shouldBuildCurrent) {
+          console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+          pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+        } else {
+          let buildFor
+          let archs
+          let platforms
+          if (shouldBuildAll) {
+            buildFor = 'building for all platforms'
+            archs = [ 'ia32', 'x64' ]
+            platforms = [ 'linux', 'win32', 'darwin' ]
+          } else if (shouldBuildLinux) {
+            buildFor = 'building for linux'
+            archs = [ 'ia32', 'x64' ]
+            platforms = [ 'linux' ]
+          } else if (shouldBuildOSX) {
+            buildFor = 'building for OSX'
+            archs = [ 'x64' ]
+            platforms = [ 'darwin' ]
+          } else {
+            buildFor = 'building for Windows'
+            archs = [ 'x64' ]
+            platforms = [ 'win32' ]
+          }
+          console.log(buildFor)
+          platforms.forEach(plat => {
+            archs.forEach(arch => {
+              console.log(`building the binary for ${plat}-${arch}`)
+              pack(plat, arch, log(plat, arch))
+            })
+          })
+        }
       })
-    }
+      .catch(err => {
+        console.error(err)
+      })
   })
   .catch(err => {
     console.error(err)

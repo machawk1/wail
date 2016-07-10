@@ -20,8 +20,10 @@ let jobbWindowURL
 let settingsWindowURL
 
 let notDebugUI = true
-let debug = true
-let openBackGroundWindows = true
+let debug = false
+let openBackGroundWindows = false
+
+let shouldQuit = false
 
 app.commandLine.appendSwitch('js-flags', '--expose_gc')
 

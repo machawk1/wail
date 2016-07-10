@@ -8,16 +8,14 @@ import Promise from 'bluebird'
 import { ipcRenderer } from 'electron'
 import Routes from './routes'
 import { writeWaybackConf } from './actions/wayback-actions'
+import RequestDaemon from './stores/requestDaemon'
 
 Promise.promisifyAll(fs)
 
-/*
- logger.transports.file.format = '[{m}:{d}:{y} {h}:{i}:{s}] [{level}] {text}'
- logger.transports.file.maxSize = 5 * 1024 * 1024
- logger.transports.file.file = logPath
- logger.transports.file.streamConfig = {flags: 'a'}
- */
+
 window.React = React
+//ensure out RequestStore is alive and kicking 
+window.ReqDaemon = RequestDaemon
 
 injectTapEventPlugin()
 
@@ -35,3 +33,4 @@ ReactDOM.render(
     routes={Routes}
   />,
   wail)
+
