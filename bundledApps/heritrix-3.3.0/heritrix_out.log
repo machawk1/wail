@@ -1,0 +1,1188 @@
+Sat Jul  9 18:45:12 EDT 2016 Starting heritrix
+Linux misanthropy 4.4.0-28-generic #47-Ubuntu SMP Fri Jun 24 10:09:13 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+openjdk version "1.7.0-u80-unofficial"
+OpenJDK Runtime Environment (build 1.7.0-u80-unofficial-b32)
+OpenJDK 64-Bit Server VM (build 24.80-b11, mixed mode)
+JAVA_OPTS= -Xmx256m
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 63810
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 65536
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 63810
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+Oracle Corporation OpenJDK Runtime Environment 1.7.0-u80-unofficial-b32
+Using ad-hoc HTTPS certificate with fingerprint...
+SHA1:3D:4C:24:92:B9:73:A6:FD:3C:79:90:46:40:A5:BA:E3:90:6E:B6:BE
+Verify in browser before accepting exception.
+2016-07-09 22:45:13.286 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1466291299295
+2016-07-09 22:45:13.289 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468041173241
+2016-07-09 22:45:13.290 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467061779169
+2016-07-09 22:45:13.290 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467333348215
+2016-07-09 22:45:13.291 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468050578489
+2016-07-09 22:45:13.291 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467089360881
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+engine listening at port 8443
+operator login set per command-line
+NOTE: We recommend a longer, stronger password, especially if your web 
+interface will be internet-accessible.
+Heritrix version: 3.3.0-SNAPSHOT-20160708-0038
+log4j:WARN No appenders could be found for logger (freemarker.cache).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+2016-07-09 22:46:47.738 SEVERE thread-27 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+2016-07-09 22:47:37.373 SEVERE thread-27 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.framework.CrawlJob.launch(CrawlJob.java:412)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:210)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 61 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 63 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 71 more
+2016-07-09 22:47:37.374 SEVERE thread-27 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+2016-07-09 22:49:44.642 SEVERE thread-21 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+2016-07-09 22:50:13.333 SEVERE thread-25 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+2016-07-09 22:50:32.351 SEVERE thread-21 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.framework.CrawlJob.launch(CrawlJob.java:412)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:210)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 61 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1466291299295/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 63 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 71 more
+2016-07-09 22:50:32.353 SEVERE thread-21 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+Sat Jul  9 18:57:03 EDT 2016 Starting heritrix
+Linux misanthropy 4.4.0-28-generic #47-Ubuntu SMP Fri Jun 24 10:09:13 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+openjdk version "1.7.0-u80-unofficial"
+OpenJDK Runtime Environment (build 1.7.0-u80-unofficial-b32)
+OpenJDK 64-Bit Server VM (build 24.80-b11, mixed mode)
+JAVA_OPTS= -Xmx256m
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 63810
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 65536
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 63810
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+Oracle Corporation OpenJDK Runtime Environment 1.7.0-u80-unofficial-b32
+Using ad-hoc HTTPS certificate with fingerprint...
+SHA1:3D:4C:24:92:B9:73:A6:FD:3C:79:90:46:40:A5:BA:E3:90:6E:B6:BE
+Verify in browser before accepting exception.
+2016-07-09 22:57:03.266 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468041173241
+2016-07-09 22:57:03.275 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467061779169
+2016-07-09 22:57:03.276 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467333348215
+2016-07-09 22:57:03.277 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468050578489
+2016-07-09 22:57:03.277 INFO thread-1 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1467089360881
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+engine listening at port 8443
+operator login set per command-line
+NOTE: We recommend a longer, stronger password, especially if your web 
+interface will be internet-accessible.
+Heritrix version: 3.3.0-SNAPSHOT-20160708-0038
+log4j:WARN No appenders could be found for logger (freemarker.cache).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+2016-07-09 22:57:41.669 SEVERE thread-16 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+2016-07-09 22:58:06.409 SEVERE thread-20 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.framework.CrawlJob.launch(CrawlJob.java:412)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:210)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 61 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 63 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 71 more
+2016-07-09 22:58:06.410 SEVERE thread-20 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+2016-07-09 22:59:58.836 SEVERE thread-31 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.framework.CrawlJob.launch(CrawlJob.java:412)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:210)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 61 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 63 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 71 more
+2016-07-09 22:59:58.837 SEVERE thread-31 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+2016-07-09 23:00:05.222 SEVERE thread-12 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1467061779169/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+Sat Jul  9 19:01:05 EDT 2016 Starting heritrix
+Linux misanthropy 4.4.0-28-generic #47-Ubuntu SMP Fri Jun 24 10:09:13 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+openjdk version "1.7.0-u80-unofficial"
+OpenJDK Runtime Environment (build 1.7.0-u80-unofficial-b32)
+OpenJDK 64-Bit Server VM (build 24.80-b11, mixed mode)
+JAVA_OPTS= -Xmx256m
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 63810
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 65536
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 63810
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
+Oracle Corporation OpenJDK Runtime Environment 1.7.0-u80-unofficial-b32
+Using ad-hoc HTTPS certificate with fingerprint...
+SHA1:3D:4C:24:92:B9:73:A6:FD:3C:79:90:46:40:A5:BA:E3:90:6E:B6:BE
+Verify in browser before accepting exception.
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+engine listening at port 8443
+operator login set per command-line
+NOTE: We recommend a longer, stronger password, especially if your web 
+interface will be internet-accessible.
+Heritrix version: 3.3.0-SNAPSHOT-20160708-0038
+log4j:WARN No appenders could be found for logger (freemarker.cache).
+log4j:WARN Please initialize the log4j system properly.
+log4j:WARN See http://logging.apache.org/log4j/1.2/faq.html#noconfig for more info.
+2016-07-09 23:01:39.177 INFO thread-18 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468105298985
+2016-07-09 23:01:39.528 SEVERE thread-18 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:216)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 60 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 62 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 70 more
+2016-07-09 23:01:41.249 SEVERE thread-25 org.archive.crawler.framework.CrawlJob.beansException() Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage; ; Can't create bean 'metadata'
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'metadata': Injection of autowired dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:285)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1074)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:517)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:456)
+	at org.springframework.beans.factory.support.AbstractBeanFactory$1.getObject(AbstractBeanFactory.java:291)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:288)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:190)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:580)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:895)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:425)
+	at org.archive.crawler.framework.CrawlJob.instantiateContainer(CrawlJob.java:291)
+	at org.archive.crawler.framework.CrawlJob.validateConfiguration(CrawlJob.java:360)
+	at org.archive.crawler.framework.CrawlJob.launch(CrawlJob.java:412)
+	at org.archive.crawler.restlet.JobResource.acceptRepresentation(JobResource.java:210)
+	at org.restlet.resource.Resource.post(Resource.java:683)
+	at org.restlet.resource.Resource.handlePost(Resource.java:537)
+	at org.restlet.Finder.handle(Finder.java:357)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at com.noelios.restlet.application.ApplicationHelper.handle(ApplicationHelper.java:112)
+	at org.restlet.Application.handle(Application.java:341)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Guard.accept(Guard.java:198)
+	at org.restlet.Guard.doHandle(Guard.java:354)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Router.handle(Router.java:504)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at com.noelios.restlet.StatusFilter.doHandle(StatusFilter.java:130)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at org.restlet.Filter.doHandle(Filter.java:150)
+	at org.restlet.Filter.handle(Filter.java:195)
+	at com.noelios.restlet.ChainHelper.handle(ChainHelper.java:124)
+	at org.restlet.Component.handle(Component.java:673)
+	at org.restlet.Server.handle(Server.java:331)
+	at com.noelios.restlet.ServerHelper.handle(ServerHelper.java:68)
+	at com.noelios.restlet.http.HttpServerHelper.handle(HttpServerHelper.java:147)
+	at com.noelios.restlet.ext.jetty.JettyServerHelper$WrappedServer.handle(JettyServerHelper.java:174)
+	at org.mortbay.jetty.HttpConnection.handleRequest(HttpConnection.java:542)
+	at org.mortbay.jetty.HttpConnection$RequestHandler.content(HttpConnection.java:945)
+	at org.mortbay.jetty.HttpParser.parseNext(HttpParser.java:756)
+	at org.mortbay.jetty.HttpParser.parseAvailable(HttpParser.java:218)
+	at org.mortbay.jetty.HttpConnection.handle(HttpConnection.java:404)
+	at org.mortbay.jetty.bio.SocketConnector$Connection.run(SocketConnector.java:228)
+	at org.mortbay.jetty.security.SslSocketConnector$SslConnection.run(SslSocketConnector.java:713)
+	at org.mortbay.thread.QueuedThreadPool$PoolThread.run(QueuedThreadPool.java:582)
+Caused by: org.springframework.beans.factory.BeanCreationException: Could not autowire method: public void org.archive.modules.CrawlMetadata.setAvailableRobotsPolicies(java.util.Map); nested exception is org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:589)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:84)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessPropertyValues(AutowiredAnnotationBeanPostProcessor.java:282)
+	... 61 more
+Caused by: org.springframework.beans.factory.CannotLoadBeanClassException: Cannot find class [org.archive.modules.fetcher.BdbCookieStorage] for bean with name 'cookieStorage' defined in URL [file:/home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468105298985/crawler-beans.cxml]; nested exception is java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1250)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.predictBeanType(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.isFactoryBean(AbstractBeanFactory.java:1319)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.getBeanNamesForType(DefaultListableBeanFactory.java:315)
+	at org.springframework.beans.factory.BeanFactoryUtils.beanNamesForTypeIncludingAncestors(BeanFactoryUtils.java:185)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.findAutowireCandidates(DefaultListableBeanFactory.java:829)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:773)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:703)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredMethodElement.inject(AutowiredAnnotationBeanPostProcessor.java:547)
+	... 63 more
+Caused by: java.lang.ClassNotFoundException: org.archive.modules.fetcher.BdbCookieStorage
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:366)
+	at java.net.URLClassLoader$1.run(URLClassLoader.java:355)
+	at java.security.AccessController.doPrivileged(Native Method)
+	at java.net.URLClassLoader.findClass(URLClassLoader.java:354)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:425)
+	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:308)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:358)
+	at org.springframework.util.ClassUtils.forName(ClassUtils.java:257)
+	at org.springframework.beans.factory.support.AbstractBeanDefinition.resolveBeanClass(AbstractBeanDefinition.java:408)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doResolveBeanClass(AbstractBeanFactory.java:1271)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveBeanClass(AbstractBeanFactory.java:1242)
+	... 71 more
+2016-07-09 23:01:41.251 SEVERE thread-25 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+2016-07-09 23:03:14.014 INFO thread-31 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: something
+2016-07-09 23:09:45.153 INFO thread-31 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468105785008
+2016-07-09 23:09:45.610 INFO thread-31 org.archive.crawler.framework.CrawlJob.instantiateContainer() Job instantiated
+2016-07-09 23:09:45.616 WARNING thread-31 org.archive.crawler.framework.CrawlJob.validateConfiguration() Field error in object 'metadata' on field 'operatorContactUrl': rejected value [ENTER_AN_URL_WITH_YOUR_CONTACT_INFO_HERE_FOR_WEBMASTERS_AFFECTED_BY_YOUR_CRAWL]; codes [null.metadata.operatorContactUrl,null.operatorContactUrl,null.java.lang.String,null]; arguments []; default message [You must supply an HTTP(S) URL which will be included in your user-agent and should explain the purpose of your crawl and how to contact the crawl operator in the event of webmaster issues.]
+2016-07-09 23:10:16.816 WARNING thread-31 org.archive.crawler.framework.CrawlJob.validateConfiguration() Field error in object 'metadata' on field 'operatorContactUrl': rejected value [ENTER_AN_URL_WITH_YOUR_CONTACT_INFO_HERE_FOR_WEBMASTERS_AFFECTED_BY_YOUR_CRAWL]; codes [null.metadata.operatorContactUrl,null.operatorContactUrl,null.java.lang.String,null]; arguments []; default message [You must supply an HTTP(S) URL which will be included in your user-agent and should explain the purpose of your crawl and how to contact the crawl operator in the event of webmaster issues.]
+2016-07-09 23:10:16.816 SEVERE thread-31 org.archive.crawler.framework.CrawlJob.launch() Can't launch problem configuration
+2016-07-09 23:11:54.803 INFO thread-33 org.archive.crawler.framework.CrawlJob.doTeardown() Job instance discarded
+2016-07-09 23:11:56.565 INFO thread-25 org.archive.crawler.framework.CrawlJob.instantiateContainer() Job instantiated
+2016-07-09 23:11:56.565 WARNING thread-25 org.archive.crawler.framework.CrawlJob.validateConfiguration() Field error in object 'metadata' on field 'operatorContactUrl': rejected value [ENTER_AN_URL_WITH_YOUR_CONTACT_INFO_HERE_FOR_WEBMASTERS_AFFECTED_BY_YOUR_CRAWL]; codes [null.metadata.operatorContactUrl,null.operatorContactUrl,null.java.lang.String,null]; arguments []; default message [You must supply an HTTP(S) URL which will be included in your user-agent and should explain the purpose of your crawl and how to contact the crawl operator in the event of webmaster issues.]
+2016-07-09 23:12:33.916 INFO thread-25 org.archive.crawler.framework.CrawlJob.doTeardown() Job instance discarded
+2016-07-09 23:12:35.387 INFO thread-33 org.archive.crawler.framework.CrawlJob.instantiateContainer() Job instantiated
+2016-07-09 23:12:35.388 WARNING thread-33 org.archive.crawler.framework.CrawlJob.validateConfiguration() Field error in object 'metadata' on field 'operatorContactUrl': rejected value [ENTER_AN_URL_WITH_YOUR_CONTACT_INFO_HERE_FOR_WEBMASTERS_AFFECTED_BY_YOUR_CRAWL]; codes [null.metadata.operatorContactUrl,null.operatorContactUrl,null.java.lang.String,null]; arguments []; default message [You must supply an HTTP(S) URL which will be included in your user-agent and should explain the purpose of your crawl and how to contact the crawl operator in the event of webmaster issues.]
+2016-07-09 23:12:46.562 INFO thread-33 org.archive.crawler.framework.CrawlJob.doTeardown() Job instance discarded
+2016-07-09 23:41:25.644 INFO thread-159 org.archive.crawler.framework.Engine.addJobDirectory() added crawl job: 1468107685492
+2016-07-09 23:41:25.744 INFO thread-159 org.archive.crawler.framework.CrawlJob.instantiateContainer() Job instantiated
+2016-07-09 23:41:26.364 INFO thread-159 org.archive.crawler.framework.CrawlJob.launch() Job launched
+2016-07-09 23:41:27.877 INFO thread-178 org.archive.spring.PathSharingContext.initLaunchId() launch id 20160709234127
+2016-07-09 23:41:28.263 INFO thread-178 org.archive.io.WriterPool.<init>() Initial configuration: prefix=MAT, template=${prefix}-${timestamp17}-${serialno}-${heritrix.pid}~${heritrix.hostname}~${heritrix.port}, compress=false, maxSize=1000000000, maxActive=1, maxWait=500
+2016-07-09 23:41:28.293 INFO thread-178 org.archive.crawler.framework.CrawlJob.onApplicationEvent() PREPARING 20160709234127
+2016-07-09 23:41:29.277 INFO thread-183 org.archive.crawler.framework.CrawlController.noteFrontierState() Crawl running.
+2016-07-09 23:41:29.278 INFO thread-183 org.archive.crawler.framework.CrawlJob.onApplicationEvent() RUNNING 20160709234127
+2016-07-09 23:41:36.649 WARNING thread-189 org.archive.modules.seeds.TextSeedModule.addSeed() nowhere to log added seed: http://www.cs.odu.edu/~mkelly/
+2016-07-09 23:47:31.681 INFO thread-271 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/seeds-report.txt
+2016-07-09 23:47:31.682 WARNING thread-271 com.noelios.restlet.http.HttpServerConverter.commit() A response with an unavailable entity was returned. Ignoring the entity for resource "https://localhost:8443/engine/job/1468107685492/report/SeedsReport.
+2016-07-09 23:47:36.409 INFO thread-271 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/seeds-report.txt
+2016-07-09 23:47:36.410 WARNING thread-271 com.noelios.restlet.http.HttpServerConverter.commit() A response with an unavailable entity was returned. Ignoring the entity for resource "https://localhost:8443/engine/job/1468107685492/report/SeedsReport.
+2016-07-09 23:47:38.353 INFO thread-271 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/hosts-report.txt
+2016-07-09 23:47:38.353 WARNING thread-271 com.noelios.restlet.http.HttpServerConverter.commit() A response with an unavailable entity was returned. Ignoring the entity for resource "https://localhost:8443/engine/job/1468107685492/report/HostsReport.
+2016-07-09 23:54:21.313 INFO thread-383 org.archive.crawler.framework.CrawlJob.onApplicationEvent() STOPPING 20160709234127
+2016-07-09 23:54:22.248 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/crawl-report.txt
+2016-07-09 23:54:22.347 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/seeds-report.txt
+2016-07-09 23:54:22.464 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/hosts-report.txt
+2016-07-09 23:54:22.465 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/source-report.txt
+2016-07-09 23:54:22.564 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/mimetype-report.txt
+2016-07-09 23:54:22.648 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/responsecode-report.txt
+2016-07-09 23:54:22.649 INFO thread-183 org.archive.modules.writer.WARCWriterProcessor.report() final stats: {response={numRecords=685, totalBytes=436311160, contentBytes=436054944, sizeOnDisk=436311160}, warcinfo={numRecords=1, totalBytes=682, contentBytes=415, sizeOnDisk=682}, request={numRecords=638, totalBytes=484452, contentBytes=256843, sizeOnDisk=484452}, totals={numRecords=1962, totalBytes=437733488, contentBytes=437027430, sizeOnDisk=437733488}, metadata={numRecords=638, totalBytes=937194, contentBytes=715228, sizeOnDisk=937194}}
+2016-07-09 23:54:22.650 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/processors-report.txt
+2016-07-09 23:54:22.661 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/frontier-summary-report.txt
+2016-07-09 23:54:22.661 INFO thread-183 org.archive.crawler.reporting.StatisticsTracker.writeReportFile() wrote report: /home/john/my-fork-wail/wail/bundledApps/heritrix-3.2.0/./jobs/1468107685492/20160709234127/reports/threads-report.txt
+2016-07-09 23:54:22.662 INFO thread-183 org.archive.crawler.framework.CheckpointService.stop() Cleaned up Checkpoint TimerThread.
+2016-07-09 23:54:22.664 INFO thread-183 org.archive.crawler.framework.CrawlJob.onApplicationEvent() FINISHED 20160709234127
+2016-07-09 23:54:22.664 INFO thread-183 org.archive.crawler.frontier.AbstractFrontier.crawlEnded() Closing with 194 urls still in queue.
+2016-07-09 23:54:46.758 INFO thread-387 org.archive.crawler.framework.CrawlJob.doTeardown() Job instance discarded

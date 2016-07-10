@@ -1,8 +1,10 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import schedule from 'node-schedule'
+import StatusDialog from '../informational/statusDialog'
 import GMessageStore from '../../stores/globalMessageStore'
+
 
 const interval = [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
   30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58 ]
@@ -23,14 +25,14 @@ export default class Footer extends Component {
   }
 
   componentWillMount () {
-    jobHolder.rule = new schedule.RecurrenceRule()
-    jobHolder.rule.second = interval
+    // jobHolder.rule = new schedule.RecurrenceRule()
+    // jobHolder.rule.second = interval
   }
 
   componentWillUnmount () {
-    if (jobHolder.job) {
-      jobHolder.job.cancel()
-    }
+    // if (jobHolder.job) {
+    //   jobHolder.job.cancel()
+    // }
   }
 
   timerGen () {
@@ -46,7 +48,7 @@ export default class Footer extends Component {
 
   @autobind
   receiveMessage () {
-    this.setState({ message: GMessageStore.getMessage, open: true })
+    this.setState({ message: GMessageStore.getMessage(), open: true })
     this.timerGen()
 
   }
@@ -60,12 +62,15 @@ export default class Footer extends Component {
 
   render () {
     return (
-      <Snackbar
-        open={this.state.open}
-        message={this.state.message}
-        autoHideDuration={2000}
-        onRequestClose={this.closeNotification}
-      />
+      <div>
+        <StatusDialog />
+        <Snackbar
+          open={this.state.open}
+          message={this.state.message}
+          autoHideDuration={2000}
+          onRequestClose={this.closeNotification}
+        />
+      </div>
     )
   }
 }

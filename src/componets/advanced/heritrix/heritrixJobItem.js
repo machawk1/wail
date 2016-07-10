@@ -73,19 +73,23 @@ export default class HeritrixJobItem extends Component {
   }
 
   @autobind
-  kill (event, cb) {
-    forceCrawlFinish(this.props.jobId, cb)
+  kill (event) {
+    forceCrawlFinish(this.props.jobId)
   }
 
   @autobind
   launch(event) {
-    launchHeritrixJob(this.props.jobid)
+    launchHeritrixJob(this.props.jobId)
   }
 
   @autobind
   deleteJob (event) {
+    console.log("Deleting Job")
     let runs = this.props.runs
-    let cb = genDeleteJobFun(this.props.jobId)
+    let cb = () =>
+      del([ `${settings.get('heritrixJob')}${path.sep}${this.props.jobId}` ], { force: true })
+        .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
+
 
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {

@@ -3,7 +3,6 @@ import childProcess from 'child_process'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
-import https from 'https'
 import path from 'path'
 import named from 'named-regexp'
 import through2 from 'through2'
@@ -19,7 +18,7 @@ import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import { remote } from 'electron'
 import util from 'util'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 // const httpsAgent = new https.Agent()
 const isWindows = os.platform() == 'win32'
@@ -27,8 +26,8 @@ const EventTypes = wc.EventTypes
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
-const logString = "heritirx-actions %s"
-const logStringError = "heritirx-actions error where[ %s ] stack [ %s ]"
+const logString = 'heritirx-actions %s'
+const logStringError = 'heritirx-actions error where[ %s ] stack [ %s ]'
 
 const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
 
@@ -44,13 +43,13 @@ if (isWindows) {
 }
 
 export function heritrixAccesible () {
-  console.log("checking heritrix accessibility")
+  console.log('checking heritrix accessibility')
   let optionEngine = _.cloneDeep(settings.get('heritrix.optionEngine'))
   // optionEngine.agent = httpsAgent
 
   rp(optionEngine)
     .then(success => {
-      console.log("heritrix success", success)
+      console.log('heritrix success', success)
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: true,
@@ -78,7 +77,7 @@ function* sequentialActions (actions, jobId) {
 export function launchHeritrix (cb) {
   if (process.platform === 'win32') {
     let heritrixPath = settings.get('heritrix.path')
-    logger.info(util.format(logString, "win32 launching heritrix"))
+    logger.info(util.format(logString, 'win32 launching heritrix'))
     let opts = {
       cwd: heritrixPath,
       env: {
@@ -90,12 +89,12 @@ export function launchHeritrix (cb) {
       shell: false,
       stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
-    let usrpwrd = `${settings.get("heritrix.username")}:${settings.get("heritrix.password")}`
+    let usrpwrd = `${settings.get('heritrix.username')}:${settings.get('heritrix.password')}`
     try {
-      let heritrix = childProcess.spawn("bin\\heritrix.cmd", [ '-a', `${usrpwrd}` ], opts)
+      let heritrix = childProcess.spawn('bin\\heritrix.cmd', [ '-a', `${usrpwrd}` ], opts)
       heritrix.unref()
     } catch (err) {
-      logger.error(util.format(logStringError, "win32 launch", err.stack))
+      logger.error(util.format(logStringError, 'win32 launch', err.stack))
     }
 
     if (cb) {
@@ -137,13 +136,13 @@ export function killHeritrix (cb) {
   // options.agent = httpsAgent
   rp(options)
     .then(response => {
-      console.log("this should never ever be reached", response)
+      console.log('this should never ever be reached', response)
       if(cb) {
         cb()
       }
     })
     .catch(err => {
-      console.log("herritrix kills itself and never replies", err)
+      console.log('herritrix kills itself and never replies', err)
       if(cb) {
         cb()
       }
@@ -152,7 +151,7 @@ export function killHeritrix (cb) {
 
 export function makeHeritrixJobConf (urls, hops, jobId) {
   console.log('in makeHeritrixJobConf')
-  fs.readFileAsync(settings.get('heritrix.jobConf'), "utf8")
+  fs.readFileAsync(settings.get('heritrix.jobConf'), 'utf8')
     .then(data => {
       let doc = cheerio.load(data, {
         xmlMode: true
@@ -185,15 +184,15 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
         fs.writeFile(path.join(confPath, 'crawler-beans.cxml'), doc.xml(), 'utf8', error => {
           if (error) {
             logger.error(util.format(logStringError, `makeHeritrixJobConf writeConf ${error.message}`, error.stack))
-            console.log("done writting file with error", error)
+            console.log('done writting file with error', error)
           } else {
-            console.log("done writting file")
+            console.log('done writting file')
           }
           CrawlDispatcher.dispatch({
             type: EventTypes.BUILT_CRAWL_CONF,
             id: jobId,
             path: confPath,
-            urls: urls,
+            urls: urls
           })
         })
       })
@@ -206,7 +205,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 export function buildHeritrixJob (jobId) {
   //`https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
   let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
-  console.log("options uri before setting", options.uri)
+  console.log('options uri before setting', options.uri)
   options.uri = `${options.uri}${jobId}`
   // options.agent = httpsAgent
   console.log(`building heritrix job ${jobId}`)
@@ -217,23 +216,23 @@ export function buildHeritrixJob (jobId) {
       rp(options)
         .then(response => {
           // POST succeeded...
-          console.log("sucess in building job", response)
+          console.log('sucess in building job', response)
           CrawlDispatcher.dispatch({
             type: EventTypes.BUILT_CRAWL_JOB,
-            id: jobId,
+            id: jobId
           })
         })
         .catch(err => {
           if (err.statusCode == 303) {
-            console.log("303 sucess in building job", err)
+            console.log('303 sucess in building job', err)
             CrawlDispatcher.dispatch({
               type: EventTypes.BUILT_CRAWL_JOB,
-              id: jobId,
+              id: jobId
             })
           } else {
             // POST failed...
-            console.log("failur in building job", err)
-            logger.error(util.format(logStringError, `building hereitrix job ${err.message}`, err.stack))
+            console.log('failur in building job', err)
+            logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
           }
         })
     })
@@ -241,55 +240,58 @@ export function buildHeritrixJob (jobId) {
     rp(options)
       .then(response => {
         // POST succeeded...
-        console.log("sucess in building job", response)
+        console.log('sucess in building job', response)
         CrawlDispatcher.dispatch({
           type: EventTypes.BUILT_CRAWL_JOB,
-          id: jobId,
+          id: jobId
         })
       })
       .catch(err => {
         if (err.statusCode == 303) {
-          console.log("303 sucess in building job", err)
+          console.log('303 sucess in building job', err)
           CrawlDispatcher.dispatch({
             type: EventTypes.BUILT_CRAWL_JOB,
-            id: jobId,
+            id: jobId
           })
         } else {
           // POST failed...
-          console.log("failur in building job", err)
+          console.log('failur in building job', err)
+          logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
         }
       })
   }
 }
 
 export function launchHeritrixJob (jobId) {
-  console.log("launch heritrixJob")
   let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
+  console.log('options uri before setting', options.uri)
+  console.log('the jobid', jobId)
   options.uri = `${options.uri}${jobId}`
+  console.log(`launching heritrix job ${jobId}`)
+  console.log('Options after setting options.uri', options.uri)
   // options.agent = httpsAgent
-  console.log(options)
   if (!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       rp(options)
         .then(response => {
           // POST succeeded...
-          console.log("sucess in launching job", response)
+          console.log('sucess in launching job', response)
           CrawlDispatcher.dispatch({
             type: EventTypes.LAUNCHED_CRAWL_JOB,
-            id: jobId,
+            id: jobId
           })
         })
         .catch(err => {
           if (err.statusCode == 303) {
-            console.log("303 sucess in launch job", err)
+            console.log('303 sucess in launch job', err)
             CrawlDispatcher.dispatch({
               type: EventTypes.LAUNCHED_CRAWL_JOB,
-              id: jobId,
+              id: jobId
             })
           } else {
             // POST failed...
-            console.log("failur in launching job", err)
-            logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`, err.stack))
+            console.log('failur in launching job', err)
+            logger.error(util.format(logStringError, `launching hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
           }
         })
     })
@@ -297,30 +299,30 @@ export function launchHeritrixJob (jobId) {
     rp(options)
       .then(response => {
         // POST succeeded...
-        console.log("sucess in launching job", response)
+        console.log('sucess in launching job', response)
         CrawlDispatcher.dispatch({
           type: EventTypes.LAUNCHED_CRAWL_JOB,
-          id: jobId,
+          id: jobId
         })
       })
       .catch(err => {
         if (err.statusCode == 303) {
-          console.log("303 sucess in launch job", err)
+          console.log('303 sucess in launch job', err)
           CrawlDispatcher.dispatch({
             type: EventTypes.LAUNCHED_CRAWL_JOB,
-            id: jobId,
+            id: jobId
           })
         } else {
           // POST failed...
-          console.log("failur in launching job", err)
-          logger.error(util.format(logStringError, `launching hereitrix job ${err.message}`, err.stack))
+          console.log('failur in launching job', err)
+          logger.error(util.format(logStringError, `launching hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
         }
       })
   }
 }
 
 export function forceCrawlFinish (jobId, cb) {
-  sendActionToHeritrix(sequentialActions([ "terminate", "teardown" ], jobId), jobId, cb)
+  sendActionToHeritrix(sequentialActions([ 'terminate', 'teardown' ], jobId), jobId, cb)
 }
 
 export function restartJob (jobId) {
@@ -369,7 +371,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
       // POST succeeded...
       console.log(`post succeeded in sendAction ${act} to heritrix`, response)
       if (isActionGenerator && notDone) {
-        console.log("we have next in action generator")
+        console.log('we have next in action generator')
         sendActionToHeritrix(act, jobId)
       }
     })
@@ -377,7 +379,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
       console.log(`post failed? in sendAction ${act} to heritrix`, err)
       logger.error(util.format(logStringError, `sendAction ${act} to heritrix ${err.message}`, err.stack))
       if (isActionGenerator && notDone) {
-        console.log("we have next in action generator", `is done? ${notDone}`)
+        console.log('we have next in action generator', `is done? ${notDone}`)
         sendActionToHeritrix(act, jobId)
       }
     })
@@ -397,7 +399,7 @@ function sortJobs (j1, j2) {
 }
 
 export function getHeritrixJobsState () {
-  console.log("Get heritrix Job State")
+  console.log('Get heritrix Job State')
   return new Promise((resolve, reject) => {
     const jobLaunch = named.named(jobLaunchRe)
     const job = named.named(jobRe)
@@ -409,7 +411,7 @@ export function getHeritrixJobsState () {
     let onlyJobLaunchsProgress = through2.obj(function (item, enc, next) {
       let didMath = jobLaunch.exec(item.path)
       if (didMath) {
-        console.log("Only job launch did match")
+        console.log('Only job launch did match')
         jobs[ didMath.capture('job') ].log = true
         jobs[ didMath.capture('job') ].launch = didMath.capture('launch')
         jobs[ didMath.capture('job') ].logPath = item.path
@@ -419,10 +421,10 @@ export function getHeritrixJobsState () {
           let jid = job.exec(item.path)
 
           if (jid) {
-            console.log("is a directory we have a jobid")
+            console.log('is a directory we have a jobid')
             counter += 1
             jobsConfs[ jid.capture('job') ] =
-              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, 'utf8')
             jobs[ jid.capture('job') ] = {
               log: false,
               jobId: jid.capture('job'),
@@ -439,7 +441,7 @@ export function getHeritrixJobsState () {
     })
 
     let launchStats = through2.obj(function (item, enc, next) {
-      fs.readFile(item.logPath, "utf8", (err, data)=> {
+      fs.readFile(item.logPath, 'utf8', (err, data)=> {
         if (err) throw err
         // console.log(data)
         let lines = data.trim().split(os.EOL)
@@ -493,7 +495,7 @@ export function getHeritrixJobsState () {
                 .value()
               resolve({ count: counter, confs: jobsConfs, jobs: sortedJobs, })
             } else {
-              resolve({ error: "count zero", count: 0, stack: 'ere' })
+              resolve({ error: 'count zero', count: 0, stack: 'ere' })
             }
           })
           .on('error', function (error, item) {

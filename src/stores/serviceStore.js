@@ -1,17 +1,26 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
 import util from 'util'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import wailConstants from '../constants/wail-constants'
-import { heritrixAccesible, launchHeritrix } from '../actions/heritrix-actions'
-import { waybackAccesible, startWayback } from '../actions/wayback-actions'
+import {heritrixAccesible, launchHeritrix} from '../actions/heritrix-actions'
+import {waybackAccesible, startWayback} from '../actions/wayback-actions'
 
 const logger = remote.getGlobal('logger')
 
 const EventTypes = wailConstants.EventTypes
 
-const logString = "service store %s"
+const logString = 'service store %s'
+const serviceDialogeTemplate = '%s %s down'
+
+const both = () =>
+  startWayback(() => {
+    launchHeritrix()
+  })
+
+const wayback = () => startWayback()
+const heritrix = () => launchHeritrix()
 
 class serviceStore extends EventEmitter {
   constructor () {
@@ -20,26 +29,57 @@ class serviceStore extends EventEmitter {
       heritrix: false,
       wayback: false,
     }
-    ipcRenderer.on("service-status-update", (event, update) => this.updateStatues(update))
+  
+    this.statusDialog = {
+      actions: [
+        both,
+        heritrix,
+        wayback
+      ],
+      actionIndex: -1,
+      message: '',
+    }
+    
+    ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
   }
 
   @autobind
   updateStatues (update) {
-    console.log("service updated")
-//     logger.log('info', logString, "services updated")
+    console.log('service updated')
     this.serviceStatus.heritrix = update.heritrix
     this.serviceStatus.wayback = update.wayback
+    let logMessage = ''
+    if (!update.heritrix && !update.wayback) {
+      logMessage = 'heritrix and wayback are down asking to start'
+      this.statusDialog.message = 'Heritrix and Wayback are not running. Restart services?'
+      this.statusDialog.actionIndex = 0
+    } else {
+      if (!update.heritrix && update.wayback) {
+        logMessage = 'heritrix was down but wayback was up asking to start'
+        this.statusDialog.message = 'Heritrix is not running. Restart service?'
+        this.statusDialog.actionIndex = 1
+      } else if (update.heritrix && !update.wayback) {
+        logMessage = 'wayback was down but heritrix was up asking to start'
+        this.statusDialog.message = 'Wayback is not running. Restart service?'
+        this.statusDialog.actionIndex = 2
+      } else {
+        logMessage = 'heritrix and wayback are up'
+        this.statusDialog.message = logMessage
+        this.statusDialog.actionIndex = -1
+      }
+    }
 
-    if (!this.serviceStatus.heritrix) {
-      logger.info(util.format(logString, "heritrix was down attempting to restart"))
-      launchHeritrix()
+    if (this.statusDialog.actionIndex !== -1) {
+      this.emit('statusDialog')
     }
-    if (!this.serviceStatus.wayback) {
-      logger.info(util.format(logString, "wayback was down attempting to restart"))
-      startWayback()
-    }
+
+    logger.info(util.format(logString, logMessage))
     this.emit('monitor-status-update')
-
+  }
+  
+  @autobind
+  statusActionMessage() {
+    return this.statusDialog
   }
 
   @autobind
@@ -68,14 +108,14 @@ class serviceStore extends EventEmitter {
     switch (event.type) {
       case EventTypes.HERITRIX_STATUS_UPDATE:
       {
-        console.log("Heritrix status update serivice store", event, this.serviceStatus)
+        console.log('Heritrix status update serivice store', event, this.serviceStatus)
         this.serviceStatus.heritrix = event.status
         this.emit('heritrix-status-update')
         break
       }
       case EventTypes.WAYBACK_STATUS_UPDATE:
       {
-        console.log("Wayback status update serivice store", event, this.serviceStatus)
+        console.log('Wayback status update serivice store', event, this.serviceStatus)
         this.serviceStatus.wayback = event.status
         this.emit('wayback-status-update')
         break

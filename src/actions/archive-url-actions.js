@@ -1,6 +1,6 @@
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import wailConstants from '../constants/wail-constants'
-import child_process from 'child_process'
+import childProcess from 'child_process'
 import rp from 'request-promise'
 import { remote } from 'electron'
 import util from 'util'
@@ -49,7 +49,7 @@ export function urlUpdated (url) {
 
 export async function askMemgator (url) {
   console.log('askingMemegator')
-  child_process.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
+  childProcess.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
       let stack
       if (Reflect.has(err, 'stack')) {

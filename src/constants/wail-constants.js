@@ -21,6 +21,7 @@ const consts = {
     HERITRIX_STATUS_UPDATE: null,
     LAUNCHED_CRAWL_JOB: null,
     QUEUE_MESSAGE: null,
+    REQUEST: null,
     SAVE_CODE: null,
     STORE_HERITRIX_JOB_CONFS: null,
     VIEW_ARCHIVED_URI: null,

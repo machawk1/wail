@@ -40,12 +40,12 @@ const ignore = [
   '^/build($|/)',
   '^/build-binary.js$',
   '^/build-binary-old.js$',
-  '^/bundledApps/heritrix-3.2.0/jobs/',
+  '^/bundledApps/heritrix-3.3.0/heritrix_out.log$',
+  '^/bundledApps/heritrix-3.3.0/heritrix.pid$',
+  '^/bundledApps/heritrix-3.3.0/jobs/',
   '^/bundledApps/memgator($|/)',
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
-  '^/bundledApps/heritrix-3.2.0/heritrix.pid$',
-  '^/bundledApps/heritrix-3.2.0/heritrix_out.log$',
   '^/.codeclimate.yml($|/)',
   '^/doElectron.sh$',
   '^/electron-main-dev.js$',
@@ -60,9 +60,8 @@ const ignore = [
   '^/test($|/)',
   '^/tools($|/)',
   '^/waillogs($|/)',
-  '^/waillogs($|/)',
   '^/webpack.config.*$',
-  '^/zips($|/)',
+  '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
     deps.filter(name => !electronCfg.externals.includes(name))

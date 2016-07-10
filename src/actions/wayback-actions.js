@@ -1,8 +1,7 @@
-import child_process from 'child_process'
+import childProcess from 'child_process'
 import rp from 'request-promise'
 import fs from 'fs-extra'
 import os from 'os'
-import http from 'http'
 import path from 'path'
 import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
@@ -10,7 +9,6 @@ import cheerio from 'cheerio'
 import { remote } from 'electron'
 import util from 'util'
 
-const httpAgent = new http.Agent()
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
 const logString = "wayback-actions %s"
@@ -62,7 +60,7 @@ export function waybackAccesible () {
   console.log("checking wayback accessibility")
   let wburi = settings.get('wayback.uri_wayback')
 
-  rp({ uri: wburi,agent: httpAgent })
+  rp({ uri: wburi})
     .then(success => {
       console.log("wayback success", success)
       ServiceDispatcher.dispatch({
@@ -92,14 +90,14 @@ export function startWayback () {
       stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
     try {
-      let wayback = child_process.spawn("wayback.bat", [ "start" ], opts)
+      let wayback = childProcess.spawn("wayback.bat", [ "start" ], opts)
       wayback.unref()
     } catch (err) {
       logger.error(util.format(logStringError, "win32 launch wayback", err.stack))
     }
 
   } else {
-    child_process.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
+    childProcess.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       if (err) {
         let stack
@@ -124,7 +122,7 @@ export function killWayback (cb) {
       stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
     try {
-      let wayback = child_process.spawn("wayback.bat", [ "stop" ], opts)
+      let wayback = childProcess.spawn("wayback.bat", [ "stop" ], opts)
       wayback.unref()
     } catch (err) {
       logger.error(util.format(logStringError, "win32 kill wayback", err.stack))
@@ -133,7 +131,7 @@ export function killWayback (cb) {
       cb()
     }
   } else {
-    child_process.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
+    childProcess.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       if(err){
         let stack
