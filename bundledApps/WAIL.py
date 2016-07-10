@@ -80,7 +80,7 @@ msg_uriInArchives_body = ("This URL is currently in the archives!"
 msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
-msg_fetchingMementos = "Fetching memento count from public archives..."
+msg_fetchingMementos = "Fetching memento count..."
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -99,6 +99,7 @@ buttonLabel_archiveNow = "Archive Now!"
 buttonLabel_archiveNow_initializing = "INITIALIZING"
 buttonLabel_checkStatus = "Check Archived Status"
 buttonLabel_viewArchive = "View Archive"
+buttonLabel_mementoCountInfo = "?"
 buttonLabel_uri = "URL:"
 buttonLabel_fix = "Fix"
 buttonLabel_kill = "Kill"
@@ -281,6 +282,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.archiveNowButton.SetDefault()
 
+        #self.mementoCountInfo = wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(270,85), size=(25,15))
+
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
@@ -302,16 +305,17 @@ class WAILGUIFrame_Basic(wx.Panel):
     def setMementoCount(self, count):
         if hasattr(self,'mementoStatus'):
           self.mementoStatus.Destroy()
+          self.mementoStatusPublicArchives.Destroy()
           
         if count:
-          memCountMsg = "Public archives: " + str(count) + " mementos available"
+          memCountMsg = str(count) + " mementos available"
+          self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(105, 85), size=(150,20))
         else:
-          memCountMsg = msg_fetchingMementos
-        #self.status = wx.HyperlinkCtrl(self, -1, label=str(count) + " mementos available", url=" ", pos=(5, 65), size=(300,20))
-        #self.status.SetNormalColour(wx.Colour(0,0,255))
-        #self.status.SetVisitedColour(wx.Colour(0,0,255))
-        #self.status.SetHoverColour(wx.Colour(0,0,255))   
-        self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(5, 85), size=(300,20))
+          self.mementoStatus = wx.StaticText(self, -1, label=msg_fetchingMementos, pos=(105, 85), size=(150,20))
+          #italicFont = self.mementoStatus.GetFont().SetStyle(wx.ITALIC)
+          #self.mementoStatus.SetFont(italicFont)
+          
+        self.mementoStatusPublicArchives = wx.StaticText(self, -1, label="Public archives: ", pos=(5, 85), size=(100,20))
     
     
     
@@ -485,7 +489,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         elif 200 != statusCode:
             wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
-            wx.MessageBox(msg_uriInArchives_body,msg_uriInArchives_title)
+            mb = wx.MessageBox(msg_uriInArchives_body,msg_uriInArchives_title)
+            mb.AddButton(wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(10,85), size=(25,15)))
 
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
