@@ -12,6 +12,8 @@ const jobHolder = {
   rule: null
 }
 
+// TODO: Let the closing of the the snackbar be where we check the to see if we need to process more messages
+
 export default class Notifications extends Component {
   constructor (props, context) {
     super(props, context)
