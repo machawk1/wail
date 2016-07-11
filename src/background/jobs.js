@@ -16,8 +16,8 @@ import Logger from '../logger/logger'
 
 const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('jobLogPath') })
-const logString = "jobs %s"
-const logStringError = "jobs error where [ %s ] stack [ %s ]"
+const logString = 'jobs %s'
+const logStringError = 'jobs error where [ %s ] stack [ %s ]'
 const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
 
 const jobLock = new ReadWriteLock()
@@ -121,7 +121,7 @@ function checkCache (newJobs) {
     jobCache.cache = newJobs
     return true
   } else {
-    console.log("There is no update", jobCache.index, positions)
+    console.log('There is no update', jobCache.index, positions)
     return false
   }
 }
@@ -152,7 +152,7 @@ function getHeritrixJobsState () {
           if (jid) {
             counter += 1
             jobsConfs[ jid.capture('job') ] =
-              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, "utf8")
+              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, 'utf8')
             jobs[ jid.capture('job') ] = {
               log: false,
               jobId: jid.capture('job'),
@@ -171,7 +171,7 @@ function getHeritrixJobsState () {
 
     let launchStats = through2.obj(function (item, enc, next) {
       let through = this
-      fs.readFile(item.logPath, "utf8", (err, data)=> {
+      fs.readFile(item.logPath, 'utf8', (err, data)=> {
         if (err) {
           logger.error(util.format(logStringError, `launchStats ${item.logPath}`, err.stack))
           through.push(item)
@@ -215,7 +215,7 @@ function getHeritrixJobsState () {
     //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
-        logger.error(util.format(logStringError, "ensure dir heritrixJobP", err.stack))
+        logger.error(util.format(logStringError, 'ensure dir heritrixJobP', err.stack))
         reject(err)
       } else {
         fs.walk(heritrixJobP)
@@ -246,17 +246,17 @@ function getHeritrixJobsState () {
 
               } else {
                 console.log('Job cache is null')
-                logger.info(util.format(logString, "the job cache is null. Setting it"))
+                logger.info(util.format(logString, 'the job cache is null. Setting it'))
                 jobCache.cache = sortedJobs
                 let len = sortedJobs.length
-                for (var i = 0; i < len; ++i) {
+                for (let i = 0; i < len; ++i) {
                   jobCache.index.set(sortedJobs[ i ].jobId, i)
                 }
                 resolve({ change: false, begin: 'We set ourselves at the first time and so does UI' })
               }
 
             } else {
-              resolve({ change: false, error: "count zero", count: 0, stack: 'ere' })
+              resolve({ change: false, error: 'count zero', count: 0, stack: 'ere' })
             }
           })
           .on('error', function (error, item) {
@@ -282,20 +282,20 @@ class JobMonitor {
   checkJobStatuses (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
-      rule.second = [ 0, 20, 40 ]
+      rule.second = [ 0, 10, 20, 30, 40, 50 ]
 
       this.job = schedule.scheduleJob(rule, () => {
-        console.log("Checking job stats")
+        console.log('Checking job stats')
         jobLock.writeLock(release => {
           getHeritrixJobsState()
             .then(status => {
-              console.log("Done Checking job stats")
+              console.log('Done Checking job stats')
               release()
               cb(status)
             })
             .catch(error => {
-              console.log("Done Checking job stats with error")
-              logger.error(util.format(logStringError, "checkJobStatuses", error.stack))
+              console.log('Done Checking job stats with error')
+              logger.error(util.format(logStringError, 'checkJobStatuses', error.stack))
               release()
               cb({ change: false })
             })
@@ -309,20 +309,20 @@ class JobMonitor {
 
 let jobMonitor = new JobMonitor()
 
-ipcRenderer.on("start-crawljob-monitoring", (event) => {
+ipcRenderer.on('start-crawljob-monitoring', (event) => {
   console.log('Monitor get start crawljob monitoring')
-  logger.info(util.format(logString, "got start crawljob monitoring"))
+  logger.info(util.format(logString, 'got start crawljob monitoring'))
   ipcRenderer.send('got-it', { from: 'jobs', yes: true })
   jobMonitor.checkJobStatuses(statues => {
     if (statues.change) {
-      ipcRenderer.send("crawljob-status-update", statues)
+      ipcRenderer.send('crawljob-status-update', statues)
     }
   })
 })
 
-ipcRenderer.on("stop", (event) => {
-  console.log('Monitor get start indexing monitoring')
-  logger.info(util.format(logString, "got stop crawljob monitoring"))
+ipcRenderer.on('stop', (event) => {
+  console.log('Monitor get stop indexing monitoring')
+  logger.info(util.format(logString, 'got stop crawljob monitoring'))
   logger.cleanUp()
   jobMonitor.job.cancel()
   jobMonitor.job = null

@@ -38,8 +38,10 @@
     "test-xml": "cross-env babel-node tools/test-xml"
   },
   "eslintConfig": {
+    "parser": "babel-eslint",
     "env": {
-      "node": true
+      "node": true,
+      "es6": true
     },
     "rules": {
       "camelcase": "off",
@@ -53,19 +55,30 @@
   "standard": {
     "parser": "babel-eslint",
     "ignore": [
-      "webpack.*",
-      "node_modules/*",
-      "tools/*",
-      "release/*",
+      "archiveIndexes/*",
+      "archives/*",
+      "buildResources/*",
+      "bundledApps",
+      "config/*",
       "*.cxml",
-      "*.xml",
-      "package.js",
       "dist/*",
-      "README.md",
-      "zips/*",
-      "support",
-      "config",
-      "bundledApps"
+      "Dockerfile",
+      "LICENSE",
+      "*.log",
+      "*.md",
+      "node_modules/*",
+      "package.js",
+      "release/*",
+      "*.sh",
+      "support/*",
+      "test/*",
+      "tools/*",
+      "*.txt",
+      "waillogs/*",
+      "webpack.*",
+      "*.xml",
+      "*.yml",
+      "zips/*"
     ],
     "env": {
       "node": true,
@@ -141,6 +154,7 @@
     "split2": "^2.1.0",
     "string": "^3.3.1",
     "through2": "^2.0.1",
+    "twix": "^1.1.0",
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",
     "validator": "^5.4.0"

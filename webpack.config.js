@@ -1,4 +1,3 @@
-var debug = process.env.NODE_ENV !== "production"
 var webpack = require('webpack')
 var path = require('path')
 
@@ -6,12 +5,13 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 
 module.exports = {
   entry: {
-    wail:  "./src/wail" ,
-    settingsW: './src/childWindows/settings/settingsW',
-    newCrawl:  "./src/childWindows/newCrawl/newCrawl" ,
     accessibility: './src/background/accessibility',
     indexer: './src/background/indexer',
     jobs: './src/background/jobs',
+    newCrawl: './src/childWindows/newCrawl/newCrawl',
+    requestD: './src/background/requestDaemon',
+    settingsW: './src/childWindows/settings/settingsW',
+    wail: './src/wail'
   },
   module: {
     noParse: noParseRe,
@@ -22,13 +22,14 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'es2015', 'stage-0', 'node6', 'react', "react-hmre" ],
-          plugins: [ 'transform-runtime', "add-module-exports",
-            "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
+          presets: [ 'es2015', 'stage-0', 'node6', 'react', 'react-hmre' ],
+          plugins: [ 'transform-runtime', 'add-module-exports',
+            'babel-plugin-transform-decorators-legacy', 'transform-class-properties', 
+            'react-html-attrs',
           ],
         },
       },
-      {test: /\.css$/, loader: "style!css"},
+      { test: /\.css$/, loader: 'style!css' },
       {
         test: /\.scss$/,
         loaders: [ 'style!css!less|scss', 'style-loader',
@@ -60,9 +61,10 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    chunkFilename: "[id].chunk.js",
+    chunkFilename: '[id].chunk.js',
     publicPath: 'http://localhost:9000/dist/'
   },
+  bail: true,
   target: 'electron-renderer',
 
 }

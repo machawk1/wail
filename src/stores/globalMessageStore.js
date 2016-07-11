@@ -21,7 +21,7 @@ class globalMessageStore extends EventEmitter {
   }
 
   hasQueuedMessages () {
-    return this.messageQ.length != 0
+    return this.messageQ.length !== 0
   }
 
   getMessage () {

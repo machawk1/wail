@@ -8,14 +8,15 @@ import Promise from 'bluebird'
 import { ipcRenderer } from 'electron'
 import Routes from './routes'
 import { writeWaybackConf } from './actions/wayback-actions'
-import RequestDaemon from './stores/requestDaemon'
+import RequestStore from './stores/requestStore'
 
 Promise.promisifyAll(fs)
 
-
 window.React = React
-//ensure out RequestStore is alive and kicking 
-window.ReqDaemon = RequestDaemon
+
+//  ensure out RequestStore is alive and kicking
+
+window.ReqStore = RequestStore
 
 injectTapEventPlugin()
 

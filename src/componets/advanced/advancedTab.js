@@ -23,16 +23,16 @@ export default class AdvancedTab extends Component {
         value={this.state.value}
         onChange={this.handleChange}
       >
-        <Tab label="General" value="general">
-          <General/>
+        <Tab label='General' value='general'>
+          <General />
         </Tab>
-        <Tab label="Wayback" value="wayback">
+        <Tab label='Wayback' value='wayback'>
           <WayBackTab />
         </Tab>
-        <Tab label="Heritrix" value="heritrix">
+        <Tab label='Heritrix' value='heritrix'>
           <HeritrixTab />
         </Tab>
-        <Tab label="Miscellaneous" value="miscellaneous">
+        <Tab label='Miscellaneous' value='miscellaneous'>
           <Miscellaneous />
         </Tab>
       </Tabs>

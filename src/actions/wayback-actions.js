@@ -1,5 +1,4 @@
 import childProcess from 'child_process'
-import rp from 'request-promise'
 import fs from 'fs-extra'
 import os from 'os'
 import path from 'path'
@@ -7,15 +6,16 @@ import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
 import cheerio from 'cheerio'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
-const logString = "wayback-actions %s"
-const logStringError = "wayback-actions error where[ %s ] stack [ %s ]"
+// const logString = 'wayback-actions %s'
+const logStringError = 'wayback-actions error where[ %s ] stack [ %s ]'
 
 const EventTypes = wc.EventTypes
+const RequestTypes = wc.RequestTypes
 
 export function writeWaybackConf () {
   let wayBackConflines = [
@@ -26,14 +26,14 @@ export function writeWaybackConf () {
     "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
     "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",
     "wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }",
-    "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}",
+    'wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}',
     "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
     'wayback.archivedir.1=${wayback.basedir}/files1/',
     'wayback.archivedir.2=${wayback.basedir}/files2/',
   ]
   let wbConfPath = settings.get('wayBackConf')
   let base = settings.get('base')
-  fs.readFile(wbConfPath, 'utf8', (err, val)=> {
+  fs.readFile(wbConfPath, 'utf8', (err, val) => {
     if (err) {
       console.error(err)
       logger.error(util.format(logStringError, `reading WBConf ${err.message}`, err.stack))
@@ -43,6 +43,7 @@ export function writeWaybackConf () {
      'wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT',
      */
     let $ = cheerio.load(val, { xmlMode: true })
+
     let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
     wayBackConflines.unshift(`wail.basedir=${base}`)
     wayBackConflines.unshift(`wayback.basedir.default=${path.normalize(path.join(base, 'bundledApps/tomcat/webapps/ROOT'))}`)
@@ -50,31 +51,34 @@ export function writeWaybackConf () {
     fs.writeFile(wbConfPath, $.xml(), err => {
       if (err) {
         console.error(err)
-        logger.error(util.format(logStringError, "writting WBConf", err.stack))
+        logger.error(util.format(logStringError, 'writting WBConf', err.stack))
       }
     })
   })
-
 }
 
 export function waybackAccesible (startOnDown = false) {
-  console.log("checking wayback accessibility")
+  console.log('checking wayback accessibility')
   // let wburi = settings.get('wayback.uri_wayback')
-
-  let request = {
-    opts: { 
-      uri:  settings.get('wayback.uri_wayback')
+  RequestDispatcher.dispatch({
+    type: EventTypes.REQUEST_WAYBACK,
+    rType: RequestTypes.ACCESSIBILITY,
+    opts: {
+      uri: settings.get('wayback.uri_wayback')
     },
+    from: 'waybackAccesible',
+    timeReceived: null,
+    startOnDown,
     success: (response) => {
-      console.log("wayback success", success)
+      console.log('wayback is accessible')
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: true,
       })
     },
     error: (err) => {
-      console.log("wayback err", err)
-      logger.error(util.format(logStringError, "waybackAccessible", err.stack))
+      console.log('wayback err', err)
+      logger.error(util.format(logStringError, 'waybackAccessible', err.stack))
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
         status: false,
@@ -83,24 +87,19 @@ export function waybackAccesible (startOnDown = false) {
         startWayback()
       }
     }
-  }
-
-  RequestDispatcher.dispatch({
-    type: EventTypes.REQUEST,
-    request
   })
 
   // rp({ uri: wburi })
   //   .then(success => {
-  //     console.log("wayback success", success)
+  //     console.log('wayback success', success)
   //     ServiceDispatcher.dispatch({
   //       type: EventTypes.WAYBACK_STATUS_UPDATE,
   //       status: true,
   //     })
   //   })
   //   .catch(err => {
-  //     console.log("wayback err", err)
-  //     logger.error(util.format(logStringError, "waybackAccessible", err.stack))
+  //     console.log('wayback err', err)
+  //     logger.error(util.format(logStringError, 'waybackAccessible', err.stack))
   //     ServiceDispatcher.dispatch({
   //       type: EventTypes.WAYBACK_STATUS_UPDATE,
   //       status: false,
@@ -121,12 +120,11 @@ export function startWayback () {
       stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
     try {
-      let wayback = childProcess.spawn("wayback.bat", [ "start" ], opts)
+      let wayback = childProcess.spawn('wayback.bat', [ 'start' ], opts)
       wayback.unref()
     } catch (err) {
-      logger.error(util.format(logStringError, "win32 launch wayback", err.stack))
+      logger.error(util.format(logStringError, 'win32 launch wayback', err.stack))
     }
-
   } else {
     childProcess.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
@@ -153,19 +151,20 @@ export function killWayback (cb) {
       stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
     try {
-      let wayback = childProcess.spawn("wayback.bat", [ "stop" ], opts)
+      let wayback = childProcess.spawn('wayback.bat', [ 'stop' ], opts)
       wayback.unref()
     } catch (err) {
-      logger.error(util.format(logStringError, "win32 kill wayback", err.stack))
+      logger.error(util.format(logStringError, 'win32 kill wayback', err.stack))
     }
     if (cb) {
       cb()
     }
   } else {
     childProcess.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
-      console.log(err, stdout, stderr)
+      console.log(stdout)
       if (err) {
         let stack
+        console.log(err, stderr)
         if (Reflect.has(err, 'stack')) {
           stack = `${stdout} ${err.stack}`
         } else {

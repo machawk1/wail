@@ -29,8 +29,8 @@ export default {
     left: 10,
   },
   heritrixJobList: {
-    overflow: "hidden",
-    overflowY: "scroll",
+    overflow: 'hidden',
+    overflowY: 'scroll',
     height: 300,
   },
   root: {
@@ -61,18 +61,17 @@ export default {
     paddingLeft: 115
   },
   tableHeaderCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
+    paddingLeft: '12px',
+    paddingRight: '12px',
   },
   tableHeader: {
-    borderBottomStyle: "none"
+    borderBottomStyle: 'none'
   },
   tableRowCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
-    wordWrap: "break-word",
-    textOverflow: "none",
-    whiteSpace: "normal",
+    paddingLeft: '12px',
+    paddingRight: '12px',
+    wordWrap: 'break-word',
+    textOverflow: 'none',
+    whiteSpace: 'normal',
   }
-
 }

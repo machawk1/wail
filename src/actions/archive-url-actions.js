@@ -8,8 +8,8 @@ import util from 'util'
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 const logger = remote.getGlobal('logger')
-const logString = "archive-url-actions %s"
-const logStringError = "archive-url-actions error where[ %s ], stack[ %s ]"
+const logString = 'archive-url-actions %s'
+const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function checkUriIsInArchive (uri) {
   return new Promise((resolve, reject) => {
@@ -17,11 +17,10 @@ export function checkUriIsInArchive (uri) {
       .then(response => {
         // POST succeeded...
         resolve({ inArchive: true, uri: uri })
-
       })
       .catch(err => {
         console.log('error in querying wayback', err)
-        logger.error(util.format(logStringError, "checkUriIsInArchive", err.stack))
+        logger.error(util.format(logStringError, 'checkUriIsInArchive', err.stack))
         resolve({ inArchive: false, uri: uri })
       })
   })

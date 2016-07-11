@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
-           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
-       default-init-method="init">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" default-init-method="init">
 
 <!--
     Macro-like substitutions for the overall file:
@@ -14,35 +11,24 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
-        <!-- Customize these basic placeholders. -->
-        wail.basedir=/Applications/WAIL.app
-        wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
-        wayback.url.scheme.default=http
-        wayback.url.host.default=localhost
-        wayback.url.port.default=8080
-
-        <!-- Environment variables (if present) override defaults. No need to customize these. -->
-        wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }
-        wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }
-        wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }
-        wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }
-
-        <!-- No need to edit this setting unless deploying in a non-ROOT context
-             or using a load balancer, in which case configure it with the frontend URL prefix. -->
-        wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}
-
-        <!-- Environment variable (if present) overrides default. No need to customize this. -->
-        wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }
-
-        <!-- Customize or add additional placeholders if needed to use elsewhere.
-             Check BDBCollection.xml for following placeholders being used. -->
-        wayback.archivedir.1=${wayback.basedir}/files1/
-        wayback.archivedir.2=${wayback.basedir}/files2/
-      </value>
+wayback.basedir.default=/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT
+wail.basedir=/home/john/my-fork-wail/wail
+wayback.url.scheme.default=http
+wayback.url.host.default=localhost
+wayback.url.port.default=8080
+wayback.basedir=#{ systemEnvironment[&apos;WAYBACK_BASEDIR&apos;] ?: &apos;${wayback.basedir.default}&apos; }
+wayback.url.scheme=#{ systemEnvironment[&apos;WAYBACK_URL_SCHEME&apos;] ?: &apos;${wayback.url.scheme.default}&apos; }
+wayback.url.host=#{ systemEnvironment[&apos;WAYBACK_URL_HOST&apos;] ?: &apos;${wayback.url.host.default}&apos; }
+wayback.url.port=#{ systemEnvironment[&apos;WAYBACK_URL_PORT&apos;] ?: &apos;${wayback.url.port.default}&apos; }
+wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}
+wayback.url.prefix=#{ systemEnvironment[&apos;WAYBACK_URL_PREFIX&apos;] ?: &apos;${wayback.url.prefix.default}&apos; }
+wayback.archivedir.1=${wayback.basedir}/files1/
+wayback.archivedir.2=${wayback.basedir}/files2/
+</value>
     </property>
   </bean>
 
-  <bean id="waybackCanonicalizer" class="org.archive.wayback.util.url.AggressiveUrlCanonicalizer" />
+  <bean id="waybackCanonicalizer" class="org.archive.wayback.util.url.AggressiveUrlCanonicalizer"/>
 
 
 <!--
@@ -61,7 +47,7 @@
 -->
 
   <bean id="resourcefilelocationdb" class="org.archive.wayback.resourcestore.locationdb.FlatFileResourceFileLocationDB">
-    <property name="path" value="${wail.basedir}/config/path-index.txt" />
+    <property name="path" value="${wail.basedir}/config/path-index.txt"/>
   </bean>
 
 <!--
@@ -170,26 +156,26 @@
     get them back on track.
   -->
   <bean name="+" class="org.archive.wayback.webapp.ServerRelativeArchivalRedirect">
-    <property name="matchPort" value="${wayback.url.port}" />
-    <property name="useCollection" value="true" />
+    <property name="matchPort" value="${wayback.url.port}"/>
+    <property name="useCollection" value="true"/>
   </bean>
 
   <bean name="standardaccesspoint" class="org.archive.wayback.webapp.AccessPoint">
     <property name="accessPointPath" value="${wayback.url.prefix}/wayback/"/>
     <property name="internalPort" value="${wayback.url.port}"/>
-    <property name="serveStatic" value="true" />
-    <property name="bounceToReplayPrefix" value="false" />
-    <property name="bounceToQueryPrefix" value="false" />
-    <property name="enableMemento" value="true" />
+    <property name="serveStatic" value="true"/>
+    <property name="bounceToReplayPrefix" value="false"/>
+    <property name="bounceToQueryPrefix" value="false"/>
+    <property name="enableMemento" value="true"/>
 
 	<!--
 	  These properties enable customized handling of query, replay, and static
 	  requests by different URL prefixes
 	-->
 	
-    <property name="replayPrefix" value="${wayback.url.prefix}/wayback/" />
-    <property name="queryPrefix" value="${wayback.url.prefix}/wayback/" />
-    <property name="staticPrefix" value="${wayback.url.prefix}/wayback/" />
+    <property name="replayPrefix" value="${wayback.url.prefix}/wayback/"/>
+    <property name="queryPrefix" value="${wayback.url.prefix}/wayback/"/>
+    <property name="staticPrefix" value="${wayback.url.prefix}/wayback/"/>
 
 	<!--
 		The following property will cause only results matching the exact host
@@ -204,13 +190,13 @@
    <!-- 
     <property name="collection" ref="localbdbcollection" />
 -->
-    <property name="collection" ref="localcdxcollection" />
+    <property name="collection" ref="localcdxcollection"/>
 
 
-    <property name="replay" ref="archivalurlreplay" />
+    <property name="replay" ref="archivalurlreplay"/>
     <property name="query">
       <bean class="org.archive.wayback.query.Renderer">
-        <property name="captureJsp" value="/WEB-INF/query/CalendarResults.jsp" />
+        <property name="captureJsp" value="/WEB-INF/query/CalendarResults.jsp"/>
 <!--
         This .jsp provides a "search engine" style listing of results vertically
         <property name="captureJsp" value="/WEB-INF/query/HTMLCaptureResults.jsp" />
@@ -226,7 +212,7 @@
 
     <property name="parser">
       <bean class="org.archive.wayback.archivalurl.ArchivalUrlRequestParser">
-        <property name="maxRecords" value="10000" />
+        <property name="maxRecords" value="10000"/>
         <!--
         <property name="earliestTimestamp" value="1999" />
         <property name="latestTimestamp" value="2004" />
@@ -358,6 +344,6 @@
     start year will default to 1996.
   -->
   <bean name="minimumYearAllowed" class="org.archive.wayback.util.Timestamp">
-    <property name="startYear" value="1996" />
+    <property name="startYear" value="1996"/>
   </bean>
 </beans>

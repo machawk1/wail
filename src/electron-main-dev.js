@@ -5,27 +5,34 @@ import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import configSettings from './settings/settings'
 
-let mainWindow = null
-let newCrawlWindow = null
-let accessibilityWindow = null
-let indexWindow = null
-let jobbWindow = null
-let settingsWindow = null
+const windows = {
+  accessibilityWindow: null,
+  accessibilityWindowURL: null,
+  indexWindow: null,
+  indexWindowURL: null,
+  jobWindow: null,
+  jobWindowURL: null,
+  mainWindow: null,
+  mWindowURL: null,
+  newCrawlWindow: null,
+  newCrawlWindowURL: null,
+  reqDaemonWindow: null,
+  reqDaemonWindowURL: null,
+  settingsWindow: null,
+  settingsWindowURL: null
+}
+
 let base
-let mWindowURL
-let newCrawlWindowURL
-let accessibilityWindowURL
-let indexWindowURL
-let jobbWindowURL
-let settingsWindowURL
-
 let notDebugUI = true
-let debug = false
-let openBackGroundWindows = false
+let debug = true
+let openBackGroundWindows = true
 
-let shouldQuit = false
+// let shouldQuit = false
 
 app.commandLine.appendSwitch('js-flags', '--expose_gc')
+
+// do not lower the priority of our invisible background windows
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 function showNewCrawlWindow (parent) {
   let config = {
@@ -36,15 +43,15 @@ function showNewCrawlWindow (parent) {
     minimizable: false,
     autoHideMenuBar: true
   }
-  newCrawlWindow = new BrowserWindow(config)
-  newCrawlWindow.loadURL(newCrawlWindowURL)
-  newCrawlWindow.on('ready-to-show', () => {
-    newCrawlWindow.show()
+  windows.newCrawlWindow = new BrowserWindow(config)
+  windows.newCrawlWindow.loadURL(windows.newCrawlWindowURL)
+  windows.newCrawlWindow.on('ready-to-show', () => {
+    windows.newCrawlWindow.show()
     // newCrawlWindow.webContents.openDevTools({ mode: 'detach' })
   })
 
-  newCrawlWindow.on('closed', () => {
-    newCrawlWindow = null
+  windows.newCrawlWindow.on('closed', () => {
+    windows.newCrawlWindow = null
   })
 }
 
@@ -57,15 +64,15 @@ function showSettingsWindow (parent) {
     minimizable: false,
     autoHideMenuBar: true
   }
-  settingsWindow = new BrowserWindow(config)
-  settingsWindow.loadURL(newCrawlWindowURL)
-  settingsWindow.on('ready-to-show', () => {
-    settingsWindow.show()
-    settingsWindow.webContents.toggleDevTools()
+  windows.settingsWindow = new BrowserWindow(config)
+  windows.settingsWindow.loadURL(windows.settingsWindowURL)
+  windows.settingsWindow.on('ready-to-show', () => {
+    windows.settingsWindow.show()
+    windows.settingsWindow.webContents.toggleDevTools()
   })
 
-  settingsWindow.on('closed', () => {
-    settingsWindow = null
+  windows.settingsWindow.on('closed', () => {
+    windows.settingsWindow = null
   })
 }
 
@@ -77,104 +84,111 @@ function setUpIPC () {
 
     ipcMain.on('start-service-monitoring', (event, payload) => {
       console.log('Got start-service-monitoring')
-      accessibilityWindow.webContents.send('start-service-monitoring', payload)
+      windows.accessibilityWindow.webContents.send('start-service-monitoring', payload)
     })
 
     ipcMain.on('start-crawljob-monitoring', (event, payload) => {
       console.log('got start-crawljob-monitoring')
-      jobbWindow.webContents.send('start-crawljob-monitoring', payload)
+      windows.jobWindow.webContents.send('start-crawljob-monitoring', payload)
     })
 
     ipcMain.on('start-index-indexing', (event, payload) => {
       console.log('got start-index-indexing')
-      indexWindow.webContents.send('start-index-indexing', payload)
+      windows.indexWindow.webContents.send('start-index-indexing', payload)
     })
 
     ipcMain.on('service-status-update', (event, payload) => {
       console.log('got test-status-update', payload)
-      mainWindow.webContents.send('service-status-update', payload)
+      windows.mainWindow.webContents.send('service-status-update', payload)
     })
 
     ipcMain.on('crawljob-status-update', (event, payload) => {
       console.log('got crawljob-status-update', payload)
-      mainWindow.webContents.send('crawljob-status-update', payload)
+      windows.mainWindow.webContents.send('crawljob-status-update', payload)
     })
 
     ipcMain.on('pong', (event, payload) => {
       console.log('got pong', payload)
-      mainWindow.webContents.send('pong', payload)
+      windows.mainWindow.webContents.send('pong', payload)
     })
   }
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
     console.log('got open-newCrawl-window')
-    showNewCrawlWindow(mainWindow)
+    showNewCrawlWindow(windows.mainWindow)
   })
 
   ipcMain.on('open-settings-window', (event, payload) => {
     console.log('got open-settings-window')
-    showSettingsWindow(mainWindow)
+    showSettingsWindow(windows.mainWindow)
   })
 
   ipcMain.on('close-newCrawl-window', (event, payload) => {
     console.log('got close-newCrawl-window')
-    if (newCrawlWindow != null) {
+    if (windows.newCrawlWindow != null) {
       console.log('newCrawlWindow is not null')
-      newCrawlWindow.destroy()
+      windows.newCrawlWindow.destroy()
     }
   })
 
   ipcMain.on('close-settings-window', (event, payload) => {
     console.log('got close-settings-window')
-    if (settingsWindow != null) {
+    if (windows.settingsWindow != null) {
       console.log('newCrawlWindow is not null')
       if (payload) {
-        console.log("It sent us ", payload)
+        console.log('It sent us ', payload)
       }
-      settingsWindow.destroy()
+      windows.settingsWindow.destroy()
     }
   })
 
   //
   ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
-    mainWindow.webContents.send('crawljob-configure-dialogue', payload)
-    if (newCrawlWindow != null) {
-      newCrawlWindow.destroy()
+    windows.mainWindow.webContents.send('crawljob-configure-dialogue', payload)
+    if (windows.newCrawlWindow != null) {
+      windows.newCrawlWindow.destroy()
     }
+  })
+
+  ipcMain.on('send-to-requestDaemon', (event, request) => {
+    windows.reqDaemonWindow.send('handle-request', request)
+  })
+
+  ipcMain.on('handled-request', (event, request) => {
+    windows.mainWindow.send('handled-request', request)
   })
 
   ipcMain.on('services-shutdown', (event, payload) => {
     // we gracefully shutdown our services this only happens on window close
-    mainWindow = null
+    windows.mainWindow = null
   })
-
-  //close-newCrawl-window-configured
 }
 
 function setUp () {
-
   setUpIPC()
 
   base = path.resolve('./')
-  ///home/john/my-fork-wail/wail/src/childWindows/newCrawl/newCrawl.html
+  //  home/john/my-fork-wail/wail/src/childWindows/newCrawl/newCrawl.html
   if (process.env.NODE_ENV === 'development') {
     require('electron-debug')({
       showDevTools: true,
     })
-    mWindowURL = `file://${__dirname}/wail.html`
-    newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
-    accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
-    indexWindowURL = `file://${__dirname}/background/indexer.html`
-    jobbWindowURL = `file://${__dirname}/background/jobs.html`
-    settingsWindowURL = `file://${__dirname}/background/settingsW.html`
+    windows.accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
+    windows.indexWindowURL = `file://${__dirname}/background/indexer.html`
+    windows.jobWindowURL = `file://${__dirname}/background/jobs.html`
+    windows.mWindowURL = `file://${__dirname}/wail.html`
+    windows.newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
+    windows.reqDaemonWindowURL = `file://${__dirname}/background/requestDaemon.html`
+    windows.settingsWindowURL = `file://${__dirname}/background/settingsW.html`
   } else {
     base = app.getAppPath()
-    mWindowURL = `file://${base}/src/wail.html`
-    newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
-    accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
-    indexWindowURL = `file://${base}/src/background/indexer.html`
-    jobbWindowURL = `file://${base}/src/background/jobs.html`
-    settingsWindowURL = `file://${base}/src/background/settingsW.html`
+    windows.accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
+    windows.indexWindowURL = `file://${base}/src/background/indexer.html`
+    windows.jobWindowURL = `file://${base}/src/background/jobs.html`
+    windows.mWindowURL = `file://${base}/src/wail.html`
+    windows.newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
+    windows.reqDaemonWindowURL = `file://${base}/src/background/requestDaemon.html`
+    windows.settingsWindowURL = `file://${base}/src/background/settingsW.html`
   }
 
   let logPath
@@ -191,9 +205,10 @@ function setUp () {
   global.accessLogPath = path.join(logPath, 'accessibility.log')
   global.jobLogPath = path.join(logPath, 'jobs.log')
   global.indexLogPath = path.join(logPath, 'index.log')
+  global.requestDaemonLogPath = path.join(logPath, 'requestDaemon.log')
 
   logPath = path.join(logPath, 'wail.log')
-  //bdb
+  //  bdb
   global.logger = new Logger({ path: logPath })
 
   global.wailLogp = logPath
@@ -202,42 +217,57 @@ function setUp () {
 function openDebug () {
   if (debug) {
     if (openBackGroundWindows) {
-      if (accessibilityWindow != null) {
-        accessibilityWindow.show()
-        accessibilityWindow.webContents.openDevTools({ mode: 'detach' })
+      if (windows.accessibilityWindow != null) {
+        windows.accessibilityWindow.show()
+        windows.accessibilityWindow.webContents.openDevTools()
       }
-      if (indexWindow != null) {
-        indexWindow.show()
-        indexWindow.webContents.openDevTools({ mode: 'detach' })
+      if (windows.indexWindow != null) {
+        windows.indexWindow.show()
+        windows.indexWindow.webContents.openDevTools()
       }
 
-      if (jobbWindow != null) {
-        jobbWindow.show()
-        jobbWindow.webContents.openDevTools({ mode: 'detach' })
+      if (windows.jobWindow != null) {
+        windows.jobWindow.show()
+        windows.jobWindow.webContents.openDevTools()
+      }
+      if (windows.reqDaemonWindow != null) {
+        windows.reqDaemonWindow.show()
+        windows.reqDaemonWindow.webContents.openDevTools()
       }
     }
-    mainWindow.webContents.openDevTools()
+    windows.mainWindow.webContents.openDevTools()
   }
 }
 
 function createBackGroundWindows () {
-  accessibilityWindow = new BrowserWindow({ show: false })
-  accessibilityWindow.loadURL(accessibilityWindowURL)
-  indexWindow = new BrowserWindow({ show: false })
-  indexWindow.loadURL(indexWindowURL)
-  jobbWindow = new BrowserWindow({ show: false })
-  jobbWindow.loadURL(jobbWindowURL)
+  windows.accessibilityWindow = new BrowserWindow({ show: false })
+  windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
+
+  windows.indexWindow = new BrowserWindow({ show: false })
+  windows.indexWindow.loadURL(windows.indexWindowURL)
+
+  windows.jobWindow = new BrowserWindow({ show: false })
+  windows.jobWindow.loadURL(windows.jobWindowURL)
+
+  windows.reqDaemonWindow = new BrowserWindow({ show: false })
+  windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
 }
 
 function stopMonitoring () {
-  if (accessibilityWindow != null) {
-    accessibilityWindow.webContents.send('stop')
+  if (windows.accessibilityWindow != null) {
+    windows.accessibilityWindow.webContents.send('stop')
   }
-  if (indexWindow != null) {
-    indexWindow.webContents.send('stop')
+
+  if (windows.indexWindow != null) {
+    windows.indexWindow.webContents.send('stop')
   }
-  if (jobbWindow != null) {
-    jobbWindow.webContents.send('stop')
+
+  if (windows.jobWindow != null) {
+    windows.jobWindow.webContents.send('stop')
+  }
+
+  if (windows.reqDaemonWindow != null) {
+    windows.reqDaemonWindow.webContents.send('stop')
   }
 }
 
@@ -246,37 +276,46 @@ function cleanUp () {
   // in an array if your app supports multi windows, this is the time
   // when you should delete the corresponding element.
   stopMonitoring()
-  if (accessibilityWindow !== null) {
-    accessibilityWindow.close()
+  if (windows.accessibilityWindow !== null) {
+    windows.accessibilityWindow.close()
   }
-  if (indexWindow !== null) {
-    indexWindow.close()
-  }
-
-  if (jobbWindow !== null) {
-    jobbWindow.close()
+  if (windows.indexWindow !== null) {
+    windows.indexWindow.close()
   }
 
-  accessibilityWindow = null
-  indexWindow = null
-  jobbWindow = null
+  if (windows.jobWindow !== null) {
+    windows.jobWindow.close()
+  }
+
+  if (windows.reqDaemonWindow !== null) {
+    windows.reqDaemonWindow.close()
+  }
+
+  windows.accessibilityWindow = null
+  windows.indexWindow = null
+  windows.jobWindow = null
+  windows.reqDaemonWindow = null
 }
 
 function checkBackGroundWindows () {
-  if (accessibilityWindow === null) {
-    accessibilityWindow = new BrowserWindow({ show: false })
-    accessibilityWindow.loadURL(accessibilityWindowURL)
+  if (windows.accessibilityWindow === null) {
+    windows.accessibilityWindow = new BrowserWindow({ show: false })
+    windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
   }
-  if (indexWindow === null) {
-    indexWindow = new BrowserWindow({ show: false })
-    indexWindow.loadURL(indexWindowURL)
-  }
-
-  if (jobbWindow === null) {
-    jobbWindow = new BrowserWindow({ show: false })
-    jobbWindow.loadURL(jobbWindowURL)
+  if (windows.indexWindow === null) {
+    windows.indexWindow = new BrowserWindow({ show: false })
+    windows.indexWindow.loadURL(windows.indexWindowURL)
   }
 
+  if (windows.jobWindow === null) {
+    windows.jobWindow = new BrowserWindow({ show: false })
+    windows.jobWindow.loadURL(windows.jobWindowURL)
+  }
+
+  if (windows.reqDaemonWindow === null) {
+    windows.reqDaemonWindow = new BrowserWindow({ show: false })
+    windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
+  }
 }
 
 function createWindow () {
@@ -297,7 +336,7 @@ function createWindow () {
   }
 
   // Create the browser window.
-  mainWindow = new BrowserWindow({
+  windows.mainWindow = new BrowserWindow({
     width: 800,
     height: 500,
     title: 'Web Archiving Integration Layer',
@@ -306,37 +345,35 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  mainWindow.loadURL(mWindowURL)
+  windows.mainWindow.loadURL(windows.mWindowURL)
 
-  mainWindow.webContents.on('did-finish-load', () => {
-    mainWindow.show()
+  windows.mainWindow.webContents.on('did-finish-load', () => {
+    windows.mainWindow.show()
     openDebug(openBackGroundWindows)
   })
 
-  mainWindow.on('unresponsive', () => {
+  windows.mainWindow.on('unresponsive', () => {
     console.log('we are unresponsive')
   })
 
-  mainWindow.webContents.on('crashed', () => {
+  windows.mainWindow.webContents.on('crashed', () => {
     console.log('we crashed')
   })
 
-  mainWindow.webContents.on('new-window', (event, url) => {
+  windows.mainWindow.webContents.on('new-window', (event, url) => {
     event.preventDefault()
     shell.openExternal(url)
   })
 
-  mainWindow.webContents.on('did-navigate-in-page', (event, url) => {
+  windows.mainWindow.webContents.on('did-navigate-in-page', (event, url) => {
     console.log('did-navigate-in-page', url)
   })
 
   // Emitted when the window is closed.
-  mainWindow.on('closed', () => {
+  windows.mainWindow.on('closed', () => {
     console.log('closed')
     cleanUp()
-
   })
-
 }
 
 process.on('uncaughtException', (err) => {
@@ -344,7 +381,6 @@ process.on('uncaughtException', (err) => {
   // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
   cleanUp()
   app.quit()
-
 })
 
 // This method will be called when Electron has finished
@@ -367,7 +403,7 @@ app.on('ready', () => {
 // })
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin'){
+  if (process.platform !== 'darwin') {
     app.quit()
   }
 })
@@ -377,13 +413,12 @@ app.on('before-quit', () => {
     cleanUp()
   }
   global.logger.cleanUp()
-
 })
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (mainWindow === null) {
+  if (windows.mainWindow === null) {
     createWindow()
   }
   checkBackGroundWindows()
@@ -395,7 +430,3 @@ app.on('activate', () => {
 //       createWindow()
 //    }
 // })
-
-
-
-

@@ -12,17 +12,16 @@ const logger = remote.getGlobal('logger')
 const EventTypes = wailConstants.EventTypes
 
 const logString = 'service store %s'
-const serviceDialogeTemplate = '%s %s down'
+// const serviceDialogeTemplate = '%s %s down'
 
-const both = () => {
-  console.log("Both")
+function both () {
+  console.log('Both')
   startWayback(() => {
-    console.log("started wayback")
+    console.log('started wayback')
     launchHeritrix()
-    console.log("started heritrix")
+    console.log('started heritrix')
   })
 }
- 
 
 const wayback = () => startWayback()
 const heritrix = () => launchHeritrix()
@@ -34,7 +33,7 @@ class serviceStore extends EventEmitter {
       heritrix: false,
       wayback: false,
     }
-  
+
     this.statusDialog = {
       actions: [
         both,
@@ -44,7 +43,7 @@ class serviceStore extends EventEmitter {
       actionIndex: -1,
       message: '',
     }
-    
+
     ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
     this.checkStatues()
   }
@@ -82,20 +81,25 @@ class serviceStore extends EventEmitter {
     logger.info(util.format(logString, logMessage))
     this.emit('monitor-status-update')
   }
-  
+
+  isUp (forWhich) {
+    if (forWhich === 'heritrixAccesible') {
+      return this.serviceStatus.heritrix
+    } else {
+      return this.serviceStatus.wayback
+    }
+  }
+
   @autobind
-  statusActionMessage() {
+  statusActionMessage () {
     return this.statusDialog
   }
 
-  @autobind
   checkStatues () {
     heritrixAccesible(true)
     waybackAccesible(true)
-   
   }
 
-  @autobind
   serviceStatuses () {
     return this.serviceStatus
   }
@@ -114,19 +118,15 @@ class serviceStore extends EventEmitter {
   handleEvent (event) {
     switch (event.type) {
       case EventTypes.HERITRIX_STATUS_UPDATE:
-      {
         console.log('Heritrix status update serivice store', event, this.serviceStatus)
         this.serviceStatus.heritrix = event.status
         this.emit('heritrix-status-update')
         break
-      }
       case EventTypes.WAYBACK_STATUS_UPDATE:
-      {
         console.log('Wayback status update serivice store', event, this.serviceStatus)
         this.serviceStatus.wayback = event.status
         this.emit('wayback-status-update')
         break
-      }
     }
   }
 }

@@ -1,10 +1,12 @@
 import keyMirror from 'keymirror'
 
-const consts = {
-  From: keyMirror({
-    BASIC_ARCHIVE_NOW: null,
-    NEW_CRAWL_DIALOG: null,
-  }),
+export default {
+  Code: {
+    which: keyMirror({
+      WBC: null,
+      CRAWLBEAN: null
+    })
+  },
   EventTypes: keyMirror({
     BUILD_CRAWL_JOB: null,
     BUILT_CRAWL_CONF: null,
@@ -21,19 +23,24 @@ const consts = {
     HERITRIX_STATUS_UPDATE: null,
     LAUNCHED_CRAWL_JOB: null,
     QUEUE_MESSAGE: null,
-    REQUEST: null,
+    REQUEST_HERITRIX: null,
+    REQUEST_WAYBACK: null,
     SAVE_CODE: null,
     STORE_HERITRIX_JOB_CONFS: null,
     VIEW_ARCHIVED_URI: null,
     VIEW_HERITRIX_JOB: null,
     WAYBACK_STATUS_UPDATE: null,
   }),
-  Code: {
-    which: keyMirror({
-      WBC: null,
-      CRAWLBEAN: null,
-    }),
-  }
+  From: keyMirror({
+    BASIC_ARCHIVE_NOW: null,
+    NEW_CRAWL_DIALOG: null
+  }),
+  RequestTypes: keyMirror({
+    ACCESSIBILITY: null,
+    BUILD_HERITIX_JOB: null,
+    FORCE_CRAWL_FINISH: null,
+    KILL_HERITRIX: null,
+    LAUNCH_HERITRIX_JOB: null,
+    SEND_HERITRIX_ACTION: null,
+  })
 }
-
-export default consts
