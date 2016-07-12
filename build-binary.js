@@ -171,7 +171,7 @@ function pack (plat, arch, cb) {
 }
 
 function createDMG (appPath, cb) {
-  let createDMG = require('electron-installer-dmg')
+  let _createDMG = require('electron-installer-dmg')
   let out = path.normalize(path.join(cwd, 'release/wail-darwin-dmg'))
   fs.emptyDirSync(out)
   let dmgOpts = {
@@ -183,7 +183,7 @@ function createDMG (appPath, cb) {
     out
   }
 
-  createDMG(dmgOpts, error => {
+  _createDMG(dmgOpts, error => {
     if (error) {
       console.error('There was an error in creating the dmg file', error)
     } else {
