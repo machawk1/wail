@@ -9,5 +9,6 @@ window.React = React
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <SettingsForm  />,
-  document.getElementById("settings"))
+  <SettingsForm />,
+  document.getElementById('settings'))
+

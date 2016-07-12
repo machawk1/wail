@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import autobind from 'autobind-decorator'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
@@ -45,7 +45,7 @@ class editorStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
-    console.log("Got an event in editor store", event)
+    console.log('Got an event in editor store', event)
     switch (event.type) {
       case EventTypes.FETCH_CODE:
         this.loadWaybackConf()
@@ -71,7 +71,7 @@ class editorStore extends EventEmitter {
           if (error) {
             console.log(`Error saving code ${error}`, event)
           } else {
-            console.log(`Save success`, event)
+            console.log('Save success', event)
           }
         })
         break

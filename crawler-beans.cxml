@@ -343,11 +343,10 @@ metadata.description=SampleCrawl
   <!-- <property name="skipIdenticalDigests" value="false" /> -->
   <!-- <property name="maxTotalBytesToWrite" value="0" /> -->
   <!-- <property name="directory" value="${launchId}" /> -->
-  <!-- <property name="storePaths">
+  <property name="storePaths">
         <list>
-         <value>warcs</value>
         </list>
-       </property> -->
+       </property>
   <!-- <property name="template" value="${prefix}-${timestamp17}-${serialno}-${heritrix.pid}~${heritrix.hostname}~${heritrix.port}" /> -->
   <!-- <property name="writeRequests" value="true" /> -->
   <!-- <property name="writeMetadata" value="true" /> -->

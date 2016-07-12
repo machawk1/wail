@@ -19,6 +19,15 @@ process.on('uncaughtException', (err) => {
   logger.error('error', util.format(logStringError, `uncaughtException ${err.message}`, err.stack))
 })
 
+/*
+ error codes returned by request library:
+ ECONNREFUSED: The connection was refused
+ ETIMEDOUT:
+ ETIMEDOUT: request timeout two cases
+ - if connect === true, then the target of the request took its sweet time to reply
+ - if connect === false, readtime out cause
+ */
+
 class RequestDaemon {
   constructor () {
     this.requestQ = []
@@ -74,11 +83,21 @@ class RequestDaemon {
         this.maybeMore()
       })
       .catch(error => {
-        console.log('The request got an error but its error callback will handle', error)
-        logger.info(util.format(logString, `${message} and it resulted in an error but its callback will handle`))
-        request.response = error
-        request.wasError = true
-        ipcRenderer.send('handled-request', request)
+        if (error.error.code === 'ETIMEDOUT' && !request.hadToRetry) {
+          request.hadToRetry = true
+          console.log('The request got an error of timeout retrying once')
+          logger.info(util.format(logString, `${message} and it resulted in an error of timeout retrying once`))
+          this.requestQ.unshift(request)
+        } else {
+          if (error.error.code === 'ETIMEDOUT' && request.hadToRetry) {
+            request.timeOutTwice = true
+          }
+          console.log('The request got an error but its error callback will handle', error)
+          logger.info(util.format(logString, `${message} and it resulted in an error but its callback will handle ${error.message}`))
+          request.response = error
+          request.wasError = true
+          ipcRenderer.send('handled-request', request)
+        }
         this.maybeMore()
       })
   }
@@ -89,7 +108,7 @@ let requestDaemon = new RequestDaemon()
 ipcRenderer.on('handle-request', (event, request) => {
   console.log('RequestDaemon got handle-request', request)
   logger.info(util.format(logString, `got handle-request ${request.from}`))
-  ipcRenderer.send('requestdaemon-ack')
+  // ipcRenderer.send('requestdaemon-ack')
   requestDaemon.handleRequest(request)
 })
 

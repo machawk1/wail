@@ -2,6 +2,7 @@ import {ipcRenderer} from 'electron'
 import autobind from 'autobind-decorator'
 import moment from 'moment'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
+import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wc from '../constants/wail-constants'
 
 const EventTypes = wc.EventTypes
@@ -91,6 +92,8 @@ class RequestStore {
         ipcRenderer.send('send-to-requestDaemon', {
           from: request.from,
           id: request.timeReceived.format(),
+          hadToRetry: false,
+          timeOutTwice: false,
           response: null,
           wasError: false,
           opts: request.opts
@@ -133,7 +136,15 @@ class RequestStore {
 
     if (handledRequest.wasError) {
       console.log('Request store we have a handledRequest with error')
-      pendingCompleted.error(handledRequest.response)
+      if (handledRequest.timeOutTwice) {
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
+        })
+        console.log('we timed out twice and are not trying again')
+      } else {
+        pendingCompleted.error(handledRequest.response)
+      }
     } else {
       console.log('Request store we have a handledRequest with success')
       pendingCompleted.success(handledRequest.response)

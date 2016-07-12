@@ -1,18 +1,8 @@
 import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
-import schedule from 'node-schedule'
+import {shell} from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
-
-const interval = [ 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28,
-  30, 32, 34, 36, 38, 40, 42, 44, 46, 48, 50, 52, 54, 56, 58 ]
-
-const jobHolder = {
-  job: null,
-  rule: null
-}
-
-// TODO: Let the closing of the the snackbar be where we check the to see if we need to process more messages
 
 export default class Notifications extends Component {
   constructor (props, context) {
@@ -21,44 +11,33 @@ export default class Notifications extends Component {
       message: 'Status Number 1',
       open: false,
     }
-
   }
 
   componentWillMount () {
-    jobHolder.rule = new schedule.RecurrenceRule()
-    jobHolder.rule.second = interval
+    GMessageStore.on('new-message', this.receiveMessage)
   }
 
   componentWillUnmount () {
-    if (jobHolder.job) {
-      jobHolder.job.cancel()
-    }
-  }
-
-  timerGen () {
-    if (!jobHolder.job) {
-      jobHolder.job = schedule.scheduleJob(jobHolder.rule, () => {
-        if (GMessageStore.hasQueuedMessages()) {
-          this.setState({ message: GMessageStore.getMessage() })
-        } else {
-          jobHolder.job.cancel()
-          jobHolder.job = null
-        }
-      })
-    }
+    GMessageStore.removeListener('new-message', this.receiveMessage)
   }
 
   @autobind
   receiveMessage () {
-    this.setState({ message: GMessageStore.getMessage(), open: true })
-    this.timerGen()
+    if (!this.state.open) {
+      this.setState({ message: GMessageStore.getMessage(), open: true })
+    }
   }
 
   @autobind
   closeNotification () {
-    this.setState({
-      open: false
-    })
+    if (GMessageStore.hasQueuedMessages()) {
+      shell.beep()
+      this.setState({ message: GMessageStore.getMessage(), open: true })
+    } else {
+      this.setState({
+        open: false
+      })
+    }
   }
 
   render () {

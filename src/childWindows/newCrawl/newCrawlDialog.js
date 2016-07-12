@@ -58,9 +58,9 @@ export default class NewCrawlDialog extends Component {
   @autobind
   urlChanged (url) {
     let urls = this.state.urls
-    console.log("crawl url added", url, urls)
+    console.log('crawl url added', url, urls)
     if (url.edit) {
-      console.log("Edit")
+      console.log('Edit')
       urls[ url.edit ] = url.url
     } else {
       urls.push(url)
@@ -72,7 +72,7 @@ export default class NewCrawlDialog extends Component {
 
   @autobind
   depthAdded (depth) {
-    console.log("crawl depth added", depth)
+    console.log('crawl depth added', depth)
     this.setState({ depth: depth })
   }
 
@@ -85,13 +85,13 @@ export default class NewCrawlDialog extends Component {
           <Toolbar>
             <ToolbarGroup firstChild={true}>
               <RaisedButton
-                label="Cancel"
+                label='Cancel'
                 onTouchTap={this.handleClose}
               />
             </ToolbarGroup>
             <ToolbarGroup>
               <RaisedButton
-                label="Start Crawl"
+                label='Start Crawl'
                 onTouchTap={this.crawlConfigured}
               />
             </ToolbarGroup>

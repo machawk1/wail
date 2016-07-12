@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import React, {Component} from 'react'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/RaisedButton'
 import autobind from 'autobind-decorator'
-import { Row } from 'react-cellblock'
-import { shell } from 'electron'
+import {Row} from 'react-cellblock'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
@@ -14,9 +13,6 @@ const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
 
 export default class BasicTabButtons extends Component {
-  constructor (props, context) {
-    super(props, context)
-  }
 
   @autobind
   onClickArchiveNow (event) {
@@ -24,7 +20,7 @@ export default class BasicTabButtons extends Component {
     console.log('archive now')
     GMessageDispatcher.dispatch({
       type: EventTypes.QUEUE_MESSAGE,
-      message: "Archiving Now!"
+      message: 'Archiving Now!'
     })
 
     CrawlDispatcher.dispatch({
@@ -41,9 +37,8 @@ export default class BasicTabButtons extends Component {
     })
     // GMessageDispatcher.dispatch({
     //   type: EventTypes.QUEUE_MESSAGE,
-    //   message: "Checking Archive"
+    //   message: 'Checking Archive'
     // })
-
   }
 
   @autobind
@@ -54,7 +49,7 @@ export default class BasicTabButtons extends Component {
     })
     // GMessageDispatcher.dispatch({
     //   type: EventTypes.QUEUE_MESSAGE,
-    //   message: "Viewing Archive"
+    //   message: 'Viewing Archive'
     // })
   }
 
@@ -64,27 +59,24 @@ export default class BasicTabButtons extends Component {
         <Toolbar>
           <ToolbarGroup firstChild={true}>
             <RaisedButton
-              label="Archive Now!"
-              labelPosition="before"
-              primary={true}
+              label='Archive Now!'
+              labelPosition='before'
               style={styles.buttonBasic}
               onMouseDown={this.onClickArchiveNow}
             />
           </ToolbarGroup>
           <ToolbarGroup >
             <RaisedButton
-              label="Check Archived Status"
-              labelPosition="before"
-              primary={true}
+              label='Check Archived Status'
+              labelPosition='before'
               style={styles.buttonBasic}
               onMouseDown={this.onClickCheckArchive}
             />
           </ToolbarGroup>
           <ToolbarGroup >
             <RaisedButton
-              label="View Archive"
-              labelPosition="before"
-              primary={true}
+              label='View Archive'
+              labelPosition='before'
               style={styles.buttonBasic}
               onMouseDown={this.onClickViewArchive}
             />

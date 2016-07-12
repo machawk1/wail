@@ -1,4 +1,4 @@
-import React, { Component, PropTypes }  from 'react'
+import React, {Component, PropTypes}  from 'react'
 import Formsy from 'formsy-react'
 import {
   FormsyCheckbox,
@@ -11,7 +11,7 @@ import {
 import Paper from 'material-ui/Paper'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import autobind from 'autobind-decorator'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
@@ -30,8 +30,8 @@ export default class SettingsForm extends Component {
     this.styles = {
       paperStyle: {
         width: 300,
-          margin: 'auto',
-          padding: 20,
+        margin: 'auto',
+        padding: 20,
       },
       switchStyle: {
         marginBottom: 16,
@@ -42,24 +42,24 @@ export default class SettingsForm extends Component {
     }
   }
 
-  enableButton() {
+  enableButton () {
     this.setState({
       canSubmit: true,
-    });
+    })
   }
 
-  disableButton() {
+  disableButton () {
     this.setState({
       canSubmit: false,
-    });
+    })
   }
 
-  submitForm(data) {
-    alert(JSON.stringify(data, null, 4));
+  submitForm (data) {
+    alert(JSON.stringify(data, null, 4))
   }
 
-  notifyFormError(data) {
-    console.error('Form error:', data);
+  notifyFormError (data) {
+    console.error('Form error:', data)
   }
 
   getChildContext () {

@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
 import S from 'string'
 import UrlStore from '../../stores/urlStore'
 import styles from '../styles/styles'
-import { DefaultMementoMessage, FetchingMementoMessage, MementoCountMessage } from './mementoMessages'
+import {DefaultMementoMessage, FetchingMementoMessage, MementoCountMessage} from './mementoMessages'
 
 export default class MementoMessagePanel extends Component {
   constructor (props, context) {
@@ -31,10 +31,7 @@ export default class MementoMessagePanel extends Component {
 
   @autobind
   urlUpdated () {
-    this.default = false
-    if (S(UrlStore.getUrl()).isEmpty()) {
-      this.default = true
-    }
+    this.default = S(UrlStore.getUrl()).isEmpty()
     this.setState({ mementoCount: -1 })
   }
 
@@ -55,16 +52,16 @@ export default class MementoMessagePanel extends Component {
     if (this.default) {
       message = <DefaultMementoMessage />
     } else {
-      if (this.state.mementoCount == -1) {
+      if (this.state.mementoCount === -1) {
         message = <FetchingMementoMessage />
       } else {
-        message = <MementoCountMessage count={this.state.mementoCount}/>
+        message = <MementoCountMessage count={this.state.mementoCount} />
       }
-
     }
+
     return (
       <div style={styles.mementoMessage}>
-        { message }
+        {message}
       </div>
     )
   }

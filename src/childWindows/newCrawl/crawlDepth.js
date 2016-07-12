@@ -22,9 +22,9 @@ export default class CrawlDepth extends Component {
   @autobind
   checkKeyCode (event) {
     let depth = this.state.text
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       if (this.depthCheck.test(depth)) {
-        console.log("We have a valid depth!")
+        console.log('We have a valid depth!')
         this.props.depthAdded(parseInt(depth))
         this.setState({ depth: depth, text: '' })
       } else {
@@ -47,29 +47,29 @@ export default class CrawlDepth extends Component {
   handleRequestClose () {
     this.setState({
       open: false,
-    });
+    })
   }
 
   render () {
     return (
       <div>
         <Row>
-          <Column width="1/2">
+          <Column width='1/2'>
             <TextField
-              floatingLabelText="Enter Crawl Depth"
-              hintText="1"
-              id="crawl-depth-input"
+              floatingLabelText='Enter Crawl Depth'
+              hintText='1'
+              id='crawl-depth-input'
               value={this.state.text}
               onKeyDown={this.checkKeyCode}
               onChange={this.handleChange}
             />
           </Column>
-          <Column width="1/2">
+          <Column width='1/2'>
             <p>{this.state.depth}</p>
           </Column>
           <Snackbar
             open={this.state.open}
-            message="You entered an invalid crawl depth"
+            message='You entered an invalid crawl depth'
             autoHideDuration={4000}
             onRequestClose={this.handleRequestClose}
           />

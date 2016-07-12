@@ -32,7 +32,7 @@ export default class ArchiveUrl extends Component {
     if (validator.isURL(this.state.uri)) {
       aua.getMementos(this.state.uri)
     } else {
-      console.log("This is not a valid uri", this.state.uri)
+      console.log('This is not a valid uri', this.state.uri)
     }
   }
 
@@ -40,7 +40,7 @@ export default class ArchiveUrl extends Component {
   focusLost (event) {
     console.log('checking uri for archiving', this.state.uri, event.target.value)
     if (validator.isURL(event.target.value)) {
-      console.log("its valid")
+      console.log('its valid')
       aua.urlUpdated(event.target.value)
     } else {
       if (S(event.target.value).isEmpty()) {
@@ -52,23 +52,23 @@ export default class ArchiveUrl extends Component {
   render () {
     return (
       <Row>
-        <Column width="1/2">
+        <Column width='1/2'>
           <TextField
-            floatingLabelText="URL"
+            floatingLabelText='URL'
             underlineStyle={this.state.underlineStyle}
-            hintText="http://matkelly.com/wail"
-            id="archive-url-input"
+            hintText='http://matkelly.com/wail'
+            id='archive-url-input'
             value={this.state.uri}
             onBlur={this.focusLost}
             onChange={this.handleChange}
             style={styles.urlInput}
           />
         </Column>
-        <Column width="1/2">
+        <Column width='1/2'>
           <div style={styles.basicTapRightColPad}>
             <RaisedButton
-              label="Get Memento Count"
-              labelPosition="before"
+              label='Get Memento Count'
+              labelPosition='before'
               onTouchTap={this.attemptMementoGet}
               style={styles.buttonMemento}
             />

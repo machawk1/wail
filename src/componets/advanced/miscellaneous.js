@@ -20,23 +20,20 @@ export default class Misc extends Component {
 
   onClickCheckForUpdates (event) {
     console.log('Check Updates')
-
   }
 
   render () {
     return (
       <div>
         <RaisedButton
-          label="View Archive Files"
-          labelPosition="before"
-          primary={true}
+          label='View Archive Files'
+          labelPosition='before'
           style={styles.button}
           onMouseDown={this.onClickViewArchiveFiles}
         />
         <RaisedButton
-          label="Check Updates"
-          labelPosition="before"
-          primary={true}
+          label='Check Updates'
+          labelPosition='before'
           style={styles.button}
           onMouseDown={this.onClickCheckForUpdates}
         />

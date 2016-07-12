@@ -239,15 +239,17 @@ function openDebug () {
   }
 }
 
-function createBackGroundWindows () {
-  windows.accessibilityWindow = new BrowserWindow({ show: false })
-  windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
+function createBackGroundWindows (notDebugUI) {
+  if (notDebugUI) {
+    windows.accessibilityWindow = new BrowserWindow({ show: false })
+    windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
 
-  windows.indexWindow = new BrowserWindow({ show: false })
-  windows.indexWindow.loadURL(windows.indexWindowURL)
+    windows.indexWindow = new BrowserWindow({ show: false })
+    windows.indexWindow.loadURL(windows.indexWindowURL)
 
-  windows.jobWindow = new BrowserWindow({ show: false })
-  windows.jobWindow.loadURL(windows.jobWindowURL)
+    windows.jobWindow = new BrowserWindow({ show: false })
+    windows.jobWindow.loadURL(windows.jobWindowURL)
+  }
 
   windows.reqDaemonWindow = new BrowserWindow({ show: false })
   windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
@@ -350,6 +352,7 @@ function createWindow () {
   windows.mainWindow.webContents.on('did-finish-load', () => {
     windows.mainWindow.show()
     openDebug(openBackGroundWindows)
+    windows.mainWindow.focus()
   })
 
   windows.mainWindow.on('unresponsive', () => {
@@ -390,9 +393,7 @@ app.on('ready', () => {
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  if (notDebugUI) {
-    createBackGroundWindows()
-  }
+  createBackGroundWindows(notDebugUI)
   createWindow()
 })
 

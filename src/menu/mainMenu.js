@@ -1,12 +1,11 @@
 const name = 'wail'
 
-
 let settingSubMenu = {
   label: 'Settings',
   submenu: [
     {
       label: 'View Or Edit',
-      click(item, focusedWindow) {
+      click (item, focusedWindow) {
         if (focusedWindow) focusedWindow.webContents.send('open-settings-window')
       }
     },
@@ -19,7 +18,7 @@ let viewSubMenu = {
     {
       label: 'Toggle Developer Tools',
       accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-      click(item, focusedWindow) {
+      click (item, focusedWindow) {
         if (focusedWindow) {
           focusedWindow.webContents.toggleDevTools()
         }
@@ -28,7 +27,7 @@ let viewSubMenu = {
     {
       label: 'Reload',
       accelerator: 'CmdOrCtrl+R',
-      click(item, focusedWindow) {
+      click (item, focusedWindow) {
         if (focusedWindow) focusedWindow.reload()
       }
     },
@@ -52,11 +51,11 @@ let aboutSubMenu = {
   submenu: [
     {
       label: `Learn more about ${name}`,
-      click() { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
+      click () { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
     },
     {
       label: 'WSDL',
-      click() { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
+      click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
     },
   ]
 }
@@ -66,7 +65,7 @@ let helpSubMenu = {
   submenu: [
     {
       label: 'Submit Bug Report',
-      click() { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
+      click () { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
     },
   ]
 }
@@ -107,7 +106,7 @@ if (process.platform === 'darwin') {
       },
     ]
   }
-  
+
   windowSubMenu.submenu = [
     {
       role: 'hide'
@@ -145,13 +144,9 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   ]
-  template =  [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
- 
-
+  template = [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
 } else {
   template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 }
-
- 
 
 export default template

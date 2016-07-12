@@ -31,7 +31,6 @@ export default class General extends Component {
   servicesUpdated () {
     let status = ServiceStore.serviceStatus
     this.setState({ wbGood: status.wayback, hGood: status.heritrix })
-
   }
 
   @autobind
@@ -45,22 +44,22 @@ export default class General extends Component {
   }
 
   wayBackFix (event) {
-    console.log("Wayback fix")
+    console.log('Wayback fix')
     startWayback()
   }
 
   wayBackKill (event) {
-    console.log("Wayback Kill")
+    console.log('Wayback Kill')
     killWayback()
   }
 
   heritrixFix (event) {
-    console.log(" Generalv HeritrixTab fix")
+    console.log(' Generalv HeritrixTab fix')
     launchHeritrix()
   }
 
   heritrixKill (event) {
-    console.log("General HeritrixTab Kill")
+    console.log('General HeritrixTab Kill')
     killHeritrix()
   }
 
@@ -77,8 +76,8 @@ export default class General extends Component {
             <TableHeaderColumn>Service Status</TableHeaderColumn>
             <TableHeaderColumn>State</TableHeaderColumn>
             <TableHeaderColumn>Version</TableHeaderColumn>
-            <TableHeaderColumn/>
-            <TableHeaderColumn/>
+            <TableHeaderColumn />
+            <TableHeaderColumn />
           </TableRow>
         </TableHeader>
         <TableBody
@@ -89,15 +88,15 @@ export default class General extends Component {
             <TableRowColumn>Wayback</TableRowColumn>
             <TableRowColumn>{waybackStatus}</TableRowColumn>
             <TableRowColumn>''</TableRowColumn>
-            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.wayBackFix}/></TableRowColumn>
-            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.wayBackKill}/></TableRowColumn>
+            <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.wayBackFix} /></TableRowColumn>
+            <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.wayBackKill} /></TableRowColumn>
           </TableRow>
           <TableRow>
             <TableRowColumn>Heritrix</TableRowColumn>
             <TableRowColumn>{heritrixStatus}</TableRowColumn>
             <TableRowColumn>3.2.0</TableRowColumn>
-            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.heritrixFix}/></TableRowColumn>
-            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.heritrixKill}/></TableRowColumn>
+            <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.heritrixFix} /></TableRowColumn>
+            <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.heritrixKill} /></TableRowColumn>
           </TableRow>
         </TableBody>
       </Table>

@@ -129,7 +129,7 @@ export function launchHeritrix (cb) {
     }
     ServiceDispatcher.dispatch({
       type: EventTypes.HERITRIX_STATUS_UPDATE,
-      status: wasError,
+      status: !wasError,
     })
 
     if (!wasError) {
@@ -154,7 +154,7 @@ export function launchHeritrix (cb) {
 
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
-        status: wasError,
+        status: !wasError,
       })
 
       if (!wasError) {
@@ -204,6 +204,10 @@ export function killHeritrix (cb) {
   //   })
 }
 
+export function addJobToHeritrix (confPath) {
+  console.log('sadshjdahjk')
+}
+
 export function makeHeritrixJobConf (urls, hops, jobId) {
   console.log('in makeHeritrixJobConf')
   fs.readFileAsync(settings.get('heritrix.jobConf'), 'utf8')
@@ -229,7 +233,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
       // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
       let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
       // warFolder.append(`<value>${wc.Paths.warcs}</value>`)
-      warFolder.append(`${os.EOL}<value>${settings.get('warcs')}</value>${os.EOL}`)
+      warFolder.append(`<value>${settings.get('warcs')}</value>${os.EOL}`)
       // let confPath = `${wc.Paths.heritrixJob}/${jobId}`
       let confPath = path.join(settings.get('heritrixJob'), `${jobId}`)
       fs.ensureDir(confPath, er => {
@@ -259,7 +263,7 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
 
 export function buildHeritrixJob (jobId) {
   //  `https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-  if (!ServiceStore.heritrixStatus()) {
+  if (false){//!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       buildHeritrixJob(jobId)
       // rp(options)
@@ -350,7 +354,7 @@ export function buildHeritrixJob (jobId) {
 
 export function launchHeritrixJob (jobId) {
   // options.agent = httpsAgent
-  if (!ServiceStore.heritrixStatus()) {
+  if (false){//!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       launchHeritrixJob(jobId)
     })
@@ -416,6 +420,28 @@ export function launchHeritrixJob (jobId) {
   }
 }
 
+export function teardownJob (jobId) {
+  let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
+  teardown.uri = `${teardown.uri}${jobId}`
+  teardown.form.action = 'teardown'
+  RequestDispatcher.dispatch({
+    type: EventTypes.REQUEST_HERITRIX,
+    rType: RequestTypes.FORCE_CRAWL_FINISH,
+    opts: teardown,
+    from: `tearDownJob[${jobId}]`,
+    jId: jobId,
+    timeReceived: null,
+    success: (response) => {
+      // POST succeeded...
+      console.log(`teardownJob post succeeded for ${jobId}`, response)
+    },
+    error: (err) => {
+      logger.error(util.format(logStringError, `teardownJob for ${jobId} to heritrix ${err.message}`, err.stack))
+      console.log(`teardownJob post failed? in sendAction to heritrix for ${jobId}`, err)
+    }
+  })
+}
+
 export function forceCrawlFinish (jobId, cb) {
   if (!ServiceStore.heritrixStatus()) {
     if (cb) {
@@ -426,9 +452,11 @@ export function forceCrawlFinish (jobId, cb) {
 
   let terminate = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
   terminate.uri = `${terminate.uri}${jobId}`
+  terminate.form.action = 'terminate'
 
   let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
   teardown.uri = `${teardown.uri}${jobId}`
+  teardown.form.action = 'teardown'
 
   // optimization and call stack reasons
   // sendActionToHeritrix(sequentialActions([ 'terminate', 'teardown' ], jobId), jobId, cb)
@@ -443,10 +471,16 @@ export function forceCrawlFinish (jobId, cb) {
     success: (response) => {
       // POST succeeded...
       console.log(`forceCrawlFinish action post succeeded in sendAction to heritrix for ${jobId}`, response)
+      if (cb) {
+        cb()
+      }
     },
     error: (err) => {
       logger.error(util.format(logStringError, `sendAction for ${jobId} to heritrix ${err.message}`, err.stack))
       console.log(`forceCrawlFinish action post failed? in sendAction to heritrix for ${jobId}`, err)
+      if (cb) {
+        cb()
+      }
     }
   })
 }

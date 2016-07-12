@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import CodeMirror from 'codemirror'
 import style from './style.css'
 import 'codemirror/lib/codemirror.css'
@@ -47,37 +47,35 @@ export default class Editor extends Component {
       matchBrackets: true,
       theme: this.props.theme,
       readOnly: this.props.readOnly
-    });
+    })
 
-    this.editor.on('change', this.handleChange);
+    this.editor.on('change', this.handleChange)
   }
 
   componentDidUpdate () {
     if (this.props.readOnly) {
-      this.editor.setValue(this.props.codeText);
+      this.editor.setValue(this.props.codeText)
     }
   }
 
   handleChange () {
     if (!this.props.readOnly && this.props.onChange) {
-      this.props.onChange(this.editor.getValue());
+      this.props.onChange(this.editor.getValue())
     }
   }
 
   setCode (code) {
-    this.editor.getDoc().setValue(code);
-    this.handleChange();
+    this.editor.getDoc().setValue(code)
+    this.handleChange()
   }
 
   render () {
-
     let className = style.editor
-    if (this.props.className) className += ` ${this.props.className}`
+    if (this.props.className) className += `${this.props.className}`
     return (
       <div className={className}>
-        <textarea ref="editor" defaultValue={this.props.codeText}/>
+        <textarea ref='editor' defaultValue={this.props.codeText} />
       </div>
     )
   }
-
 }

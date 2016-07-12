@@ -110,7 +110,7 @@ export function waybackAccesible (startOnDown = false) {
   //   })
 }
 
-export function startWayback () {
+export function startWayback (cb) {
   if (process.platform === 'win32') {
     let basePath = settings.get('bundledApps')
     let opts = {
@@ -125,6 +125,10 @@ export function startWayback () {
     } catch (err) {
       logger.error(util.format(logStringError, 'win32 launch wayback', err.stack))
     }
+
+    if (cb) {
+      cb()
+    }
   } else {
     childProcess.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
@@ -136,6 +140,9 @@ export function startWayback () {
           stack = `${stderr}`
         }
         logger.error(util.format(logStringError, `linux/osx launch wayback ${stdout}`, stack))
+      }
+      if (cb) {
+        cb()
       }
     })
   }

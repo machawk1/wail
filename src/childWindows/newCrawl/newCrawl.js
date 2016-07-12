@@ -10,4 +10,4 @@ injectTapEventPlugin()
 
 ReactDOM.render(
   <NewCrawlDialog />,
-  document.getElementById("newCrawl"))
+  document.getElementById('newCrawl'))

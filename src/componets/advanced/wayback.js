@@ -23,30 +23,30 @@ export default class WayBackTab extends Component {
   @autobind
   onClickViewWayback (event) {
     console.log('View Wayback')
-    shell.openExternal(settings.get("wayback.uri_wayback"))
+    shell.openExternal(settings.get('wayback.uri_wayback'))
   }
 
   @autobind
   viewWaybackConf (event) {
-    shell.openItem(settings.get("wayBackConf"))
+    shell.openItem(settings.get('wayBackConf'))
   }
 
   render () {
     return (
       <Grid>
         <Row>
-          <Column width="1/2">
+          <Column width='1/2'>
             <RaisedButton
-              label="View Wayback in Browser"
-              labelPosition="before"
+              label='View Wayback in Browser'
+              labelPosition='before'
               style={styles.button}
               onMouseDown={this.onClickViewWayback}
             />
           </Column>
-          <Column width="1/2">
+          <Column width='1/2'>
             <RaisedButton
-              label="Edit Wayback Configuration"
-              labelPosition="before"
+              label='Edit Wayback Configuration'
+              labelPosition='before'
               style={styles.button}
               onMouseDown={this.viewWaybackConf}
             />

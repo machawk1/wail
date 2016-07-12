@@ -2,7 +2,6 @@ import 'babel-polyfill'
 import autobind from 'autobind-decorator'
 import {ipcRenderer, remote} from 'electron'
 import rp from 'request-promise'
-import Promise from 'bluebird'
 import schedule from 'node-schedule'
 import Logger from '../logger/logger'
 
@@ -16,34 +15,6 @@ const cache = {
   accessibility: null
 }
 
-function heritrixAccesible () {
-  console.log('checking heritrix accessibility')
-  let optionEngine = settings.get('heritrix.optionEngine')
-  return new Promise((resolve, reject) => {
-    rp(optionEngine)
-      .then(success => {
-        resolve({ status: true })
-      })
-      .catch(err => {
-        resolve({ status: false, error: err })
-      })
-  })
-}
-
-function waybackAccesible () {
-  console.log('checking wayback accessibility')
-  let wburi = settings.get('wayback.uri_wayback')
-  return new Promise((resolve, reject) => {
-    rp({ uri: wburi })
-      .then(success => {
-        resolve({ status: true })
-      })
-      .catch(err => {
-        resolve({ status: false, error: err })
-      })
-  })
-}
-
 class StatusMonitor {
   constructor () {
     this.job = null
@@ -55,46 +26,62 @@ class StatusMonitor {
     this.lastFinished = true
   }
 
+  /*
+   error codes returned by request library:
+   ECONNREFUSED: The connection was refused
+   ETIMEDOUT:
+   ETIMEDOUT: request timeout two cases
+   - if connect === true, then the target of the request took its sweet time to reply
+   - if connect === false, readtime out cause
+   */
+
   @autobind
   checkReachability (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
-      // rule.minute = []
-      // for (let m = 2; m < 62; m += 2) {
-      //   rule.minute.push(m)
-      // }
-      rule.second = [ 0, 10, 20, 30, 40, 50 ]
+      rule.second = [ 0, 15, 30, 45 ]
+      this.started = true
       this.job = schedule.scheduleJob(rule, () => {
         if (this.lastFinished) {
           this.lastFinished = false
-          heritrixAccesible()
-            .then(ha => {
-              this.statues.heritrix = ha.status
+          console.log('checking heritrix accessibility')
+          rp(settings.get('heritrix.optionEngine'))
+            .then(response => {
+              this.statues.heritrix = true
             })
-            .catch(hdown => {
-              this.statues.heritrix = hdown.status
+            .catch(err => {
+              if (err.error.code === 'ECONNREFUSED') {
+                this.statues.heritrix = false
+                console.log('checking heritrix resulted in an error of connection refused', err.error.code, err.error.message)
+              } else {
+                console.log('checking heritrix resulted in an error other than connection refused', err.error.code, err.error.message)
+              }
+              console.log('heritrix error')
             })
-            .finally(() =>
-              waybackAccesible()
-                .then(wba => {
-                  this.statues.wayback = wba.status
+            .finally(() => {
+              console.log('checking wayback accessibility')
+              rp({ uri: settings.get('wayback.uri_wayback') })
+                .then(success => {
+                  this.statues.wayback = true
                 })
-                .catch(wbdown => {
-                  this.statues.wayback = wbdown.status
+                .catch(err => {
+                  if (err.error.code === 'ECONNREFUSED') {
+                    this.statues.wayback = false
+                    console.log('checking wayback resulted in an error of connection refused', err.error.code, err.error.message)
+                  } else {
+                    console.log('checking wayback resulted in an error other than connection refused', err.error.code, err.error.message)
+                  }
                 })
                 .finally(() => {
                   if (cache.accessibility) {
                     console.log('Accessibility cache is here ', cache)
-
                     let wasUpdate = false
                     if (this.statues.wayback !== cache.accessibility.get('wayback')) {
                       wasUpdate = true
                     }
-
                     if (this.statues.heritrix !== cache.accessibility.get('heritrix')) {
                       wasUpdate = true
                     }
-
                     if (wasUpdate) {
                       logger.info(`${logString} there was an update to service statuses: heritrix[${this.statues.heritrix}] wayback[${this.statues.wayback}]`)
                       cache.accessibility.set('wayback', this.statues.wayback)
@@ -113,14 +100,12 @@ class StatusMonitor {
                     cache.accessibility.set('heritrix', this.statues.heritrix)
                     cb(this.statues)
                   }
-
                   console.log('Done with status checks ', this.statues)
                   this.lastFinished = true
                 })
-            )
+            })
         }
       })
-      this.started = true
     }
   }
 }

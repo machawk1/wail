@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Menu from 'material-ui/Menu'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
 import Popover from 'material-ui/Popover'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import * as Heritrix from '../actions/heritrix-actions'
 import * as Wayback from '../actions/wayback-actions'
 import ServiceStore from '../stores/serviceStore'
@@ -61,12 +61,12 @@ export default class Debug extends Component {
   }
 
   launchHeritrix () {
-    console.log("Launch HeritrixTab")
+    console.log('Launch HeritrixTab')
     Heritrix.launchHeritrix()
   }
 
   killHeritrix () {
-    console.log("Kill HeritrixTab")
+    console.log('Kill HeritrixTab')
     Heritrix.killHeritrix()
   }
 
@@ -88,46 +88,46 @@ export default class Debug extends Component {
   }
 
   render () {
-    if (false) {//process.env.NODE_ENV === 'development') {
+    if (true) {
       return (
         <div>
           <Toolbar>
             <ToolbarGroup firstChild={true}>
               <RaisedButton
                 onTouchTap={this.handleTouchTap}
-                label="Heritrix"
+                label='Heritrix'
               />
               <RaisedButton
                 onTouchTap={this.wayBackButton}
-                label="Wayback"
+                label='Wayback'
               />
             </ToolbarGroup>
           </Toolbar>
           <Popover
             open={this.state.hopen}
             anchorEl={this.state.anchorEl}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             onRequestClose={this.handleRequestClose}
           >
             <Menu>
-              <MenuItem onTouchTap={this.launchHeritrix} primaryText="Start Heritrix"/>
-              <MenuItem onTouchTap={this.killHeritrix} primaryText="Kill Heritrix"/>
-              <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('http://matkelly.com',1)}
-                        primaryText="make job"/>
-              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText="test-status"/>
+              <MenuItem onTouchTap={this.launchHeritrix} primaryText='Start Heritrix' />
+              <MenuItem onTouchTap={this.killHeritrix} primaryText='Kill Heritrix' />
+              <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('http://matkelly.com', 1)}
+                        primaryText='make job' />
+              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText='test-status' />
             </Menu>
           </Popover>
           <Popover
             open={this.state.wopen}
             anchorEl={this.state.anchorElw}
-            anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-            targetOrigin={{horizontal: 'left', vertical: 'top'}}
+            anchorOrigin={{ horizontal: 'left', vertical: 'bottom' }}
+            targetOrigin={{ horizontal: 'left', vertical: 'top' }}
             onRequestClose={this.wpopclose}
           >
             <Menu>
-              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText="Start Wayback"/>
-              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText="Kill Wayback"/>
+              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText='Start Wayback' />
+              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText='Kill Wayback' />
 
             </Menu>
           </Popover>
@@ -138,6 +138,5 @@ export default class Debug extends Component {
         <div></div>
       )
     }
-
   }
 }

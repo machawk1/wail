@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import childProcess from 'child_process'
 import os from 'os'
 import path from 'path'
@@ -18,10 +18,10 @@ import Logger from '../logger/logger'
 const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('indexLogPath') })
 const indexLock = new ReadWriteLock()
-const logString = "indexer %s"
-const logStringError = "indexer error where[ %s ] stack [ %s ]"
+const logString = 'indexer %s'
+const logStringError = 'indexer error where[ %s ] stack [ %s ]'
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 function generatePathIndex (genCdx) {
   let index = []
@@ -34,7 +34,7 @@ function generatePathIndex (genCdx) {
     next()
   })
   indexLock.readLock('pindex', (warcReadRelease) => {
-    console.log("Aquiring pindex readlock")
+    console.log('Aquiring pindex readlock')
     fs.walk(settings.get('warcs'))
       .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
       .pipe(onlyWarf)
@@ -42,16 +42,16 @@ function generatePathIndex (genCdx) {
         index.push(`${path.basename(item.path)}\t${item.path}`)
       })
       .on('end', () => {
-        console.log("Aquiring pindex writelock")
+        console.log('Aquiring pindex writelock')
         indexLock.writeLock('pindex', (indexWriteRelease) => {
           if (count > 0) {
             console.log('The count was greater than zero')
             fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
-              console.log("Releasing pindex writelock")
+              console.log('Releasing pindex writelock')
               if (err) {
                 indexWriteRelease()
                 console.error('generating path index with error', err)
-                logger.error(util.format(logStringError, "generate path index on end", err.stack))
+                logger.error(util.format(logStringError, 'generate path index on end', err.stack))
               } else {
                 indexWriteRelease()
                 console.log('done generating path index no error')
@@ -59,11 +59,11 @@ function generatePathIndex (genCdx) {
               }
             })
           } else {
-            console.log("There were no warcs to index")
+            console.log('There were no warcs to index')
             indexWriteRelease()
           }
         })
-        console.log("Releasing pindex readlock")
+        console.log('Releasing pindex readlock')
         warcReadRelease()
       })
       .on('error', err => {
@@ -77,7 +77,7 @@ function generatePathIndex (genCdx) {
   })
 }
 
-//implements bytewise sorting of export LC_ALL=C; sort
+//  implements bytewise sorting of export LC_ALL=C; sort
 function unixSort (a, b) {
   return bytewise.compare(bytewise.encode(a), bytewise.encode(b))
 }
@@ -87,8 +87,9 @@ function generateCDX () {
   let cdxHeaderIncluded = false
 
   let onlyWorf = through2.obj(function (item, enc, next) {
-    if (!item.stats.isDirectory() && path.extname(item.path) === '.warc')
+    if (!item.stats.isDirectory() && path.extname(item.path) === '.warc') {
       this.push(item)
+    }
     next()
   })
 
@@ -96,14 +97,14 @@ function generateCDX () {
   let cdxIndexer = settings.get('cdxIndexer')
 
   let worfToCdx = through2.obj(function (item, enc, next) {
-    let through = this //hope this ensures that this is through2.obj
+    let through = this // hope this ensures that this is through2.obj
     let cdx = path.basename(item.path).replace(replace, '.cdx')
     let cdxFile = `${cdxp}/${cdx}`
     childProcess.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
         logger.error(util.format(logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack))
       }
-      fs.readFile(cdxFile, 'utf8', (errr, value)=> {
+      fs.readFile(cdxFile, 'utf8', (errr, value) => {
         if (errr) {
           logger.error(util.format(logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack))
         }
@@ -156,7 +157,6 @@ function generateCDX () {
       })
       .on('error', err => logger.error(util.format(logStringError, 'generateCDX on error', err.stack)))
   })
-
 }
 
 class Indexer {
@@ -182,13 +182,13 @@ class Indexer {
 
 let indexer = new Indexer()
 
-ipcRenderer.on("start-index-indexing", (event) => {
+ipcRenderer.on('start-index-indexing', (event) => {
   console.log('Monitor get start indexing monitoring')
   ipcRenderer.send('got-it', { from: 'indexer', yes: true })
   indexer.indexer()
 })
 
-ipcRenderer.on("stop", (event) => {
+ipcRenderer.on('stop', (event) => {
   console.log('Monitor get start indexing monitoring')
   logger.cleanUp()
   indexer.job.cancel()

@@ -10,7 +10,7 @@ export default class StatusDialog extends Component {
     super(props, context)
     this.state = {
       open: false,
-      serviceMessage: "",
+      serviceMessage: '',
       action: null
     }
   }
@@ -49,19 +49,19 @@ export default class StatusDialog extends Component {
   render () {
     const actions = [
       <FlatButton
-        label="No"
+        label='No'
         primary={true}
         onTouchTap={this.handleCloseDisregard}
       />,
       <FlatButton
-        label="Yes"
+        label='Yes'
         primary={true}
         onTouchTap={this.handleCloseFix}
       />
     ]
     return (
       <Dialog
-        title="Service Status Update"
+        title='Service Status Update'
         actions={actions}
         modal={true}
         open={this.state.open}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -6,7 +6,7 @@ import EditorDispatcher from '../../dispatchers/editorDispatcher'
 import Editor from './editor'
 import EditorStore from '../../stores/editorStore'
 import wc from '../../constants/wail-constants'
-import { List, ListItem } from 'material-ui/List'
+import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 
 const style = {
@@ -18,8 +18,8 @@ const style = {
     margin: 12,
   },
   popup: {
-    overflowX: "hidden",
-    "overflowY": "scroll"
+    overflowX: 'hidden',
+    'overflowY': 'scroll'
   }
 }
 
@@ -40,7 +40,7 @@ export default class EditorPopup extends Component {
 
     this.state = {
       open: false,
-      codeText: Reflect.has(this.props.codeToLoad, "which") ?
+      codeText: Reflect.has(this.props.codeToLoad, 'which') ?
         EditorStore.getCode(loadCode.which, loadCode.jid) : EditorStore.getCode(loadCode.codeToLoad)
     }
 
@@ -49,7 +49,6 @@ export default class EditorPopup extends Component {
     this.handleCodeChange = this.handleCodeChange.bind(this)
     this.saveCode = this.saveCode.bind(this)
     this.storeUpdate = this.storeUpdate.bind(this)
-
   }
 
   storeUpdate () {
@@ -61,7 +60,6 @@ export default class EditorPopup extends Component {
     if (this.props.useButton) {
       EditorStore.on('wbc-fetched', this.storeUpdate)
     }
-
   }
 
   componentWillUnmount () {
@@ -83,7 +81,7 @@ export default class EditorPopup extends Component {
   }
 
   handleCodeChange (codeText) {
-    console.log("Code changed")
+    console.log('Code changed')
     this.setState({ codeText })
   }
 
@@ -106,7 +104,6 @@ export default class EditorPopup extends Component {
       code: this.state.codeText,
       jid: this.props.codeToLoad.jid,
     })
-
   }
 
   editorWithButton (actions) {
@@ -115,7 +112,7 @@ export default class EditorPopup extends Component {
         <RaisedButton
           label={this.props.buttonLabel}
           onTouchTap={this.handleOpen}
-          labelPosition="before"
+          labelPosition='before'
           primary={true}
           style={style.button}
         />
@@ -134,15 +131,15 @@ export default class EditorPopup extends Component {
           />
           <List style={style.popup}>
             <Subheader>Commands</Subheader>
-            <ListItem primaryText="Ctrl-F/Cmd-F: Start searching"/>
-            <ListItem primaryText="Ctrl-G/Cmd-G: Find next"/>
-            <ListItem primaryText="Shift-Ctrl-G/Shift-Cmd-G: Find previous"/>
-            <ListItem primaryText="Shift-Ctrl-F/Cmd-Option-F: Replace"/>
-            <ListItem primaryText="Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all"/>
+            <ListItem primaryText='Ctrl-F/Cmd-F: Start searching'/>
+            <ListItem primaryText='Ctrl-G/Cmd-G: Find next'/>
+            <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous'/>
+            <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace'/>
+            <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all'/>
             <ListItem
               primaryText="Alt-F: Persistent search (dialog doesn't autoclose,enter to find next, Shift-Enter to find previous)"
             />
-            <ListItem primaryText="Alt-G: Jump to line"/>
+            <ListItem primaryText='Alt-G: Jump to line'/>
           </List>
         </Dialog>
       </div>
@@ -166,15 +163,15 @@ export default class EditorPopup extends Component {
         />
         <List style={style.popup}>
           <Subheader>Commands</Subheader>
-          <ListItem primaryText="Ctrl-F/Cmd-F: Start searching"/>
-          <ListItem primaryText="Ctrl-G/Cmd-G: Find next"/>
-          <ListItem primaryText="Shift-Ctrl-G/Shift-Cmd-G: Find previous"/>
-          <ListItem primaryText="Shift-Ctrl-F/Cmd-Option-F: Replace"/>
-          <ListItem primaryText="Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all"/>
+          <ListItem primaryText='Ctrl-F/Cmd-F: Start searching'/>
+          <ListItem primaryText='Ctrl-G/Cmd-G: Find next'/>
+          <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous'/>
+          <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace'/>
+          <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all'/>
           <ListItem
             primaryText="Alt-F: Persistent search (dialog doesn't autoclose,enter to find next, Shift-Enter to find previous)"
           />
-          <ListItem primaryText="Alt-G: Jump to line"/>
+          <ListItem primaryText='Alt-G: Jump to line'/>
         </List>
       </Dialog>
     )
@@ -183,12 +180,12 @@ export default class EditorPopup extends Component {
   render () {
     const actions = [
       <FlatButton
-        label="Cancel"
+        label='Cancel'
         primary={true}
         onTouchTap={this.handleClose}
       />,
       <FlatButton
-        label="Save"
+        label='Save'
         primary={true}
         onTouchTap={this.saveCode}
       />,
@@ -198,5 +195,3 @@ export default class EditorPopup extends Component {
     return (editorElement)
   }
 }
-
-

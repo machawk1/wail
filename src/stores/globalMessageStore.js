@@ -15,7 +15,11 @@ class globalMessageStore extends EventEmitter {
   handleEvent (event) {
     switch (event.type) {
       case EventTypes.QUEUE_MESSAGE:
+        let lenBefore = this.messageQ.length
         this.messageQ.push(event.message)
+        if (lenBefore === 0) {
+          this.emit('new-message')
+        }
         break
     }
   }
@@ -30,7 +34,7 @@ class globalMessageStore extends EventEmitter {
 }
 
 const GMessageStore = new globalMessageStore()
-//noinspection JSAnnotator
+// noinspection JSAnnotator
 window.GMessageStore = GMessageStore
 GMessageDispatcher.register(GMessageStore.handleEvent)
 export default GMessageStore

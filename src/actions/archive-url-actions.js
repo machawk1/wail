@@ -1,9 +1,9 @@
-import UrlDispatcher from '../dispatchers/url-dispatcher'
-import wailConstants from '../constants/wail-constants'
 import childProcess from 'child_process'
 import rp from 'request-promise'
 import { remote } from 'electron'
 import util from 'util'
+import UrlDispatcher from '../dispatchers/url-dispatcher'
+import wailConstants from '../constants/wail-constants'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -61,6 +61,7 @@ export async function askMemgator (url) {
     let mementoCount = (stdout.match(/memento/g) || []).length
     UrlDispatcher.dispatch({
       type: EventTypes.GOT_MEMENTO_COUNT,
+      url,
       mementos: mementoCount
     })
   })

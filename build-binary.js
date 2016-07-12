@@ -81,13 +81,13 @@ const DEFAULT_OPTS = {
   version: require('electron-prebuilt/package.json').version
 }
 
-//OSX
+// OSX
 const darwinSpecificOpts = {
 
   'app-bundle-id': 'wsdl.cs.odu.edu.wail',
 
-  // The application category type, as shown in the Finder via "View" -> "Arrange by
-  // Application Category" when viewing the Applications directory (OS X only).
+  // The application category type, as shown in the Finder via 'View' -> 'Arrange by
+  // Application Category' when viewing the Applications directory (OS X only).
   'app-category-type': 'public.app-category.utilities',
 
   // // The bundle identifier to use in the application helper's plist (OS X only).
@@ -154,7 +154,6 @@ function pack (plat, arch, cb) {
         arch
       })
     }
-
   } else if (plat === 'win32') {
     opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {
       platform: plat,
@@ -173,7 +172,7 @@ function pack (plat, arch, cb) {
 
 function createDMG (appPath, cb) {
   let createDMG = require('electron-installer-dmg')
-  let out = path.normalize(path.join(cwd, `release/wail-darwin-dmg`))
+  let out = path.normalize(path.join(cwd, 'release/wail-darwin-dmg'))
   fs.emptyDirSync(out)
   let dmgOpts = {
     appPath,
@@ -235,7 +234,7 @@ function log (plat, arch) {
       cb = () => {
         // fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
         if (process.platform === 'darwin') {
-          console.log("Building dmg")
+          console.log('Building dmg')
           createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
         } else {
           console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
@@ -251,7 +250,6 @@ function log (plat, arch) {
         cb = () => console.log(`${plat}-${arch} finished!`)
       }
       moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
-
     }
     let releasePath = path.normalize(path.join(cwd, moveToPath))
     moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
@@ -264,47 +262,42 @@ fs.emptyDirSync(path.join(cwd, 'release'))
 console.log('building webpack.config.electron')
 build(electronCfg)
   .then((stats) => {
-    console.log(util.inspect(stats, { depth: null, colors: true }))
     console.log('building webpack.config.production')
     build(cfg)
-      .then((stats) => {
-        console.log(util.inspect(stats, { depth: null, colors: true }))
-        if (shouldBuildCurrent) {
-          console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-          pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-        } else {
-          let buildFor
-          let archs
-          let platforms
-          if (shouldBuildAll) {
-            buildFor = 'building for all platforms'
-            archs = [ 'ia32', 'x64' ]
-            platforms = [ 'linux', 'win32', 'darwin' ]
-          } else if (shouldBuildLinux) {
-            buildFor = 'building for linux'
-            archs = [ 'ia32', 'x64' ]
-            platforms = [ 'linux' ]
-          } else if (shouldBuildOSX) {
-            buildFor = 'building for OSX'
-            archs = [ 'x64' ]
-            platforms = [ 'darwin' ]
-          } else {
-            buildFor = 'building for Windows'
-            archs = [ 'x64' ]
-            platforms = [ 'win32' ]
-          }
-          console.log(buildFor)
-          platforms.forEach(plat => {
-            archs.forEach(arch => {
-              console.log(`building the binary for ${plat}-${arch}`)
-              pack(plat, arch, log(plat, arch))
-            })
-          })
-        }
+  })
+  .then((stats) => {
+    if (shouldBuildCurrent) {
+      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+    } else {
+      let buildFor
+      let archs
+      let platforms
+      if (shouldBuildAll) {
+        buildFor = 'building for all platforms'
+        archs = [ 'ia32', 'x64' ]
+        platforms = [ 'linux', 'win32', 'darwin' ]
+      } else if (shouldBuildLinux) {
+        buildFor = 'building for linux'
+        archs = [ 'ia32', 'x64' ]
+        platforms = [ 'linux' ]
+      } else if (shouldBuildOSX) {
+        buildFor = 'building for OSX'
+        archs = [ 'x64' ]
+        platforms = [ 'darwin' ]
+      } else {
+        buildFor = 'building for Windows'
+        archs = [ 'x64' ]
+        platforms = [ 'win32' ]
+      }
+      console.log(buildFor)
+      platforms.forEach(plat => {
+        archs.forEach(arch => {
+          console.log(`building the binary for ${plat}-${arch}`)
+          pack(plat, arch, log(plat, arch))
+        })
       })
-      .catch(err => {
-        console.error(err)
-      })
+    }
   })
   .catch(err => {
     console.error(err)

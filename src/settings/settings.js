@@ -10,7 +10,7 @@ const managed = {
     { name: 'archives', path: 'config/archives.json' },
     { name: 'cdxIndexer', path: 'bundledApps/tomcat/webapps/bin/cdx-indexer' },
     { name: 'cdx', path: 'archiveIndexes' },
-    { name: 'cdxTemp', path: "archiveIndexes/combined_unsorted.cdxt" },
+    { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
     { name: 'crawlerBean', path: 'crawler-beans.cxml' },
     { name: 'heritrixBin', path: 'bundledApps/heritrix-3.3.0/bin/heritrix' },
     { name: 'heritrixJob', path: 'bundledApps/heritrix-3.3.0/jobs' },
@@ -31,17 +31,35 @@ const managed = {
     port: '8843',
     username: 'lorem',
     password: 'ipsum',
-    login: "-a lorem:ipsum",
-    path: "",
+    login: '-a lorem:ipsum',
+    path: '',
     jobConf: 'crawler-beans.cxml',
-    web_ui: "https://lorem:ipsum@localhost:8443",
+    web_ui: 'https://lorem:ipsum@localhost:8443',
+    addJobDirectoryOptions: {
+      method: 'POST',
+      uri: 'https://localhost:8443/engine',
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      timeout: 15000,
+      form: {
+        action: 'add',
+        addPath: '',
+      },
+      auth: {
+        username: 'lorem',
+        password: 'ipsum',
+        sendImmediately: false
+      },
+      strictSSL: false,
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+    },
     sendActionOptions: {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       timeout: 15000,
       form: {
-        action: ""
+        action: ''
       },
       auth: {
         username: 'lorem',
@@ -54,12 +72,14 @@ const managed = {
     },
     killOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine/',
+      uri: 'https://localhost:8443/engine',
       timeout: 15000,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      form: {
-        action: 'exit+java+process',
-        'im_sure': 'on'
+      body: 'im_sure=on&action=exit java process',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
+        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'en-US,en;q=0.5',
+        'Connection': 'keep-alive'
       },
       auth: {
         username: 'lorem',
@@ -74,7 +94,7 @@ const managed = {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
       timeout: 15000,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'launch'
       },
@@ -91,7 +111,6 @@ const managed = {
       method: 'GET',
       uri: 'https://localhost:8443/engine',
       timeout: 15000,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       auth: {
         username: 'lorem',
         password: 'ipsum',
@@ -105,7 +124,7 @@ const managed = {
       method: 'POST',
       uri: 'https://localhost:8443/engine/job/',
       timeout: 15000,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
         action: 'build'
       },
@@ -160,7 +179,7 @@ function writeSettings (base, settings) {
 
   let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
   let command = 'sh'
-  let isWindows = os.platform() == 'win32'
+  let isWindows = os.platform() === 'win32'
   settings.set('isWindows', isWindows)
 
   managed.commands.forEach(cmd => {

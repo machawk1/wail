@@ -13,14 +13,14 @@ export default class logger {
 
   @autobind
   info (msg) {
-    let date = moment().format("MM/DD/YYYY hh:mm:ssa")
+    let date = moment().format('MM/DD/YYYY hh:mm:ssa')
     let lmsg = `[${date}] [info] ${msg}${this.endline}`
     this.fileStream.write(lmsg)
   }
 
   @autobind
   error (msg) {
-    let date = moment().format("MM/DD/YYYY hh:mm:ssa")
+    let date = moment().format('MM/DD/YYYY hh:mm:ssa')
     let lmsg = `[${date}] [error] ${msg}${this.endline}`
     this.fileStream.write(lmsg)
   }

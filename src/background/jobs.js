@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
@@ -23,10 +23,11 @@ const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
 const jobLock = new ReadWriteLock()
 const jobCache = {
   cache: null,
+  updated: null,
   index: new Map(),
 }
 
-const isWindows = os.platform() == 'win32'
+const isWindows = os.platform() === 'win32'
 
 let jobLaunchRe
 let jobRe
@@ -60,12 +61,14 @@ function checkCache (newJobs) {
   let actualUpdate = false
   let len = newJobs.length
   let positions = new Map()
+  jobCache.updated = []
   for (let i = 0; i < len; ++i) {
     let maybeNewJob = newJobs[ i ]
 
     if (!jobCache.index.has(maybeNewJob.jobId)) {
       console.log('checkCache we did not have a jobId', maybeNewJob.jobId)
       actualUpdate = true
+      jobCache.updated.push(maybeNewJob)
       positions.set(maybeNewJob.jobId, i)
       continue
     } else {
@@ -75,11 +78,13 @@ function checkCache (newJobs) {
     let oldJob = jobCache.cache[ idx ]
     if (oldJob.launch !== maybeNewJob.launch) {
       actualUpdate = true
+      jobCache.updated.push(maybeNewJob)
       continue
     }
 
     if (oldJob.runs.length !== maybeNewJob.runs.length) {
       actualUpdate = true
+      jobCache.updated.push(maybeNewJob)
       continue
     }
 
@@ -89,27 +94,31 @@ function checkCache (newJobs) {
 
       if (ojr.discovered !== mnjr.discovered) {
         actualUpdate = true
+        jobCache.updated.push(maybeNewJob)
         continue
-
       }
 
       if (ojr.downloaded !== mnjr.downloaded) {
         actualUpdate = true
+        jobCache.updated.push(maybeNewJob)
         continue
       }
 
       if (ojr.ended !== mnjr.ended) {
         actualUpdate = true
+        jobCache.updated.push(maybeNewJob)
         continue
       }
 
       if (ojr.queued !== mnjr.queued) {
         actualUpdate = true
+        jobCache.updated.push(maybeNewJob)
         continue
       }
 
       if (!ojr.timestampm.isSame(mnjr.timestampm)) {
         actualUpdate = true
+        jobCache.updated.push(maybeNewJob)
       }
     }
   }
@@ -148,7 +157,6 @@ function getHeritrixJobsState () {
       } else {
         if (item.stats.isDirectory()) {
           let jid = job.exec(item.path)
-
           if (jid) {
             counter += 1
             jobsConfs[ jid.capture('job') ] =
@@ -165,13 +173,12 @@ function getHeritrixJobsState () {
           }
         }
       }
-
       next()
     })
 
     let launchStats = through2.obj(function (item, enc, next) {
       let through = this
-      fs.readFile(item.logPath, 'utf8', (err, data)=> {
+      fs.readFile(item.logPath, 'utf8', (err, data) => {
         if (err) {
           logger.error(util.format(logStringError, `launchStats ${item.logPath}`, err.stack))
           through.push(item)
@@ -193,9 +200,7 @@ function getHeritrixJobsState () {
             queued: nextLastfields[ 2 ],
             downloaded: nextLastfields[ 3 ],
           })
-
         } else {
-          // TODO: check if last line is empty
           let fields = lastLine.collapseWhitespace().s.split(' ')
           let tsm = moment(fields[ 0 ])
           jobs[ item.jobId ].runs.push({
@@ -212,7 +217,6 @@ function getHeritrixJobsState () {
       next()
     })
 
-    //return { confs: jobsConfs, obs: sortedJobs, }
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
         logger.error(util.format(logStringError, 'ensure dir heritrixJobP', err.stack))
@@ -239,11 +243,10 @@ function getHeritrixJobsState () {
                 .value()
               if (jobCache.cache) {
                 if (checkCache(sortedJobs)) {
-                  resolve({ change: true, count: counter, confs: jobsConfs, jobs: sortedJobs, })
+                  resolve({ change: true, count: counter, confs: jobsConfs, jobs: jobCache.updated, })
                 } else {
                   resolve({ change: false })
                 }
-
               } else {
                 console.log('Job cache is null')
                 logger.info(util.format(logString, 'the job cache is null. Setting it'))
@@ -254,7 +257,6 @@ function getHeritrixJobsState () {
                 }
                 resolve({ change: false, begin: 'We set ourselves at the first time and so does UI' })
               }
-
             } else {
               resolve({ change: false, error: 'count zero', count: 0, stack: 'ere' })
             }
@@ -267,9 +269,7 @@ function getHeritrixJobsState () {
           })
       }
     })
-
   })
-
 }
 
 class JobMonitor {
@@ -283,7 +283,6 @@ class JobMonitor {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
       rule.second = [ 0, 10, 20, 30, 40, 50 ]
-
       this.job = schedule.scheduleJob(rule, () => {
         console.log('Checking job stats')
         jobLock.writeLock(release => {
@@ -300,7 +299,6 @@ class JobMonitor {
               cb({ change: false })
             })
         })
-
       })
       this.started = true
     }
@@ -314,6 +312,7 @@ ipcRenderer.on('start-crawljob-monitoring', (event) => {
   logger.info(util.format(logString, 'got start crawljob monitoring'))
   ipcRenderer.send('got-it', { from: 'jobs', yes: true })
   jobMonitor.checkJobStatuses(statues => {
+    console.log(statues)
     if (statues.change) {
       ipcRenderer.send('crawljob-status-update', statues)
     }

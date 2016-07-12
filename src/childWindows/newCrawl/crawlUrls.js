@@ -8,9 +8,9 @@ import _ from 'lodash'
 import CrawlUrlItem from './crawlUrlItem'
 
 const style = {
-  height: "100px",
-  overflowX: "hidden",
-  "overflowY": "scroll"
+  height: '100px',
+  overflowX: 'hidden',
+  'overflowY': 'scroll'
 }
 
 export default class CrawlUrls extends Component {
@@ -26,7 +26,6 @@ export default class CrawlUrls extends Component {
       text: '',
       keys: 0,
     }
-
   }
 
   @autobind
@@ -42,16 +41,16 @@ export default class CrawlUrls extends Component {
   @autobind
   checkKeyCode (event) {
     console.log(event.keyCode)
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       let uris = this.state.urls
       let keyNum = this.state.keys
       let text = this.state.text
 
       let deleteAction = (event) => {
         let list = this.state.urls
-        let removeUrl = ""
+        let removeUrl = ''
         // list.forEach(elem => console.log(elem))
-        let newUrls = _.remove(list, elem => parseInt(elem.key) != keyNum)
+        let newUrls = _.remove(list, elem => parseInt(elem.key) !== keyNum)
         // this.state.urls.
         this.setState({ urls: newUrls })
       }
@@ -68,7 +67,7 @@ export default class CrawlUrls extends Component {
           url={text}
         />
       )
-      uris.push(<Divider key={keyNum+3}/>)
+      uris.push(<Divider key={keyNum + 3}/>)
       this.props.urlAdded(this.state.text)
       this.setState({ urls: uris, text: '', keys: keyNum + 4 })
     }
@@ -81,21 +80,20 @@ export default class CrawlUrls extends Component {
   }
 
   render () {
-
     return (
       <Row>
-        <Column width="1/2">
+        <Column width='1/2'>
           <TextField
-            floatingLabelText="Enter URI to crawl"
-            hintText="http://matkelly.com/wail"
-            id="crawl-url-input"
+            floatingLabelText='Enter URI to crawl'
+            hintText='http://matkelly.com/wail'
+            id='crawl-url-input'
             value={this.state.text}
-            tooltip="press enter"
+            tooltip='press enter'
             onKeyDown={this.checkKeyCode}
             onChange={this.handleChange}
           />
         </Column>
-        <Column width="1/2">
+        <Column width='1/2'>
           <List style={style} children={ this.state.urls }/>
         </Column>
       </Row>

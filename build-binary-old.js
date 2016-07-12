@@ -1,18 +1,15 @@
-import fsreal from 'fs'
-import gracefulFs from 'graceful-fs'
-gracefulFs.gracefulify(fsreal)
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 Promise.promisifyAll(fs)
 import path from 'path'
-import os  from 'os'
-import webpack  from 'webpack'
-import electronCfg  from './webpack.config.electron.js'
-import cfg  from './webpack.config.production.js'
+import os from 'os'
+import webpack from 'webpack'
+import electronCfg from './webpack.config.electron.js'
+import cfg from './webpack.config.production.js'
 import packager from 'electron-packager'
-import del  from 'del'
-import pkg  from './package.json'
-import moveTo from "./tools/moveJDKMemgator"
+import del from 'del'
+import pkg from './package.json'
+import moveTo from './tools/moveJDKMemgator'
 
 fs.removeSync(path.join(path.resolve('.'), 'dist'))
 
@@ -102,13 +99,13 @@ function startPack () {
       build(cfg)
     })
     .then((stats) => {
-      console.log("removing previous builds")
+      console.log('removing previous builds')
       del.sync('release')
     })
     .then(paths => {
       if (shouldBuildAll) {
         // build for all platforms
-        console.log("building for all platforms")
+        console.log('building for all platforms')
         let archs = [ 'ia32', 'x64' ]
         let platforms = [ 'linux', 'win32', 'darwin' ]
 
@@ -119,9 +116,8 @@ function startPack () {
           })
         })
       } else {
-
         if (shouldBuildLinux) {
-          console.log("building for linux")
+          console.log('building for linux')
           let archs = [ 'ia32', 'x64' ]
           let platforms = [ 'linux', ]
 
@@ -132,7 +128,7 @@ function startPack () {
             })
           })
         } else if (shouldBuildOSX) {
-          console.log("building for OSX")
+          console.log('building for OSX')
           let archs = [ 'x64' ]
           let platforms = [ 'darwin', ]
 
@@ -143,7 +139,7 @@ function startPack () {
             })
           })
         } else if (shouldBuildWindows) {
-          console.log("building for Windows")
+          console.log('building for Windows')
           let archs = [ 'ia32', 'x64' ]
           let platforms = [ 'win32' ]
 
@@ -157,7 +153,6 @@ function startPack () {
           console.log(`build the binary for ${os.platform()}-${os.arch()}`)
           pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
         }
-
       }
     })
     .catch(err => {

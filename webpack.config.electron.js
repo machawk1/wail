@@ -12,7 +12,7 @@ export default {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'es2015', 'stage-0', 'node6', 'react',   ],
+          presets: [ 'es2015', 'stage-0', 'node6', 'react', ],
           plugins: [ 'transform-runtime', "add-module-exports",
             "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
           ],
@@ -32,7 +32,7 @@ export default {
   },
   devtool: 'source-map',
 
-  entry: ['babel-polyfill','./src/electron-main-dev'],
+  entry: [ 'babel-polyfill', './src/electron-main-dev' ],
   output: {
     filename: 'electron-main.js',
     path: path.join(__dirname, 'dist'),

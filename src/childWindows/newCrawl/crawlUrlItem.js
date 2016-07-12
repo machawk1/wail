@@ -1,16 +1,16 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import { ListItem } from 'material-ui/List'
+import {ListItem} from 'material-ui/List'
 import TextField from 'material-ui/TextField'
-import { grey400 } from 'material-ui/styles/colors'
+import {grey400} from 'material-ui/styles/colors'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 
 const style = {
-  height: "100px",
-  overflowX: "hidden",
-  "overflowY": "scroll"
+  height: '100px',
+  overflowX: 'hidden',
+  'overflowY': 'scroll'
 }
 
 export default class CrawlUrlItem extends Component {
@@ -40,7 +40,7 @@ export default class CrawlUrlItem extends Component {
 
   @autobind
   checkKeyCode (event) {
-    if (event.keyCode == 13) {
+    if (event.keyCode === 13) {
       if (this.state.editable) {
         this.setState({ editable: false })
         console.log(this.state.url, this.props.idx)
@@ -70,7 +70,7 @@ export default class CrawlUrlItem extends Component {
         onKeyDown={this.checkKeyCode}
         id={this.state.url}
         value={this.state.url}
-        key={this.props.num+2}
+        key={this.props.num + 2}
       />
     )
     return (

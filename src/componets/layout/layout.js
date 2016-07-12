@@ -3,6 +3,7 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
+import Debug from '../debug-element'
 import styles from '../styles/styles'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
@@ -25,11 +26,12 @@ export default class Layout extends Component {
   render () {
     return (
       <div>
-        <Header/>
+        <Header />
         <div style={styles.root}>
-          { this.props.children }
+          {this.props.children}
         </div>
         <Footer />
+        <Debug />
       </div>
     )
   }

@@ -1,29 +1,29 @@
-import React, { Component, PropTypes } from 'react'
-import { TableRow, TableRowColumn } from 'material-ui/Table'
+import React, {Component, PropTypes} from 'react'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import moment from 'moment'
 
 const style = {
   tableHeaderCol: {
-    paddingLeft: "12px",
-    paddingRight: "12px",
+    paddingLeft: '12px',
+    paddingRight: '12px',
   },
   tableHeader: {
-    borderBottomStyle: "none"
+    borderBottomStyle: 'none'
   },
   tableRowCol: {
-    paddingLeft: "5px",
-    paddingRight: "5px",
-    wordWrap: "break-word",
-    textOverflow: "none",
-    whiteSpace: "normal",
+    paddingLeft: '5px',
+    paddingRight: '5px',
+    wordWrap: 'break-word',
+    textOverflow: 'none',
+    whiteSpace: 'normal',
   },
   trcTextCenter: {
-    paddingLeft: "5px",
-    paddingRight: "5px",
-    wordWrap: "break-word",
-    textOverflow: "none",
-    whiteSpace: "normal",
-    textAlign: "left",
+    paddingLeft: '5px',
+    paddingRight: '5px',
+    wordWrap: 'break-word',
+    textOverflow: 'none',
+    whiteSpace: 'normal',
+    textAlign: 'left',
   }
 
 }
@@ -34,15 +34,11 @@ export default class HeritrixJobInfoRow extends Component {
     runs: PropTypes.array.isRequired,
   }
 
-  constructor (props, context) {
-    super(props, context)
-  }
-
   render () {
     let runs = this.props.runs
     if (runs.length > 0) {
       let job = runs[ 0 ]
-      let status = job.ended ? "Ended" : "Running"
+      let status = job.ended ? 'Ended' : 'Running'
       let discovered = job.discovered || ''
       let queued = job.queued || ''
       let downloaded = job.downloaded || ''
@@ -56,7 +52,7 @@ export default class HeritrixJobInfoRow extends Component {
             {status}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={style.tableRowCol}>
-            {moment(job.timestamp).format("MM/DD/YYYY h:mm:ssa")}
+            {moment(job.timestamp).format('MM/DD/YYYY h:mm:ssa')}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={style.tableRowCol}>
             {discovered}
@@ -69,15 +65,18 @@ export default class HeritrixJobInfoRow extends Component {
           </TableRowColumn>
         </TableRow>
       )
-
     } else {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`}
-                          style={style.tableRowCol}> {this.props.jobId} </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>Not Started</TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={style.tableRowCol}>Not
-            Started</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>
+            {this.props.jobId}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>
+            Not Started
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={style.tableRowCol}>
+            Not Started
+          </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={style.tableRowCol}>0</TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={style.tableRowCol}>0</TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={style.tableRowCol}>0</TableRowColumn>

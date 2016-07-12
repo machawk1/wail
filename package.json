@@ -44,8 +44,8 @@
       "es6": true
     },
     "rules": {
-      "camelcase": "off",
-      "comma-dangle": "off"
+      "comma-dangle": "off",
+      "react/jsx-boolean-value": "off"
     },
     "extends": [
       "standard",
@@ -82,10 +82,10 @@
     ],
     "env": {
       "node": true,
-      "browser": true
+      "browser": true,
+      "es6": true
     },
     "rules": {
-      "camelcase": "off",
       "comma-dangle": "off"
     }
   },
