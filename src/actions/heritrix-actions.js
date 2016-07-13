@@ -204,18 +204,42 @@ export function killHeritrix (cb) {
   //   })
 }
 
-export function addJobToHeritrix (confPath) {
-  console.log('sadshjdahjk')
+export function addJobDirectoryHeritrix (confPath) {
+  let options = _.cloneDeep(settings.get('heritrix.addJobDirectoryOptions'))
+  options.form.addPath = confPath
+  RequestDispatcher.dispatch({
+    type: EventTypes.REQUEST_HERITRIX,
+    rType: RequestTypes.ADD_HERITRIX_JOB_DIRECTORY,
+    opts: options,
+    from: `addJobToHeritrix[${confPath}]`,
+    timeReceived: null,
+    success: (response) => {
+      console.log('success in addJobDirectoryHeritrix', response)
+      logger.info(util.format(logString, `'303 success in addJobDirectoryHeritrix ${confPath}`))
+    },
+    error: (err) => {
+      if (err.statusCode === 303) {
+        console.log('303 success in addJobDirectoryHeritrix', err)
+        logger.info(util.format(logString, `'303 success in addJobDirectoryHeritrix ${confPath}`))
+      } else {
+        // POST failed...
+        console.log('addJobDirectoryHeritrix failed', err)
+        logger.error(util.format(logStringError, `addJobDirectoryHeritrix failed ${err.message}`, err.statusCode))
+      }
+    }
+  })
 }
 
-export function makeHeritrixJobConf (urls, hops, jobId) {
+export function makeHeritrixJobConf (urls, hops = 1, jobId) {
   console.log('in makeHeritrixJobConf')
   fs.readFileAsync(settings.get('heritrix.jobConf'), 'utf8')
     .then(data => {
       let doc = cheerio.load(data, {
         xmlMode: true
       })
-      let jobId = new Date().getTime()
+      if (!jobId) {
+        jobId = new Date().getTime()
+      }
       // console.log(doc.xml())
       let urlConf = doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]')
       let urlText
@@ -246,13 +270,14 @@ export function makeHeritrixJobConf (urls, hops, jobId) {
             console.log('done writting file with error', error)
           } else {
             console.log('done writting file')
+            addJobDirectoryHeritrix(confPath)
+            CrawlDispatcher.dispatch({
+              type: EventTypes.BUILT_CRAWL_CONF,
+              id: jobId,
+              path: confPath,
+              urls: urls
+            })
           }
-          CrawlDispatcher.dispatch({
-            type: EventTypes.BUILT_CRAWL_CONF,
-            id: jobId,
-            path: confPath,
-            urls: urls
-          })
         })
       })
     })

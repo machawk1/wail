@@ -37,6 +37,7 @@ export default {
   }),
   RequestTypes: keyMirror({
     ACCESSIBILITY: null,
+    ADD_HERITRIX_JOB_DIRECTORY: null,
     BUILD_HERITIX_JOB: null,
     FORCE_CRAWL_FINISH: null,
     KILL_HERITRIX: null,

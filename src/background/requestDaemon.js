@@ -35,7 +35,7 @@ class RequestDaemon {
   }
 
   @autobind
-  handleRequest (request) {
+  queueRequest (request) {
     console.log(`RequestDaemon got an incoming request[${request.id},${request.from}]`, request)
     logger.info(util.format(logString, `got an incoming request[${request.id},${request.from}]`))
     if (Array.isArray(request.opts)) {
@@ -50,7 +50,7 @@ class RequestDaemon {
     if (!this.working) {
       console.log('RequestDaemon we are not working but we are now')
       this.working = true
-      this.handleRequests()
+      this.handleRequest()
     } else {
       console.log('RequestDaemon we are currently working and will continue to do so')
     }
@@ -61,22 +61,25 @@ class RequestDaemon {
     console.log('Do we have more requests to process?')
     if (this.requestQ.length > 0) {
       console.log('Yes we do handling them')
-      this.handleRequests()
+      logger.info(util.format(logString, 'has more requests, handling them'))
+      this.handleRequest()
     } else {
       console.log('No we do not. Waiting for more')
+      logger.info(util.format(logString, 'has not more requests waiting for more'))
       this.working = false
     }
   }
 
   @autobind
-  handleRequests () {
+  handleRequest () {
     let request = this.requestQ.shift()
     console.log(`Handling a request[${request.id},${request.from}]`, request)
+    logger.info(util.format(logString, `handling a request[${request.id},${request.from}]`))
     let message = `handled request[${request.id},${request.from}]`
     rp(request.opts)
       .then(response => {
         console.log('The request got a response', response)
-        logger.info(util.format(logString, `${message} and it got a response`))
+        logger.info(util.format(logString, `request[${request.id},${request.from}] got a successful response`))
         request.response = response
         request.wasError = false
         ipcRenderer.send('handled-request', request)
@@ -91,6 +94,7 @@ class RequestDaemon {
         } else {
           if (error.error.code === 'ETIMEDOUT' && request.hadToRetry) {
             request.timeOutTwice = true
+            logger.info(util.format(logString, `the request[${request.id},${request.from}] timeout twice not retrying`))
           }
           console.log('The request got an error but its error callback will handle', error)
           logger.info(util.format(logString, `${message} and it resulted in an error but its callback will handle ${error.message}`))
@@ -109,7 +113,7 @@ ipcRenderer.on('handle-request', (event, request) => {
   console.log('RequestDaemon got handle-request', request)
   logger.info(util.format(logString, `got handle-request ${request.from}`))
   // ipcRenderer.send('requestdaemon-ack')
-  requestDaemon.handleRequest(request)
+  requestDaemon.queueRequest(request)
 })
 
 ipcRenderer.on('stop', (event) => {

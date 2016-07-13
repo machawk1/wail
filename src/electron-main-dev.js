@@ -24,8 +24,8 @@ const windows = {
 
 let base
 let notDebugUI = true
-let debug = true
-let openBackGroundWindows = true
+let debug = false
+let openBackGroundWindows = false
 
 // let shouldQuit = false
 

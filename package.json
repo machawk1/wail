@@ -131,6 +131,7 @@
     "node-cron": "^1.1.1",
     "node-schedule": "^1.1.1",
     "normalize.css": "^4.2.0",
+    "openport": "0.0.4",
     "pkginfo": "^0.4.0",
     "postcss": "^5.0.21",
     "progress": "^1.1.8",
