@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import {app, BrowserWindow, Menu, shell, ipcMain} from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
@@ -26,6 +26,8 @@ let base
 let notDebugUI = true
 let debug = false
 let openBackGroundWindows = false
+
+let didClose = false
 
 // let shouldQuit = false
 
@@ -58,7 +60,7 @@ function showNewCrawlWindow (parent) {
 function showSettingsWindow (parent) {
   let config = {
     parent: parent,
-    modal: true,
+    modal: false,
     show: false,
     closable: false,
     minimizable: false,
@@ -106,11 +108,6 @@ function setUpIPC () {
       console.log('got crawljob-status-update', payload)
       windows.mainWindow.webContents.send('crawljob-status-update', payload)
     })
-
-    ipcMain.on('pong', (event, payload) => {
-      console.log('got pong', payload)
-      windows.mainWindow.webContents.send('pong', payload)
-    })
   }
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
@@ -142,7 +139,6 @@ function setUpIPC () {
     }
   })
 
-  //
   ipcMain.on('close-newCrawl-window-configured', (event, payload) => {
     windows.mainWindow.webContents.send('crawljob-configure-dialogue', payload)
     if (windows.newCrawlWindow != null) {
@@ -166,9 +162,7 @@ function setUpIPC () {
 
 function setUp () {
   setUpIPC()
-
   base = path.resolve('./')
-  //  home/john/my-fork-wail/wail/src/childWindows/newCrawl/newCrawl.html
   if (process.env.NODE_ENV === 'development') {
     require('electron-debug')({
       showDevTools: true,
@@ -179,7 +173,7 @@ function setUp () {
     windows.mWindowURL = `file://${__dirname}/wail.html`
     windows.newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
     windows.reqDaemonWindowURL = `file://${__dirname}/background/requestDaemon.html`
-    windows.settingsWindowURL = `file://${__dirname}/background/settingsW.html`
+    windows.settingsWindowURL = `file://${__dirname}/childWindows/settings/settingsW.html`
   } else {
     base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
@@ -188,7 +182,7 @@ function setUp () {
     windows.mWindowURL = `file://${base}/src/wail.html`
     windows.newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
     windows.reqDaemonWindowURL = `file://${base}/src/background/requestDaemon.html`
-    windows.settingsWindowURL = `file://${base}/src/background/settingsW.html`
+    windows.settingsWindowURL = `file://${base}/src/childWindows/settings/settingsW.html`
   }
 
   let logPath
@@ -212,6 +206,8 @@ function setUp () {
   global.logger = new Logger({ path: logPath })
 
   global.wailLogp = logPath
+
+  global.showSettingsMenu = showSettingsWindow
 }
 
 function openDebug () {
@@ -278,18 +274,18 @@ function cleanUp () {
   // in an array if your app supports multi windows, this is the time
   // when you should delete the corresponding element.
   stopMonitoring()
-  if (windows.accessibilityWindow !== null) {
+  if (windows.accessibilityWindow != null) {
     windows.accessibilityWindow.close()
   }
-  if (windows.indexWindow !== null) {
+  if (windows.indexWindow != null) {
     windows.indexWindow.close()
   }
 
-  if (windows.jobWindow !== null) {
+  if (windows.jobWindow != null) {
     windows.jobWindow.close()
   }
 
-  if (windows.reqDaemonWindow !== null) {
+  if (windows.reqDaemonWindow != null) {
     windows.reqDaemonWindow.close()
   }
 
@@ -297,6 +293,7 @@ function cleanUp () {
   windows.indexWindow = null
   windows.jobWindow = null
   windows.reqDaemonWindow = null
+  windows.mainWindow = null
 }
 
 function checkBackGroundWindows () {
@@ -347,6 +344,7 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
+  console.log(`activating the main window did close? ${didClose}`)
   windows.mainWindow.loadURL(windows.mWindowURL)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
@@ -368,13 +366,10 @@ function createWindow () {
     shell.openExternal(url)
   })
 
-  windows.mainWindow.webContents.on('did-navigate-in-page', (event, url) => {
-    console.log('did-navigate-in-page', url)
-  })
-
   // Emitted when the window is closed.
   windows.mainWindow.on('closed', () => {
     console.log('closed')
+    didClose = true
     cleanUp()
   })
 }
@@ -386,6 +381,21 @@ process.on('uncaughtException', (err) => {
   app.quit()
 })
 
+
+const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // Someone tried to run a second instance, we should focus our window.
+  if (windows.mainWindow) {
+    if (windows.mainWindow.isMinimized()) windows.mainWindow.restore()
+    windows.mainWindow.focus()
+  }
+})
+
+if (shouldQuit) {
+  app.quit()
+  return
+}
+
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -394,6 +404,13 @@ app.on('ready', () => {
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
   createBackGroundWindows(notDebugUI)
+  createWindow()
+})
+
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  checkBackGroundWindows()
   createWindow()
 })
 
@@ -410,24 +427,10 @@ app.on('window-all-closed', () => {
 })
 
 app.on('before-quit', () => {
+  console.log('before-quit')
   if (notDebugUI) {
     cleanUp()
   }
   global.logger.cleanUp()
 })
 
-app.on('activate', () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (windows.mainWindow === null) {
-    createWindow()
-  }
-  checkBackGroundWindows()
-})
-
-// app.on('activate-with-no-open-windows', () => {
-//    console.log('activate no windows')
-//    if (!mainWindow) {
-//       createWindow()
-//    }
-// })

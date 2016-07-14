@@ -31,7 +31,6 @@ export default class Layout extends Component {
           {this.props.children}
         </div>
         <Footer />
-        <Debug />
       </div>
     )
   }

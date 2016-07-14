@@ -203,7 +203,7 @@ function writeSettings (base, settings) {
         break
       case 'tomcatStop':
         if (!isWindows) {
-          settings.set(cmd.name, `${command} ${path.normalize(path.join(base, cmd.path))}`)
+          settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
           settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} stop`)
         }

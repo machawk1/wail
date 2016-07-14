@@ -70,9 +70,10 @@ const ignore = [
   )
 
 const DEFAULT_OPTS = {
+  'app-copyright': 'jberlin',
   'app-version': pkg.version,
   asar: false,
-  prune: false,
+  prune: true,
   dir: cwd,
   name: pkg.name,
   ignore,
@@ -91,7 +92,7 @@ const darwinSpecificOpts = {
   'app-category-type': 'public.app-category.utilities',
 
   // // The bundle identifier to use in the application helper's plist (OS X only).
-  // 'helper-bundle-id': 'wail.wsdl.cs.odu.edu-helper',
+  'helper-bundle-id': 'wsdl.wail.cs.odu.edu-helper',
 
   'extend-info': darwinBuild.extendPlist,
 
@@ -143,17 +144,10 @@ function pack (plat, arch, cb) {
 
   let opts
   if (plat === 'darwin') {
-    if (shouldBuildWithExtra) {
-      opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
-        platform: plat,
-        arch
-      })
-    } else {
-      opts = Object.assign({}, DEFAULT_OPTS, {
-        platform: plat,
-        arch
-      })
-    }
+    opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
+      platform: plat,
+      arch
+    })
   } else if (plat === 'win32') {
     opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {
       platform: plat,
@@ -236,6 +230,7 @@ function log (plat, arch) {
         if (process.platform === 'darwin') {
           console.log('Building dmg')
           createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
+          // console.log(`${plat}-${arch} finished!`)
         } else {
           console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
           console.log(`${plat}-${arch} finished!`)

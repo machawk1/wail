@@ -1,11 +1,12 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
 import util from 'util'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
-import {heritrixAccesible, launchHeritrix} from '../actions/heritrix-actions'
-import {waybackAccesible, startWayback} from '../actions/wayback-actions'
+import { heritrixAccesible, launchHeritrix } from '../actions/heritrix-actions'
+import { waybackAccesible, startWayback } from '../actions/wayback-actions'
 
 const logger = remote.getGlobal('logger')
 
@@ -59,18 +60,28 @@ class serviceStore extends EventEmitter {
       this.statusDialog.message = 'Heritrix and Wayback are not running. Restart services?'
       this.statusDialog.actionIndex = 0
     } else {
+      let message = null
       if (!update.heritrix && update.wayback) {
         logMessage = 'heritrix was down but wayback was up asking to start'
         this.statusDialog.message = 'Heritrix is not running. Restart service?'
         this.statusDialog.actionIndex = 1
+        message = 'Wayback is now running'
       } else if (update.heritrix && !update.wayback) {
         logMessage = 'wayback was down but heritrix was up asking to start'
         this.statusDialog.message = 'Wayback is not running. Restart service?'
         this.statusDialog.actionIndex = 2
+        message = 'Hertrix is now running'
       } else {
         logMessage = 'heritrix and wayback are up'
         this.statusDialog.message = logMessage
         this.statusDialog.actionIndex = -1
+        message = 'Hertrix and Wayback are now running'
+      }
+      if (message != null) {
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message
+        })
       }
     }
 

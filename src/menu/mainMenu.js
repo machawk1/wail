@@ -1,4 +1,4 @@
-const name = 'wail'
+const name = require('electron').app.getName()
 
 let settingSubMenu = {
   label: 'Settings',
@@ -6,7 +6,8 @@ let settingSubMenu = {
     {
       label: 'View Or Edit',
       click (item, focusedWindow) {
-        if (focusedWindow) focusedWindow.webContents.send('open-settings-window')
+        console.log('settings menu clicked',focusedWindow)
+        if (focusedWindow) global.showSettingsMenu(focusedWindow)
       }
     },
   ]
@@ -35,7 +36,7 @@ let viewSubMenu = {
 }
 
 let windowSubMenu = {
-  role: 'window',
+  role: 'Window',
   submenu: [
     {
       role: 'minimize'
@@ -61,7 +62,7 @@ let aboutSubMenu = {
 }
 
 let helpSubMenu = {
-  role: 'help',
+  label: 'Help',
   submenu: [
     {
       label: 'Submit Bug Report',
@@ -77,14 +78,17 @@ if (process.platform === 'darwin') {
     label: name,
     submenu: [
       {
-        role: 'about'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'services',
-        submenu: []
+        label: 'About',
+        submenu: [
+          {
+            label: `Learn more about ${name}`,
+            click () { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
+          },
+          {
+            label: 'WSDL',
+            click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
+          },
+        ]
       },
       {
         type: 'separator'
@@ -102,51 +106,63 @@ if (process.platform === 'darwin') {
         type: 'separator'
       },
       {
+        label: 'Help',
+        submenu: [
+          {
+            label: 'Submit Bug Report',
+            click () { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
+          },
+        ]
+      },
+      {
+        type: 'separator'
+      },
+      {
         role: 'quit'
       },
     ]
   }
 
-  windowSubMenu.submenu = [
-    {
-      role: 'hide'
-    },
-    {
-      role: 'hideothers'
-    },
-    {
-      role: 'unhide'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      role: 'quit'
-    },
-    {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
-      role: 'close'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
-      role: 'minimize'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
-    }
-  ]
-  template = [ darWinMenu, settingSubMenu, viewSubMenu, windowSubMenu, helpSubMenu ]
+  windowSubMenu = {
+    label: 'Window',
+    submenu: [
+      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
+        role: 'close'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Minimize',
+        accelerator: 'CmdOrCtrl+M',
+        role: 'minimize'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Bring All to Front',
+        role: 'front'
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Toggle Developer Tools',
+        accelerator: 'Alt+Command+I',
+        click (item, focusedWindow) {
+          if (focusedWindow) {
+            focusedWindow.webContents.toggleDevTools()
+          }
+        }
+      },
+    ]
+  }
+  template = [ darWinMenu, windowSubMenu ]
 } else {
-  template = [ settingSubMenu, viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
+  template = [ viewSubMenu, windowSubMenu, aboutSubMenu, helpSubMenu ]
 }
 
 export default template

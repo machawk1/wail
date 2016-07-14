@@ -97,7 +97,7 @@ class urlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Viewing archived version of: ${this.urlMemento.url}`
         })
-        shell.openExternal(`${settings.get('wayback.uri_wayback')}/*/${this.urlMemento.url}`)
+        shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url}`)
         break
       }
     }
