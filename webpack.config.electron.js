@@ -32,7 +32,7 @@ export default {
   },
   devtool: 'source-map',
 
-  entry: [ 'babel-polyfill', './src/electron-main-dev' ],
+  entry: [ 'babel-polyfill', './src/electron-main-dev.js' ],
   output: {
     filename: 'electron-main.js',
     path: path.join(__dirname, 'dist'),

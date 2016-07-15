@@ -318,6 +318,7 @@ function checkBackGroundWindows () {
 }
 
 function createWindow () {
+  didClose = false
   if (process.env.NODE_ENV === 'development') {
     let installExtension = require('electron-devtools-installer')
     try {
@@ -326,6 +327,7 @@ function createWindow () {
       console.error(e)
     }
   }
+
   let iconp
 
   if (process.platform === 'darwin') {
@@ -381,20 +383,18 @@ process.on('uncaughtException', (err) => {
   app.quit()
 })
 
-
-const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-  // Someone tried to run a second instance, we should focus our window.
-  if (windows.mainWindow) {
-    if (windows.mainWindow.isMinimized()) windows.mainWindow.restore()
-    windows.mainWindow.focus()
-  }
-})
-
-if (shouldQuit) {
-  app.quit()
-  return
-}
-
+// const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+//   // Someone tried to run a second instance, we should focus our window.
+//   if (windows.mainWindow) {
+//     if (windows.mainWindow.isMinimized()) windows.mainWindow.restore()
+//     windows.mainWindow.focus()
+//   }
+// })
+//
+// if (shouldQuit) {
+//   app.quit()
+//   return
+// }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -410,8 +410,10 @@ app.on('ready', () => {
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  checkBackGroundWindows()
-  createWindow()
+  if (didClose) {
+    checkBackGroundWindows()
+    createWindow()
+  }
 })
 
 // app.on('before-quite', (event) => {
