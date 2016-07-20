@@ -1,4 +1,6 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {Grid, Row} from 'react-cellblock'
 import {List} from 'material-ui/List'
 import autobind from 'autobind-decorator'
@@ -10,22 +12,26 @@ const progressMessages = [
   'Checking Java Version',
 ]
 
+const baseTheme = getMuiTheme(lightBaseTheme)
+
 export default class LoadingProgress extends Component {
+  static childContextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  }
+
   constructor (props, context) {
     super()
     this.state = {
       statusMessage: progressMessages[ 0 ],
       messageCounter: 0,
+      muiTheme: baseTheme
     }
   }
 
-  @autobind
-  osCheck (whichOS) {
-    console.log(whichOS)
-    let messageCounter = this.state.messageCounter + 1
-    let statusMessage = this.state.statusMessage[ messageCounter ]
-    this.setState({ messageCounter, statusMessage })
+  getChildContext () {
+    return { muiTheme: this.state.muiTheme }
   }
+
 
   @autobind
   javaCheck (have, which) {
@@ -37,12 +43,12 @@ export default class LoadingProgress extends Component {
       <Grid flexible={true}>
         <Row>
           <List>
-            <CheckOS checkOS={this.osCheck}/>
+            <CheckOS/>
             <CheckJava checkJava={this.javaCheck}/>
           </List>
         </Row>
         <Row>
-          {this.state.statusMessage}
+          <p>{this.state.statusMessage}</p>
         </Row>
       </Grid>
     )

@@ -19,12 +19,18 @@ const windows = {
   reqDaemonWindow: null,
   reqDaemonWindowURL: null,
   settingsWindow: null,
-  settingsWindowURL: null
+  settingsWindowURL: null,
+
+  firstLoadWindow: null,
+  firstLoadWindowURL: null,
+
+  loadingWindow: null,
+  loadingWindowURL: null
 }
 
 let base
-let notDebugUI = true
-let debug = false
+let notDebugUI = false
+let debug = true
 let openBackGroundWindows = false
 
 let didClose = false
@@ -174,6 +180,7 @@ function setUp () {
     windows.newCrawlWindowURL = `file://${__dirname}/childWindows/newCrawl/newCrawl.html`
     windows.reqDaemonWindowURL = `file://${__dirname}/background/requestDaemon.html`
     windows.settingsWindowURL = `file://${__dirname}/childWindows/settings/settingsW.html`
+    windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
   } else {
     base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
@@ -183,6 +190,7 @@ function setUp () {
     windows.newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
     windows.reqDaemonWindowURL = `file://${base}/src/background/requestDaemon.html`
     windows.settingsWindowURL = `file://${base}/src/childWindows/settings/settingsW.html`
+    windows.firstLoadWindowURL = `file://${base}/src/loadingScreens/firstTime/loadingScreen.html`
   }
 
   let logPath
@@ -245,10 +253,12 @@ function createBackGroundWindows (notDebugUI) {
 
     windows.jobWindow = new BrowserWindow({ show: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
+
+    windows.reqDaemonWindow = new BrowserWindow({ show: false })
+    windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
 
-  windows.reqDaemonWindow = new BrowserWindow({ show: false })
-  windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
+
 }
 
 function stopMonitoring () {
@@ -347,7 +357,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   console.log(`activating the main window did close? ${didClose}`)
-  windows.mainWindow.loadURL(windows.mWindowURL)
+  windows.mainWindow.loadURL(windows.firstLoadWindowURL)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
     windows.mainWindow.show()

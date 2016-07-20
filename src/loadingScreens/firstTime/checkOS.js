@@ -8,14 +8,10 @@ import os from 'os'
 import styles from '../../componets/styles/styles'
 
 export default class CheckOS extends Component {
-  static propTypes = {
-    checkOS: PropTypes.func.isRequired,
-  }
 
   @autobind
   doCheck () {
     let plat = os.platform()
-    this.props.checkOS(plat)
     return { os: plat, arch: os.arch() }
   }
 
@@ -70,7 +66,7 @@ export default class CheckOS extends Component {
           <TableRow>
             <TableRowColumn>
               <p>
-                `Running ${whichOS} ${bitType}`
+                Running {whichOS} {bitType}
               </p>
             </TableRowColumn>
             <TableRowColumn>

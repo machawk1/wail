@@ -4,14 +4,16 @@ var path = require('path')
 var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 module.exports = {
+  devtool: 'inline-source-map',
   entry: {
-    accessibility: './src/background/accessibility',
-    indexer: './src/background/indexer',
-    jobs: './src/background/jobs',
-    newCrawl: './src/childWindows/newCrawl/newCrawl',
-    requestD: './src/background/requestDaemon',
-    settingsW: './src/childWindows/settings/settingsW',
-    wail: './src/wail'
+    // accessibility: './src/background/accessibility',
+    // indexer: './src/background/indexer',
+    // jobs: './src/background/jobs',
+    // newCrawl: './src/childWindows/newCrawl/newCrawl',
+    // requestD: './src/background/requestDaemon',
+    // settingsW: './src/childWindows/settings/settingsW',
+    wail: './src/wail',
+    firstLoad: './src/loadingScreens/firstTime/loadingScreen'
   },
   module: {
     noParse: noParseRe,
@@ -24,7 +26,7 @@ module.exports = {
           cacheDirectory: true,
           presets: [ 'es2015', 'stage-0', 'node6', 'react', 'react-hmre' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
-            'babel-plugin-transform-decorators-legacy', 'transform-class-properties', 
+            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
             'react-html-attrs',
           ],
         },

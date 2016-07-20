@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import LoadingProgress from './components/loadingProgress'
+import LoadingProgress from './loadingProgress'
 
 window.React = React
 
