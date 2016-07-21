@@ -1,7 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import {TableRow, TableRowColumn} from 'material-ui/Table'
+import autobind from 'autobind-decorator'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
+import LoadingStore from './loadingStore'
 
 const style = {
   container: {
@@ -14,12 +16,36 @@ const style = {
 }
 
 export default class CheckServices extends Component {
+  static propTypes = {
+    firstLoad: PropTypes.bool.isRequired,
+  }
   constructor (props, context) {
-    super()
+    super(props,context)
     this.state = {
-      progMessage: 'Waiting to check Services. Depends on Java Check.',
+      progMessage: props.firstLoad ? 'Waiting to check Services. Depends on Java Check.' : 'Checking Heritrix, Wayback Status',
       done: false
     }
+  }
+
+  componentWillMount(){
+    LoadingStore.on('check-services',this.updateProgress)
+    LoadingStore.on('service-check-done',this.done)
+  }
+
+  componentWillUnMount() {
+    LoadingStore.removeListener('check-services',this.updateProgress)
+    LoadingStore.removeListener('check-services',this.done)
+  }
+
+  @autobind
+  done(){
+    this.setState({done: true})
+  }
+
+  @autobind
+  updateProgress(){
+    let {progMessage} = LoadingStore.serviceMessage()
+    this.setState({progMessage})
   }
 
   render () {

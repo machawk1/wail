@@ -8,23 +8,26 @@ import configSettings from './settings/settings'
 const windows = {
   accessibilityWindow: null,
   accessibilityWindowURL: null,
+
   indexWindow: null,
   indexWindowURL: null,
+
   jobWindow: null,
   jobWindowURL: null,
+
   mainWindow: null,
   mWindowURL: null,
+
   newCrawlWindow: null,
   newCrawlWindowURL: null,
+
   reqDaemonWindow: null,
   reqDaemonWindowURL: null,
+
   settingsWindow: null,
   settingsWindowURL: null,
 
-  firstLoadWindow: null,
   firstLoadWindowURL: null,
-
-  loadingWindow: null,
   loadingWindowURL: null
 }
 
@@ -182,6 +185,7 @@ function setUp () {
     windows.reqDaemonWindowURL = `file://${__dirname}/background/requestDaemon.html`
     windows.settingsWindowURL = `file://${__dirname}/childWindows/settings/settingsW.html`
     windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
+    windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
   } else {
     base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
@@ -192,6 +196,7 @@ function setUp () {
     windows.reqDaemonWindowURL = `file://${base}/src/background/requestDaemon.html`
     windows.settingsWindowURL = `file://${base}/src/childWindows/settings/settingsW.html`
     windows.firstLoadWindowURL = `file://${base}/src/loadingScreens/firstTime/loadingScreen.html`
+    windows.loadingWindowURL = `file://${base}/src/loadingScreens/notFirstTime/loadingScreen.html`
   }
 
   let logPath
@@ -358,7 +363,7 @@ function createWindow () {
 
   // and load the index.html of the app.
   console.log(`activating the main window did close? ${didClose}`)
-  windows.mainWindow.loadURL(windows.firstLoadWindowURL)
+  windows.mainWindow.loadURL(windows.loadingWindowURL)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
     windows.mainWindow.show()

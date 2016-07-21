@@ -1,11 +1,11 @@
 import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
-import LoadingStore from '../storeDispatcher/loadingStore'
+import LoadingStore from './loadingStore'
 
 
 export default class ProgressMessages extends Component {
   constructor (props, context) {
-    super()
+    super(props,context)
     this.state = {
       statusMessage: LoadingStore.progressMessage(),
     }

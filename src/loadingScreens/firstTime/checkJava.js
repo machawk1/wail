@@ -8,7 +8,7 @@ import S from 'string'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
 import wc from '../../constants/wail-constants'
-import LoadingDispatcher from '../storeDispatcher/loadingDispatcher'
+import LoadingDispatcher from '../shared/loadingDispatcher'
 
 const style = {
   container: {
@@ -25,7 +25,7 @@ let checkInterval = null
 export default class CheckJava extends Component {
 
   constructor (props, context) {
-    super()
+    super(props,context)
     this.state = {
       checkedJava: false,
       haveCorrectJava: false,
@@ -49,7 +49,7 @@ export default class CheckJava extends Component {
         this.setState({
           checkedJava: true,
           haveCorrectJava: false,
-          progMessage: 'Java 1.x detected but not correct version. But it is ok ;)'
+          progMessage: 'Java detected'
         })
       }
       LoadingDispatcher.dispatch({
@@ -71,6 +71,7 @@ export default class CheckJava extends Component {
     let len = jvms.length
     let haveCorrectJava = false
     let checkedJava = true
+    var type
     if (len > 0) {
       for (let i = 0; i < len; ++i) {
         let jvm = jvms[ i ]
@@ -94,15 +95,13 @@ export default class CheckJava extends Component {
           progMessage: 'Java detected.'
         })
       }
-      LoadingDispatcher.dispatch({
-        type: wc.Loading.JAVA_CHECK_DONE
-      })
+      type = wc.Loading.JAVA_CHECK_DONE
+
     } else {
       this.setState({ haveCorrectJava, checkedJava, progMessage: 'No Java detected', installJava: true })
-      LoadingDispatcher.dispatch({
-        type: wc.Loading.DOWNLOAD_JAVA
-      })
+      type = wc.Loading.DOWNLOAD_JAVA
     }
+    LoadingDispatcher.dispatch({ type })
   }
 
   @autobind
@@ -125,7 +124,7 @@ export default class CheckJava extends Component {
         }
       } else {
         console.log('Java was not detected. But it is ok ;)')
-        progMessage = 'Java was not detected. But it is ok ;)'
+        progMessage = 'Java was not detected. But that is ok ;)'
       }
       this.setState({ haveCorrectJava, checkedJava, progMessage })
       LoadingDispatcher.dispatch({

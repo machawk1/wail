@@ -4,9 +4,10 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import {Grid, Row} from 'react-cellblock'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 import styles from '../../componets/styles/styles'
-import CheckOS from './checkOS'
-import CheckJava from './checkJava'
-import ProgressMessages from './progressMessages'
+import CheckServices from '../shared/checkServices'
+import ProgressMessages from '../shared/progressMessages'
+import LoadingDispatcher from '../shared/loadingDispatcher'
+import wc from '../../constants/wail-constants'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -18,6 +19,14 @@ export default class LoadingProgress extends Component {
   getChildContext () {
     return { muiTheme: baseTheme  }
   }
+
+  componentWillMount(){
+    // To get around sharing code this is necessary to progress our state to checking services
+    LoadingDispatcher.dispatch({
+      type: wc.Loading.JAVA_CHECK_DONE
+    })
+  }
+
 
   render () {
     return (
@@ -44,8 +53,7 @@ export default class LoadingProgress extends Component {
               displayRowCheckbox={false}
               showRowHover={true}
             >
-              <CheckOS />
-              <CheckJava />
+              <CheckServices firstLoad={false}/>
             </TableBody>
           </Table>
         </Row>

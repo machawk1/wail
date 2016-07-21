@@ -33,6 +33,8 @@ src/public/*
 
 build
 
+bundledApps/heritrix-3.2.0/
+
 wayback.xml
 heritrix.pid
 heritrix_out.log

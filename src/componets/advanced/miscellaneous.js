@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
+import autobind from 'autobind-decorator'
+import {shell, remote} from 'electron'
 
 const styles = {
   button: {
@@ -7,19 +9,14 @@ const styles = {
   },
 }
 
-export default class Misc extends Component {
-  constructor (props, context) {
-    super(props, context)
-    this.onClickViewArchiveFiles = this.onClickViewArchiveFiles.bind(this)
-    this.onClickCheckForUpdates = this.onClickCheckForUpdates.bind(this)
-  }
+const settings = remote.getGlobal('settings')
 
+export default class Misc extends Component {
+
+  @autobind
   onClickViewArchiveFiles (event) {
     console.log('View Archive Files')
-  }
-
-  onClickCheckForUpdates (event) {
-    console.log('Check Updates')
+    shell.openItem(settings.get('warcs'))
   }
 
   render () {
@@ -31,14 +28,7 @@ export default class Misc extends Component {
           style={styles.button}
           onMouseDown={this.onClickViewArchiveFiles}
         />
-        <RaisedButton
-          label='Check Updates'
-          labelPosition='before'
-          style={styles.button}
-          onMouseDown={this.onClickCheckForUpdates}
-        />
       </div>
     )
   }
 }
-

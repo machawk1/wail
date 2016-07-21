@@ -12,7 +12,8 @@ module.exports = {
     // requestD: './src/background/requestDaemon',
     // settingsW: './src/childWindows/settings/settingsW',
     wail: './src/wail',
-    firstLoad: './src/loadingScreens/firstTime/loadingScreen'
+    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },
   module: {
     noParse: noParseRe,
