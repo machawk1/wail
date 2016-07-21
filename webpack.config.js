@@ -4,7 +4,6 @@ var path = require('path')
 var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 module.exports = {
-  devtool: 'inline-source-map',
   entry: {
     // accessibility: './src/background/accessibility',
     // indexer: './src/background/indexer',

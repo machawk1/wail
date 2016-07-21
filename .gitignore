@@ -16,6 +16,9 @@ WAIL.spec
 # Mac meta
 .DS_Store
 
+*.pid
+*.keystore
+
 waillogs
 memgators
 node_modules/
