@@ -34,6 +34,7 @@ let debug = true
 let openBackGroundWindows = false
 
 let didClose = false
+let loading = true
 
 // let shouldQuit = false
 
@@ -157,7 +158,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('handled-request', (event, request) => {
-    windows.mainWindow.send('handled-request', request)
+      windows.mainWindow.send('handled-request', request)
   })
 
   ipcMain.on('services-shutdown', (event, payload) => {

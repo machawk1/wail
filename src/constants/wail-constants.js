@@ -43,5 +43,14 @@ export default {
     KILL_HERITRIX: null,
     LAUNCH_HERITRIX_JOB: null,
     SEND_HERITRIX_ACTION: null,
+  }),
+  Loading: keyMirror({
+    JAVA_CHECK_DONE: null,
+    DOWNLOAD_JAVA: null,
+    JDK_DOWNLOADING: null,
+    JDK_DOWNLOADED: null,
+    SERVICE_HW_UP: null,
+    SERVICE_HW_DOWN: null,
+    SERVICE_CHECK_DONE: null,
   })
 }

@@ -1,15 +1,14 @@
-import React, { Component, PropTypes } from 'react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import { ListItem } from 'material-ui/List'
-import fs from 'fs-extra'
+import React, {Component, PropTypes} from 'react'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import shelljs from 'shelljs'
 import named from 'named-regexp'
 import autobind from 'autobind-decorator'
 import cp from 'child_process'
 import S from 'string'
-import request from 'request'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
+import wc from '../../constants/wail-constants'
+import LoadingDispatcher from '../storeDispatcher/loadingDispatcher'
 
 const style = {
   container: {
@@ -22,12 +21,8 @@ const style = {
 }
 
 let checkInterval = null
-const osx_java7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
 
 export default class CheckJava extends Component {
-  static propTypes = {
-    checkJava: PropTypes.func.isRequired,
-  }
 
   constructor (props, context) {
     super()
@@ -42,9 +37,7 @@ export default class CheckJava extends Component {
 
   @autobind
   whichJava () {
-
     clearInterval(checkInterval)
-
     let javaPath = process.env[ 'JAVA_HOME' ] || process.env[ 'JDK_HOME' ] || process.env[ 'JRE_HOME' ]
     if (javaPath) {
       let jp = S(javaPath)
@@ -59,6 +52,9 @@ export default class CheckJava extends Component {
           progMessage: 'Java 1.x detected but not correct version. But it is ok ;)'
         })
       }
+      LoadingDispatcher.dispatch({
+        type: wc.Loading.JAVA_CHECK_DONE
+      })
     } else {
       if (process.platform == 'darwin') {
         this.checkJavaOSX()
@@ -88,19 +84,25 @@ export default class CheckJava extends Component {
         }
         console.log(jvmTest.capture('jvm'))
       }
+      console.log('carry on')
       if (haveCorrectJava) {
         this.setState({ haveCorrectJava, checkedJava, progMessage: 'Java 1.7 detected' })
       } else {
         this.setState({
           haveCorrectJava,
           checkedJava,
-          progMessage: 'Java 1.x detected but not correct version. But it is ok ;)'
+          progMessage: 'Java detected.'
         })
       }
+      LoadingDispatcher.dispatch({
+        type: wc.Loading.JAVA_CHECK_DONE
+      })
     } else {
       this.setState({ haveCorrectJava, checkedJava, progMessage: 'No Java detected', installJava: true })
+      LoadingDispatcher.dispatch({
+        type: wc.Loading.DOWNLOAD_JAVA
+      })
     }
-
   }
 
   @autobind
@@ -118,86 +120,34 @@ export default class CheckJava extends Component {
           haveCorrectJava = true
           progMessage = 'Java 1.7 detected'
         } else {
-          console.log('Java 1.x detected but not correct version. But it is ok ;)')
-          progMessage = 'Java 1.x detected but not correct version. But it is ok ;)'
+          console.log('Java detected.')
+          progMessage = 'Java detected.'
         }
       } else {
         console.log('Java was not detected. But it is ok ;)')
         progMessage = 'Java was not detected. But it is ok ;)'
       }
-
       this.setState({ haveCorrectJava, checkedJava, progMessage })
+      LoadingDispatcher.dispatch({
+        type: wc.Loading.JAVA_CHECK_DONE
+      })
     })
   }
 
-
-  @autobind
-  downloadJDK (response) {
-    console.log(response)
-    const app = require('electron').remote.app
-    if (response === 1 || response === 666) {
-      app.exit(1)
-    } else {
-      request.get(osx_java7DMG)
-        .on('response', res => {
-          console.log(res.statusCode) // 200
-          console.log(res.headers[ 'content-type' ])
-        }).on('error', err => {
-        console.error(err)
-      }).pipe(fs.createWriteStream('/tmp/java7.dmg'))
-        .on('close', () => {
-          console.log('done')
-          cp.exec('hdiutil attach /tmp/java7.dmg', (err, stdout, stderr) => {
-            if (err) {
-              console.error(err)
-            } else {
-              console.log(stderr, stdout)
-              cp.exec('open /Volumes/JDK\\ 7\\ Update\\ 79/JDK\\ 7\\ Update\\ 79.pkg', (err, stdout, stderr) => {
-                if(err) {
-                  console.error(err)
-                } else {
-                  console.log(stderr,stdout)
-                  app.exit(1)
-                }
-              })
-            }
-          })
-
-        })
-    }
-  }
-
   render () {
-
-    let check_or_done
-    if (!this.state.checkedJava) {
-      check_or_done =
-        <RefreshIndicator size={40}
-                          left={10}
-                          top={0}
-                          status="loading"
-                          style={style.refresh}
-
-        />
-
-      checkInterval = setInterval(this.whichJava, 3000)
-
-    } else {
+    var check_or_done
+    if (this.state.checkedJava) {
       check_or_done = <SvgIcon />
-      if (true) {//this.state.installJava) {
-        const { dialog } = require('electron').remote
-        dialog.showMessageBox({
-          type: 'question',
-          title: 'Download Required JDK',
-          detail: 'In order to use Wail you must have the correct jdk. Otherwise you can not use this this tool.',
-          buttons: [ 'Yes', 'No' ],
-          message: 'Java needs to be installed for Heritrix and Wayback',
-          cancelId: 666,
-        }, this.downloadJDK)
-      } else {
-        console.log('carry on')
-      }
-
+    } else {
+      check_or_done =
+        <RefreshIndicator
+          size={40}
+          left={10}
+          top={0}
+          status='loading'
+          style={style.refresh}
+        />
+      checkInterval = setInterval(this.whichJava, 3000)
     }
 
     return (

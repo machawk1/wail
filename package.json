@@ -172,7 +172,7 @@
     "twix": "^1.1.0",
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",
-    "validator": "^5.4.0"
+    "validator": "^5.5.0"
   },
   "devDependencies": {
     "asar": "^0.12.0",
@@ -214,11 +214,11 @@
     "debug": "^2.2.0",
     "devtron": "^1.2.1",
     "electron-compile": "3.3.4",
-    "electron-compilers": "3.1.5",
-    "electron-devtools-installer": "^1.1.5",
+    "electron-compilers": "3.1.6",
+    "electron-devtools-installer": "^2.0.0",
     "electron-installer-dmg": "^0.1.1",
     "electron-packager": "^7.3.0",
-    "electron-prebuilt": "^1.2.7",
+    "electron-prebuilt": "^1.2.8",
     "electron-react-devtools": "0.3.1",
     "electron-rebuild": "^1.1.5",
     "electron-reload": "^1.0.0",

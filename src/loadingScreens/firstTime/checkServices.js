@@ -1,26 +1,52 @@
 import React, {Component, PropTypes} from 'react'
-import autobind from 'autobind-decorator'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
+import RefreshIndicator from 'material-ui/RefreshIndicator'
+import SvgIcon from 'material-ui/svg-icons/action/done'
+
+const style = {
+  container: {
+    position: 'relative',
+  },
+  refresh: {
+    display: 'inline-block',
+    position: 'relative',
+  },
+}
 
 export default class CheckServices extends Component {
-  static propTypes = {
-    checkServices: PropTypes.func.isRequired,
-  }
-
   constructor (props, context) {
     super()
     this.state = {
-      checkENV: false,
-      checkedVersion: false,
-      haveENV: false,
-      haveRequeiredVersion: false,
+      progMessage: 'Waiting to check Services. Depends on Java Check.',
+      done: false
     }
   }
 
   render () {
+    var check_or_done
+    if (this.state.done) {
+      check_or_done = <SvgIcon />
+    } else {
+      check_or_done =
+        <RefreshIndicator
+          size={40}
+          left={10}
+          top={0}
+          status='loading'
+          style={style.refresh}
+        />
+    }
     return (
-      <p>
-        hi ;)
-      </p>
+      <TableRow>
+        <TableRowColumn>
+          <p>
+            {this.state.progMessage}
+          </p>
+        </TableRowColumn>
+        <TableRowColumn>
+          {check_or_done}
+        </TableRowColumn>
+      </TableRow>
     )
   }
 }
