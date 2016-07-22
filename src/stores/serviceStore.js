@@ -31,8 +31,8 @@ class serviceStore extends EventEmitter {
   constructor () {
     super()
     this.serviceStatus = {
-      heritrix: false,
-      wayback: false,
+      heritrix: true,
+      wayback: true,
     }
 
     this.statusDialog = {
@@ -44,9 +44,7 @@ class serviceStore extends EventEmitter {
       actionIndex: -1,
       message: '',
     }
-
     ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
-    this.checkStatues()
   }
 
   @autobind

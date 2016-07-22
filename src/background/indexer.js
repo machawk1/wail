@@ -22,6 +22,7 @@ const logString = 'indexer %s'
 const logStringError = 'indexer error where[ %s ] stack [ %s ]'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+let prevIndexingDone = true
 
 function generatePathIndex (genCdx) {
   let index = []
@@ -33,48 +34,88 @@ function generatePathIndex (genCdx) {
     }
     next()
   })
-  indexLock.readLock('pindex', (warcReadRelease) => {
-    console.log('Aquiring pindex readlock')
-    fs.walk(settings.get('warcs'))
-      .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
-      .pipe(onlyWarf)
-      .on('data', item => {
-        index.push(`${path.basename(item.path)}\t${item.path}`)
-      })
-      .on('end', () => {
-        console.log('Aquiring pindex writelock')
-        indexLock.writeLock('pindex', (indexWriteRelease) => {
-          if (count > 0) {
-            console.log('The count was greater than zero')
-            fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
-              console.log('Releasing pindex writelock')
-              if (err) {
-                indexWriteRelease()
-                console.error('generating path index with error', err)
-                logger.error(util.format(logStringError, 'generate path index on end', err.stack))
-              } else {
-                indexWriteRelease()
-                console.log('done generating path index no error')
-                genCdx()
-              }
-            })
+  fs.walk(settings.get('warcs'))
+    .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
+    .pipe(onlyWarf)
+    .on('data', item => {
+      index.push(`${path.basename(item.path)}\t${item.path}`)
+    })
+    .on('end', () => {
+      console.log('Aquiring pindex writelock')
+      if (count > 0) {
+        console.log('The count was greater than zero')
+        fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
+          console.log('Releasing pindex writelock')
+          if (err) {
+            console.error('generating path index with error', err)
+            logger.error(util.format(logStringError, 'generate path index on end', err.stack))
+            prevIndexingDone = true
           } else {
-            console.log('There were no warcs to index')
-            indexWriteRelease()
+            console.log('done generating path index no error')
+            logger.info(util.format(logString, 'done generating path index no error'))
+            genCdx()
           }
         })
-        console.log('Releasing pindex readlock')
-        warcReadRelease()
-      })
-      .on('error', err => {
-        if (Reflect.has(err, 'stack')) {
-          logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack))
-        } else {
-          logger.error(util.format(logStringError, 'generateIndexPath on error', `${err.message} ${err.fileName} ${err.lineNumber} `))
-        }
-        console.error('generating path index with error', err)
-      })
-  })
+      } else {
+        console.log('There were no warcs to index')
+        logger.info(util.format(logString, 'There were no warcs to index'))
+        prevIndexingDone = true
+      }
+    })
+    .on('error', err => {
+      if (Reflect.has(err, 'stack')) {
+        logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack))
+      } else {
+        logger.error(util.format(logStringError, 'generateIndexPath on error', `${err.message} ${err.fileName} ${err.lineNumber} `))
+      }
+      console.error('generating path index with error', err)
+      prevIndexingDone = true
+    })
+  // indexLock.readLock('pindex', (warcReadRelease) => {
+  //   console.log('Aquiring pindex readlock')
+  //   fs.walk(settings.get('warcs'))
+  //     .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
+  //     .pipe(onlyWarf)
+  //     .on('data', item => {
+  //       index.push(`${path.basename(item.path)}\t${item.path}`)
+  //     })
+  //     .on('end', () => {
+  //       console.log('Aquiring pindex writelock')
+  //       indexLock.writeLock('pindex', (indexWriteRelease) => {
+  //         if (count > 0) {
+  //           console.log('The count was greater than zero')
+  //           fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
+  //             console.log('Releasing pindex writelock')
+  //             if (err) {
+  //               indexWriteRelease()
+  //               console.error('generating path index with error', err)
+  //               logger.error(util.format(logStringError, 'generate path index on end', err.stack))
+  //             } else {
+  //               indexWriteRelease()
+  //               console.log('done generating path index no error')
+  //               logger.info(util.format(logString, 'done generating path index no error'))
+  //               genCdx()
+  //             }
+  //           })
+  //         } else {
+  //           console.log('There were no warcs to index')
+  //           logger.info(util.format(logString, 'There were no warcs to index'))
+  //           indexWriteRelease()
+  //         }
+  //       })
+  //       console.log('Releasing pindex readlock')
+  //       warcReadRelease()
+  //     })
+  //     .on('error', err => {
+  //       if (Reflect.has(err, 'stack')) {
+  //         logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack))
+  //       } else {
+  //         logger.error(util.format(logStringError, 'generateIndexPath on error', `${err.message} ${err.fileName} ${err.lineNumber} `))
+  //       }
+  //       warcReadRelease()
+  //       console.error('generating path index with error', err)
+  //     })
+  // })
 }
 
 //  implements bytewise sorting of export LC_ALL=C; sort
@@ -135,9 +176,7 @@ function generateCDX () {
   })
 
   let writeStream = fs.createWriteStream(settings.get('indexCDX'))
-  indexLock.writeLock('indedxCDX', (indexCDXWriteRelease) => {
-    console.log('Acquiring write lock for indexCDX')
-    fs.walk(settings.get('warcs'))
+  fs.walk(settings.get('warcs'))
       .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
       .pipe(onlyWorf)
       .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
@@ -151,12 +190,44 @@ function generateCDX () {
         del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
           .then(paths => {
             console.log('Releaseing write lock for indexCDX')
-            console.log('Deleted files and folders:\n', paths.join('\n'))
-            indexCDXWriteRelease()
+            let deleted = `Deleted files and folders:\n${paths.join('\n')}`
+            console.log(deleted)
+            logger.info(util.format(logString, deleted))
+            prevIndexingDone = true
           })
       })
-      .on('error', err => logger.error(util.format(logStringError, 'generateCDX on error', err.stack)))
-  })
+      .on('error', err => {
+        logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
+        prevIndexingDone = true
+      })
+  // indexLock.writeLock('indedxCDX', (indexCDXWriteRelease) => {
+  //   console.log('Acquiring write lock for indexCDX')
+  //   fs.walk(settings.get('warcs'))
+  //     .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
+  //     .pipe(onlyWorf)
+  //     .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
+  //     .pipe(worfToCdx)
+  //     .pipe(cdxToLines)
+  //     .pipe(streamSort(unixSort))
+  //     .pipe(writeStream)
+  //     .on('close', () => {
+  //       writeStream.destroy()
+  //       console.log('we have closed')
+  //       del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
+  //         .then(paths => {
+  //           console.log('Releaseing write lock for indexCDX')
+  //           let deleted = `Deleted files and folders:\n${paths.join('\n')}`
+  //           console.log(deleted)
+  //           logger.info(util.format(logString, deleted))
+  //           indexCDXWriteRelease()
+  //           prevIndexingDone = true
+  //         })
+  //     })
+  //     .on('error', err => {
+  //       indexCDXWriteRelease()
+  //       logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
+  //     })
+  // })
 }
 
 class Indexer {
@@ -171,10 +242,13 @@ class Indexer {
       let rule = new schedule.RecurrenceRule()
       // this process can take more than 10 seconds
       // so check 3x a minute
-      rule.second = [ 10, 30, 50 ]
-      this.job = schedule.scheduleJob(rule, () =>
-        generatePathIndex(generateCDX)
-      )
+      rule.second = [ 0, 10, 20, 30, 40, 50 ]
+      this.job = schedule.scheduleJob(rule, () => {
+        if (prevIndexingDone) {
+          prevIndexingDone = false
+          generatePathIndex(generateCDX)
+        }
+      })
       this.started = true
     }
   }
@@ -184,12 +258,14 @@ let indexer = new Indexer()
 
 ipcRenderer.on('start-index-indexing', (event) => {
   console.log('Monitor get start indexing monitoring')
+  logger.info(util.format(logString, 'got start indexing monitoring'))
   ipcRenderer.send('got-it', { from: 'indexer', yes: true })
   indexer.indexer()
 })
 
 ipcRenderer.on('stop', (event) => {
-  console.log('Monitor get start indexing monitoring')
+  console.log('Monitor get stop indexing monitoring')
+  logger.info(util.format(logString, 'got stop indexing monitoring'))
   logger.cleanUp()
   indexer.job.cancel()
   indexer.job = null

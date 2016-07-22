@@ -25,7 +25,7 @@ let checkInterval = null
 export default class CheckJava extends Component {
 
   constructor (props, context) {
-    super(props,context)
+    super(props, context)
     this.state = {
       checkedJava: false,
       haveCorrectJava: false,

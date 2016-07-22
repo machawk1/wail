@@ -17,16 +17,15 @@ export default class LoadingProgress extends Component {
   }
 
   getChildContext () {
-    return { muiTheme: baseTheme  }
+    return { muiTheme: baseTheme }
   }
 
-  componentWillMount(){
+  componentWillMount () {
     // To get around sharing code this is necessary to progress our state to checking services
     LoadingDispatcher.dispatch({
       type: wc.Loading.JAVA_CHECK_DONE
     })
   }
-
 
   render () {
     return (

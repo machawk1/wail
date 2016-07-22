@@ -2,10 +2,9 @@ import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
 import LoadingStore from './loadingStore'
 
-
 export default class ProgressMessages extends Component {
   constructor (props, context) {
-    super(props,context)
+    super(props, context)
     this.state = {
       statusMessage: LoadingStore.progressMessage(),
     }
@@ -20,7 +19,7 @@ export default class ProgressMessages extends Component {
   }
 
   @autobind
-  update() {
+  update () {
     this.setState({ statusMessage: LoadingStore.progressMessage() })
   }
 

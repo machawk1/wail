@@ -5,12 +5,12 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 
 module.exports = {
   entry: {
-    // accessibility: './src/background/accessibility',
-    // indexer: './src/background/indexer',
-    // jobs: './src/background/jobs',
-    // newCrawl: './src/childWindows/newCrawl/newCrawl',
-    // requestD: './src/background/requestDaemon',
-    // settingsW: './src/childWindows/settings/settingsW',
+    accessibility: './src/background/accessibility',
+    indexer: './src/background/indexer',
+    jobs: './src/background/jobs',
+    newCrawl: './src/childWindows/newCrawl/newCrawl',
+    requestD: './src/background/requestDaemon',
+    settingsW: './src/childWindows/settings/settingsW',
     wail: './src/wail',
     firstLoad: './src/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'

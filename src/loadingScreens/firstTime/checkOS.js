@@ -4,7 +4,6 @@ import SvgIcon from 'material-ui/svg-icons/action/done'
 import autobind from 'autobind-decorator'
 import os from 'os'
 
-
 export default class CheckOS extends Component {
 
   @autobind

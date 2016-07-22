@@ -15,6 +15,8 @@ const config = {
     requestD: './src/background/requestDaemon',
     settingsW: './src/childWindows/settings/settingsW',
     jobs: './src/background/jobs',
+    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },
 
   output: {

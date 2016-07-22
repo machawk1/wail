@@ -17,7 +17,7 @@ export default class LoadingProgress extends Component {
   }
 
   getChildContext () {
-    return { muiTheme: baseTheme  }
+    return { muiTheme: baseTheme }
   }
 
   render () {

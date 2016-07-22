@@ -32,12 +32,14 @@ const windows = {
 }
 
 let base
-let notDebugUI = false
+let notDebugUI = true
 let debug = true
 let openBackGroundWindows = false
 
 let didClose = false
+let didLoad = false
 let loading = true
+let firstLoad = false
 
 // let shouldQuit = false
 
@@ -110,12 +112,12 @@ function setUpIPC () {
     })
 
     ipcMain.on('service-status-update', (event, payload) => {
-      console.log('got test-status-update', payload)
+      console.log('got test-status-update')
       windows.mainWindow.webContents.send('service-status-update', payload)
     })
 
     ipcMain.on('crawljob-status-update', (event, payload) => {
-      console.log('got crawljob-status-update', payload)
+      console.log('got crawljob-status-update')
       windows.mainWindow.webContents.send('crawljob-status-update', payload)
     })
   }
@@ -168,6 +170,10 @@ function setUpIPC () {
     // we gracefully shutdown our services this only happens on window close
     windows.mainWindow = null
   })
+
+  ipcMain.on('loading-finished',(event,payload) => {
+    windows.mainWindow.loadURL(windows.mWindowURL)
+  })
 }
 
 function setUp () {
@@ -208,7 +214,12 @@ function setUp () {
     logPath = path.join(app.getPath('userData'), 'waillogs')
   }
 
-  global.settings = configSettings(base, settingsPath)
+  let settings =  configSettings(base, settingsPath)
+  global.settings = settings
+  if(!settings.get('firstLoad')) {
+    firstLoad = true
+    settings.set('firstLoad',true)
+  }
 
   global.accessLogPath = path.join(logPath, 'accessibility.log')
   global.jobLogPath = path.join(logPath, 'jobs.log')
@@ -363,7 +374,19 @@ function createWindow () {
 
   // and load the index.html of the app.
   console.log(`activating the main window did close? ${didClose}`)
-  windows.mainWindow.loadURL(windows.loadingWindowURL)
+
+  let loadUrl
+  if(loading && firstLoad) {
+    loadUrl = windows.firstLoadWindowURL
+  } else {
+    if(!didLoad) {
+      loadUrl = windows.loadingWindowURL
+    } else {
+      loadUrl = windows.mWindowURL
+    }
+  }
+
+  windows.mainWindow.loadURL(loadUrl)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
     windows.mainWindow.show()

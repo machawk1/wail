@@ -4,7 +4,7 @@ import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
 import cp from 'child_process'
 import request from 'request'
-import {remote} from 'electron'
+import {remote, ipcRenderer} from 'electron'
 import LoadingDispatcher from './loadingDispatcher'
 import {startHeritrix, startWayback} from './lsActions'
 import wc from '../../constants/wail-constants'
@@ -32,7 +32,6 @@ class loadingStore extends EventEmitter {
     this.startedHeritrix = false
     this.wasHeritrixStartError = false
     this.pMessage = this.progress.messages[ 0 ]
-    this.sMessage = 'Are Heritrix and Wayback started?'
   }
 
   @autobind
@@ -57,6 +56,7 @@ class loadingStore extends EventEmitter {
         }, this.downloadJDK)
         break
       case wc.Loading.SERVICE_CHECK_DONE:
+        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
         break
     }
   }
@@ -104,7 +104,7 @@ class loadingStore extends EventEmitter {
   }
 
   @autobind
-  wb() {
+  wb () {
     request.get(settings.get('wayback.uri_wayback'))
       .on('response', (res) => {
         console.log(res)
