@@ -120,6 +120,7 @@ function generatePathIndex (genCdx) {
 
 //  implements bytewise sorting of export LC_ALL=C; sort
 function unixSort (a, b) {
+
   return bytewise.compare(bytewise.encode(a), bytewise.encode(b))
 }
 
