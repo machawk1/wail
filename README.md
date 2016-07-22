@@ -132,4 +132,4 @@ Please see the [Frequently Asked Questions](https://github.com/machawk1/wail/wik
 
 WAIL is a project of the Web Science and Digital Libraries (WS-DL) research group at Old Dominion University (ODU), created by Mat Kelly.
 
-For support e-mail wail@matkelly.com or tweet to us at [@machawk1](https://twitter.com/machawk1) and/or [@WebSciDL](https://twitter.com/WebSciDL).
+For support e-mail jberlin@cs.odu.edu or tweet to us at [@johnaberlin](https://twitter.com/johnaberlin) and/or [@WebSciDL](https://twitter.com/WebSciDL).
