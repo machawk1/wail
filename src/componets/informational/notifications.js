@@ -31,7 +31,6 @@ export default class Notifications extends Component {
   @autobind
   closeNotification () {
     if (GMessageStore.hasQueuedMessages()) {
-      shell.beep()
       this.setState({ message: GMessageStore.getMessage(), open: true })
     } else {
       this.setState({

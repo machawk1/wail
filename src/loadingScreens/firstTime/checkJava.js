@@ -41,20 +41,32 @@ export default class CheckJava extends Component {
     let javaPath = process.env[ 'JAVA_HOME' ] || process.env[ 'JDK_HOME' ] || process.env[ 'JRE_HOME' ]
     if (javaPath) {
       let jp = S(javaPath)
+      var type
       if (jp.contains('1.7')) {
         console.log('1.7')
         this.setState({ checkedJava: true, haveCorrectJava: true, progMessage: 'Java 1.7 detected' })
       } else {
         console.log('not 1.7 or not named 1.7')
-        this.setState({
-          checkedJava: true,
-          haveCorrectJava: false,
-          progMessage: 'Java detected'
+
+        if (process.platform == 'darwin') {
+          this.setState({
+            checkedJava: true,
+            haveCorrectJava: false,
+            progMessage: 'Java detected but you will need to download another version'
+          })
+          type = wc.Loading.DOWNLOAD_JAVA
+        } else {
+          this.setState({
+            checkedJava: true,
+            haveCorrectJava: false,
+            progMessage: 'Java detected'
+          })
+          type =  wc.Loading.JAVA_CHECK_DONE
+        }
+        LoadingDispatcher.dispatch({
+          type
         })
       }
-      LoadingDispatcher.dispatch({
-        type: wc.Loading.JAVA_CHECK_DONE
-      })
     } else {
       if (process.platform == 'darwin') {
         this.checkJavaOSX()
@@ -88,15 +100,15 @@ export default class CheckJava extends Component {
       console.log('carry on')
       if (haveCorrectJava) {
         this.setState({ haveCorrectJava, checkedJava, progMessage: 'Java 1.7 detected' })
+        type = wc.Loading.JAVA_CHECK_DONE
       } else {
         this.setState({
           haveCorrectJava,
           checkedJava,
-          progMessage: 'Java detected.'
+          progMessage: 'Java detected but you will need to download another version'
         })
+        type = wc.Loading.DOWNLOAD_JAVA
       }
-      type = wc.Loading.JAVA_CHECK_DONE
-
     } else {
       this.setState({ haveCorrectJava, checkedJava, progMessage: 'No Java detected', installJava: true })
       type = wc.Loading.DOWNLOAD_JAVA

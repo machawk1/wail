@@ -33,7 +33,7 @@ const windows = {
 
 let base
 let notDebugUI = true
-let debug = true
+let debug = false
 let openBackGroundWindows = false
 
 let didClose = false
@@ -163,7 +163,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('handled-request', (event, request) => {
-      windows.mainWindow.send('handled-request', request)
+    windows.mainWindow.send('handled-request', request)
   })
 
   ipcMain.on('services-shutdown', (event, payload) => {
@@ -171,7 +171,7 @@ function setUpIPC () {
     windows.mainWindow = null
   })
 
-  ipcMain.on('loading-finished',(event,payload) => {
+  ipcMain.on('loading-finished', (event, payload) => {
     windows.mainWindow.loadURL(windows.mWindowURL)
   })
 }
@@ -214,11 +214,11 @@ function setUp () {
     logPath = path.join(app.getPath('userData'), 'waillogs')
   }
 
-  let settings =  configSettings(base, settingsPath)
+  let settings = configSettings(base, settingsPath)
   global.settings = settings
-  if(!settings.get('firstLoad')) {
+  if (!settings.get('didFirstLoad')) {
     firstLoad = true
-    settings.set('firstLoad',true)
+    settings.set('didFirstLoad', true)
   }
 
   global.accessLogPath = path.join(logPath, 'accessibility.log')
@@ -262,20 +262,18 @@ function openDebug () {
 
 function createBackGroundWindows (notDebugUI) {
   if (notDebugUI) {
-    windows.accessibilityWindow = new BrowserWindow({ show: false })
+    windows.accessibilityWindow = new BrowserWindow({ show: false, frame: false })
     windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
 
-    windows.indexWindow = new BrowserWindow({ show: false })
+    windows.indexWindow = new BrowserWindow({ show: false, frame: false })
     windows.indexWindow.loadURL(windows.indexWindowURL)
 
-    windows.jobWindow = new BrowserWindow({ show: false })
+    windows.jobWindow = new BrowserWindow({ show: false, frame: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
 
-    windows.reqDaemonWindow = new BrowserWindow({ show: false })
+    windows.reqDaemonWindow = new BrowserWindow({ show: false, frame: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
-
-
 }
 
 function stopMonitoring () {
@@ -325,21 +323,21 @@ function cleanUp () {
 
 function checkBackGroundWindows () {
   if (windows.accessibilityWindow === null) {
-    windows.accessibilityWindow = new BrowserWindow({ show: false })
+    windows.accessibilityWindow = new BrowserWindow({ show: false, frame: false })
     windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
   }
   if (windows.indexWindow === null) {
-    windows.indexWindow = new BrowserWindow({ show: false })
+    windows.indexWindow = new BrowserWindow({ show: false, frame: false })
     windows.indexWindow.loadURL(windows.indexWindowURL)
   }
 
   if (windows.jobWindow === null) {
-    windows.jobWindow = new BrowserWindow({ show: false })
+    windows.jobWindow = new BrowserWindow({ show: false, frame: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
   }
 
   if (windows.reqDaemonWindow === null) {
-    windows.reqDaemonWindow = new BrowserWindow({ show: false })
+    windows.reqDaemonWindow = new BrowserWindow({ show: false, frame: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
 }
@@ -366,8 +364,10 @@ function createWindow () {
   // Create the browser window.
   windows.mainWindow = new BrowserWindow({
     width: 800,
-    height: 500,
+    height: 300,
     title: 'Web Archiving Integration Layer',
+    fullscreenable: false,
+    resizable: false,
     show: false,
     icon: iconp,
   })
@@ -376,11 +376,12 @@ function createWindow () {
   console.log(`activating the main window did close? ${didClose}`)
 
   let loadUrl
-  if(loading && firstLoad) {
+  if (loading && firstLoad) {
     loadUrl = windows.firstLoadWindowURL
   } else {
-    if(!didLoad) {
+    if (!didLoad) {
       loadUrl = windows.loadingWindowURL
+      didLoad = true
     } else {
       loadUrl = windows.mWindowURL
     }
@@ -421,19 +422,6 @@ process.on('uncaughtException', (err) => {
   cleanUp()
   app.quit()
 })
-
-// const shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
-//   // Someone tried to run a second instance, we should focus our window.
-//   if (windows.mainWindow) {
-//     if (windows.mainWindow.isMinimized()) windows.mainWindow.restore()
-//     windows.mainWindow.focus()
-//   }
-// })
-//
-// if (shouldQuit) {
-//   app.quit()
-//   return
-// }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.

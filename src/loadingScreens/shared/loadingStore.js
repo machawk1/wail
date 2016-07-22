@@ -4,9 +4,9 @@ import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
 import cp from 'child_process'
 import request from 'request'
-import {remote, ipcRenderer} from 'electron'
+import { remote, ipcRenderer } from 'electron'
 import LoadingDispatcher from './loadingDispatcher'
-import {startHeritrix, startWayback} from './lsActions'
+import { startHeritrix, startWayback } from './lsActions'
 import wc from '../../constants/wail-constants'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
@@ -69,10 +69,14 @@ class loadingStore extends EventEmitter {
   @autobind
   downloadJDK (response) {
     console.log(response)
+    settings.set('didFirstLoad', false)
     const app = require('electron').remote.app
     if (response === 1 || response === 666) {
       app.exit(1)
     } else {
+      settings.set('didDlJava', true)
+      this.pMessage = 'Downloading the required JDK'
+      this.emit('progress')
       request.get(osx_java7DMG)
         .on('response', res => {
           console.log(res.statusCode) // 200
@@ -84,6 +88,8 @@ class loadingStore extends EventEmitter {
         .pipe(fs.createWriteStream('/tmp/java7.dmg'))
         .on('close', () => {
           console.log('done')
+          this.pMessage = 'Starting the install of the JDK'
+          this.emit('progress')
           cp.exec('hdiutil attach /tmp/java7.dmg', (err, stdout, stderr) => {
             if (err) {
               console.error(err)

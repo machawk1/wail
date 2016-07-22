@@ -31,7 +31,7 @@ export default {
   heritrixJobList: {
     overflow: 'hidden',
     overflowY: 'scroll',
-    height: 300,
+    height: 140,
   },
   root: {
     paddingTop: spacing.desktopKeylineIncrement,

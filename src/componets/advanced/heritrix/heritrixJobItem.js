@@ -14,7 +14,7 @@ import autobind from 'autobind-decorator'
 import wc from '../../../constants/wail-constants'
 import CrawlStore from '../../../stores/crawlStore'
 import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
-import {forceCrawlFinish, deleteHeritrixJob, restartJob, launchHeritrixJob} from '../../../actions/heritrix-actions'
+import {forceCrawlFinish, deleteHeritrixJob, restartJob, launchHeritrixJob,rescanJobDir} from '../../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
 
 const settings = remote.getGlobal('settings')
@@ -96,7 +96,10 @@ export default class HeritrixJobItem extends Component {
     let runs = this.state.runs
     let cb = () =>
       del([ `${settings.get('heritrixJob')}${path.sep}${this.props.jobId}` ], { force: true })
-        .then(paths => console.log('Deleted files and folders:\n', paths.join('\n')))
+        .then(paths => {
+          console.log('Deleted files and folders:\n', paths.join('\n'))
+          rescanJobDir()
+        })
 
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {

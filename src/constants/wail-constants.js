@@ -40,6 +40,7 @@ export default {
     ADD_HERITRIX_JOB_DIRECTORY: null,
     BUILD_HERITIX_JOB: null,
     FORCE_CRAWL_FINISH: null,
+    RESCAN_JOB_DIR: null,
     KILL_HERITRIX: null,
     LAUNCH_HERITRIX_JOB: null,
     SEND_HERITRIX_ACTION: null,

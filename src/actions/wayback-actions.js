@@ -88,26 +88,6 @@ export function waybackAccesible (startOnDown = false) {
       }
     }
   })
-
-  // rp({ uri: wburi })
-  //   .then(success => {
-  //     console.log('wayback success', success)
-  //     ServiceDispatcher.dispatch({
-  //       type: EventTypes.WAYBACK_STATUS_UPDATE,
-  //       status: true,
-  //     })
-  //   })
-  //   .catch(err => {
-  //     console.log('wayback err', err)
-  //     logger.error(util.format(logStringError, 'waybackAccessible', err.stack))
-  //     ServiceDispatcher.dispatch({
-  //       type: EventTypes.WAYBACK_STATUS_UPDATE,
-  //       status: false,
-  //     })
-  //     if (startOnDown) {
-  //       startWayback()
-  //     }
-  //   })
 }
 
 export function startWayback (cb) {
@@ -130,7 +110,13 @@ export function startWayback (cb) {
       cb()
     }
   } else {
-    childProcess.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
+    var wStart
+    if(process.platform === 'darwin') {
+      wStart = settings.get('tomcatStartDarwin')
+    } else {
+      wStart = settings.get('tomcatStart')
+    }
+    childProcess.exec(wStart, (err, stdout, stderr) => {
       console.log(err, stdout, stderr)
       if (err) {
         let stack
@@ -167,7 +153,13 @@ export function killWayback (cb) {
       cb()
     }
   } else {
-    childProcess.exec(settings.get('tomcatStop'), (err, stdout, stderr) => {
+    var wStop
+    if(process.platform === 'darwin') {
+      wStop = settings.get('tomcatStopDarwin')
+    } else {
+      wStop = settings.get('tomcatStop')
+    }
+    childProcess.exec(wStop, (err, stdout, stderr) => {
       console.log(stdout)
       if (err) {
         let stack
@@ -186,4 +178,3 @@ export function killWayback (cb) {
     })
   }
 }
-

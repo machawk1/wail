@@ -35,10 +35,6 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.CHECK_URI_IN_ARCHIVE,
     })
-    // GMessageDispatcher.dispatch({
-    //   type: EventTypes.QUEUE_MESSAGE,
-    //   message: 'Checking Archive'
-    // })
   }
 
   @autobind
@@ -47,10 +43,6 @@ export default class BasicTabButtons extends Component {
     UrlDispatcher.dispatch({
       type: EventTypes.VIEW_ARCHIVED_URI,
     })
-    // GMessageDispatcher.dispatch({
-    //   type: EventTypes.QUEUE_MESSAGE,
-    //   message: 'Viewing Archive'
-    // })
   }
 
   render () {
@@ -73,7 +65,7 @@ export default class BasicTabButtons extends Component {
               onMouseDown={this.onClickCheckArchive}
             />
           </ToolbarGroup>
-          <ToolbarGroup >
+          <ToolbarGroup lastChild={true}>
             <RaisedButton
               label='View Archive'
               labelPosition='before'

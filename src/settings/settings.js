@@ -137,6 +137,23 @@ const managed = {
       rejectUnauthorized: false,
       resolveWithFullResponse: true,
     },
+    reScanJobs: {
+      method: 'POST',
+      uri: 'https://localhost:8443/engine',
+      timeout: 5000,
+      headers: { 'content-type': 'application/x-www-form-urlencoded' },
+      form: {
+        action: 'rescan'
+      },
+      auth: {
+        username: 'lorem',
+        password: 'ipsum',
+        sendImmediately: false
+      },
+      strictSSL: false,
+      rejectUnauthorized: false,
+      resolveWithFullResponse: true,
+    }
 
   },
   wayback: {
@@ -178,10 +195,11 @@ function writeSettings (base, settings) {
   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
 
   let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
+  let jHomeDarwin = `/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home`
+  let darwinExport = `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
   let command = 'sh'
   let isWindows = os.platform() === 'win32'
   settings.set('isWindows', isWindows)
-
   managed.commands.forEach(cmd => {
     switch (cmd.name) {
       case 'memgator':
@@ -197,6 +215,7 @@ function writeSettings (base, settings) {
       case 'tomcatStart':
         if (!isWindows) {
           settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+          settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
           settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
         }
@@ -204,6 +223,7 @@ function writeSettings (base, settings) {
       case 'tomcatStop':
         if (!isWindows) {
           settings.set(cmd.name, `${cmdexport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
+          settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${path.normalize(path.join(base, cmd.path))}`)
         } else {
           settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} stop`)
         }
@@ -212,7 +232,9 @@ function writeSettings (base, settings) {
         if (isWindows) {
           settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/heritrix.bat'))} ${settings.get('heritrix.login')}`)
         } else {
-          settings.set(cmd.name, `${cmdexport}  ${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`)
+          let hStart = `${path.normalize(path.join(base, cmd.path))} ${settings.get('heritrix.login')}`
+          settings.set(cmd.name, `${cmdexport} ${hStart}`)
+          settings.set(`${cmd.name}Darwin`, `${darwinExport} ${hStart}`)
         }
         break
       default:
@@ -234,24 +256,24 @@ export default function configSettings (base, userData) {
     settings = new ElectronSettings({ configDirPath: settingsDir })
   }
 
-  writeSettings(base, settings)
+  // writeSettings(base, settings)
 
-  // if (!settings.get('configured')) {
-  //   console.log("We are not configured")
-  //   writeSettings(base, settings)
-  //   console.log(base, settings)
-  // } else {
-  //   if (settings.get('base') !== base) {
-  //     /*
-  //      If the user moves the application directory the settings will
-  //      will not be correct since I use absolute paths.
-  //      I did this to myself....
-  //      */
-  //     console.log("We are not configured due to binary directory being moved")
-  //     writeSettings(base, settings)
-  //   }
-  //   console.log("We are configured")
-  // }
+  if (!settings.get('configured')) {
+    console.log('We are not configured')
+    writeSettings(base, settings)
+    console.log(base, settings)
+  } else {
+    if (settings.get('base') !== base) {
+      /*
+       If the user moves the application directory the settings will
+       will not be correct since I use absolute paths.
+       I did this to myself....
+       */
+      console.log('We are not configured due to binary directory being moved')
+      writeSettings(base, settings)
+    }
+    console.log('We are configured')
+  }
 
   return settings
 }

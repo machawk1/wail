@@ -87,14 +87,14 @@ export default class General extends Component {
           <TableRow>
             <TableRowColumn>Wayback</TableRowColumn>
             <TableRowColumn>{waybackStatus}</TableRowColumn>
-            <TableRowColumn>''</TableRowColumn>
+            <TableRowColumn>2.3.1</TableRowColumn>
             <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.wayBackFix} /></TableRowColumn>
             <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.wayBackKill} /></TableRowColumn>
           </TableRow>
           <TableRow>
             <TableRowColumn>Heritrix</TableRowColumn>
             <TableRowColumn>{heritrixStatus}</TableRowColumn>
-            <TableRowColumn>3.2.0</TableRowColumn>
+            <TableRowColumn>3.3.0</TableRowColumn>
             <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.heritrixFix} /></TableRowColumn>
             <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.heritrixKill} /></TableRowColumn>
           </TableRow>

@@ -32,8 +32,14 @@ export function startHeritrix (logger) {
       return resolve()
     } else {
       logger.info(util.format('Loading Actions %s', 'linux/osx launching heritrix'))
-      childProcess.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
-        console.log(settings.get('heritrixStart'))
+      var hStart
+      if(process.platform === 'darwin') {
+        hStart = settings.get('heritrixStartDarwin')
+      } else {
+        hStart = settings.get('heritrixStart')
+      }
+      childProcess.exec(hStart , (err, stdout, stderr) => {
+        console.log(hStart)
         console.log(err, stdout, stderr)
         if (err) {
           logger.error(util.format('Loading Actions %s, %s', `linux/osx launch heritrix ${stderr}`, err))
@@ -66,7 +72,13 @@ export function startWayback (logger) {
       return resolve()
     } else {
       logger.info(util.format('Loading Actions %s', 'linux/osx launching wayback'))
-      childProcess.exec(settings.get('tomcatStart'), (err, stdout, stderr) => {
+      var wStart
+      if(process.platform === 'darwin') {
+        wStart = settings.get('tomcatStartDarwin')
+      } else {
+        wStart = settings.get('tomcatStart')
+      }
+      childProcess.exec(wStart, (err, stdout, stderr) => {
         console.log(err, stdout, stderr)
         if (err) {
           logger.error(util.format('Loading Actions %s', `linux/osx launch wayback ${stderr}`, err))

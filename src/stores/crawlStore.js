@@ -208,6 +208,7 @@ class crawlStore extends EventEmitter {
       }
       case EventTypes.CRAWL_JOB_DELETED:
         this.crawlJobs = _.filter(this.crawlJobs, jb => jb.jobId !== event.jobId)
+        this.jobIndex.delete(event.jobId)
         this.emit('jobs-updated')
         break
     }

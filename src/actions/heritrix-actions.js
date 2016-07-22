@@ -9,7 +9,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
@@ -17,11 +17,8 @@ import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 
-// require('request-debug')(rp)
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-// const httpsAgent = new https.Agent()
 const isWindows = os.platform() === 'win32'
 const EventTypes = wc.EventTypes
 const RequestTypes = wc.RequestTypes
@@ -55,14 +52,14 @@ export function heritrixAccesible (startOnDown = false) {
     from: `heritrixAccesible[${startOnDown}]`,
     timeReceived: null,
     startOnDown,
-    success: (response) => {
+    success: function (response) {
       console.log('heritrix success')
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: true
       })
     },
-    error: (err) => {
+    error: function (err) {
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: false,
@@ -73,24 +70,6 @@ export function heritrixAccesible (startOnDown = false) {
       }
     }
   })
-  // rp(optionEngine)
-  //   .then(success => {
-  //     console.log('heritrix success', success)
-  //     ServiceDispatcher.dispatch({
-  //       type: EventTypes.HERITRIX_STATUS_UPDATE,
-  //       status: true,
-  //     })
-  //
-  //   })
-  //   .catch(err => {
-  //     ServiceDispatcher.dispatch({
-  //       type: EventTypes.HERITRIX_STATUS_UPDATE,
-  //       status: false,
-  //     })
-  //     if (startOnDown) {
-  //       launchHeritrix()
-  //     }
-  //   })
 }
 
 function * sequentialActions (actions, jobId) {
@@ -138,8 +117,14 @@ export function launchHeritrix (cb) {
       }
     }
   } else {
-    childProcess.exec(settings.get('heritrixStart'), (err, stdout, stderr) => {
-      console.log(settings.get('heritrixStart'))
+    var hStart
+    if (os.platform() === 'darwin') {
+      hStart = settings.get('heritrixStartDarwin')
+    } else {
+      hStart = settings.get('heritrixStart')
+    }
+    childProcess.exec(hStart, (err, stdout, stderr) => {
+      console.log(hStart)
       console.log(err, stdout, stderr)
       if (err) {
         let stack
@@ -176,32 +161,19 @@ export function killHeritrix (cb) {
     opts: options,
     from: 'killHeritrix',
     timeReceived: null,
-    success: (response) => {
+    success: function (response) {
       console.log('this should never ever be reached', response)
       if (cb) {
         cb()
       }
     },
-    error: (err) => {
+    error: function (err) {
       console.log('herritrix kills itself and never replies', err)
       if (cb) {
         cb()
       }
     }
   })
-  // rp(options)
-  //   .then(response => {
-  //     console.log('this should never ever be reached', response)
-  //     if (cb) {
-  //       cb()
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log('herritrix kills itself and never replies', err)
-  //     if (cb) {
-  //       cb()
-  //     }
-  //   })
 }
 
 export function addJobDirectoryHeritrix (confPath) {
@@ -213,11 +185,11 @@ export function addJobDirectoryHeritrix (confPath) {
     opts: options,
     from: `addJobToHeritrix[${confPath}]`,
     timeReceived: null,
-    success: (response) => {
+    success: function (response) {
       console.log('success in addJobDirectoryHeritrix', response)
       logger.info(util.format(logString, `'303 success in addJobDirectoryHeritrix ${confPath}`))
     },
-    error: (err) => {
+    error: function (err) {
       if (err.statusCode === 303) {
         console.log('303 success in addJobDirectoryHeritrix', err)
         logger.info(util.format(logString, `'303 success in addJobDirectoryHeritrix ${confPath}`))
@@ -286,33 +258,28 @@ export function makeHeritrixJobConf (urls, hops = 1, jobId) {
     })
 }
 
+export function rescanJobDir () {
+  RequestDispatcher.dispatch({
+    type: EventTypes.REQUEST_HERITRIX,
+    rType: RequestTypes.RESCAN_JOB_DIR,
+    from: 'rescanJobDir',
+    opts: settings.get('heritrix.reScanJobs'),
+    jId: 666,
+    timeReceived: null,
+    success: function (response) {
+      console.log('Yes we rescanned the job directory', response)
+    },
+    error: function (err) {
+      console.log('There was an error in rescanning the job directory but who cares')
+    }
+  })
+}
+
 export function buildHeritrixJob (jobId) {
   //  `https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-  if (false){//!ServiceStore.heritrixStatus()) {
+  if (false) {//!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       buildHeritrixJob(jobId)
-      // rp(options)
-      //   .then(response => {
-      //     // POST succeeded...
-      //     console.log('sucess in building job', response)
-      //     CrawlDispatcher.dispatch({
-      //       type: EventTypes.BUILT_CRAWL_JOB,
-      //       id: jobId
-      //     })
-      //   })
-      //   .catch(err => {
-      //     if (err.statusCode == 303) {
-      //       console.log('303 sucess in building job', err)
-      //       CrawlDispatcher.dispatch({
-      //         type: EventTypes.BUILT_CRAWL_JOB,
-      //         id: jobId
-      //       })
-      //     } else {
-      //       // POST failed...
-      //       console.log('failur in building job', err)
-      //       logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
-      //     }
-      //   })
     })
   } else {
     let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
@@ -330,14 +297,14 @@ export function buildHeritrixJob (jobId) {
       from: `buildHeritrixJob[${jobId}]`,
       jId: jobId,
       timeReceived: null,
-      success: (response) => {
+      success: function (response) {
         console.log('sucess in building job', response)
         CrawlDispatcher.dispatch({
           type: EventTypes.BUILT_CRAWL_JOB,
           id: jobId
         })
       },
-      error: (err) => {
+      error: function (err)  {
         if (err.statusCode === 303) {
           console.log('303 success in building job', err)
           CrawlDispatcher.dispatch({
@@ -351,35 +318,12 @@ export function buildHeritrixJob (jobId) {
         }
       }
     })
-
-    // rp(options)
-    //   .then(response => {
-    //     // POST succeeded...
-    //     console.log('sucess in building job', response)
-    //     CrawlDispatcher.dispatch({
-    //       type: EventTypes.BUILT_CRAWL_JOB,
-    //       id: jobId
-    //     })
-    //   })
-    //   .catch(err => {
-    //     if (err.statusCode == 303) {
-    //       console.log('303 sucess in building job', err)
-    //       CrawlDispatcher.dispatch({
-    //         type: EventTypes.BUILT_CRAWL_JOB,
-    //         id: jobId
-    //       })
-    //     } else {
-    //       // POST failed...
-    //       console.log('failur in building job', err)
-    //       logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
-    //     }
-    //   })
   }
 }
 
 export function launchHeritrixJob (jobId) {
   // options.agent = httpsAgent
-  if (false){//!ServiceStore.heritrixStatus()) {
+  if (false) {//!ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       launchHeritrixJob(jobId)
     })
@@ -398,7 +342,7 @@ export function launchHeritrixJob (jobId) {
       from: `launchHeritrixJob[${jobId}]`,
       jId: jobId,
       timeReceived: null,
-      success: (response) => {
+      success: function (response) {
         // POST succeeded...
         console.log('sucess in launching job', response)
         CrawlDispatcher.dispatch({
@@ -406,7 +350,7 @@ export function launchHeritrixJob (jobId) {
           id: jobId
         })
       },
-      error: (err) => {
+      error: function (err) {
         if (err.statusCode === 303) {
           console.log('303 success in launch job', err)
           CrawlDispatcher.dispatch({
@@ -420,28 +364,6 @@ export function launchHeritrixJob (jobId) {
         }
       }
     })
-    // rp(options)
-    //   .then(response => {
-    //     // POST succeeded...
-    //     console.log('sucess in launching job', response)
-    //     CrawlDispatcher.dispatch({
-    //       type: EventTypes.LAUNCHED_CRAWL_JOB,
-    //       id: jobId
-    //     })
-    //   })
-    //   .catch(err => {
-    //     if (err.statusCode == 303) {
-    //       console.log('303 sucess in launch job', err)
-    //       CrawlDispatcher.dispatch({
-    //         type: EventTypes.LAUNCHED_CRAWL_JOB,
-    //         id: jobId
-    //       })
-    //     } else {
-    //       // POST failed...
-    //       console.log('failur in launching job', err)
-    //       logger.error(util.format(logStringError, `launching hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
-    //     }
-    //   })
   }
 }
 
@@ -456,11 +378,11 @@ export function teardownJob (jobId) {
     from: `tearDownJob[${jobId}]`,
     jId: jobId,
     timeReceived: null,
-    success: (response) => {
+    success: function (response) {
       // POST succeeded...
       console.log(`teardownJob post succeeded for ${jobId}`, response)
     },
-    error: (err) => {
+    error: function (err) {
       logger.error(util.format(logStringError, `teardownJob for ${jobId} to heritrix ${err.message}`, err.stack))
       console.log(`teardownJob post failed? in sendAction to heritrix for ${jobId}`, err)
     }
@@ -493,14 +415,14 @@ export function forceCrawlFinish (jobId, cb) {
     jId: jobId,
     callback: cb,
     timeReceived: null,
-    success: (response) => {
+    success: function (response) {
       // POST succeeded...
       console.log(`forceCrawlFinish action post succeeded in sendAction to heritrix for ${jobId}`, response)
       if (cb) {
         cb()
       }
     },
-    error: (err) => {
+    error: function (err) {
       logger.error(util.format(logStringError, `sendAction for ${jobId} to heritrix ${err.message}`, err.stack))
       console.log(`forceCrawlFinish action post failed? in sendAction to heritrix for ${jobId}`, err)
       if (cb) {
@@ -565,7 +487,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
     jId: jobId,
     callback: cb,
     timeReceived: null,
-    success: (response) => {
+    success: function (response) {
       // POST succeeded...
       if (isActionGenerator) {
         console.log(`sequential action post succeeded in sendAction to heritrix for ${jobId}`, response)
@@ -573,7 +495,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
         console.log(`post succeeded in sendAction to heritrix for ${jobId}`, response)
       }
     },
-    error: (err) => {
+    error: function (err) {
       logger.error(util.format(logStringError, `sendAction for ${jobId} to heritrix ${err.message}`, err.stack))
       if (isActionGenerator) {
         console.log(`sequential action post failed? in sendAction to heritrix for ${jobId}`, err)
@@ -582,24 +504,6 @@ export function sendActionToHeritrix (act, jobId, cb) {
       }
     }
   })
-
-  // rp(options)
-  //   .then(response => {
-  //     // POST succeeded...
-  //     console.log(`post succeeded in sendAction ${act} to heritrix`, response)
-  //     if (isActionGenerator && notDone) {
-  //       console.log('we have next in action generator')
-  //       sendActionToHeritrix(act, jobId)
-  //     }
-  //   })
-  //   .catch(err => {
-  //     console.log(`post failed? in sendAction ${act} to heritrix`, err)
-  //     logger.error(util.format(logStringError, `sendAction ${act} to heritrix ${err.message}`, err.stack))
-  //     if (isActionGenerator && notDone) {
-  //       console.log('we have next in action generator', `is done? ${notDone}`)
-  //       sendActionToHeritrix(act, jobId)
-  //     }
-  //   })
 }
 
 function sortJobs (j1, j2) {

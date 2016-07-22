@@ -1,9 +1,10 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
-import {shell, remote} from 'electron'
+import { shell, remote } from 'electron'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
+import S from 'string'
 import * as urlActions from '../actions/archive-url-actions'
 
 const settings = remote.getGlobal('settings')
@@ -35,7 +36,6 @@ class urlStore extends EventEmitter {
           console.log(`url updated ${event.url}`)
           this.emit('url-updated')
         }
-
         break
       }
       case EventTypes.GOT_MEMENTO_COUNT: {
@@ -55,49 +55,42 @@ class urlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Getting the memento count for ${this.urlMemento.url}`
         })
-        // new Notification('Getting memento count for', {
-        //   body: `${this.urlMemento.url}`
-        // })
         break
       }
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
-        GMessageDispatcher.dispatch({
-          type: EventTypes.QUEUE_MESSAGE,
-          message: `Checking if ${this.urlMemento.url} is in the archive`
-        })
-
-        urlActions.checkUriIsInArchive(this.urlMemento.url)
-          .then(wasIn => {
-            let message
-            if (wasIn.inArchive) {
-              message = `The URL ${wasIn.uri} is in the archive`
-              // new Notification('The URL was in the archive', {
-              //   body: `${wasIn.uri}`
-              // })
-            } else {
-              message = `The URL ${wasIn.uri} is not in the archive`
-              //   new Notification('The URL was not in the archive', {
-              //   body: `${wasIn.uri}`
-              // })
-            }
-            GMessageDispatcher.dispatch({
-              type: EventTypes.QUEUE_MESSAGE,
-              message
+        if (!S(this.urlMemento.url).isEmpty()) {
+          GMessageDispatcher.dispatch({
+            type: EventTypes.QUEUE_MESSAGE,
+            message: `Checking if ${this.urlMemento.url} is in the archive`
+          })
+          urlActions.checkUriIsInArchive(this.urlMemento.url)
+            .then(wasIn => {
+              let message
+              if (wasIn.inArchive) {
+                message = `The URL ${wasIn.uri} is in the archive`
+              } else {
+                message = `The URL ${wasIn.uri} is not in the archive`
+              }
+              GMessageDispatcher.dispatch({
+                type: EventTypes.QUEUE_MESSAGE,
+                message
+              })
             })
-          })
-          .catch(err => {
-            console.log('There was an error when checking if the uri is in archive', err)
-          })
+            .catch(err => {
+              console.log('There was an error when checking if the uri is in archive', err)
+            })
+        }
         break
       }
-
       case EventTypes.VIEW_ARCHIVED_URI: {
-        GMessageDispatcher.dispatch({
-          type: EventTypes.QUEUE_MESSAGE,
-          message: `Viewing archived version of: ${this.urlMemento.url}`
-        })
-        shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url}`)
+        if (!S(this.urlMemento.url).isEmpty()) {
+          GMessageDispatcher.dispatch({
+            type: EventTypes.QUEUE_MESSAGE,
+            message: `Viewing archived version of: ${this.urlMemento.url}`
+          })
+          shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url}`)
+        }
         break
       }
     }
