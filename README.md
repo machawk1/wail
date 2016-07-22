@@ -6,7 +6,7 @@ Web Archiving Integration Layer (WAIL)
 
 _"One-Click User Instigated Preservation"_
 
-Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web pages. Tools included and accessible through the GUI are [Heritrix 3.2.0](https://github.com/internetarchive/heritrix3) and [OpenWayback 2.3.0](https://github.com/iipc/openwayback). Support packages include Apache Tomcat and [MemGator](https://github.com/oduwsdl/memgator).
+Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web pages. Tools included and accessible through the GUI are [Heritrix 3.3.0](https://github.com/internetarchive/heritrix3) and [OpenWayback 2.3.0](https://github.com/iipc/openwayback). Support packages include Apache Tomcat and [MemGator](https://github.com/oduwsdl/memgator).
 
 ## Electron Wail
 
