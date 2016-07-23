@@ -111,11 +111,11 @@ export default class Debug extends Component {
             onRequestClose={this.handleRequestClose}
           >
             <Menu>
-              <MenuItem onTouchTap={this.launchHeritrix} primaryText='Start Heritrix' />
-              <MenuItem onTouchTap={this.killHeritrix} primaryText='Kill Heritrix' />
+              <MenuItem onTouchTap={this.launchHeritrix} primaryText='Start Heritrix'/>
+              <MenuItem onTouchTap={this.killHeritrix} primaryText='Kill Heritrix'/>
               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('http://matkelly.com', 1)}
-                        primaryText='make job' />
-              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText='test-status' />
+                        primaryText='make job'/>
+              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText='test-status'/>
             </Menu>
           </Popover>
           <Popover
@@ -126,8 +126,8 @@ export default class Debug extends Component {
             onRequestClose={this.wpopclose}
           >
             <Menu>
-              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText='Start Wayback' />
-              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText='Kill Wayback' />
+              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText='Start Wayback'/>
+              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText='Kill Wayback'/>
 
             </Menu>
           </Popover>

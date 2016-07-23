@@ -55,7 +55,7 @@ export default class MementoMessagePanel extends Component {
       if (this.state.mementoCount === -1) {
         message = <FetchingMementoMessage />
       } else {
-        message = <MementoCountMessage count={this.state.mementoCount} />
+        message = <MementoCountMessage count={this.state.mementoCount}/>
       }
     }
 

@@ -1,13 +1,13 @@
 import 'babel-polyfill'
 import React from 'react'
-import { Router, hashHistory } from 'react-router'
+import {Router, hashHistory} from 'react-router'
 import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import Routes from './routes'
-import { writeWaybackConf } from './actions/wayback-actions'
+import {writeWaybackConf} from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
 
 Promise.promisifyAll(fs)

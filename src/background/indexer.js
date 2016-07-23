@@ -178,29 +178,29 @@ function generateCDX () {
 
   let writeStream = fs.createWriteStream(settings.get('indexCDX'))
   fs.walk(settings.get('warcs'))
-      .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
-      .pipe(onlyWorf)
-      .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
-      .pipe(worfToCdx)
-      .pipe(cdxToLines)
-      .pipe(streamSort(unixSort))
-      .pipe(writeStream)
-      .on('close', () => {
-        writeStream.destroy()
-        console.log('we have closed')
-        del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
-          .then(paths => {
-            console.log('Releaseing write lock for indexCDX')
-            let deleted = `Deleted files and folders:\n${paths.join('\n')}`
-            console.log(deleted)
-            logger.info(util.format(logString, deleted))
-            prevIndexingDone = true
-          })
-      })
-      .on('error', err => {
-        logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
-        prevIndexingDone = true
-      })
+    .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
+    .pipe(onlyWorf)
+    .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
+    .pipe(worfToCdx)
+    .pipe(cdxToLines)
+    .pipe(streamSort(unixSort))
+    .pipe(writeStream)
+    .on('close', () => {
+      writeStream.destroy()
+      console.log('we have closed')
+      del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
+        .then(paths => {
+          console.log('Releaseing write lock for indexCDX')
+          let deleted = `Deleted files and folders:\n${paths.join('\n')}`
+          console.log(deleted)
+          logger.info(util.format(logString, deleted))
+          prevIndexingDone = true
+        })
+    })
+    .on('error', err => {
+      logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
+      prevIndexingDone = true
+    })
   // indexLock.writeLock('indedxCDX', (indexCDXWriteRelease) => {
   //   console.log('Acquiring write lock for indexCDX')
   //   fs.walk(settings.get('warcs'))

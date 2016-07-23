@@ -111,7 +111,7 @@ export function startWayback (cb) {
     }
   } else {
     var wStart
-    if(process.platform === 'darwin') {
+    if (process.platform === 'darwin') {
       wStart = settings.get('tomcatStartDarwin')
     } else {
       wStart = settings.get('tomcatStart')
@@ -154,7 +154,7 @@ export function killWayback (cb) {
     }
   } else {
     var wStop
-    if(process.platform === 'darwin') {
+    if (process.platform === 'darwin') {
       wStop = settings.get('tomcatStopDarwin')
     } else {
       wStop = settings.get('tomcatStop')

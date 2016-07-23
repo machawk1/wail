@@ -132,6 +132,10 @@ const windowsSpecificOpts = {
   icon: iconPath
 }
 
+const linuxSpecificOpts = {
+  icon: path.normalize(path.join(cwd, 'buildResources/linux/icon.png')),
+}
+
 function build (cfg) {
   return new Promise((resolve, reject) => {
     webpack(cfg, (err, stats) => {
@@ -158,7 +162,7 @@ function pack (plat, arch, cb) {
     })
   } else {
     /* linux */
-    opts = Object.assign({}, DEFAULT_OPTS, {
+    opts = Object.assign({}, DEFAULT_OPTS, linuxSpecificOpts, {
       platform: plat,
       arch
     })
@@ -219,6 +223,110 @@ function createWindowsInstallers (plat, arch, cb) {
     .catch(error => console.error(`There was an error in creating the windows installer for ${arch}`, error))
 }
 
+function createDeb_redHat (arc, cb) {
+  let deb = require('electron-installer-debian')
+  let deb2 = require('nobin-debian-installer')
+  let redHat = require('electron-installer-redhat')
+  let arch = arc === 'x64' ? 'amd64' : 'i386'
+  let debOptions = {
+    name: DEFAULT_OPTS.name,
+    productName: DEFAULT_OPTS.name,
+    genericName: DEFAULT_OPTS.name,
+    maintainer: 'John Berlin(jberlin@cs.odu.edu)',
+    arch,
+    productDescription: pkg.description,
+    src: `release/wail-linux-${arc}`,
+    dest: 'release/installers/',
+    version: pkg.version,
+    revision: pkg.revision,
+    icon: {
+      '32x32': path.normalize(path.join(cwd,'build/icons/whale_32.png')),
+      '64x64': path.normalize(path.join(cwd,'build/icons/whale_64.png')),
+      '128x128': path.normalize(path.join(cwd,'build/icons/whale_128.png')),
+      '256x256': path.normalize(path.join(cwd,'build/icons/whale_256.png'))
+    },
+    section: 'utils',
+    depends: [
+      'gconf2',
+      'libxss1',
+      'gconf-service',
+      'gvfs-bin',
+      'libc6',
+      'libcap2',
+      'libgtk2.0-0',
+      'libudev0 | libudev1',
+      'libgcrypt11 | libgcrypt20',
+      'libnotify4',
+      'libnss3',
+      'libxtst6',
+      'python',
+      'xdg-utils'
+    ],
+    recommends: [
+      'lsb-release'
+    ],
+    suggests: [
+      'gir1.2-gnomekeyring-1.0',
+      'libgnome-keyring0'
+    ],
+    lintianOverrides: [
+      'changelog-file-missing-in-native-package'
+    ]
+  }
+
+  let redOpts = {
+    name: DEFAULT_OPTS.name,
+    productName: DEFAULT_OPTS.name,
+    genericName: DEFAULT_OPTS.name,
+    maintainer: 'John Berlin(jberlin@cs.odu.edu)',
+    arch,
+    productDescription: pkg.description,
+    src: `release/wail-linux-${arc}`,
+    dest: 'release/installers/',
+    version: pkg.version,
+    revision: pkg.revision,
+    icon: {
+      '32x32': path.normalize(path.join(cwd,'build/icons/whale_32.png')),
+      '64x64': path.normalize(path.join(cwd,'build/icons/whale_64.png')),
+      '128x128': path.normalize(path.join(cwd,'build/icons/whale_128.png')),
+      '256x256': path.normalize(path.join(cwd,'build/icons/whale_256.png'))
+    },
+    description: pkg.description,
+    license: pkg.license,
+
+    group: undefined,
+    requires: [
+      'lsb'
+    ],
+    bin: pkg.name,
+    categories: [
+      'GNOME',
+      'GTK',
+      'Utility'
+    ]
+  }
+
+  deb(debOptions, err => {
+    if (err) {
+      console.log(`There was an error in creating debian package for ${arc}`)
+      console.log(`Attempting to create red-hat package for ${arc}`)
+      console.error(err)
+    } else {
+      console.log(`Created debian package for ${arc}`)
+      console.log(`Creating red-hat package for ${arc}`)
+    }
+    redHat(debOptions, rhErr => {
+      if (err) {
+        console.log(`There was an error in creating redHat package for ${arc}`)
+        console.error(rhErr)
+        cb()
+      } else {
+        console.log(`Created redHat package for ${arc}`)
+      }
+    })
+  })
+}
+
 function log (plat, arch) {
   return (err, filepath) => {
     if (err) return console.error(err)
@@ -245,7 +353,10 @@ function log (plat, arch) {
           createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
         }
       } else {
-        cb = () => console.log(`${plat}-${arch} finished!`)
+        // cb = () => {
+        //   createDeb_redHat(arch, () => console.log(`${plat}-${arch} finished!`))
+        // }
+        console.log(`${plat}-${arch} finished!`)
       }
       moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
     }

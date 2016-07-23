@@ -45,24 +45,24 @@ export default class Header extends Component {
         >
           <MenuItem
             primaryText={'Basic'}
-            containerElement={<IndexLink to='/' />}
-            onTouchTap={(e) => this.handleClose(e, 'Basic')} />
+            containerElement={<IndexLink to='/'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Basic')}/>
           <MenuItem
             primaryText={'Service Statuses'}
-            containerElement={<Link to='services' />}
-            onTouchTap={(e) => this.handleClose(e, 'Services')} />
+            containerElement={<Link to='services'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Services')}/>
           <MenuItem
             primaryText={'Wayback'}
-            containerElement={<Link to='wayback' />}
-            onTouchTap={(e) => this.handleClose(e, 'Wayback')} />
+            containerElement={<Link to='wayback'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Wayback')}/>
           <MenuItem
             primaryText={'Heritrix'}
-            containerElement={<Link to='heritrix' />}
-            onTouchTap={(e) => this.handleClose(e, 'Heritrix')} />
+            containerElement={<Link to='heritrix'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Heritrix')}/>
           <MenuItem
             primaryText={'Miscellaneous'}
-            containerElement={<Link to='misc' />}
-            onTouchTap={(e) => this.handleClose(e, 'Misc')} />
+            containerElement={<Link to='misc'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Misc')}/>
         </Drawer>
       </div>
     )

@@ -14,7 +14,13 @@ import autobind from 'autobind-decorator'
 import wc from '../../../constants/wail-constants'
 import CrawlStore from '../../../stores/crawlStore'
 import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
-import {forceCrawlFinish, deleteHeritrixJob, restartJob, launchHeritrixJob,rescanJobDir} from '../../../actions/heritrix-actions'
+import {
+  forceCrawlFinish,
+  deleteHeritrixJob,
+  restartJob,
+  launchHeritrixJob,
+  rescanJobDir
+} from '../../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
 
 const settings = remote.getGlobal('settings')
@@ -45,7 +51,7 @@ export default class HeritrixJobItem extends Component {
 
   @autobind
   updateRuns () {
-    this.setState({runs: CrawlStore.getRuns(this.props.jobId)})
+    this.setState({ runs: CrawlStore.getRuns(this.props.jobId) })
   }
 
   @autobind

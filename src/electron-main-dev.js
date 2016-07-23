@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import { app, BrowserWindow, Menu, shell, ipcMain } from 'electron'
+import {app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray} from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
@@ -357,8 +357,10 @@ function createWindow () {
 
   if (process.platform === 'darwin') {
     iconp = path.normalize(path.join(base, 'src/icons/whale.icns'))
-  } else {
+  } else if(process.platform === 'win') {
     iconp = path.normalize(path.join(base, 'src/icons/whale.ico'))
+  } else {
+    iconp = path.normalize(path.join(base, 'src/icons/linux/whale_64.png'))
   }
 
   // Create the browser window.

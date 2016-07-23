@@ -77,7 +77,7 @@ export default class SettingsForm extends Component {
     return { muiTheme: this.state.muiTheme }
   }
 
-  render() {
+  render () {
     let { wordsError, numericError, urlError } = this.errorMessages
     return (
       <Paper style={this.styles.paperStyle}>
@@ -116,9 +116,9 @@ export default class SettingsForm extends Component {
             floatingLabelText='How often do you?'
             menuItems={this.selectFieldItems}
           >
-            <MenuItem value={'never'} primaryText='Never' />
-            <MenuItem value={'nightly'} primaryText='Every Night' />
-            <MenuItem value={'weeknights'} primaryText='Weeknights' />
+            <MenuItem value={'never'} primaryText='Never'/>
+            <MenuItem value={'nightly'} primaryText='Every Night'/>
+            <MenuItem value={'weeknights'} primaryText='Weeknights'/>
           </FormsySelect>
           <FormsyDate
             name='date'

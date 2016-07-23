@@ -33,12 +33,12 @@ export function startHeritrix (logger) {
     } else {
       logger.info(util.format('Loading Actions %s', 'linux/osx launching heritrix'))
       var hStart
-      if(process.platform === 'darwin') {
+      if (process.platform === 'darwin') {
         hStart = settings.get('heritrixStartDarwin')
       } else {
         hStart = settings.get('heritrixStart')
       }
-      childProcess.exec(hStart , (err, stdout, stderr) => {
+      childProcess.exec(hStart, (err, stdout, stderr) => {
         console.log(hStart)
         console.log(err, stdout, stderr)
         if (err) {
@@ -73,7 +73,7 @@ export function startWayback (logger) {
     } else {
       logger.info(util.format('Loading Actions %s', 'linux/osx launching wayback'))
       var wStart
-      if(process.platform === 'darwin') {
+      if (process.platform === 'darwin') {
         wStart = settings.get('tomcatStartDarwin')
       } else {
         wStart = settings.get('tomcatStart')

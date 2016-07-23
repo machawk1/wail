@@ -9,7 +9,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
@@ -304,7 +304,7 @@ export function buildHeritrixJob (jobId) {
           id: jobId
         })
       },
-      error: function (err)  {
+      error: function (err) {
         if (err.statusCode === 303) {
           console.log('303 success in building job', err)
           CrawlDispatcher.dispatch({

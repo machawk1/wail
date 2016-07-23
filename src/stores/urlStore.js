@@ -1,6 +1,6 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
-import { shell, remote } from 'electron'
+import {shell, remote} from 'electron'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'

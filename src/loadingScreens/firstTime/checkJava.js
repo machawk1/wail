@@ -61,7 +61,7 @@ export default class CheckJava extends Component {
             haveCorrectJava: false,
             progMessage: 'Java detected'
           })
-          type =  wc.Loading.JAVA_CHECK_DONE
+          type = wc.Loading.JAVA_CHECK_DONE
         }
         LoadingDispatcher.dispatch({
           type

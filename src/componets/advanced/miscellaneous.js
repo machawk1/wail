@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import { Grid, Row, Column } from 'react-cellblock'
-import { shell, remote } from 'electron'
+import {Grid, Row, Column} from 'react-cellblock'
+import {shell, remote} from 'electron'
 
 const settings = remote.getGlobal('settings')
 

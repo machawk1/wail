@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, IndexRoute } from 'react-router'
+import {Route, IndexRoute} from 'react-router'
 import Layout from '../src/componets/layout/layout'
 import BasicTab from '../src/componets/basic/basic-tab'
 import General from '../src/componets/advanced/general'

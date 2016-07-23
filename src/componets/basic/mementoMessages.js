@@ -12,7 +12,7 @@ export class DefaultMementoMessage extends Component {
           <p>Enter URL to fetch mementos</p>
         </Column>
         <Column width='1/2'>
-          <p style={{paddingLeft: 125}}>0</p>
+          <p style={{ paddingLeft: 125 }}>0</p>
         </Column>
       </Row>
     )
