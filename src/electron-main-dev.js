@@ -251,20 +251,7 @@ function setUpIPC () {
 function setUp () {
   setUpIPC()
   control.base = path.resolve('./')
-  if (process.platform === 'darwin') {
-    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
-    control.w = 800
-    control.h = 300
-  } else if (process.platform === 'win32') {
-    console.log('windows')
-    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
-    control.w = 800
-    control.h = 337
-  } else {
-    control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
-    control.w = 800
-    control.h = 300
-  }
+
   if (process.env.NODE_ENV === 'development') {
     require('electron-debug')({
       showDevTools: true
@@ -298,6 +285,21 @@ function setUp () {
     settingsPath = logPath
   } else {
     logPath = path.join(app.getPath('userData'), 'waillogs')
+  }
+
+  if (process.platform === 'darwin') {
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.w = 800
+    control.h = 300
+  } else if (process.platform === 'win32') {
+    console.log('windows')
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
+    control.w = 800
+    control.h = 337
+  } else {
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
+    control.w = 800
+    control.h = 300
   }
 
   let settings = configSettings(control.base, settingsPath)
