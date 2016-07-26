@@ -1,8 +1,8 @@
-import React, {Component} from 'react'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import React, { Component } from 'react'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/RaisedButton'
 import autobind from 'autobind-decorator'
-import {Row} from 'react-cellblock'
+import { Row } from 'react-cellblock'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
@@ -33,7 +33,7 @@ export default class BasicTabButtons extends Component {
   onClickCheckArchive (event) {
     console.log('check archive')
     UrlDispatcher.dispatch({
-      type: EventTypes.CHECK_URI_IN_ARCHIVE,
+      type: EventTypes.CHECK_URI_IN_ARCHIVE
     })
   }
 
@@ -41,7 +41,7 @@ export default class BasicTabButtons extends Component {
   onClickViewArchive (event) {
     console.log('view archive')
     UrlDispatcher.dispatch({
-      type: EventTypes.VIEW_ARCHIVED_URI,
+      type: EventTypes.VIEW_ARCHIVED_URI
     })
   }
 
@@ -51,7 +51,7 @@ export default class BasicTabButtons extends Component {
         <Toolbar>
           <ToolbarGroup firstChild={true}>
             <RaisedButton
-              label='Archive Now!'
+              label="Archive Now!"
               labelPosition='before'
               style={styles.buttonBasic}
               onMouseDown={this.onClickArchiveNow}

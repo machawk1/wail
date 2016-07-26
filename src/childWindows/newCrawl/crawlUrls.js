@@ -1,9 +1,9 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
-import {List} from 'material-ui/List'
+import { List } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import TextField from 'material-ui/TextField'
-import {Grid, Row, Column} from 'react-cellblock'
+import { Row, Column } from 'react-cellblock'
 import _ from 'lodash'
 import CrawlUrlItem from './crawlUrlItem'
 
@@ -48,7 +48,6 @@ export default class CrawlUrls extends Component {
 
       let deleteAction = (event) => {
         let list = this.state.urls
-        let removeUrl = ''
         // list.forEach(elem => console.log(elem))
         let newUrls = _.remove(list, elem => parseInt(elem.key) !== keyNum)
         // this.state.urls.
@@ -71,7 +70,6 @@ export default class CrawlUrls extends Component {
       this.props.urlAdded(this.state.text)
       this.setState({ urls: uris, text: '', keys: keyNum + 4 })
     }
-
   }
 
   @autobind
@@ -82,19 +80,19 @@ export default class CrawlUrls extends Component {
   render () {
     return (
       <Row>
-        <Column width='1/2'>
+        <Column width="1/2">
           <TextField
-            floatingLabelText='Enter URI to crawl'
-            hintText='http://matkelly.com/wail'
-            id='crawl-url-input'
+            floatingLabelText="Enter URI to crawl"
+            hintText="http://matkelly.com/wail"
+            id="crawl-url-input"
             value={this.state.text}
-            tooltip='press enter'
+            tooltip="press enter"
             onKeyDown={this.checkKeyCode}
             onChange={this.handleChange}
           />
         </Column>
-        <Column width='1/2'>
-          <List style={style} children={ this.state.urls }/>
+        <Column width="1/2">
+          <List style={style} children={this.state.urls} />
         </Column>
       </Row>
     )

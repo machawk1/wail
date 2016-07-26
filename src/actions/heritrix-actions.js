@@ -1,3 +1,4 @@
+import 'babel-polyfill'
 import childProcess from 'child_process'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
@@ -9,7 +10,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
@@ -19,7 +20,7 @@ import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-const isWindows = os.platform() === 'win32'
+const isWindows = process.platform === 'win32'
 const EventTypes = wc.EventTypes
 const RequestTypes = wc.RequestTypes
 
@@ -34,10 +35,10 @@ let jobLaunchRe
 let jobRe
 
 if (isWindows) {
-  jobLaunchRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)\\(:<launch>\d+)\\logs\\progress\-statistics\.log$/
+  jobLaunchRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)\\(:<launch>\d+)\\logs\\progress-statistics\.log$/
   jobRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)/
 } else {
-  jobLaunchRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/
+  jobLaunchRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress-statistics\.log$/
   jobRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/
 }
 
@@ -227,9 +228,11 @@ export function makeHeritrixJobConf (urls, hops = 1, jobId) {
       let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
       maxHops.attr('value', `${hops}`)
       // console.log(doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').html())
-      let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
-      // warFolder.append(`<value>${wc.Paths.warcs}</value>`)
-      warFolder.append(`<value>${settings.get('warcs')}</value>${os.EOL}`)
+      if (!isWindows) {
+        let warFolder = doc('bean[id="warcWriter"]').find('property[name="storePaths"]').find('list')
+        // warFolder.append(`<value>${wc.Paths.warcs}</value>`)
+        warFolder.append(`<value>${settings.get('warcs')}</value>${os.EOL}`)
+      }
       // let confPath = `${wc.Paths.heritrixJob}/${jobId}`
       let confPath = path.join(settings.get('heritrixJob'), `${jobId}`)
       fs.ensureDir(confPath, er => {
@@ -277,7 +280,7 @@ export function rescanJobDir () {
 
 export function buildHeritrixJob (jobId) {
   //  `https://lorem:ipsum@localhost:8443/engine/job/${jobId}`
-  if (false) {//!ServiceStore.heritrixStatus()) {
+  if (false) { // !ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       buildHeritrixJob(jobId)
     })
@@ -323,7 +326,8 @@ export function buildHeritrixJob (jobId) {
 
 export function launchHeritrixJob (jobId) {
   // options.agent = httpsAgent
-  if (false) {//!ServiceStore.heritrixStatus()) {
+  if (false) {
+    // !ServiceStore.heritrixStatus()) {
     launchHeritrix(() => {
       launchHeritrixJob(jobId)
     })
@@ -533,22 +537,29 @@ export function getHeritrixJobsState () {
         console.log('Only job launch did match')
         jobs[ didMath.capture('job') ].log = true
         jobs[ didMath.capture('job') ].launch = didMath.capture('launch')
-        jobs[ didMath.capture('job') ].logPath = item.path
+        jobs[ didMath.capture('job') ].logPath = path.normalize(item.path)
         this.push(jobs[ didMath.capture('job') ])
       } else {
         if (item.stats.isDirectory()) {
           let jid = job.exec(item.path)
 
           if (jid) {
+            let crawlerBeanP = `${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`
             console.log('is a directory we have a jobid')
             counter += 1
-            jobsConfs[ jid.capture('job') ] =
-              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, 'utf8')
+            var cBeanT = 'This file is missing from the job when we tried to access it. This is an auto generated warning message'
+            try {
+              cBeanT = fs.readFileSync(crawlerBeanP, 'utf8')
+            } catch (error) {
+              console.error(error)
+            }
+            jobsConfs[ jid.capture('job') ] = cBeanT
+
             jobs[ jid.capture('job') ] = {
               log: false,
               jobId: jid.capture('job'),
               launch: '',
-              path: `${heritrixJobP}/${jid.capture('job')}`,
+              path: path.normalize(`${heritrixJobP}/${jid.capture('job')}`),
               logPath: ' ',
               urls: '',
               runs: [],
@@ -562,12 +573,18 @@ export function getHeritrixJobsState () {
     let launchStats = through2.obj(function (item, enc, next) {
       fs.readFile(item.logPath, 'utf8', (err, data) => {
         if (err) throw err
-        // console.log(data)
-        let lines = data.trim().split(os.EOL)
+        let lines = S(data).lines()
         let lastLine = S(lines[ lines.length - 1 ])
+        if (lastLine.isEmpty()) {
+          lastLine = S(lines[ lines.length - 2 ])
+        }
         if (jobEndStatus.test(lastLine.s)) {
           // jobs[item.jobId].progress.ended = true
+          // console.log(lines[ lines.length - 2 ])
           let nextToLast = S(lines[ lines.length - 2 ])
+          if (nextToLast.isEmpty()) {
+            nextToLast = S(lines[ lines.length - 3 ])
+          }
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
           jobs[ item.jobId ].runs.push({
             ended: true,
@@ -578,6 +595,7 @@ export function getHeritrixJobsState () {
           })
         } else {
           let fields = lastLine.collapseWhitespace().s.split(' ')
+          console.log(fields)
           jobs[ item.jobId ].runs.push({
             ended: false,
             timestamp: moment(fields[ 0 ]),
@@ -593,7 +611,7 @@ export function getHeritrixJobsState () {
 
     fs.ensureDir(heritrixJobP, err => {
       if (err) {
-        logger.error(util.format(logStringError, `ensuring ${heritrixJobP} ${err.message}`, err.stack))
+        logger.error(util.format(logStringError, `ensuring ${heritrixJobP} ${err.message}`, err))
         reject(err)
       } else {
         fs.walk(heritrixJobP)

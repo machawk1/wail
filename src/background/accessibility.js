@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import rp from 'request-promise'
 import schedule from 'node-schedule'
 import Logger from '../logger/logger'

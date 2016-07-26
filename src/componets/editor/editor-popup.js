@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
@@ -6,7 +6,7 @@ import EditorDispatcher from '../../dispatchers/editorDispatcher'
 import Editor from './editor'
 import EditorStore from '../../stores/editorStore'
 import wc from '../../constants/wail-constants'
-import {List, ListItem} from 'material-ui/List'
+import { List, ListItem } from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
 
 const style = {
@@ -131,15 +131,15 @@ export default class EditorPopup extends Component {
           />
           <List style={style.popup}>
             <Subheader>Commands</Subheader>
-            <ListItem primaryText='Ctrl-F/Cmd-F: Start searching'/>
-            <ListItem primaryText='Ctrl-G/Cmd-G: Find next'/>
-            <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous'/>
-            <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace'/>
-            <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all'/>
+            <ListItem primaryText='Ctrl-F/Cmd-F: Start searching' />
+            <ListItem primaryText='Ctrl-G/Cmd-G: Find next' />
+            <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous' />
+            <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace' />
+            <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all' />
             <ListItem
               primaryText="Alt-F: Persistent search (dialog doesn't autoclose,enter to find next, Shift-Enter to find previous)"
             />
-            <ListItem primaryText='Alt-G: Jump to line'/>
+            <ListItem primaryText='Alt-G: Jump to line' />
           </List>
         </Dialog>
       </div>
@@ -163,15 +163,15 @@ export default class EditorPopup extends Component {
         />
         <List style={style.popup}>
           <Subheader>Commands</Subheader>
-          <ListItem primaryText='Ctrl-F/Cmd-F: Start searching'/>
-          <ListItem primaryText='Ctrl-G/Cmd-G: Find next'/>
-          <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous'/>
-          <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace'/>
-          <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all'/>
+          <ListItem primaryText='Ctrl-F/Cmd-F: Start searching' />
+          <ListItem primaryText='Ctrl-G/Cmd-G: Find next' />
+          <ListItem primaryText='Shift-Ctrl-G/Shift-Cmd-G: Find previous' />
+          <ListItem primaryText='Shift-Ctrl-F/Cmd-Option-F: Replace' />
+          <ListItem primaryText='Shift-Ctrl-R/Shift-Cmd-Option-F: Replace all' />
           <ListItem
             primaryText="Alt-F: Persistent search (dialog doesn't autoclose,enter to find next, Shift-Enter to find previous)"
           />
-          <ListItem primaryText='Alt-G: Jump to line'/>
+          <ListItem primaryText='Alt-G: Jump to line' />
         </List>
       </Dialog>
     )

@@ -1,12 +1,13 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import named from 'named-regexp'
 import through2 from 'through2'
 import S from 'string'
 import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
+import path from 'path'
 import fs from 'fs-extra'
 import ReadWriteLock from 'rwlock'
 import schedule from 'node-schedule'
@@ -33,10 +34,10 @@ let jobLaunchRe
 let jobRe
 
 if (isWindows) {
-  jobLaunchRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)\\(:<launch>\d+)\\logs\\progress\-statistics\.log$/
+  jobLaunchRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)\\(:<launch>\d+)\\logs\\progress-statistics\.log$/
   jobRe = /[a-zA-Z0-9-:\\.]+jobs\\(:<job>\d+)/
 } else {
-  jobLaunchRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress\-statistics\.log$/
+  jobLaunchRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)\/(:<launch>\d+)\/logs\/progress-statistics\.log$/
   jobRe = /[a-zA-Z0-9-/.]+jobs\/(:<job>\d+)/
 }
 
@@ -152,20 +153,26 @@ function getHeritrixJobsState () {
       if (didMath) {
         jobs[ didMath.capture('job') ].log = true
         jobs[ didMath.capture('job') ].launch = didMath.capture('launch')
-        jobs[ didMath.capture('job') ].logPath = item.path
+        jobs[ didMath.capture('job') ].logPath = path.normalize(item.path)
         through.push(jobs[ didMath.capture('job') ])
       } else {
         if (item.stats.isDirectory()) {
           let jid = job.exec(item.path)
           if (jid) {
             counter += 1
-            jobsConfs[ jid.capture('job') ] =
-              fs.readFileSync(`${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`, 'utf8')
+            let crawlerBeanP = `${heritrixJobP}/${jid.capture('job')}/crawler-beans.cxml`
+            var cBeanT = 'This file is missing from the job when we tried to access it. This is an auto generated warning message'
+            try {
+              cBeanT = fs.readFileSync(crawlerBeanP, 'utf8')
+            } catch (error) {
+              console.error(error)
+            }
+            jobsConfs[ jid.capture('job') ] = cBeanT
             jobs[ jid.capture('job') ] = {
               log: false,
               jobId: jid.capture('job'),
               launch: '',
-              path: `${heritrixJobP}/${jid.capture('job')}`,
+              path: path.normalize(`${heritrixJobP}/${jid.capture('job')}`),
               logPath: ' ',
               urls: '',
               runs: [],
@@ -184,12 +191,17 @@ function getHeritrixJobsState () {
           through.push(item)
         }
         // console.log(data)
-        let lines = data.trim().split('\n')
+        let lines = S(data).lines()
         let lastLine = S(lines[ lines.length - 1 ])
-
+        if(lastLine.isEmpty()) {
+          lastLine = S(lines[lines.length - 2])
+        }
         if (jobEndStatus.test(lastLine.s)) {
           // jobs[item.jobId].progress.ended = true
           let nextToLast = S(lines[ lines.length - 2 ])
+          if(nextToLast.isEmpty()) {
+            nextToLast = S(lines[lines.length - 3])
+          }
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
           let tsm = moment(nextLastfields[ 0 ])
           jobs[ item.jobId ].runs.push({

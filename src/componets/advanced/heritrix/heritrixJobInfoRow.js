@@ -1,14 +1,16 @@
-import React, {Component, PropTypes} from 'react'
-import {TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
 
 const style = {
   tableHeaderCol: {
     paddingLeft: '12px',
     paddingRight: '12px',
+    cursor: 'default'
   },
   tableHeader: {
-    borderBottomStyle: 'none'
+    borderBottomStyle: 'none',
+    cursor: 'default'
   },
   tableRowCol: {
     paddingLeft: '5px',
@@ -16,6 +18,7 @@ const style = {
     wordWrap: 'break-word',
     textOverflow: 'none',
     whiteSpace: 'normal',
+    cursor: 'default'
   },
   trcTextCenter: {
     paddingLeft: '5px',
@@ -24,6 +27,7 @@ const style = {
     textOverflow: 'none',
     whiteSpace: 'normal',
     textAlign: 'left',
+    cursor: 'default'
   }
 
 }
@@ -31,7 +35,7 @@ const style = {
 export default class HeritrixJobInfoRow extends Component {
   static propTypes = {
     jobId: PropTypes.string.isRequired,
-    runs: PropTypes.array.isRequired,
+    runs: PropTypes.array.isRequired
   }
 
   render () {

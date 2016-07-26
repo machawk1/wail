@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import rp from 'request-promise'
 import _ from 'lodash'
 import util from 'util'

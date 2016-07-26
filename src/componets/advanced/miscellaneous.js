@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Grid, Row, Column} from 'react-cellblock'
-import {shell, remote} from 'electron'
+import { Grid, Row, Column } from 'react-cellblock'
+import { shell, remote } from 'electron'
 
 const settings = remote.getGlobal('settings')
 
@@ -20,8 +20,8 @@ export default class Misc extends Component {
           </Column>
           <Column width='1/2'>
             <RaisedButton
-              label="Check Updates"
-              labelPosition="before"
+              label='Check Updates'
+              labelPosition='before'
               style={{ margin: 12 }}
               onMouseDown={() => shell.openExternal('https://github.com/N0taN3rd/wail')}
             />

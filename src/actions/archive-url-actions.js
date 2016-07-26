@@ -1,6 +1,6 @@
 import childProcess from 'child_process'
 import rp from 'request-promise'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import wailConstants from '../constants/wail-constants'

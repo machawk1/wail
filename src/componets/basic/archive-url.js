@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import {Row, Column} from 'react-cellblock'
+import { Row, Column } from 'react-cellblock'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
 import validator from 'validator'
@@ -52,19 +52,19 @@ export default class ArchiveUrl extends Component {
   render () {
     return (
       <Row>
-        <Column width='1/2'>
+        <Column width="1/2">
           <TextField
             floatingLabelText='URL'
             underlineStyle={this.state.underlineStyle}
-            hintText='http://matkelly.com/wail'
-            id='archive-url-input'
+            hintText="http://matkelly.com/wail"
+            id="archive-url-input"
             value={this.state.uri}
             onBlur={this.focusLost}
             onChange={this.handleChange}
             style={styles.urlInput}
           />
         </Column>
-        <Column width='1/2'>
+        <Column width="1/2">
           <div style={styles.basicTapRightColPad}>
             <RaisedButton
               label='Get Memento Count'

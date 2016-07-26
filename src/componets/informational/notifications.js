@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
-import {shell} from 'electron'
+import { shell } from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
 
 export default class Notifications extends Component {

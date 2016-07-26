@@ -1,4 +1,4 @@
-import {remote} from 'electron'
+import { remote } from 'electron'
 import Promise from 'bluebird'
 import childProcess from 'child_process'
 import util from 'util'

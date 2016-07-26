@@ -6,7 +6,7 @@ import wc from '../constants/wail-constants'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
 import cheerio from 'cheerio'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 
 const settings = remote.getGlobal('settings')

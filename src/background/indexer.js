@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import childProcess from 'child_process'
 import os from 'os'
 import path from 'path'
@@ -10,14 +10,12 @@ import fs from 'fs-extra'
 import del from 'del'
 import streamSort from 'sort-stream2'
 import bytewise from 'bytewise'
-import ReadWriteLock from 'rwlock'
 import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
 
 const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('indexLogPath') })
-const indexLock = new ReadWriteLock()
 const logString = 'indexer %s'
 const logStringError = 'indexer error where[ %s ] stack [ %s ]'
 
@@ -41,7 +39,6 @@ function generatePathIndex (genCdx) {
       index.push(`${path.basename(item.path)}\t${item.path}`)
     })
     .on('end', () => {
-      console.log('Aquiring pindex writelock')
       if (count > 0) {
         console.log('The count was greater than zero')
         fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
@@ -71,56 +68,10 @@ function generatePathIndex (genCdx) {
       console.error('generating path index with error', err)
       prevIndexingDone = true
     })
-  // indexLock.readLock('pindex', (warcReadRelease) => {
-  //   console.log('Aquiring pindex readlock')
-  //   fs.walk(settings.get('warcs'))
-  //     .on('error', (err) => onlyWarf.emit('error', err)) // forward the error on
-  //     .pipe(onlyWarf)
-  //     .on('data', item => {
-  //       index.push(`${path.basename(item.path)}\t${item.path}`)
-  //     })
-  //     .on('end', () => {
-  //       console.log('Aquiring pindex writelock')
-  //       indexLock.writeLock('pindex', (indexWriteRelease) => {
-  //         if (count > 0) {
-  //           console.log('The count was greater than zero')
-  //           fs.writeFile(settings.get('index'), index.join(os.EOL), 'utf8', err => {
-  //             console.log('Releasing pindex writelock')
-  //             if (err) {
-  //               indexWriteRelease()
-  //               console.error('generating path index with error', err)
-  //               logger.error(util.format(logStringError, 'generate path index on end', err.stack))
-  //             } else {
-  //               indexWriteRelease()
-  //               console.log('done generating path index no error')
-  //               logger.info(util.format(logString, 'done generating path index no error'))
-  //               genCdx()
-  //             }
-  //           })
-  //         } else {
-  //           console.log('There were no warcs to index')
-  //           logger.info(util.format(logString, 'There were no warcs to index'))
-  //           indexWriteRelease()
-  //         }
-  //       })
-  //       console.log('Releasing pindex readlock')
-  //       warcReadRelease()
-  //     })
-  //     .on('error', err => {
-  //       if (Reflect.has(err, 'stack')) {
-  //         logger.error(util.format(logStringError, 'generateIndexPath on error', err.stack))
-  //       } else {
-  //         logger.error(util.format(logStringError, 'generateIndexPath on error', `${err.message} ${err.fileName} ${err.lineNumber} `))
-  //       }
-  //       warcReadRelease()
-  //       console.error('generating path index with error', err)
-  //     })
-  // })
 }
 
 //  implements bytewise sorting of export LC_ALL=C; sort
 function unixSort (a, b) {
-
   return bytewise.compare(bytewise.encode(a), bytewise.encode(b))
 }
 
@@ -145,14 +96,17 @@ function generateCDX () {
     childProcess.exec(`${cdxIndexer} ${item.path} ${cdxFile}`, (err, stdout, stderr) => {
       if (err) {
         logger.error(util.format(logStringError, `generateCDX exec cdxinder ${stderr}`, err.stack))
-      }
-      fs.readFile(cdxFile, 'utf8', (errr, value) => {
-        if (errr) {
-          logger.error(util.format(logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack))
-        }
-        through.push(value)
         next()
-      })
+      } else {
+        fs.readFile(cdxFile, 'utf8', (errr, value) => {
+          if (errr) {
+            logger.error(util.format(logStringError, `generateCDX exec cdxinder read ${cdxFile}`, errr.stack))
+          } else {
+            through.push(value)
+          }
+          next()
+        })
+      }
     })
   })
 
@@ -190,7 +144,6 @@ function generateCDX () {
       console.log('we have closed')
       del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
         .then(paths => {
-          console.log('Releaseing write lock for indexCDX')
           let deleted = `Deleted files and folders:\n${paths.join('\n')}`
           console.log(deleted)
           logger.info(util.format(logString, deleted))
@@ -201,34 +154,6 @@ function generateCDX () {
       logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
       prevIndexingDone = true
     })
-  // indexLock.writeLock('indedxCDX', (indexCDXWriteRelease) => {
-  //   console.log('Acquiring write lock for indexCDX')
-  //   fs.walk(settings.get('warcs'))
-  //     .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
-  //     .pipe(onlyWorf)
-  //     .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
-  //     .pipe(worfToCdx)
-  //     .pipe(cdxToLines)
-  //     .pipe(streamSort(unixSort))
-  //     .pipe(writeStream)
-  //     .on('close', () => {
-  //       writeStream.destroy()
-  //       console.log('we have closed')
-  //       del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
-  //         .then(paths => {
-  //           console.log('Releaseing write lock for indexCDX')
-  //           let deleted = `Deleted files and folders:\n${paths.join('\n')}`
-  //           console.log(deleted)
-  //           logger.info(util.format(logString, deleted))
-  //           indexCDXWriteRelease()
-  //           prevIndexingDone = true
-  //         })
-  //     })
-  //     .on('error', err => {
-  //       indexCDXWriteRelease()
-  //       logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
-  //     })
-  // })
 }
 
 class Indexer {

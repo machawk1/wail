@@ -4,17 +4,17 @@ var gracefulFs = require('graceful-fs')
 gracefulFs.gracefulify(realFs)
 import fs from 'fs-extra'
 import path from 'path'
+import util from 'util'
 import Promise from 'bluebird'
 Promise.promisifyAll(fs)
 import cheerio from 'cheerio'
 import through2 from 'through2'
 import S from 'string'
-import child_process from 'child_process'
 import split2 from 'split2'
 import os from 'os'
 import del from 'del'
 import streamSort from 'sort-stream2'
-import {encode, compare} from 'bytewise'
+import { encode, compare } from 'bytewise'
 import shelljs from 'shelljs'
 import validUrl from 'valid-url'
 import validator from 'validator'
@@ -23,42 +23,126 @@ import rp from "request-promise"
 import _ from 'lodash'
 import moment from 'moment'
 import named from 'named-regexp'
+import cp from 'child_process'
 
+require('pretty-error').start()
 
-let lines = [
+let opts = {
+  cwd: 'A:\\wail-electron',
+  detached: true,
+  shell: false,
+  stdio: [ 'ignore', 'ignore', 'ignore' ]
+}
 
-   '\nwayback.url.scheme.default=http',
-   'wayback.url.host.default=localhost',
-   'wayback.url.port.default=8080',
-   "wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }",
-   "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
-   "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",
-   "wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }",
-   "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}" ,
-   "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
-   'wayback.archivedir.1=${wayback.basedir}/files1/',
-   'wayback.archivedir.2=${wayback.basedir}/files2/',
-]
+fs.readFile('A:\\wail-electron\\bundledApps\\heritrix-3.3.0\\jobs\\1469503104218\\20160726031827\\logs\\progress-statistics.log','utf8', (err, data) => {
+  if(err) {
+    console.error(err)
+  }
 
-fs.readFile('/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml','utf8',(err,val)=>{
-   /*
-    'wail.basedir=/Applications/WAIL.app',
-    'wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT',
-    */
-   let $ = cheerio.load(val,{ xmlMode: true})
-   let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
-   let base = path.resolve('./')
-   lines.push(`wail.basedir=${base}`)
-   lines.push(`wayback.basedir.default=${base}/bundledApps/tomcat/webapps/ROOT\n`)
-   console.log(lines)
-   console.log(config.text(lines.join('\n')).text())
-
-   fs.writeFile('/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',$.xml(),err => {
-      console.log(err)
-   })
+  console.log(data)
 })
 
 
+// import depcheck from 'depcheck'
+//
+// console.log(util.inspect(depcheck,{depth:null,colors: true}))
+//
+// const options = {
+//   withoutDev: false, // [DEPRECATED] check against devDependencies
+//   ignoreBinPackage: false, // ignore the packages with bin entry
+//   ignoreDirs: [ // folder with these names will be ignored
+//     'sandbox',
+//     'dist',
+//     'bower_components',
+//     'node_modules',
+//     '.idea',
+//     'archiveIndexes',
+//     'archives',
+//     'build',
+//     'buildResources',
+//     'bundledApps',
+//     'support',
+//     'images',
+//     'waillogs',
+//     'zips',
+//     'memgators',
+//     'release',
+//     'config'
+//   ],
+//   ignoreMatches: [ // ignore dependencies that matches these globs
+//     'grunt-*',
+//     'eslint',
+//     'babel'
+//   ],
+//   parsers: { // the target parsers
+//     '*.js': depcheck.parser.es7,
+//     '*.jsx?': depcheck.parser.jsx
+//   },
+//   detectors: [ // the target detectors
+//     depcheck.detector.requireCallExpression,
+//     depcheck.detector.importDeclaration
+//   ],
+//   specials: [ // the target special parsers
+//     // depcheck.special.eslint,
+//     // depcheck.special.babel,
+//     // depcheck.special.webpack,
+//     depcheck.special.bin,
+//     depcheck.special['feross-standard']
+//   ],
+// }
+// depcheck('A:\\wail-electron', options, (unused) => {
+//   console.log('unused deps')
+//   console.log(util.inspect(unused.dependencies,{depth:null,colors: true}))
+//   console.log('---------------------------------------------')
+//   console.log('unused dev-deps')
+//   console.log(util.inspect(unused.devDependencies,{depth:null,colors: true}))
+//   console.log('---------------------------------------------')
+//   console.log('missing')
+//   console.log(util.inspect(unused.missing,{depth:null,colors: true}))
+//   console.log('---------------------------------------------')
+//   // console.log(unused.dependencies); // an array containing the unused dependencies
+//   // console.log(unused.devDependencies); // an array containing the unused devDependencies
+//   // console.log(unused.missing); // an array containing the dependencies missing in `package.json`
+//   // console.log(unused.using); // a lookup indicating each dependency is used by which files
+//   console.log(unused.invalidFiles); // files that cannot access or parse
+//   // console.log(unused.invalidDirs); // directories that cannot access
+//   //
+//   // console.log(util.inspect(options,{depth:null,colors: true}))
+//   // console.log(util.inspect(unused,{depth:null,colors: true}))
+// })
+
+
+// let lines = [
+//   '\nwayback.url.scheme.default=http',
+//   'wayback.url.host.default=localhost',
+//   'wayback.url.port.default=8080',
+//   "wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }",
+//   "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
+//   "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",
+//   "wayback.url.port=#{ systemEnvironment['WAYBACK_URL_PORT'] ?: '${wayback.url.port.default}' }",
+//   "wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}",
+//   "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
+//   'wayback.archivedir.1=${wayback.basedir}/files1/',
+//   'wayback.archivedir.2=${wayback.basedir}/files2/',
+// ]
+//
+// fs.readFile('/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml', 'utf8', (err, val)=> {
+//   /*
+//    'wail.basedir=/Applications/WAIL.app',
+//    'wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT',
+//    */
+//   let $ = cheerio.load(val, { xmlMode: true })
+//   let config = $('bean[class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"]').find('value')
+//   let base = path.resolve('./')
+//   lines.push(`wail.basedir=${base}`)
+//   lines.push(`wayback.basedir.default=${base}/bundledApps/tomcat/webapps/ROOT\n`)
+//   console.log(lines)
+//   console.log(config.text(lines.join('\n')).text())
+//
+//   fs.writeFile('/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml', $.xml(), err => {
+//     console.log(err)
+//   })
+// })
 
 //
 // function* sequentialActions(actions) {
@@ -467,8 +551,6 @@ fs.readFile('/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT/WEB-IN
 // // lines.forEach((line, index)=> {
 // //    console.log(line, index)
 // // })
-
-
 
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // var Nightmare = require('nightmare');

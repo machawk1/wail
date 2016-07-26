@@ -9,6 +9,7 @@ const managed = {
     { name: 'logs', path: 'waillogs/wail.log' },
     { name: 'archives', path: 'config/archives.json' },
     { name: 'cdxIndexer', path: 'bundledApps/tomcat/webapps/bin/cdx-indexer' },
+    { name: 'cdxIndexerWin', path: 'bundledApps/tomcat/webapps/bin/cdx-indexer.bat' },
     { name: 'cdx', path: 'archiveIndexes' },
     { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
     { name: 'crawlerBean', path: 'crawler-beans.cxml' },
@@ -19,7 +20,7 @@ const managed = {
     { name: 'index', path: '/config/path-index.txt' },
     { name: 'jdk', path: 'bundledApps/openjdk' },
     { name: 'jobConf', path: 'crawler-beans.cxml' },
-    { name: 'jre', path: 'bundledApps/openjdk/jre' },
+    { name: 'jre', path: 'bundledApps/openjdk' },
     { name: 'memgator', path: 'bundledApps/memgator' },
     { name: 'tomcat', path: 'bundledApps/tomcat' },
     { name: 'warcs', path: '/archives' },
@@ -34,6 +35,7 @@ const managed = {
     login: '-a lorem:ipsum',
     path: '',
     jobConf: 'crawler-beans.cxml',
+    jobConfWin: 'crawler-beans-win.cxml',
     web_ui: 'https://lorem:ipsum@localhost:8443',
     addJobDirectoryOptions: {
       method: 'POST',
@@ -167,7 +169,7 @@ const managed = {
     { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
     { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
     { name: 'heritrixStart', path: 'bundledApps/heritrix-3.3.0/bin/heritrix' },
-    { name: 'memgator' },
+    { name: 'memgator' }
   ],
   code: {
     crawlerBean: 'crawler-beans.cxml',
@@ -176,6 +178,7 @@ const managed = {
 }
 
 function writeSettings (base, settings) {
+  let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
   settings.set('base', base)
   managed.paths.forEach(p => {
@@ -184,7 +187,14 @@ function writeSettings (base, settings) {
 
   let heritrix = managed.heritrix
   heritrix.path = settings.get('heritrix')
-  heritrix.jobConf = path.normalize(path.join(base, heritrix.jobConf))
+  var jobConfPath
+  if (isWindows) {
+    settings.set('cdxIndexer', settings.get('cdxIndexerWin'))
+    jobConfPath = path.normalize(path.join(base, heritrix.jobConfWin))
+  } else {
+    jobConfPath = path.normalize(path.join(base, heritrix.jobConf))
+  }
+  heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
   let wb = managed.wayback
   wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
@@ -194,11 +204,12 @@ function writeSettings (base, settings) {
   code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
 
+  settings.set('winDeleteJob', path.normalize(path.join(base, 'windowsNukeDir.bat')))
+
   let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
   let jHomeDarwin = `/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home`
   let darwinExport = `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
   let command = 'sh'
-  let isWindows = os.platform() === 'win32'
   settings.set('isWindows', isWindows)
   managed.commands.forEach(cmd => {
     switch (cmd.name) {

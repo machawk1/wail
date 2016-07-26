@@ -1,49 +1,49 @@
-import {red500, blue500} from 'material-ui/styles/colors'
+import { red500, blue500 } from 'material-ui/styles/colors'
 import spacing from 'material-ui/styles/spacing'
-import {zIndex} from 'material-ui/styles'
+import { zIndex } from 'material-ui/styles'
 
 export default {
   buttonBasic: {
-    margin: 12,
+    margin: 12
   },
   underlineStyle: {
-    borderColor: blue500,
+    borderColor: blue500
   },
   underlineStyleError: {
-    borderColor: red500,
+    borderColor: red500
   },
   button: {
     // padding: '10px',
     right: '0px',
-    margin: 12,
+    margin: 12
   },
   buttonMemento: {
     // left: '5px',
-    marginTop: 35,
+    marginTop: 35
   },
   buttonPad: {
     right: '0px',
-    margin: 45,
+    margin: 45
   },
   urlInput: {
-    left: 10,
+    left: 10
   },
   heritrixJobList: {
     overflow: 'hidden',
     overflowY: 'scroll',
-    height: 140,
+    height: 140
   },
   root: {
-    paddingTop: spacing.desktopKeylineIncrement,
+    paddingTop: spacing.desktopKeylineIncrement
   },
   appBar: {
     position: 'fixed',
     // Needed to overlap the examples
     zIndex: zIndex.appBar + 1,
-    top: 0,
+    top: 0
   },
   navDrawer: {
-    zIndex: zIndex.appBar - 1,
+    zIndex: zIndex.appBar - 1
   },
 
   basicTapRightColPad: {
@@ -63,9 +63,11 @@ export default {
   tableHeaderCol: {
     paddingLeft: '12px',
     paddingRight: '12px',
+    cursor: 'default'
   },
   tableHeader: {
-    borderBottomStyle: 'none'
+    borderBottomStyle: 'none',
+    cursor: 'default'
   },
   tableRowCol: {
     paddingLeft: '12px',
@@ -73,5 +75,9 @@ export default {
     wordWrap: 'break-word',
     textOverflow: 'none',
     whiteSpace: 'normal',
+    cursor: 'default'
+  },
+  cursor: {
+    cursor: 'default'
   }
 }

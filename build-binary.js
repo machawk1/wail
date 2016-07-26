@@ -396,7 +396,7 @@ build(electronCfg)
         platforms = [ 'darwin' ]
       } else {
         buildFor = 'building for Windows'
-        archs = [ 'x64' ]
+        archs = [ 'ia32', 'x64' ]
         platforms = [ 'win32' ]
       }
       console.log(buildFor)

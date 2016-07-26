@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
-import {shell, remote} from 'electron'
+import React, { Component } from 'react'
+import { shell, remote } from 'electron'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Grid, Row, Column} from 'react-cellblock'
+import { Grid, Row, Column } from 'react-cellblock'
 import autobind from 'autobind-decorator'
 import ServiceStore from '../../stores/serviceStore'
 

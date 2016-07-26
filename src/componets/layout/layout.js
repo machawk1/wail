@@ -1,17 +1,18 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import Debug from '../debug-element'
 import styles from '../styles/styles'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class Layout extends Component {
-
+  static propTypes = {
+    children: PropTypes.any.isRequired
+  }
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (props, context) {

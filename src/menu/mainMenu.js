@@ -30,7 +30,7 @@ const template = [
       },
       {
         role: 'selectall'
-      },
+      }
     ]
   },
   {
@@ -51,18 +51,25 @@ const template = [
             focusedWindow.webContents.toggleDevTools()
           }
         }
-      },
+      }
     ]
   },
   {
     role: 'window',
     submenu: [
       {
-        role: 'minimize'
-      },
-      {
+        label: 'Close',
+        accelerator: 'CmdOrCtrl+W',
         role: 'close'
       },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Minimize',
+        accelerator: 'CmdOrCtrl+M',
+        role: 'minimize'
+      }
     ]
   },
   {
@@ -73,7 +80,7 @@ const template = [
         click () { require('electron').shell.openExternal('mailto:wail@matkelly.com') }
       }
     ]
-  },
+  }
 ]
 
 if (process.platform === 'darwin') {
@@ -90,7 +97,7 @@ if (process.platform === 'darwin') {
           {
             label: 'WSDL',
             click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
-          },
+          }
         ]
       },
       {
@@ -117,7 +124,7 @@ if (process.platform === 'darwin') {
       },
       {
         role: 'quit'
-      },
+      }
     ]
   })
   // Window menu.
@@ -144,6 +151,31 @@ if (process.platform === 'darwin') {
       role: 'front'
     }
   ]
+} else {
+  template.unshift({
+    label: name,
+    submenu: [
+      {
+        label: 'About',
+        submenu: [
+          {
+            label: `Learn more about ${name}`,
+            click () { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
+          },
+          {
+            label: 'WSDL',
+            click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
+          }
+        ]
+      },
+      {
+        type: 'separator'
+      },
+      {
+        role: 'quit'
+      }
+    ]
+  })
 }
 
 export default template

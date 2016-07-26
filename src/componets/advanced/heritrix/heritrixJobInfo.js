@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
 import styles from '../../styles/styles'
@@ -7,7 +7,7 @@ import styles from '../../styles/styles'
 export default class HeritrixJobInfo extends Component {
   static propTypes = {
     jobId: PropTypes.string.isRequired,
-    runs: PropTypes.array.isRequired,
+    runs: PropTypes.array.isRequired
   }
 
   render () {

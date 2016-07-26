@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import EventEmitter from 'eventemitter3'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer, remote } from 'electron'
 import _ from 'lodash'
 import os from 'os'
 import autobind from 'autobind-decorator'
@@ -9,7 +9,7 @@ import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
-import {readCode} from '../actions/editor-actions'
+import { readCode } from '../actions/editor-actions'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -45,9 +45,6 @@ class crawlStore extends EventEmitter {
         type: EventTypes.QUEUE_MESSAGE,
         message: `Building Heritrix crawl for ${urls}`
       })
-      // new Notification('Building Heritrix Crawl', {
-      //   body: `Building the Job! for\n${urls}`
-      // })
     })
   }
 
@@ -148,7 +145,9 @@ class crawlStore extends EventEmitter {
             makeHeritrixJobConf(event.urls, event.depth)
             if (Array.isArray(event.urls)) {
               let temp = 'Urls: '
-              event.urls.forEach(url => temp += `${url}${os.EOL}`)
+              event.urls.forEach(url => {
+                temp += `${url}${os.EOL}`
+              })
               urls = temp + `With depth of ${event.depth}`
             }
             break
@@ -158,9 +157,6 @@ class crawlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Building Heritrix crawl for ${urls}`
         })
-        // new Notification('Building Heritrix Crawl', {
-        //   body: `Building the Job! for\n${urls}`
-        // })
         break
       }
       case EventTypes.BUILT_CRAWL_CONF: {
@@ -171,9 +167,6 @@ class crawlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Built the Heritrix crawl config for job: ${event.id}`
         })
-        // new Notification('Built the Heritrix Crawl Config', {
-        //   body: `Job id: ${event.id}\nJob location${event.path}`
-        // })
         break
       }
       case EventTypes.BUILT_CRAWL_JOB: {
@@ -184,9 +177,6 @@ class crawlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built for job: ${event.id}`
         })
-        // new Notification('Heritrix Crawl Job Built', {
-        //   body: `Job id: ${event.id}`
-        // })
         break
       }
       case EventTypes.LAUNCHED_CRAWL_JOB: {
@@ -195,10 +185,6 @@ class crawlStore extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built launched job: ${event.id}`
         })
-        // new Notification('Heritrix Crawl Job Launched', {
-        //   body: `Job id: ${event.id}`
-        // })
-        // this.createJob(event.id, event.path)
         break
       }
       case EventTypes.HERITRIX_CRAWL_ALL_STATUS: {

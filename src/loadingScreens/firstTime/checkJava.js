@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { TableRow, TableRowColumn } from 'material-ui/Table'
 import shelljs from 'shelljs'
 import named from 'named-regexp'
 import autobind from 'autobind-decorator'
@@ -48,7 +48,7 @@ export default class CheckJava extends Component {
       } else {
         console.log('not 1.7 or not named 1.7')
 
-        if (process.platform == 'darwin') {
+        if (process.platform === 'darwin') {
           this.setState({
             checkedJava: true,
             haveCorrectJava: false,
@@ -68,7 +68,7 @@ export default class CheckJava extends Component {
         })
       }
     } else {
-      if (process.platform == 'darwin') {
+      if (process.platform === 'darwin') {
         this.checkJavaOSX()
       } else {
         this.executeJavaVersion()
@@ -146,11 +146,11 @@ export default class CheckJava extends Component {
   }
 
   render () {
-    var check_or_done
+    var checkOrDone
     if (this.state.checkedJava) {
-      check_or_done = <SvgIcon />
+      checkOrDone = <SvgIcon />
     } else {
-      check_or_done =
+      checkOrDone =
         <RefreshIndicator
           size={40}
           left={10}
@@ -169,7 +169,7 @@ export default class CheckJava extends Component {
           </p>
         </TableRowColumn>
         <TableRowColumn>
-          {check_or_done}
+          {checkOrDone}
         </TableRowColumn>
       </TableRow>
     )

@@ -1,21 +1,14 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {ipcRenderer, remote} from 'electron'
+import { ipcRenderer } from 'electron'
 import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import {Grid, Row} from 'react-cellblock'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import { Grid, Row } from 'react-cellblock'
 import CrawlUrls from './crawlUrls'
 import CrawlDepth from './crawlDepth'
 
-const style = {
-  height: '500px',
-  maxHeight: 'none',
-  button: {
-    margin: 12,
-  },
-}
 const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class NewCrawlDialog extends Component {
@@ -85,13 +78,13 @@ export default class NewCrawlDialog extends Component {
           <Toolbar>
             <ToolbarGroup firstChild={true}>
               <RaisedButton
-                label='Cancel'
+                label="Cancel"
                 onTouchTap={this.handleClose}
               />
             </ToolbarGroup>
             <ToolbarGroup>
               <RaisedButton
-                label='Start Crawl'
+                label="Start Crawl"
                 onTouchTap={this.crawlConfigured}
               />
             </ToolbarGroup>

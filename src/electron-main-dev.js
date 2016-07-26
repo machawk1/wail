@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import {app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray} from 'electron'
+import { app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray } from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
@@ -31,15 +31,20 @@ const windows = {
   loadingWindowURL: null
 }
 
-let base
-let notDebugUI = true
-let debug = false
-let openBackGroundWindows = false
-
-let didClose = false
-let didLoad = false
-let loading = true
-let firstLoad = false
+const control = {
+  w: null,
+  h: null,
+  iconp: null,
+  tray: null,
+  base: null,
+  notDebugUI: true,
+  debug: false,
+  openBackGroundWindows: false,
+  didClose: false,
+  didLoad: false,
+  loading: true,
+  firstLoad: false
+}
 
 // let shouldQuit = false
 
@@ -47,6 +52,63 @@ app.commandLine.appendSwitch('js-flags', '--expose_gc')
 
 // do not lower the priority of our invisible background windows
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
+
+function contextMenu (event, props) {
+  let editFlags = props.editFlags
+  let hasText = props.selectionText.trim().length > 0
+  let menuTemp = []
+  if (editFlags.canCut && hasText) {
+    menuTemp.push({
+      label: 'Cut',
+      role: 'cut',
+      enabled: true,
+      visible: props.isEditable
+    })
+  }
+
+  if (editFlags.canCopy && hasText) {
+    if (menuTemp.length > 0) {
+      menuTemp.push({
+        type: 'separator'
+      })
+    }
+    menuTemp.push({
+      label: 'Copy',
+      role: 'copy',
+      enabled: true,
+      visible: props.isEditable
+    })
+  }
+
+  if (editFlags.canPaste && hasText) {
+    if (menuTemp.length > 0) {
+      menuTemp.push({
+        type: 'separator'
+      })
+    }
+    menuTemp.push({
+      label: 'Paste',
+      role: 'paste',
+      enabled: true,
+      visible: props.isEditable
+    })
+  }
+
+  if (editFlags.canSelectAll && hasText) {
+    if (menuTemp.length > 0) {
+      menuTemp.push({
+        type: 'separator'
+      })
+    }
+    menuTemp.push({
+      label: 'Select All',
+      role: 'selectall',
+      enabled: true,
+      visible: props.isEditable
+    })
+  }
+  return Menu.buildFromTemplate(menuTemp)
+}
 
 function showNewCrawlWindow (parent) {
   let config = {
@@ -61,7 +123,11 @@ function showNewCrawlWindow (parent) {
   windows.newCrawlWindow.loadURL(windows.newCrawlWindowURL)
   windows.newCrawlWindow.on('ready-to-show', () => {
     windows.newCrawlWindow.show()
-    // newCrawlWindow.webContents.openDevTools({ mode: 'detach' })
+  })
+  windows.newCrawlWindow.webContents.on('context-menu', (e, props) => {
+    if (props.isEditable) {
+      contextMenu(e, props).popup(windows.newCrawlWindow)
+    }
   })
 
   windows.newCrawlWindow.on('closed', () => {
@@ -84,6 +150,11 @@ function showSettingsWindow (parent) {
     windows.settingsWindow.show()
     windows.settingsWindow.webContents.toggleDevTools()
   })
+  windows.settingsWindow.webContents.on('context-menu', (e, props) => {
+    if (props.isEditable) {
+      contextMenu(e, props).popup(windows.settingsWindow)
+    }
+  })
 
   windows.settingsWindow.on('closed', () => {
     windows.settingsWindow = null
@@ -91,7 +162,7 @@ function showSettingsWindow (parent) {
 }
 
 function setUpIPC () {
-  if (notDebugUI) {
+  if (control.notDebugUI) {
     ipcMain.on('got-it', (event, payload) => {
       console.log(payload)
     })
@@ -172,16 +243,31 @@ function setUpIPC () {
   })
 
   ipcMain.on('loading-finished', (event, payload) => {
+    windows.mainWindow.hide()
     windows.mainWindow.loadURL(windows.mWindowURL)
   })
 }
 
 function setUp () {
   setUpIPC()
-  base = path.resolve('./')
+  control.base = path.resolve('./')
+  if (process.platform === 'darwin') {
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.w = 800
+    control.h = 300
+  } else if (process.platform === 'win32') {
+    console.log('windows')
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
+    control.w = 800
+    control.h = 337
+  } else {
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
+    control.w = 800
+    control.h = 300
+  }
   if (process.env.NODE_ENV === 'development') {
     require('electron-debug')({
-      showDevTools: true,
+      showDevTools: true
     })
     windows.accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     windows.indexWindowURL = `file://${__dirname}/background/indexer.html`
@@ -193,31 +279,31 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
   } else {
-    base = app.getAppPath()
-    windows.accessibilityWindowURL = `file://${base}/src/background/accessibility.html`
-    windows.indexWindowURL = `file://${base}/src/background/indexer.html`
-    windows.jobWindowURL = `file://${base}/src/background/jobs.html`
-    windows.mWindowURL = `file://${base}/src/wail.html`
-    windows.newCrawlWindowURL = `file://${base}/src/childWindows/newCrawl/newCrawl.html`
-    windows.reqDaemonWindowURL = `file://${base}/src/background/requestDaemon.html`
-    windows.settingsWindowURL = `file://${base}/src/childWindows/settings/settingsW.html`
-    windows.firstLoadWindowURL = `file://${base}/src/loadingScreens/firstTime/loadingScreen.html`
-    windows.loadingWindowURL = `file://${base}/src/loadingScreens/notFirstTime/loadingScreen.html`
+    control.base = app.getAppPath()
+    windows.accessibilityWindowURL = `file://${control.base}/src/background/accessibility.html`
+    windows.indexWindowURL = `file://${control.base}/src/background/indexer.html`
+    windows.jobWindowURL = `file://${control.base}/src/background/jobs.html`
+    windows.mWindowURL = `file://${control.base}/src/wail.html`
+    windows.newCrawlWindowURL = `file://${control.base}/src/childWindows/newCrawl/newCrawl.html`
+    windows.reqDaemonWindowURL = `file://${control.base}/src/background/requestDaemon.html`
+    windows.settingsWindowURL = `file://${control.base}/src/childWindows/settings/settingsW.html`
+    windows.firstLoadWindowURL = `file://${control.base}/src/loadingScreens/firstTime/loadingScreen.html`
+    windows.loadingWindowURL = `file://${control.base}/src/loadingScreens/notFirstTime/loadingScreen.html`
   }
 
   let logPath
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
-    logPath = path.join(base, 'waillogs')
+    logPath = path.join(control.base, 'waillogs')
     settingsPath = logPath
   } else {
     logPath = path.join(app.getPath('userData'), 'waillogs')
   }
 
-  let settings = configSettings(base, settingsPath)
+  let settings = configSettings(control.base, settingsPath)
   global.settings = settings
   if (!settings.get('didFirstLoad')) {
-    firstLoad = true
+    control.firstLoad = true
     settings.set('didFirstLoad', true)
   }
 
@@ -236,8 +322,8 @@ function setUp () {
 }
 
 function openDebug () {
-  if (debug) {
-    if (openBackGroundWindows) {
+  if (control.debug) {
+    if (control.openBackGroundWindows) {
       if (windows.accessibilityWindow != null) {
         windows.accessibilityWindow.show()
         windows.accessibilityWindow.webContents.openDevTools()
@@ -258,6 +344,10 @@ function openDebug () {
     }
     windows.mainWindow.webContents.openDevTools()
   }
+  windows.accessibilityWindow.hide()
+  windows.indexWindow.hide()
+  windows.jobWindow.hide()
+  windows.reqDaemonWindow.hide()
 }
 
 function createBackGroundWindows (notDebugUI) {
@@ -343,7 +433,7 @@ function checkBackGroundWindows () {
 }
 
 function createWindow () {
-  didClose = false
+  control.didClose = false
   if (process.env.NODE_ENV === 'development') {
     let installExtension = require('electron-devtools-installer')
     try {
@@ -352,38 +442,33 @@ function createWindow () {
       console.error(e)
     }
   }
-
-  let iconp
-
-  if (process.platform === 'darwin') {
-    iconp = path.normalize(path.join(base, 'src/icons/whale.icns'))
-  } else if(process.platform === 'win') {
-    iconp = path.normalize(path.join(base, 'src/icons/whale.ico'))
-  } else {
-    iconp = path.normalize(path.join(base, 'src/icons/linux/whale_64.png'))
-  }
-
   // Create the browser window.
   windows.mainWindow = new BrowserWindow({
-    width: 800,
-    height: 300,
+    width: control.w,
+    minWidth: control.w,
+    maxWidth: control.w,
+    height: control.h,
+    minHeight: control.h,
+    maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,
-    resizable: false,
+    maximizable: false,
     show: false,
-    icon: iconp,
+    icon: control.iconp
   })
 
+  console.log(windows.mainWindow.getSize())
+
   // and load the index.html of the app.
-  console.log(`activating the main window did close? ${didClose}`)
+  console.log(`activating the main window did close? ${control.didClose}`)
 
   let loadUrl
-  if (loading && firstLoad) {
+  if (control.loading && control.firstLoad) {
     loadUrl = windows.firstLoadWindowURL
   } else {
-    if (!didLoad) {
+    if (!control.didLoad) {
       loadUrl = windows.loadingWindowURL
-      didLoad = true
+      control.didLoad = true
     } else {
       loadUrl = windows.mWindowURL
     }
@@ -392,8 +477,10 @@ function createWindow () {
   windows.mainWindow.loadURL(loadUrl)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
+    console.log('did-finish-load man win')
+    console.log(windows.mainWindow.getSize())
     windows.mainWindow.show()
-    openDebug(openBackGroundWindows)
+    openDebug(control.openBackGroundWindows)
     windows.mainWindow.focus()
   })
 
@@ -403,6 +490,7 @@ function createWindow () {
 
   windows.mainWindow.webContents.on('crashed', () => {
     console.log('we crashed')
+    app.quit()
   })
 
   windows.mainWindow.webContents.on('new-window', (event, url) => {
@@ -413,8 +501,14 @@ function createWindow () {
   // Emitted when the window is closed.
   windows.mainWindow.on('closed', () => {
     console.log('closed')
-    didClose = true
+    control.didClose = true
     cleanUp()
+  })
+
+  windows.mainWindow.webContents.on('context-menu', (e, props) => {
+    if (props.isEditable) {
+      contextMenu(e, props).popup(windows.mainWindow)
+    }
   })
 }
 
@@ -432,14 +526,23 @@ app.on('ready', () => {
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  createBackGroundWindows(notDebugUI)
+  control.tray = new Tray(control.iconp)
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' },
+    { label: 'Item3', type: 'radio', checked: true },
+    { label: 'Item4', type: 'radio' }
+  ])
+  control.tray.setToolTip('WAIL')
+  control.tray.setContextMenu(contextMenu)
+  createBackGroundWindows(control.notDebugUI)
   createWindow()
 })
 
 app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
-  if (didClose) {
+  if (control.didClose) {
     checkBackGroundWindows()
     createWindow()
   }
@@ -459,7 +562,7 @@ app.on('window-all-closed', () => {
 
 app.on('before-quit', () => {
   console.log('before-quit')
-  if (notDebugUI) {
+  if (control.notDebugUI) {
     cleanUp()
   }
   global.logger.cleanUp()

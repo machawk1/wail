@@ -1,10 +1,11 @@
-import React, {Component} from 'react'
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component } from 'react'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
-import {launchHeritrix, killHeritrix} from '../../actions/heritrix-actions'
-import {startWayback, killWayback} from '../../actions/wayback-actions'
+import { launchHeritrix, killHeritrix } from '../../actions/heritrix-actions'
+import { startWayback, killWayback } from '../../actions/wayback-actions'
 import ServiceStore from '../../stores/serviceStore'
+import style from '../styles/styles'
 
 export default class General extends Component {
   constructor (props, context) {
@@ -73,11 +74,11 @@ export default class General extends Component {
           adjustForCheckbox={false}
         >
           <TableRow>
-            <TableHeaderColumn>Service Status</TableHeaderColumn>
-            <TableHeaderColumn>State</TableHeaderColumn>
-            <TableHeaderColumn>Version</TableHeaderColumn>
-            <TableHeaderColumn />
-            <TableHeaderColumn />
+            <TableHeaderColumn style={style.cursor}>Service Status</TableHeaderColumn>
+            <TableHeaderColumn style={style.cursor}>State</TableHeaderColumn>
+            <TableHeaderColumn style={style.cursor}>Version</TableHeaderColumn>
+            <TableHeaderColumn style={style.cursor} />
+            <TableHeaderColumn style={style.cursor} />
           </TableRow>
         </TableHeader>
         <TableBody
@@ -85,18 +86,18 @@ export default class General extends Component {
           showRowHover={true}
         >
           <TableRow>
-            <TableRowColumn>Wayback</TableRowColumn>
-            <TableRowColumn>{waybackStatus}</TableRowColumn>
-            <TableRowColumn>2.3.1</TableRowColumn>
-            <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.wayBackFix}/></TableRowColumn>
-            <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.wayBackKill}/></TableRowColumn>
+            <TableRowColumn style={style.cursor}>Wayback</TableRowColumn>
+            <TableRowColumn style={style.cursor}>{waybackStatus}</TableRowColumn>
+            <TableRowColumn style={style.cursor}>2.3.1</TableRowColumn>
+            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.wayBackFix} /> </TableRowColumn>
+            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.wayBackKill} /></TableRowColumn>
           </TableRow>
           <TableRow>
-            <TableRowColumn>Heritrix</TableRowColumn>
-            <TableRowColumn>{heritrixStatus}</TableRowColumn>
+            <TableRowColumn style={style.cursor}>Heritrix</TableRowColumn>
+            <TableRowColumn style={style.cursor}>{heritrixStatus}</TableRowColumn>
             <TableRowColumn>3.3.0</TableRowColumn>
-            <TableRowColumn><RaisedButton label='Fix' onMouseDown={this.heritrixFix}/></TableRowColumn>
-            <TableRowColumn><RaisedButton label='Kill' onMouseDown={this.heritrixKill}/></TableRowColumn>
+            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.heritrixFix} /></TableRowColumn>
+            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.heritrixKill} /></TableRowColumn>
           </TableRow>
         </TableBody>
       </Table>

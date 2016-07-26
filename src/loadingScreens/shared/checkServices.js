@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { TableRow, TableRowColumn } from 'material-ui/Table'
 import autobind from 'autobind-decorator'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
