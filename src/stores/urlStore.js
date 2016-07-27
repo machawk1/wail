@@ -23,7 +23,7 @@ class urlStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
-    console.log('Got an event url store', event)
+    // console.log('Got an event url store', event)
     switch (event.type) {
       case EventTypes.EMPTY_URL: {
         this.urlMemento = { url: '', mementos: -1, inArchive: false }
@@ -33,13 +33,13 @@ class urlStore extends EventEmitter {
       case EventTypes.HAS_VAILD_URI: {
         if (this.urlMemento.url !== event.url) {
           this.urlMemento.url = event.url
-          console.log(`url updated ${event.url}`)
+          // console.log(`url updated ${event.url}`)
           this.emit('url-updated')
         }
         break
       }
       case EventTypes.GOT_MEMENTO_COUNT: {
-        console.log('Got Memento count in store', event)
+        // console.log('Got Memento count in store', event)
         this.urlMemento.mementos = event.mementos
         this.emit('memento-count-updated')
         GMessageDispatcher.dispatch({
@@ -68,9 +68,9 @@ class urlStore extends EventEmitter {
             .then(wasIn => {
               let message
               if (wasIn.inArchive) {
-                message = `The URL ${wasIn.uri} is in the archive`
+                message = `The URL ${wasIn.url} is in the archive`
               } else {
-                message = `The URL ${wasIn.uri} is not in the archive`
+                message = `The URL ${wasIn.url} is not in the archive`
               }
               GMessageDispatcher.dispatch({
                 type: EventTypes.QUEUE_MESSAGE,
@@ -78,7 +78,7 @@ class urlStore extends EventEmitter {
               })
             })
             .catch(err => {
-              console.log('There was an error when checking if the uri is in archive', err)
+              // console.log('There was an error when checking if the url is in archive', err)
             })
         }
         break

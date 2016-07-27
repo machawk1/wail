@@ -9,7 +9,7 @@ import { ipcRenderer, remote } from 'electron'
 import Routes from './routes'
 import { writeWaybackConf } from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
-require('pretty-error').start()
+// require('pretty-error').start()
 
 Promise.promisifyAll(fs)
 

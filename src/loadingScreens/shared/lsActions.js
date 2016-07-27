@@ -39,8 +39,8 @@ export function startHeritrix (logger) {
         hStart = settings.get('heritrixStart')
       }
       childProcess.exec(hStart, (err, stdout, stderr) => {
-        console.log(hStart)
-        console.log(err, stdout, stderr)
+        // console.log(hStart)
+        // console.log(err, stdout, stderr)
         if (err) {
           logger.error(util.format('Loading Actions %s, %s', `linux/osx launch heritrix ${stderr}`, err))
           return reject(err)
@@ -79,7 +79,7 @@ export function startWayback (logger) {
         wStart = settings.get('tomcatStart')
       }
       childProcess.exec(wStart, (err, stdout, stderr) => {
-        console.log(err, stdout, stderr)
+        // console.log(err, stdout, stderr)
         if (err) {
           logger.error(util.format('Loading Actions %s', `linux/osx launch wayback ${stderr}`, err))
           return reject(err)

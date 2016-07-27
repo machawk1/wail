@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import childProcess from 'child_process'
 import cheerio from 'cheerio'
 import fs from 'fs-extra'
@@ -76,7 +75,7 @@ export function heritrixAccesible (startOnDown = false) {
 function * sequentialActions (actions, jobId) {
   let index = 0
   let options = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-  options.uri = `${options.uri}${jobId}`
+  options.url = `${options.url}${jobId}`
   while (index < actions.length) {
     options.form.action = actions[ index++ ]
     yield options
@@ -262,6 +261,7 @@ export function makeHeritrixJobConf (urls, hops = 1, jobId) {
 }
 
 export function rescanJobDir () {
+  console.log(settings.get('heritrix.reScanJobs'))
   RequestDispatcher.dispatch({
     type: EventTypes.REQUEST_HERITRIX,
     rType: RequestTypes.RESCAN_JOB_DIR,
@@ -285,12 +285,16 @@ export function buildHeritrixJob (jobId) {
       buildHeritrixJob(jobId)
     })
   } else {
+    console.log(jobId)
+    console.log('build heritrix job',util.inspect(settings.get('heritrix.buildOptions'),{depth:null,colors:true}))
     let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
-    console.log('options uri before setting', options.uri)
-    options.uri = `${options.uri}${jobId}`
+    console.log('options url before setting', options.url)
+    options.url = `${options.url}${jobId}`
+    console.log(options)
+    console.log('options url before setting', options.url)
     // options.agent = httpsAgent
     console.log(`building heritrix job ${jobId}`)
-    console.log('Options after setting options.uri', options.uri)
+    console.log('Options after setting options.url', options.url)
     logger.info(util.format(logString, `building heritrix job ${jobId} with options ${options}`))
 
     RequestDispatcher.dispatch({
@@ -317,7 +321,7 @@ export function buildHeritrixJob (jobId) {
         } else {
           // POST failed...
           console.log('failur in building job', err)
-          logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
+          logger.error(util.format(logStringError, `building hereitrix job ${err.message} the uri ${options.url}`, err.stack))
         }
       }
     })
@@ -333,11 +337,11 @@ export function launchHeritrixJob (jobId) {
     })
   } else {
     let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
-    console.log('options uri before setting', options.uri)
+    console.log('options url before setting', options.url)
     console.log('the jobid', jobId)
-    options.uri = `${options.uri}${jobId}`
+    options.url = `${options.url}${jobId}`
     console.log(`launching heritrix job ${jobId}`)
-    console.log('Options after setting options.uri', options.uri)
+    console.log('Options after setting options.url', options.url)
 
     RequestDispatcher.dispatch({
       type: EventTypes.REQUEST_HERITRIX,
@@ -364,7 +368,7 @@ export function launchHeritrixJob (jobId) {
         } else {
           // POST failed...
           console.log('failur in launching job', err)
-          logger.error(util.format(logStringError, `launching hereitrix job ${err.message} the uri ${options.uri}`, err.stack))
+          logger.error(util.format(logStringError, `launching hereitrix job ${err.message} the uri ${options.url}`, err.stack))
         }
       }
     })
@@ -373,7 +377,7 @@ export function launchHeritrixJob (jobId) {
 
 export function teardownJob (jobId) {
   let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-  teardown.uri = `${teardown.uri}${jobId}`
+  teardown.url = `${teardown.url}${jobId}`
   teardown.form.action = 'teardown'
   RequestDispatcher.dispatch({
     type: EventTypes.REQUEST_HERITRIX,
@@ -402,11 +406,11 @@ export function forceCrawlFinish (jobId, cb) {
   }
 
   let terminate = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-  terminate.uri = `${terminate.uri}${jobId}`
+  terminate.url = `${terminate.url}${jobId}`
   terminate.form.action = 'terminate'
 
   let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-  teardown.uri = `${teardown.uri}${jobId}`
+  teardown.url = `${teardown.url}${jobId}`
   teardown.form.action = 'teardown'
 
   // optimization and call stack reasons
@@ -478,7 +482,7 @@ export function sendActionToHeritrix (act, jobId, cb) {
     // console.log(options)
   } else {
     options = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-    options.uri = `${options.uri}${jobId}`
+    options.url = `${options.url}${jobId}`
     options.form.action = act
   }
   // options.agent = httpsAgent
@@ -595,7 +599,7 @@ export function getHeritrixJobsState () {
           })
         } else {
           let fields = lastLine.collapseWhitespace().s.split(' ')
-          console.log(fields)
+          // console.log(fields)
           jobs[ item.jobId ].runs.push({
             ended: false,
             timestamp: moment(fields[ 0 ]),

@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import EventEmitter from 'eventemitter3'
 import { ipcRenderer, remote } from 'electron'
 import _ from 'lodash'
@@ -32,6 +31,8 @@ class crawlStore extends EventEmitter {
 
     ipcRenderer.on('crawljob-status-update', (event, crawlStatus) => this.crawlJobUpdate(crawlStatus))
     ipcRenderer.on('crawljob-configure-dialogue', (event, newCrawl) => {
+      // console.log('got crawljob configured')
+      // console.log(newCrawl)
       makeHeritrixJobConf(newCrawl.urls, newCrawl.depth)
       let urls
       if (Array.isArray(newCrawl.urls)) {
@@ -50,10 +51,10 @@ class crawlStore extends EventEmitter {
 
   @autobind
   intialJobStateLoad () {
-    console.log('initial load of crawl store')
+    // console.log('initial load of crawl store')
     getHeritrixJobsState()
       .then(status => {
-        console.log(status)
+        // console.log(status)
         if (status.count > 0) {
           EditorDispatcher.dispatch({
             type: EventTypes.STORE_HERITRIX_JOB_CONFS,
@@ -63,13 +64,13 @@ class crawlStore extends EventEmitter {
           status.jobs.forEach((jrb, idx) => {
             this.jobIndex.set(jrb.jobId, idx)
           })
-          console.log(status.jobs)
+          // console.log(status.jobs)
           this.crawlJobs = status.jobs
           this.emit('jobs-updated')
         }
       })
       .catch(error => {
-        console.log('There was an error in getting the configs', error)
+        // console.log('There was an error in getting the configs', error)
       })
   }
 
@@ -89,7 +90,7 @@ class crawlStore extends EventEmitter {
 
   @autobind
   crawlJobUpdate (jobs) {
-    console.log('building jobs from job monitor', jobs.jobs)
+    // console.log('building jobs from job monitor', jobs.jobs)
     let updated = []
     jobs.jobs.forEach(job => {
       let jobIdx = this.jobIndex.get(job.jobId)
@@ -128,16 +129,16 @@ class crawlStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
-    console.log('Got an event in crawl store', event)
+    // console.log('Got an event in crawl store', event)
 
     switch (event.type) {
       case EventTypes.BUILD_CRAWL_JOB: {
-        console.log('Build crawl job')
+        // console.log('Build crawl job')
         let urls
         switch (event.from) {
           case From.BASIC_ARCHIVE_NOW: {
             urls = UrlStore.getUrl()
-            console.log('crawlstore archiving the url is ', urls)
+            // console.log('crawlstore archiving the url is ', urls)
             makeHeritrixJobConf(urls, 1)
             break
           }
@@ -160,7 +161,7 @@ class crawlStore extends EventEmitter {
         break
       }
       case EventTypes.BUILT_CRAWL_CONF: {
-        console.log('Built crawl conf', event)
+        // console.log('Built crawl conf', event)
         this.createJob(event.id, event.path, event.urls)
         buildHeritrixJob(event.id)
         GMessageDispatcher.dispatch({
@@ -170,7 +171,7 @@ class crawlStore extends EventEmitter {
         break
       }
       case EventTypes.BUILT_CRAWL_JOB: {
-        console.log('Built crawl', event)
+        // console.log('Built crawl', event)
         // this.createJob(event.id, event.path)
         launchHeritrixJob(event.id)
         GMessageDispatcher.dispatch({
@@ -180,7 +181,7 @@ class crawlStore extends EventEmitter {
         break
       }
       case EventTypes.LAUNCHED_CRAWL_JOB: {
-        console.log('Launched crawl', event)
+        // console.log('Launched crawl', event)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built launched job: ${event.id}`

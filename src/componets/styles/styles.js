@@ -42,6 +42,15 @@ export default {
     zIndex: zIndex.appBar + 1,
     top: 0
   },
+  ncAppBar: {
+    display: 'flex',
+    boarderRadius: '0px',
+    position: 'fixed',
+    width: '100%',
+    // Needed to overlap the examples
+    zIndex: zIndex.appBar + 1,
+    top: 0
+  },
   navDrawer: {
     zIndex: zIndex.appBar - 1
   },

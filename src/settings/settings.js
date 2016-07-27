@@ -39,7 +39,7 @@ const managed = {
     web_ui: 'https://lorem:ipsum@localhost:8443',
     addJobDirectoryOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine',
+      url: 'https://localhost:8443/engine',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       timeout: 15000,
       form: {
@@ -57,7 +57,7 @@ const managed = {
     },
     sendActionOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine/job/',
+      url: 'https://localhost:8443/engine/job/',
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       timeout: 15000,
       form: {
@@ -74,7 +74,7 @@ const managed = {
     },
     killOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine',
+      url: 'https://localhost:8443/engine',
       timeout: 15000,
       body: 'im_sure=on&action=exit java process',
       headers: {
@@ -94,7 +94,7 @@ const managed = {
     },
     launchJobOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine/job/',
+      url: 'https://localhost:8443/engine/job/',
       timeout: 15000,
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
@@ -111,7 +111,7 @@ const managed = {
     },
     optionEngine: {
       method: 'GET',
-      uri: 'https://localhost:8443/engine',
+      url: 'https://localhost:8443/engine',
       timeout: 15000,
       auth: {
         username: 'lorem',
@@ -124,7 +124,7 @@ const managed = {
     },
     buildOptions: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine/job/',
+      url: 'https://localhost:8443/engine/job/',
       timeout: 15000,
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
@@ -141,7 +141,7 @@ const managed = {
     },
     reScanJobs: {
       method: 'POST',
-      uri: 'https://localhost:8443/engine',
+      url: 'https://localhost:8443/engine',
       timeout: 5000,
       headers: { 'content-type': 'application/x-www-form-urlencoded' },
       form: {
@@ -270,9 +270,9 @@ export default function configSettings (base, userData) {
   // writeSettings(base, settings)
 
   if (!settings.get('configured')) {
-    console.log('We are not configured')
+    // console.log('We are not configured')
     writeSettings(base, settings)
-    console.log(base, settings)
+    // console.log(base, settings)
   } else {
     if (settings.get('base') !== base) {
       /*
@@ -280,10 +280,10 @@ export default function configSettings (base, userData) {
        will not be correct since I use absolute paths.
        I did this to myself....
        */
-      console.log('We are not configured due to binary directory being moved')
+      // console.log('We are not configured due to binary directory being moved')
       writeSettings(base, settings)
     }
-    console.log('We are configured')
+    // console.log('We are configured')
   }
 
   return settings

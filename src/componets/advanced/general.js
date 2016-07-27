@@ -45,22 +45,22 @@ export default class General extends Component {
   }
 
   wayBackFix (event) {
-    console.log('Wayback fix')
+    // console.log('Wayback fix')
     startWayback()
   }
 
   wayBackKill (event) {
-    console.log('Wayback Kill')
+    // console.log('Wayback Kill')
     killWayback()
   }
 
   heritrixFix (event) {
-    console.log(' Generalv HeritrixTab fix')
+    // console.log(' Generalv HeritrixTab fix')
     launchHeritrix()
   }
 
   heritrixKill (event) {
-    console.log('General HeritrixTab Kill')
+    // console.log('General HeritrixTab Kill')
     killHeritrix()
   }
 

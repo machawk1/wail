@@ -17,7 +17,7 @@ export default class BasicTabButtons extends Component {
   @autobind
   onClickArchiveNow (event) {
     event.preventDefault()
-    console.log('archive now')
+    // console.log('archive now')
     GMessageDispatcher.dispatch({
       type: EventTypes.QUEUE_MESSAGE,
       message: 'Archiving Now!'
@@ -31,7 +31,7 @@ export default class BasicTabButtons extends Component {
 
   @autobind
   onClickCheckArchive (event) {
-    console.log('check archive')
+    // console.log('check archive')
     UrlDispatcher.dispatch({
       type: EventTypes.CHECK_URI_IN_ARCHIVE
     })
@@ -39,7 +39,7 @@ export default class BasicTabButtons extends Component {
 
   @autobind
   onClickViewArchive (event) {
-    console.log('view archive')
+    // console.log('view archive')
     UrlDispatcher.dispatch({
       type: EventTypes.VIEW_ARCHIVED_URI
     })

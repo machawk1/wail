@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+require('babel-polyfill')
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
@@ -68,7 +68,7 @@ class loadingStore extends EventEmitter {
 
   @autobind
   downloadJDK (response) {
-    console.log(response)
+    // console.log(response)
     settings.set('didFirstLoad', false)
     const app = require('electron').remote.app
     if (response === 1 || response === 666) {
@@ -79,27 +79,27 @@ class loadingStore extends EventEmitter {
       this.emit('progress')
       request.get(osx_java7DMG)
         .on('response', res => {
-          console.log(res.statusCode) // 200
-          console.log(res.headers[ 'content-type' ])
+          // console.log(res.statusCode) // 200
+          // console.log(res.headers[ 'content-type' ])
         })
         .on('error', err => {
-          console.error(err)
+          // console.error(err)
         })
         .pipe(fs.createWriteStream('/tmp/java7.dmg'))
         .on('close', () => {
-          console.log('done')
+          // console.log('done')
           this.pMessage = 'Starting the install of the JDK'
           this.emit('progress')
           cp.exec('hdiutil attach /tmp/java7.dmg', (err, stdout, stderr) => {
             if (err) {
-              console.error(err)
+              // console.error(err)
             } else {
-              console.log(stderr, stdout)
+              // console.log(stderr, stdout)
               cp.exec('open /Volumes/JDK\\ 7\\ Update\\ 79/JDK\\ 7\\ Update\\ 79.pkg', (err, stdout, stderr) => {
                 if (err) {
-                  console.error(err)
+                  // console.error(err)
                 } else {
-                  console.log(stderr, stdout)
+                  // console.log(stderr, stdout)
                   app.exit(1)
                 }
               })
@@ -113,7 +113,7 @@ class loadingStore extends EventEmitter {
   wb () {
     request.get(settings.get('wayback.uri_wayback'))
       .on('response', (res) => {
-        console.log(res)
+        // console.log(res)
         let message
         if (this.startedHeritrix) {
           message = 'Heritrix was started and Wayback is already started. Done'
@@ -126,7 +126,7 @@ class loadingStore extends EventEmitter {
         this.emit('service-check-done')
       })
       .on('error', (err) => {
-        console.error(err)
+        // console.error(err)
         startWayback(logger)
           .then(() => {
             let message
@@ -139,10 +139,10 @@ class loadingStore extends EventEmitter {
             this.serviceProgressDone = true
             this.emit('progress')
             this.emit('service-check-done')
-            console.log('it worked wayback')
+            // console.log('it worked wayback')
           })
           .catch((err) => {
-            console.log('it no work? why wayback', err)
+            // console.log('it no work? why wayback', err)
             let message
             if (this.startedHeritrix) {
               if (this.wasHeritrixStartError) {
@@ -167,25 +167,25 @@ class loadingStore extends EventEmitter {
   checkServices () {
     let haReq = request(settings.get('heritrix.optionEngine'))
     haReq.on('response', (res) => {
-      console.log(res)
+      // console.log(res)
       this.pMessage = 'Heritrix is already started. Checking Wayback'
       this.emit('progress')
       this.wb()
     })
     haReq.on('error', (err) => {
-      console.error(err)
+      // console.error(err)
       this.startedHeritrix = true
       this.pMessage = 'Heritrix is not started. Starting'
       this.emit('progress')
       startHeritrix(logger)
         .then(() => {
-          console.log('it worked heritrix!')
+          // console.log('it worked heritrix!')
           this.pMessage = 'Heritrix has been started. Checking Wayback'
           this.emit('progress')
           this.wb()
         })
         .catch((err) => {
-          console.log('it no work? why heritrix', err)
+          // console.log('it no work? why heritrix', err)
           this.wasHeritrixStartError = true
           this.pMessage = 'Starting Heritrix failed. Checking Wayback'
           this.emit('progress')

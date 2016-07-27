@@ -15,7 +15,7 @@ export default class Header extends Component {
   @autobind
   handleToggle () {
     if (!this.state.open) {
-      console.log('we are opening the drawer')
+      // console.log('we are opening the drawer')
     }
     this.setState({ open: !this.state.open })
   }

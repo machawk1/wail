@@ -29,7 +29,7 @@ class editorStore extends EventEmitter {
 
   @autobind
   getCode (which, jid) {
-    console.log(`Editor Store ${which} ${jid}`)
+    // console.log(`Editor Store ${which} ${jid}`)
     switch (which) {
       case WhichCode.WBC:
         return this.code.get(WhichCode.WBC)
@@ -45,7 +45,7 @@ class editorStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
-    console.log('Got an event in editor store', event)
+    // console.log('Got an event in editor store', event)
     switch (event.type) {
       case EventTypes.FETCH_CODE:
         this.loadWaybackConf()
@@ -69,9 +69,9 @@ class editorStore extends EventEmitter {
         }
         EditorActions.saveCode(path, event.code, error => {
           if (error) {
-            console.log(`Error saving code ${error}`, event)
+            // console.log(`Error saving code ${error}`, event)
           } else {
-            console.log('Save success', event)
+            // console.log('Save success', event)
           }
         })
         break

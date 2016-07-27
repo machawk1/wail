@@ -64,7 +64,7 @@ export default class HeritrixJobItem extends Component {
 
   @autobind
   start (event) {
-    console.log('stat')
+    // console.log('stat')
     let runs = this.state.runs
     if (runs.length > 0) {
       if (runs[ 0 ].ended) {
@@ -98,38 +98,38 @@ export default class HeritrixJobItem extends Component {
 
   @autobind
   deleteJob (event) {
-    console.log('Deleting Job')
+    // console.log('Deleting Job')
     let runs = this.state.runs
     let jPath = `${settings.get('heritrixJob')}${path.sep}${this.props.jobId}`
     let cb = () => {
       if (process.platform === 'win32') {
         cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
           if (error) {
-            console.log(stderr)
-            console.log(error)
+            // console.log(stderr)
+            // console.log(error)
           } else {
             rescanJobDir()
           }
         })
       } else {
         fs.remove(jPath, error => {
-          if (error) return console.error(error)
+          if (error) return // console.error(error)
           rescanJobDir()
         })
       }
     }
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {
-        console.log('We have runs and the running one has not ended')
+        // console.log('We have runs and the running one has not ended')
         forceCrawlFinish(this.props.jobId, () => {
           deleteHeritrixJob(this.props.jobId, cb)
         })
       } else {
-        console.log('We have runs and the run has ended')
+        // console.log('We have runs and the run has ended')
         deleteHeritrixJob(this.props.jobId, cb)
       }
     } else {
-      console.log('We have no runs delete ok')
+      // console.log('We have no runs delete ok')
       deleteHeritrixJob(this.props.jobId, cb)
     }
 

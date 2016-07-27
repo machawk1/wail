@@ -4,7 +4,7 @@ import autobind from 'autobind-decorator'
 import { Row, Column } from 'react-cellblock'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
-import validator from 'validator'
+import isURL from 'validator/lib/isURL'
 import UrlStore from '../../stores/urlStore'
 import * as aua from '../../actions/archive-url-actions'
 import styles from '../styles/styles'
@@ -17,11 +17,9 @@ export default class ArchiveUrl extends Component {
 
   @autobind
   handleChange (e) {
-    console.log('setState')
-    console.log(e.target.value)
     let value = e.target.value
     let err = styles.underlineStyleError
-    if (validator.isURL(value) || S(value).isEmpty()) {
+    if (isURL(value) || S(value).isEmpty()) {
       err = styles.underlineStyle
     }
     this.setState({ uri: value, underlineStyle: err })
@@ -29,18 +27,19 @@ export default class ArchiveUrl extends Component {
 
   @autobind
   attemptMementoGet () {
-    if (validator.isURL(this.state.uri)) {
+    console.log(this.state.uri)
+    if (isURL(this.state.uri)) {
       aua.getMementos(this.state.uri)
     } else {
-      console.log('This is not a valid uri', this.state.uri)
+      console.log('This is not a valid url', this.state.uri)
     }
   }
 
   @autobind
   focusLost (event) {
-    console.log('checking uri for archiving', this.state.uri, event.target.value)
-    if (validator.isURL(event.target.value)) {
-      console.log('its valid')
+    // console.log('checking url for archiving', this.state.url, event.target.value)
+    if (isURL(event.target.value)) {
+      // console.log('its valid')
       aua.urlUpdated(event.target.value)
     } else {
       if (S(event.target.value).isEmpty()) {
@@ -58,7 +57,7 @@ export default class ArchiveUrl extends Component {
             underlineStyle={this.state.underlineStyle}
             hintText="http://matkelly.com/wail"
             id="archive-url-input"
-            value={this.state.uri}
+            value={this.state.url}
             onBlur={this.focusLost}
             onChange={this.handleChange}
             style={styles.urlInput}

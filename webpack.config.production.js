@@ -35,12 +35,12 @@ const config = {
         loader: 'babel-loader',
         query: {
           presets: [ 'es2015', 'stage-0', 'node6', 'react' ],
-          plugins: [ 'transform-runtime', "add-module-exports",
-            "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
+          plugins: [ 'transform-runtime', 'add-module-exports',
+            'babel-plugin-transform-decorators-legacy', 'transform-class-properties', 'react-html-attrs',
           ],
         },
       },
-      { test: /\.css$/, loader: "style!css" },
+      { test: /\.css$/, loader: 'style!css' },
       {
         test: /\.scss$/,
         loaders: [ 'style!css!less|scss', 'style-loader',

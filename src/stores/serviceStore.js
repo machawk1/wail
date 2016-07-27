@@ -16,11 +16,11 @@ const logString = 'service store %s'
 // const serviceDialogeTemplate = '%s %s down'
 
 function both () {
-  console.log('Both')
+  // console.log('Both')
   startWayback(() => {
-    console.log('started wayback')
+    // console.log('started wayback')
     launchHeritrix()
-    console.log('started heritrix')
+    // console.log('started heritrix')
   })
 }
 
@@ -49,7 +49,7 @@ class serviceStore extends EventEmitter {
 
   @autobind
   updateStatues (update) {
-    console.log('service updated')
+    // console.log('service updated')
     this.serviceStatus.heritrix = update.heritrix
     this.serviceStatus.wayback = update.wayback
     let logMessage = ''
@@ -127,12 +127,12 @@ class serviceStore extends EventEmitter {
   handleEvent (event) {
     switch (event.type) {
       case EventTypes.HERITRIX_STATUS_UPDATE:
-        console.log('Heritrix status update serivice store', event, this.serviceStatus)
+        // console.log('Heritrix status update serivice store', event, this.serviceStatus)
         this.serviceStatus.heritrix = event.status
         this.emit('heritrix-status-update')
         break
       case EventTypes.WAYBACK_STATUS_UPDATE:
-        console.log('Wayback status update serivice store', event, this.serviceStatus)
+        // console.log('Wayback status update serivice store', event, this.serviceStatus)
         this.serviceStatus.wayback = event.status
         this.emit('wayback-status-update')
         break

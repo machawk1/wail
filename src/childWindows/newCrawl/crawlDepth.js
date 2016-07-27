@@ -2,14 +2,15 @@ import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import TextField from 'material-ui/TextField'
+import RaisedButton from 'material-ui/RaisedButton'
 import { Row, Column } from 'react-cellblock'
 import style from '../../componets/styles/styles'
+import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
+import wailConstants from '../../constants/wail-constants'
+
+const EventTypes = wailConstants.EventTypes
 
 export default class CrawlDepth extends Component {
-  static propTypes = {
-    depthAdded: PropTypes.func.isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
     this.state = {
@@ -26,13 +27,33 @@ export default class CrawlDepth extends Component {
     if (event.keyCode === 13) {
       if (this.depthCheck.test(depth)) {
         console.log('We have a valid depth!')
-        this.props.depthAdded(parseInt(depth))
+        CrawlUrlsDispatcher.dispatch({
+          type: EventTypes.NEW_CRAWL_ADD_DEPTH,
+          depth: parseInt(depth)
+        })
         this.setState({ depth: depth, text: '' })
       } else {
         this.setState({
           open: true
         })
       }
+    }
+  }
+
+  @autobind
+  addDepth (e) {
+    let depth = this.state.text
+    if (this.depthCheck.test(depth)) {
+      console.log('We have a valid depth!')
+      CrawlUrlsDispatcher.dispatch({
+        type: EventTypes.NEW_CRAWL_ADD_DEPTH,
+        depth: parseInt(depth)
+      })
+      this.setState({ depth: depth, text: '' })
+    } else {
+      this.setState({
+        open: true
+      })
     }
   }
 
@@ -50,10 +71,10 @@ export default class CrawlDepth extends Component {
   }
 
   render () {
+    //{/*<p style={style.cursor}>{this.state.depth}</p>*/}
     return (
-      <div>
         <Row>
-          <Column width="1/2">
+          <Column width="3/4">
             <TextField
               floatingLabelText="Enter Crawl Depth"
               hintText="1"
@@ -63,8 +84,8 @@ export default class CrawlDepth extends Component {
               onChange={this.handleChange}
             />
           </Column>
-          <Column width="1/2">
-            <p style={style.cursor}>{this.state.depth}</p>
+          <Column width="1/4">
+            <RaisedButton label="Add Depth" style={style.button} onMouseDown={this.addDepth}/>
           </Column>
           <Snackbar
             open={this.state.open}
@@ -73,7 +94,6 @@ export default class CrawlDepth extends Component {
             onRequestClose={this.handleRequestClose}
           />
         </Row>
-      </div>
     )
   }
 }

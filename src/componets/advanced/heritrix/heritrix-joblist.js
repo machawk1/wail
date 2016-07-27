@@ -17,7 +17,7 @@ export default class HeritrixJobList extends Component {
 
   @autobind
   getJobs () {
-    console.log('Get jobs crawlstore')
+    // console.log('Get jobs crawlstore')
     this.setState({ jobs: CrawlStore.jobs() })
   }
 
@@ -30,7 +30,7 @@ export default class HeritrixJobList extends Component {
   }
 
   render () {
-    console.log('rendering the joblist', this.state)
+    // console.log('rendering the joblist', this.state)
     let { jobs } = this.state
     let JobItems
     if (jobs.length > 0) {

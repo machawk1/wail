@@ -149,7 +149,7 @@ fs.readFile('A:\\wail-electron\\bundledApps\\heritrix-3.3.0\\jobs\\1469503104218
 //    let index = 0
 //    let options = {
 //       method: 'POST',
-//       uri: `https://localhost:8443/engine/job/${12213}`,
+//       url: `https://localhost:8443/engine/job/${12213}`,
 //       headers: {
 //          Accept: "application/xml",
 //          /* 'Content-type': 'application/x-www-form-urlencoded' */ // Set automatically
@@ -286,7 +286,7 @@ fs.readFile('A:\\wail-electron\\bundledApps\\heritrix-3.3.0\\jobs\\1469503104218
 // // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 // //
 // // let options = {
-// //    uri: "https://localhost:8443/engine",
+// //    url: "https://localhost:8443/engine",
 // //    'auth': {
 // //       'username': 'lorem',
 // //       'password': 'ipsum',

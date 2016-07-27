@@ -654,7 +654,7 @@
         <!-- <property name="crawlLogPath" value="crawl.log" /> -->
         <!-- <property name="alertsLogPath" value="alerts.log" /> -->
         <!-- <property name="progressLogPath" value="progress-statistics.log" /> -->
-        <!-- <property name="uriErrorsLogPath" value="uri-errors.log" /> -->
+        <!-- <property name="uriErrorsLogPath" value="url-errors.log" /> -->
         <!-- <property name="runtimeErrorsLogPath" value="runtime-errors.log" /> -->
         <!-- <property name="nonfatalErrorsLogPath" value="nonfatal-errors.log" /> -->
         <!-- <property name="logExtraInfo" value="false" /> -->

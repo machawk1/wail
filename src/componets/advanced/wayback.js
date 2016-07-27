@@ -22,7 +22,7 @@ export default class WayBackTab extends Component {
 
   @autobind
   onClickViewWayback (event) {
-    console.log('View Wayback')
+    // console.log('View Wayback')
     shell.openExternal(settings.get('wayback.uri_wayback'))
   }
 

@@ -6,15 +6,15 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    accessibility: ['babel-polyfill','./src/background/accessibility'],
-    indexer: ['babel-polyfill','./src/background/indexer'],
-    jobs: ['babel-polyfill','./src/background/jobs'],
-    newCrawl: ['babel-polyfill','./src/childWindows/newCrawl/newCrawl'],
-    requestD: ['babel-polyfill','./src/background/requestDaemon'],
-    settingsW: ['babel-polyfill','./src/childWindows/settings/settingsW'],
-    wail: ['babel-polyfill','./src/wail'],
-    firstLoad: ['babel-polyfill','./src/loadingScreens/firstTime/loadingScreen'],
-    notFirstLoad: ['babel-polyfill','./src/loadingScreens/notFirstTime/notFirstLoad']
+    accessibility: './src/background/accessibility',
+    indexer: './src/background/indexer',
+    jobs: './src/background/jobs',
+    newCrawl: './src/childWindows/newCrawl/newCrawl',
+    requestD: './src/background/requestDaemon',
+    settingsW: './src/childWindows/settings/settingsW',
+    wail: './src/wail',
+    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },
   module: {
     noParse: noParseRe,
@@ -54,10 +54,10 @@ module.exports = {
     ]
 
   },
-  resolve: {
-    modulesDirectories: ['node_modules'],
-    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx', '.json'],
-  },
+  // resolve: {
+  //   modulesDirectories: [ 'node_modules' ],
+  //   extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
+  // },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({

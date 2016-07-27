@@ -46,7 +46,7 @@ export default class HeritrixJobInfoRow extends Component {
       let discovered = job.discovered || ''
       let queued = job.queued || ''
       let downloaded = job.downloaded || ''
-      console.log('the job being displayed', job)
+      // console.log('the job being displayed', job)
       return (
         <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>

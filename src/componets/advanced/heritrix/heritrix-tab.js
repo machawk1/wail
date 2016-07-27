@@ -5,7 +5,7 @@ import { Grid, Row } from 'react-cellblock'
 import autobind from 'autobind-decorator'
 import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
-
+import {rescanJobDir} from '../../../actions/heritrix-actions'
 const styles = {
   button: {
     margin: 12
@@ -18,7 +18,7 @@ export default class HeritrixTab extends Component {
 
   @autobind
   onClickNewCrawl (event) {
-    console.log('New Crawl')
+    // console.log('New Crawl')
     ipcRenderer.send('open-newCrawl-window')
   }
 
@@ -35,7 +35,7 @@ export default class HeritrixTab extends Component {
         </Row>
         <Row>
           <Toolbar>
-            <ToolbarGroup >
+            <ToolbarGroup firstChild={true}>
               <RaisedButton
                 label='Configure New Crawl'
                 labelPosition='before'
@@ -43,7 +43,15 @@ export default class HeritrixTab extends Component {
                 onMouseDown={this.onClickNewCrawl}
               />
             </ToolbarGroup>
-            <ToolbarGroup>
+            <ToolbarGroup >
+              <RaisedButton
+                label='Ensure Jobs are Submitted'
+                labelPosition='before'
+                style={styles.button}
+                onMouseDown={() => rescanJobDir()}
+              />
+            </ToolbarGroup>
+            <ToolbarGroup lastChild={true}>
               <RaisedButton
                 label='Launch Web UI'
                 labelPosition='before'

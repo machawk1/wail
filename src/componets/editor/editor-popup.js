@@ -36,7 +36,7 @@ export default class EditorPopup extends Component {
   constructor (props, context) {
     super(props, context)
     let loadCode = this.props.codeToLoad
-    console.log(loadCode)
+    // console.log(loadCode)
 
     this.state = {
       open: false,
@@ -52,7 +52,7 @@ export default class EditorPopup extends Component {
   }
 
   storeUpdate () {
-    console.log('code add')
+    // console.log('code add')
     this.setState({ codeText: EditorStore.getCode(this.props.codeToLoad) })
   }
 
@@ -81,7 +81,7 @@ export default class EditorPopup extends Component {
   }
 
   handleCodeChange (codeText) {
-    console.log('Code changed')
+    // console.log('Code changed')
     this.setState({ codeText })
   }
 
@@ -96,7 +96,7 @@ export default class EditorPopup extends Component {
       savePath = this.props.codeToLoad.codePath
       which = this.props.codeToLoad.which
     }
-    console.log(savePath)
+    // console.log(savePath)
     EditorDispatcher.dispatch({
       type: wc.EventTypes.SAVE_CODE,
       which: which,
@@ -190,7 +190,7 @@ export default class EditorPopup extends Component {
         onTouchTap={this.saveCode}
       />,
     ]
-    console.log(`Use Buttons? ${this.props.useButton}`)
+    // console.log(`Use Buttons? ${this.props.useButton}`)
     const editorElement = this.props.useButton ? this.editorWithButton(actions) : this.editorNoButton(actions)
     return (editorElement)
   }

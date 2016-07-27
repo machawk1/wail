@@ -43,6 +43,7 @@ const ignore = [
   '^/build-binary-old.js$',
   '^/bundledApps/heritrix-3.2.0($|/)',
   '^/bundledApps/heritrix-3.3.0/heritrix_out.log$',
+  '^/bundledApps/heritrix-3.3.0/adhoc.keystore$',
   '^/bundledApps/heritrix-3.3.0/heritrix.pid$',
   '^/bundledApps/heritrix-3.3.0/jobs/',
   '^/bundledApps/memgator($|/)',

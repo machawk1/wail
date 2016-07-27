@@ -1,8 +1,9 @@
-import 'babel-polyfill'
-import { app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray } from 'electron'
+require('babel-polyfill')
+import { app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray, clipboard } from 'electron'
 import Logger from './logger/logger'
-import menuTemplate from './menu/mainMenu'
+import menuTemplate, { screenShot, screenShotPDF } from './menu/mainMenu'
 import path from 'path'
+import util from 'util'
 import configSettings from './settings/settings'
 
 const windows = {
@@ -47,11 +48,12 @@ const control = {
 }
 
 // let shouldQuit = false
-
 app.commandLine.appendSwitch('js-flags', '--expose_gc')
 
 // do not lower the priority of our invisible background windows
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
+app.commandLine.appendSwitch('allow-http-screen-capture')
 
 function contextMenu (event, props) {
   let editFlags = props.editFlags
@@ -60,7 +62,9 @@ function contextMenu (event, props) {
   if (editFlags.canCut && hasText) {
     menuTemp.push({
       label: 'Cut',
-      role: 'cut',
+      click (item, window) {
+        window.webContents.cut()
+      },
       enabled: true,
       visible: props.isEditable
     })
@@ -74,13 +78,15 @@ function contextMenu (event, props) {
     }
     menuTemp.push({
       label: 'Copy',
-      role: 'copy',
+      click (item, window) {
+        window.webContents.copy()
+      },
       enabled: true,
       visible: props.isEditable
     })
   }
 
-  if (editFlags.canPaste && hasText) {
+  if (editFlags.canPaste) {
     if (menuTemp.length > 0) {
       menuTemp.push({
         type: 'separator'
@@ -88,13 +94,23 @@ function contextMenu (event, props) {
     }
     menuTemp.push({
       label: 'Paste',
-      role: 'paste',
+      click (item, window) {
+        window.webContents.paste()
+      },
       enabled: true,
-      visible: props.isEditable
+      visible: true
+    })
+    menuTemp.push({
+      label: 'Paste and Match Style',
+      click (item, window) {
+        window.webContents.pasteAndMatchStyle()
+      },
+      enabled: true,
+      visible: true
     })
   }
 
-  if (editFlags.canSelectAll && hasText) {
+  if (editFlags.canSelectAll) {
     if (menuTemp.length > 0) {
       menuTemp.push({
         type: 'separator'
@@ -102,9 +118,38 @@ function contextMenu (event, props) {
     }
     menuTemp.push({
       label: 'Select All',
-      role: 'selectall',
-      enabled: true,
-      visible: props.isEditable
+      click(item, window) {
+        window.webContents.selectAll()
+      },
+      enabled: true
+    })
+  }
+  if (editFlags.canUndo) {
+    if (menuTemp.length > 0) {
+      menuTemp.push({
+        type: 'separator'
+      })
+    }
+    menuTemp.push({
+      label: 'Undo',
+      click (item, window) {
+        window.webContents.undo()
+      },
+      enabled: true
+    })
+  }
+  if (editFlags.canRedo) {
+    if (menuTemp.length > 0) {
+      menuTemp.push({
+        type: 'separator'
+      })
+    }
+    menuTemp.push({
+      label: 'Undo',
+      click (item, window) {
+        window.webContents.redo()
+      },
+      enabled: true
     })
   }
   return Menu.buildFromTemplate(menuTemp)
@@ -113,6 +158,8 @@ function contextMenu (event, props) {
 function showNewCrawlWindow (parent) {
   let config = {
     parent: parent,
+    width: 800,
+    height: 470,
     modal: true,
     show: false,
     closable: false,
@@ -151,6 +198,7 @@ function showSettingsWindow (parent) {
     windows.settingsWindow.webContents.toggleDevTools()
   })
   windows.settingsWindow.webContents.on('context-menu', (e, props) => {
+    e.preventDefault()
     if (props.isEditable) {
       contextMenu(e, props).popup(windows.settingsWindow)
     }
@@ -164,59 +212,59 @@ function showSettingsWindow (parent) {
 function setUpIPC () {
   if (control.notDebugUI) {
     ipcMain.on('got-it', (event, payload) => {
-      console.log(payload)
+      // console.log(payload)
     })
 
     ipcMain.on('start-service-monitoring', (event, payload) => {
-      console.log('Got start-service-monitoring')
+      // console.log('Got start-service-monitoring')
       windows.accessibilityWindow.webContents.send('start-service-monitoring', payload)
     })
 
     ipcMain.on('start-crawljob-monitoring', (event, payload) => {
-      console.log('got start-crawljob-monitoring')
+      // console.log('got start-crawljob-monitoring')
       windows.jobWindow.webContents.send('start-crawljob-monitoring', payload)
     })
 
     ipcMain.on('start-index-indexing', (event, payload) => {
-      console.log('got start-index-indexing')
+      // console.log('got start-index-indexing')
       windows.indexWindow.webContents.send('start-index-indexing', payload)
     })
 
     ipcMain.on('service-status-update', (event, payload) => {
-      console.log('got test-status-update')
+      // console.log('got test-status-update')
       windows.mainWindow.webContents.send('service-status-update', payload)
     })
 
     ipcMain.on('crawljob-status-update', (event, payload) => {
-      console.log('got crawljob-status-update')
+      // console.log('got crawljob-status-update')
       windows.mainWindow.webContents.send('crawljob-status-update', payload)
     })
   }
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
-    console.log('got open-newCrawl-window')
+    // console.log('got open-newCrawl-window')
     showNewCrawlWindow(windows.mainWindow)
   })
 
   ipcMain.on('open-settings-window', (event, payload) => {
-    console.log('got open-settings-window')
+    // console.log('got open-settings-window')
     showSettingsWindow(windows.mainWindow)
   })
 
   ipcMain.on('close-newCrawl-window', (event, payload) => {
-    console.log('got close-newCrawl-window')
+    // console.log('got close-newCrawl-window')
     if (windows.newCrawlWindow != null) {
-      console.log('newCrawlWindow is not null')
+      // console.log('newCrawlWindow is not null')
       windows.newCrawlWindow.destroy()
     }
   })
 
   ipcMain.on('close-settings-window', (event, payload) => {
-    console.log('got close-settings-window')
+    // console.log('got close-settings-window')
     if (windows.settingsWindow != null) {
-      console.log('newCrawlWindow is not null')
+      // console.log('newCrawlWindow is not null')
       if (payload) {
-        console.log('It sent us ', payload)
+        // console.log('It sent us ', payload)
       }
       windows.settingsWindow.destroy()
     }
@@ -292,7 +340,7 @@ function setUp () {
     control.w = 800
     control.h = 300
   } else if (process.platform === 'win32') {
-    console.log('windows')
+    // console.log('windows')
     control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
     control.w = 800
     control.h = 337
@@ -441,11 +489,10 @@ function createWindow () {
     try {
       installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ])
     } catch (e) {
-      console.error(e)
+      // console.error(e)
     }
   }
-  // Create the browser window.
-  windows.mainWindow = new BrowserWindow({
+  let windowConfig = {
     width: control.w,
     minWidth: control.w,
     maxWidth: control.w,
@@ -457,14 +504,16 @@ function createWindow () {
     maximizable: false,
     show: false,
     icon: control.iconp
-  })
+  }
+  // Create the browser window.
+  windows.mainWindow = new BrowserWindow(windowConfig)
 
-  console.log(windows.mainWindow.getSize())
+  // console.log(windows.mainWindow.getSize())
 
   // and load the index.html of the app.
-  console.log(`activating the main window did close? ${control.didClose}`)
+  // console.log(`activating the main window did close? ${control.didClose}`)
 
-  let loadUrl
+  var loadUrl
   if (control.loading && control.firstLoad) {
     loadUrl = windows.firstLoadWindowURL
   } else {
@@ -479,19 +528,19 @@ function createWindow () {
   windows.mainWindow.loadURL(loadUrl)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
-    console.log('did-finish-load man win')
-    console.log(windows.mainWindow.getSize())
+    // console.log('did-finish-load man win')
+    // console.log(windows.mainWindow.getSize())
     windows.mainWindow.show()
     openDebug(control.openBackGroundWindows)
     windows.mainWindow.focus()
   })
 
   windows.mainWindow.on('unresponsive', () => {
-    console.log('we are unresponsive')
+    // console.log('we are unresponsive')
   })
 
   windows.mainWindow.webContents.on('crashed', () => {
-    console.log('we crashed')
+    // console.log('we crashed')
     app.quit()
   })
 
@@ -502,12 +551,14 @@ function createWindow () {
 
   // Emitted when the window is closed.
   windows.mainWindow.on('closed', () => {
-    console.log('closed')
+    // console.log('closed')
     control.didClose = true
     cleanUp()
   })
 
   windows.mainWindow.webContents.on('context-menu', (e, props) => {
+    e.preventDefault()
+    // console.log(util.inspect(props, { depth: null, colors: true }))
     if (props.isEditable) {
       contextMenu(e, props).popup(windows.mainWindow)
     }
@@ -563,7 +614,7 @@ app.on('window-all-closed', () => {
 })
 
 app.on('before-quit', () => {
-  console.log('before-quit')
+  // console.log('before-quit')
   if (control.notDebugUI) {
     cleanUp()
   }

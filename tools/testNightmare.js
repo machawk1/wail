@@ -18,7 +18,7 @@ Promise.promisifyAll(fs)
 //
 // let options = {
 //   method: "POST",
-//   uri: "https://localhost:8443/engine/job/1468042466879",
+//   url: "https://localhost:8443/engine/job/1468042466879",
 //   form: {
 //     action: "launch"
 //   },

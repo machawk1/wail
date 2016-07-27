@@ -43,10 +43,10 @@ export default class CheckJava extends Component {
       let jp = S(javaPath)
       var type
       if (jp.contains('1.7')) {
-        console.log('1.7')
+        // console.log('1.7')
         this.setState({ checkedJava: true, haveCorrectJava: true, progMessage: 'Java 1.7 detected' })
       } else {
-        console.log('not 1.7 or not named 1.7')
+        // console.log('not 1.7 or not named 1.7')
 
         if (process.platform === 'darwin') {
           this.setState({
@@ -90,14 +90,14 @@ export default class CheckJava extends Component {
         let jvmTest = jvmRegex.exec(jvm)
         if (jvmTest) {
           if (S(jvmTest.capture('jvm')).contains('1.7')) {
-            console.log('you have the correct jvm')
+            // console.log('you have the correct jvm')
             haveCorrectJava = true
             break
           }
         }
-        console.log(jvmTest.capture('jvm'))
+        // console.log(jvmTest.capture('jvm'))
       }
-      console.log('carry on')
+      // console.log('carry on')
       if (haveCorrectJava) {
         this.setState({ haveCorrectJava, checkedJava, progMessage: 'Java 1.7 detected' })
         type = wc.Loading.JAVA_CHECK_DONE
@@ -127,15 +127,15 @@ export default class CheckJava extends Component {
       if (jvTest) {
         let jv = jvTest.capture('jv')
         if (S(jv).contains('1.7')) {
-          console.log('Java 1.7 detected')
+          // console.log('Java 1.7 detected')
           haveCorrectJava = true
           progMessage = 'Java 1.7 detected'
         } else {
-          console.log('Java detected.')
+          // console.log('Java detected.')
           progMessage = 'Java detected.'
         }
       } else {
-        console.log('Java was not detected. But it is ok ;)')
+        // console.log('Java was not detected. But it is ok ;)')
         progMessage = 'Java was not detected. But that is ok ;)'
       }
       this.setState({ haveCorrectJava, checkedJava, progMessage })

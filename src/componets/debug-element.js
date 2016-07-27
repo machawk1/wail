@@ -61,12 +61,12 @@ export default class Debug extends Component {
   }
 
   launchHeritrix () {
-    console.log('Launch HeritrixTab')
+    // console.log('Launch HeritrixTab')
     Heritrix.launchHeritrix()
   }
 
   killHeritrix () {
-    console.log('Kill HeritrixTab')
+    // console.log('Kill HeritrixTab')
     Heritrix.killHeritrix()
   }
 
