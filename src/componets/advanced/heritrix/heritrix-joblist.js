@@ -41,11 +41,11 @@ export default class HeritrixJobList extends Component {
         let job = jobs[ i ]
         JobItems.push(<HeritrixJobItem key={job.jobId} {...job} />)
         if (i < stopAddingDividers) {
-          JobItems.push(<Divider key={`${job.jobId}-${i}`} />)
+          JobItems.push(<Divider key={`${job.jobId}-${i}`}/>)
         }
       }
     } else {
-      JobItems = <ListItem primaryText='No Jobs To Display' />
+      JobItems = <ListItem primaryText='No Jobs To Display'/>
     }
     return (
       <List style={styles.heritrixJobList}>

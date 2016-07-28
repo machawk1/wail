@@ -6,15 +6,15 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    accessibility: './src/background/accessibility',
-    indexer: './src/background/indexer',
-    jobs: './src/background/jobs',
-    newCrawl: './src/childWindows/newCrawl/newCrawl',
-    requestD: './src/background/requestDaemon',
+    // accessibility: './src/background/accessibility',
+    // indexer: './src/background/indexer',
+    // jobs: './src/background/jobs',
+    // newCrawl: './src/childWindows/newCrawl/newCrawl',
+    // requestD: './src/background/requestDaemon',
     settingsW: './src/childWindows/settings/settingsW',
     wail: './src/wail',
-    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
+    // firstLoad: './src/loadingScreens/firstTime/loadingScreen',
+    // notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },
   module: {
     noParse: noParseRe,

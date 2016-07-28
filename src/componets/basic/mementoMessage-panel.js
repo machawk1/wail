@@ -11,7 +11,7 @@ export default class MementoMessagePanel extends Component {
     let mc = UrlStore.getMementoCount()
     let tState
     this.default = false
-    if (S(UrlStore.getUrl()).isEmpty()) {
+    if (UrlStore.getUrl().isEmpty()) {
       this.default = true
       tState = {
         mementoCount: -1
@@ -31,7 +31,7 @@ export default class MementoMessagePanel extends Component {
 
   @autobind
   urlUpdated () {
-    this.default = S(UrlStore.getUrl()).isEmpty()
+    this.default = UrlStore.getUrl().isEmpty()
     this.setState({ mementoCount: -1 })
   }
 
@@ -55,7 +55,7 @@ export default class MementoMessagePanel extends Component {
       if (this.state.mementoCount === -1) {
         message = <FetchingMementoMessage />
       } else {
-        message = <MementoCountMessage count={this.state.mementoCount} />
+        message = <MementoCountMessage count={this.state.mementoCount}/>
       }
     }
 

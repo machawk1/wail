@@ -7,7 +7,6 @@ import Layout from './layout'
 import EnterCrawlUrls from './enterCrawlUrls'
 import CrawlDepth from './crawlDepth'
 import CrawlUrlList from './crawlUrlList'
-import $ from 'cheerio'
 
 // let {Menu} = remote
 

@@ -17,7 +17,6 @@ export default class CrawlUrlItem extends Component {
     num: PropTypes.number.isRequired,
   }
 
-
   @autobind
   editCrawlUrl (event) {
     CrawlUrlsDispatcher.dispatch({
@@ -28,7 +27,7 @@ export default class CrawlUrlItem extends Component {
   }
 
   @autobind
-  deleteMe(e) {
+  deleteMe (e) {
     CrawlUrlsDispatcher.dispatch({
       type: EventTypes.NEW_CRAWL_REMOVE_URL,
       url: this.props.url,

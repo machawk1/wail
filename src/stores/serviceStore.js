@@ -27,7 +27,7 @@ function both () {
 const wayback = () => startWayback()
 const heritrix = () => launchHeritrix()
 
-class serviceStore extends EventEmitter {
+class ServiceStore_ extends EventEmitter {
   constructor () {
     super()
     this.serviceStatus = {
@@ -140,7 +140,10 @@ class serviceStore extends EventEmitter {
   }
 }
 
-const ServiceStore = new serviceStore()
+const ServiceStore = new ServiceStore_()
+
+// noinspection JSAnnotator
+window.ServiceStore = ServiceStore
 
 ServiceDispatcher.register(ServiceStore.handleEvent)
 

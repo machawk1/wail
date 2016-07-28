@@ -193,14 +193,14 @@ function getHeritrixJobsState () {
         // console.log(data)
         let lines = S(data).lines()
         let lastLine = S(lines[ lines.length - 1 ])
-        if(lastLine.isEmpty()) {
-          lastLine = S(lines[lines.length - 2])
+        if (lastLine.isEmpty()) {
+          lastLine = S(lines[ lines.length - 2 ])
         }
         if (jobEndStatus.test(lastLine.s)) {
           // jobs[item.jobId].progress.ended = true
           let nextToLast = S(lines[ lines.length - 2 ])
-          if(nextToLast.isEmpty()) {
-            nextToLast = S(lines[lines.length - 3])
+          if (nextToLast.isEmpty()) {
+            nextToLast = S(lines[ lines.length - 3 ])
           }
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
           let tsm = moment(nextLastfields[ 0 ])

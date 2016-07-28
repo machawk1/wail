@@ -73,27 +73,27 @@ export default class CrawlDepth extends Component {
   render () {
     //{/*<p style={style.cursor}>{this.state.depth}</p>*/}
     return (
-        <Row>
-          <Column width="3/4">
-            <TextField
-              floatingLabelText="Enter Crawl Depth"
-              hintText="1"
-              id="crawl-depth-input"
-              value={this.state.text}
-              onKeyDown={this.checkKeyCode}
-              onChange={this.handleChange}
-            />
-          </Column>
-          <Column width="1/4">
-            <RaisedButton label="Add Depth" style={style.button} onMouseDown={this.addDepth}/>
-          </Column>
-          <Snackbar
-            open={this.state.open}
-            message="You entered an invalid crawl depth"
-            autoHideDuration={4000}
-            onRequestClose={this.handleRequestClose}
+      <Row>
+        <Column width="3/4">
+          <TextField
+            floatingLabelText="Enter Crawl Depth"
+            hintText="1"
+            id="crawl-depth-input"
+            value={this.state.text}
+            onKeyDown={this.checkKeyCode}
+            onChange={this.handleChange}
           />
-        </Row>
+        </Column>
+        <Column width="1/4">
+          <RaisedButton label="Add Depth" style={style.button} onMouseDown={this.addDepth}/>
+        </Column>
+        <Snackbar
+          open={this.state.open}
+          message="You entered an invalid crawl depth"
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestClose}
+        />
+      </Row>
     )
   }
 }

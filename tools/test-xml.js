@@ -24,23 +24,38 @@ import _ from 'lodash'
 import moment from 'moment'
 import named from 'named-regexp'
 import cp from 'child_process'
+import { joinStrings } from 'joinable'
 
-require('pretty-error').start()
 
-let opts = {
-  cwd: 'A:\\wail-electron',
-  detached: true,
-  shell: false,
-  stdio: [ 'ignore', 'ignore', 'ignore' ]
-}
+// let it = S('yay')
+//
+// console.log(it)
+//
+// it.setValue('')
+//
+// console.log(it,it.isEmpty())
 
-fs.readFile('A:\\wail-electron\\bundledApps\\heritrix-3.3.0\\jobs\\1469503104218\\20160726031827\\logs\\progress-statistics.log','utf8', (err, data) => {
-  if(err) {
-    console.error(err)
-  }
-
-  console.log(data)
+fs.readFile('/Users/jberlin/WebstormProjects/wail/waillogs/wail-settings/settings.json','utf8', (error,it) => {
+  let json = JSON.parse(it)
+  console.log(_.keys(json))
 })
+
+// require('pretty-error').start()
+//
+// let opts = {
+//   cwd: 'A:\\wail-electron',
+//   detached: true,
+//   shell: false,
+//   stdio: [ 'ignore', 'ignore', 'ignore' ]
+// }
+//
+// fs.readFile('A:\\wail-electron\\bundledApps\\heritrix-3.3.0\\jobs\\1469503104218\\20160726031827\\logs\\progress-statistics.log','utf8', (err, data) => {
+//   if(err) {
+//     console.error(err)
+//   }
+//
+//   console.log(data)
+// })
 
 
 // import depcheck from 'depcheck'

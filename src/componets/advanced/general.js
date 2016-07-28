@@ -77,8 +77,8 @@ export default class General extends Component {
             <TableHeaderColumn style={style.cursor}>Service Status</TableHeaderColumn>
             <TableHeaderColumn style={style.cursor}>State</TableHeaderColumn>
             <TableHeaderColumn style={style.cursor}>Version</TableHeaderColumn>
-            <TableHeaderColumn style={style.cursor} />
-            <TableHeaderColumn style={style.cursor} />
+            <TableHeaderColumn style={style.cursor}/>
+            <TableHeaderColumn style={style.cursor}/>
           </TableRow>
         </TableHeader>
         <TableBody
@@ -89,15 +89,15 @@ export default class General extends Component {
             <TableRowColumn style={style.cursor}>Wayback</TableRowColumn>
             <TableRowColumn style={style.cursor}>{waybackStatus}</TableRowColumn>
             <TableRowColumn style={style.cursor}>2.3.1</TableRowColumn>
-            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.wayBackFix} /> </TableRowColumn>
-            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.wayBackKill} /></TableRowColumn>
+            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.wayBackFix}/> </TableRowColumn>
+            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.wayBackKill}/></TableRowColumn>
           </TableRow>
           <TableRow>
             <TableRowColumn style={style.cursor}>Heritrix</TableRowColumn>
             <TableRowColumn style={style.cursor}>{heritrixStatus}</TableRowColumn>
             <TableRowColumn>3.3.0</TableRowColumn>
-            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.heritrixFix} /></TableRowColumn>
-            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.heritrixKill} /></TableRowColumn>
+            <TableRowColumn><RaisedButton label="Fix" onMouseDown={this.heritrixFix}/></TableRowColumn>
+            <TableRowColumn><RaisedButton label="Kill" onMouseDown={this.heritrixKill}/></TableRowColumn>
           </TableRow>
         </TableBody>
       </Table>

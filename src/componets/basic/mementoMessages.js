@@ -12,7 +12,7 @@ export class DefaultMementoMessage extends Component {
           <p style={styles.cursor}>Enter URL to fetch mementos</p>
         </Column>
         <Column width="1/2">
-          <p style={{paddingLeft: 125, cursor: 'default'}}>0</p>
+          <p style={{ paddingLeft: 125, cursor: 'default' }}>0</p>
         </Column>
       </Row>
     )
@@ -32,7 +32,7 @@ export class FetchingMementoMessage extends Component {
         </Column>
         <Column width="1/2">
           <div style={styles.spinningMemento}>
-            <Avatar src="icons/mLogo_animated.gif" size={30} />
+            <Avatar src="icons/mLogo_animated.gif" size={30}/>
           </div>
         </Column>
       </Row>

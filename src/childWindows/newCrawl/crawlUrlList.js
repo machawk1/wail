@@ -43,7 +43,7 @@ export default class UrlList extends Component {
   getUrls () {
     let it = CrawlUrlsStore.getCrawlUrlItems()
     // console.log('UrlList getUrls',it)
-    this.setState({ urls: it})
+    this.setState({ urls: it })
   }
 
   render () {

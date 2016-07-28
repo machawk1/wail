@@ -13,7 +13,7 @@ function heritrixKillCase (type, rType, havePending) {
   return (type === EventTypes.REQUEST_HERITRIX) && (rType === RequestTypes.KILL_HERITRIX && !havePending)
 }
 
-class RequestStore {
+class RequestStore_ {
   constructor () {
     this.pendingRequests = new Map()
     this.duplicateRequests = new Map()
@@ -177,8 +177,10 @@ class RequestStore {
   }
 }
 
-const requestStore = new RequestStore()
+const RequestStore = new RequestStore_()
+// noinspection JSAnnotator
+window.RequestStore = RequestStore
 
-RequestDispatcher.register(requestStore.pendingRequest)
+RequestDispatcher.register(RequestStore.pendingRequest)
 
-export default requestStore
+export default RequestStore

@@ -286,7 +286,10 @@ export function buildHeritrixJob (jobId) {
     })
   } else {
     console.log(jobId)
-    console.log('build heritrix job',util.inspect(settings.get('heritrix.buildOptions'),{depth:null,colors:true}))
+    console.log('build heritrix job', util.inspect(settings.get('heritrix.buildOptions'), {
+      depth: null,
+      colors: true
+    }))
     let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
     console.log('options url before setting', options.url)
     options.url = `${options.url}${jobId}`

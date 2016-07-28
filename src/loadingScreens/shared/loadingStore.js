@@ -1,4 +1,4 @@
-require('babel-polyfill')
+import 'babel-polyfill'
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
@@ -13,7 +13,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
-const osx_java7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
+const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
 
 class loadingStore extends EventEmitter {
   constructor () {
@@ -52,7 +52,7 @@ class loadingStore extends EventEmitter {
           detail: 'In order to use Wail you must have a jdk. Otherwise you can not use this this tool.',
           buttons: [ 'Yes', 'No' ],
           message: 'Java needs to be installed for Heritrix and Wayback',
-          cancelId: 666,
+          cancelId: 666
         }, this.downloadJDK)
         break
       case wc.Loading.SERVICE_CHECK_DONE:
@@ -77,13 +77,13 @@ class loadingStore extends EventEmitter {
       settings.set('didDlJava', true)
       this.pMessage = 'Downloading the required JDK'
       this.emit('progress')
-      request.get(osx_java7DMG)
+      request.get(osxJava7DMG)
         .on('response', res => {
           // console.log(res.statusCode) // 200
           // console.log(res.headers[ 'content-type' ])
         })
         .on('error', err => {
-          // console.error(err)
+          console.error(err)
         })
         .pipe(fs.createWriteStream('/tmp/java7.dmg'))
         .on('close', () => {
@@ -92,16 +92,16 @@ class loadingStore extends EventEmitter {
           this.emit('progress')
           cp.exec('hdiutil attach /tmp/java7.dmg', (err, stdout, stderr) => {
             if (err) {
-              // console.error(err)
+              console.error(err)
             } else {
               // console.log(stderr, stdout)
               cp.exec('open /Volumes/JDK\\ 7\\ Update\\ 79/JDK\\ 7\\ Update\\ 79.pkg', (err, stdout, stderr) => {
                 if (err) {
-                  // console.error(err)
+                  console.error(err)
                 } else {
-                  // console.log(stderr, stdout)
-                  app.exit(1)
+                  console.log(stderr, stdout)
                 }
+                app.exit(1)
               })
             }
           })
@@ -126,7 +126,7 @@ class loadingStore extends EventEmitter {
         this.emit('service-check-done')
       })
       .on('error', (err) => {
-        // console.error(err)
+        console.error(err)
         startWayback(logger)
           .then(() => {
             let message
@@ -142,12 +142,12 @@ class loadingStore extends EventEmitter {
             // console.log('it worked wayback')
           })
           .catch((err) => {
-            // console.log('it no work? why wayback', err)
+            console.log('it no work? why wayback', err)
             let message
             if (this.startedHeritrix) {
               if (this.wasHeritrixStartError) {
                 let m1 = 'There were critical errors while starting both Heritrix and Wayback.'
-                let m2 = 'Please ensure ports 8080 and 8443 are free or that these services are not running already'
+                let m2 = 'Please ensure that these services are not running already'
                 message = `${m1}\n${m2}\nRestart Wail and try again. If this persists please submit a bug report`
               } else {
                 message = 'There was a critical error while starting Wayback, but Heritrix was started. You can archive but not replay'
@@ -173,7 +173,7 @@ class loadingStore extends EventEmitter {
       this.wb()
     })
     haReq.on('error', (err) => {
-      // console.error(err)
+      console.error(err)
       this.startedHeritrix = true
       this.pMessage = 'Heritrix is not started. Starting'
       this.emit('progress')
@@ -185,7 +185,7 @@ class loadingStore extends EventEmitter {
           this.wb()
         })
         .catch((err) => {
-          // console.log('it no work? why heritrix', err)
+          console.log('it no work? why heritrix', err)
           this.wasHeritrixStartError = true
           this.pMessage = 'Starting Heritrix failed. Checking Wayback'
           this.emit('progress')

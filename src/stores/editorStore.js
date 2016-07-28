@@ -11,7 +11,7 @@ const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
 const WhichCode = wailConstants.Code.which
 
-class editorStore extends EventEmitter {
+class EditorStore_ extends EventEmitter {
   constructor () {
     super()
     this.code = new Map()
@@ -79,6 +79,8 @@ class editorStore extends EventEmitter {
   }
 }
 
-const EditorStore = new editorStore()
+const EditorStore = new EditorStore_()
+// noinspection JSAnnotator
+window.EditorStore = EditorStore
 EditorDispatcher.register(EditorStore.handleEvent)
 export default EditorStore

@@ -1,7 +1,7 @@
-require('babel-polyfill')
+import 'babel-polyfill'
 import { app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray, clipboard } from 'electron'
 import Logger from './logger/logger'
-import menuTemplate, { screenShot, screenShotPDF } from './menu/mainMenu'
+import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import util from 'util'
 import configSettings from './settings/settings'
@@ -118,7 +118,7 @@ function contextMenu (event, props) {
     }
     menuTemp.push({
       label: 'Select All',
-      click(item, window) {
+      click (item, window) {
         window.webContents.selectAll()
       },
       enabled: true
@@ -336,7 +336,7 @@ function setUp () {
   }
 
   if (process.platform === 'darwin') {
-    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    // control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
     control.h = 300
   } else if (process.platform === 'win32') {
@@ -356,6 +356,8 @@ function setUp () {
     control.firstLoad = true
     settings.set('didFirstLoad', true)
   }
+
+  global.wailVersion = app.getVersion()
 
   global.accessLogPath = path.join(logPath, 'accessibility.log')
   global.jobLogPath = path.join(logPath, 'jobs.log')
@@ -402,16 +404,16 @@ function openDebug () {
 
 function createBackGroundWindows (notDebugUI) {
   if (notDebugUI) {
-    windows.accessibilityWindow = new BrowserWindow({ show: false, frame: false })
+    windows.accessibilityWindow = new BrowserWindow({ show: false})
     windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
 
-    windows.indexWindow = new BrowserWindow({ show: false, frame: false })
+    windows.indexWindow = new BrowserWindow({ show: false})
     windows.indexWindow.loadURL(windows.indexWindowURL)
 
-    windows.jobWindow = new BrowserWindow({ show: false, frame: false })
+    windows.jobWindow = new BrowserWindow({ show: false})
     windows.jobWindow.loadURL(windows.jobWindowURL)
 
-    windows.reqDaemonWindow = new BrowserWindow({ show: false, frame: false })
+    windows.reqDaemonWindow = new BrowserWindow({ show: false})
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
 }
@@ -492,6 +494,7 @@ function createWindow () {
       // console.error(e)
     }
   }
+
   let windowConfig = {
     width: control.w,
     minWidth: control.w,
@@ -513,17 +516,17 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl
-  if (control.loading && control.firstLoad) {
-    loadUrl = windows.firstLoadWindowURL
-  } else {
-    if (!control.didLoad) {
-      loadUrl = windows.loadingWindowURL
-      control.didLoad = true
-    } else {
-      loadUrl = windows.mWindowURL
-    }
-  }
+  var loadUrl = windows.mWindowURL
+  // if (control.loading && control.firstLoad) {
+  //   loadUrl = windows.firstLoadWindowURL
+  // } else {
+  //   if (!control.didLoad) {
+  //     loadUrl = windows.loadingWindowURL
+  //     control.didLoad = true
+  //   } else {
+  //     loadUrl = windows.mWindowURL
+  //   }
+  // }
 
   windows.mainWindow.loadURL(loadUrl)
 
@@ -558,7 +561,7 @@ function createWindow () {
 
   windows.mainWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
-    // console.log(util.inspect(props, { depth: null, colors: true }))
+    console.log(util.inspect(props, { depth: null, colors: true }))
     if (props.isEditable) {
       contextMenu(e, props).popup(windows.mainWindow)
     }
@@ -579,15 +582,15 @@ app.on('ready', () => {
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  control.tray = new Tray(control.iconp)
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' },
-    { label: 'Item3', type: 'radio', checked: true },
-    { label: 'Item4', type: 'radio' }
-  ])
-  control.tray.setToolTip('WAIL')
-  control.tray.setContextMenu(contextMenu)
+  // control.tray = new Tray(control.iconp)
+  // const contextMenu = Menu.buildFromTemplate([
+  //   { label: 'Item1', type: 'radio' },
+  //   { label: 'Item2', type: 'radio' },
+  //   { label: 'Item3', type: 'radio', checked: true },
+  //   { label: 'Item4', type: 'radio' }
+  // ])
+  // control.tray.setToolTip('WAIL')
+  // control.tray.setContextMenu(contextMenu)
   createBackGroundWindows(control.notDebugUI)
   createWindow()
 })

@@ -17,8 +17,8 @@ const cwd = path.resolve('.')
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
 
 const darwinBuild = {
-  icon: 'whale_1024.icns',
-  iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale_1024.icns')),
+  icon: 'whale.icns',
+  iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale.icns')),
   archiveIcon: 'archive.icns',
   archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
   extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist')),
@@ -241,10 +241,10 @@ function createDeb_redHat (arc, cb) {
     version: pkg.version,
     revision: pkg.revision,
     icon: {
-      '32x32': path.normalize(path.join(cwd,'build/icons/whale_32.png')),
-      '64x64': path.normalize(path.join(cwd,'build/icons/whale_64.png')),
-      '128x128': path.normalize(path.join(cwd,'build/icons/whale_128.png')),
-      '256x256': path.normalize(path.join(cwd,'build/icons/whale_256.png'))
+      '32x32': path.normalize(path.join(cwd, 'build/icons/whale_32.png')),
+      '64x64': path.normalize(path.join(cwd, 'build/icons/whale_64.png')),
+      '128x128': path.normalize(path.join(cwd, 'build/icons/whale_128.png')),
+      '256x256': path.normalize(path.join(cwd, 'build/icons/whale_256.png'))
     },
     section: 'utils',
     depends: [
@@ -287,10 +287,10 @@ function createDeb_redHat (arc, cb) {
     version: pkg.version,
     revision: pkg.revision,
     icon: {
-      '32x32': path.normalize(path.join(cwd,'build/icons/whale_32.png')),
-      '64x64': path.normalize(path.join(cwd,'build/icons/whale_64.png')),
-      '128x128': path.normalize(path.join(cwd,'build/icons/whale_128.png')),
-      '256x256': path.normalize(path.join(cwd,'build/icons/whale_256.png'))
+      '32x32': path.normalize(path.join(cwd, 'build/icons/whale_32.png')),
+      '64x64': path.normalize(path.join(cwd, 'build/icons/whale_64.png')),
+      '128x128': path.normalize(path.join(cwd, 'build/icons/whale_128.png')),
+      '256x256': path.normalize(path.join(cwd, 'build/icons/whale_256.png'))
     },
     description: pkg.description,
     license: pkg.license,

@@ -146,7 +146,7 @@ export default class HeritrixJobItem extends Component {
         tooltip='Actions'
         tooltipPosition="bottom-left"
       >
-        <MoreVertIcon color={grey400} />
+        <MoreVertIcon color={grey400}/>
       </IconButton>
     )
 
@@ -156,17 +156,17 @@ export default class HeritrixJobItem extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         targetOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config' />
+        <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config'/>
         <Divider  />
         <MenuItem
           style={style}
           primaryText='Actions'
           rightIcon={<ArrowDropRight  />}
           menuItems={[
-            <MenuItem style={style} onTouchTap={this.start} primaryText='Start' />,
-            <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart' />,
-            <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl' />,
-            <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete' />,
+            <MenuItem style={style} onTouchTap={this.start} primaryText='Start'/>,
+            <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart'/>,
+            <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl'/>,
+            <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete'/>,
           ]}
         />
       </IconMenu>
@@ -176,7 +176,7 @@ export default class HeritrixJobItem extends Component {
       <ListItem
         key={`hjiLI-${this.props.jobId}`}
         disabled={true}
-        primaryText={<HeritrixJobInfo jobId={this.props.jobId} runs={this.state.runs} />}
+        primaryText={<HeritrixJobInfo jobId={this.props.jobId} runs={this.state.runs}/>}
         rightIconButton={rightIconMenu}
       />
     )

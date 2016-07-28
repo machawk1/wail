@@ -2,14 +2,16 @@ import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
+import Avatar from 'material-ui/Avatar'
 import MenuItem from 'material-ui/MenuItem'
+import Divider from 'material-ui/Divider'
 import styles from '../styles/styles'
 import { Link, IndexLink } from 'react-router'
 
 export default class Header extends Component {
   constructor (props, context) {
     super(props, context)
-    this.state = { open: false, location: 'Basic' }
+    this.state = { open: false, location: 'WAIL' }
   }
 
   @autobind
@@ -27,7 +29,7 @@ export default class Header extends Component {
 
   @autobind
   handleClose (event, toWhere) {
-    this.setState({open: false, location: toWhere})
+    this.setState({ open: false, location: toWhere })
   }
 
   render () {
@@ -36,7 +38,8 @@ export default class Header extends Component {
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
-          zDepth={0}
+          iconElementRight={<Avatar className="img-circle" backgroundColor={'transparent'} src={'icons/whale.ico'}/>}
+            zDepth={0}
           style={styles.appBar}
         />
         <Drawer
@@ -46,25 +49,27 @@ export default class Header extends Component {
           onRequestChange={this.open}
         >
           <MenuItem
-            primaryText={'Basic'}
-            containerElement={<IndexLink to="/" />}
-            onTouchTap={(e) => this.handleClose(e, 'Basic')} />
-          <MenuItem
-            primaryText={'Service Statuses'}
-            containerElement={<Link to='services' />}
-            onTouchTap={(e) => this.handleClose(e, 'Services')} />
+            primaryText={'WAIL'}
+            containerElement={<IndexLink to="/"/>}
+            onTouchTap={(e) => this.handleClose(e, 'WAIL')}/>
+          <Divider/>
           <MenuItem
             primaryText={'Wayback'}
-            containerElement={<Link to='wayback' />}
-            onTouchTap={(e) => this.handleClose(e, 'Wayback')} />
+            containerElement={<Link to='wayback'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Wayback')}/>
           <MenuItem
             primaryText={'Heritrix'}
-            containerElement={<Link to='heritrix' />}
-            onTouchTap={(e) => this.handleClose(e, 'Heritrix')} />
+            containerElement={<Link to='heritrix'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Heritrix')}/>
+          <Divider/>
+          <MenuItem
+            primaryText={'Service Statuses'}
+            containerElement={<Link to='services'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Services')}/>
           <MenuItem
             primaryText={'Miscellaneous'}
-            containerElement={<Link to='misc' />}
-            onTouchTap={(e) => this.handleClose(e, 'Misc')} />
+            containerElement={<Link to='misc'/>}
+            onTouchTap={(e) => this.handleClose(e, 'Misc')}/>
         </Drawer>
       </div>
     )

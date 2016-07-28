@@ -74,7 +74,7 @@ export default class Editor extends Component {
     if (this.props.className) className += `${this.props.className}`
     return (
       <div className={className}>
-        <textarea ref='editor' defaultValue={this.props.codeText} />
+        <textarea ref='editor' defaultValue={this.props.codeText}/>
       </div>
     )
   }

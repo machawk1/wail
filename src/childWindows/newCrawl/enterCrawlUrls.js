@@ -30,8 +30,8 @@ export default class EnterCrawlUrls extends Component {
   }
 
   @autobind
-  getUrlToEdit(){
-    this.setState({url: CrawlUrlsStore.getUrlToEdit()})
+  getUrlToEdit () {
+    this.setState({ url: CrawlUrlsStore.getUrlToEdit() })
   }
 
   @autobind
@@ -42,7 +42,7 @@ export default class EnterCrawlUrls extends Component {
       if (isURL(url) || S(url).isEmpty()) {
         underlineStyle = styles.underlineStyle
       }
-      if(isURL(url)) {
+      if (isURL(url)) {
         CrawlUrlsDispatcher.dispatch({
           type: EventTypes.NEW_CRAWL_ADD_URL,
           url: url
@@ -60,19 +60,19 @@ export default class EnterCrawlUrls extends Component {
     if (isURL(url) || S(url).isEmpty()) {
       underlineStyle = styles.underlineStyle
     }
-    this.setState({ url, underlineStyle})
+    this.setState({ url, underlineStyle })
   }
 
   @autobind
-  addUrl(event){
-    console.log('Adding url from button',this.state.url)
+  addUrl (event) {
+    console.log('Adding url from button', this.state.url)
     let url = this.state.url
     if (isURL(url)) {
       CrawlUrlsDispatcher.dispatch({
         type: EventTypes.NEW_CRAWL_ADD_URL,
         url
       })
-      this.setState({ url: '', underlineStyle: styles.underlineStyle})
+      this.setState({ url: '', underlineStyle: styles.underlineStyle })
     }
   }
 
@@ -80,18 +80,17 @@ export default class EnterCrawlUrls extends Component {
     return (
       <Row>
         <Column width="3/4">
-            <TextField
-              floatingLabelText="Enter URL to crawl"
-              hintText="http://matkelly.com"
-              id="crawl-url-input"
-              type="url"
-              value={this.state.url}
-              multiLine={true}
-              underlineStyle={this.state.underlineStyle}
-              fullWidth={true}
-              onKeyDown={this.checkKeyCode}
-              onChange={this.handleChange}
-            />
+          <TextField
+            floatingLabelText="Enter URL to crawl"
+            id="crawl-url-input"
+            type="url"
+            value={this.state.url}
+            multiLine={true}
+            underlineStyle={this.state.underlineStyle}
+            fullWidth={true}
+            onKeyDown={this.checkKeyCode}
+            onChange={this.handleChange}
+          />
         </Column>
         <Column width="1/4">
           <RaisedButton label="Add Url" style={styles.button} onMouseDown={this.addUrl}/>

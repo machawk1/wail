@@ -1,14 +1,8 @@
-import { dialog, app } from 'electron'
+import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
-import util from 'util'
+import cp from 'child_process'
 const name = app.getName()
-
-const errorMessage = {
-  type: 'error',
-  buttons: [ 'Ok' ],
-  title: 'Something went wrong'
-}
 
 export function screenShotPDF (window) {
   if (window) {
@@ -48,10 +42,6 @@ export function screenShotPDF (window) {
 
 export function screenShot (window) {
   if (window) {
-    // console.log('Taking image Screenshot')
-    let size = window.getSize()
-    // console.log(size)
-    // console.log(util.inspect(window,{depth: null,colors:true}))
     window.webContents.capturePage((image) => {
       let opts = {
         title: 'Save Screen Shot',
@@ -83,6 +73,48 @@ export function screenShot (window) {
       dialog.showSaveDialog(window, opts, cb)
     })
   }
+}
+
+const forceKill = {
+  submenu: [
+    {
+      label: 'Force Termination',
+      submenu: [
+        {
+          label: 'Heritrix',
+          click (item, focusedWindow) {
+            dialog.showMessageBox(focusedWindow, {
+              type: 'question',
+              title: 'Are you sure?',
+              message: 'Forcefully terminating Heritrix will stop any crawls in progress',
+              buttons: [ 'Im Sure', 'Cancel' ],
+              cancelId: 666
+            }, (r) => {
+              if (r === 1) {
+                cp.exec("ps ax | grep 'heritrix' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
+              }
+            })
+          }
+        },
+        {
+          label: 'Wayback',
+          click (item, focusedWindow) {
+            dialog.showMessageBox(focusedWindow, {
+              type: 'question',
+              title: 'Are you sure?',
+              message: 'Forcefully terminating Wayback will stop any indexing in progress',
+              buttons: [ 'Im Sure', 'Cancel' ],
+              cancelId: 666
+            }, (r) => {
+              if (r === 1) {
+                cp.exec("ps ax | grep 'tomcat' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
+              }
+            })
+          }
+        }
+      ]
+    }
+  ]
 }
 
 const template = [
@@ -148,7 +180,7 @@ const template = [
           },
           {
             label: 'As image',
-            click(item, focusedWindow) {
+            click (item, focusedWindow) {
               screenShot(focusedWindow)
             }
           }
@@ -179,7 +211,16 @@ const template = [
     submenu: [
       {
         label: 'Submit Bug Report',
-        click () { require('electron').shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        subMenu: [
+          {
+            label: 'Via Email',
+            click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+          },
+          {
+            label: 'Through Github',
+            click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
+          }
+        ],
       }
     ]
   }
@@ -194,11 +235,14 @@ if (process.platform === 'darwin') {
         submenu: [
           {
             label: `Learn more about ${name}`,
-            click () { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
+            click () { shell.openExternal('http://machawk1.github.io/wail/') }
           },
           {
             label: 'WSDL',
-            click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
+            click () { shell.openExternal('https://ws-dl.cs.odu.edu/') }
+          },
+          {
+            label: `Version: ${app.getVersion()}`
           }
         ]
       },
@@ -206,8 +250,8 @@ if (process.platform === 'darwin') {
         type: 'separator'
       },
       {
-        role: 'services',
-        submenu: []
+        label: 'Services',
+        submenu: forceKill.submenu
       },
       {
         type: 'separator'
@@ -254,30 +298,72 @@ if (process.platform === 'darwin') {
     }
   ]
 } else {
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: 'About',
-        submenu: [
-          {
-            label: `Learn more about ${name}`,
-            click () { require('electron').shell.openExternal('http://machawk1.github.io/wail/') }
-          },
-          {
-            label: 'WSDL',
-            click () { require('electron').shell.openExternal('https://ws-dl.cs.odu.edu/') }
-          }
-        ]
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'quit'
-      }
-    ]
-  })
+  var about
+  if (process.platform === 'linux') {
+    about = {
+      label: name,
+      submenu: [
+        {
+          label: 'About',
+          submenu: [
+            {
+              label: `Learn more about ${name}`,
+              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+            },
+            {
+              label: 'WSDL',
+              click () { shell.openExternal('https://ws-dl.cs.odu.edu/') }
+            },
+            {
+              label: `Version: ${app.getVersion()}`
+            }
+          ]
+        },
+        {
+          type: 'separator'
+        },
+        {
+          Label: 'Services',
+          submenu: forceKill.submenu
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'quit'
+        }
+      ]
+    }
+  } else {
+    about = {
+      label: name,
+      submenu: [
+        {
+          label: 'About',
+          submenu: [
+            {
+              label: `Learn more about ${name}`,
+              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+            },
+            {
+              label: 'WSDL',
+              click () { shell.openExternal('https://ws-dl.cs.odu.edu/') }
+            },
+            {
+              label: `Version: ${app.getVersion()}`
+            }
+          ]
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'quit'
+        }
+      ]
+    }
+  }
+  template.unshift(about)
 }
 
 export default template

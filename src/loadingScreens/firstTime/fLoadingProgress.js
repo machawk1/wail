@@ -47,7 +47,7 @@ export default class LoadingProgress extends Component {
             >
               <CheckOS />
               <CheckJava />
-              <CheckServices firstLoad={true} />
+              <CheckServices firstLoad={true}/>
             </TableBody>
           </Table>
         </Row>

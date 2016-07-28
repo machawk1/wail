@@ -5,8 +5,9 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MenuItem from 'material-ui/MenuItem'
 import { ipcRenderer, remote } from 'electron'
 import autobind from 'autobind-decorator'
-import {Tabs, Tab} from 'material-ui/Tabs'
+import { Tabs, Tab } from 'material-ui/Tabs'
 import SwipeableViews from 'react-swipeable-views'
+import WailSettings from './wailSettings'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -36,7 +37,7 @@ export default class SettingsForm extends Component {
   }
 
   @autobind
-  handleChange(value){
+  handleChange (value) {
     this.setState({
       slideIndex: value,
     })
@@ -45,25 +46,23 @@ export default class SettingsForm extends Component {
   getChildContext () {
     return { muiTheme: this.state.muiTheme }
   }
-  render() {
+
+  render () {
     return (
       <div>
         <Tabs
           onChange={this.handleChange}
           value={this.state.slideIndex}
         >
-          <Tab label="WAIL" value={0} />
-          <Tab label="Heritrix" value={1} />
-          <Tab label="Wayback" value={2} />
+          <Tab label="WAIL" value={0}/>
+          <Tab label="Heritrix" value={1}/>
+          <Tab label="Wayback" value={2}/>
         </Tabs>
         <SwipeableViews
           index={this.state.slideIndex}
           onChangeIndex={this.handleChange}
         >
-          <div>
-            <h2 style={styles.headline}>Tabs with slide effect</h2>
-            Swipe to see the next slide.<br />
-          </div>
+          <WailSettings slideStyle={styles.slide}/>
           <div style={styles.slide}>
             slide n°2
           </div>

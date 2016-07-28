@@ -5,7 +5,7 @@ import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 
 const EventTypes = wailConstants.EventTypes
 
-class globalMessageStore extends EventEmitter {
+class GlobalMessageStore_ extends EventEmitter {
   constructor () {
     super()
     this.messageQ = []
@@ -33,7 +33,7 @@ class globalMessageStore extends EventEmitter {
   }
 }
 
-const GMessageStore = new globalMessageStore()
+const GMessageStore = new GlobalMessageStore_()
 // noinspection JSAnnotator
 window.GMessageStore = GMessageStore
 GMessageDispatcher.register(GMessageStore.handleEvent)

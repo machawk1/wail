@@ -177,6 +177,9 @@ const managed = {
   }
 }
 
+// set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
+const debugOSX = true
+
 function writeSettings (base, settings) {
   let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
@@ -186,13 +189,25 @@ function writeSettings (base, settings) {
   })
 
   let heritrix = managed.heritrix
+  let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
+  let jHomeDarwin = '/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home'
+  let darwinExport = debugOSX ? cmdexport : `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
+  let command = 'sh'
   heritrix.path = settings.get('heritrix')
   var jobConfPath
   if (isWindows) {
-    settings.set('cdxIndexer', settings.get('cdxIndexerWin'))
+    let cdxWin = `${cmdexport} ${settings.get('cdxIndexerWin')}`
+    settings.set('cdxIndexer', cdxWin)
     jobConfPath = path.normalize(path.join(base, heritrix.jobConfWin))
   } else {
     jobConfPath = path.normalize(path.join(base, heritrix.jobConf))
+    var cdx
+    if (process.platform === 'darwin') {
+      cdx = `${darwinExport} ${settings.get('cdxIndexerWin')}`
+    } else {
+      cdx = `${cmdexport} ${settings.get('cdxIndexerWin')}`
+    }
+    settings.set('cdxIndexer', cdx)
   }
   heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
@@ -206,10 +221,6 @@ function writeSettings (base, settings) {
 
   settings.set('winDeleteJob', path.normalize(path.join(base, 'windowsNukeDir.bat')))
 
-  let cmdexport = `export JAVA_HOME=${settings.get('jdk')}; export JRE_HOME=${settings.get('jre')};`
-  let jHomeDarwin = `/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home`
-  let darwinExport = `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
-  let command = 'sh'
   settings.set('isWindows', isWindows)
   managed.commands.forEach(cmd => {
     switch (cmd.name) {

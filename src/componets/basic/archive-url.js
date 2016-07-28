@@ -7,12 +7,33 @@ import S from 'string'
 import isURL from 'validator/lib/isURL'
 import UrlStore from '../../stores/urlStore'
 import * as aua from '../../actions/archive-url-actions'
+import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
+import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
+
+const From = wailConstants.From
+const EventTypes = wailConstants.EventTypes
 
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
     super(props, context)
-    this.state = { uri: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
+    this.state = { url: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
+  }
+
+  componentWillMount () {
+    UrlStore.on('url-updated', this.getUrl)
+  }
+
+  componentWillUnmount () {
+    UrlStore.removeListener('url-updated', this.getUrl)
+  }
+
+  @autobind
+  getUrl () {
+    let maybeUpdate = UrlStore.getUrl()
+    if (this.state.url.s !== maybeUpdate.s) {
+      this.setState({ url: this.state.url.setValue(maybeUpdate.s) })
+    }
   }
 
   @autobind
@@ -22,17 +43,7 @@ export default class ArchiveUrl extends Component {
     if (isURL(value) || S(value).isEmpty()) {
       err = styles.underlineStyle
     }
-    this.setState({ uri: value, underlineStyle: err })
-  }
-
-  @autobind
-  attemptMementoGet () {
-    console.log(this.state.uri)
-    if (isURL(this.state.uri)) {
-      aua.getMementos(this.state.uri)
-    } else {
-      console.log('This is not a valid url', this.state.uri)
-    }
+    this.setState({ url: this.state.url.setValue(value), underlineStyle: err })
   }
 
   @autobind
@@ -41,6 +52,7 @@ export default class ArchiveUrl extends Component {
     if (isURL(event.target.value)) {
       // console.log('its valid')
       aua.urlUpdated(event.target.value)
+      aua.getMementos(this.state.url.s)
     } else {
       if (S(event.target.value).isEmpty()) {
         aua.emptyURL()
@@ -48,31 +60,41 @@ export default class ArchiveUrl extends Component {
     }
   }
 
+  @autobind
+  onClickArchiveNow (event) {
+    // console.log('archive now')
+    CrawlDispatcher.dispatch({
+      type: EventTypes.BUILD_CRAWL_JOB,
+      from: From.BASIC_ARCHIVE_NOW
+    })
+  }
+
   render () {
     return (
       <Row>
-        <Column width="1/2">
-          <TextField
-            floatingLabelText='URL'
-            underlineStyle={this.state.underlineStyle}
-            hintText="http://matkelly.com/wail"
-            id="archive-url-input"
-            value={this.state.url}
-            onBlur={this.focusLost}
-            onChange={this.handleChange}
-            style={styles.urlInput}
-          />
-        </Column>
-        <Column width="1/2">
-          <div style={styles.basicTapRightColPad}>
-            <RaisedButton
-              label='Get Memento Count'
-              labelPosition='before'
-              onTouchTap={this.attemptMementoGet}
-              style={styles.buttonMemento}
+        <div style={{display: 'flex'}}>
+          <div style={{flex: 1}}>
+            <TextField
+              floatingLabelText="URL"
+              underlineStyle={this.state.underlineStyle}
+              id="archive-url-input"
+              value={this.state.url.s}
+              onBlur={this.focusLost}
+              fullWidth={true}
+              onChange={this.handleChange}
+              style={styles.urlInput}
             />
           </div>
-        </Column>
+          <div style={{width: '180px'}}>
+            <RaisedButton
+              label="Archive Now!"
+              primary={true}
+              labelPosition='before'
+              style={styles.buttonBasic}
+              onMouseDown={this.onClickArchiveNow}
+            />
+          </div>
+        </div>
       </Row>
     )
   }

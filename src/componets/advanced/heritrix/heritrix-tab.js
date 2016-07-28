@@ -5,7 +5,7 @@ import { Grid, Row } from 'react-cellblock'
 import autobind from 'autobind-decorator'
 import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
-import {rescanJobDir} from '../../../actions/heritrix-actions'
+import { rescanJobDir } from '../../../actions/heritrix-actions'
 const styles = {
   button: {
     margin: 12

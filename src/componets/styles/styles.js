@@ -4,7 +4,7 @@ import { zIndex } from 'material-ui/styles'
 
 export default {
   buttonBasic: {
-    margin: 12
+    margin: '25px 10px 0 30px'
   },
   underlineStyle: {
     borderColor: blue500
@@ -14,7 +14,7 @@ export default {
   },
   button: {
     // padding: '10px',
-    right: '0px',
+    right: 0,
     margin: 12
   },
   buttonMemento: {
@@ -22,11 +22,11 @@ export default {
     marginTop: 35
   },
   buttonPad: {
-    right: '0px',
+    right: 0,
     margin: 45
   },
   urlInput: {
-    left: 10
+    left: 20
   },
   heritrixJobList: {
     overflow: 'hidden',
@@ -88,5 +88,14 @@ export default {
   },
   cursor: {
     cursor: 'default'
+  },
+  settingsCol: {
+    width: '80px'
+  },
+  settingsActionCol: {
+    width: '180px'
+  },
+  settingsButton: {
+    marginLeft: '10px'
   }
 }
