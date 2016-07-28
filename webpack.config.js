@@ -12,7 +12,7 @@ module.exports = {
     // newCrawl: './src/childWindows/newCrawl/newCrawl',
     // requestD: './src/background/requestDaemon',
     settingsW: './src/childWindows/settings/settingsW',
-    wail: './src/wail',
+    // wail: './src/wail',
     // firstLoad: './src/loadingScreens/firstTime/loadingScreen',
     // notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },

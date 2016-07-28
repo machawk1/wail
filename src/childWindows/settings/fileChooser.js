@@ -18,11 +18,13 @@ const style = {
   cursor: 'pointer'
 }
 
-export default class FSLocationChooser extends Component {
+export default class FileChooser extends Component {
   static propTypes = {
     whichSetting: PropTypes.string.isRequired,
-    warnOnChange: PropTypes.bool.isRequired,
-    settings: PropTypes.object.isRequired
+    warnOnChange: PropTypes.bool,
+    settings: PropTypes.object.isRequired,
+    useAltName: PropTypes.bool.isRequired,
+    altName: PropTypes.string,
   }
 
   constructor (props, context) {
@@ -39,7 +41,7 @@ export default class FSLocationChooser extends Component {
     dialog.showOpenDialog({
       title: 'Choose Location',
       defaultPath: this.state.settingValue,
-      properties: [ 'openDirectory', 'createDirectory' ]
+      properties: [ 'openFile' ]
     }, (settingValue) => {
       if (settingValue) {
         // settings.set(this.props.whichSetting, path)
@@ -54,30 +56,6 @@ export default class FSLocationChooser extends Component {
     this.props.settings.set(this.props.whichSetting, this.state.originalValue)
     this.setState({ settingValue: this.state.originalValue })
   }
-  /*
-   <TableRow key={this.props.whichSetting}>
-   <TableRowColumn style={styles.settingsCol}>
-   {`${ _.upperCase(this.props.whichSetting) } Path`}
-   </TableRowColumn>
-   <TableRowColumn>
-   {this.state.settingValue}
-   </TableRowColumn>
-   <TableRowColumn style={styles.settingsActionCol}>
-   <RaisedButton
-   label={"Change"}
-   primary={true}
-   labelPosition={'before'}
-   onMouseDown={this.changeLocation}
-   />
-   <RaisedButton
-   label={"Revert"}
-   style={styles.settingsButton}
-   labelPosition={'before'}
-   onMouseDown={this.revert}
-   />
-   </TableRowColumn>
-   </TableRow>
-   */
 
   render () {
     const actionIcon = (
@@ -100,10 +78,16 @@ export default class FSLocationChooser extends Component {
         <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default'/>
       </IconMenu>
     )
+    var pt
+    if(this.props.useAltName) {
+      pt = this.props.altName
+    } else {
+      pt = `${ _.upperCase(this.props.whichSetting) } Path`
+    }
     return (
       <ListItem
-        key={`fslc-li-${this.props.whichSetting}`}
-        primaryText={`${ _.upperCase(this.props.whichSetting) } Path`}
+        key={`fsc-li-${this.props.whichSetting}`}
+        primaryText={pt}
         rightIconButton={rightIconMenu}
         secondaryText={this.state.settingValue}
       />

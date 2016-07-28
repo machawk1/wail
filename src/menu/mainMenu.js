@@ -323,7 +323,7 @@ if (process.platform === 'darwin') {
           type: 'separator'
         },
         {
-          Label: 'Services',
+          label: 'Services',
           submenu: forceKill.submenu
         },
         {

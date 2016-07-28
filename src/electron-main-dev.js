@@ -491,32 +491,32 @@ function createWindow () {
     try {
       installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ])
     } catch (e) {
-      // console.error(e)
+      console.error(e)
     }
   }
 
-  let windowConfig = {
-    width: control.w,
-    minWidth: control.w,
-    maxWidth: control.w,
-    height: control.h,
-    minHeight: control.h,
-    maxHeight: control.h,
-    title: 'Web Archiving Integration Layer',
-    fullscreenable: false,
-    maximizable: false,
-    show: false,
-    icon: control.iconp
-  }
+  // let windowConfig = {
+  //   width: control.w,
+  //   minWidth: control.w,
+  //   maxWidth: control.w,
+  //   height: control.h,
+  //   minHeight: control.h,
+  //   maxHeight: control.h,
+  //   title: 'Web Archiving Integration Layer',
+  //   fullscreenable: false,
+  //   maximizable: false,
+  //   show: false,
+  //   icon: control.iconp
+  // }
   // Create the browser window.
-  windows.mainWindow = new BrowserWindow(windowConfig)
+  windows.mainWindow = new BrowserWindow({show: true})//windowConfig)
 
   // console.log(windows.mainWindow.getSize())
 
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.mWindowURL
+  var loadUrl = windows.settingsWindowURL//windows.mWindowURL
   // if (control.loading && control.firstLoad) {
   //   loadUrl = windows.firstLoadWindowURL
   // } else {
