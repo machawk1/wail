@@ -3,6 +3,9 @@ import RaisedButton from 'material-ui/RaisedButton'
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
 import { Grid, Row } from 'react-cellblock'
 import autobind from 'autobind-decorator'
+import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
+import AddCrawlIcon from 'material-ui/svg-icons/content/add'
+import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
 import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
 import { rescanJobDir } from '../../../actions/heritrix-actions'
@@ -37,7 +40,8 @@ export default class HeritrixTab extends Component {
           <Toolbar>
             <ToolbarGroup firstChild={true}>
               <RaisedButton
-                label='Configure New Crawl'
+                icon={<AddCrawlIcon />}
+                label='New Crawl'
                 labelPosition='before'
                 style={styles.button}
                 onMouseDown={this.onClickNewCrawl}
@@ -45,7 +49,8 @@ export default class HeritrixTab extends Component {
             </ToolbarGroup>
             <ToolbarGroup >
               <RaisedButton
-                label='Ensure Jobs are Submitted'
+                icon={<JobScanIcon />}
+                label='Rescan Job Directory'
                 labelPosition='before'
                 style={styles.button}
                 onMouseDown={() => rescanJobDir()}
@@ -53,6 +58,7 @@ export default class HeritrixTab extends Component {
             </ToolbarGroup>
             <ToolbarGroup lastChild={true}>
               <RaisedButton
+                icon={<OpenBrowserIcon />}
                 label='Launch Web UI'
                 labelPosition='before'
                 style={styles.button}

@@ -2,6 +2,7 @@ import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
+import {showSettingsWindow} from '../electron-main-dev'
 const name = app.getName()
 
 export function screenShotPDF (window) {
@@ -245,6 +246,20 @@ if (process.platform === 'darwin') {
             label: `Version: ${app.getVersion()}`
           }
         ]
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Settings',
+        click (item, focusedWindow) {
+          console.log('clicked settings menu')
+          if (focusedWindow) {
+            showSettingsWindow(focusedWindow)
+          } else {
+            console.log('window for settings click is a no go')
+          }
+        }
       },
       {
         type: 'separator'

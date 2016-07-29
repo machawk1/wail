@@ -4,7 +4,8 @@ import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import util from 'util'
-import configSettings from './settings/settings'
+import configSettings, { writeSettings } from './settings/settings'
+import ContextMenu from './menu/contextMenu'
 
 const windows = {
   accessibilityWindow: null,
@@ -33,6 +34,7 @@ const windows = {
 }
 
 const control = {
+  settings: null,
   w: null,
   h: null,
   iconp: null,
@@ -44,7 +46,8 @@ const control = {
   didClose: false,
   didLoad: false,
   loading: true,
-  firstLoad: false
+  firstLoad: false,
+  contextMenu: new ContextMenu()
 }
 
 // let shouldQuit = false
@@ -145,7 +148,7 @@ function contextMenu (event, props) {
       })
     }
     menuTemp.push({
-      label: 'Undo',
+      label: 'Redo',
       click (item, window) {
         window.webContents.redo()
       },
@@ -172,9 +175,8 @@ function showNewCrawlWindow (parent) {
     windows.newCrawlWindow.show()
   })
   windows.newCrawlWindow.webContents.on('context-menu', (e, props) => {
-    if (props.isEditable) {
-      contextMenu(e, props).popup(windows.newCrawlWindow)
-    }
+    e.preventDefault()
+    control.contextMenu.maybeShow(props, windows.newCrawlWindow)
   })
 
   windows.newCrawlWindow.on('closed', () => {
@@ -182,12 +184,12 @@ function showNewCrawlWindow (parent) {
   })
 }
 
-function showSettingsWindow (parent) {
+export function showSettingsWindow (parent) {
   let config = {
-    parent: parent,
+    width: 784,
+    height: 300,
     modal: false,
     show: false,
-    closable: false,
     minimizable: false,
     autoHideMenuBar: true
   }
@@ -199,9 +201,7 @@ function showSettingsWindow (parent) {
   })
   windows.settingsWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
-    if (props.isEditable) {
-      contextMenu(e, props).popup(windows.settingsWindow)
-    }
+    control.contextMenu.maybeShow(props, windows.settingsWindow)
   })
 
   windows.settingsWindow.on('closed', () => {
@@ -247,7 +247,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('open-settings-window', (event, payload) => {
-    // console.log('got open-settings-window')
+    console.log('got open-settings-window')
     showSettingsWindow(windows.mainWindow)
   })
 
@@ -293,6 +293,11 @@ function setUpIPC () {
   ipcMain.on('loading-finished', (event, payload) => {
     windows.mainWindow.hide()
     windows.mainWindow.loadURL(windows.mWindowURL)
+  })
+
+  ipcMain.on('setting-hard-reset', (event, payload) => {
+    console.log('got settings-hard-reset')
+    writeSettings(control.base, control.settings)
   })
 }
 
@@ -351,7 +356,7 @@ function setUp () {
   }
 
   let settings = configSettings(control.base, settingsPath)
-  global.settings = settings
+  global.settings = control.settings = settings
   if (!settings.get('didFirstLoad')) {
     control.firstLoad = true
     settings.set('didFirstLoad', true)
@@ -396,24 +401,24 @@ function openDebug () {
     }
     windows.mainWindow.webContents.openDevTools()
   }
-  windows.accessibilityWindow.hide()
-  windows.indexWindow.hide()
-  windows.jobWindow.hide()
-  windows.reqDaemonWindow.hide()
+  // windows.accessibilityWindow.hide()
+  // windows.indexWindow.hide()
+  // windows.jobWindow.hide()
+  // windows.reqDaemonWindow.hide()
 }
 
 function createBackGroundWindows (notDebugUI) {
   if (notDebugUI) {
-    windows.accessibilityWindow = new BrowserWindow({ show: false})
+    windows.accessibilityWindow = new BrowserWindow({ show: false })
     windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
 
-    windows.indexWindow = new BrowserWindow({ show: false})
+    windows.indexWindow = new BrowserWindow({ show: false })
     windows.indexWindow.loadURL(windows.indexWindowURL)
 
-    windows.jobWindow = new BrowserWindow({ show: false})
+    windows.jobWindow = new BrowserWindow({ show: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
 
-    windows.reqDaemonWindow = new BrowserWindow({ show: false})
+    windows.reqDaemonWindow = new BrowserWindow({ show: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
 }
@@ -495,38 +500,39 @@ function createWindow () {
     }
   }
 
-  // let windowConfig = {
-  //   width: control.w,
-  //   minWidth: control.w,
-  //   maxWidth: control.w,
-  //   height: control.h,
-  //   minHeight: control.h,
-  //   maxHeight: control.h,
-  //   title: 'Web Archiving Integration Layer',
-  //   fullscreenable: false,
-  //   maximizable: false,
-  //   show: false,
-  //   icon: control.iconp
-  // }
+  let windowConfig = {
+    width: control.w,
+    minWidth: control.w,
+    maxWidth: control.w,
+    height: control.h,
+    minHeight: control.h,
+    maxHeight: control.h,
+    title: 'Web Archiving Integration Layer',
+    fullscreenable: false,
+    maximizable: false,
+    show: false,
+    icon: control.iconp
+  }
   // Create the browser window.
-  windows.mainWindow = new BrowserWindow({show: true})//windowConfig)
+
+  windows.mainWindow = new BrowserWindow(windowConfig) //{show: true})//windowConfig)
 
   // console.log(windows.mainWindow.getSize())
 
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.settingsWindowURL//windows.mWindowURL
-  // if (control.loading && control.firstLoad) {
-  //   loadUrl = windows.firstLoadWindowURL
-  // } else {
-  //   if (!control.didLoad) {
-  //     loadUrl = windows.loadingWindowURL
-  //     control.didLoad = true
-  //   } else {
-  //     loadUrl = windows.mWindowURL
-  //   }
-  // }
+  var loadUrl = windows.mWindowURL //windows.settingsWindowURL windows.mWindowURL
+  if (control.loading && control.firstLoad) {
+    loadUrl = windows.firstLoadWindowURL
+  } else {
+    if (!control.didLoad) {
+      loadUrl = windows.loadingWindowURL
+      control.didLoad = true
+    } else {
+      loadUrl = windows.mWindowURL
+    }
+  }
 
   windows.mainWindow.loadURL(loadUrl)
 
@@ -562,9 +568,10 @@ function createWindow () {
   windows.mainWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
     console.log(util.inspect(props, { depth: null, colors: true }))
-    if (props.isEditable) {
-      contextMenu(e, props).popup(windows.mainWindow)
-    }
+    control.contextMenu.maybeShow(props, windows.mainWindow)
+    // if (props.isEditable) {
+    //   contextMenu(e, props).popup(windows.mainWindow)
+    // }
   })
 }
 

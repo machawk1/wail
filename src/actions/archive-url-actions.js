@@ -12,6 +12,7 @@ const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function checkUriIsInArchive (uri) {
+  console.log('checking if uri is in archive',uri)
   return new Promise((resolve, reject) => {
     rp({ uri: `${settings.get('wayback.uri_wayback')}*/${uri}` })
       .then(response => {

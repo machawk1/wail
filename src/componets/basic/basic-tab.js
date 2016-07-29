@@ -7,11 +7,11 @@ import MementoMessagePanel from './mementoMessage-panel'
 export default class BasicTab extends Component {
   render () {
     return (
-      <Grid flexible>
+      <Grid flexible >
         <ArchiveUrl />
         <MementoMessagePanel />
         <Row>
-          <div style={{ paddingBottom: 25 }}/>
+          <div style={{ paddingBottom: 25 }} />
         </Row>
         <BasicTabButtons />
       </Grid>

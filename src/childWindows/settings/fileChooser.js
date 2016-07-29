@@ -2,14 +2,12 @@ import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
 import { remote } from 'electron'
 import MenuItem from 'material-ui/MenuItem'
-import {ListItem} from 'material-ui/List'
+import { ListItem } from 'material-ui/List'
 import _ from 'lodash'
 import { grey400 } from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-
 
 // const settings = remote.getGlobal('settings')
 const { dialog } = remote
@@ -24,6 +22,7 @@ export default class FileChooser extends Component {
     warnOnChange: PropTypes.bool,
     settings: PropTypes.object.isRequired,
     useAltName: PropTypes.bool.isRequired,
+    counter: PropTypes.number.isRequired,
     altName: PropTypes.string,
   }
 
@@ -79,14 +78,15 @@ export default class FileChooser extends Component {
       </IconMenu>
     )
     var pt
-    if(this.props.useAltName) {
+    if (this.props.useAltName) {
       pt = this.props.altName
     } else {
       pt = `${ _.upperCase(this.props.whichSetting) } Path`
     }
     return (
       <ListItem
-        key={`fsc-li-${this.props.whichSetting}`}
+        nestedLevel={1}
+        key={`FILECHOOSER${this.props.whichSetting}`}
         primaryText={pt}
         rightIconButton={rightIconMenu}
         secondaryText={this.state.settingValue}

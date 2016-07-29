@@ -141,9 +141,9 @@ class CrawlStore_ extends EventEmitter {
           case From.BASIC_ARCHIVE_NOW: {
             urls = UrlStore.getUrl()
             if (!urls.isEmpty()) {
-              // console.log('crawlstore archiving the url is ', urls)
-              urls = urls.s
+              // console.log('crawlstore archiving the url is ', urls
               crawlingUrlsMessage = urls.s
+              urls = urls.s
               GMessageDispatcher.dispatch({
                 type: EventTypes.QUEUE_MESSAGE,
                 message: 'Archiving Now!'

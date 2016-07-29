@@ -13,6 +13,7 @@ import bytewise from 'bytewise'
 import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
+require('pretty-error').start()
 
 const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('indexLogPath') })
@@ -129,31 +130,68 @@ function generateCDX () {
     })
     next()
   })
+  if (process.platform === 'win32') {
+    let writeStream = fs.createWriteStream(settings.get('indexCDX'))
+    fs.walk(settings.get('warcs'))
+      .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
+      .pipe(onlyWorf)
+      .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
+      .pipe(worfToCdx)
+      .pipe(cdxToLines)
+      .pipe(streamSort(unixSort))
+      .pipe(writeStream)
+      .on('close', () => {
+        writeStream.destroy()
+        console.log('we have closed')
+        del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
+          .then(paths => {
+            let deleted = `Deleted files and folders:\n${paths.join('\n')}`
+            console.log(deleted)
+            logger.info(util.format(logString, deleted))
+            prevIndexingDone = true
+          })
+      })
+      .on('error', err => {
+        logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
+        prevIndexingDone = true
+      })
+  } else {
+    let writeStream = fs.createWriteStream(settings.get('cdxTemp'))
+    fs.walk(settings.get('warcs'))
+      .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
+      .pipe(onlyWorf)
+      .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
+      .pipe(worfToCdx)
+      .pipe(cdxToLines)
+      .pipe(writeStream)
+      .on('close', () => {
+        writeStream.destroy()
+        console.log('we have closed')
+        childProcess.exec(`export LC_ALL=C; sort -u ${settings.get('cdxTemp')} > ${settings.get('indexCDX')}`,
+          (error, stdout, stderr) => {
+            if (error) {
+              logger.error(util.format(logStringError, `nix sorting cdx temp ${error}`))
+            }
+            del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
+              .then(paths => {
+                let deleted = `Deleted files and folders:\n${paths.join('\n')}`
+                console.log(deleted)
+                fs.remove(settings.get('cdxTemp'), (maybeError) => {
+                  if (maybeError) {
+                    logger.error(util.format(logStringError, `nix sorting cdx temp ${maybeError}`))
+                  }
+                  logger.info(util.format(logString, deleted))
+                  prevIndexingDone = true
+                })
+              })
+          })
+      })
+      .on('error', err => {
+        logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
+        prevIndexingDone = true
+      })
+  }
 
-  let writeStream = fs.createWriteStream(settings.get('indexCDX'))
-  fs.walk(settings.get('warcs'))
-    .on('error', (err) => onlyWorf.emit('error', err)) // forward the error on please....
-    .pipe(onlyWorf)
-    .on('error', (err) => worfToCdx.emit('error', err)) // forward the error on please....
-    .pipe(worfToCdx)
-    .pipe(cdxToLines)
-    .pipe(streamSort(unixSort))
-    .pipe(writeStream)
-    .on('close', () => {
-      writeStream.destroy()
-      console.log('we have closed')
-      del([ settings.get('wayback.allCDX'), settings.get('wayback.notIndexCDX') ], { force: true })
-        .then(paths => {
-          let deleted = `Deleted files and folders:\n${paths.join('\n')}`
-          console.log(deleted)
-          logger.info(util.format(logString, deleted))
-          prevIndexingDone = true
-        })
-    })
-    .on('error', err => {
-      logger.error(util.format(logStringError, 'generateCDX on error', err.stack))
-      prevIndexingDone = true
-    })
 }
 
 class Indexer {
@@ -168,7 +206,7 @@ class Indexer {
       let rule = new schedule.RecurrenceRule()
       // this process can take more than 10 seconds
       // so check 3x a minute
-      rule.second = [ 0, 10, 20, 30, 40, 50 ]
+      rule.second = [ 10, 30, 50 ]
       this.job = schedule.scheduleJob(rule, () => {
         if (prevIndexingDone) {
           prevIndexingDone = false

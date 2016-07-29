@@ -97,5 +97,21 @@ export default {
   },
   settingsButton: {
     marginLeft: '10px'
+  },
+  servicesSS: {
+    width: '80px',
+    cursor: 'default'
+  },
+  servicesActionsH: {
+    width: '200px',
+    cursor: 'default',
+    textAlign: 'center',
+  },
+  servicesActions: {
+    width: '200px',
+    cursor: 'default'
+  },
+  serviceActionButton: {
+    margin: '10px'
   }
 }

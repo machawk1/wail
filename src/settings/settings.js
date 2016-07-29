@@ -159,6 +159,7 @@ const managed = {
 
   },
   wayback: {
+    port: '8080',
     uri_tomcat: 'http://localhost:8080/',
     uri_wayback: 'http://localhost:8080/wayback/',
     allCDX: `${path.sep}*.cdx`,
@@ -178,9 +179,9 @@ const managed = {
 }
 
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
-const debugOSX = true
+const debugOSX = false
 
-function writeSettings (base, settings) {
+export function writeSettings (base, settings) {
   let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
   settings.set('base', base)
@@ -203,9 +204,9 @@ function writeSettings (base, settings) {
     jobConfPath = path.normalize(path.join(base, heritrix.jobConf))
     var cdx
     if (process.platform === 'darwin') {
-      cdx = `${darwinExport} ${settings.get('cdxIndexerWin')}`
+      cdx = `${darwinExport} ${settings.get('cdxIndexer')}`
     } else {
-      cdx = `${cmdexport} ${settings.get('cdxIndexerWin')}`
+      cdx = `${cmdexport} ${settings.get('cdxIndexer')}`
     }
     settings.set('cdxIndexer', cdx)
   }
@@ -279,7 +280,6 @@ export default function configSettings (base, userData) {
   }
 
   // writeSettings(base, settings)
-
   if (!settings.get('configured')) {
     // console.log('We are not configured')
     writeSettings(base, settings)
