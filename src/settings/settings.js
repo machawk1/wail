@@ -181,6 +181,8 @@ const managed = {
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
 const debugOSX = false
 
+
+
 export function writeSettings (base, settings) {
   let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
