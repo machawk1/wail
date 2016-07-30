@@ -1,24 +1,15 @@
-import React, { Component } from 'react'
-import ReactDOM from 'react-dom'
+import React, {Component} from 'react'
+import {Row} from 'react-cellblock'
 import autobind from 'autobind-decorator'
-import { List, ListItem } from 'material-ui/List'
+import {List, ListItem} from 'material-ui/List'
 import CrawlUrlsStore from './crawlUrlsStore'
-import cheerio from 'cheerio'
+
 const lstyle = {
-  height: 150, overflow: 'hidden',
+  width: '70%',
+  height: 200,
+  overflow: 'hidden',
   overflowY: 'scroll'
 }
-
-// window.addEventListener('contextmenu', (e) => {
-//   e.preventDefault()
-//   // console.log(e.toElement)
-//  // e.toE.innerHTML = "!!!!!"
-//   // console.log(e)
-//   // // console.log(document.getElementById('newCrawl'))
-//   // let {target} = e
-//   // ReactDOM
-//
-// }, false)
 
 export default class UrlList extends Component {
 

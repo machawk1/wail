@@ -6,6 +6,10 @@ export default {
   buttonBasic: {
     margin: '25px 10px 0 30px'
   },
+  ncAddUrlButton: {
+    // margin: '25px 10px 0 30px'
+    marginRight: 20
+  },
   underlineStyle: {
     borderColor: blue500
   },
@@ -105,7 +109,7 @@ export default {
   servicesActionsH: {
     width: '200px',
     cursor: 'default',
-    textAlign: 'center',
+    textAlign: 'center'
   },
   servicesActions: {
     width: '200px',

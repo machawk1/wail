@@ -1,8 +1,10 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
 import TextField from 'material-ui/TextField'
-import { Row, Column } from 'react-cellblock'
+import AddUrlIcon from 'material-ui/svg-icons/content/add'
+import {Row, Column} from 'react-cellblock'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
 import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
@@ -78,24 +80,32 @@ export default class EnterCrawlUrls extends Component {
 
   render () {
     return (
-      <Row>
-        <Column width="3/4">
-          <TextField
-            floatingLabelText="Enter URL to crawl"
-            id="crawl-url-input"
-            type="url"
-            value={this.state.url}
-            multiLine={true}
-            underlineStyle={this.state.underlineStyle}
-            fullWidth={true}
-            onKeyDown={this.checkKeyCode}
-            onChange={this.handleChange}
-          />
-        </Column>
-        <Column width="1/4">
-          <RaisedButton label="Add Url" style={styles.button} onMouseDown={this.addUrl}/>
-        </Column>
-      </Row>
+      <div>
+        <TextField
+          floatingLabelText="Enter URL to crawl"
+          id="crawl-url-input"
+          type="url"
+          value={this.state.url}
+          underlineStyle={this.state.underlineStyle}
+          onKeyDown={this.checkKeyCode}
+          onChange={this.handleChange}
+        />
+        <FloatingActionButton
+          mini={true}
+          onMouseDown={this.addUrl}
+        >
+          <AddUrlIcon />
+        </FloatingActionButton>
+      </div>
     )
   }
 }
+/*
+ <RaisedButton
+ icon={<AddUrlIcon />}
+ label="Add Url"
+ labelPosition="before"
+ style={styles.ncAddUrlButton}
+ onMouseDown={this.addUrl}
+ />
+ */

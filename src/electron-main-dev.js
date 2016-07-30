@@ -501,12 +501,12 @@ function createWindow () {
   }
 
   let windowConfig = {
-    width: control.w,
-    minWidth: control.w,
-    maxWidth: control.w,
-    height: control.h,
-    minHeight: control.h,
-    maxHeight: control.h,
+    // width: control.w,
+    // minWidth: control.w,
+    // maxWidth: control.w,
+    // height: control.h,
+    // minHeight: control.h,
+    // maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,
     maximizable: false,
@@ -522,17 +522,17 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.mWindowURL //windows.settingsWindowURL windows.mWindowURL
-  if (control.loading && control.firstLoad) {
-    loadUrl = windows.firstLoadWindowURL
-  } else {
-    if (!control.didLoad) {
-      loadUrl = windows.loadingWindowURL
-      control.didLoad = true
-    } else {
-      loadUrl = windows.mWindowURL
-    }
-  }
+  var loadUrl = windows.newCrawlWindowURL //windows.settingsWindowURL windows.mWindowURL
+  // if (control.loading && control.firstLoad) {
+  //   loadUrl = windows.firstLoadWindowURL
+  // } else {
+  //   if (!control.didLoad) {
+  //     loadUrl = windows.loadingWindowURL
+  //     control.didLoad = true
+  //   } else {
+  //     loadUrl = windows.mWindowURL
+  //   }
+  // }
 
   windows.mainWindow.loadURL(loadUrl)
 
