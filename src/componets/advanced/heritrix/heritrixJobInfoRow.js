@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import { TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
+import ToolTip from 'material-ui/internal/Tooltip'
 
 const style = {
   tableHeaderCol: {
@@ -34,8 +35,10 @@ const style = {
 
 export default class HeritrixJobInfoRow extends Component {
   static propTypes = {
+    urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired,
     jobId: PropTypes.string.isRequired,
-    runs: PropTypes.array.isRequired
+    runs: PropTypes.array.isRequired,
+    actionMenu: PropTypes.element.isRequired
   }
 
   render () {
@@ -48,9 +51,9 @@ export default class HeritrixJobInfoRow extends Component {
       let downloaded = job.downloaded || ''
       // console.log('the job being displayed', job)
       return (
-        <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
+        <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>
-            {this.props.jobId}
+            {this.props.urls}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>
             {status}
@@ -67,13 +70,16 @@ export default class HeritrixJobInfoRow extends Component {
           <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={style.tableRowCol}>
             {downloaded}
           </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={style.tableRowCol}>
+            {this.props.actionMenu}
+          </TableRowColumn>
         </TableRow>
       )
     } else {
       return (
-        <TableRow key={`${this.props.jobId}-TableRow`} displayBorder={false}>
+        <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>
-            {this.props.jobId}
+            {this.props.urls}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>
             Not Started
@@ -84,6 +90,9 @@ export default class HeritrixJobInfoRow extends Component {
           <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={style.tableRowCol}>0</TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={style.tableRowCol}>0</TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={style.tableRowCol}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={style.tableRowCol}>
+            {this.props.actionMenu}
+          </TableRowColumn>
         </TableRow>
       )
     }

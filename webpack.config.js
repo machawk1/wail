@@ -6,14 +6,14 @@ var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    accessibility: './src/background/accessibility',
-    indexer: './src/background/indexer',
-    jobs: './src/background/jobs',
+    // accessibility: './src/background/accessibility',
+    // indexer: './src/background/indexer',
+    // jobs: './src/background/jobs',
     newCrawl: './src/childWindows/newCrawl/newCrawl',
-    requestD: './src/background/requestDaemon',
-    settingsW: './src/childWindows/settings/settingsW',
+    // requestD: './src/background/requestDaemon',
+    // settingsW: './src/childWindows/settings/settingsW',
     wail: './src/wail',
-    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
+    // firstLoad: './src/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
   },
   module: {
@@ -54,10 +54,9 @@ module.exports = {
     ]
 
   },
-  // resolve: {
-  //   modulesDirectories: [ 'node_modules' ],
-  //   extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
-  // },
+  resolve: {
+    extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
+  },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -73,5 +72,4 @@ module.exports = {
   },
   // bail: true,
   target: 'electron-renderer',
-
 }

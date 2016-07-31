@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import { Row, Column } from 'react-cellblock'
+import {Row, Column} from 'react-cellblock'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
@@ -42,14 +42,14 @@ export default class ArchiveUrl extends Component {
 
   @autobind
   handleChange (e) {
-    let val = e.target.value
-    clearTimeout(focusTime)
-    focusTime = setTimeout(() => {
-      console.log('Timeout focus time')
-      if (isURL(val)) {
-        aua.getMementos(val)
-      }
-    }, 600)
+    // let val = e.target.value
+    // clearTimeout(focusTime)
+    // focusTime = setTimeout(() => {
+    //   console.log('Timeout focus time')
+    //   if (isURL(val)) {
+    //     aua.getMementos(val)
+    //   }
+    // }, 600)
     let value = e.target.value
     let err = styles.underlineStyleError
     if (isURL(value) || S(value).isEmpty()) {
@@ -62,7 +62,7 @@ export default class ArchiveUrl extends Component {
   focusLost (event) {
     // console.log('checking url for archiving', this.state.url, event.target.value)
     if (isURL(event.target.value)) {
-      // console.log('its valid')
+      console.log('its valid')
       aua.urlUpdated(event.target.value)
     } else {
       if (S(event.target.value).isEmpty()) {
@@ -82,32 +82,30 @@ export default class ArchiveUrl extends Component {
 
   render () {
     return (
-      <Row>
-        <div style={{display: 'flex'}}>
-          <div style={{flex: 1}}>
-            <TextField
-              floatingLabelText="URL"
-              underlineStyle={this.state.underlineStyle}
-              id="archive-url-input"
-              value={this.state.url.s}
-              onBlur={this.focusLost}
-              fullWidth={true}
-              onChange={this.handleChange}
-              style={styles.urlInput}
-            />
-          </div>
-          <div >
-            <RaisedButton
-              icon={<ArchiveNowButton />}
-              label="Archive Now!"
-              primary={true}
-              labelPosition='before'
-              style={styles.buttonBasic}
-              onMouseDown={this.onClickArchiveNow}
-            />
-          </div>
+      <div style={{ display: 'flex' }}>
+        <div style={{ flex: 1 }}>
+          <TextField
+            floatingLabelText="URL"
+            underlineStyle={this.state.underlineStyle}
+            id="archive-url-input"
+            value={this.state.url.s}
+            onBlur={this.focusLost}
+            fullWidth={true}
+            onChange={this.handleChange}
+            style={styles.urlInput}
+          />
         </div>
-      </Row>
+        <div >
+          <RaisedButton
+            icon={<ArchiveNowButton />}
+            label="Archive Now!"
+            primary={true}
+            labelPosition='before'
+            style={styles.buttonBasic}
+            onMouseDown={this.onClickArchiveNow}
+          />
+        </div>
+      </div>
     )
   }
 }

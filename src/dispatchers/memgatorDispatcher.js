@@ -2,6 +2,6 @@ import { Dispatcher } from 'flux'
 
 // use of a variable here allows us to attach our dispatchers to the window
 // if desired
-const MemgatorDispatcher = new Dispatcher()
+const MementoDispatcher = new Dispatcher()
 
-export default MemgatorDispatcher
+export default MementoDispatcher

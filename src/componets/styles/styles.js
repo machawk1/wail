@@ -147,5 +147,20 @@ export default {
   },
   serviceActionButton: {
     margin: '10px'
+  },
+  basicTab: {
+    btBody: {
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    mementoTable: {
+      height: '140px',
+      resourceCol: {
+        width: '160px'
+      },
+      copiesCol: {
+        width: '90px'
+      }
+    }
   }
 }

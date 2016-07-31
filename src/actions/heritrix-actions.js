@@ -531,6 +531,19 @@ function sortJobs (j1, j2) {
   return 0
 }
 
+function extractUrlsFromConf (confText) {
+  let doc = cheerio.load(confText, {
+    xmlMode: true
+  })
+  let urlElemText = S(doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]').text().trim())
+  let maybeMultiple = urlElemText.lines()
+  if(maybeMultiple.length > 1) {
+    return maybeMultiple
+  } else {
+    return maybeMultiple[0]
+  }
+}
+
 export function getHeritrixJobsState () {
   console.log('Get heritrix Job State')
   return new Promise((resolve, reject) => {
@@ -558,20 +571,27 @@ export function getHeritrixJobsState () {
             console.log('is a directory we have a jobid')
             counter += 1
             var cBeanT = 'This file is missing from the job when we tried to access it. This is an auto generated warning message'
+            var urls
+            let noConfReadError = true
             try {
               cBeanT = fs.readFileSync(crawlerBeanP, 'utf8')
             } catch (error) {
+              noConfReadError =  false
               console.error(error)
             }
             jobsConfs[ jid.capture('job') ] = cBeanT
-
+            if(noConfReadError) {
+              urls = extractUrlsFromConf(cBeanT)
+            } else {
+              urls = 'error reading conf'
+            }
             jobs[ jid.capture('job') ] = {
               log: false,
               jobId: jid.capture('job'),
               launch: '',
               path: path.normalize(`${heritrixJobP}/${jid.capture('job')}`),
               logPath: ' ',
-              urls: '',
+              urls,
               runs: [],
             }
           }

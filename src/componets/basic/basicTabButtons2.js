@@ -31,24 +31,20 @@ export default class BasicTabButtons extends Component {
 
   render () {
     return (
-        <Toolbar>
-          <ToolbarGroup firstChild={true}>
-            <RaisedButton
-              icon={<CheckArchiveStatIcon />}
-              label='Check Archived Status'
-              labelPosition='before'
-              onMouseDown={this.onClickCheckArchive}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup lastChild={true}>
-            <RaisedButton
-              icon={<ViewArchiveIcon />}
-              label='View Archive'
-              labelPosition='before'
-              onMouseDown={this.onClickViewArchive}
-            />
-          </ToolbarGroup>
-        </Toolbar>
+      <>
+        <ToolbarGroup firstChild={true}>
+          <RaisedButton
+            icon={<CheckArchiveStatIcon />}
+            onMouseDown={this.onClickCheckArchive}
+          />
+        </ToolbarGroup>
+        <ToolbarGroup lastChild={true}>
+          <RaisedButton
+            icon={<ViewArchiveIcon />}
+            onMouseDown={this.onClickViewArchive}
+          />
+        </ToolbarGroup>
+      </>
     )
   }
 }

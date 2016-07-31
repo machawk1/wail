@@ -1,8 +1,9 @@
 import childProcess from 'child_process'
 import rp from 'request-promise'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
+import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import wailConstants from '../constants/wail-constants'
 
 const settings = remote.getGlobal('settings')
@@ -12,7 +13,7 @@ const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function checkUriIsInArchive (uri) {
-  console.log('checking if uri is in archive',uri)
+  console.log('checking if uri is in archive', uri)
   return new Promise((resolve, reject) => {
     rp({ uri: `${settings.get('wayback.uri_wayback')}*/${uri}` })
       .then(response => {
@@ -44,6 +45,29 @@ export function urlUpdated (url) {
   UrlDispatcher.dispatch({
     type: EventTypes.HAS_VAILD_URI,
     url: url
+  })
+}
+
+export async function askMemgator2 (url) {
+  childProcess.exec(`${settings.get('memgatorQuery')} -f json ${url}`, (err, stdout, stderr) => {
+    if (err) {
+      console.error(err)
+      let stack
+      if (Reflect.has(err, 'stack')) {
+        stack = `${stderr} ${err.stack}`
+      } else {
+        stack = `${stderr}`
+      }
+      logger.error(util.format(logStringError, `askMemgator ${stdout}`, stack))
+    } else {
+      let timemap = JSON.parse(stdout)
+      MemgatorDispatcher.dispatch({
+        type: EventTypes.GOT_MEMENTO_COUNT,
+        url,
+        timemap,
+        count: timemap.mementos.list.length
+      })
+    }
   })
 }
 

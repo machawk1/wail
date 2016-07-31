@@ -33,11 +33,12 @@ export default {
     STORE_HERITRIX_JOB_CONFS: null,
     VIEW_ARCHIVED_URI: null,
     VIEW_HERITRIX_JOB: null,
-    WAYBACK_STATUS_UPDATE: null,
+    WAYBACK_STATUS_UPDATE: null
   }),
   From: keyMirror({
     BASIC_ARCHIVE_NOW: null,
-    NEW_CRAWL_DIALOG: null
+    NEW_CRAWL_DIALOG: null,
+    MEMENTO_MENU: null
   }),
   RequestTypes: keyMirror({
     ACCESSIBILITY: null,
@@ -47,7 +48,7 @@ export default {
     RESCAN_JOB_DIR: null,
     KILL_HERITRIX: null,
     LAUNCH_HERITRIX_JOB: null,
-    SEND_HERITRIX_ACTION: null,
+    SEND_HERITRIX_ACTION: null
   }),
   Loading: keyMirror({
     JAVA_CHECK_DONE: null,
@@ -56,6 +57,6 @@ export default {
     JDK_DOWNLOADED: null,
     SERVICE_HW_UP: null,
     SERVICE_HW_DOWN: null,
-    SERVICE_CHECK_DONE: null,
+    SERVICE_CHECK_DONE: null
   })
 }

@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react'
-import { shell, remote } from 'electron'
-import { ListItem } from 'material-ui/List'
-import { grey400 } from 'material-ui/styles/colors'
+import React, {Component, PropTypes} from 'react'
+import {shell, remote} from 'electron'
+import {ListItem} from 'material-ui/List'
+import {grey400} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
@@ -22,6 +22,7 @@ import {
   rescanJobDir
 } from '../../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
+import HeritrixJobInfoRow from './heritrixJobInfoRow'
 
 const style = {
   cursor: 'pointer'
@@ -39,6 +40,7 @@ export default class HeritrixJobItem extends Component {
 
   constructor (props, context) {
     super(props, context)
+    console.log('Heritrix Job Item',this.props)
     this.state = {
       runs: props.runs
     }
@@ -139,12 +141,35 @@ export default class HeritrixJobItem extends Component {
     })
   }
 
+  /*
+   const rightIconMenu = (
+   <IconMenu
+   iconButtonElement={actionIcon}
+   anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+   targetOrigin={{ vertical: 'top', horizontal: 'left' }}
+   >
+   <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config'/>
+   <Divider  />
+   <MenuItem
+   style={style}
+   primaryText='Actions'
+   rightIcon={<ArrowDropRight  />}
+   menuItems={[
+   <MenuItem style={style} onTouchTap={this.start} primaryText='Start'/>,
+   <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart'/>,
+   <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl'/>,
+   <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete'/>,
+   ]}
+   />
+   </IconMenu>
+   )
+   */
+
   render () {
     const actionIcon = (
       <IconButton
+        key={`HJIR-${this.props.jobId}-actionButton`}
         touch={true}
-        tooltip='Actions'
-        tooltipPosition="bottom-left"
       >
         <MoreVertIcon color={grey400}/>
       </IconButton>
@@ -152,33 +177,32 @@ export default class HeritrixJobItem extends Component {
 
     const rightIconMenu = (
       <IconMenu
+        key={`HJIR-${this.props.jobId}-actionButton-menu`}
         iconButtonElement={actionIcon}
-        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-        targetOrigin={{ vertical: 'top', horizontal: 'left' }}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
       >
         <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config'/>
         <Divider  />
-        <MenuItem
-          style={style}
-          primaryText='Actions'
-          rightIcon={<ArrowDropRight  />}
-          menuItems={[
-            <MenuItem style={style} onTouchTap={this.start} primaryText='Start'/>,
-            <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart'/>,
-            <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl'/>,
-            <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete'/>,
-          ]}
-        />
+        <MenuItem style={style} onTouchTap={this.start} primaryText='Start'/>
+        <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart'/>
+        <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl'/>
+        <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete'/>
       </IconMenu>
     )
 
     return (
-      <ListItem
-        key={`hjiLI-${this.props.jobId}`}
-        disabled={true}
-        primaryText={<HeritrixJobInfo jobId={this.props.jobId} runs={this.state.runs}/>}
-        rightIconButton={rightIconMenu}
-      />
+      <HeritrixJobInfoRow key={`HJIR-${this.props.jobId}`} jobId={this.props.jobId} runs={this.state.runs} actionMenu={rightIconMenu}/>
     )
   }
 }
+/*
+ return (
+ <ListItem
+ key={`hjiLI-${this.props.jobId}`}
+ disabled={true}
+ primaryText={<HeritrixJobInfo jobId={this.props.jobId} runs={this.state.runs}/>}
+ rightIconButton={rightIconMenu}
+ />
+ )
+ */

@@ -243,16 +243,16 @@ function setUp () {
   if (process.platform === 'darwin') {
     // control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
-    control.h = 300
+    control.h = 361
   } else if (process.platform === 'win32') {
     // console.log('windows')
     control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
     control.w = 800
-    control.h = 337
+    control.h = 361
   } else {
     control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
     control.w = 800
-    control.h = 300
+    control.h = 361
   }
 
   let settings = configSettings(control.base, settingsPath)
@@ -402,10 +402,10 @@ function createWindow () {
 
   let windowConfig = {
     width: control.w,
-    minWidth: control.w,
+    // minWidth: control.w,
     // maxWidth: control.w,
     height: control.h,
-    minHeight: control.h,
+    // minHeight: control.h,
     // maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,

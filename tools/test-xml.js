@@ -35,9 +35,20 @@ import { joinStrings } from 'joinable'
 //
 // console.log(it,it.isEmpty())
 
-fs.readFile('/Users/jberlin/WebstormProjects/wail/waillogs/wail-settings/settings.json','utf8', (error,it) => {
-  let json = JSON.parse(it)
-  console.log(_.keys(json))
+let cpath = '/home/john/my-fork-wail/wail/bundledApps/heritrix-3.3.0/jobs/1469471564925/crawler-beans.cxml'
+
+fs.readFile(cpath ,'utf8', (error,it) => {
+  let doc = cheerio.load(it, {
+    xmlMode: true
+  })
+
+  let urlElemText = S(doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]').text().trim())
+  let maybeMultiple = urlElemText.lines()
+  if(maybeMultiple.length > 1) {
+    return maybeMultiple
+  } else {
+    return maybeMultiple[0]
+  }
 })
 
 // require('pretty-error').start()
