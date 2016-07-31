@@ -28,7 +28,9 @@ const logger = remote.getGlobal('logger')
 const logString = 'heritirx-actions %s'
 const logStringError = 'heritirx-actions error where[ %s ] stack [ %s ]'
 
-const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+const jobRunning = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
+const jobEnd = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+const jobStatusRe = /(:<timestamp>[a-zA-Z0-9\-:]+)\s(:<discovered>[0-9]+)\s(:<queued>[0-9]+)\s(:<downloaded>[0-9]+)\s.+/
 
 let jobLaunchRe
 let jobRe
@@ -534,6 +536,7 @@ export function getHeritrixJobsState () {
   return new Promise((resolve, reject) => {
     let jobLaunch = named.named(jobLaunchRe)
     let job = named.named(jobRe)
+    let jobStatus = named.named(jobStatusRe)
     let jobs = {}
     let counter = 0
     let jobsConfs = {}
@@ -581,16 +584,16 @@ export function getHeritrixJobsState () {
       fs.readFile(item.logPath, 'utf8', (err, data) => {
         if (err) throw err
         let lines = S(data).lines()
-        let lastLine = S(lines[ lines.length - 1 ])
+        let linesLen = lines.length - 1
+        let lastLine = S(lines[ linesLen ])
         if (lastLine.isEmpty()) {
-          lastLine = S(lines[ lines.length - 2 ])
+          linesLen = linesLen - 1
+          lastLine.setValue(lines[ linesLen ])
         }
-        if (jobEndStatus.test(lastLine.s)) {
-          // jobs[item.jobId].progress.ended = true
-          // console.log(lines[ lines.length - 2 ])
-          let nextToLast = S(lines[ lines.length - 2 ])
-          if (nextToLast.isEmpty()) {
-            nextToLast = S(lines[ lines.length - 3 ])
+        if (jobEnd.test(lastLine.s)) {
+          let nextToLast = S(lines[ linesLen - 1 ])
+          if (nextToLast.isEmpty() || jobEnd.test(nextToLast.s)) {
+            nextToLast.setValue(lines[ linesLen - 2 ])
           }
           let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
           jobs[ item.jobId ].runs.push({
@@ -602,7 +605,6 @@ export function getHeritrixJobsState () {
           })
         } else {
           let fields = lastLine.collapseWhitespace().s.split(' ')
-          // console.log(fields)
           jobs[ item.jobId ].runs.push({
             ended: false,
             timestamp: moment(fields[ 0 ]),

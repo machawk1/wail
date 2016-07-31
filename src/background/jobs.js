@@ -19,7 +19,9 @@ const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('jobLogPath') })
 const logString = 'jobs %s'
 const logStringError = 'jobs error where [ %s ] stack [ %s ]'
-const jobEndStatus = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+const jobRunning = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
+const jobEnd = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+const jobStatusRe = /(:<timestamp>[a-zA-Z0-9\-:]+)\s(:<discovered>[0-9]+)\s(:<queued>[0-9]+)\s(:<downloaded>[0-9]+)\s.+/
 
 const jobLock = new ReadWriteLock()
 const jobCache = {
@@ -189,40 +191,40 @@ function getHeritrixJobsState () {
         if (err) {
           logger.error(util.format(logStringError, `launchStats ${item.logPath}`, err.stack))
           through.push(item)
-        }
-        // console.log(data)
-        let lines = S(data).lines()
-        let lastLine = S(lines[ lines.length - 1 ])
-        if (lastLine.isEmpty()) {
-          lastLine = S(lines[ lines.length - 2 ])
-        }
-        if (jobEndStatus.test(lastLine.s)) {
-          // jobs[item.jobId].progress.ended = true
-          let nextToLast = S(lines[ lines.length - 2 ])
-          if (nextToLast.isEmpty()) {
-            nextToLast = S(lines[ lines.length - 3 ])
-          }
-          let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
-          let tsm = moment(nextLastfields[ 0 ])
-          jobs[ item.jobId ].runs.push({
-            ended: true,
-            timestampm: tsm,
-            timestamp: tsm.format(),
-            discovered: nextLastfields[ 1 ],
-            queued: nextLastfields[ 2 ],
-            downloaded: nextLastfields[ 3 ],
-          })
         } else {
-          let fields = lastLine.collapseWhitespace().s.split(' ')
-          let tsm = moment(fields[ 0 ])
-          jobs[ item.jobId ].runs.push({
-            ended: false,
-            timestampm: tsm,
-            timestamp: tsm.format(),
-            discovered: fields[ 1 ],
-            queued: fields[ 2 ],
-            downloaded: fields[ 3 ],
-          })
+          // console.log(data)
+          let lines = S(data).lines()
+          let linesLen = lines.length - 1
+          let lastLine = S(lines[ linesLen ])
+          if (lastLine.isEmpty()) {
+            linesLen = linesLen - 1
+            lastLine.setValue(lines[ linesLen ])
+          }
+          if (jobEnd.test(lastLine.s)) {
+            let nextToLast = S(lines[ linesLen - 1 ])
+            if (nextToLast.isEmpty() || jobEnd.test(nextToLast.s)) {
+              nextToLast.setValue(lines[ linesLen - 2 ])
+            }
+            let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+            jobs[ item.jobId ].runs.push({
+              ended: true,
+              timestamp: moment(nextLastfields[ 0 ]),
+              discovered: nextLastfields[ 1 ],
+              queued: nextLastfields[ 2 ],
+              downloaded: nextLastfields[ 3 ],
+            })
+          } else {
+            let fields = lastLine.collapseWhitespace().s.split(' ')
+            let tsm = moment(fields[ 0 ])
+            jobs[ item.jobId ].runs.push({
+              ended: false,
+              timestampm: tsm,
+              timestamp: tsm.format(),
+              discovered: fields[ 1 ],
+              queued: fields[ 2 ],
+              downloaded: fields[ 3 ],
+            })
+          }
         }
       })
       through.push(item)
