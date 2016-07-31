@@ -3,6 +3,36 @@ import spacing from 'material-ui/styles/spacing'
 import { zIndex } from 'material-ui/styles'
 
 export default {
+  newCrawlBody: {
+    display: 'flex',
+    flex: 1
+  },
+  newCrawlListBody: {
+    order: -1,
+  },
+  newCrawlList: {
+    width: '55%',
+    order: -1,
+    overflow: 'hidden',
+    overflowY: 'scroll'
+  },
+  newCrawlChildren: {
+    paddingTop: spacing.desktopKeylineIncrement,
+    flexDirection: 'column'
+  },
+  newCrawlColRow: {
+    flex: 1,
+    flexDirection: 'row',
+    width: '45%',
+    justifyContent: 'center'
+  },
+  newCrawlDepth: {
+    marginLeft: 15
+  },
+  newCrawlUrlInput: {
+    width: '80%',
+    marginLeft: 15
+  },
   buttonBasic: {
     margin: '25px 10px 0 30px'
   },

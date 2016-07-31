@@ -26,9 +26,9 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{ height: '100%' }}>
         <Header />
-        <div style={styles.root}>
+        <div style={styles.newCrawlChildren}>
           {this.props.children}
         </div>
         <Footer />

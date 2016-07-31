@@ -40,7 +40,7 @@ const control = {
   iconp: null,
   tray: null,
   base: null,
-  notDebugUI: true,
+  notDebugUI: false,
   debug: false,
   openBackGroundWindows: false,
   didClose: false,
@@ -57,106 +57,6 @@ app.commandLine.appendSwitch('js-flags', '--expose_gc')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
 app.commandLine.appendSwitch('allow-http-screen-capture')
-
-function contextMenu (event, props) {
-  let editFlags = props.editFlags
-  let hasText = props.selectionText.trim().length > 0
-  let menuTemp = []
-  if (editFlags.canCut && hasText) {
-    menuTemp.push({
-      label: 'Cut',
-      click (item, window) {
-        window.webContents.cut()
-      },
-      enabled: true,
-      visible: props.isEditable
-    })
-  }
-
-  if (editFlags.canCopy && hasText) {
-    if (menuTemp.length > 0) {
-      menuTemp.push({
-        type: 'separator'
-      })
-    }
-    menuTemp.push({
-      label: 'Copy',
-      click (item, window) {
-        window.webContents.copy()
-      },
-      enabled: true,
-      visible: props.isEditable
-    })
-  }
-
-  if (editFlags.canPaste) {
-    if (menuTemp.length > 0) {
-      menuTemp.push({
-        type: 'separator'
-      })
-    }
-    menuTemp.push({
-      label: 'Paste',
-      click (item, window) {
-        window.webContents.paste()
-      },
-      enabled: true,
-      visible: true
-    })
-    menuTemp.push({
-      label: 'Paste and Match Style',
-      click (item, window) {
-        window.webContents.pasteAndMatchStyle()
-      },
-      enabled: true,
-      visible: true
-    })
-  }
-
-  if (editFlags.canSelectAll) {
-    if (menuTemp.length > 0) {
-      menuTemp.push({
-        type: 'separator'
-      })
-    }
-    menuTemp.push({
-      label: 'Select All',
-      click (item, window) {
-        window.webContents.selectAll()
-      },
-      enabled: true
-    })
-  }
-  if (editFlags.canUndo) {
-    if (menuTemp.length > 0) {
-      menuTemp.push({
-        type: 'separator'
-      })
-    }
-    menuTemp.push({
-      label: 'Undo',
-      click (item, window) {
-        window.webContents.undo()
-      },
-      enabled: true
-    })
-  }
-  if (editFlags.canRedo) {
-    if (menuTemp.length > 0) {
-      menuTemp.push({
-        type: 'separator'
-      })
-    }
-    menuTemp.push({
-      label: 'Redo',
-      click (item, window) {
-        window.webContents.redo()
-      },
-      enabled: true
-    })
-  }
-  return Menu.buildFromTemplate(menuTemp)
-}
 
 function showNewCrawlWindow (parent) {
   let config = {
@@ -501,11 +401,11 @@ function createWindow () {
   }
 
   let windowConfig = {
-    // width: control.w,
-    // minWidth: control.w,
+    width: control.w,
+    minWidth: control.w,
     // maxWidth: control.w,
-    // height: control.h,
-    // minHeight: control.h,
+    height: control.h,
+    minHeight: control.h,
     // maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,
@@ -522,7 +422,7 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.newCrawlWindowURL //windows.settingsWindowURL windows.mWindowURL
+  var loadUrl = windows.mWindowURL //windows.settingsWindowURL windows.mWindowURL
   // if (control.loading && control.firstLoad) {
   //   loadUrl = windows.firstLoadWindowURL
   // } else {

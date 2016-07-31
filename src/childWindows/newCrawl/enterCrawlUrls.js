@@ -80,11 +80,12 @@ export default class EnterCrawlUrls extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{ order: 2 }}>
         <TextField
           floatingLabelText="Enter URL to crawl"
           id="crawl-url-input"
           type="url"
+          style={styles.newCrawlUrlInput}
           value={this.state.url}
           underlineStyle={this.state.underlineStyle}
           onKeyDown={this.checkKeyCode}

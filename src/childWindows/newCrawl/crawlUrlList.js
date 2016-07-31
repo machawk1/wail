@@ -1,15 +1,8 @@
-import React, {Component} from 'react'
-import {Row} from 'react-cellblock'
+import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
-import {List, ListItem} from 'material-ui/List'
+import { List, ListItem } from 'material-ui/List'
+import styles from '../../componets/styles/styles'
 import CrawlUrlsStore from './crawlUrlsStore'
-
-const lstyle = {
-  width: '70%',
-  height: 200,
-  overflow: 'hidden',
-  overflowY: 'scroll'
-}
 
 export default class UrlList extends Component {
 
@@ -39,7 +32,7 @@ export default class UrlList extends Component {
 
   render () {
     return (
-      <List style={lstyle} children={this.state.urls}/>
+      <List style={styles.newCrawlList} children={this.state.urls}/>
     )
   }
 }
