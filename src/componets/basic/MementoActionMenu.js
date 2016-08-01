@@ -96,12 +96,6 @@ export default class MementoActionMenu extends Component {
       >
         <MenuItem
           style={style}
-          onTouchTap={this.viewStats}
-          rightIcon={<ViewStatsIcon />}
-          primaryText='View Statistics'
-        />
-        <MenuItem
-          style={style}
           onTouchTap={this.archiveNow}
           rightIcon={<ArchiveNowIcon />}
           primaryText='Archive Now'

@@ -25,7 +25,32 @@ import moment from 'moment'
 import named from 'named-regexp'
 import cp from 'child_process'
 import { joinStrings } from 'joinable'
+import tld from 'tldjs'
+import purl from 'purl'
+import EventEmitter from 'eventemitter3'
 
+class ee extends EventEmitter {
+  constructor () {
+    super()
+  }
+
+  doIt() {
+    this.emit('test',{
+      hi: 'yo'
+    })
+  }
+
+}
+
+let EE = new ee()
+
+EE.on('test',(it) => {
+  console.log(it)
+})
+
+EE.doIt()
+
+// import tm from '/home/john/my-fork-wail/wail/test/csodu.timemap.json'
 
 // let it = S('yay')
 //
@@ -35,21 +60,22 @@ import { joinStrings } from 'joinable'
 //
 // console.log(it,it.isEmpty())
 
-let cpath = '/home/john/my-fork-wail/wail/bundledApps/heritrix-3.3.0/jobs/1469471564925/crawler-beans.cxml'
+// let archiveExtractor = named.named()
 
-fs.readFile(cpath ,'utf8', (error,it) => {
-  let doc = cheerio.load(it, {
-    xmlMode: true
-  })
 
-  let urlElemText = S(doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]').text().trim())
-  let maybeMultiple = urlElemText.lines()
-  if(maybeMultiple.length > 1) {
-    return maybeMultiple
-  } else {
-    return maybeMultiple[0]
-  }
-})
+// cp.exec('/home/john/my-fork-wail/wail/memgators/memgator-linux-amd64 --arcs=/home/john/my-fork-wail/wail/config/archives.json --format=json http://cs.odu.edu',(err, stdout, stderr) => {
+//   if(err) {
+//     console.error(err)
+//   } else {
+//     // let tm = JSON.parse()
+//     // console.log(tm)
+//     fs.writeFile('/home/john/my-fork-wail/wail/test/csodu.timemap.json', stdout,'utf8',(err) =>{
+//       if(err){
+//         console.error(err)
+//       }
+//     })
+//   }
+// })
 
 // require('pretty-error').start()
 //

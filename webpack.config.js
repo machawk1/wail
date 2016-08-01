@@ -9,12 +9,13 @@ module.exports = {
     // accessibility: './src/background/accessibility',
     // indexer: './src/background/indexer',
     // jobs: './src/background/jobs',
-    newCrawl: './src/childWindows/newCrawl/newCrawl',
+    // newCrawl: './src/childWindows/newCrawl/newCrawl',
     // requestD: './src/background/requestDaemon',
     // settingsW: './src/childWindows/settings/settingsW',
     wail: './src/wail',
     // firstLoad: './src/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
+    // notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad',
+    // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },
   module: {
     noParse: noParseRe,

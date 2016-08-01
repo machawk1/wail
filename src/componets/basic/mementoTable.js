@@ -54,6 +54,9 @@ export default class MementoTable extends Component {
                 Public Copies
               </TableHeaderColumn>
               <TableHeaderColumn>
+                Archival Status
+              </TableHeaderColumn>
+              <TableHeaderColumn>
                 Actions
               </TableHeaderColumn>
             </TableRow>

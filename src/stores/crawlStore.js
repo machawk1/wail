@@ -8,6 +8,7 @@ import autobind from 'autobind-decorator'
 import UrlStore from '../stores/urlStore'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
+import MementoDispatcher from '../dispatchers/memgatorDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import { readCode } from '../actions/editor-actions'
@@ -35,13 +36,25 @@ class CrawlStore_ extends EventEmitter {
     ipcRenderer.on('crawljob-configure-dialogue', (event, newCrawl) => {
       // console.log('got crawljob configured')
       // console.log(newCrawl)
-      makeHeritrixJobConf(newCrawl.urls, newCrawl.depth)
+      let forMTI
       let urls
-      if (Array.isArray(newCrawl.urls)) {
-        urls = `Urls: ${joinStrings(...newCrawl.urls, { separator: os.EOL })} With depth of ${newCrawl.depth}`
+      let maybeArray = Array.isArray(newCrawl.urls)
+      if (maybeArray) {
+        forMTI = joinStrings(...newCrawl.urls, { separator: os.EOL })
+        urls = `Urls: ${forMTI} With depth of ${newCrawl.depth}`
       } else {
+        forMTI = newCrawl.urls
         urls = `${newCrawl.urls} with depth of ${newCrawl.depth}`
       }
+      let jId = new Date().getTime()
+      MementoDispatcher.dispatch({
+        type: EventTypes.BUILD_CRAWL_JOB,
+        urls: forMTI,
+        maybeArray,
+        jId
+      })
+      makeHeritrixJobConf(newCrawl.urls, newCrawl.depth,jId)
+
       GMessageDispatcher.dispatch({
         type: EventTypes.QUEUE_MESSAGE,
         message: `Building Heritrix crawl for ${urls}`
@@ -137,6 +150,7 @@ class CrawlStore_ extends EventEmitter {
         var urls
         let depth = 1
         let showMessage = true
+        let maybeArray = false
         switch (event.from) {
           case From.BASIC_ARCHIVE_NOW: {
             urls = UrlStore.getUrl()
@@ -154,7 +168,7 @@ class CrawlStore_ extends EventEmitter {
             break
           }
           case From.NEW_CRAWL_DIALOG: {
-            let maybeArray = Array.isArray(event.urls)
+            maybeArray = Array.isArray(event.urls)
             depth = event.depth
             if (maybeArray) {
               crawlingUrlsMessage = `Urls: ${joinStrings(...event.urls, { separator: os.EOL })} With depth of ${depth}`
@@ -171,11 +185,18 @@ class CrawlStore_ extends EventEmitter {
         }
 
         if (showMessage) {
+          let jId = new Date().getTime()
+          MementoDispatcher.dispatch({
+            type: EventTypes.BUILD_CRAWL_JOB,
+            urls,
+            maybeArray,
+            jId
+          })
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: `Building Heritrix crawl for ${crawlingUrlsMessage}`
           })
-          makeHeritrixJobConf(urls, depth)
+          makeHeritrixJobConf(urls, depth,jId)
         }
 
         break
@@ -201,6 +222,10 @@ class CrawlStore_ extends EventEmitter {
         break
       }
       case EventTypes.LAUNCHED_CRAWL_JOB: {
+        MementoDispatcher.dispatch({
+          type: EventTypes.LAUNCHED_CRAWL_JOB,
+          jId: event.id
+        })
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built launched job: ${event.id}`

@@ -13,6 +13,11 @@
       "email": "mkelly@cs.odu.edu"
     }
   ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:N0taN3rd/wail.git"
+  },
+  "bugs": "https://github.com/N0taN3rd/wail/issues",
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
@@ -147,6 +152,7 @@
     "postcss": "^5.1.1",
     "pretty-error": "^2.0.0",
     "progress": "^1.1.8",
+    "purl": "^1.0.4",
     "queue": "^4.0.0",
     "react": "15.3.0",
     "react-addons-css-transition-group": "^15.3.0",
@@ -172,6 +178,7 @@
     "split2": "^2.1.0",
     "string": "^3.3.1",
     "through2": "^2.0.1",
+    "tldjs": "^1.6.2",
     "twix": "^1.1.0",
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",

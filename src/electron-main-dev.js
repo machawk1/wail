@@ -30,7 +30,10 @@ const windows = {
   settingsWindowURL: null,
 
   firstLoadWindowURL: null,
-  loadingWindowURL: null
+  loadingWindowURL: null,
+
+  timemapStatsWindow: null,
+  timemapStatsURL: null
 }
 
 const control = {
@@ -218,6 +221,7 @@ function setUp () {
     windows.settingsWindowURL = `file://${__dirname}/childWindows/settings/settingsW.html`
     windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
+    windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
   } else {
     control.base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${control.base}/src/background/accessibility.html`
@@ -229,6 +233,7 @@ function setUp () {
     windows.settingsWindowURL = `file://${control.base}/src/childWindows/settings/settingsW.html`
     windows.firstLoadWindowURL = `file://${control.base}/src/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${control.base}/src/loadingScreens/notFirstTime/loadingScreen.html`
+    windows.timemapStatsURL = `file://${control.base}/childWindows/timemapStats/timemapStats.html`
   }
 
   let logPath

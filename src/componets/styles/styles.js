@@ -162,5 +162,47 @@ export default {
         width: '90px'
       }
     }
+  },
+  heritrixTable: {
+    crawlUrlS: {
+      width: '150px',
+      wordWrap: 'break-word',
+      textOverflow: 'none',
+      whiteSpace: 'normal',
+      cursor: 'default'
+    },
+    statusS: {
+      width: '75px',
+      wordWrap: 'break-word',
+      textOverflow: 'none',
+      whiteSpace: 'normal',
+      cursor: 'default'
+    },
+    timestampS: {
+      width: '75px',
+      wordWrap: 'break-word',
+      textOverflow: 'none',
+      whiteSpace: 'normal',
+      cursor: 'default'
+    },
+    discoveredS: {
+      width: '75px',
+      textAlign: 'center',
+      cursor: 'default'
+    },
+    queuedS: {
+      width: '75px',
+      textAlign: 'center',
+      cursor: 'default'
+    },
+    downloadedS: {
+      width: '75px',
+      textAlign: 'center',
+      cursor: 'default'
+    },
+    actionS: {
+      width: '30px',
+      cursor: 'default'
+    }
   }
 }

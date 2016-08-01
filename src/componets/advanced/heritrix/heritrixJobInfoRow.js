@@ -1,7 +1,18 @@
 import React, { Component, PropTypes } from 'react'
 import { TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
-import ToolTip from 'material-ui/internal/Tooltip'
+import { joinStrings } from 'joinable'
+import styles from '../../styles/styles'
+
+const {
+  crawlUrlS,
+  statusS,
+  timestampS,
+  discoveredS,
+  queuedS,
+  downloadedS,
+  actionS
+} = styles.heritrixTable
 
 const style = {
   tableHeaderCol: {
@@ -43,6 +54,12 @@ export default class HeritrixJobInfoRow extends Component {
 
   render () {
     let runs = this.props.runs
+    var url
+    if(Array.isArray(this.props.urls)) {
+      url = joinStrings(...this.props.urls,{ separator: ',' })
+    } else {
+      url = this.props.urls
+    }
     if (runs.length > 0) {
       let job = runs[ 0 ]
       let status = job.ended ? 'Ended' : 'Running'
@@ -52,25 +69,25 @@ export default class HeritrixJobInfoRow extends Component {
       // console.log('the job being displayed', job)
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>
-            {this.props.urls}
+          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
+            {url}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             {status}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={timestampS}>
             {moment(job.timestamp).format('MM/DD/YYYY h:mm:ssa')}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={discoveredS}>
             {discovered}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={queuedS}>
             {queued}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={downloadedS}>
             {downloaded}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={actionS}>
             {this.props.actionMenu}
           </TableRowColumn>
         </TableRow>
@@ -78,19 +95,19 @@ export default class HeritrixJobInfoRow extends Component {
     } else {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={style.tableRowCol}>
-            {this.props.urls}
+          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
+            {url}
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             Not Started
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={timestampS}>
             Not Started
           </TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={style.tableRowCol}>0</TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={style.tableRowCol}>0</TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={style.tableRowCol}>0</TableRowColumn>
-          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={style.tableRowCol}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={discoveredS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={queuedS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={downloadedS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={actionS}>
             {this.props.actionMenu}
           </TableRowColumn>
         </TableRow>

@@ -7,6 +7,16 @@ import CrawlStore from '../.././../stores/crawlStore'
 import HeritrixJobItem from './heritrixJobItem'
 import styles from '../../styles/styles'
 
+const {
+  crawlUrlS,
+  statusS,
+  timestampS,
+  discoveredS,
+  queuedS,
+  downloadedS,
+  actionS
+} = styles.heritrixTable
+
 export default class HeritrixJobList extends Component {
 
   constructor (props, context) {
@@ -40,56 +50,56 @@ export default class HeritrixJobList extends Component {
       // JobItems = <ListItem primaryText='No Jobs To Display'/>
       JobItems = (
         <TableRow key="no-items-tr">
-          <TableRowColumn>
+          <TableRowColumn style={crawlUrlS}>
             No Jobs
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={statusS}>
             To Display
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={timestampS}>
             0
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={discoveredS}>
             0
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={queuedS}>
             0
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={downloadedS}>
             0
           </TableRowColumn>
-          <TableRowColumn>
+          <TableRowColumn style={actionS}>
             No actions available
           </TableRowColumn>
         </TableRow>
       )
     }
     return (
-      <Table height={'140'} width={"100%"}>
+      <Table height={'180px'} width={"100%"}>
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}
         >
           <TableRow >
-            <TableHeaderColumn>
+            <TableHeaderColumn style={crawlUrlS}>
               Crawl Url(s)
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={statusS}>
               Status
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={timestampS}>
               Timestamp
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={discoveredS}>
               Discovered
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={queuedS}>
               Queued
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={downloadedS}>
               Downloaded
             </TableHeaderColumn>
-            <TableHeaderColumn>
+            <TableHeaderColumn style={actionS}>
               Actions
             </TableHeaderColumn>
           </TableRow>
