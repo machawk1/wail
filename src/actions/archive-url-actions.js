@@ -1,9 +1,10 @@
 import childProcess from 'child_process'
 import rp from 'request-promise'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
+import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
 
 const settings = remote.getGlobal('settings')
@@ -14,18 +15,29 @@ const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function checkUriIsInArchive (uri) {
   console.log('checking if uri is in archive', uri)
-  return new Promise((resolve, reject) => {
-    rp({ uri: `${settings.get('wayback.uri_wayback')}*/${uri}` })
-      .then(response => {
-        // POST succeeded...
-        resolve({ inArchive: true, uri: uri })
-      })
-      .catch(err => {
-        console.log('error in querying wayback', err)
-        logger.error(util.format(logStringError, 'checkUriIsInArchive', err.stack))
-        resolve({ inArchive: false, uri: uri })
-      })
+
+  GMessageDispatcher.dispatch({
+    type: EventTypes.QUEUE_MESSAGE,
+    message: `Checking if ${uri} is in the archive`
   })
+
+  rp({ uri: `${settings.get('wayback.uri_wayback')}*/${uri}` })
+    .then(response => {
+      // POST succeeded...
+      GMessageDispatcher.dispatch({
+        type: EventTypes.QUEUE_MESSAGE,
+        message: `The URL ${uri} is in the archive`
+      })
+    })
+    .catch(err => {
+      console.log('error in querying wayback', err)
+      logger.error(util.format(logStringError, 'checkUriIsInArchive', err.stack))
+      GMessageDispatcher.dispatch({
+        type: EventTypes.QUEUE_MESSAGE,
+        message: `The URL ${uri} is not in the archive`
+      })
+    })
+
 }
 
 export function getMementos (url) {

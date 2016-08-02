@@ -18,6 +18,8 @@ export default class WaybackSettings extends Component {
         nestedItems={
           [
             <NumberPicker key={'Numpicker'} counter={1} hint='Port' settings={this.props.settings} warnOnChange={false}
+                          notifyMain={true}
+                          channel={'rewrite-wayback-config'}
                           whichSetting="wayback.port"/>
           ]
         }

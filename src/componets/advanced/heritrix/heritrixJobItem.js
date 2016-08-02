@@ -55,6 +55,7 @@ export default class HeritrixJobItem extends Component {
 
   @autobind
   updateRuns () {
+    console.log('updating runs')
     this.setState({ runs: CrawlStore.getRuns(this.props.jobId) })
   }
 

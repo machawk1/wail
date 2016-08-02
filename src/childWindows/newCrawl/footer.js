@@ -34,7 +34,7 @@ export default class Footer extends Component {
       <Toolbar>
         <ToolbarGroup firstChild={true}>
           <RaisedButton
-            label="Cancel Configure Crawl"
+            label="Cancel"
             onTouchTap={this.handleClose}
           />
         </ToolbarGroup>

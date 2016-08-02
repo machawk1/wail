@@ -4,7 +4,7 @@ import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import util from 'util'
-import configSettings, { writeSettings } from './settings/settings'
+import configSettings, { writeSettings,rewriteHeritrixAuth } from './settings/settings'
 import ContextMenu from './menu/contextMenu'
 
 const windows = {
@@ -43,14 +43,14 @@ const control = {
   iconp: null,
   tray: null,
   base: null,
-  notDebugUI: false,
+  notDebugUI: true,
   debug: false,
   openBackGroundWindows: false,
   didClose: false,
   didLoad: false,
   loading: true,
   firstLoad: false,
-  contextMenu: new ContextMenu()
+  contextMenu: new ContextMenu(),
 }
 
 // let shouldQuit = false
@@ -63,12 +63,11 @@ app.commandLine.appendSwitch('allow-http-screen-capture')
 
 function showNewCrawlWindow (parent) {
   let config = {
-    parent: parent,
     width: 800,
-    height: 470,
+    height: 360,
     modal: true,
     show: false,
-    closable: false,
+    closable: true,
     minimizable: false,
     autoHideMenuBar: true
   }
@@ -76,6 +75,7 @@ function showNewCrawlWindow (parent) {
   windows.newCrawlWindow.loadURL(windows.newCrawlWindowURL)
   windows.newCrawlWindow.on('ready-to-show', () => {
     windows.newCrawlWindow.show()
+    // windows.newCrawlWindow.webContents.toggleDevTools()
   })
   windows.newCrawlWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
@@ -88,9 +88,10 @@ function showNewCrawlWindow (parent) {
 }
 
 export function showSettingsWindow (parent) {
+  console.log('showing settings window')
   let config = {
     width: 784,
-    height: 300,
+    height: 350,
     modal: false,
     show: false,
     minimizable: false,
@@ -99,8 +100,9 @@ export function showSettingsWindow (parent) {
   windows.settingsWindow = new BrowserWindow(config)
   windows.settingsWindow.loadURL(windows.settingsWindowURL)
   windows.settingsWindow.on('ready-to-show', () => {
+    console.log('settings window ready to show')
     windows.settingsWindow.show()
-    windows.settingsWindow.webContents.toggleDevTools()
+    // windows.settingsWindow.webContents.toggleDevTools()
   })
   windows.settingsWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
@@ -163,7 +165,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('close-settings-window', (event, payload) => {
-    // console.log('got close-settings-window')
+    console.log('got close-settings-window')
     if (windows.settingsWindow != null) {
       // console.log('newCrawlWindow is not null')
       if (payload) {
@@ -202,6 +204,16 @@ function setUpIPC () {
     console.log('got settings-hard-reset')
     writeSettings(control.base, control.settings)
   })
+
+  ipcMain.on('rewrite-wayback-config',(event,payload) => {
+    console.log('got rewrite-wayback-config')
+    windows.mainWindow.send('rewrite-wayback-config')
+  })
+
+  ipcMain.on('set-heritrix-usrpwd',(event, payload) => {
+    console.log('got set heritrix usrpwd',payload)
+    rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
+  })
 }
 
 function setUp () {
@@ -209,9 +221,9 @@ function setUp () {
   control.base = path.resolve('./')
 
   if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')({
-      showDevTools: true
-    })
+    // require('electron-debug')({
+    //   showDevTools: true
+    // })
     windows.accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     windows.indexWindowURL = `file://${__dirname}/background/indexer.html`
     windows.jobWindowURL = `file://${__dirname}/background/jobs.html`
@@ -246,9 +258,9 @@ function setUp () {
   }
 
   if (process.platform === 'darwin') {
-    // control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
-    control.h = 361
+    control.h = 380
   } else if (process.platform === 'win32') {
     // console.log('windows')
     control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
@@ -322,6 +334,8 @@ function createBackGroundWindows (notDebugUI) {
 
     windows.jobWindow = new BrowserWindow({ show: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
+    windows.jobWindow.webContents.toggleDevTools()
+
 
     windows.reqDaemonWindow = new BrowserWindow({ show: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
@@ -366,6 +380,14 @@ function cleanUp () {
     windows.reqDaemonWindow.close()
   }
 
+  if (windows.newCrawlWindow != null) {
+    windows.newCrawlWindow.destroy()
+  }
+
+  if (windows.settingsWindow != null) {
+    windows.settingsWindow.destroy()
+  }
+
   windows.accessibilityWindow = null
   windows.indexWindow = null
   windows.jobWindow = null
@@ -407,11 +429,11 @@ function createWindow () {
 
   let windowConfig = {
     width: control.w,
-    // minWidth: control.w,
-    // maxWidth: control.w,
+    minWidth: control.w,
+    maxWidth: control.w,
     height: control.h,
-    // minHeight: control.h,
-    // maxHeight: control.h,
+    minHeight: control.h,
+    maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,
     maximizable: false,
@@ -427,17 +449,17 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.mWindowURL //windows.settingsWindowURL windows.mWindowURL
-  // if (control.loading && control.firstLoad) {
-  //   loadUrl = windows.firstLoadWindowURL
-  // } else {
-  //   if (!control.didLoad) {
-  //     loadUrl = windows.loadingWindowURL
-  //     control.didLoad = true
-  //   } else {
-  //     loadUrl = windows.mWindowURL
-  //   }
-  // }
+  var loadUrl  //windows.settingsWindowURL windows.mWindowURL
+  if (control.loading && control.firstLoad) {
+    loadUrl = windows.firstLoadWindowURL
+  } else {
+    if (!control.didLoad) {
+      loadUrl = windows.loadingWindowURL
+      control.didLoad = true
+    } else {
+      loadUrl = windows.mWindowURL
+    }
+  }
 
   windows.mainWindow.loadURL(loadUrl)
 
@@ -472,7 +494,7 @@ function createWindow () {
 
   windows.mainWindow.webContents.on('context-menu', (e, props) => {
     e.preventDefault()
-    console.log(util.inspect(props, { depth: null, colors: true }))
+    // console.log(util.inspect(props, { depth: null, colors: true }))
     control.contextMenu.maybeShow(props, windows.mainWindow)
     // if (props.isEditable) {
     //   contextMenu(e, props).popup(windows.mainWindow)

@@ -40,20 +40,20 @@ class CrawlStore_ extends EventEmitter {
       let urls
       let maybeArray = Array.isArray(newCrawl.urls)
       if (maybeArray) {
-        forMTI = joinStrings(...newCrawl.urls, { separator: os.EOL })
+        forMTI = joinStrings(...newCrawl.urls, { separator: ' ' })
         urls = `Urls: ${forMTI} With depth of ${newCrawl.depth}`
       } else {
         forMTI = newCrawl.urls
         urls = `${newCrawl.urls} with depth of ${newCrawl.depth}`
       }
       let jId = new Date().getTime()
-      MementoDispatcher.dispatch({
-        type: EventTypes.BUILD_CRAWL_JOB,
-        urls: forMTI,
-        maybeArray,
-        jId
-      })
-      makeHeritrixJobConf(newCrawl.urls, newCrawl.depth,jId)
+      // MementoDispatcher.dispatch({
+      //   type: EventTypes.BUILD_CRAWL_JOB,
+      //   urls: forMTI,
+      //   maybeArray,
+      //   jId
+      // })
+      makeHeritrixJobConf(newCrawl.urls, newCrawl.depth, jId)
 
       GMessageDispatcher.dispatch({
         type: EventTypes.QUEUE_MESSAGE,
@@ -103,7 +103,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   crawlJobUpdate (jobs) {
-    // console.log('building jobs from job monitor', jobs.jobs)
+    console.log('building jobs from job monitor', jobs.jobs)
     let updated = []
     jobs.jobs.forEach(job => {
       let jobIdx = this.jobIndex.get(job.jobId)
@@ -186,17 +186,17 @@ class CrawlStore_ extends EventEmitter {
 
         if (showMessage) {
           let jId = new Date().getTime()
-          MementoDispatcher.dispatch({
-            type: EventTypes.BUILD_CRAWL_JOB,
-            urls,
-            maybeArray,
-            jId
-          })
+          // MementoDispatcher.dispatch({
+          //   type: EventTypes.BUILD_CRAWL_JOB,
+          //   urls,
+          //   maybeArray,
+          //   jId
+          // })
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: `Building Heritrix crawl for ${crawlingUrlsMessage}`
           })
-          makeHeritrixJobConf(urls, depth,jId)
+          makeHeritrixJobConf(urls, depth, jId)
         }
 
         break
@@ -222,10 +222,10 @@ class CrawlStore_ extends EventEmitter {
         break
       }
       case EventTypes.LAUNCHED_CRAWL_JOB: {
-        MementoDispatcher.dispatch({
-          type: EventTypes.LAUNCHED_CRAWL_JOB,
-          jId: event.id
-        })
+        // MementoDispatcher.dispatch({
+        //   type: EventTypes.LAUNCHED_CRAWL_JOB,
+        //   jId: event.id
+        // })
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built launched job: ${event.id}`

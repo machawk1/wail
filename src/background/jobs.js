@@ -30,6 +30,8 @@ const jobCache = {
   index: new Map(),
 }
 
+let prevJobCheckDone = true
+
 const isWindows = os.platform() === 'win32'
 
 let jobLaunchRe
@@ -206,9 +208,11 @@ function getHeritrixJobsState () {
               nextToLast.setValue(lines[ linesLen - 2 ])
             }
             let nextLastfields = nextToLast.collapseWhitespace().s.split(' ')
+            let tsm = moment(nextLastfields[ 0 ])
             jobs[ item.jobId ].runs.push({
               ended: true,
-              timestamp: moment(nextLastfields[ 0 ]),
+              timestampm: tsm,
+              timestamp: tsm.format(),
               discovered: nextLastfields[ 1 ],
               queued: nextLastfields[ 2 ],
               downloaded: nextLastfields[ 3 ],
@@ -257,6 +261,7 @@ function getHeritrixJobsState () {
                 .value()
               if (jobCache.cache) {
                 if (checkCache(sortedJobs)) {
+                  console.log('sending changes')
                   resolve({ change: true, count: counter, confs: jobsConfs, jobs: jobCache.updated, })
                 } else {
                   resolve({ change: false })
@@ -299,20 +304,21 @@ class JobMonitor {
       rule.second = [ 0, 10, 20, 30, 40, 50 ]
       this.job = schedule.scheduleJob(rule, () => {
         console.log('Checking job stats')
-        jobLock.writeLock(release => {
+        if(prevJobCheckDone) {
+          prevJobCheckDone = false
           getHeritrixJobsState()
             .then(status => {
               console.log('Done Checking job stats')
-              release()
+              prevJobCheckDone = true
               cb(status)
             })
             .catch(error => {
               console.log('Done Checking job stats with error')
               logger.error(util.format(logStringError, 'checkJobStatuses', error.stack))
-              release()
+              prevJobCheckDone = true
               cb({ change: false })
             })
-        })
+        }
       })
       this.started = true
     }

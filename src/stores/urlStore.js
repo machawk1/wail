@@ -76,26 +76,12 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
+          urlActions.checkUriIsInArchive(this.urlMemento.url.s)
+        } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: `Checking if ${this.urlMemento.url.s} is in the archive`
+            message: 'You must enter a url first to check if it is in the archive'
           })
-          urlActions.checkUriIsInArchive(this.urlMemento.url.s)
-            .then(wasIn => {
-              let message
-              if (wasIn.inArchive) {
-                message = `The URL ${wasIn.url} is in the archive`
-              } else {
-                message = `The URL ${wasIn.url} is not in the archive`
-              }
-              GMessageDispatcher.dispatch({
-                type: EventTypes.QUEUE_MESSAGE,
-                message
-              })
-            })
-            .catch(err => {
-              console.log('There was an error when checking if the url is in archive', err)
-            })
         }
         break
       }
@@ -106,6 +92,11 @@ class UrlStore_ extends EventEmitter {
             message: `Viewing archived version of: ${this.urlMemento.url.s}`
           })
           shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url.s}`)
+        }  else {
+          GMessageDispatcher.dispatch({
+            type: EventTypes.QUEUE_MESSAGE,
+            message: 'You must enter a url first and it be in the archive for you to view it'
+          })
         }
         break
       }

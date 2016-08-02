@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { ipcRenderer, remote } from 'electron'
+import { remote } from 'electron'
 import MenuItem from 'material-ui/MenuItem'
 import { ListItem } from 'material-ui/List'
 import { grey400 } from 'material-ui/styles/colors'
@@ -9,7 +9,6 @@ import IconMenu from 'material-ui/IconMenu'
 import FlatButton from 'material-ui/FlatButton'
 import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
-import isInt from 'validator/lib/isInt'
 
 // const settings = remote.getGlobal('settings')
 const { dialog } = remote
@@ -18,19 +17,13 @@ const style = {
   cursor: 'pointer'
 }
 
-export default class NumberPicker extends Component {
+export default class StringChanger extends Component {
   static propTypes = {
     whichSetting: PropTypes.string.isRequired,
     hint: PropTypes.string.isRequired,
     warnOnChange: PropTypes.bool.isRequired,
     counter: PropTypes.number.isRequired,
-    settings: PropTypes.object.isRequired,
-    notifyMain: PropTypes.bool,
-    channel: PropTypes.string
-  }
-
-  static defaultProps = {
-    notifyMain: false
+    settings: PropTypes.object.isRequired
   }
 
   constructor (props, context) {
@@ -40,7 +33,7 @@ export default class NumberPicker extends Component {
       originalValue: this.props.settings.get(props.whichSetting),
       didModify: false,
       open: false,
-      number: this.props.settings.get(props.whichSetting)
+      string: this.props.settings.get(props.whichSetting)
     }
   }
 
@@ -58,40 +51,31 @@ export default class NumberPicker extends Component {
       settingValue: this.state.settingValue
     }
 
-    if (isInt(this.state.number)) {
-      dialog.showMessageBox(remote.getCurrentWindow(), {
-        type: 'question',
-        title: 'Are you sure?',
-        message: 'You will have to restart the service in order to continue using after change',
-        buttons: [ 'Im Sure', 'Cancel' ],
-        cancelId: 666
-      }, (r) => {
-        if (r === 0) {
-          this.props.settings.set(this.props.whichSetting, this.state.number)
-          ns.settingValue = this.state.number
-          if (this.props.notifyMain) {
-            ipcRenderer.send(this.props.channel)
-          }
-          this.setState(ns)
-        }
-      })
-    } else {
-      this.setState(ns)
-    }
+    dialog.showMessageBox(remote.getCurrentWindow(), {
+      type: 'question',
+      title: 'Are you sure?',
+      message: 'You will have to restart the service in order to continue using after change',
+      buttons: [ 'Im Sure', 'Cancel' ],
+      cancelId: 666
+    }, (r) => {
+      if (r === 0) {
+        this.props.settings.set(this.props.whichSetting, this.state.string)
+        ns.settingValue = this.state.string
+        this.setState(ns)
+      }
+    })
+
   }
 
   handleInput = (e) => {
     this.setState({
-      number: e.target.value
+      string: e.target.value
     })
   }
 
   revert = (event) => {
     this.props.settings.set(this.props.whichSetting, this.state.originalValue)
-    if (this.props.notifyMain) {
-      ipcRenderer.send(this.props.channel)
-    }
-    this.setState({ settingValue: this.state.originalValue, number: this.state.originalValue })
+    this.setState({ settingValue: this.state.originalValue, string: this.state.originalValue })
   }
 
   render () {
@@ -130,21 +114,21 @@ export default class NumberPicker extends Component {
       <div>
         <ListItem
           nestedLevel={3.5}
-          key={`NumberPicks${this.props.whichSetting}`}
+          key={`StringChanger${this.props.whichSetting}`}
           primaryText={`${this.props.hint}: ${this.state.settingValue}`}
           rightIconButton={rightIconMenu}
         />
         <Dialog
-          key={`np-d-${this.props.whichSetting}`}
+          key={`stringchanger-d-${this.props.whichSetting}`}
           title="Change"
           actions={actions}
           modal={true}
           open={this.state.open}
         >
           <TextField
-            key={`np-tf-${this.props.whichSetting}`}
+            key={`stringchanger-tf-${this.props.whichSetting}`}
             hintText={this.props.hint}
-            value={this.state.number}
+            value={this.state.string}
             onChange={this.handleInput}
           />
         </Dialog>

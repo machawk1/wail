@@ -165,43 +165,58 @@ export default {
   },
   heritrixTable: {
     crawlUrlS: {
-      width: '150px',
+      width: '100px',
       wordWrap: 'break-word',
       textOverflow: 'none',
       whiteSpace: 'normal',
       cursor: 'default'
     },
     statusS: {
-      width: '75px',
+      width: '50px',
       wordWrap: 'break-word',
       textOverflow: 'none',
       whiteSpace: 'normal',
       cursor: 'default'
     },
     timestampS: {
-      width: '75px',
+      width: '70px',
       wordWrap: 'break-word',
       textOverflow: 'none',
       whiteSpace: 'normal',
       cursor: 'default'
     },
     discoveredS: {
-      width: '75px',
+      width: '50px',
       textAlign: 'center',
       cursor: 'default'
     },
     queuedS: {
-      width: '75px',
+      width: '50px',
       textAlign: 'center',
       cursor: 'default'
     },
     downloadedS: {
-      width: '75px',
+      width: '50px',
       textAlign: 'center',
       cursor: 'default'
     },
     actionS: {
       width: '30px',
+      cursor: 'default'
+    }
+  },
+
+  mementoMessagePanel: {
+    container: {
+      paddingTop: '32px',
+      display: 'flex',
+      height: '90px',
+      flexDirection: 'column'
+    },
+
+    fetching: {
+      display: 'flex',
+      flexDirection: 'row',
       cursor: 'default'
     }
   }

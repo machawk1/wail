@@ -1,54 +1,177 @@
 import 'babel-polyfill'
+import fs from 'fs-extra'
+import Promise from 'bluebird'
+import S from 'string'
+import { encode, compare } from 'bytewise'
+import _ from 'lodash'
 var realFs = require('fs')
 var gracefulFs = require('graceful-fs')
 gracefulFs.gracefulify(realFs)
-import fs from 'fs-extra'
-import path from 'path'
-import util from 'util'
-import Promise from 'bluebird'
 Promise.promisifyAll(fs)
-import cheerio from 'cheerio'
-import through2 from 'through2'
-import S from 'string'
-import split2 from 'split2'
-import os from 'os'
-import del from 'del'
-import streamSort from 'sort-stream2'
-import { encode, compare } from 'bytewise'
-import shelljs from 'shelljs'
-import validUrl from 'valid-url'
-import validator from 'validator'
-import keyMirror from 'keymirror'
-import rp from "request-promise"
-import _ from 'lodash'
-import moment from 'moment'
-import named from 'named-regexp'
-import cp from 'child_process'
-import { joinStrings } from 'joinable'
-import tld from 'tldjs'
-import purl from 'purl'
-import EventEmitter from 'eventemitter3'
 
-class ee extends EventEmitter {
-  constructor () {
-    super()
-  }
-
-  doIt() {
-    this.emit('test',{
-      hi: 'yo'
-    })
+let heritrix = {
+  uri_heritrix: 'https://127.0.0.1:8443',
+  uri_engine: 'https://localhost:8443/engine/',
+  port: '8843',
+  username: 'lorem',
+  password: 'ipsum',
+  login: '-a lorem:ipsum',
+  path: '',
+  jobConf: 'crawler-beans.cxml',
+  jobConfWin: 'crawler-beans-win.cxml',
+  web_ui: 'https://lorem:ipsum@localhost:8443',
+  addJobDirectoryOptions: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    timeout: 15000,
+    form: {
+      action: 'add',
+      addPath: '',
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  sendActionOptions: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine/job/',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    timeout: 15000,
+    form: {
+      action: ''
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  killOptions: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine',
+    timeout: 15000,
+    body: 'im_sure=on&action=exit java process',
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
+      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+      'Accept-Language': 'en-US,en;q=0.5',
+      'Connection': 'keep-alive'
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  launchJobOptions: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine/job/',
+    timeout: 15000,
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    form: {
+      action: 'launch'
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  optionEngine: {
+    method: 'GET',
+    url: 'https://localhost:8443/engine',
+    timeout: 15000,
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  buildOptions: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine/job/',
+    timeout: 15000,
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    form: {
+      action: 'build'
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
+  },
+  reScanJobs: {
+    method: 'POST',
+    url: 'https://localhost:8443/engine',
+    timeout: 5000,
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    form: {
+      action: 'rescan'
+    },
+    auth: {
+      username: 'lorem',
+      password: 'ipsum',
+      sendImmediately: false
+    },
+    strictSSL: false,
+    rejectUnauthorized: false,
+    resolveWithFullResponse: true,
   }
 
 }
 
-let EE = new ee()
+let mutate = S('export JAVA_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; export JRE_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; /Users/jberlin/WebstormProjects/wail/bundledApps/heritrix-3.3.0/bin/heritrix -a lorem:ipsum')
 
-EE.on('test',(it) => {
-  console.log(it)
-})
+if(mutate.contains('-a lorem:ipsum')) {
+  console.log(mutate.replaceAll('-a lorem:ipsum','-a john:berlin').s)
+}
 
-EE.doIt()
+
+// let usr = 'John'
+// let pwd = 'Berlin'
+// let nh = _.mapValues(heritrix, (v, k) => {
+//
+//   // var nv = _.cloneDeep(v)
+//   if(_.has(v,'auth')) {
+//     console.log(v)
+//     let auth = v.auth
+//     v.auth.username = 'John'
+//     v.auth.password = 'Berlin'
+//   }
+//
+//   return v
+// })
+//
+// nh.username = usr
+// nh.password = pwd
+// nh.web_ui = S(nh.web_ui).replaceAll(heritrix.username,usr).replaceAll(heritrix.password,pwd).s
+// nh.login = S(nh.login).replaceAll(heritrix.username,usr).replaceAll(heritrix.password,pwd).s
+//
+// _.forOwn(nh,(v,k) => {
+//   console.log(k,v)
+// })
 
 // import tm from '/home/john/my-fork-wail/wail/test/csodu.timemap.json'
 
@@ -61,7 +184,6 @@ EE.doIt()
 // console.log(it,it.isEmpty())
 
 // let archiveExtractor = named.named()
-
 
 // cp.exec('/home/john/my-fork-wail/wail/memgators/memgator-linux-amd64 --arcs=/home/john/my-fork-wail/wail/config/archives.json --format=json http://cs.odu.edu',(err, stdout, stderr) => {
 //   if(err) {
@@ -93,7 +215,6 @@ EE.doIt()
 //
 //   console.log(data)
 // })
-
 
 // import depcheck from 'depcheck'
 //
@@ -162,7 +283,6 @@ EE.doIt()
 //   // console.log(util.inspect(options,{depth:null,colors: true}))
 //   // console.log(util.inspect(unused,{depth:null,colors: true}))
 // })
-
 
 // let lines = [
 //   '\nwayback.url.scheme.default=http',

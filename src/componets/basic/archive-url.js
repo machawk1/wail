@@ -42,14 +42,14 @@ export default class ArchiveUrl extends Component {
 
   @autobind
   handleChange (e) {
-    // let val = e.target.value
-    // clearTimeout(focusTime)
-    // focusTime = setTimeout(() => {
-    //   console.log('Timeout focus time')
-    //   if (isURL(val)) {
-    //     aua.getMementos(val)
-    //   }
-    // }, 600)
+    let val = e.target.value
+    clearTimeout(focusTime)
+    focusTime = setTimeout(() => {
+      console.log('Timeout focus time')
+      if (isURL(val)) {
+        aua.urlUpdated(val)
+      }
+    }, 1500)
     let value = e.target.value
     let err = styles.underlineStyleError
     if (isURL(value) || S(value).isEmpty()) {
@@ -61,6 +61,7 @@ export default class ArchiveUrl extends Component {
   @autobind
   focusLost (event) {
     // console.log('checking url for archiving', this.state.url, event.target.value)
+    clearTimeout(focusTime)
     if (isURL(event.target.value)) {
       console.log('its valid')
       aua.urlUpdated(event.target.value)

@@ -14,14 +14,22 @@ export default class BasicTab extends Component {
     return (
       <div style={btBody}>
         <ArchiveUrl />
-        <div style={{ paddingBottom: 25 }} />
-        <MementoTable />
+        <MementoMessagePanel />
+        <div style={{ paddingBottom: 44 }} />
+        <BasicTabButtons />
       </div>
     )
   }
 }
 
 /*
+
+ <div style={btBody}>
+ <ArchiveUrl />
+ <div style={{ paddingBottom: 25 }} />
+ <MementoTable />
+ </div>
+
  render () {
  return (
  <Grid flexible >

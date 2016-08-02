@@ -7,6 +7,8 @@ import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
 import CheckArchiveStatIcon from 'material-ui/svg-icons/action/schedule'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import wailConstants from '../../constants/wail-constants'
+import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
+import { ipcRenderer } from 'electron'
 import styles from '../styles/styles'
 
 const EventTypes = wailConstants.EventTypes
@@ -32,14 +34,14 @@ export default class BasicTabButtons extends Component {
   render () {
     return (
         <Toolbar>
-          <ToolbarGroup firstChild={true}>
-            <RaisedButton
-              icon={<CheckArchiveStatIcon />}
-              label='Check Archived Status'
-              labelPosition='before'
-              onMouseDown={this.onClickCheckArchive}
-            />
-          </ToolbarGroup>
+            <ToolbarGroup firstChild={true}>
+              <RaisedButton
+                icon={<CheckArchiveStatIcon />}
+                label='Check Archived Status'
+                labelPosition='before'
+                onMouseDown={this.onClickCheckArchive}
+              />
+            </ToolbarGroup>
           <ToolbarGroup lastChild={true}>
             <RaisedButton
               icon={<ViewArchiveIcon />}

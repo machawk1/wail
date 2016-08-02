@@ -75,7 +75,7 @@ export default class HeritrixJobList extends Component {
       )
     }
     return (
-      <Table height={'180px'} width={"100%"}>
+      <Table height={'179px'}>
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}

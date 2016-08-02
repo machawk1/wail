@@ -21,7 +21,7 @@ export function writeWaybackConf () {
   let wayBackConflines = [
     'wayback.url.scheme.default=http',
     'wayback.url.host.default=localhost',
-    'wayback.url.port.default=8080',
+    `wayback.url.port.default=${settings.get('wayback.port')}`,
     "wayback.basedir=#{ systemEnvironment['WAYBACK_BASEDIR'] ?: '${wayback.basedir.default}' }",
     "wayback.url.scheme=#{ systemEnvironment['WAYBACK_URL_SCHEME'] ?: '${wayback.url.scheme.default}' }",
     "wayback.url.host=#{ systemEnvironment['WAYBACK_URL_HOST'] ?: '${wayback.url.host.default}' }",

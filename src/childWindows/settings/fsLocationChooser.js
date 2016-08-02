@@ -58,8 +58,8 @@ export default class FSLocationChooser extends Component {
     const actionIcon = (
       <IconButton
         touch={true}
-        tooltip='Actions'
-        tooltipPosition="bottom-left"
+        tooltip='Modify'
+        tooltipPosition="top-left"
       >
         <MoreVertIcon color={grey400}/>
       </IconButton>
