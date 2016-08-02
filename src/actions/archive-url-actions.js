@@ -61,6 +61,7 @@ export function urlUpdated (url) {
 }
 
 export async function askMemgator2 (url) {
+
   childProcess.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
       console.error(err)
