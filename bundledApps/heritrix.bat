@@ -6,6 +6,6 @@ set HERITRIX_HOME=%here%\heritrix-3.3.0
 set start=%here%\heritrix-3.3.0\bin\heritrix.cmd
 
 
-echo starting  %1 %2
+echo starting  %*
 
-%start% %1 %2
+%start% %*
