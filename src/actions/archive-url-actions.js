@@ -61,7 +61,7 @@ export function urlUpdated (url) {
 }
 
 export async function askMemgator2 (url) {
-  childProcess.exec(`${settings.get('memgatorQuery')} -f json ${url}`, (err, stdout, stderr) => {
+  childProcess.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
       console.error(err)
       let stack
@@ -70,14 +70,14 @@ export async function askMemgator2 (url) {
       } else {
         stack = `${stderr}`
       }
-      logger.error(util.format(logStringError, `askMemgator ${stdout}`, stack))
+      logger.error(util.format(logStringError, `askMemgator ${stderr}`, stack))
     } else {
-      let timemap = JSON.parse(stdout)
+      let mementoCount = (stdout.match(/memento/g) || []).length
       MemgatorDispatcher.dispatch({
         type: EventTypes.GOT_MEMENTO_COUNT,
         url,
-        timemap,
-        count: timemap.mementos.list.length
+        timemap: '',
+        count: mementoCount
       })
     }
   })
