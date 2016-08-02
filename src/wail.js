@@ -11,7 +11,7 @@ import { writeWaybackConf } from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
 // require('pretty-error').start()
 
-ipcRenderer.on('rewrite-wayback-config',(event,payload) => {
+ipcRenderer.on('rewrite-wayback-config', (event, payload) => {
   console.log('wail got rewrite-wayback-config')
   writeWaybackConf()
 })

@@ -55,8 +55,8 @@ export default class HeritrixJobInfoRow extends Component {
   render () {
     let runs = this.props.runs
     var url
-    if(Array.isArray(this.props.urls)) {
-      url = joinStrings(...this.props.urls,{ separator: ',' })
+    if (Array.isArray(this.props.urls)) {
+      url = joinStrings(...this.props.urls, { separator: ',' })
     } else {
       url = this.props.urls
     }

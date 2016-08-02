@@ -178,6 +178,7 @@ const managed = {
     crawlerBean: 'crawler-beans.cxml',
     wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
   }
+
 }
 
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
@@ -211,6 +212,7 @@ export function writeSettings (base, settings) {
     } else {
       cdx = `${cmdexport} ${settings.get('cdxIndexer')}`
     }
+
     settings.set('cdxIndexer', cdx)
   }
   heritrix.jobConf = jobConfPath
@@ -270,18 +272,18 @@ export function writeSettings (base, settings) {
   })
 }
 
-function rewriteHeritrixPort (settings,was,is) {
+function rewriteHeritrixPort (settings, was, is) {
   let mutate = S(' ')
   let nh = _.mapValues(settings.get('heritrix'), (v, k) => {
-    if(_.has(v,'url')) {
+    if (_.has(v, 'url')) {
       mutate = mutate.setValue(v.url)
-      mutate =  mutate.replaceAll(was,is)
+      mutate = mutate.replaceAll(was, is)
       v.url = mutate.s
     } else {
       mutate = mutate.setValue(k)
-      if(mutate.contains('uri') || mutate.contains('ui')) {
+      if (mutate.contains('uri') || mutate.contains('ui')) {
         mutate = mutate.setValue(v)
-        mutate =  mutate.replaceAll(was,is)
+        mutate = mutate.replaceAll(was, is)
         v = mutate.s
       }
     }
@@ -289,20 +291,20 @@ function rewriteHeritrixPort (settings,was,is) {
   })
 
   let hStart = mutate.setValue(settings.get('heritrixStart'))
-  if(hStart.contains('-p')) {
+  if (hStart.contains('-p')) {
     hStart.replaceAll(`-p ${was}`, `-p ${is}`)
   } else {
     hStart.setValue(`${settings.get('heritrixStart')} -p ${is}`)
   }
   settings.set('heritrixStart', hStart.s)
-  settings.set('heritrix',nh)
+  settings.set('heritrix', nh)
 }
 
-export function rewriteHeritrixAuth (settings, usr,pwd) {
-  if(usr && pwd) {
+export function rewriteHeritrixAuth (settings, usr, pwd) {
+  if (usr && pwd) {
     let heritrix = settings.get('heritrix')
     let nh = _.mapValues(heritrix, (v, k) => {
-      if(_.has(v,'auth')) {
+      if (_.has(v, 'auth')) {
         v.auth.username = usr
         v.auth.password = pwd
       }
@@ -312,13 +314,13 @@ export function rewriteHeritrixAuth (settings, usr,pwd) {
     nh.password = pwd
 
     nh.web_ui = `https://${usr}:${pwd}@localhost:${nh.port}`
-    nh.login =  `-a ${usr}:${pwd}`
+    nh.login = `-a ${usr}:${pwd}`
 
     let hS = S(settings.get('heritrixStart'))
     let hSD = S(settings.get('heritrixStartDarwin'))
-    settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`,`${usr}:${pwd}`).s)
-    settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`,`${usr}:${pwd}`).s)
-    settings.set('heritrix',nh)
+    settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    settings.set('heritrix', nh)
   }
 
 }
@@ -355,21 +357,19 @@ export default function configSettings (base, userData) {
 
   settings.watch('heritrix.port', change => {
     console.log('heritrix.port changed ', change)
-    rewriteHeritrixPort(settings,change.was,change.now)
+    rewriteHeritrixPort(settings, change.was, change.now)
   })
-
 
   settings.watch('wayback.port', change => {
     let wb = _.cloneDeep(settings.get('wayback'))
     wb.port = change.now
     let uriTomcat = S(wb.uri_tomcat)
-    wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`,`${change.now}`).s
+    wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
     let uriWB = S(wb.uri_wayback)
-    wb.uri_wayback = uriWB.replaceAll(`${change.was}`,`${change.now}`).s
-    settings.set('wayback',wb)
+    wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+    settings.set('wayback', wb)
 
   })
-
 
   return settings
 }

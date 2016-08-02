@@ -30,7 +30,7 @@ export default class UserPasswordChanger extends Component {
 
   constructor (props, context) {
     super(props, context)
-    let usernameSetting =  this.props.settings.get(props.usrSetting)
+    let usernameSetting = this.props.settings.get(props.usrSetting)
     let passwordSetting = this.props.settings.get(props.pwdSetting)
     this.state = {
       usernameSetting,
@@ -44,17 +44,17 @@ export default class UserPasswordChanger extends Component {
   }
 
   @autobind
-  handleOpen (){
+  handleOpen () {
     this.setState({ open: true })
   }
 
   @autobind
-  cancelEdit() {
+  cancelEdit () {
     this.setState({ open: false })
   }
 
   @autobind
-  submitEdit(event){
+  submitEdit (event) {
     let send = {
       usr: this.state.usrModString,
       pwd: this.state.pwrdModString,
@@ -73,7 +73,7 @@ export default class UserPasswordChanger extends Component {
       cancelId: 666
     }, (r) => {
       if (r === 0) {
-        ipcRenderer.send(this.props.channel,send)
+        ipcRenderer.send(this.props.channel, send)
         this.setState(ns)
       } else {
         this.setState({
@@ -85,32 +85,31 @@ export default class UserPasswordChanger extends Component {
 
   }
 
-
   @autobind
-  handleInputPW(e){
+  handleInputPW (e) {
     this.setState({
       pwrdModString: e.target.value
     })
   }
 
   @autobind
-  handleInputUN(e){
+  handleInputUN (e) {
     this.setState({
       usrModString: e.target.value
     })
   }
 
   @autobind
-  revert(event){
-    if(this.state.passwordSetting !== this.props.pwdOriginal || this.state.usernameSetting !== this.props.usrOriginal) {
-      ipcRenderer.send(this.props.channel,{
+  revert (event) {
+    if (this.state.passwordSetting !== this.props.pwdOriginal || this.state.usernameSetting !== this.props.usrOriginal) {
+      ipcRenderer.send(this.props.channel, {
         usr: this.props.usrOriginal,
         pwrd: this.props.pwdOriginal,
       })
       this.setState({
         usernameSetting: this.props.usrOriginal,
         usrModString: this.props.usrOriginal,
-        passwordSetting: this.props.pwdOriginal ,
+        passwordSetting: this.props.pwdOriginal,
         pwrdModString: this.props.pwdOriginal
       })
     }
@@ -169,7 +168,7 @@ export default class UserPasswordChanger extends Component {
             key={`UserPasswordChanger-tf-${this.state.usernameSetting}`}
             value={this.state.usrModString}
             onChange={this.handleInputUN}
-            style={{marginRight: 5}}
+            style={{ marginRight: 5 }}
           />
           <TextField
             id={`UserPasswordChanger-tf-${this.state.passwordSetting}`}

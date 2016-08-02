@@ -21,7 +21,8 @@ export default class HeritrixSettings extends Component {
             <NumberPicker key={'Numpicker'} counter={1} hint='Port' settings={this.props.settings} warnOnChange={false}
                           whichSetting="heritrix.port"/>,
 
-            <UserPasswordChanger key={'H-UPC'} usrSetting="heritrix.username" pwdSetting="heritrix.password" usrOriginal="lorem"
+            <UserPasswordChanger key={'H-UPC'} usrSetting="heritrix.username" pwdSetting="heritrix.password"
+                                 usrOriginal="lorem"
                                  pwdOriginal="ipsum" settings={this.props.settings} channel="set-heritrix-usrpwd"/>
           ]
         }

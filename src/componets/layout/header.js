@@ -39,7 +39,7 @@ export default class Header extends Component {
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
-            zDepth={0}
+          zDepth={0}
           style={styles.appBar}
         />
         <Drawer

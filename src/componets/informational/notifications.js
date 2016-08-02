@@ -24,14 +24,14 @@ export default class Notifications extends Component {
   @autobind
   receiveMessage () {
     if (!this.state.open) {
-      this.setState({ message: GMessageStore.getMessage(), open: true})
+      this.setState({ message: GMessageStore.getMessage(), open: true })
     }
   }
 
   @autobind
   closeNotification () {
     if (GMessageStore.hasQueuedMessages()) {
-      this.setState({ message: GMessageStore.getMessage()})
+      this.setState({ message: GMessageStore.getMessage() })
     } else {
       this.setState({
         open: false

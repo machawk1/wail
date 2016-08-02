@@ -2,7 +2,7 @@ import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
-import {showSettingsWindow} from '../electron-main-dev'
+import { showSettingsWindow } from '../electron-main-dev'
 const name = app.getName()
 
 export function screenShotPDF (window) {
@@ -229,6 +229,50 @@ const template = [
 
 if (process.platform === 'darwin') {
   template.unshift({
+    label: 'File',
+    submenu: [
+      {
+        label: 'Settings',
+        click (item, focusedWindow) {
+          console.log('clicked settings menu')
+          if (focusedWindow) {
+            showSettingsWindow(focusedWindow)
+          } else {
+            console.log('window for settings click is a no go')
+          }
+        }
+      },
+      {
+        type: 'separator'
+      },
+      {
+        label: 'Open',
+        submenu: [
+          {
+            label: 'WARC Files Location',
+            click() {
+              shell.openItem(global.settings.get('warcs'))
+            }
+          },
+          {
+            label: 'CDX Files Location',
+            click() {
+              shell.openItem(global.settings.get('cdx'))
+            }
+          },
+          {
+            label: 'Archive List',
+            click() {
+              shell.openItem(global.settings.get('archives'))
+            }
+
+          }
+        ]
+      }
+    ]
+  })
+
+  template.unshift({
     label: name,
     submenu: [
       {
@@ -247,20 +291,7 @@ if (process.platform === 'darwin') {
           }
         ]
       },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Settings',
-        click (item, focusedWindow) {
-          console.log('clicked settings menu')
-          if (focusedWindow) {
-            showSettingsWindow(focusedWindow)
-          } else {
-            console.log('window for settings click is a no go')
-          }
-        }
-      },
+
       {
         type: 'separator'
       },

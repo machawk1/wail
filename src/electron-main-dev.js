@@ -4,7 +4,7 @@ import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import util from 'util'
-import configSettings, { writeSettings,rewriteHeritrixAuth } from './settings/settings'
+import configSettings, { writeSettings, rewriteHeritrixAuth } from './settings/settings'
 import ContextMenu from './menu/contextMenu'
 
 const windows = {
@@ -75,6 +75,7 @@ function showNewCrawlWindow (parent) {
   windows.newCrawlWindow.loadURL(windows.newCrawlWindowURL)
   windows.newCrawlWindow.on('ready-to-show', () => {
     windows.newCrawlWindow.show()
+    windows.newCrawlWindow.focus()
     // windows.newCrawlWindow.webContents.toggleDevTools()
   })
   windows.newCrawlWindow.webContents.on('context-menu', (e, props) => {
@@ -102,6 +103,7 @@ export function showSettingsWindow (parent) {
   windows.settingsWindow.on('ready-to-show', () => {
     console.log('settings window ready to show')
     windows.settingsWindow.show()
+    windows.settingsWindow.focus()
     // windows.settingsWindow.webContents.toggleDevTools()
   })
   windows.settingsWindow.webContents.on('context-menu', (e, props) => {
@@ -205,13 +207,13 @@ function setUpIPC () {
     writeSettings(control.base, control.settings)
   })
 
-  ipcMain.on('rewrite-wayback-config',(event,payload) => {
+  ipcMain.on('rewrite-wayback-config', (event, payload) => {
     console.log('got rewrite-wayback-config')
     windows.mainWindow.send('rewrite-wayback-config')
   })
 
-  ipcMain.on('set-heritrix-usrpwd',(event, payload) => {
-    console.log('got set heritrix usrpwd',payload)
+  ipcMain.on('set-heritrix-usrpwd', (event, payload) => {
+    console.log('got set heritrix usrpwd', payload)
     rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
   })
 }
@@ -336,7 +338,6 @@ function createBackGroundWindows (notDebugUI) {
     windows.jobWindow.loadURL(windows.jobWindowURL)
     windows.jobWindow.webContents.toggleDevTools()
 
-
     windows.reqDaemonWindow = new BrowserWindow({ show: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
@@ -449,7 +450,7 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl  //windows.settingsWindowURL windows.mWindowURL
+  var loadUrl //windows.settingsWindowURL windows.mWindowURL
   if (control.loading && control.firstLoad) {
     loadUrl = windows.firstLoadWindowURL
   } else {

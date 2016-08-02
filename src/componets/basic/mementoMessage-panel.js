@@ -67,18 +67,19 @@ import styles from '../styles/styles'
 //   }
 // }
 
-const {container} =  {
+const { container } =  {
   container: {
-    paddingTop: '32px',
-      display: 'flex',
-      height: '90px',
-      flexDirection: 'column'
+    marginTop: '5px',
+    display: 'flex',
+    height: '100px',
+    marginBottom: '5px',
+    flexDirection: 'column'
   },
 
   fetching: {
     display: 'flex',
-      flexDirection: 'row',
-      cursor: 'default'
+    flexDirection: 'row',
+    cursor: 'default'
   }
 }
 
@@ -103,7 +104,7 @@ export default class MementoMessagePanel extends Component {
   }
 
   @autobind
-  empty() {
+  empty () {
     MemgatorStore.resetCountLast()
     this.setState({
       count: -2
@@ -111,19 +112,19 @@ export default class MementoMessagePanel extends Component {
   }
 
   @autobind
-  update(data) {
+  update (data) {
     this.setState(data)
   }
 
   render () {
     var ret
-    if(this.state.count === -2) {
+    if (this.state.count === -2) {
       ret = <DefaultMementoMessage />
     } else {
-      if (this.state.count === -1 ) {
+      if (this.state.count === -1) {
         ret = <FetchingMementoMessage />
       } else {
-        ret = <MementoCountMessage count={this.state.count} />
+        ret = <MementoCountMessage count={this.state.count}/>
       }
     }
 

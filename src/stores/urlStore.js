@@ -8,8 +8,6 @@ import wailConstants from '../constants/wail-constants'
 import S from 'string'
 import * as urlActions from '../actions/archive-url-actions'
 
-
-
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 
@@ -42,7 +40,7 @@ class UrlStore_ extends EventEmitter {
         console.log('hasValidUrl')
         if (this.urlMemento.url.s !== event.url) {
           this.urlMemento.url.setValue(event.url)
-          console.log('adding url in urlStore',event.url)
+          console.log('adding url in urlStore', event.url)
           // console.log(`url updated ${event.url}`)
           MemgatorDispatcher.dispatch({
             type: EventTypes.GET_MEMENTO_COUNT,
@@ -92,7 +90,7 @@ class UrlStore_ extends EventEmitter {
             message: `Viewing archived version of: ${this.urlMemento.url.s}`
           })
           shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url.s}`)
-        }  else {
+        } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: 'You must enter a url first and it be in the archive for you to view it'

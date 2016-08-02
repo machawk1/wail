@@ -10,7 +10,6 @@ import styles from '../../componets/styles/styles'
 import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
 import wailConstants from '../../constants/wail-constants'
 
-
 const EventTypes = wailConstants.EventTypes
 const items = [];
 for (let i = 1; i <= 10; i++) {
@@ -33,7 +32,6 @@ export default class CrawlDepth extends Component {
       depth: parseInt(value)
     })
   }
-
 
   render () {
     return (

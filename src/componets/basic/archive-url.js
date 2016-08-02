@@ -1,7 +1,7 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import {Row, Column} from 'react-cellblock'
+import { Row, Column } from 'react-cellblock'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
@@ -9,7 +9,6 @@ import UrlStore from '../../stores/urlStore'
 import * as aua from '../../actions/archive-url-actions'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
-import ViewArchiveIcon from 'material-ui/svg-icons/'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
 
@@ -84,28 +83,15 @@ export default class ArchiveUrl extends Component {
   render () {
     return (
       <div style={{ display: 'flex' }}>
-        <div style={{ flex: 1 }}>
-          <TextField
-            floatingLabelText="URL"
-            underlineStyle={this.state.underlineStyle}
-            id="archive-url-input"
-            value={this.state.url.s}
-            onBlur={this.focusLost}
-            fullWidth={true}
-            onChange={this.handleChange}
-            style={styles.urlInput}
-          />
-        </div>
-        <div >
-          <RaisedButton
-            icon={<ArchiveNowButton />}
-            label="Archive Now!"
-            primary={true}
-            labelPosition='before'
-            style={styles.buttonBasic}
-            onMouseDown={this.onClickArchiveNow}
-          />
-        </div>
+        <TextField
+          floatingLabelText="URL"
+          underlineStyle={this.state.underlineStyle}
+          id="archive-url-input"
+          value={this.state.url.s}
+          onBlur={this.focusLost}
+          onChange={this.handleChange}
+          style={styles.urlInput}
+        />
       </div>
     )
   }

@@ -304,7 +304,7 @@ class JobMonitor {
       rule.second = [ 0, 10, 20, 30, 40, 50 ]
       this.job = schedule.scheduleJob(rule, () => {
         console.log('Checking job stats')
-        if(prevJobCheckDone) {
+        if (prevJobCheckDone) {
           prevJobCheckDone = false
           getHeritrixJobsState()
             .then(status => {

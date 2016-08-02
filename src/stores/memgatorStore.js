@@ -14,16 +14,16 @@ class MemgatorStore_ extends EventEmitter {
   constructor () {
     super()
     this.mementos = new Map()
-    this.countLast  = -2
+    this.countLast = -2
   }
 
   @autobind
-  lastCount() {
+  lastCount () {
     return this.countLast
   }
 
   @autobind
-  resetCountLast() {
+  resetCountLast () {
     this.countLast = -2
   }
 
@@ -74,7 +74,7 @@ class MemgatorStore_ extends EventEmitter {
         data.count = event.count
         data.timemap = event.timemap
         this.mementos.set(event.url, data)
-        this.emit('count-update',{
+        this.emit('count-update', {
           count: event.count
         })
         this.countLast = event.count
@@ -88,9 +88,9 @@ class MemgatorStore_ extends EventEmitter {
       }
       case EventTypes.GET_MEMENTO_COUNT: {
 
-        if(!this.mementos.has(event.url)) {
+        if (!this.mementos.has(event.url)) {
           console.log('adding url', event.url)
-          let data ={
+          let data = {
             count: -1,
             timemap: '',
             maybeArray: false,
@@ -98,7 +98,7 @@ class MemgatorStore_ extends EventEmitter {
             archivalStatus: 'Not Started'
           }
           this.mementos.set(event.url, data)
-          this.emit('count-update',{
+          this.emit('count-update', {
             count: -1
           })
           this.countLast = -1
@@ -110,7 +110,7 @@ class MemgatorStore_ extends EventEmitter {
           })
         } else {
           let data = this.mementos.get(event.url)
-          this.emit('count-update',{
+          this.emit('count-update', {
             count: data.count
           })
           this.countLast = data.count

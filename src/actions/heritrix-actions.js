@@ -537,10 +537,10 @@ function extractUrlsFromConf (confText) {
   })
   let urlElemText = S(doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]').text().trim())
   let maybeMultiple = urlElemText.lines()
-  if(maybeMultiple.length > 1) {
+  if (maybeMultiple.length > 1) {
     return maybeMultiple
   } else {
-    return maybeMultiple[0]
+    return maybeMultiple[ 0 ]
   }
 }
 
@@ -576,11 +576,11 @@ export function getHeritrixJobsState () {
             try {
               cBeanT = fs.readFileSync(crawlerBeanP, 'utf8')
             } catch (error) {
-              noConfReadError =  false
+              noConfReadError = false
               console.error(error)
             }
             jobsConfs[ jid.capture('job') ] = cBeanT
-            if(noConfReadError) {
+            if (noConfReadError) {
               urls = extractUrlsFromConf(cBeanT)
             } else {
               urls = 'error reading conf'

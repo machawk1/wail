@@ -164,6 +164,10 @@ class CrawlStore_ extends EventEmitter {
               })
             } else {
               showMessage = false
+              GMessageDispatcher.dispatch({
+                type: EventTypes.QUEUE_MESSAGE,
+                message: 'You cannot archive an none existent URL!'
+              })
             }
             break
           }

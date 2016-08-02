@@ -40,7 +40,7 @@ export default class SettingsForm extends Component {
       <List style={{
         overflow: 'hidden',
         overflowY: 'auto',
-        height: 250
+        height: '100%'
       }}>
         <WailSettings settings={settings}/>
         <WaybackSettings settings={settings}/>

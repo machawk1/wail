@@ -3,7 +3,7 @@ import { Row, Column } from 'react-cellblock'
 import Avatar from 'material-ui/Avatar'
 import styles from '../styles/styles'
 
-const {fetching} ={
+const { fetching } ={
   container: {
     paddingTop: '32px',
     display: 'flex',
@@ -77,10 +77,10 @@ export class FetchingMementoMessage extends Component {
   render () {
     return (
       <div style={fetching}>
-          <p style={{ paddingLeft: '20px',width: '60%' }}>
-            Retrieving number of publicly available copies
-          </p>
-          <Avatar  style={{marginTop: '10px'}} src="icons/mLogo_animated.gif" size={30}/>
+        <p style={{ paddingLeft: '20px', width: '60%' }}>
+          Retrieving number of publicly available copies
+        </p>
+        <Avatar style={{ marginTop: '10px' }} src="icons/mLogo_animated.gif" size={30}/>
       </div>
     )
   }
@@ -110,9 +110,9 @@ export class MementoCountMessage extends Component {
 
   render () {
     return (
-        <p style={number}>
-          Publicly available copies: {this.props.count}
-        </p>
+      <p style={number}>
+        Publicly available copies: {this.props.count}
+      </p>
     )
   }
 

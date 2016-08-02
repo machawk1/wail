@@ -11,8 +11,6 @@ import tm from '../../../test/csodu.timemap.json'
 
 window.React = React
 
-
-
 // injectTapEventPlugin()
 //
 let ScatterPlot = require('react-d3-basic').BarChart
@@ -29,19 +27,19 @@ mementos.forEach(m => {
 //
 //
 let parser = d3.time.format('%YM%m').parse
-let width = 1920, height = 1080, margins = {left: 100, right: 100, top: 50, bottom: 50},
+let width = 1920, height = 1080, margins = { left: 100, right: 100, top: 50, bottom: 50 },
   x = (d) => {
     console.log(d)
     console.log(parser(d.year))
     return parser(d.year)
-  } ,
+  },
   xScale = 'time',
   xLabel = 'Archived Year',
   yLabel = 'Count',
-  chartSeries =[{
+  chartSeries = [ {
     name: 'Count',
     field: 'count'
-  }]
+  } ]
 
 //
 //
@@ -52,11 +50,10 @@ let byYear = _.chain(mementos).groupBy(m => m.datetimeM.year()).value()
 //     .mapValues(byY => _.groupBy(byY, m => m.datetimeM.month()))
 //     .value()
 
-
 let yearData = []
-_.forIn(byYear,(v,k) => {
+_.forIn(byYear, (v, k) => {
   yearData.push({
-    year: v[0].datetime,
+    year: v[ 0 ].datetime,
     count: v.length
   })
 })
@@ -73,11 +70,11 @@ _.forIn(byYear,(v,k) => {
 ReactDOM.render(
   <ScatterPlot
     margins={margins}
-    width= {width}
-    height= {height}
-    data= {yearData}
-    chartSeries = {chartSeries}
-    x= {x}
+    width={width}
+    height={height}
+    data={yearData}
+    chartSeries={chartSeries}
+    x={x}
   >
   </ScatterPlot>,
   document.getElementById('stats'))
