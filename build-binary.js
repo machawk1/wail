@@ -11,6 +11,7 @@ import pkg from './package.json'
 import moveTo from './tools/moveJDKMemgator'
 Promise.promisifyAll(fs)
 
+
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = path.resolve('.')
 
