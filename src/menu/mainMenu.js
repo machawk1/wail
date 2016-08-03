@@ -2,7 +2,7 @@ import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
-import { showSettingsWindow } from '../electron-main-dev'
+import { showSettingsWindow} from '../electron-main-dev'
 const name = app.getName()
 
 export function screenShotPDF (window) {
@@ -76,7 +76,7 @@ export function screenShot (window) {
   }
 }
 
-const forceKill = {
+export const forceKill = {
   submenu: [
     {
       label: 'Force Termination',
@@ -118,235 +118,9 @@ const forceKill = {
   ]
 }
 
-const template = [
-  {
-    label: 'Edit',
-    submenu: [
-      {
-        role: 'undo'
-      },
-      {
-        role: 'redo'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'cut'
-      },
-      {
-        role: 'copy'
-      },
-      {
-        role: 'paste'
-      },
-      {
-        role: 'pasteandmatchstyle'
-      },
-      {
-        role: 'delete'
-      },
-      {
-        role: 'selectall'
-      }
-    ]
-  },
-  {
-    label: 'View',
-    submenu: [
-      {
-        label: 'Reload',
-        accelerator: 'CmdOrCtrl+R',
-        click (item, focusedWindow) {
-          if (focusedWindow) focusedWindow.reload()
-        }
-      },
-      {
-        label: 'Toggle Developer Tools',
-        accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
-        click (item, focusedWindow) {
-          if (focusedWindow) {
-            focusedWindow.webContents.toggleDevTools()
-          }
-        }
-      },
-      {
-        label: 'Screen Shot',
-        submenu: [
-          {
-            label: 'Save As PDF',
-            click (item, focusedWindow) {
-              screenShotPDF(focusedWindow)
-            }
-          },
-          {
-            label: 'As image',
-            click (item, focusedWindow) {
-              screenShot(focusedWindow)
-            }
-          }
-        ]
-      }
-    ]
-  },
-  {
-    role: 'window',
-    submenu: [
-      {
-        label: 'Close',
-        accelerator: 'CmdOrCtrl+W',
-        role: 'close'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Minimize',
-        accelerator: 'CmdOrCtrl+M',
-        role: 'minimize'
-      }
-    ]
-  },
-  {
-    role: 'help',
-    submenu: [
-      {
-        label: 'Submit Bug Report',
-        subMenu: [
-          {
-            label: 'Via Email',
-            click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-          },
-          {
-            label: 'Through Github',
-            click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-          }
-        ],
-      }
-    ]
-  }
-]
-
-if (process.platform === 'darwin') {
-  template.unshift({
-    label: 'File',
-    submenu: [
-      {
-        label: 'Settings',
-        click (item, focusedWindow) {
-          console.log('clicked settings menu')
-          if (focusedWindow) {
-            showSettingsWindow(focusedWindow)
-          } else {
-            console.log('window for settings click is a no go')
-          }
-        }
-      },
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Open',
-        submenu: [
-          {
-            label: 'WARC Files Location',
-            click() {
-              shell.openItem(global.settings.get('warcs'))
-            }
-          },
-          {
-            label: 'CDX Files Location',
-            click() {
-              shell.openItem(global.settings.get('cdx'))
-            }
-          },
-          {
-            label: 'Archive List',
-            click() {
-              shell.openItem(global.settings.get('archives'))
-            }
-
-          }
-        ]
-      }
-    ]
-  })
-
-  template.unshift({
-    label: name,
-    submenu: [
-      {
-        label: 'About',
-        submenu: [
-          {
-            label: `Learn more about ${name}`,
-            click () { shell.openExternal('http://machawk1.github.io/wail/') }
-          },
-          {
-            label: 'WSDL',
-            click () { shell.openExternal('https://ws-dl.cs.odu.edu/') }
-          },
-          {
-            label: `Version: ${app.getVersion()}`
-          }
-        ]
-      },
-
-      {
-        type: 'separator'
-      },
-      {
-        label: 'Services',
-        submenu: forceKill.submenu
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'hide'
-      },
-      {
-        role: 'hideothers'
-      },
-      {
-        role: 'unhide'
-      },
-      {
-        type: 'separator'
-      },
-      {
-        role: 'quit'
-      }
-    ]
-  })
-  // Window menu.
-  template[ 3 ].submenu = [
+const menus = {
+  linux: [
     {
-      label: 'Close',
-      accelerator: 'CmdOrCtrl+W',
-      role: 'close'
-    },
-    {
-      label: 'Minimize',
-      accelerator: 'CmdOrCtrl+M',
-      role: 'minimize'
-    },
-    {
-      label: 'Zoom',
-      role: 'zoom'
-    },
-    {
-      type: 'separator'
-    },
-    {
-      label: 'Bring All to Front',
-      role: 'front'
-    }
-  ]
-} else {
-  var about
-  if (process.platform === 'linux') {
-    about = {
       label: name,
       submenu: [
         {
@@ -364,6 +138,20 @@ if (process.platform === 'darwin') {
               label: `Version: ${app.getVersion()}`
             }
           ]
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Preferences',
+          click (item, focusedWindow) {
+            console.log('clicked settings menu')
+            if (focusedWindow) {
+              showSettingsWindow(focusedWindow)
+            } else {
+              console.log('window for settings click is a no go')
+            }
+          }
         },
         {
           type: 'separator'
@@ -379,9 +167,147 @@ if (process.platform === 'darwin') {
           role: 'quit'
         }
       ]
+    },
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open',
+          submenu: [
+            {
+              label: 'WARC Files Location',
+              click() {
+                shell.openItem(global.settings.get('warcs'))
+              }
+            },
+            {
+              label: 'CDX Files Location',
+              click() {
+                shell.openItem(global.settings.get('cdx'))
+              }
+            },
+            {
+              label: 'Archive List',
+              click() {
+                shell.openItem(global.settings.get('archives'))
+              }
+
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          role: 'undo'
+        },
+        {
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'cut'
+        },
+        {
+          role: 'copy'
+        },
+        {
+          role: 'paste'
+        },
+        {
+          role: 'pasteandmatchstyle'
+        },
+        {
+          role: 'delete'
+        },
+        {
+          role: 'selectall'
+        }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'Ctrl+R',
+          click (item, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload()
+          }
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Ctrl+Shift+I',
+          click (item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.toggleDevTools()
+            }
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Screen Shot',
+          submenu: [
+            {
+              label: 'Save As PDF',
+              click (item, focusedWindow) {
+                screenShotPDF(focusedWindow)
+              }
+            },
+            {
+              label: 'As image',
+              click (item, focusedWindow) {
+                screenShot(focusedWindow)
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {
+          label: 'Close',
+          accelerator: 'Ctrl+W',
+          role: 'close'
+        },
+        {
+          label: 'Minimize',
+          accelerator: 'Ctrl+M',
+          role: 'minimize'
+        },
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Submit Bug Report',
+          subMenu: [
+            {
+              label: 'Via Email',
+              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+            },
+            {
+              label: 'Through Github',
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
+            }
+          ],
+        }
+      ]
     }
-  } else {
-    about = {
+
+  ],
+
+  darwin: [
+    {
       label: name,
       submenu: [
         {
@@ -404,12 +330,384 @@ if (process.platform === 'darwin') {
           type: 'separator'
         },
         {
+          label: 'Preferences',
+          accelerator: 'Cmd+,',
+          click (item, focusedWindow) {
+            console.log('clicked settings menu')
+            if (focusedWindow) {
+              showSettingsWindow(focusedWindow)
+            } else {
+              console.log('window for settings click is a no go')
+            }
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Services',
+          submenu: forceKill.submenu
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'hide'
+        },
+        {
+          role: 'hideothers'
+        },
+        {
+          role: 'unhide'
+        },
+        {
+          type: 'separator'
+        },
+        {
           role: 'quit'
         }
       ]
+    },
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open',
+          submenu: [
+            {
+              label: 'WARC Files Location',
+              click() {
+                shell.openItem(global.settings.get('warcs'))
+              }
+            },
+            {
+              label: 'CDX Files Location',
+              click() {
+                shell.openItem(global.settings.get('cdx'))
+              }
+            },
+            {
+              label: 'Archive List',
+              click() {
+                shell.openItem(global.settings.get('archives'))
+              }
+
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          role: 'undo'
+        },
+        {
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'cut'
+        },
+        {
+          role: 'copy'
+        },
+        {
+          role: 'paste'
+        },
+        {
+          role: 'pasteandmatchstyle'
+        },
+        {
+          role: 'delete'
+        },
+        {
+          role: 'selectall'
+        }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click (item, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload()
+          }
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click (item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.toggleDevTools()
+            }
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Screen Shot',
+          submenu: [
+            {
+              label: 'Save As PDF',
+              click (item, focusedWindow) {
+                screenShotPDF(focusedWindow)
+              }
+            },
+            {
+              label: 'As image',
+              click (item, focusedWindow) {
+                screenShot(focusedWindow)
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {
+          label: 'Close',
+          accelerator: 'Cmd+W',
+          role: 'close'
+        },
+        {
+          label: 'Minimize',
+          accelerator: 'Cmd+M',
+          role: 'minimize'
+        },
+        {
+          label: 'Zoom',
+          role: 'zoom'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Bring All to Front',
+          role: 'front'
+        }
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Submit Bug Report',
+          subMenu: [
+            {
+              label: 'Via Email',
+              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+            },
+            {
+              label: 'Through Github',
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
+            }
+          ],
+        }
+      ]
     }
-  }
-  template.unshift(about)
+
+  ],
+  windows: [
+    {
+      label: name,
+      submenu: [
+        {
+          label: 'About',
+          submenu: [
+            {
+              label: `Learn more about ${name}`,
+              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+            },
+            {
+              label: 'WSDL',
+              click () { shell.openExternal('https://ws-dl.cs.odu.edu/') }
+            },
+            {
+              label: `Version: ${app.getVersion()}`
+            }
+          ]
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Preferences',
+          click (item, focusedWindow) {
+            console.log('clicked settings menu')
+            if (focusedWindow) {
+              showSettingsWindow(focusedWindow)
+            } else {
+              console.log('window for settings click is a no go')
+            }
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'quit'
+        }
+      ]
+    },
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'Open',
+          submenu: [
+            {
+              label: 'WARC Files Location',
+              click() {
+                shell.openItem(global.settings.get('warcs'))
+              }
+            },
+            {
+              label: 'CDX Files Location',
+              click() {
+                shell.openItem(global.settings.get('cdx'))
+              }
+            },
+            {
+              label: 'Archive List',
+              click() {
+                shell.openItem(global.settings.get('archives'))
+              }
+
+            }
+          ]
+        }
+      ]
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        {
+          role: 'undo'
+        },
+        {
+          role: 'redo'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          role: 'cut'
+        },
+        {
+          role: 'copy'
+        },
+        {
+          role: 'paste'
+        },
+        {
+          role: 'pasteandmatchstyle'
+        },
+        {
+          role: 'delete'
+        },
+        {
+          role: 'selectall'
+        }
+      ]
+    },
+    {
+      label: 'View',
+      submenu: [
+        {
+          label: 'Reload',
+          accelerator: 'Ctrl+R',
+          click (item, focusedWindow) {
+            if (focusedWindow) focusedWindow.reload()
+          }
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: 'Ctrl+Shift+I',
+          click (item, focusedWindow) {
+            if (focusedWindow) {
+              focusedWindow.webContents.toggleDevTools()
+            }
+          }
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Screen Shot',
+          submenu: [
+            {
+              label: 'Save As PDF',
+              click (item, focusedWindow) {
+                screenShotPDF(focusedWindow)
+              }
+            },
+            {
+              label: 'As image',
+              click (item, focusedWindow) {
+                screenShot(focusedWindow)
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      role: 'window',
+      submenu: [
+        {
+          label: 'Close',
+          accelerator: 'Ctrl+W',
+          role: 'close'
+        },
+        {
+          label: 'Minimize',
+          accelerator: 'Ctrl+M',
+          role: 'minimize'
+        },
+      ]
+    },
+    {
+      role: 'help',
+      submenu: [
+        {
+          label: 'Submit Bug Report',
+          subMenu: [
+            {
+              label: 'Via Email',
+              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+            },
+            {
+              label: 'Through Github',
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
+            }
+          ],
+        }
+      ]
+    }
+  ]
 }
 
+var template
+
+if(process.platform === 'darwin') {
+    template = menus.darwin
+} else if (process.platform === 'linux') {
+    template = menus.linux
+} else {
+    template = menus.windows
+}
+
+
 export default template
+
+
+
