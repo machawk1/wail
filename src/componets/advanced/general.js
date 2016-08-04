@@ -32,8 +32,7 @@ export default class General extends Component {
 
   @autobind
   servicesUpdated () {
-    let status = ServiceStore.serviceStatus
-    this.setState({ wbGood: status.wayback, hGood: status.heritrix })
+    this.setState({ wbGood: ServiceStore.serviceStatus.wayback, hGood: ServiceStore.serviceStatus.heritrix })
   }
 
   @autobind
