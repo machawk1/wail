@@ -1,0 +1,16 @@
+{
+  "presets": ["es2015", "stage-0","node6", "react"],
+  "plugins": [
+    "transform-runtime",
+    "add-module-exports",
+    "babel-plugin-transform-decorators-legacy",
+    "react-html-attrs",
+    "transform-class-properties",
+    "react-html-attrs"
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"]
+    }
+  }
+}

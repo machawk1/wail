@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+    <link rel="stylesheet" type="text/css"
+          href="../../../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"/>
+    <link rel="stylesheet" type="text/css" href="../../../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"/>
+    <style>
+        html {
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+</head>
+<body style="margin: 0; font-family: Roboto, sans-serif;">
+<div id="settings">
+
+</div>
+</body>
+<script>
+    (function () {
+        const script = document.createElement('script')
+        script.src = (process.env.HOT) ? 'http://localhost:9000/dist/settingsW.bundle.js' : '../../../dist/settingsW.bundle.js'
+        document.write(script.outerHTML)
+    }())
+</script>
+</html>

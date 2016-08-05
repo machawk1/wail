@@ -1,7 +1,4 @@
 import 'babel-polyfill'
-import realFs from 'fs'
-import gracefulFs from 'graceful-fs'
-gracefulFs.gracefulify(realFs)
 import fs from 'fs-extra'
 import path from 'path'
 import Promise from 'bluebird'
