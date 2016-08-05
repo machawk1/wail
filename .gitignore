@@ -34,6 +34,7 @@ src/public/*
 build
 
 bundledApps/heritrix-3.2.0/
+bundledApps/heritrix-3.3.0/
 
 wayback.xml
 heritrix.pid
