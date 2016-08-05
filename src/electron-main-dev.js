@@ -62,9 +62,10 @@ app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
 app.commandLine.appendSwitch('allow-http-screen-capture')
 
 function showNewCrawlWindow (parent) {
+  let height = process.platform === 'win32' ? 380 : 360
   let config = {
     width: 800,
-    height: 360,
+    height,
     modal: true,
     show: false,
     closable: true,
@@ -267,7 +268,7 @@ function setUp () {
     // console.log('windows')
     control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
     control.w = 800
-    control.h = 361
+    control.h = 420
   } else {
     control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
     control.w = 800
