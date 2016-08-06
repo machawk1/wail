@@ -4,11 +4,11 @@ import util from 'util'
 import path from 'path'
 import os from 'os'
 import webpack from 'webpack'
-import electronCfg from './webpack.config.electron.js'
-import cfg from './webpack.config.production.js'
+import electronCfg from './wail-ui/webpack.config.electron.js'
+import cfg from './wail-ui/webpack.config.production.js'
 import packager from 'electron-packager'
 import pkg from './package.json'
-import moveTo from '../tools/moveJDKMemgator'
+import moveTo from './tools/moveJDKMemgator'
 Promise.promisifyAll(fs)
 
 
