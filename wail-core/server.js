@@ -9,15 +9,14 @@ import Promise from 'bluebird'
 
 const app = feathers()
 
-app.configure(config(path.join(__dirname,'..')))
+app.configure(config(path.join(__dirname, '..')))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(rest())
 
-
-app.use('/test',{
-  get(id,params) {
-    console.log(`got request ${id}`,params)
+app.use('/test', {
+  get(id, params) {
+    console.log(`got request ${id}`, params)
     return Promise.resolve({
       id,
       read: false,
@@ -29,15 +28,14 @@ app.use('/test',{
 
 app.listen(3030)
 
-
-process.on('SIGTERM',() => {
+process.on('SIGTERM', () => {
   console.log('Stopping WAIL-Core server')
   app.close(() => {
     process.exit(0)
   })
 })
 
-process.on('SIGINT',() => {
+process.on('SIGINT', () => {
   console.log('Stopping WAIL-Core server')
   app.close(() => {
     process.exit(0)

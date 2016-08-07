@@ -5,6 +5,7 @@ import feathersNedb from 'feathers-nedb'
 export default function () {
   const app = this
   const db = new NeDB({
-    filename: path.join()
+    filename: path.join(app.get('nedb'), 'memento.db'),
+    autoload: true
   })
 }
