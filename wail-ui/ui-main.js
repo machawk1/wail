@@ -251,10 +251,6 @@ function setUp () {
     windows.timemapStatsURL = `file://${control.base}/childWindows/timemapStats/timemapStats.html`
   }
 
-  if(process.env.NODE_ENV === 'development') {
-    control.base = path.resolve(control.base,'../../')
-  }
-
   let logPath
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {

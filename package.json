@@ -21,12 +21,13 @@
   "scripts": {
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
-    "dev-ui": "cross-env webpack-dev-server --port 9000 --content-base ./wail-ui/src/ --hot --inline",
-    "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/src/electron-main-dev.js",
+    "dev-ui": "cross-env webpack-dev-server --port 9000 --content-base ./wail-ui/ --hot --inline",
+    "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/electron-main-dev.js",
+    "dev-core-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-core/core-main.js",
     "nightmare": "babel-node tools/testNightmare",
-    "postinstall": "npm run check-dev-engines",
     "test-xml": "babel-node tools/test-xml"
   },
+  "main": "./dist/ui-main.js",
   "bin": {
     "electron": "./node_modules/.bin/electron"
   },
@@ -42,13 +43,14 @@
     "cron": "^1.1.0",
     "del": "2.2.1",
     "dotenv": "^2.0.0",
+    "electron-positioner": "^3.0.0",
     "electron-settings": "1.1.1",
     "eventemitter3": "^1.2.0",
     "extract-zip": "^1.5.0",
     "flux": "^2.1.1",
     "fs-extra": "0.30.0",
-    "googleapis": "^12.1.0",
     "google-auth-library": "^0.9.8",
+    "googleapis": "^12.1.0",
     "graceful-fs": "^4.1.5",
     "history": "^3.0.0",
     "insafe": "^0.3.0",
@@ -57,6 +59,7 @@
     "lodash": "^4.14.1",
     "material-design-icons-iconfont": "^2.0.5",
     "material-ui": "^0.15.3",
+    "menubar": "^5.1.0",
     "mkdirp": "^0.5.1",
     "moment": "^2.14.1",
     "named-regexp": "^0.1.1",
@@ -77,6 +80,7 @@
     "rwlock": "^5.0.0",
     "shelljs": "0.7.3",
     "sliced": "^1.0.1",
+    "socket.io": "^1.4.8",
     "sort-stream2": "^1.0.0",
     "source-map-support": "^0.4.2",
     "split2": "^2.1.0",
@@ -85,8 +89,8 @@
     "tldjs": "^1.6.2",
     "twix": "^1.1.1",
     "unzip": "^0.1.11",
-    "validator": "^5.5.0",
-    "valid-url": "^1.0.9"
+    "valid-url": "^1.0.9",
+    "validator": "^5.5.0"
   },
   "devDependencies": {
     "asar": "^0.12.1",
