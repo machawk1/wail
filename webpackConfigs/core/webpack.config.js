@@ -1,21 +1,12 @@
-var webpack = require('webpack')
-var path = require('path')
+import webpack from 'webpack'
+import path from 'path'
 
-var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
+const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
-module.exports = {
+export default {
   devtool: 'inline-source-map',
   entry: {
-    accessibility: './src/background/accessibility',
-    indexer: './src/background/indexer',
-    jobs: './src/background/jobs',
-    newCrawl: './src/childWindows/newCrawl/newCrawl',
-    requestD: './src/background/requestDaemon',
-    settingsW: './src/childWindows/settings/settingsW',
-    wail: './src/wail',
-    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
-    // timemapStats: './src/childWindows/timemapStats/timemapStats'
+    server: 'wail-core/server'
   },
   module: {
     noParse: noParseRe,
@@ -26,10 +17,9 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'es2015', 'stage-0', 'node6', 'react', 'react-hmre' ],
+          presets: [ 'es2015', 'stage-0', 'node6',],
           plugins: [ 'transform-runtime', 'add-module-exports',
-            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
-            'react-html-attrs',
+            'babel-plugin-transform-decorators-legacy'
           ],
         },
       },
@@ -59,6 +49,7 @@ module.exports = {
     extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,
@@ -67,9 +58,8 @@ module.exports = {
   ],
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name].bundle.js',
-    chunkFilename: '[id].chunk.js',
-    publicPath: 'http://localhost:9000/dist/'
+    filename: '[name].js',
+    chunkFilename: '[id].chunk.js'
   },
   // bail: true,
   target: 'electron-renderer',

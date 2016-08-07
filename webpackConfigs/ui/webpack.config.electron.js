@@ -1,7 +1,7 @@
 import webpack from 'webpack'
 import path from 'path'
 
-let noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
+const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
   module: {
@@ -32,9 +32,9 @@ export default {
   },
   devtool: 'source-map',
 
-  entry: [ 'babel-polyfill', './src/electron-main-dev.js' ],
+  entry: [ 'babel-polyfill', './wail-ui/ui-main.js' ],
   output: {
-    filename: 'electron-main.js',
+    filename: 'ui-main.js',
     path: path.join(__dirname, 'dist'),
     publicPath: './dist/',
     libraryTarget: 'commonjs2'

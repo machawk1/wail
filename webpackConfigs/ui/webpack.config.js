@@ -1,9 +1,9 @@
-var webpack = require('webpack')
-var path = require('path')
+import webpack from 'webpack'
+import path from 'path'
 
-var noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
+const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
-module.exports = {
+export default {
   devtool: 'inline-source-map',
   entry: {
     accessibility: './src/background/accessibility',
@@ -59,6 +59,7 @@ module.exports = {
     extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
   },
   plugins: [
+    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,

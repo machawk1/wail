@@ -8,6 +8,8 @@ const options = {
   tooltip: 'WAIL',
   width: 500
 }
+
+
 const wailMenuBar = menubar(options)
 
 

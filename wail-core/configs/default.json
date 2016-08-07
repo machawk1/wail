@@ -1,0 +1,5 @@
+{
+  "host": "localhost",
+   "port": 3030,
+   "nedb": "../dbs/"
+}

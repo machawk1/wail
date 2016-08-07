@@ -2,9 +2,9 @@ import webpack from 'webpack'
 import ExtractTextPlugin from 'extract-text-webpack-plugin'
 import path from 'path'
 
-let noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
+const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
-const config = {
+export default {
   devtool: 'source-map',
 
   entry: {
@@ -79,5 +79,3 @@ const config = {
   ],
   target: 'electron-renderer'
 }
-
-export default config
