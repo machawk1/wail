@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import feathers from 'feathers'
 import hooks from 'feathers-hooks'
 import rest from 'feathers-rest'
@@ -7,23 +6,27 @@ import socketio from 'feathers-socketio'
 import bodyParser from 'body-parser'
 import path from 'path'
 import Promise from 'bluebird'
-import services from './services'
 
 const app = feathers()
 
-app.configure(config(__dirname))
+app.configure(config(path.join(__dirname, '..')))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
-  .configure(hooks())
   .configure(rest())
-  .configure(services)
 
-
-app.listen(app.get('port'))
-
-app.on('listening', () => {
-  console.log(`WAIL-Core listing on ${app.get('host')}:${app.get('port')}`)
+app.use('/test', {
+  get(id, params) {
+    console.log(`got request ${id}`, params)
+    return Promise.resolve({
+      id,
+      read: false,
+      test: 'yo',
+      createdAt: new Date().getTime()
+    })
+  }
 })
+
+app.listen(3030)
 
 process.on('SIGTERM', () => {
   console.log('Stopping WAIL-Core server')
