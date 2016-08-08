@@ -1,7 +1,8 @@
 import NeDB from 'nedb'
 import path from 'path'
-import service from 'feathers-nedb'
 import hooks from './hooks'
+import nedbService from 'feathers-nedb'
+
 
 export default function () {
   const app = this
@@ -18,20 +19,15 @@ export default function () {
     }
   }
 
-  app.use('/memgator',service(dbOptions))
+  app.use('/memgator',nedbService(dbOptions))
 
   console.log('memgator')
 
   let memgatorService = app.service('/memgator')
-  console.log(memgatorService)
+  // console.log(memgatorService)
 
 
+  memgatorService.before(hooks.before)
   memgatorService.after(hooks.after)
 
-  memgatorService.create({
-    url: 'http://cs.odu.edu/~jberlin',
-    mementos: 2
-  }).then(mementos => {
-    console.log('created memento',mementos)
-  })
 }
