@@ -4,150 +4,166 @@ import Promise from 'bluebird'
 import S from 'string'
 import { encode, compare } from 'bytewise'
 import _ from 'lodash'
-var realFs = require('fs')
-var gracefulFs = require('graceful-fs')
-gracefulFs.gracefulify(realFs)
-Promise.promisifyAll(fs)
+import feathers from 'feathers/client'
+import socketio from 'feathers-socketio/client'
+import hooks from 'feathers-hooks'
+import io from 'socket.io-client'
 
-let heritrix = {
-  uri_heritrix: 'https://127.0.0.1:8443',
-  uri_engine: 'https://localhost:8443/engine/',
-  port: '8843',
-  username: 'lorem',
-  password: 'ipsum',
-  login: '-a lorem:ipsum',
-  path: '',
-  jobConf: 'crawler-beans.cxml',
-  jobConfWin: 'crawler-beans-win.cxml',
-  web_ui: 'https://lorem:ipsum@localhost:8443',
-  addJobDirectoryOptions: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    timeout: 15000,
-    form: {
-      action: 'add',
-      addPath: '',
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  sendActionOptions: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine/job/',
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    timeout: 15000,
-    form: {
-      action: ''
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  killOptions: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine',
-    timeout: 15000,
-    body: 'im_sure=on&action=exit java process',
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
-      Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-      'Accept-Language': 'en-US,en;q=0.5',
-      'Connection': 'keep-alive'
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  launchJobOptions: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine/job/',
-    timeout: 15000,
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    form: {
-      action: 'launch'
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  optionEngine: {
-    method: 'GET',
-    url: 'https://localhost:8443/engine',
-    timeout: 15000,
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  buildOptions: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine/job/',
-    timeout: 15000,
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    form: {
-      action: 'build'
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  },
-  reScanJobs: {
-    method: 'POST',
-    url: 'https://localhost:8443/engine',
-    timeout: 5000,
-    headers: { 'content-type': 'application/x-www-form-urlencoded' },
-    form: {
-      action: 'rescan'
-    },
-    auth: {
-      username: 'lorem',
-      password: 'ipsum',
-      sendImmediately: false
-    },
-    strictSSL: false,
-    rejectUnauthorized: false,
-    resolveWithFullResponse: true,
-  }
+const socket = io('http://localhost:3030')
+const app = feathers()
+  .configure(hooks())
+  .configure(socketio(socket))
 
-}
+const memgator = app.service('/timemap')
+// memgator.find().then(data => {
+//   console.log(data)
+// })
 
-let mutate = S('export JAVA_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; export JRE_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; /Users/jberlin/WebstormProjects/wail/bundledApps/heritrix-3.3.0/bin/heritrix -a lorem:ipsum')
+memgator.create({
+  url: 'http://cs.odu.edu/~mln',
+  format: 'json'
+})
 
-if(mutate.contains('-a lorem:ipsum')) {
-  console.log(mutate.replaceAll('-a lorem:ipsum','-a john:berlin').s)
-}
 
+// let heritrix = {
+//   uri_heritrix: 'https://127.0.0.1:8443',
+//   uri_engine: 'https://localhost:8443/engine/',
+//   port: '8843',
+//   username: 'lorem',
+//   password: 'ipsum',
+//   login: '-a lorem:ipsum',
+//   path: '',
+//   jobConf: 'crawler-beans.cxml',
+//   jobConfWin: 'crawler-beans-win.cxml',
+//   web_ui: 'https://lorem:ipsum@localhost:8443',
+//   addJobDirectoryOptions: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine',
+//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+//     timeout: 15000,
+//     form: {
+//       action: 'add',
+//       addPath: '',
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   sendActionOptions: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine/job/',
+//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+//     timeout: 15000,
+//     form: {
+//       action: ''
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   killOptions: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine',
+//     timeout: 15000,
+//     body: 'im_sure=on&action=exit java process',
+//     headers: {
+//       'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
+//       Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+//       'Accept-Language': 'en-US,en;q=0.5',
+//       'Connection': 'keep-alive'
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   launchJobOptions: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine/job/',
+//     timeout: 15000,
+//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+//     form: {
+//       action: 'launch'
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   optionEngine: {
+//     method: 'GET',
+//     url: 'https://localhost:8443/engine',
+//     timeout: 15000,
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   buildOptions: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine/job/',
+//     timeout: 15000,
+//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+//     form: {
+//       action: 'build'
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   },
+//   reScanJobs: {
+//     method: 'POST',
+//     url: 'https://localhost:8443/engine',
+//     timeout: 5000,
+//     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+//     form: {
+//       action: 'rescan'
+//     },
+//     auth: {
+//       username: 'lorem',
+//       password: 'ipsum',
+//       sendImmediately: false
+//     },
+//     strictSSL: false,
+//     rejectUnauthorized: false,
+//     resolveWithFullResponse: true,
+//   }
+//
+// }
+//
+// let mutate = S('export JAVA_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; export JRE_HOME=/Users/jberlin/WebstormProjects/wail/bundledApps/openjdk; /Users/jberlin/WebstormProjects/wail/bundledApps/heritrix-3.3.0/bin/heritrix -a lorem:ipsum')
+//
+// if(mutate.contains('-a lorem:ipsum')) {
+//   console.log(mutate.replaceAll('-a lorem:ipsum','-a john:berlin').s)
+// }
+//
 
 // let usr = 'John'
 // let pwd = 'Berlin'

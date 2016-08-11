@@ -50,11 +50,11 @@ const jdks = [
 ]
 
 const memgators = [
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-windows-386.exe',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-windows-amd64.exe',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-386',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-amd64',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-darwin-amd64',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc6/memgator-windows-386.exe',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc6/memgator-windows-amd64.exe',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc6/memgator-linux-386',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc6/memgator-linux-amd64',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc6/memgator-darwin-amd64',
 ]
 
 const unpackedJDKs = [

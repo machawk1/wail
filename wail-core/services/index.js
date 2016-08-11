@@ -1,4 +1,4 @@
-import memgator from './memgator'
+import memgator from './memgator/memgatorService'
 
 export default function () {
   const app = this

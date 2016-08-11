@@ -1,6 +1,7 @@
 {
   "port": 3030,
   "host": "localhost",
-  "nedb": "../dbs"
+  "nedb": "../dbs",
+  "timemaps": "../timemaps"
 
 }
