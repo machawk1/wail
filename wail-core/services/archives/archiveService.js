@@ -25,7 +25,7 @@ export default function () {
 
   console.log('memgator')
 
-  const memgatorDbService = app.service('/archives')
+  const archives = app.service('/archives')
   memgatorDbService.before(hooks.db.before)
   memgatorDbService.after(hooks.db.after)
 
