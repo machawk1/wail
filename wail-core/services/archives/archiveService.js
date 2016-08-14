@@ -1,6 +1,8 @@
 import NeDB from 'nedb'
 import path from 'path'
 import nedbService from 'feathers-nedb'
+import hooks from './hooks/archiveHooks'
+import ArchiveManager from './archiveManager'
 
 
 export default function () {
@@ -19,14 +21,14 @@ export default function () {
   }
 
   app.use('/archives', nedbService(dbOptions))
+  app.use('/archivesManager', new ArchiveManager())
 
   // app.use('/memgator/')
 
 
-  console.log('memgator')
+  console.log('archives')
 
   const archives = app.service('/archives')
-  memgatorDbService.before(hooks.db.before)
-  memgatorDbService.after(hooks.db.after)
-
+  archives.before(hooks.before)
+  archives.after(hooks.after)
 }

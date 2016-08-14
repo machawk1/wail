@@ -14,15 +14,14 @@ const app = feathers()
   .configure(hooks())
   .configure(socketio(socket))
 
-const memgator = app.service('/timemap')
+const memgator = app.service('/archivesManager')
 // memgator.find().then(data => {
 //   console.log(data)
 // })
 
-memgator.create({
-  url: 'http://cs.odu.edu/~mln',
-  format: 'json'
-})
+memgator.create({ name: 'xyz', existingWarcs: '/home/john/wail/archives/*.warc'})
+  .then(data => console.log(data))
+  .catch(err => console.error(err))
 
 
 // let heritrix = {
