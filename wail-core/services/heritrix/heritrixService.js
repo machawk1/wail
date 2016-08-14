@@ -1,6 +1,6 @@
 import NeDB from 'nedb'
 import path from 'path'
-import hooks from './hooks'
+import hooks from './hooks/heritrixHooks'
 import nedbService from 'feathers-nedb'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'

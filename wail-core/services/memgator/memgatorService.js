@@ -23,9 +23,9 @@ export default function () {
     }
   }
 
-  app.use('/memgator',nedbService(dbOptions))
-  app.use('/memgator/:proto://:url',new MemgatorPather())
-  app.use('/timemap',new DLTimemap())
+  app.use('/memgator', nedbService(dbOptions))
+  app.use('/memgator/:proto://:url', new MemgatorPather())
+  app.use('/timemap', new DLTimemap())
 
   // app.use('/memgator/')
 
