@@ -112,7 +112,8 @@
     "unzip": "^0.1.11",
     "valid-url": "^1.0.9",
     "validator": "^5.5.0",
-    "vhost": "^3.0.2"
+    "vhost": "^3.0.2",
+    "yamljs": "^0.2.8"
   },
   "devDependencies": {
     "asar": "^0.12.1",

@@ -1,5 +1,6 @@
 import Promise from 'bluebird'
 import cp from 'child_process'
+import path from 'path'
 
 export default class ArchiveManager {
 
@@ -13,32 +14,55 @@ export default class ArchiveManager {
 
   }
 
+  createWithWarcs (warcs, name, glob = false) {
+    let opts = {
+      cwd: '/home/john/wail/archives'
+    }
+    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wbManager'
+    if (glob) {
+
+    } else {
+
+    }
+  }
+
 // POST /messages
   create (data, params, cb) {
     console.log(data, params)
-    return Promise.resolve({
-      yay: 'yes!'
+
+    let { name } = data
+    let opts = {
+      cwd: '/home/john/my-fork-wail/archives'
+    }
+    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wbManager'
+    return new Promise((resolve, reject) => {
+      cp.execFile(exec, [ 'init', name ], opts, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          reject(error)
+        }
+        console.log('created collection')
+        let path = `/home/john/wail/archives/collections/${name}`
+        let toCreate = {
+          _id: name,
+          name,
+          path,
+          archive: `${path}/archive`,
+          indexes: `${path}/indexes`,
+          colName: name,
+          numArchives: 0
+        }
+        if (Reflect.has(data, 'existingWarcs')) {
+          let {existingWarcs} = data
+          toCreate.existingWarcs = existingWarcs
+          if(Reflect.has(data,'glob')) {
+           toCreate.glob = true
+          }
+        }
+        resolve(this.app.service('archives').create(toCreate))
+      })
     })
-    // let opts = {
-    //   cwd: '/home/john/wail/archives'
-    // }
-    //
-    // let exec = '/home/john/wail/bundledApps/pywb/wbManager'
-    // return new Promise((resolve, reject) => {
-    //   cp.execFile(exec, [ 'init', data.name ], opts, (error, stdout, stderr) => {
-    //     if (error) {
-    //       console.error(stderr)
-    //       reject(error)
-    //     }
-    //
-    //     console.log(stdout)
-    //     resolve(this.app.service('archives').create({
-    //       path: `/home/john/wail/archives/collections/${data.name}`,
-    //       colName: data.name,
-    //       numArchives: 0
-    //     }))
-    //   })
-    // })
+
   }
 
 // PUT /messages[/<id>]
