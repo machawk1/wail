@@ -18,7 +18,7 @@ export default class ArchiveManager {
     let opts = {
       cwd: '/home/john/wail/archives'
     }
-    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wbManager'
+    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wb-manager'
     if (glob) {
 
     } else {
@@ -34,7 +34,7 @@ export default class ArchiveManager {
     let opts = {
       cwd: '/home/john/my-fork-wail/archives'
     }
-    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wbManager'
+    let exec = '/home/john/my-fork-wail/bundledApps/pywb/wb-manager'
     return new Promise((resolve, reject) => {
       cp.execFile(exec, [ 'init', name ], opts, (error, stdout, stderr) => {
         if (error) {
@@ -42,7 +42,7 @@ export default class ArchiveManager {
           reject(error)
         }
         console.log('created collection')
-        let path = `/home/john/wail/archives/collections/${name}`
+        let path = `/home/john/wail/archives/${name}`
         let toCreate = {
           _id: name,
           name,

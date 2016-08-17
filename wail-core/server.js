@@ -23,7 +23,7 @@ app.configure(config(__dirname))
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
   .configure(rest())
-  .configure(socketio())
+  .configure(socketio({ timeout: 120000 }))
   .configure(services)
   .use(errors({
     html: function(error, req, res, next) {

@@ -11,34 +11,35 @@ import io from 'socket.io-client'
 import yaml from 'yamljs'
 
 
-fs.readFile('/home/john/my-fork-wail/bundledApps/pywb/config.yaml','utf8',(err,data) => {
-  if(err) {
-    console.error(err)
-  } else {
-    let config = yaml.parse(data)
-    console.log(config)
-  }
-})
-
-// const socket = io('http://localhost:3030')
-// const app = feathers()
-//   .configure(hooks())
-//   .configure(socketio(socket))
-//
-// const memgator = app.service('/archivesManager')
-// // memgator.find().then(data => {
-// //   console.log(data)
-// // })
-//
-// memgator.create({ name: 'xyz', existingWarcs: '/home/john/my-fork-wail/archives/*.warc'})
-//   .then(data => {
-//     console.log(data)
-//     process.exit(0)
-//   })
-//   .catch(err => {
+// fs.readFile('/home/john/my-fork-wail/bundledApps/pywb/config.yaml','utf8',(err,data) => {
+//   if(err) {
 //     console.error(err)
-//     process.exit(0)
-//   })
+//   } else {
+//     let config = yaml.parse(data)
+//     console.log(config)
+//   }
+// })
+
+const socket = io('http://localhost:3030',{ timeout: 120000 })
+const app = feathers()
+  .configure(hooks())
+  .configure(socketio(socket,{ timeout: 120000 }))
+
+const memgator = app.service('/archivesManager')
+// memgator.find().then(data => {
+//   console.log(data)
+// })
+
+memgator.create({ name: 'xyz', existingWarcs: '/home/john/my-fork-wail/archives/*.warc'})
+  .then(data => {
+    console.log(data)
+    process.exit(0)
+
+  })
+  .catch(err => {
+    console.error(err)
+    process.exit(0)
+  })
 
 
 // let heritrix = {

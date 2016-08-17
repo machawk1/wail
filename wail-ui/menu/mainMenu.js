@@ -2,7 +2,7 @@ import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
-import { showSettingsWindow} from '../electron-main-dev'
+import { showSettingsWindow} from '../ui-main'
 const name = app.getName()
 
 export function screenShotPDF (window) {

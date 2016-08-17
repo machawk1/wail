@@ -31,7 +31,6 @@ export default class ArchivalButtons extends Component {
           <RaisedButton
             icon={<ArchiveNowButton />}
             label="Archive Via Heritrix!"
-            primary={true}
             labelPosition='before'
             onMouseDown={() => {
               CrawlDispatcher.dispatch({

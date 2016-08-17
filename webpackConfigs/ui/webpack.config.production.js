@@ -8,15 +8,15 @@ export default {
   devtool: 'source-map',
 
   entry: {
-    wail: './src/wail',
-    newCrawl: './src/childWindows/newCrawl/newCrawl',
-    accessibility: './src/background/accessibility',
-    indexer: './src/background/indexer',
-    requestD: './src/background/requestDaemon',
-    settingsW: './src/childWindows/settings/settingsW',
-    jobs: './src/background/jobs',
-    firstLoad: './src/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './src/loadingScreens/notFirstTime/notFirstLoad'
+    wail: './wail-ui/wail',
+    newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    accessibility: './wail-ui/background/accessibility',
+    indexer: './wail-ui/background/indexer',
+    requestD: './wail-ui/background/requestDaemon',
+    settingsW: './wail-ui/childWindows/settings/settingsW',
+    jobs: './wail-ui/background/jobs',
+    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad'
   },
 
   output: {

@@ -224,9 +224,9 @@ function setUp () {
   control.base = path.resolve('./')
 
   if (process.env.NODE_ENV === 'development') {
-    // require('electron-debug')({
-    //   showDevTools: true
-    // })
+    require('electron-debug')({
+      showDevTools: true
+    })
     windows.accessibilityWindowURL = `file://${__dirname}/background/accessibility.html`
     windows.indexWindowURL = `file://${__dirname}/background/indexer.html`
     windows.jobWindowURL = `file://${__dirname}/background/jobs.html`
@@ -239,15 +239,15 @@ function setUp () {
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
   } else {
     control.base = app.getAppPath()
-    windows.accessibilityWindowURL = `file://${control.base}/src/background/accessibility.html`
-    windows.indexWindowURL = `file://${control.base}/src/background/indexer.html`
-    windows.jobWindowURL = `file://${control.base}/src/background/jobs.html`
-    windows.mWindowURL = `file://${control.base}/src/wail.html`
-    windows.newCrawlWindowURL = `file://${control.base}/src/childWindows/newCrawl/newCrawl.html`
-    windows.reqDaemonWindowURL = `file://${control.base}/src/background/requestDaemon.html`
-    windows.settingsWindowURL = `file://${control.base}/src/childWindows/settings/settingsW.html`
-    windows.firstLoadWindowURL = `file://${control.base}/src/loadingScreens/firstTime/loadingScreen.html`
-    windows.loadingWindowURL = `file://${control.base}/src/loadingScreens/notFirstTime/loadingScreen.html`
+    windows.accessibilityWindowURL = `file://${control.base}/background/accessibility.html`
+    windows.indexWindowURL = `file://${control.base}/background/indexer.html`
+    windows.jobWindowURL = `file://${control.base}/background/jobs.html`
+    windows.mWindowURL = `file://${control.base}/wail.html`
+    windows.newCrawlWindowURL = `file://${control.base}/childWindows/newCrawl/newCrawl.html`
+    windows.reqDaemonWindowURL = `file://${control.base}/background/requestDaemon.html`
+    windows.settingsWindowURL = `file://${control.base}/childWindows/settings/settingsW.html`
+    windows.firstLoadWindowURL = `file://${control.base}/loadingScreens/firstTime/loadingScreen.html`
+    windows.loadingWindowURL = `file://${control.base}/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${control.base}/childWindows/timemapStats/timemapStats.html`
   }
 
