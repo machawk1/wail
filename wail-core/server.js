@@ -9,6 +9,7 @@ import bodyParser from 'body-parser'
 import path from 'path'
 import Promise from 'bluebird'
 import util from 'util'
+import ElectronSettings from 'electron-settings'
 import services from './services'
 
 process.on('unhandledRejection', (reason, p) => {
@@ -16,6 +17,13 @@ process.on('unhandledRejection', (reason, p) => {
 })
 
 const app = feathers()
+
+let base = path.normalize(path.join(path.resolve('./'),'waillogs'))
+
+let settingsDir = path.join(base, 'wail-settings')
+global.wailSettings = new ElectronSettings({ configDirPath: settingsDir })
+
+
 
 
 app.configure(config(__dirname))

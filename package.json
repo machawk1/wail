@@ -26,6 +26,7 @@
     "dev-core-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-core/core-main.js",
     "core-server": "babel-node wail-core/server",
     "nightmare": "babel-node tools/testNightmare",
+    "standard": "standard --verbose | snazzy",
     "test-xml": "babel-node tools/test-xml"
   },
   "main": "./dist/ui-main.js",
@@ -187,6 +188,72 @@
     "webpack-dev-server": "1.14.1",
     "webpack-hot-middleware": "^2.12.2",
     "webpack-middleware": "^1.5.1"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "globals": [
+      "React",
+      "window"
+    ],
+    "rules": {
+      "comma-dangle": "off",
+      "react/jsx-boolean-value": "off",
+      "react/jsx-space-before-closing": "off",
+      "no-unused-var": "off",
+      "no-undef": "off"
+    },
+    "extends": [
+      "standard",
+      "standard-react"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "archiveIndexes/*",
+      "archives/*",
+      "buildResources/*",
+      "bundledApps",
+      "config/*",
+      "*.cxml",
+      "dist/*",
+      "Dockerfile",
+      "LICENSE",
+      "*.log",
+      "*.md",
+      "node_modules/*",
+      "package.js",
+      "release/*",
+      "*.sh",
+      "support/*",
+      "test/*",
+      "tools/*",
+      "*.txt",
+      "waillogs/*",
+      "webpack.*",
+      "*.xml",
+      "*.yml",
+      "zips/*",
+      "images/*",
+      "memgators/*",
+      ""
+    ],
+    "globals": [
+      "React",
+      "window"
+    ],
+    "env": {
+      "node": true,
+      "browser": true,
+      "es6": true
+    },
+    "rules": {
+      "comma-dangle": "off"
+    }
   },
   "devEngines": {
     "node": "6.x",

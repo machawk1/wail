@@ -5,6 +5,9 @@ import S from 'string'
 import _ from 'lodash'
 import os from 'os'
 
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
+
 const managed = {
   paths: [
     { name: 'bundledApps', path: 'bundledApps' },
@@ -175,11 +178,23 @@ const managed = {
     { name: 'memgator' }
   ],
   pywb: {
-    newCollection: 'bundledApps/pywb/wb-manager init $col$',
-    addWarcsToCol: 'bundledApps/pywb/wb-manager add $col$ $warcs$',
-    addMetadata: 'bundledApps/pywb/wb-manager metadata $col$ --set $metadata$',
-    reindexCol: 'bundledApps/pywb/wb-manager reindex $col$',
-
+    port: '8080',
+    url: 'http://localhost:{port}/',
+    newCollection: 'bundledApps/pywb/wb-manager init {col}',
+    addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
+    addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
+    reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
+    convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
+    autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
+    autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
+    sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
+    sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
+    cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
+    cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
+    wayback: 'bundledApps/pywb/wayback',
+    waybackPort: 'bundledApps/pywb/wayback -p {port}',
+    waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
+    waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}'
   },
   code: {
     crawlerBean: 'crawler-beans.cxml',
@@ -231,6 +246,17 @@ export function writeSettings (base, settings) {
   let code = managed.code
   code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
+  let pywb = _.mapValues(managed.pywb,(v,k) => {
+    if(k !== 'port' && k !== 'url') {
+      v = path.normalize(path.join(base, v))
+    }
+    if(k === 'url') {
+      v = S(v).template({port: managed.pywb.port}).s
+    }
+    return v
+  })
+
+  settings.set('pywb',pywb)
 
   settings.set('winDeleteJob', path.normalize(path.join(base, 'windowsNukeDir.bat')))
 
