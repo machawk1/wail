@@ -20,26 +20,48 @@ import yaml from 'yamljs'
 //   }
 // })
 
-const socket = io('http://localhost:3030',{ timeout: 120000 })
-const app = feathers()
-  .configure(hooks())
-  .configure(socketio(socket,{ timeout: 120000 }))
+let output = "2016-08-19 22:44:36,599: [INFO]: Copied /home/john/my-fork-wail/archives/MAT-20160725182544870-00000-5931~misanthropy~8443.warc to /home/john/my-fork-wail/archives/collections/xyz/archive \
+2016-08-19 22:44:36,602: [INFO]: Copied /home/john/my-fork-wail/archives/WAIL-20160725183304516-00000-20279~misanthropy~8443.warc to /home/john/my-fork-wail/archives/collections/xyz/archive \
+2016-08-19 22:44:36,604: [INFO]: Copied /home/john/my-fork-wail/archives/WAIL-20160725183305634-00000-20279~misanthropy~8443.warc to /home/john/my-fork-wail/archives/collections/xyz/archive \
+2016-08-19 22:44:36,605: [INFO]: Copied /home/john/my-fork-wail/archives/WAIL-20160815211920610-00000-20339~misanthropy~8443.warc to /home/john/my-fork-wail/archives/collections/xyz/archive "
 
-const memgator = app.service('/archivesManager')
-// memgator.find().then(data => {
-//   console.log(data)
-// })
+let count = (output.match(/INFO/g) || []).length
+console.log(count)
 
-memgator.create({ name: 'xyz', existingWarcs: '/home/john/my-fork-wail/archives/*.warc'})
-  .then(data => {
-    console.log(data)
-    process.exit(0)
-
-  })
-  .catch(err => {
-    console.error(err)
-    process.exit(0)
-  })
+// fs.emptyDirSync('/home/john/my-fork-wail/archives/collections/xyz/archive')
+// fs.emptyDirSync('/home/john/my-fork-wail/archives/collections/xyz/indexes')
+//
+// const socket = io('http://localhost:3030',{ pingTimeout: 120000 })
+// const app = feathers()
+//   .configure(hooks())
+//   .configure(socketio(socket))
+//
+// const memgator = app.service('/archivesManager')
+// // memgator.find().then(data => {
+// //   console.log(data)
+// // })
+// // {existingWarcs: '/home/john/my-fork-wail/archives/*.warc'}
+// // memgator.create({ name: 'xyz'})
+// //   .then(data => {
+// //     console.log(data)
+// //     process.exit(0)
+// //
+// //   })
+// //   .catch(err => {
+// //     console.error(err)
+// //     process.exit(0)
+// //   })
+//
+// memgator.update( 'xyz', {existingWarcs: '/home/john/my-fork-wail/archives/*.warc'}, { query: { action: 'addWarcs'} })
+//   .then(data => {
+//     console.log(data)
+//     process.exit(0)
+//
+//   })
+//   .catch(err => {
+//     console.error(err)
+//     process.exit(0)
+//   })
 
 
 // let heritrix = {

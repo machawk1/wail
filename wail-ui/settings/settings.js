@@ -174,6 +174,13 @@ const managed = {
     { name: 'heritrixStart', path: 'bundledApps/heritrix-3.3.0/bin/heritrix' },
     { name: 'memgator' }
   ],
+  pywb: {
+    newCollection: 'bundledApps/pywb/wb-manager init $col$',
+    addWarcsToCol: 'bundledApps/pywb/wb-manager add $col$ $warcs$',
+    addMetadata: 'bundledApps/pywb/wb-manager metadata $col$ --set $metadata$',
+    reindexCol: 'bundledApps/pywb/wb-manager reindex $col$',
+
+  },
   code: {
     crawlerBean: 'crawler-beans.cxml',
     wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',

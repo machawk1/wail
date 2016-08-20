@@ -22,17 +22,10 @@ app.configure(config(__dirname))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
-  .configure(rest())
-  .configure(socketio({ timeout: 120000 }))
+  // .configure(rest())
+  .configure(socketio({ pingTimeout: 120000 }))
   .configure(services)
-  .use(errors({
-    html: function(error, req, res, next) {
-      console.log('error handler')
-      console.log(error,req,res)
-      // render your error view with the error object
-      res.render('error', error)
-    }
-  }))
+  .use(errors())
 
 const server = app.listen(app.get('port'))
 
