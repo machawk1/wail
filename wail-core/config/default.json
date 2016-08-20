@@ -3,5 +3,4 @@
   "host": "localhost",
   "nedb": "../dbs",
   "timemaps": "../timemaps"
-
 }

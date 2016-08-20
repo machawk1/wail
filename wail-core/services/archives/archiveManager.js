@@ -3,24 +3,24 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
+import consts from '../../constants/serviceConstants'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
-
-const { wailSettings } =  global
 
 export default class ArchiveManager {
 
   setup (app, path) {
     this.app = app
+    this.wailSettings = global.wailSettings
   }
 
   addWarcsToCol (id, data, params) {
     let opts = {
-      cwd: wailSettings.get('archives')
+      cwd: this.wailSettings.get('warcs')
     }
     return new Promise((resolve, reject) => {
       // `/home/john/my-fork-wail/bundledApps/pywb/wb-manager add ${id} ${data.existingWarcs}`
-      let exec = S(wailSettings.get('pwyb.addWarcsToCol')).template({ col: id, warcs: data.existingWarcs }).s
+      let exec = S(this.wailSettings.get('pywb.addWarcsToCol')).template({ col: id, warcs: data.existingWarcs }).s
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
           console.error(stderr)
@@ -28,7 +28,7 @@ export default class ArchiveManager {
         }
 
         let c1 = ((stdout || ' ').match(/INFO/g) || []).length
-        let c2 = ((stdout || ' ').match(/INFO/g) || []).length
+        let c2 = ((stderr || ' ').match(/INFO/g) || []).length
         let count = c1 === 0 ? c2 : c1
 
         console.log('added warcs to collection', id)
@@ -41,10 +41,10 @@ export default class ArchiveManager {
 
   addMetadata (id, data, params) {
     let opts = {
-      cwd: wailSettings.get('archives')
+      cwd: this.wailSettings.get('warcs')
     }
     return new Promise((resolve, reject) => {
-      let exec = S(wailSettings.get('pwyb.addMetadata')).template({ col: id, metadata: join(...data.metadata) }).s
+      let exec = S(this.wailSettings.get('pywb.addMetadata')).template({ col: id, metadata: join(...data.metadata) }).s
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
           console.error(stderr)
@@ -75,9 +75,9 @@ export default class ArchiveManager {
 
     let { name } = data
     let opts = {
-      cwd: wailSettings.get('archives')
+      cwd: this.wailSettings.get('warcs')
     }
-    let exec = S(wailSettings.get('pwyb.newCollection')).template({ col: name }).s
+    let exec = S(this.wailSettings.get('pywb.newCollection')).template({ col: name }).s
     return new Promise((resolve, reject) => {
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
@@ -85,13 +85,13 @@ export default class ArchiveManager {
           return reject(error)
         }
         console.log('created collection')
-        let path = `${wailSettings.get('archives')}${path.sep}${name}`
+        let colpath = `${this.wailSettings.get('warcs')}${path.sep}collections${path.sep}${name}`
         let toCreate = {
           _id: name,
           name,
-          path,
-          archive: `${path}${path.sep}archive`,
-          indexes: `${path}${path.sep}indexes`,
+          colpath,
+          archive: `${colpath}${path.sep}archive`,
+          indexes: `${colpath}${path.sep}indexes`,
           colName: name,
           numArchives: 0
         }
@@ -104,15 +104,27 @@ export default class ArchiveManager {
 // PUT /messages[/<id>]
   update (id, data, params, cb) {
     console.log('archiveManager update', id, data, params)
-    if (params.query.action === 'addWarcs') {
-      return this.addWarcsToCol(id, data, params)
-    } else if (params.query.action === 'addMetadata') {
-      return this.addMetadata(id, data, params)
-    } else {
-      return Promise.resolve({
-        "yay": "hell yeah"
-      })
+    let { action } = params.query
+    let { addWarcs, addMetadata } = consts
+    switch (action) {
+      case addWarcs:
+        return this.addWarcsToCol(id, data, params)
+      case addMetadata:
+        return this.addMetadata(id, data, params)
+      default:
+        return Promise.resolve({
+          "yay": "hell yeah"
+        })
     }
+    // if (params.query.action === 'addWarcs') {
+    //   return this.addWarcsToCol(id, data, params)
+    // } else if (params.query.action === 'addMetadata') {
+    //   return this.addMetadata(id, data, params)
+    // } else {
+    //   return Promise.resolve({
+    //     "yay": "hell yeah"
+    //   })
+    // }
 
   }
 

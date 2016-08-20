@@ -12,19 +12,15 @@ import util from 'util'
 import ElectronSettings from 'electron-settings'
 import services from './services'
 
+let base = path.normalize(path.join(path.resolve('./'),'waillogs'))
+let settingsDir = path.join(base, 'wail-settings')
+global.wailSettings = new ElectronSettings({ configDirPath: settingsDir })
+
 process.on('unhandledRejection', (reason, p) => {
   console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
 })
 
 const app = feathers()
-
-let base = path.normalize(path.join(path.resolve('./'),'waillogs'))
-
-let settingsDir = path.join(base, 'wail-settings')
-global.wailSettings = new ElectronSettings({ configDirPath: settingsDir })
-
-
-
 
 app.configure(config(__dirname))
   .use(bodyParser.json())
