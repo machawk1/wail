@@ -24,11 +24,4 @@ export default function () {
 
   console.log('memgator')
 
-  let heritrixService = app.service('/crawls')
-  // console.log(memgatorService)
-
-
-  heritrixService.before(hooks.before)
-  heritrixService.after(hooks.after)
-
 }

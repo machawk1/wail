@@ -59,16 +59,25 @@ const memgator = app.service('/archivesManager')
 // })
 
 // memgator.create({ name: 'xyz' })
-//   .then(data => {
-//     console.log(data)
-//
+//   .then(created => {
+//     console.log(created)
+//     memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
+//       .then(data => {
+//         console.log(data)
+//         process.exit(0)
+//       })
+//       .catch(error => {
+//         console.error(error)
+//         process.exit(0)
+//       })
 //   })
 //   .catch(err => {
 //     console.error(err)
 //     process.exit(0)
 //   })
 
-memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, {query: {action: 'addWarcs' }})
+
+memgator.update('xyz',{ metadata: ['title="Test"','description="Makeing sure this works"']},{query: {action: 'addMetadata'}})
   .then(data => {
     console.log(data)
     process.exit(0)
@@ -77,4 +86,6 @@ memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, {qu
     console.error(error)
     process.exit(0)
   })
+
+
 

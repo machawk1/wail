@@ -3,6 +3,7 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
+import util from 'util'
 import consts from '../../constants/serviceConstants'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -12,6 +13,7 @@ export default class ArchiveManager {
   setup (app, path) {
     this.app = app
     this.wailSettings = global.wailSettings
+    // console.log(util.inspect(app,{depth: null, colors: true}))
   }
 
   addWarcsToCol (id, data, params) {
@@ -51,16 +53,24 @@ export default class ArchiveManager {
           return reject(error)
         }
 
+        let mdata = data.metadata.map(m => {
+          let split = m.split('=')
+          let mo = {}
+          mo['k'] = split[0]
+          mo['v'] = S(split[1]).replaceAll('"','').s
+          return mo
+        })
+
         console.log('added metadata to collection', id)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        return resolve(this.app.service('archives').update(id, { $inc: { numArchives: count } }))
+        return resolve(this.app.service('archives').update(id, { $push: { metadata: { $each: mdata } } }))
       })
     })
   }
 
   find (params, cb) {
-
+    return this.app.service('')
   }
 
 // GET /memgator
@@ -93,7 +103,8 @@ export default class ArchiveManager {
           archive: `${colpath}${path.sep}archive`,
           indexes: `${colpath}${path.sep}indexes`,
           colName: name,
-          numArchives: 0
+          numArchives: 0,
+          metadata: []
         }
         return resolve(this.app.service('archives').create(toCreate))
       })
