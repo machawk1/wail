@@ -6,7 +6,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 export default {
   devtool: 'inline-source-map',
   entry: {
-    server: 'wail-core/server'
+    core: './wail-core/test.js'
   },
   module: {
     noParse: noParseRe,
@@ -45,11 +45,7 @@ export default {
     ]
 
   },
-  resolve: {
-    extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
-  },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,
@@ -57,9 +53,11 @@ export default {
     }),
   ],
   output: {
+    filename: '[name].bundle.js',
+    chunkFilename: '[id].chunk.js',
     path: path.join(__dirname, 'dist'),
-    filename: '[name].js',
-    chunkFilename: '[id].chunk.js'
+    publicPath: '/dist/',
+    libraryTarget: 'commonjs2'
   },
   // bail: true,
   target: 'electron-renderer',

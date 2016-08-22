@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
-import { encode, compare } from 'bytewise'
+import {encode, compare} from 'bytewise'
 import _ from 'lodash'
 import feathers from 'feathers/client'
 import socketio from 'feathers-socketio/client'
@@ -10,6 +10,62 @@ import hooks from 'feathers-hooks'
 import io from 'socket.io-client'
 import yaml from 'yamljs'
 import path from 'path'
+import mongodb_prebuilt from 'mongodb-prebuilt'
+
+const socket = io('http://localhost:3030',{ pingTimeout: 120000 })
+const app = feathers()
+  .configure(hooks())
+  .configure(socketio(socket,{ pingTimeout: 120000 }))
+
+const memgator = app.service('/archivesManager')
+memgator.find({}).then(data => {
+  console.log(data)
+})
+//
+// // memgator.create({ name: 'xyz' })
+// //   .then(created => {
+// //     console.log(created)
+// //     memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
+// //       .then(data => {
+// //         console.log(data)
+// //         process.exit(0)
+// //       })
+// //       .catch(error => {
+// //         console.error(error)
+// //         process.exit(0)
+// //       })
+// //   })
+// //   .catch(err => {
+// //     console.error(err)
+// //     process.exit(0)
+// //   })
+//
+//
+// memgator.update('xyz',{ metadata: ['title="Test"','description="Makeing sure this works"']},{query: {action: 'addMetadata'}})
+//   .then(data => {
+//     console.log(data)
+//     process.exit(0)
+//   })
+//   .catch(error => {
+//     console.error(error)
+//     process.exit(0)
+//   })
+
+//
+// function logs_callback(buffer) {
+//   console.log("log message:", buffer.toString());
+// }
+//
+// mongodb_prebuilt.start_server({
+//   logs_callback: logs_callback,
+//   args: {
+//     dbpath: '/home/john/my-fork-wail/wail-core/dbs'
+//   }
+// }, function(err) {
+//   if (!err) console.log('server started')
+//   else  console.error(err)
+// })
+
 //
 // let managed = {
 //   port: '8080',
@@ -46,46 +102,3 @@ import path from 'path'
 // })
 //
 // console.log(pywb)
-
-
-const socket = io('http://localhost:3030',{ pingTimeout: 120000 })
-const app = feathers()
-  .configure(hooks())
-  .configure(socketio(socket,{ pingTimeout: 120000 }))
-
-const memgator = app.service('/archivesManager')
-// memgator.find().then(data => {
-//   console.log(data)
-// })
-
-// memgator.create({ name: 'xyz' })
-//   .then(created => {
-//     console.log(created)
-//     memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
-//       .then(data => {
-//         console.log(data)
-//         process.exit(0)
-//       })
-//       .catch(error => {
-//         console.error(error)
-//         process.exit(0)
-//       })
-//   })
-//   .catch(err => {
-//     console.error(err)
-//     process.exit(0)
-//   })
-
-
-memgator.update('xyz',{ metadata: ['title="Test"','description="Makeing sure this works"']},{query: {action: 'addMetadata'}})
-  .then(data => {
-    console.log(data)
-    process.exit(0)
-  })
-  .catch(error => {
-    console.error(error)
-    process.exit(0)
-  })
-
-
-

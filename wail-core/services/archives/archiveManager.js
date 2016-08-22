@@ -70,7 +70,7 @@ export default class ArchiveManager {
   }
 
   find (params, cb) {
-    return this.app.service('')
+    return this.app.service('archives').find(params,cb)
   }
 
 // GET /memgator
