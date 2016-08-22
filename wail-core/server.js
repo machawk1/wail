@@ -45,6 +45,15 @@ const primusConfig = {
 //   .configure(socketio({ pingTimeout: 120000 }))
 //   .configure(services)
 //   .use(errors())
+app.configure(config(__dirname))
+  .use(bodyParser.json())
+  .use(bodyParser.urlencoded({ extended: true }))
+  .configure(hooks())
+  // .configure(rest())
+  // .configure(socketio({ pingTimeout: 120000 }))
+  .configure(Primus(primusConfig))
+  .configure(services)
+  .use(errors())
 
 const server = app.listen(app.get('port'))
 
