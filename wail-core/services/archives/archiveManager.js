@@ -70,6 +70,7 @@ export default class ArchiveManager {
   }
 
   find (params, cb) {
+    console.log('archive man finding',params)
     return this.app.service('archives').find(params,cb)
   }
 

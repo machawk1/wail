@@ -49,9 +49,9 @@ app.configure(config(__dirname))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
-  // .configure(rest())
-  // .configure(socketio({ pingTimeout: 120000 }))
-  .configure(Primus(primusConfig))
+  .configure(Primus(primusConfig, primus => {
+    primus.save(__dirname +'/primus.js')
+  }))
   .configure(services)
   .use(errors())
 

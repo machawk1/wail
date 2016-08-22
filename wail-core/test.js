@@ -2,12 +2,9 @@ import 'babel-polyfill'
 import feathers from 'feathers/client'
 import hooks from 'feathers-hooks'
 import primus from 'feathers-primus/client'
-import engineio from 'engine.io-client'
 
 const p = new Primus('http://localhost:3030',{
-  transformer: 'engine.io',
-  timeout: 120000,
-  parser: 'JSON'
+  timeout: 120000
 })
 
 
@@ -15,10 +12,22 @@ const app = feathers()
   .configure(hooks())
   .configure(primus(p))
 
-const memgator = app.service('/archivesManager')
+window.app = app
+
+
+
+const memgator = app.service('/memgator')
+const archives = app.service('/archivesManager')
 memgator.find({})
   .then(data => {
     console.log(data)
+    archives.find({})
+      .then(aData => {
+        console.log(aData)
+      })
+      .catch(aError => {
+        console.log(aError)
+      })
     // process.exit(0)
   })
   .catch(error => {

@@ -8,6 +8,9 @@ export default {
   entry: {
     core: './wail-core/test.js'
   },
+  resolveLoader: {
+    root: path.join(path.resolve('.'), 'node_modules')
+  },
   module: {
     noParse: noParseRe,
     loaders: [
@@ -17,7 +20,7 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'es2015', 'stage-0', 'node6',],
+          presets: [ 'es2015', 'stage-0'],
           plugins: [ 'transform-runtime', 'add-module-exports',
             'babel-plugin-transform-decorators-legacy'
           ],
@@ -56,9 +59,8 @@ export default {
     filename: '[name].bundle.js',
     chunkFilename: '[id].chunk.js',
     path: path.join(__dirname, 'dist'),
-    publicPath: '/dist/',
-    libraryTarget: 'commonjs2'
+    publicPath: '/dist/'
   },
   // bail: true,
-  target: 'electron-renderer',
+  // target: 'electron-renderer',
 }

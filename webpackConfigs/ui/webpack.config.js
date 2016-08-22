@@ -59,7 +59,6 @@ export default {
   //   extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
   // },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,
