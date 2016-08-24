@@ -50,6 +50,15 @@ app.configure(config(__dirname))
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
   .configure(Primus(primusConfig, primus => {
+
+    let testResource = primus.resource('test')
+    testResource.oncommand = (spark, command, fn) =>  {
+      console.log(command)
+      fn('testResource just got command: ' + command)
+    }
+    // primus.on('connection',spark => {
+    //
+    // })
     primus.save(__dirname +'/primus.js')
   }))
   .configure(services)

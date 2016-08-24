@@ -118,6 +118,7 @@
     "source-map-support": "^0.4.2",
     "split2": "^2.1.0",
     "string": "^3.3.1",
+    "string-length": "^1.0.1",
     "through2": "^2.0.1",
     "tldjs": "^1.6.2",
     "twix": "^1.1.1",

@@ -10,13 +10,13 @@ S.TMPL_CLOSE = '}'
 
 export default class ArchiveManager {
 
-  setup (app, path) {
+  setup = (app, path) => {
     this.app = app
     this.wailSettings = global.wailSettings
     // console.log(util.inspect(app,{depth: null, colors: true}))
   }
 
-  addWarcsToCol (id, data, params) {
+  addWarcsToCol = (id, data, params) => {
     let opts = {
       cwd: this.wailSettings.get('warcs')
     }
@@ -56,8 +56,8 @@ export default class ArchiveManager {
         let mdata = data.metadata.map(m => {
           let split = m.split('=')
           let mo = {}
-          mo['k'] = split[0]
-          mo['v'] = S(split[1]).replaceAll('"','').s
+          mo[ 'k' ] = split[ 0 ]
+          mo[ 'v' ] = S(split[ 1 ]).replaceAll('"', '').s
           return mo
         })
 
@@ -70,14 +70,14 @@ export default class ArchiveManager {
   }
 
   find (params, cb) {
-    console.log('archive man finding',params)
-    return this.app.service('archives').find(params,cb)
+    console.log('archive man finding', params)
+    return this.app.service('archives').find(params, cb)
   }
 
 // GET /memgator
   //id cs.odu.edu params { query: {}, url: 'http:', provider: 'rest' }
   get (id, params, cb) {
-
+    return this.app.service('archives').get(id, params, cb)
   }
 
 // POST /messages
@@ -117,12 +117,24 @@ export default class ArchiveManager {
   update (id, data, params, cb) {
     console.log('archiveManager update', id, data, params)
     let { action } = params.query
-    let { addWarcs, addMetadata } = consts
+    let {
+      addWarcs,
+      addMetadata,
+      reindexCol,
+      convertCDX,
+      autoIndexCol,
+    } = consts
     switch (action) {
       case addWarcs:
         return this.addWarcsToCol(id, data, params)
       case addMetadata:
         return this.addMetadata(id, data, params)
+      case convertCDX:
+        break
+      case reindexCol:
+        break
+      case autoIndexCol:
+        break
       default:
         return Promise.resolve({
           "yay": "hell yeah"

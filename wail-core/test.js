@@ -14,7 +14,12 @@ const app = feathers()
 
 window.app = app
 
-
+let testResource = p.resource('test')
+testResource.on('ready', () => {
+  testResource.command('sleep', (res) =>  {
+    console.log(res)
+  })
+})
 
 const memgator = app.service('/memgator')
 const archives = app.service('/archivesManager')
@@ -24,6 +29,7 @@ memgator.find({})
     archives.find({})
       .then(aData => {
         console.log(aData)
+
       })
       .catch(aError => {
         console.log(aError)
