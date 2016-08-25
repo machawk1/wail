@@ -1,0 +1,15 @@
+[#urls] [#bytes] [mime-types]
+111 3305894 text/html
+37 756127 image/png
+31 7735 text/dns
+23 46499 text/plain
+16 2522176 image/jpeg
+15 8500 application/binary
+14 28634 image/gif
+8 303899 application/javascript
+5 45717 image/x-icon
+5 2092536 text/javascript
+4 1043916 text/css
+3 489275 font/ttf
+2 1186 application/xml
+1 5737 application/x-shockwave-flash

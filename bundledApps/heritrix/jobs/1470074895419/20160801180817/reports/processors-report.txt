@@ -1,0 +1,51 @@
+CandidateChain - Processors report - 201608011811
+  Number of Processors: 2
+
+Processor: org.archive.crawler.prefetch.CandidateScoper
+
+Processor: org.archive.crawler.prefetch.FrontierPreparer
+
+
+FetchChain - Processors report - 201608011811
+  Number of Processors: 9
+
+Processor: org.archive.crawler.prefetch.Preselector
+
+Processor: org.archive.crawler.prefetch.PreconditionEnforcer
+
+Processor: org.archive.modules.fetcher.FetchDNS
+
+Processor: org.archive.modules.fetcher.FetchHTTP
+
+Processor: org.archive.modules.extractor.ExtractorHTTP
+  5 links from 74 CrawlURIs
+
+Processor: org.archive.modules.extractor.ExtractorHTML
+  437 links from 9 CrawlURIs
+
+Processor: org.archive.modules.extractor.ExtractorCSS
+  3 links from 2 CrawlURIs
+
+Processor: org.archive.modules.extractor.ExtractorJS
+  67 links from 6 CrawlURIs
+
+Processor: org.archive.modules.extractor.ExtractorSWF
+  0 links from 0 CrawlURIs
+
+
+DispositionChain - Processors report - 201608011811
+  Number of Processors: 3
+
+Processor: org.archive.modules.writer.WARCWriterProcessor
+  Function:          Writes WARCs
+  Total CrawlURIs:   79
+  Revisit records:   0
+  Crawled content bytes (including http headers): 2875518 (2.7 MiB)
+  Total uncompressed bytes (including all warc records): 3007673 (2.9 MiB)
+  Total size on disk (uncompressed): 3007673 (2.9 MiB)
+
+Processor: org.archive.crawler.postprocessor.CandidatesProcessor
+
+Processor: org.archive.crawler.postprocessor.DispositionProcessor
+
+

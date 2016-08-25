@@ -1,0 +1,335 @@
+Frontier report - 201608012009
+ Job being crawled: MyWAILBasedHeritrixCrawl
+
+ -----===== STATS =====-----
+ Discovered:    272
+ Queued:        2
+ Finished:      275
+  Successfully: 275
+  Failed:       0
+  Disregarded:  0
+
+ -----===== QUEUES =====-----
+ Already included size:     272
+               pending:     0
+
+ All class queues map size: 33
+             Active queues: 1
+                    In-process: 0
+                         Ready: 0
+                       Snoozed: 1
+           Inactive queues: 0 (p3: 0)
+            Retired queues: 0
+          Exhausted queues: 32
+
+             Last state: RUN
+ -----===== MANAGER THREAD =====-----
+Java Thread State: RUNNABLE
+Blocked/Waiting On: NONE
+    java.lang.Thread.getStackTrace(Thread.java:1589)
+    org.archive.crawler.framework.ToeThread.reportThread(ToeThread.java:484)
+    org.archive.crawler.frontier.WorkQueueFrontier.reportTo(WorkQueueFrontier.java:1308)
+    org.archive.crawler.reporting.FrontierSummaryReport.write(FrontierSummaryReport.java:39)
+    org.archive.crawler.reporting.StatisticsTracker.writeReportFile(StatisticsTracker.java:898)
+    org.archive.crawler.reporting.StatisticsTracker.dumpReports(StatisticsTracker.java:926)
+    org.archive.crawler.reporting.StatisticsTracker.stop(StatisticsTracker.java:342)
+    org.springframework.context.support.DefaultLifecycleProcessor.doStop(DefaultLifecycleProcessor.java:236)
+    org.springframework.context.support.DefaultLifecycleProcessor.doStop(DefaultLifecycleProcessor.java:213)
+    org.springframework.context.support.DefaultLifecycleProcessor.doStop(DefaultLifecycleProcessor.java:213)
+    org.springframework.context.support.DefaultLifecycleProcessor.doStop(DefaultLifecycleProcessor.java:213)
+    org.springframework.context.support.DefaultLifecycleProcessor.access$2(DefaultLifecycleProcessor.java:206)
+    org.springframework.context.support.DefaultLifecycleProcessor$LifecycleGroup.stop(DefaultLifecycleProcessor.java:352)
+    org.springframework.context.support.DefaultLifecycleProcessor.stopBeans(DefaultLifecycleProcessor.java:195)
+    org.springframework.context.support.DefaultLifecycleProcessor.stop(DefaultLifecycleProcessor.java:103)
+    org.springframework.context.support.AbstractApplicationContext.stop(AbstractApplicationContext.java:1241)
+    org.archive.crawler.framework.CrawlController.completeStop(CrawlController.java:392)
+    org.archive.crawler.framework.CrawlController.noteFrontierState(CrawlController.java:663)
+    org.archive.crawler.frontier.AbstractFrontier.reachedState(AbstractFrontier.java:442)
+    org.archive.crawler.frontier.AbstractFrontier.managementTasks(AbstractFrontier.java:399)
+    org.archive.crawler.frontier.AbstractFrontier$1.run(AbstractFrontier.java:316)
+
+ -----===== 20 LONGEST QUEUES =====-----
+LONGEST#0:
+Queue com,blogspot,ws-dl, (p3)
+  0 items
+    last enqueued: http://ws-dl.blogspot.com/
+      last peeked: http://ws-dl.blogspot.com/
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 269681 269681 2 2016-08-01T19:37:55.880Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#1:
+Queue com,google,accounts, (p3)
+  0 items
+    last enqueued: https://accounts.google.com/ServiceLogin?service=oz&passive=1209600&continue=https://plus.google.com/?wwc%3D1%26gpsrc%3Dgplp0
+      last peeked: https://accounts.google.com/ServiceLogin?service=oz&passive=1209600&continue=https://plus.google.com/?wwc%3D1%26gpsrc%3Dgplp0
+   total expended: 15 (total budget: -1)
+   active balance: 2999
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   15 15 0 0 15 0 1138633 1138633 2 2016-08-01T19:39:04.334Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#2:
+Queue com,google,apis, (p3)
+  0 items
+    last enqueued: https://apis.google.com/
+      last peeked: https://apis.google.com/
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 2903 2903 2 2016-08-01T19:37:55.762Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#3:
+Queue com,google,docs, (p3)
+  0 items
+    last enqueued: https://docs.google.com/picker
+      last peeked: https://docs.google.com/picker
+   total expended: 5 (total budget: -1)
+   active balance: 2995
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   5 5 0 0 5 0 5044 5044 3 2016-08-01T19:38:01.876Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#4:
+Queue com,google,hangouts, (p3)
+  0 items
+    last enqueued: https://hangouts.google.com/
+      last peeked: https://hangouts.google.com/hangouts/_/stream/
+   total expended: 6 (total budget: -1)
+   active balance: 2994
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   6 6 0 0 6 0 70316 70316 2 2016-08-01T19:38:05.038Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#5:
+Queue com,google,maps-api-ssl, (p3)
+  0 items
+    last enqueued: https://maps-api-ssl.google.com/maps/api/staticmap?size=375x175&sensor=false&language=en&client=google-profiles&signature=fNZUcgnPo-kwulgpmUhuA1MK6sE%3D
+      last peeked: https://maps-api-ssl.google.com/maps/api/staticmap?size=480x175&sensor=false&language=en&client=google-profiles&signature=XFx9UcLT04n6gPg4XIBeel7N_P4%3D
+   total expended: 6 (total budget: -1)
+   active balance: 2994
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   6 6 0 0 6 0 135620 135620 2 2016-08-01T19:38:04.868Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#6:
+Queue com,google,picasaweb, (p3)
+  0 items
+    last enqueued: http://picasaweb.google.com/home
+      last peeked: http://picasaweb.google.com/home
+   total expended: 4 (total budget: -1)
+   active balance: 2996
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   4 4 0 0 4 0 2510 2510 2 2016-08-01T19:37:58.870Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#7:
+Queue com,google,plus, (p3)
+  0 items
+    last enqueued: https://plus.google.com/u/0/
+      last peeked: https://plus.google.com/all
+   total expended: 32 (total budget: -1)
+   active balance: 2968
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   32 32 0 0 32 0 3248593 3248593 2 2016-08-01T19:39:13.684Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#8:
+Queue com,google,support, (p3)
+  0 items
+    last enqueued: https://support.google.com/plus/?p=plus_embeds
+      last peeked: https://support.google.com/plus/?p=plus_embeds
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 244411 244411 2 2016-08-01T19:37:55.924Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#9:
+Queue com,google,talkgadget, (p3)
+  0 items
+    last enqueued: https://talkgadget.google.com/talkgadget/mediaplayer
+      last peeked: https://talkgadget.google.com/talkgadget/mediaplayer
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 2048 2048 2 2016-08-01T19:37:55.797Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#10:
+Queue com,google,www, (p3)
+  0 items
+    last enqueued: https://www.google.com/intl/en/policies/privacy/
+      last peeked: https://www.google.com/intl/en-US/help/terms_maps.html
+   total expended: 28 (total budget: -1)
+   active balance: 2972
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   28 28 0 0 28 0 280885 280885 3 2016-08-01T19:38:56.711Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#11:
+Queue com,googleusercontent,lh6, (p3)
+  0 items
+    last enqueued: https://lh6.googleusercontent.com/-iNDr29fIsWM/AAAAAAAAAAI/AAAAAAAAMR0/b0M788l81Wk/photo.jpg
+      last peeked: https://lh6.googleusercontent.com/-iNDr29fIsWM/AAAAAAAAAAI/AAAAAAAAMR0/b0M788l81Wk/photo.jpg
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 338996 338996 2 2016-08-01T19:37:55.796Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#12:
+Queue com,googleusercontent,s2, (p3)
+  0 items
+    last enqueued: https://s2.googleusercontent.com/s2/favicons?alt=p&domain=www.youtube.com
+      last peeked: https://s2.googleusercontent.com/s2/favicons?domain=ws-dl.blogspot.com&alt=p
+   total expended: 4 (total budget: -1)
+   active balance: 2996
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   4 4 0 0 4 0 2635 2635 2 2016-08-01T19:37:58.834Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#13:
+Queue com,gstatic,csi, (p3)
+  0 items
+    last enqueued: https://csi.gstatic.com/csi
+      last peeked: https://csi.gstatic.com/csi
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 2392 2392 2 2016-08-01T19:37:56.332Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#14:
+Queue com,gstatic,fonts, (p3)
+  0 items
+    last enqueued: https://fonts.gstatic.com/s/roboto/v15/W5F8_SL0XFawnjxHGsZjJA.ttf
+      last peeked: https://fonts.gstatic.com/s/roboto/v15/dtpHsbgPEm2lVWciJZ0P-A.ttf
+   total expended: 5 (total budget: -1)
+   active balance: 2995
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   5 5 0 0 5 0 491563 491563 2 2016-08-01T19:38:01.825Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#15:
+Queue com,gstatic,ssl, (p3)
+  0 items
+    last enqueued: https://ssl.gstatic.com/gb/images/b_8d5afc09.png
+      last peeked: https://ssl.gstatic.com/images/branding/google_plus/1x/gplus_word_108x30dp.png
+   total expended: 18 (total budget: -1)
+   active balance: 2982
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   18 18 0 0 18 0 263505 263505 3 2016-08-01T19:38:34.235Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#16:
+Queue com,youtube,www, (p3)
+  0 items
+    last enqueued: https://www.youtube.com/channel/UCYxIqzBJEuisbUZ6LCYW1mA
+      last peeked: https://www.youtube.com/channel/UCYxIqzBJEuisbUZ6LCYW1mA
+   total expended: 16 (total budget: -1)
+   active balance: 2984
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   16 16 0 0 16 0 960929 960929 3 2016-08-01T19:38:40.999Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#17:
+Queue com,ytimg,i, (p3)
+  0 items
+    last enqueued: http://i.ytimg.com/vi/DoSiPDujIiM/hqdefault.jpg
+      last peeked: http://i.ytimg.com/vi/DoSiPDujIiM/hqdefault.jpg
+   total expended: 3 (total budget: -1)
+   active balance: 2997
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   3 3 0 0 3 0 14954 14954 2 2016-08-01T19:37:55.783Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#18:
+Queue edu,odu,cs,www, (p3)
+  0 items
+    last enqueued: http://www.cs.odu.edu/~mkelly/bullet_oduphd.png
+      last peeked: http://www.cs.odu.edu/~mkelly/bullet_oduphd.png
+   total expended: 67 (total budget: -1)
+   active balance: 2933
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   67 67 0 0 67 0 2858308 2858308 1 2016-08-01T19:40:46.708Z
+   SimplePrecedenceProvider
+   3
+
+LONGEST#19:
+Queue org,w3,www, (p3)
+  0 items
+    last enqueued: http://www.w3.org/1999/xhtml/
+      last peeked: http://www.w3.org/1999/xhtml/
+   total expended: 5 (total budget: -1)
+   active balance: 2995
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   5 5 0 0 5 0 9119 9119 2 2016-08-01T19:40:10.633Z
+   SimplePrecedenceProvider
+   3
+
+
+ -----===== IN-PROCESS QUEUES =====-----
+
+ -----===== READY QUEUES =====-----
+
+ -----===== SNOOZED QUEUES =====-----
+SNOOZED#0:
+Queue com,google,social, (p3)
+  2 items
+   wakes in: 14m26s907ms
+    last enqueued: dns:social.google.com
+      last peeked: dns:social.google.com
+   total expended: 2 (total budget: -1)
+   active balance: 2998
+   last(avg) cost: 1(1)
+   totalScheduled fetchSuccesses fetchFailures fetchDisregards fetchResponses robotsDenials successBytes totalBytes fetchNonResponses lastSuccessTime
+   2 0 0 0 0 0 0 0 3 1970-01-01T00:00:00.000Z
+   SimplePrecedenceProvider
+   3
+
+
+ -----===== INACTIVE QUEUES =====-----
+
+ -----===== RETIRED QUEUES =====-----

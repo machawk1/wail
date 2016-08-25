@@ -1,0 +1,7 @@
+[#urls] [#bytes] [host] [#robots] [#remaining] [#novel-urls] [#novel-bytes] [#dup-by-hash-urls] [#dup-by-hash-bytes] [#not-modified-urls] [#not-modified-bytes]
+57 2657469 www.cs.odu.edu 0 0 57 2657469 0 0 0 0 
+7 88384 www.google.com 0 0 7 88384 0 0 0 0 
+5 910 dns: 0 0 5 910 0 0 0 0 
+4 754 cs.odu.edu 0 0 4 754 0 0 0 0 
+3 111227 platform.twitter.com 0 0 3 111227 0 0 0 0 
+3 16774 ssl.gstatic.com 0 0 3 16774 0 0 0 0 

@@ -1,0 +1,3 @@
+[code] [status] [seed] [redirect]
+302 CRAWLED http://cs.odu.edu/ http://www.cs.odu.edu/
+200 CRAWLED http://www.cs.odu.edu/

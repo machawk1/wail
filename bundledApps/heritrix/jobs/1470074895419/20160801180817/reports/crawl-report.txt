@@ -1,0 +1,21 @@
+crawl name: MyWAILBasedHeritrixCrawl
+crawl status: Finished
+duration: 2m59s243ms
+
+seeds crawled: 2
+seeds uncrawled: 0
+
+hosts visited: 5
+
+URIs processed: 79
+URI successes: 79
+URI failures: 0
+URI disregards: 0
+
+novel URIs: 79
+
+total crawled bytes: 2875518 (2.7 MiB) 
+novel crawled bytes: 2875518 (2.7 MiB)
+
+URIs/sec: 0.44
+KB/sec: 15

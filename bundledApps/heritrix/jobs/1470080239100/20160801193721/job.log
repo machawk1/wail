@@ -1,0 +1,6 @@
+2016-08-01T19:37:21.598Z INFO PREPARING 20160801193721
+2016-08-01T19:37:22.588Z INFO RUNNING 20160801193721
+2016-08-01T19:37:29.439Z WARNING nowhere to log added seed: http://www.cs.odu.edu/ (in thread 'ToeThread #7: http://cs.odu.edu/'; in processor 'candidates')
+2016-08-01T19:37:29.474Z WARNING nowhere to log added seed: http://www.cs.odu.edu/~mkelly/ (in thread 'ToeThread #7: http://matkelly.com/'; in processor 'candidates')
+2016-08-01T20:09:06.283Z INFO STOPPING 20160801193721
+2016-08-01T20:09:08.105Z INFO FINISHED 20160801193721
