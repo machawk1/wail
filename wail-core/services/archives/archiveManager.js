@@ -10,13 +10,14 @@ S.TMPL_CLOSE = '}'
 
 export default class ArchiveManager {
 
-  setup = (app, path) => {
+  setup(app, path){
     this.app = app
     this.wailSettings = global.wailSettings
-    // console.log(util.inspect(app,{depth: null, colors: true}))
+    console.log('archiveman')
+    console.log(util.inspect(app,{depth: null, colors: true}))
   }
 
-  addWarcsToCol = (id, data, params) => {
+  addWarcsToCol(id, data, params) {
     let opts = {
       cwd: this.wailSettings.get('warcs')
     }

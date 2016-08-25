@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
-import {encode, compare} from 'bytewise'
+import { encode, compare } from 'bytewise'
 import _ from 'lodash'
 import feathers from 'feathers/client'
 import socketio from 'feathers-socketio/client'
@@ -10,23 +10,23 @@ import hooks from 'feathers-hooks'
 import io from 'socket.io-client'
 import yaml from 'yamljs'
 import path from 'path'
+import util from 'util'
 import mongodb_prebuilt from 'mongodb-prebuilt'
 
-
-mongodb_prebuilt.start_server({
-  version: "3.2.9",
-  auto_shutdown: false,
-  args: {
-    logpath: path.join(path.resolve('.'),'waillogs/mongodb-prebuilt.log'),
-    dbpath: path.join(path.resolve('.'),'database')
-  }
-}, function(err) {
-  if (err) {
-    console.log('mongod didnt start:', err);
-  } else {
-    console.log('mongod is started');
-  }
-})
+// mongodb_prebuilt.start_server({
+//   version: "3.2.9",
+//   auto_shutdown: false,
+//   args: {
+//     logpath: path.join(path.resolve('.'),'waillogs/mongodb-prebuilt.log'),
+//     dbpath: path.join(path.resolve('.'),'database')
+//   }
+// }, function(err) {
+//   if (err) {
+//     console.log('mongod didnt start:', err);
+//   } else {
+//     console.log('mongod is started');
+//   }
+// })
 
 //
 // let managed = {
@@ -65,19 +65,42 @@ mongodb_prebuilt.start_server({
 //
 // console.log(pywb)
 
+const socket = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
+const app = feathers()
+  .configure(hooks())
+  .configure(socketio(socket, { pingTimeout: 120000,timeout: 120000  }))
 
-// const socket = io('http://localhost:3030',{ pingTimeout: 120000 })
-// const app = feathers()
-//   .configure(hooks())
-//   .configure(socketio(socket,{ pingTimeout: 120000 }))
-//
-// const memgator = app.service('/archivesManager')
+
+const memgator = app.service('/archivesManager')
+memgator.update('xyz' , { existingWarcs: '/Users/jberlin/WebstormProjects/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
+  .then(data => {
+    console.log(data)
+    process.exit(0)
+  })
+  .catch(error => {
+    console.error(error)
+    process.exit(0)
+  })
 // memgator.find({}).then(data => {
 //   console.log(data)
+//   memgator.create({ name: 'xyz' })
+//     .then(created => {
+//       console.log(created)
+//       process.exit(0)
+//
+//     })
+//     .catch(err => {
+//       console.error(err)
+//       process.exit(0)
+//     })
+//
 // })
+//   .catch(error => {
+//     console.error(error)
+//     process.exit(0)
+//   })
 
 // console.log(path.join(path.resolve('.'),'database'))
-
 
 // let it = mongodb_prebuilt.start_server({
 //   version: "3.2.9",
@@ -96,23 +119,7 @@ mongodb_prebuilt.start_server({
 //
 // console.log(it)
 //
-// // memgator.create({ name: 'xyz' })
-// //   .then(created => {
-// //     console.log(created)
-// //     memgator.update('xyz' , { existingWarcs: '/home/john/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
-// //       .then(data => {
-// //         console.log(data)
-// //         process.exit(0)
-// //       })
-// //       .catch(error => {
-// //         console.error(error)
-// //         process.exit(0)
-// //       })
-// //   })
-// //   .catch(err => {
-// //     console.error(err)
-// //     process.exit(0)
-// //   })
+
 //
 //
 // memgator.update('xyz',{ metadata: ['title="Test"','description="Makeing sure this works"']},{query: {action: 'addMetadata'}})
@@ -124,8 +131,6 @@ mongodb_prebuilt.start_server({
 //     console.error(error)
 //     process.exit(0)
 //   })
-
-
 
 //
 // let managed = {

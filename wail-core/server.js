@@ -27,42 +27,22 @@ process.on('unhandledRejection', (reason, p) => {
 
 const app = feathers()
 
-const primusConfig = {
-  transformer: 'engine.io',
-  timeout: 120000,
-  parser: 'JSON',
-  plugin: {
-    'multiplex': primusMultiplex,
-    'resource': primusResource,
-    'responder': primusResponder,
-  }
-}
 
-// app.configure(config(__dirname))
-//   .use(bodyParser.json())
-//   .use(bodyParser.urlencoded({ extended: true }))
-//   .configure(hooks())
-//   .configure(socketio({ pingTimeout: 120000 }))
-//   .configure(services)
-//   .use(errors())
 app.configure(config(__dirname))
   .use(bodyParser.json())
   .use(bodyParser.urlencoded({ extended: true }))
   .configure(hooks())
-  .configure(Primus(primusConfig, primus => {
-
-    let testResource = primus.resource('test')
-    testResource.oncommand = (spark, command, fn) =>  {
-      console.log(command)
-      fn('testResource just got command: ' + command)
-    }
-    // primus.on('connection',spark => {
-    //
-    // })
-    primus.save(__dirname +'/primus.js')
-  }))
+  .configure(socketio((io) => {
+    // console.log(io)
+    let testns = io.of('/test')
+    testns.on('connection',(socket) => {
+      socket.emit('hi',{test: 'hello'})
+    })
+  },{ pingTimeout: 120000, timemout: 120000 }))
   .configure(services)
   .use(errors())
+
+export default app
 
 const server = app.listen(app.get('port'))
 

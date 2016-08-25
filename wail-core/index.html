@@ -12,19 +12,16 @@
             -webkit-font-smoothing: antialiased;
         }
     </style>
-    <script src="primus.js"></script>
-    <script src="http://localhost:9000/dist/core.bundle.js"></script>
-</head>
 <body style="margin: 0; font-family: Roboto, sans-serif;">
 <div id="wail">
 HI!!!!
 </div>
-<!--<script>-->
-    <!--(function () {-->
-        <!--const script = document.createElement('script');-->
-        <!--script.src = (process.env.HOT) ? 'http://localhost:9000/dist/core.bundle.js' : '../dist/core.bundle.js';-->
-        <!--document.write(script.outerHTML);-->
-    <!--}());-->
-<!--</script>-->
+<script>
+    (function () {
+        const script = document.createElement('script');
+        script.src = (process.env.HOT) ? 'http://localhost:9000/dist/core.bundle.js' : '../dist/core.bundle.js';
+        document.write(script.outerHTML);
+    }());
+</script>
 </body>
 </html>
