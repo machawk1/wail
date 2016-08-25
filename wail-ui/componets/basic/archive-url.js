@@ -17,6 +17,8 @@ const EventTypes = wailConstants.EventTypes
 
 let focusTime = null
 
+
+
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
     super(props, context)

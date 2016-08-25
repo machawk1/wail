@@ -18,9 +18,9 @@ const managed = {
     { name: 'cdx', path: 'archiveIndexes' },
     { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
     { name: 'crawlerBean', path: 'crawler-beans.cxml' },
-    { name: 'heritrixBin', path: 'bundledApps/heritrix-3.3.0/bin/heritrix' },
-    { name: 'heritrixJob', path: 'bundledApps/heritrix-3.3.0/jobs' },
-    { name: 'heritrix', path: 'bundledApps/heritrix-3.3.0' },
+    { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
+    { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
+    { name: 'heritrix', path: 'bundledApps/heritrix' },
     { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
     { name: 'index', path: '/config/path-index.txt' },
     { name: 'jdk', path: 'bundledApps/openjdk' },
@@ -174,7 +174,7 @@ const managed = {
     { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
     { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
     { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-    { name: 'heritrixStart', path: 'bundledApps/heritrix-3.3.0/bin/heritrix' },
+    { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
     { name: 'memgator' }
   ],
   pywb: {
@@ -204,10 +204,11 @@ const managed = {
 }
 
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
-const debugOSX = false
+const debugOSX = true
 
-export function writeSettings (base, settings) {
+export function writeSettings (base, settings,v) {
   settings.clear()
+  settings.set('version',v)
   let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
   settings.set('base', base)
@@ -358,7 +359,7 @@ export function rewriteHeritrixAuth (settings, usr, pwd) {
 
 }
 
-export default function configSettings (base, userData) {
+export default function configSettings (base, userData,v) {
   let settings
   let settingsDir = path.join(userData, 'wail-settings')
   try {
@@ -371,9 +372,10 @@ export default function configSettings (base, userData) {
   }
 
   // writeSettings(base, settings)
-  if (!settings.get('configured')) {
-    // console.log('We are not configured')
-    writeSettings(base, settings)
+  console.log(settings.get('version'),v)
+  if (!settings.get('configured') || settings.get('version') !== v) {
+    console.log('We are not configured')
+    writeSettings(base, settings,v)
     // console.log(base, settings)
   } else {
     if (settings.get('base') !== base) {
@@ -383,7 +385,7 @@ export default function configSettings (base, userData) {
        I did this to myself....
        */
       // console.log('We are not configured due to binary directory being moved')
-      writeSettings(base, settings)
+      writeSettings(base, settings,v)
     }
     // console.log('We are configured')
   }

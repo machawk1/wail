@@ -252,11 +252,14 @@ function setUp () {
   }
 
   let logPath
+  let version = ''
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
     logPath = path.join(control.base, 'waillogs')
+    version = "1.0.0-rc.2.5"
     settingsPath = logPath
   } else {
+    version = app.getVersion()
     logPath = path.join(app.getPath('userData'), 'waillogs')
   }
 
@@ -275,7 +278,7 @@ function setUp () {
     control.h = 361
   }
 
-  let settings = configSettings(control.base, settingsPath)
+  let settings = configSettings(control.base, settingsPath,version)
   global.settings = control.settings = settings
   if (!settings.get('didFirstLoad')) {
     control.firstLoad = true

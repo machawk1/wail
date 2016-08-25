@@ -10,6 +10,7 @@ import LoadingDispatcher from '../shared/loadingDispatcher'
 import wc from '../../constants/wail-constants'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
+const settings = remote.getGlobal('settings')
 
 export default class LoadingProgress extends Component {
   static childContextTypes = {

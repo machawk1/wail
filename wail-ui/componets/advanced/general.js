@@ -94,7 +94,7 @@ export default class General extends Component {
                 disabled={this.state.wbGood}
                 style={style.serviceActionButton}
                 labelPosition="before"
-                label="Fix"
+                label="Start"
                 onMouseDown={this.wayBackFix}
                 icon={<FixIcon/>}
               />
@@ -102,7 +102,7 @@ export default class General extends Component {
                 disabled={!this.state.wbGood}
                 style={style.serviceActionButton}
                 labelPosition="before"
-                label="Kill"
+                label="Stop"
                 onMouseDown={this.wayBackKill}
                 icon={<KillIcon />}
               />
