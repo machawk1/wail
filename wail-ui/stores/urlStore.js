@@ -89,7 +89,7 @@ class UrlStore_ extends EventEmitter {
             type: EventTypes.QUEUE_MESSAGE,
             message: `Viewing archived version of: ${this.urlMemento.url.s}`
           })
-          shell.openExternal(`${settings.get('wayback.uri_wayback')}*/${this.urlMemento.url.s}`)
+          shell.openExternal(`${settings.get('pywb.url')}/Wail/*/${this.urlMemento.url.s}`)
         } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,

@@ -111,20 +111,20 @@ export default class General extends Component {
           <TableRow>
             <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
             <TableRowColumn style={style.servicesSS}>{heritrixStatus}</TableRowColumn>
-            <TableRowColumn style={style.servicesSS}>3.3.0</TableRowColumn>
+            <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
             <TableRowColumn style={style.servicesActions}>
               <RaisedButton
                 disabled={this.state.hGood}
                 style={style.serviceActionButton}
                 labelPosition="before"
-                label="Fix"
+                label="Start"
                 onMouseDown={this.heritrixFix}
                 icon={<FixIcon/>}
               />
               <RaisedButton
                 disabled={!this.state.hGood}
                 style={style.serviceActionButton}
-                labelPosition="before" label="Kill"
+                labelPosition="before" label="Stop"
                 onMouseDown={this.heritrixKill}
                 icon={<KillIcon />}
               />
