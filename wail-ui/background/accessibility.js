@@ -60,7 +60,7 @@ class StatusMonitor {
             })
             .finally(() => {
               console.log('checking wayback accessibility')
-              rp({ uri: settings.get('wayback.uri_wayback') })
+              rp({ uri: settings.get('pywb.url') })
                 .then(success => {
                   this.statues.wayback = true
                 })

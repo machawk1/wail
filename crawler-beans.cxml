@@ -132,10 +132,10 @@
                     <property name="maxHops" value="1"/>
                 </bean>
                 <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
-                <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
-                     <property name="maxTransHops" value="1" />
-                     <property name="maxSpeculativeHops" value="1" />
-                </bean>
+                <!--<bean class="org.archive.modules.deciderules.TransclusionDecideRule">-->
+                     <!--<property name="maxTransHops" value="1" />-->
+                     <!--<property name="maxSpeculativeHops" value="1" />-->
+                <!--</bean>-->
                 <!-- ...but REJECT those from a configurable (initially empty) set of REJECT SURTs... -->
                 <bean class="org.archive.modules.deciderules.surt.SurtPrefixedDecideRule">
                     <property name="decision" value="REJECT"/>

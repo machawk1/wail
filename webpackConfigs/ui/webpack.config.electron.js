@@ -35,7 +35,7 @@ export default {
   entry: [ 'babel-polyfill', './wail-ui/ui-main.js' ],
   output: {
     filename: 'ui-main.js',
-    path: path.join(__dirname, 'dist'),
+    path: './dist',
     publicPath: './dist/',
     libraryTarget: 'commonjs2'
   },

@@ -64,7 +64,7 @@ export function waybackAccesible (startOnDown = false) {
     type: EventTypes.REQUEST_WAYBACK,
     rType: RequestTypes.ACCESSIBILITY,
     opts: {
-      uri: settings.get('wayback.uri_wayback')
+      uri: settings.get('pywb.url')
     },
     from: 'waybackAccesible',
     timeReceived: null,
@@ -91,90 +91,111 @@ export function waybackAccesible (startOnDown = false) {
 }
 
 export function startWayback (cb) {
-  if (process.platform === 'win32') {
-    let basePath = settings.get('bundledApps')
-    let opts = {
-      cwd: basePath,
-      detached: true,
-      shell: false,
-      stdio: [ 'ignore', 'ignore', 'ignore' ]
-    }
-    try {
-      let wayback = childProcess.spawn('wayback.bat', [ 'start' ], opts)
-      wayback.unref()
-    } catch (err) {
-      logger.error(util.format(logStringError, 'win32 launch wayback', err.stack))
-    }
-
-    if (cb) {
-      cb()
-    }
-  } else {
-    var wStart
-    if (process.platform === 'darwin') {
-      wStart = settings.get('tomcatStartDarwin')
-    } else {
-      wStart = settings.get('tomcatStart')
-    }
-    childProcess.exec(wStart, (err, stdout, stderr) => {
-      console.log(err, stdout, stderr)
-      if (err) {
-        let stack
-        if (Reflect.has(err, 'stack')) {
-          stack = `${stderr} ${err.stack}`
-        } else {
-          stack = `${stderr}`
-        }
-        logger.error(util.format(logStringError, `linux/osx launch wayback ${stdout}`, stack))
-      }
-      if (cb) {
-        cb()
-      }
-    })
+  let exec =settings.get('pywb.wayback')
+  let opts = {
+    cwd: settings.get('pywb.home'),
+    detached: true,
+    shell: false,
+    stdio: [ 'ignore', 'ignore', 'ignore' ]
   }
+  console.log(opts)
+  logger.info(util.format('Wayback-actions %s', 'launching wayback'))
+  try {
+    let wayback = childProcess.spawn(exec,['-d', settings.get('warcs')], opts)
+    wayback.unref()
+  } catch (err) {
+    logger.error(util.format('Wayback-actions %s', 'launch wayback', err))
+  }
+  if(cb) {
+    cb()
+  }
+  // if (process.platform === 'win32') {
+  //   let basePath = settings.get('bundledApps')
+  //   let opts = {
+  //     cwd: basePath,
+  //     detached: true,
+  //     shell: false,
+  //     stdio: [ 'ignore', 'ignore', 'ignore' ]
+  //   }
+  //   try {
+  //     let wayback = childProcess.spawn('wayback.bat', [ 'start' ], opts)
+  //     wayback.unref()
+  //   } catch (err) {
+  //     logger.error(util.format(logStringError, 'win32 launch wayback', err.stack))
+  //   }
+  //
+  //   if (cb) {
+  //     cb()
+  //   }
+  // } else {
+  //   var wStart
+  //   if (process.platform === 'darwin') {
+  //     wStart = settings.get('tomcatStartDarwin')
+  //   } else {
+  //     wStart = settings.get('tomcatStart')
+  //   }
+  //   childProcess.exec(wStart, (err, stdout, stderr) => {
+  //     console.log(err, stdout, stderr)
+  //     if (err) {
+  //       let stack
+  //       if (Reflect.has(err, 'stack')) {
+  //         stack = `${stderr} ${err.stack}`
+  //       } else {
+  //         stack = `${stderr}`
+  //       }
+  //       logger.error(util.format(logStringError, `linux/osx launch wayback ${stdout}`, stack))
+  //     }
+  //     if (cb) {
+  //       cb()
+  //     }
+  //   })
+  // }
 }
 
 export function killWayback (cb) {
-  if (process.platform === 'win32') {
-    let basePath = settings.get('bundledApps')
-    let opts = {
-      cwd: basePath,
-      detached: true,
-      shell: false,
-      stdio: [ 'ignore', 'ignore', 'ignore' ]
-    }
-    try {
-      let wayback = childProcess.spawn('wayback.bat', [ 'stop' ], opts)
-      wayback.unref()
-    } catch (err) {
-      logger.error(util.format(logStringError, 'win32 kill wayback', err.stack))
-    }
-    if (cb) {
-      cb()
-    }
-  } else {
-    var wStop
-    if (process.platform === 'darwin') {
-      wStop = settings.get('tomcatStopDarwin')
-    } else {
-      wStop = settings.get('tomcatStop')
-    }
-    childProcess.exec(wStop, (err, stdout, stderr) => {
-      console.log(stdout)
-      if (err) {
-        let stack
-        console.log(err, stderr)
-        if (Reflect.has(err, 'stack')) {
-          stack = `${stdout} ${err.stack}`
-        } else {
-          stack = `${stdout}`
-        }
-        logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
-      }
-
-      if (cb) {
-        cb()
-      }
-    })
+  // if (process.platform === 'win32') {
+  //   let basePath = settings.get('bundledApps')
+  //   let opts = {
+  //     cwd: basePath,
+  //     detached: true,
+  //     shell: false,
+  //     stdio: [ 'ignore', 'ignore', 'ignore' ]
+  //   }
+  //   try {
+  //     let wayback = childProcess.spawn('wayback.bat', [ 'stop' ], opts)
+  //     wayback.unref()
+  //   } catch (err) {
+  //     logger.error(util.format(logStringError, 'win32 kill wayback', err.stack))
+  //   }
+  //   if (cb) {
+  //     cb()
+  //   }
+  // } else {
+  //   var wStop
+  //   if (process.platform === 'darwin') {
+  //     wStop = settings.get('tomcatStopDarwin')
+  //   } else {
+  //     wStop = settings.get('tomcatStop')
+  //   }
+  //   childProcess.exec(wStop, (err, stdout, stderr) => {
+  //     console.log(stdout)
+  //     if (err) {
+  //       let stack
+  //       console.log(err, stderr)
+  //       if (Reflect.has(err, 'stack')) {
+  //         stack = `${stdout} ${err.stack}`
+  //       } else {
+  //         stack = `${stdout}`
+  //       }
+  //       logger.error(util.format(logStringError, `linux/osx kill heritrix ${stderr}`, stack))
+  //     }
+  //
+  //     if (cb) {
+  //       cb()
+  //     }
+  //   })
+  // }
+  if (cb) {
+    cb()
   }
 }

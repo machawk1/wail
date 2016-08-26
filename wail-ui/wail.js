@@ -9,6 +9,8 @@ import { ipcRenderer, remote } from 'electron'
 import Routes from './routes'
 import { writeWaybackConf } from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
+require('./css/toaster.css')
+require('./css/animate.css')
 // require('pretty-error').start()
 
 ipcRenderer.on('rewrite-wayback-config', (event, payload) => {

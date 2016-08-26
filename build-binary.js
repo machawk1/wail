@@ -52,6 +52,8 @@ const ignore = [
   '^/bundledApps/wailpy($|/)',
   '^/.codeclimate.yml($|/)',
   '^/doElectron.sh$',
+  '^/wail-core($|/)',
+  '^/archives/',
   '^/bootstrap.sh$',
   '^/npm-debug.log.*$',
   '^/electron-main-dev.js$',

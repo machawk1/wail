@@ -3,6 +3,12 @@ import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import { shell } from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
+import {
+  ToastContainer,
+  ToastMessage,
+} from "react-toastr"
+
+const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
 export default class Notifications extends Component {
   constructor (props, context) {
@@ -11,6 +17,7 @@ export default class Notifications extends Component {
       message: 'Status Number 1',
       open: false,
     }
+    this.toastr = null
   }
 
   componentWillMount () {
@@ -23,9 +30,12 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-    if (!this.state.open) {
-      this.setState({ message: GMessageStore.getMessage(), open: true })
-    }
+    this.toastr.info(<p>
+      {GMessageStore.getMessage()}
+    </p>)
+    // if (!this.state.open) {
+    //   this.setState({ message: , open: true })
+    // }
   }
 
   @autobind
@@ -41,12 +51,21 @@ export default class Notifications extends Component {
 
   render () {
     return (
-      <Snackbar
-        open={this.state.open}
-        message={this.state.message}
-        autoHideDuration={2000}
-        onRequestClose={this.closeNotification}
-      />
+    <ToastContainer
+      toastMessageFactory={ToastMessageFactory}
+      ref={(c) => this.toastr = c}
+      preventDuplicates={true}
+      newestOnTop={true}
+      className="toast-top-center"
+    />
     )
   }
 }
+/*
+ <Snackbar
+ open={this.state.open}
+ message={this.state.message}
+ autoHideDuration={2000}
+ onRequestClose={this.closeNotification}
+ />
+ */

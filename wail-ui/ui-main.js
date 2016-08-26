@@ -239,16 +239,16 @@ function setUp () {
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
   } else {
     control.base = app.getAppPath()
-    windows.accessibilityWindowURL = `file://${control.base}/background/accessibility.html`
-    windows.indexWindowURL = `file://${control.base}/background/indexer.html`
-    windows.jobWindowURL = `file://${control.base}/background/jobs.html`
-    windows.mWindowURL = `file://${control.base}/wail.html`
-    windows.newCrawlWindowURL = `file://${control.base}/childWindows/newCrawl/newCrawl.html`
-    windows.reqDaemonWindowURL = `file://${control.base}/background/requestDaemon.html`
-    windows.settingsWindowURL = `file://${control.base}/childWindows/settings/settingsW.html`
-    windows.firstLoadWindowURL = `file://${control.base}/loadingScreens/firstTime/loadingScreen.html`
-    windows.loadingWindowURL = `file://${control.base}/loadingScreens/notFirstTime/loadingScreen.html`
-    windows.timemapStatsURL = `file://${control.base}/childWindows/timemapStats/timemapStats.html`
+    windows.accessibilityWindowURL = `file://${control.base}/wail-ui/background/accessibility.html`
+    windows.indexWindowURL = `file://${control.base}/wail-ui/background/indexer.html`
+    windows.jobWindowURL = `file://${control.base}/wail-ui/background/jobs.html`
+    windows.mWindowURL = `file://${control.base}/wail-ui/wail.html`
+    windows.newCrawlWindowURL = `file://${control.base}/wail-ui/childWindows/newCrawl/newCrawl.html`
+    windows.reqDaemonWindowURL = `file://${control.base}/wail-ui/background/requestDaemon.html`
+    windows.settingsWindowURL = `file://${control.base}/wail-ui/childWindows/settings/settingsW.html`
+    windows.firstLoadWindowURL = `file://${control.base}/wail-ui/loadingScreens/firstTime/loadingScreen.html`
+    windows.loadingWindowURL = `file://${control.base}/wail-ui/loadingScreens/notFirstTime/loadingScreen.html`
+    windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
   }
 
   let logPath

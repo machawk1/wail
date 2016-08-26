@@ -225,7 +225,7 @@ const managed = {
 }
 
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
-const debugOSX = true
+const debugOSX = false
 
 export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   settings.clear()

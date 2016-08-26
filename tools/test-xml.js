@@ -15,19 +15,28 @@ import mongodb_prebuilt from 'mongodb-prebuilt'
 import shelljs from 'shelljs'
 import cp from 'child_process'
 let opts = {
-  cwd: '/Users/jberlin/WebstormProjects/wail/bundledApps/pywb',
-  detached: true,
-  shell: true,
+  cwd: '/Users/jberlin/WebstormProjects/wail/archives',
+  // detached: true,
+  // shell: true,
   // stdio: [ 'ignore', 'ignore', 'ignore' ]
 }
-let wayback = cp.spawn('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wayback',['-d','/Users/jberlin/WebstormProjects/wail/archives'], opts)
-wayback.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
 
-wayback.stderr.on('data', (data) => {
-  console.log(`stderr: ${data}`);
-});
+cp.exec('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wb-manager reindex Wail',opts,(error, stdout, stderr) =>{
+  if(error) {
+    console.error(error)
+  }
+  console.log(stderr)
+  console.log(stdout)
+})
+
+// let wayback = cp.spawn('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wayback',['-d','/Users/jberlin/WebstormProjects/wail/archives'], opts)
+// wayback.stdout.on('data', (data) => {
+//   console.log(`stdout: ${data}`);
+// });
+//
+// wayback.stderr.on('data', (data) => {
+//   console.log(`stderr: ${data}`);
+// });
 
 // mongodb_prebuilt.start_server({
 //   version: "3.2.9",

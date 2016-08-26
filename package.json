@@ -28,7 +28,9 @@
     "core-server": "babel-node wail-core/server",
     "nightmare": "babel-node tools/testNightmare",
     "standard": "standard --verbose | snazzy",
-    "test-xml": "babel-node tools/test-xml"
+    "test-xml": "babel-node tools/test-xml",
+    "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
+    "package-osx": "npm run package -- --osx"
   },
   "main": "./dist/ui-main.js",
   "bin": {

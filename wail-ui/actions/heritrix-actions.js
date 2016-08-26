@@ -16,6 +16,8 @@ import ServiceStore from '../stores/serviceStore'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
+import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
+import shelljs from 'shelljs'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -673,4 +675,26 @@ export function getHeritrixJobsState () {
       }
     })
   })
+}
+
+export function moveWarc () {
+  let ret = shelljs.ls(`${settings.get('warcs')}/*.warc`)
+  if (ret.length > 0) {
+    ret.forEach(warc => {
+      fs.copy(warc, path.normalize(`${settings.get('collections.defaultCol')}/archive/${path.basename(warc)}`), err => {
+          if (err) {
+            GMessageDispatcher.dispatch({
+              type: EventTypes.QUEUE_MESSAGE,
+              message: `There was an error in moving ${path.basename(warc)} to the Wail collection`
+            })
+          } else {
+            GMessageDispatcher.dispatch({
+              type: EventTypes.QUEUE_MESSAGE,
+              message: `Moved ${path.basename(warc)} to the Wail collection`
+            })
+          }
+      })
+    })
+  }
+
 }
