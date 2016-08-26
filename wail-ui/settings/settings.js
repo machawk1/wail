@@ -178,8 +178,10 @@ const managed = {
     { name: 'memgator' }
   ],
   pywb: {
+    home: 'bundledApps/pywb',
     port: '8080',
     url: 'http://localhost:{port}/',
+    wbMan: 'bundledApps/pywb/wb-manager',
     newCollection: 'bundledApps/pywb/wb-manager init {col}',
     addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
     addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
@@ -194,11 +196,30 @@ const managed = {
     wayback: 'bundledApps/pywb/wayback',
     waybackPort: 'bundledApps/pywb/wayback -p {port}',
     waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
-    waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}'
+    waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
+    templates: 'bundledApps/pywb/templates',
+    statics: 'bundledApps/pywb/static'
+  },
+  collections: {
+    defaultCol:'archives/collections/Wail',
+    dir: 'archives/collections',
+    aCollPath: 'archives/collections/{col}',
+    colTemplate: 'archives/collections/{col}/static',
+    colStatic: 'archives/collections/{col}/templates',
+    colWarcs: 'archives/collections/{col}/archive',
+    colIndexs: 'archives/collections/{col}/indexes',
+    templateDir: 'archives/templates',
+    staticsDir: 'archives/static'
   },
   code: {
     crawlerBean: 'crawler-beans.cxml',
     wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
+  },
+  core: {
+    port: '3030',
+    url: 'http://localhost:{port}',
+    db: 'database',
+    timemaps: 'timemaps'
   }
 
 }
@@ -206,9 +227,9 @@ const managed = {
 // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
 const debugOSX = true
 
-export function writeSettings (base, settings,v) {
+export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   settings.clear()
-  settings.set('version',v)
+  settings.set('version', v)
   let isWindows = os.platform() === 'win32'
   settings.set('configured', true)
   settings.set('base', base)
@@ -223,6 +244,7 @@ export function writeSettings (base, settings,v) {
   let command = 'sh'
   heritrix.path = settings.get('heritrix')
   var jobConfPath
+
   if (isWindows) {
     let cdxWin = `${cmdexport} ${settings.get('cdxIndexerWin')}`
     settings.set('cdxIndexer', cdxWin)
@@ -240,24 +262,48 @@ export function writeSettings (base, settings,v) {
   }
   heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
+
   let wb = managed.wayback
   wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
   wb.notIndexCDX = `!${settings.get('cdx')}${wb.notIndexCDX}`
   settings.set('wayback', wb)
+
   let code = managed.code
   code.crawlerBean = path.normalize(path.join(base, code.crawlerBean))
   code.wayBackConf = path.normalize(path.join(base, code.wayBackConf))
-  let pywb = _.mapValues(managed.pywb,(v,k) => {
-    if(k !== 'port' && k !== 'url') {
+
+  let pywb = _.mapValues(managed.pywb, (v, k) => {
+    if (k !== 'port' && k !== 'url') {
       v = path.normalize(path.join(base, v))
     }
-    if(k === 'url') {
-      v = S(v).template({port: managed.pywb.port}).s
+    if (k === 'url') {
+      v = S(v).template({ port: managed.pywb.port }).s
     }
     return v
   })
 
-  settings.set('pywb',pywb)
+  let core = _.mapValues(managed.core, (v, k) => {
+    if (k === 'url') {
+      v = S(v).template({ port: managed.core.port }).s
+    }
+    if (k !== 'port' && k !== 'url') {
+      v = path.normalize(path.join(base, v))
+    }
+    return v
+  })
+
+  settings.set('wailCore', core)
+
+  let collections = _.mapValues(managed.collections, (v, k) => {
+    return path.normalize(path.join(base, v))
+  })
+
+  settings.set('collections', collections)
+
+  settings.set('pywb', pywb)
+  console.log('migrate', migrate)
+  settings.set('migrate', migrate)
+  settings.set('didFirstLoad', didFirstLoad)
 
   settings.set('winDeleteJob', path.normalize(path.join(base, 'windowsNukeDir.bat')))
 
@@ -359,7 +405,7 @@ export function rewriteHeritrixAuth (settings, usr, pwd) {
 
 }
 
-export default function configSettings (base, userData,v) {
+export default function configSettings (base, userData, v) {
   let settings
   let settingsDir = path.join(userData, 'wail-settings')
   try {
@@ -372,10 +418,17 @@ export default function configSettings (base, userData,v) {
   }
 
   // writeSettings(base, settings)
-  console.log(settings.get('version'),v)
+  console.log(settings.get('version'), v)
   if (!settings.get('configured') || settings.get('version') !== v) {
     console.log('We are not configured')
-    writeSettings(base, settings,v)
+    let migrate = settings.get('migrate')
+    let doMigrate = false
+    if (migrate === null || migrate === undefined) {
+      doMigrate = true
+    } else {
+      doMigrate = migrate
+    }
+    writeSettings(base, settings, v, settings.get('didFirstLoad'), doMigrate)
     // console.log(base, settings)
   } else {
     if (settings.get('base') !== base) {
@@ -385,7 +438,7 @@ export default function configSettings (base, userData,v) {
        I did this to myself....
        */
       // console.log('We are not configured due to binary directory being moved')
-      writeSettings(base, settings,v)
+      writeSettings(base, settings, v)
     }
     // console.log('We are configured')
   }

@@ -12,6 +12,22 @@ import yaml from 'yamljs'
 import path from 'path'
 import util from 'util'
 import mongodb_prebuilt from 'mongodb-prebuilt'
+import shelljs from 'shelljs'
+import cp from 'child_process'
+let opts = {
+  cwd: '/Users/jberlin/WebstormProjects/wail/bundledApps/pywb',
+  detached: true,
+  shell: true,
+  // stdio: [ 'ignore', 'ignore', 'ignore' ]
+}
+let wayback = cp.spawn('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wayback',['-d','/Users/jberlin/WebstormProjects/wail/archives'], opts)
+wayback.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`);
+});
+
+wayback.stderr.on('data', (data) => {
+  console.log(`stderr: ${data}`);
+});
 
 // mongodb_prebuilt.start_server({
 //   version: "3.2.9",
@@ -26,6 +42,12 @@ import mongodb_prebuilt from 'mongodb-prebuilt'
 //   } else {
 //     console.log('mongod is started');
 //   }
+// })
+
+// let ret = shelljs.ls(`/Users/jberlin/WebstormProjects/wail/archives/*.warc`)
+// ret.forEach(warc => {
+//   console.log(warc)
+//   console.log('--------------')
 // })
 
 //
@@ -65,22 +87,23 @@ import mongodb_prebuilt from 'mongodb-prebuilt'
 //
 // console.log(pywb)
 
-const socket = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
-const app = feathers()
-  .configure(hooks())
-  .configure(socketio(socket, { pingTimeout: 120000,timeout: 120000  }))
 
-
-const memgator = app.service('/archivesManager')
-memgator.update('xyz' , { existingWarcs: '/Users/jberlin/WebstormProjects/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
-  .then(data => {
-    console.log(data)
-    process.exit(0)
-  })
-  .catch(error => {
-    console.error(error)
-    process.exit(0)
-  })
+// const socket = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
+// const app = feathers()
+//   .configure(hooks())
+//   .configure(socketio(socket, { pingTimeout: 120000,timeout: 120000  }))
+//
+//
+// const memgator = app.service('/archivesManager')
+// memgator.update('xyz' , { existingWarcs: '/Users/jberlin/WebstormProjects/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
+//   .then(data => {
+//     console.log(data)
+//     process.exit(0)
+//   })
+//   .catch(error => {
+//     console.error(error)
+//     process.exit(0)
+//   })
 // memgator.find({}).then(data => {
 //   console.log(data)
 //   memgator.create({ name: 'xyz' })

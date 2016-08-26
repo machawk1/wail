@@ -44,7 +44,7 @@ const control = {
   tray: null,
   base: null,
   notDebugUI: true,
-  debug: false,
+  debug: true,
   openBackGroundWindows: false,
   didClose: false,
   didLoad: false,
@@ -205,7 +205,7 @@ function setUpIPC () {
 
   ipcMain.on('setting-hard-reset', (event, payload) => {
     console.log('got settings-hard-reset')
-    writeSettings(control.base, control.settings)
+    writeSettings(control.base, control.settings,settings.get('version'),settings.get('didFirstLoad'),settings.get('migrate'))
   })
 
   ipcMain.on('rewrite-wayback-config', (event, payload) => {
@@ -278,7 +278,7 @@ function setUp () {
     control.h = 361
   }
 
-  let settings = configSettings(control.base, settingsPath,version)
+  let settings = configSettings(control.base, settingsPath, version)
   global.settings = control.settings = settings
   if (!settings.get('didFirstLoad')) {
     control.firstLoad = true

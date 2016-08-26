@@ -57,6 +57,7 @@ export default {
     JDK_DOWNLOADED: null,
     SERVICE_HW_UP: null,
     SERVICE_HW_DOWN: null,
-    SERVICE_CHECK_DONE: null
+    SERVICE_CHECK_DONE: null,
+    MIGRATION_DONE: null
   })
 }

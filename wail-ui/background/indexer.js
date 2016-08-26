@@ -13,6 +13,7 @@ import bytewise from 'bytewise'
 import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
+import cp from 'child_process'
 require('pretty-error').start()
 
 const settings = remote.getGlobal('settings')
@@ -203,16 +204,38 @@ class Indexer {
   @autobind
   indexer () {
     if (!this.started) {
-      let rule = new schedule.RecurrenceRule()
-      // this process can take more than 10 seconds
-      // so check 3x a minute
-      rule.second = [ 10, 30, 50 ]
-      this.job = schedule.scheduleJob(rule, () => {
-        if (prevIndexingDone) {
-          prevIndexingDone = false
-          generatePathIndex(generateCDX)
-        }
-      })
+      let exec =settings.get('pywb.wbMan')
+      let opts = {
+        cwd: settings.get('warcs'),
+        detached: true,
+        shell: false,
+        // stdio: [ 'ignore', 'ignore', 'ignore' ]
+      }
+      console.log(opts)
+      logger.info(util.format('Indexer %s', 'launching autoindexer'))
+      try {
+        let autoIndexer = childProcess.spawn(exec,['autoindex', 'Wail'], opts)
+        autoIndexer.stdout.on('data', (data) => {
+          console.log(`stdout: ${data}`);
+        });
+
+        autoIndexer.stderr.on('data', (data) => {
+          console.log(`stderr: ${data}`);
+        });
+        // wayback.unref()
+      } catch (err) {
+        logger.error(util.format('Indexer %s', 'launch autoindexer', err))
+      }
+      // let rule = new schedule.RecurrenceRule()
+      // // this process can take more than 10 seconds
+      // // so check 3x a minute
+      // rule.second = [ 10, 30, 50 ]
+      // this.job = schedule.scheduleJob(rule, () => {
+      //   if (prevIndexingDone) {
+      //     prevIndexingDone = false
+      //     generatePathIndex(generateCDX)
+      //   }
+      // })
       this.started = true
     }
   }

@@ -20,6 +20,7 @@ const style = {
 export default class CheckServices extends Component {
   static propTypes = {
     firstLoad: PropTypes.bool.isRequired,
+    wait: PropTypes.bool.isRequired,
   }
 
   constructor (props, context) {

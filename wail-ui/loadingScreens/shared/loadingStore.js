@@ -39,10 +39,18 @@ class loadingStore extends EventEmitter {
     switch (event.type) {
       case wc.Loading.JAVA_CHECK_DONE:
         this.progress.javaCheckDone = true
-        this.emit('check-services')
+        console.log('start migrations')
+        if(settings.get('migrate')) {
+          this.emit('migrate')
+        } else {
+          this.emit('check-services')
+          this.checkServices()
+        }
+
+
         this.pMessage = this.progress.messages[ 1 ]
         this.emit('progress')
-        this.checkServices()
+
         break
       case wc.Loading.DOWNLOAD_JAVA:
         const { dialog } = require('electron').remote
@@ -54,6 +62,11 @@ class loadingStore extends EventEmitter {
           message: 'Java needs to be installed for Heritrix and Wayback',
           cancelId: 666
         }, this.downloadJDK)
+        break
+      case wc.Loading.MIGRATION_DONE:
+        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        this.checkServices()
+        this.emit('migration-done')
         break
       case wc.Loading.SERVICE_CHECK_DONE:
         ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
@@ -111,7 +124,7 @@ class loadingStore extends EventEmitter {
 
   @autobind
   wb () {
-    request.get(settings.get('wayback.uri_wayback'))
+    request.get(settings.get('pywb.url'))
       .on('response', (res) => {
         // console.log(res)
         let message

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { Grid, Row } from 'react-cellblock'
+import { remote, ipcRenderer } from 'electron'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 import styles from '../../componets/styles/styles'
 import CheckOS from './checkOS'
@@ -9,6 +10,7 @@ import CheckJava from './checkJava'
 import CheckServices from '../shared/checkServices'
 import ProgressMessages from '../shared/progressMessages'
 
+const settings = remote.getGlobal('settings')
 const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class LoadingProgress extends Component {
@@ -47,7 +49,8 @@ export default class LoadingProgress extends Component {
             >
               <CheckOS />
               <CheckJava />
-              <CheckServices firstLoad={true}/>
+              <MigratePywb settings={settings} migrate={true} />
+              <CheckServices firstLoad={true} wait={false}/>
             </TableBody>
           </Table>
         </Row>

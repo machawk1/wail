@@ -2,12 +2,14 @@ import React, { Component, PropTypes } from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { Grid, Row } from 'react-cellblock'
+import { remote, ipcRenderer } from 'electron'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 import styles from '../../componets/styles/styles'
 import CheckServices from '../shared/checkServices'
 import ProgressMessages from '../shared/progressMessages'
 import LoadingDispatcher from '../shared/loadingDispatcher'
 import wc from '../../constants/wail-constants'
+import MigratePywb from '../shared/migrateToPywb'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 const settings = remote.getGlobal('settings')
@@ -53,7 +55,9 @@ export default class LoadingProgress extends Component {
               displayRowCheckbox={false}
               showRowHover={true}
             >
-              <CheckServices firstLoad={false}/>
+              <MigratePywb settings={settings} migrate={settings.get('migrate')} />
+              <CheckServices firstLoad={false} wait={true}/>
+
             </TableBody>
           </Table>
         </Row>

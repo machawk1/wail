@@ -2,6 +2,7 @@ import { remote } from 'electron'
 import Promise from 'bluebird'
 import childProcess from 'child_process'
 import util from 'util'
+import S from 'string'
 
 const settings = remote.getGlobal('settings')
 
@@ -53,39 +54,56 @@ export function startHeritrix (logger) {
 
 export function startWayback (logger) {
   return new Promise((resolve, reject) => {
-    if (process.platform === 'win32') {
-      let basePath = settings.get('bundledApps')
-      let opts = {
-        cwd: basePath,
-        detached: true,
-        shell: false,
-        stdio: [ 'ignore', 'ignore', 'ignore' ]
-      }
-      logger.info(util.format('Loading Actions %s', 'win32 launching wayback'))
-      try {
-        let wayback = childProcess.spawn('wayback.bat', [ 'start' ], opts)
-        wayback.unref()
-      } catch (err) {
-        logger.error(util.format('Loading Actions %s', 'win32 launch wayback', err))
-        return reject(err)
-      }
-      return resolve()
-    } else {
-      logger.info(util.format('Loading Actions %s', 'linux/osx launching wayback'))
-      var wStart
-      if (process.platform === 'darwin') {
-        wStart = settings.get('tomcatStartDarwin')
-      } else {
-        wStart = settings.get('tomcatStart')
-      }
-      childProcess.exec(wStart, (err, stdout, stderr) => {
-        // console.log(err, stdout, stderr)
-        if (err) {
-          logger.error(util.format('Loading Actions %s', `linux/osx launch wayback ${stderr}`, err))
-          return reject(err)
-        }
-        return resolve()
-      })
+    let exec =settings.get('pywb.wayback')
+    let opts = {
+      cwd: settings.get('pywb.home'),
+      detached: true,
+      shell: false,
+      stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
+    console.log(opts)
+    logger.info(util.format('Loading Actions %s', 'launching wayback'))
+    try {
+      let wayback = childProcess.spawn(exec,['-d', settings.get('warcs')], opts)
+      wayback.unref()
+    } catch (err) {
+      logger.error(util.format('Loading Actions %s', 'launch wayback', err))
+      return reject(err)
+    }
+    return resolve()
+    // if (process.platform === 'win32') {
+    //   let basePath = settings.get('bundledApps')
+    //   let opts = {
+    //     cwd: basePath,
+    //     detached: true,
+    //     shell: false,
+    //     stdio: [ 'ignore', 'ignore', 'ignore' ]
+    //   }
+    //   logger.info(util.format('Loading Actions %s', 'win32 launching wayback'))
+    //   try {
+    //     let wayback = childProcess.spawn('wayback.bat', [ 'start' ], opts)
+    //     wayback.unref()
+    //   } catch (err) {
+    //     logger.error(util.format('Loading Actions %s', 'win32 launch wayback', err))
+    //     return reject(err)
+    //   }
+    //   return resolve()
+    // } else {
+    //   logger.info(util.format('Loading Actions %s', 'linux/osx launching wayback'))
+    //   var wStart
+    //   if (process.platform === 'darwin') {
+    //     wStart = settings.get('tomcatStartDarwin')
+    //   } else {
+    //     wStart = settings.get('tomcatStart')
+    //   }
+    //   childProcess.exec(wStart, (err, stdout, stderr) => {
+    //     // console.log(err, stdout, stderr)
+    //     if (err) {
+    //       logger.error(util.format('Loading Actions %s', `linux/osx launch wayback ${stderr}`, err))
+    //       return reject(err)
+    //     }
+    //     return resolve()
+    //   })
+    // }
   })
 }
