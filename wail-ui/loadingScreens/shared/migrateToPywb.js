@@ -17,8 +17,6 @@ import cp from 'child_process'
 import shelljs from 'shelljs'
 import path from 'path'
 
-
-
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
@@ -26,7 +24,7 @@ function movePywbStuff (moveMe) {
   return new Promise((resolve, reject) => {
     fs.copy(moveMe.from, moveMe.to, (err) => {
       if (err) {
-        console.error(moveMe,err)
+        console.error(moveMe, err)
         reject(err)
       } else {
         resolve()
@@ -58,7 +56,7 @@ export default class MigratePywb extends Component {
     let message = 'Waiting to Migrate. Depends on Checking Heritrix, Wayback Status'
     // props.migrate ? 'Waiting to Migrate. Depends on Checking Heritrix, Wayback Status' : 'Migrating to pywb',
     if (props.migrate) {
-        message = 'Migrating to pywb'
+      message = 'Migrating to pywb'
     } else {
       message = 'no script for days'
     }
@@ -93,14 +91,14 @@ export default class MigratePywb extends Component {
   }
 
   @autobind
-  doMigration() {
+  doMigration () {
     console.log('migrating to pywb')
     this.doMigaration()
   }
 
   @autobind
   updateProgress () {
-    this.setState({progMessage: 'Migrating to pywb'}, () => {
+    this.setState({ progMessage: 'Migrating to pywb' }, () => {
       console.log('migrating to pywb')
       this.doMigaration()
     })
@@ -151,7 +149,7 @@ export default class MigratePywb extends Component {
 
       } else {
         let ret = shelljs.ls(`${this.props.settings.get('warcs')}/*.warc`)
-        if(ret.length > 0) {
+        if (ret.length > 0) {
           this.container.success('Created Collection Wail migrating existing warcs')
           let exec = S(this.props.settings.get('pywb.addWarcsToCol')).template({
             col: 'Wail',
@@ -169,24 +167,23 @@ export default class MigratePywb extends Component {
             this.container.success(`Migrated ${count} warcs to the default collection Wail`)
 
             let moveArray = this.getMoveArray()
-            Promise.map(moveArray,movePywbStuff)
+            Promise.map(moveArray, movePywbStuff)
               .then(() => {
                 let backup = path.normalize(`${this.props.settings.get('warcs')}/warcBackup`)
-                fs.ensureDir(backup,err => {
-                  if(!err) {
+                fs.ensureDir(backup, err => {
+                  if (!err) {
                     ret.forEach(warc => {
-                      fs.move(warc,path.normalize(`${backup}/${path.basename(warc)}`),err => {
-                        if(err) {
+                      fs.move(warc, path.normalize(`${backup}/${path.basename(warc)}`), err => {
+                        if (err) {
                           console.error(err)
                         } else {
-                          console.log('moved ',warc)
+                          console.log('moved ', warc)
                         }
                       })
                     })
                     this.done()
                   }
                 })
-
               })
               .catch(moveError => {
                 this.refs.container.error(
