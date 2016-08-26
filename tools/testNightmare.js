@@ -13,6 +13,10 @@ import crypto from 'crypto'
 import through2 from 'through2'
 import shelljs from 'shelljs'
 Promise.promisifyAll(fs)
+import ipc from 'node-ipc'
+
+
+const ipcDaemon = new ipc.IPC()
 
 // process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 //
