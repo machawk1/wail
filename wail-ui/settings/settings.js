@@ -9,6 +9,20 @@ import autobind from 'autobind-decorator'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
+const templates = {
+  heritrix: {
+    defaultHost: 'localhost',
+    defaultPort: '8443',
+    uri_heritrix: 'https://{host}:{port}',
+    uri_engine: 'https://{host}:{port}/engine/',
+    login: '-a {usr}:{pass}',
+    web_ui: 'https://{usr}:{pass}@localhost:{port}',
+    jobUrl: 'https://{host}:{port}/engine/job/',
+    engineUrl: 'https://{host}:{port}/engine',
+
+  }
+}
+
 const managed = {
   paths: [
     { name: 'bundledApps', path: 'bundledApps' },
