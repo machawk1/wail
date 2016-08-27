@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
-import { encode, compare } from 'bytewise'
+import {encode, compare} from 'bytewise'
 import _ from 'lodash'
 import feathers from 'feathers/client'
 import socketio from 'feathers-socketio/client'
@@ -14,29 +14,29 @@ import util from 'util'
 import mongodb_prebuilt from 'mongodb-prebuilt'
 import shelljs from 'shelljs'
 import cp from 'child_process'
+import autobind from 'autobind-decorator'
+import {Pather} from '../sharedUtil'
+
+
+const pathMan = new Pather(path.resolve('.'))
+
+// let here = path.resolve('.')
+// console.log(pathMan.base,pathMan.normalizeJoin('it/aswell'))
 let opts = {
-  cwd: '/Users/jberlin/WebstormProjects/wail/archives',
+  cwd: pathMan.join('bundledApps/pywb')
   // detached: true,
   // shell: true,
   // stdio: [ 'ignore', 'ignore', 'ignore' ]
 }
-
-cp.exec('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wb-manager reindex Wail',opts,(error, stdout, stderr) =>{
-  if(error) {
-    console.error(error)
-  }
-  console.log(stderr)
-  console.log(stdout)
+//
+let wayback = cp.spawn(pathMan.join('bundledApps/pywb/wayback'),['-d',pathMan.join('archives')], opts)
+wayback.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`)
 })
 
-// let wayback = cp.spawn('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wayback',['-d','/Users/jberlin/WebstormProjects/wail/archives'], opts)
-// wayback.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-//
-// wayback.stderr.on('data', (data) => {
-//   console.log(`stderr: ${data}`);
-// });
+wayback.stderr.on('data', (data) => {
+  console.log(`stderr: ${data}`)
+})
 
 // mongodb_prebuilt.start_server({
 //   version: "3.2.9",
@@ -95,7 +95,6 @@ cp.exec('/Users/jberlin/WebstormProjects/wail/bundledApps/pywb/wb-manager reinde
 // })
 //
 // console.log(pywb)
-
 
 // const socket = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
 // const app = feathers()

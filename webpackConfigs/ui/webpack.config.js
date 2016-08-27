@@ -1,19 +1,20 @@
 import webpack from 'webpack'
 import path from 'path'
 
+
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
   devtool: 'inline-source-map',
   entry: {
-    accessibility: './wail-ui/background/accessibility',
-    indexer: './wail-ui/background/indexer',
-    jobs: './wail-ui/background/jobs',
-    newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    requestD: './wail-ui/background/requestDaemon',
-    settingsW: './wail-ui/childWindows/settings/settingsW',
-    wail: './wail-ui/wail',
-    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    // accessibility: './wail-ui/background/accessibility',
+    // indexer: './wail-ui/background/indexer',
+    // jobs: './wail-ui/background/jobs',
+    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    // requestD: './wail-ui/background/requestDaemon',
+    // settingsW: './wail-ui/childWindows/settings/settingsW',
+    // wail: './wail-ui/wail',
+    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },

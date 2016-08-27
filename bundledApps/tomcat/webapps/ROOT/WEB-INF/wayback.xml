@@ -11,8 +11,8 @@
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="properties">
       <value>
-wayback.basedir.default=/home/john/my-fork-wail/wail/bundledApps/tomcat/webapps/ROOT
-wail.basedir=/home/john/my-fork-wail/wail
+wayback.basedir.default=/home/john/my-fork-wail/bundledApps/tomcat/webapps/ROOT
+wail.basedir=/home/john/my-fork-wail
 wayback.url.scheme.default=http
 wayback.url.host.default=localhost
 wayback.url.port.default=8080

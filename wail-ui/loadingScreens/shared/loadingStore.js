@@ -69,7 +69,7 @@ class loadingStore extends EventEmitter {
         this.emit('migration-done')
         break
       case wc.Loading.SERVICE_CHECK_DONE:
-        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
         break
     }
   }
@@ -126,7 +126,7 @@ class loadingStore extends EventEmitter {
   wb () {
     request.get(settings.get('pywb.url'))
       .on('response', (res) => {
-        // console.log(res)
+        console.log(res)
         let message
         if (this.startedHeritrix) {
           message = 'Heritrix was started and Wayback is already started. Done'

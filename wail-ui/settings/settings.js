@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
+import autobind from 'autobind-decorator'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -201,7 +202,7 @@ const managed = {
     statics: 'bundledApps/pywb/static'
   },
   collections: {
-    defaultCol:'archives/collections/Wail',
+    defaultCol: 'archives/collections/Wail',
     dir: 'archives/collections',
     aCollPath: 'archives/collections/{col}',
     colTemplate: 'archives/collections/{col}/static',
@@ -462,3 +463,99 @@ export default function configSettings (base, userData, v) {
   return settings
 }
 
+const { pathMan } = global
+
+export class SettingsManager {
+  constructor (base, userData, version) {
+    this._userData = userData
+    this._version = version
+    this._base = base
+    this._settings = null
+    this._settingsDir = null
+  }
+
+  @autobind
+  init () {
+    this._settingsDir = pathMan.join('wail-settings')
+    try {
+      this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+    } catch (e) {
+      // if something went terrible wrong during a config the json becomes malformed
+      // electron settings throws an error in this case
+      fs.removeSync(this._settingsDir)
+      this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+    }
+    console.log(this._settings.get('version'), this._version)
+    if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
+      console.log('We are not configured')
+      let migrate = this._settings.get('migrate')
+      let doMigrate = false
+      if (migrate === null || migrate === undefined) {
+        doMigrate = true
+      } else {
+        doMigrate = migrate
+      }
+      writeSettings(this._base, this._settings, this._version, this._settings.get('didFirstLoad'), doMigrate)
+      // console.log(base, settings)
+    } else {
+      if (this._settings.get('base') !== this._base) {
+        /*
+         If the user moves the application directory the settings will
+         will not be correct since I use absolute paths.
+         I did this to myself....
+         */
+        // console.log('We are not configured due to binary directory being moved')
+        writeSettings(this._base, this._settings, this._version, false, false)
+      }
+      // console.log('We are configured')
+    }
+
+    this._settings.watch('heritrix.port', change => {
+      console.log('heritrix.port changed ', change)
+      rewriteHeritrixPort(this._settings, change.was, change.now)
+    })
+
+    this._settings.watch('wayback.port', change => {
+      let wb = _.cloneDeep(this._settings.get('wayback'))
+      wb.port = change.now
+      let uriTomcat = S(wb.uri_tomcat)
+      wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
+      let uriWB = S(wb.uri_wayback)
+      wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+      this._settings.set('wayback', wb)
+    })
+  }
+
+
+
+  @autobind
+  resetToDefault() {
+
+  }
+
+  @autobind
+  get (what) {
+    return this._settings.get(what)
+  }
+
+  @autobind
+  set (what, replacement) {
+    this._settings.set(what, replacement)
+  }
+
+  get settings () {
+    return this._settings
+  }
+
+  get base () {
+    return this._base
+  }
+
+  get userData () {
+    return this._userData
+  }
+
+  get version () {
+    return this._version
+  }
+}

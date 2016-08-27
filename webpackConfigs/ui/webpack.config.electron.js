@@ -1,5 +1,6 @@
 import webpack from 'webpack'
 import path from 'path'
+import ExternalsPlugin from 'webpack-externals-plugin'
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
@@ -41,6 +42,10 @@ export default {
   },
 
   plugins: [
+    new ExternalsPlugin({
+      type: 'commonjs',
+      include: './node_modules/winston',
+    }),
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false

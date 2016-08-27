@@ -157,6 +157,7 @@ export default class MigratePywb extends Component {
           }).s
           cp.exec(exec, opts, (error, stdout, stderr) => {
             if (error) {
+              console.error(error)
               this.refs.container.error(
                 'There was an error migrating warcs to the default collection Wail'
               )
@@ -186,6 +187,7 @@ export default class MigratePywb extends Component {
                 })
               })
               .catch(moveError => {
+                console.error(moveError)
                 this.refs.container.error(
                   'There was an error migrating pywb template static files'
                 )

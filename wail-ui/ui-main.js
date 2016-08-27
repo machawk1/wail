@@ -1,11 +1,12 @@
 import 'babel-polyfill'
-import { app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray, clipboard } from 'electron'
+import {app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray, clipboard} from 'electron'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
 import util from 'util'
-import configSettings, { writeSettings, rewriteHeritrixAuth } from './settings/settings'
+import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
 import ContextMenu from './menu/contextMenu'
+import {Pather} from '../sharedUtil'
 
 const windows = {
   accessibilityWindow: null,
@@ -38,6 +39,7 @@ const windows = {
 
 const control = {
   settings: null,
+  pathMan: null,
   w: null,
   h: null,
   iconp: null,
@@ -205,7 +207,7 @@ function setUpIPC () {
 
   ipcMain.on('setting-hard-reset', (event, payload) => {
     console.log('got settings-hard-reset')
-    writeSettings(control.base, control.settings,settings.get('version'),settings.get('didFirstLoad'),settings.get('migrate'))
+    writeSettings(control.base, control.settings, settings.get('version'), settings.get('didFirstLoad'), settings.get('migrate'))
   })
 
   ipcMain.on('rewrite-wayback-config', (event, payload) => {
@@ -251,20 +253,22 @@ function setUp () {
     windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
   }
 
+  global.pathMan = control.pathMan = new Pather(control.base)
+
   let logPath
   let version = ''
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
-    logPath = path.join(control.base, 'waillogs')
+    logPath = control.pathMan.join('waillogs')//path.join(control.base, 'waillogs')
     version = "1.0.0-rc.2.5"
     settingsPath = logPath
   } else {
     version = app.getVersion()
-    logPath = path.join(app.getPath('userData'), 'waillogs')
+    logPath = control.pathMan.joinWithBase(app.getPath('userData'), 'waillogs')//path.join(app.getPath('userData'), 'waillogs')
   }
 
   if (process.platform === 'darwin') {
-    control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.iconp =  control.pathMan.normalizeJoin('src/icons/whale.icns') //path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
     control.h = 380
   } else if (process.platform === 'win32') {
@@ -277,6 +281,8 @@ function setUp () {
     control.w = 800
     control.h = 361
   }
+
+  console.log(app.getPath('documents'))
 
   let settings = configSettings(control.base, settingsPath, version)
   global.settings = control.settings = settings
@@ -435,10 +441,10 @@ function createWindow () {
   let windowConfig = {
     width: control.w,
     minWidth: control.w,
-    maxWidth: control.w,
+    // maxWidth: control.w,
     height: control.h,
     minHeight: control.h,
-    maxHeight: control.h,
+    // maxHeight: control.h,
     title: 'Web Archiving Integration Layer',
     fullscreenable: false,
     maximizable: false,
