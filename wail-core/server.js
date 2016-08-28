@@ -5,11 +5,6 @@ import rest from 'feathers-rest'
 import config from 'feathers-configuration'
 import errors from 'feathers-errors/handler'
 import socketio from 'feathers-socketio'
-import Primus from 'feathers-primus'
-import primusResponder from 'primus-responder'
-import primusEmitter from 'primus-emitter'
-import primusMultiplex from 'primus-multiplex'
-import primusResource from 'primus-resource'
 import bodyParser from 'body-parser'
 import path from 'path'
 import Promise from 'bluebird'
@@ -19,7 +14,7 @@ import services from './services'
 
 
 
-export default function configureSever (settings) {
+export default function configureApp (settings) {
   let app = feathers()
   /*
    "nedb": "../dbs",
@@ -27,7 +22,7 @@ export default function configureSever (settings) {
       */
   app.set('host',settings.get('wailCore.host'))
   app.set('port',settings.get('wailCore.port'))
-  app.set('db',settings.get('wailCore.database'))
+  app.set('db',settings.get('wailCore.db'))
   app.set('timemaps',settings.get('wailCore.timemaps'))
 
   app.use(bodyParser.json())
@@ -35,20 +30,15 @@ export default function configureSever (settings) {
     .configure(hooks())
     .configure(socketio((io) => {
       // console.log(io)
-      let testns = io.of('/test')
-      testns.on('connection',(socket) => {
-        socket.emit('hi',{test: 'hello'})
-      })
+      // let testns = io.of('/test')
+      // testns.on('connection',(socket) => {
+      //   socket.emit('hi',{test: 'hello'})
+      // })
     },{ pingTimeout: 120000, timemout: 120000 }))
     .configure(services)
     .use(errors())
 
-
-  const server = app.listen(app.get('port'))
-
-  server.on('listening', () => {
-    console.log(`WAIL-Core listing on ${app.get('host')}:${app.get('port')}`)
-  })
+ return app
 }
 
 
@@ -60,7 +50,13 @@ process.on('unhandledRejection', (reason, p) => {
   console.log("Unhandled Rejection at: Promise ", p, " reason: ", reason);
 })
 
+const app = configureApp(global.wailSettings)
+const server = app.listen(app.get('port'))
 
+
+server.on('listening', () => {
+  console.log(`WAIL-Core listing on ${app.get('host')}:${app.get('port')}`)
+})
 
 process.on('SIGTERM', () => {
   console.log('Stopping WAIL-Core server')

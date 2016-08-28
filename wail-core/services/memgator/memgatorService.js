@@ -11,7 +11,7 @@ import notFound from 'feathers-errors/not-found'
 export default function () {
   const app = this
   const db = new NeDB({
-    filename: path.join(app.get('nedb'), 'memento.db'),
+    filename: path.join(app.get('db'), 'memento.db'),
     autoload: true
   })
 

@@ -8,14 +8,14 @@ import ArchiveManager from './archiveManager'
 export default function () {
   const app = this
   const db = new NeDB({
-    filename: path.join(app.get('nedb'), 'archives.db'),
+    filename: path.join(app.get('db'), 'archives.db'),
     autoload: true
   })
 
   const dbOptions = {
     Model: db,
     paginate: {
-      default: 5,
+      default: 25,
       max: 100
     }
   }

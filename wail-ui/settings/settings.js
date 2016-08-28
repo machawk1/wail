@@ -230,11 +230,14 @@ const managed = {
     crawlerBean: 'crawler-beans.cxml',
     wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
   },
-  core: {
+  wailCore: {
+    dport: '3030',
     port: '3030',
-    url: 'http://localhost:{port}',
-    db: 'database',
-    timemaps: 'timemaps'
+    dhost: 'localhost',
+    host: 'localhost',
+    url: 'http://{host}:{port}',
+    db: 'coreData/database',
+    timemaps: 'coreData/timemaps'
   }
 
 }
@@ -277,6 +280,20 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   }
   heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
+  let checkArray = [ 'port', 'url', 'dport', 'dhost','host' ]
+  let wc = _.mapValues(managed.wailCore, (v, k) => {
+    if (!checkArray.includes(k)) {
+      console.log(k)
+      v = path.normalize(path.join(base, v))
+    }
+
+    if (k === 'url') {
+      v = S(v).template({ port: managed.wailCore.dport, host: managed.wailCore.dhost }).s
+    }
+    return v
+  })
+
+  settings.set('wailCore',wc)
 
   let wb = managed.wayback
   wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
@@ -297,17 +314,6 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
     return v
   })
 
-  let core = _.mapValues(managed.core, (v, k) => {
-    if (k === 'url') {
-      v = S(v).template({ port: managed.core.port }).s
-    }
-    if (k !== 'port' && k !== 'url') {
-      v = path.normalize(path.join(base, v))
-    }
-    return v
-  })
-
-  settings.set('wailCore', core)
 
   let collections = _.mapValues(managed.collections, (v, k) => {
     return path.normalize(path.join(base, v))
@@ -540,10 +546,8 @@ export class SettingsManager {
     })
   }
 
-
-
   @autobind
-  resetToDefault() {
+  resetToDefault () {
 
   }
 

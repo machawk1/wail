@@ -18,15 +18,6 @@ import autobind from 'autobind-decorator'
 import {Pather} from '../sharedUtil'
 import coreJsBuilder from 'core-js-builder'
 
-let it = 1
-let result = do {
-  if(it === 0)
-    52
-  else if(it === 1) {
-    42
-  }
-}
-console.log(result)
 
 // const pathMan = new Pather(path.resolve('.'))
 //

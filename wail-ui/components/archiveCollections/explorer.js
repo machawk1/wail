@@ -3,9 +3,12 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import SplitPane from 'react-split-pane'
 import Paper from 'material-ui/Paper'
+import autobind from 'autobind-decorator'
+import renderIf from 'render-if'
+import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
-import autobind from 'autobind-decorator'
+import wailCoreManager from '../../coreConnection'
 require('./splitpane.css')
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -16,7 +19,32 @@ export default class Explorer extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { muiTheme: baseTheme, showing: 'test1' }
+    this.state = { loading: true, showing: '', collections: { }, colNames: [ ] }
+    this.archiveService = wailCoreManager.getService('/archivesManager')
+  }
+
+  componentWillMount () {
+
+  }
+
+  componentDidMount () {
+    this.archiveService.find({})
+      .then(result => {
+        console.log(result)
+        if (result.total > 0) {
+          let { collections, colNames } = this.state
+          let { data } = result
+          console.log(data)
+          data.forEach(col => {
+            colNames.push({name: col.colName, description: 'none'})
+            collections[ col.colName ] = col
+          })
+          this.setState({collections,colNames, loading: false})
+        }
+      })
+      .catch(error => {
+        console.error(error)
+      })
   }
 
   @autobind
@@ -26,19 +54,26 @@ export default class Explorer extends Component {
   }
 
   getChildContext () {
-    return { muiTheme: this.state.muiTheme }
+    return { muiTheme: baseTheme }
   }
 
   render () {
-    return (
-      <SplitPane
-        split="vertical"
-        minSize={50} defaultSize={100}
-        className="primary"
-      >
-        <CollectionList key="the-list" cols={[ 'test1', 'test2', 'test3' ]} clicked={this.clicked}/>
-        <CollectionView name={this.state.showing}/>
-      </SplitPane>
-    )
+    if (this.state.loading) {
+      return (
+        <CircularProgress size={5}/>
+      )
+    } else {
+      return (
+        <SplitPane
+          split="vertical"
+          minSize={50} defaultSize={100}
+          className="primary"
+        >
+          <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>)}
+          <CollectionView collection={this.state.showing}/>)
+        </SplitPane>
+      )
+    }
+
   }
 }
