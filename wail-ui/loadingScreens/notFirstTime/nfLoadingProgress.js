@@ -31,6 +31,32 @@ export default class LoadingProgress extends Component {
   }
 
   render () {
+    var tbody
+    if (settings.get('migrate')) {
+      tbody = (
+        <TableBody
+          key={'check-table-body'}
+          displayRowCheckbox={false}
+          showRowHover={true}
+        >
+          <MigratePywb settings={settings} migrate={settings.get('migrate')}/>
+          <CheckServices firstLoad={false} wait={true}/>
+
+        </TableBody>
+      )
+    } else {
+      tbody = (
+        <TableBody
+          key={'check-table-body'}
+          displayRowCheckbox={false}
+          showRowHover={true}
+        >
+          <CheckServices firstLoad={false} wait={false}/>
+        </TableBody>
+      )
+
+    }
+
     return (
       <Grid flexible={true}>
         <Row>
@@ -50,15 +76,7 @@ export default class LoadingProgress extends Component {
                 </TableHeaderColumn>
               </TableRow>
             </TableHeader>
-            <TableBody
-              key={'check-table-body'}
-              displayRowCheckbox={false}
-              showRowHover={true}
-            >
-              <MigratePywb settings={settings} migrate={settings.get('migrate')} />
-              <CheckServices firstLoad={false} wait={true}/>
-
-            </TableBody>
+            {tbody}
           </Table>
         </Row>
         <Row>

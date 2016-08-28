@@ -56,7 +56,7 @@ const control = {
 }
 
 // let shouldQuit = false
-app.commandLine.appendSwitch('js-flags', '--expose_gc')
+app.commandLine.appendSwitch('js-flags', '--expose_gc --harmony')
 
 // do not lower the priority of our invisible background windows
 app.commandLine.appendSwitch('disable-renderer-backgrounding')

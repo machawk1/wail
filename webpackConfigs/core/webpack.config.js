@@ -20,7 +20,7 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'es2015', 'stage-0'],
+          presets: [ 'latest', 'stage-0'],
           plugins: [ 'transform-runtime', 'add-module-exports',
             'babel-plugin-transform-decorators-legacy'
           ],

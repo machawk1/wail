@@ -1,7 +1,6 @@
 import webpack from 'webpack'
 import path from 'path'
 
-
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
@@ -15,7 +14,8 @@ export default {
     // settingsW: './wail-ui/childWindows/settings/settingsW',
     // wail: './wail-ui/wail',
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad'
+    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
+    explore: './wail-ui/components/archiveCollections/explore'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },
   module: {
@@ -27,8 +27,12 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'es2015', 'stage-0', 'node6', 'react', 'react-hmre' ],
+          presets: [ 'latest', 'react', 'stage-0','node6', 'react-hmre' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
+            [ "transform-async-to-module-method", {
+              "module": "bluebird",
+              "method": "coroutine"
+            } ],
             'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
             'react-html-attrs',
           ],
@@ -73,5 +77,5 @@ export default {
     publicPath: 'http://localhost:9000/dist/'
   },
   // bail: true,
-  target: 'electron-renderer',
+  // target: 'electron-renderer',
 }

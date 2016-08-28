@@ -16,27 +16,37 @@ import shelljs from 'shelljs'
 import cp from 'child_process'
 import autobind from 'autobind-decorator'
 import {Pather} from '../sharedUtil'
+import coreJsBuilder from 'core-js-builder'
 
-
-const pathMan = new Pather(path.resolve('.'))
-
-// let here = path.resolve('.')
-// console.log(pathMan.base,pathMan.normalizeJoin('it/aswell'))
-let opts = {
-  cwd: pathMan.join('bundledApps/pywb')
-  // detached: true,
-  // shell: true,
-  // stdio: [ 'ignore', 'ignore', 'ignore' ]
+let it = 1
+let result = do {
+  if(it === 0)
+    52
+  else if(it === 1) {
+    42
+  }
 }
-//
-let wayback = cp.spawn(pathMan.join('bundledApps/pywb/wayback'),['-d',pathMan.join('archives')], opts)
-wayback.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`)
-})
+console.log(result)
 
-wayback.stderr.on('data', (data) => {
-  console.log(`stderr: ${data}`)
-})
+// const pathMan = new Pather(path.resolve('.'))
+//
+// // let here = path.resolve('.')
+// // console.log(pathMan.base,pathMan.normalizeJoin('it/aswell'))
+// let opts = {
+//   cwd: pathMan.join('bundledApps/pywb')
+//   // detached: true,
+//   // shell: true,
+//   // stdio: [ 'ignore', 'ignore', 'ignore' ]
+// }
+// //
+// let wayback = cp.spawn(pathMan.join('bundledApps/pywb/wayback'),['-d',pathMan.join('archives')], opts)
+// wayback.stdout.on('data', (data) => {
+//   console.log(`stdout: ${data}`)
+// })
+//
+// wayback.stderr.on('data', (data) => {
+//   console.log(`stderr: ${data}`)
+// })
 
 // mongodb_prebuilt.start_server({
 //   version: "3.2.9",
