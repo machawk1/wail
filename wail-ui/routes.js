@@ -1,11 +1,11 @@
 import React from 'react'
 import { Route, IndexRoute } from 'react-router'
-import Layout from './componets/layout/layout'
-import BasicTab from './componets/basic/basic-tab'
-import General from './componets/advanced/general'
-import Wayback from './componets/advanced/wayback'
-import Heritrix from './componets/advanced/heritrix/heritrix-tab'
-import Misc from './componets/advanced/miscellaneous'
+import Layout from './components/layout/layout'
+import BasicTab from './components/basic/basic-tab'
+import General from './components/advanced/general'
+import Wayback from './components/advanced/wayback'
+import Heritrix from './components/advanced/heritrix/heritrix-tab'
+import Misc from './components/advanced/miscellaneous'
 
 const Routes = (
   <Route path='/' component={Layout}>

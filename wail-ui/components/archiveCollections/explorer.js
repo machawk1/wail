@@ -1,26 +1,43 @@
-import React, { Component } from 'react'
+import React, {Component, PropTypes} from 'react'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import SplitPane from 'react-split-pane'
+import Paper from 'material-ui/Paper'
+import CollectionView from './collectionView'
+import CollectionList from './collectionList'
+import autobind from 'autobind-decorator'
+require('./splitpane.css')
+const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class Explorer extends Component {
+  static childContextTypes = {
+    muiTheme: PropTypes.object.isRequired
+  }
+
+  constructor (props, context) {
+    super(props, context)
+    this.state = { muiTheme: baseTheme, showing: 'test1' }
+  }
+
+  @autobind
+  clicked (showing) {
+    console.log(showing)
+    this.setState({ showing })
+  }
+
+  getChildContext () {
+    return { muiTheme: this.state.muiTheme }
+  }
+
   render () {
-    const styleA = { background: '#eee' };
-    const styleB = { background: '#aaa4ba' };
-    const styleC = { background: '#000' };
-    const styleD = { padding: '2em', fontStyle: 'italic' };
     return (
       <SplitPane
         split="vertical"
-        minSize={50} maxSize={300} defaultSize={100}
+        minSize={50} defaultSize={100}
         className="primary"
-        pane1Style={styleA}
-        resizerStyle={styleC}>
-        <div>
-          Stuff
-        </div>
-        <SplitPane split="horizontal" paneStyle={styleD} pane2Style={styleB}>
-          <div>Hello...</div>
-          <div> ...world.</div>
-        </SplitPane>
+      >
+        <CollectionList key="the-list" cols={[ 'test1', 'test2', 'test3' ]} clicked={this.clicked}/>
+        <CollectionView name={this.state.showing}/>
       </SplitPane>
     )
   }
