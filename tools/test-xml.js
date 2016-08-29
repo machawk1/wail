@@ -16,8 +16,13 @@ import shelljs from 'shelljs'
 import cp from 'child_process'
 import autobind from 'autobind-decorator'
 import {Pather} from '../sharedUtil'
-import coreJsBuilder from 'core-js-builder'
 
+
+let it = [{"k":"title","v":"Wail"},{"k":"description","v":"Default Collection"}]
+
+for(let {k,v} of Object.entries(it)) {
+  console.log(k,v)
+}
 
 // const pathMan = new Pather(path.resolve('.'))
 //

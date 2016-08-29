@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import SplitPane from 'react-split-pane'
@@ -19,7 +19,7 @@ export default class Explorer extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { loading: true, showing: '', collections: { }, colNames: [ ] }
+    this.state = { loading: true, showing: 'empty', collections: {'empty': 'void'}, colNames: [] }
     this.archiveService = wailCoreManager.getService('/archivesManager')
   }
 
@@ -36,10 +36,20 @@ export default class Explorer extends Component {
           let { data } = result
           console.log(data)
           data.forEach(col => {
-            colNames.push({name: col.colName, description: 'none'})
+            let foundDescription = false
+            for (let { k, v } of col.metadatea) {
+              if (k === 'description') {
+                colNames.push({ name: col.colName, description: v })
+                foundDescription = true
+                break
+              }
+            }
+            if (!foundDescription) {
+              colNames.push({ name: col.colName, description: 'No Description' })
+            }
             collections[ col.colName ] = col
           })
-          this.setState({collections,colNames, loading: false})
+          this.setState({ collections, colNames, loading: false })
         }
       })
       .catch(error => {
@@ -70,7 +80,7 @@ export default class Explorer extends Component {
           className="primary"
         >
           <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>)}
-          <CollectionView collection={this.state.showing}/>)
+          <CollectionView collection={this.state.collections[this.state.showing]}/>)
         </SplitPane>
       )
     }
