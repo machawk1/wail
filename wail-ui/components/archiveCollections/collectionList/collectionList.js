@@ -1,6 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import {List} from 'material-ui/List'
+import Drawer from 'material-ui/Drawer'
 import {Scrollbars} from 'react-custom-scrollbars'
 import ColListItem from './collectionListItem'
 
@@ -30,9 +31,16 @@ export default class CollectionList extends Component {
       }
     }
     return (
-      <Scrollbars>
-        {rCols}
-      </Scrollbars>
+    <Scrollbars>
+      {rCols}
+    </Scrollbars>
+
     )
   }
 }
+
+/*
+ <Drawer width={150}  open={true} zDepth={0}>
+
+ </Drawer>
+ */

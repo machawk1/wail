@@ -38,7 +38,12 @@ export default {
           ],
         },
       },
-      { test: /\.css$/, loader: 'style!css' },
+      { test: /\.css$/, loader: 'style!css',exclude: /flexboxgrid/ },
+      {
+        test: /\.css$/,
+        loader: 'style!css?modules',
+        include: /flexboxgrid/,
+      },
       {
         test: /\.scss$/,
         loaders: [ 'style!css!less|scss', 'style-loader',

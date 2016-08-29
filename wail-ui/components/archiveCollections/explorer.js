@@ -9,6 +9,8 @@ import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
 import wailCoreManager from '../../coreConnection'
+import SplitPanel from 'react-split-panel'
+import { Flex, Box, Grid } from 'reflexbox'
 require('./splitpane.css')
 const baseTheme = getMuiTheme(lightBaseTheme)
 
@@ -19,7 +21,7 @@ export default class Explorer extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { loading: true, showing: 'empty', collections: {'empty': 'void'}, colNames: [] }
+    this.state = { loading: true, showing: 'empty', collections: {'empty': { name: 'void', description: 'nothings' }}, colNames: [] }
     this.archiveService = wailCoreManager.getService('/archivesManager')
   }
 
@@ -37,7 +39,7 @@ export default class Explorer extends Component {
           console.log(data)
           data.forEach(col => {
             let foundDescription = false
-            for (let { k, v } of col.metadatea) {
+            for (let { k, v } of col.metadata) {
               if (k === 'description') {
                 colNames.push({ name: col.colName, description: v })
                 foundDescription = true
@@ -74,16 +76,35 @@ export default class Explorer extends Component {
       )
     } else {
       return (
-        <SplitPane
-          split="vertical"
-          minSize={50} defaultSize={100}
-          className="primary"
+        <Flex
+          align="center"
+          gutter={3}
+          justify="space-between"
         >
-          <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>)}
-          <CollectionView collection={this.state.collections[this.state.showing]}/>)
-        </SplitPane>
+          <Box
+            col={6}
+            p={3}
+          >
+            <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>
+          </Box>
+          <Box
+            col={6}
+            p={3}
+          >
+            Box col 6
+          </Box>
+        </Flex>
       )
     }
 
   }
 }
+/*
+ <SplitPanel
+ direction="horizontal"
+ defaultWeights={[10, 20]}
+ >
+ <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>
+ <CollectionView collection={this.state.collections[this.state.showing]}/>
+ </SplitPanel>
+ */
