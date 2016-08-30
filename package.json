@@ -49,6 +49,7 @@
     "classnames": "^2.2.5",
     "codemirror": "^5.18.2",
     "connect-timeout": "^1.7.0",
+    "core-decorators": "^0.12.3",
     "cron": "^1.1.0",
     "del": "2.2.2",
     "dotenv": "^2.0.0",
