@@ -14,7 +14,6 @@ export default class ArchiveManager {
     this.app = app
     this.wailSettings = global.wailSettings
     console.log('archiveman')
-    console.log(util.inspect(app, { depth: null, colors: true }))
   }
 
   addWarcsToCol (id, data, params) {
@@ -53,15 +52,11 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-
-        let mdata = data.metadata.map(m => {
+        let mdata = {}
+        data.metadata.forEach(m => {
           let split = m.split('=')
-          let mo = {}
-          mo[ 'k' ] = split[ 0 ]
-          mo[ 'v' ] = S(split[ 1 ]).replaceAll('"', '').s
-          return mo
+          mdata[ split[ 0 ] ] = S(split[ 1 ]).replaceAll('"', '').s
         })
-
         console.log('added metadata to collection', id)
         console.log('stdout', stdout)
         console.log('stderr', stderr)

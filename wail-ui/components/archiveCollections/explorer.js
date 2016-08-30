@@ -1,18 +1,30 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import SplitPane from 'react-split-pane'
-import Paper from 'material-ui/Paper'
-import autobind from 'autobind-decorator'
-import renderIf from 'render-if'
+import SplitPane  from 'react-split-pane'
+import _ from 'lodash'
+import {blueGrey50,darkBlack,lightBlue900} from 'material-ui/styles/colors'
 import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
 import wailCoreManager from '../../coreConnection'
-import SplitPanel from 'react-split-panel'
-import { Flex, Box, Grid } from 'reflexbox'
-require('./splitpane.css')
-const baseTheme = getMuiTheme(lightBaseTheme)
+import CollectionHeader from './collectionHeader'
+import {ViewWatcher} from '../../../sharedUtil'
+import './css/archiveCol.css'
+// import 'react-flexbox-layout/lib/styles.css'
+// import {VLayout, VLayoutItem} from 'react-flexbox-layout'
+// import {Flex, Box, Grid} from 'reflexbox'
+
+const baseTheme = getMuiTheme({
+  tabs: {
+    backgroundColor: blueGrey50,
+    textColor: darkBlack,
+    selectedTextColor: darkBlack
+  },
+  inkBar: {
+    backgroundColor: lightBlue900
+  }
+})
 
 export default class Explorer extends Component {
   static childContextTypes = {
@@ -21,7 +33,11 @@ export default class Explorer extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { loading: true, showing: 'empty', collections: {'empty': { name: 'void', description: 'nothings' }}, colNames: [] }
+    this.state = {
+      loading: true,
+      collections: { 'empty': { colName: 'void', description: 'nothings' } },
+      colNames: []
+    }
     this.archiveService = wailCoreManager.getService('/archivesManager')
   }
 
@@ -38,17 +54,7 @@ export default class Explorer extends Component {
           let { data } = result
           console.log(data)
           data.forEach(col => {
-            let foundDescription = false
-            for (let { k, v } of col.metadata) {
-              if (k === 'description') {
-                colNames.push({ name: col.colName, description: v })
-                foundDescription = true
-                break
-              }
-            }
-            if (!foundDescription) {
-              colNames.push({ name: col.colName, description: 'No Description' })
-            }
+            colNames.push( col.colName )
             collections[ col.colName ] = col
           })
           this.setState({ collections, colNames, loading: false })
@@ -57,12 +63,6 @@ export default class Explorer extends Component {
       .catch(error => {
         console.error(error)
       })
-  }
-
-  @autobind
-  clicked (showing) {
-    console.log(showing)
-    this.setState({ showing })
   }
 
   getChildContext () {
@@ -76,35 +76,35 @@ export default class Explorer extends Component {
       )
     } else {
       return (
-        <Flex
-          align="center"
-          gutter={3}
-          justify="space-between"
-        >
-          <Box
-            col={6}
-            p={3}
-          >
-            <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>
-          </Box>
-          <Box
-            col={6}
-            p={3}
-          >
-            Box col 6
-          </Box>
-        </Flex>
+
+         <SplitPane
+           split="vertical"
+           defaultSize={125}
+           className="primary"
+           allowResize={false}
+         >
+           <CollectionList
+             key="the-list"
+             cols={this.state.colNames}
+             viewWatcher={ViewWatcher}
+             from="Wail-Archive-Collections"
+           />
+           <CollectionView
+             collections={this.state.collections}
+             viewWatcher={ViewWatcher}
+             from="Wail-Archive-Collections"
+             defaultView="empty"
+           />
+         </SplitPane>
+
       )
     }
 
   }
 }
 /*
- <SplitPanel
- direction="horizontal"
- defaultWeights={[10, 20]}
- >
+ <div>
  <CollectionList key="the-list" cols={this.state.colNames} clicked={this.clicked}/>
- <CollectionView collection={this.state.collections[this.state.showing]}/>
- </SplitPanel>
+ <CollectionView collection={this.state.collections[ this.state.showing ]}/>
+ </div>
  */

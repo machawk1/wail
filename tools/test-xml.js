@@ -17,13 +17,16 @@ import cp from 'child_process'
 import autobind from 'autobind-decorator'
 import {Pather} from '../sharedUtil'
 
+let metadata= {title:"Test", description:"Making sure this works"}
 
-let it = [{"k":"title","v":"Wail"},{"k":"description","v":"Default Collection"}]
+var start = new Date().getTime()
+// for(let it in metadata) {
+//   console.log(it)
+// }
 
-for(let {k,v} of Object.entries(it)) {
-  console.log(k,v)
-}
-
+var end = new Date().getTime()
+var time = end - start
+console.log('Execution time: ' + time)
 // const pathMan = new Pather(path.resolve('.'))
 //
 // // let here = path.resolve('.')
