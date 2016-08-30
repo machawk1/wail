@@ -10,7 +10,7 @@ export default class CollectionInfo extends Component {
   }
 
   static defaultProps = {
-    className: '',
+    className: 'slide',
   }
 
   constructor (...args) {
