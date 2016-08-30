@@ -12,7 +12,7 @@ build/*
 bundledApps/waybackConfigWriter.pyc
 bundledApps/openjdk
 WAIL.spec
-
+*.db
 # Mac meta
 .DS_Store
 

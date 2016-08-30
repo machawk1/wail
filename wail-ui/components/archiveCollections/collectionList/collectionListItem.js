@@ -1,5 +1,7 @@
 import React, {Component, PropTypes} from 'react'
+import Dimensions from 'react-dimensions'
 import FlatButton from 'material-ui/FlatButton'
+
 
 export default class CollectionListItem extends Component {
   static propTypes = {

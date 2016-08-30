@@ -1,12 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import {List} from 'material-ui/List'
-import Drawer from 'material-ui/Drawer'
-import {Grid, Row, Col} from 'react-flexbox-grid'
-import {lightBlueA100 as color} from 'material-ui/styles/colors'
 import Divider from 'material-ui/Divider'
 import {Scrollbars} from 'react-custom-scrollbars'
 import ColListItem from './collectionListItem'
+
 
 export default class CollectionList extends Component {
   static propTypes = {

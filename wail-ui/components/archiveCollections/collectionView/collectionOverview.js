@@ -1,16 +1,19 @@
-import React, {Component, PropTypes} from 'react'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import React, { Component, PropTypes } from 'react'
+import { Grid, Row, Col } from 'react-flexbox-grid'
+import OpenButton from 'material-ui/FlatButton'
+import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
+import Dimensions from 'react-dimensions'
 import autobind from 'autobind-decorator'
 
-export default class CollectionInfo extends Component {
+export default class CollectionOverview extends Component {
   static propTypes = {
     collection: PropTypes.object.isRequired,
     className: PropTypes.string,
   }
 
   static defaultProps = {
-    className: 'slide',
+    className: '',
   }
 
   constructor (...args) {
@@ -19,23 +22,44 @@ export default class CollectionInfo extends Component {
   }
 
   render () {
-    let { className, collection } = this.props
+    let { collection } = this.props
+    console.log(collection)
     let {
       archive,
       colName,
-      colPath,
+      colpath,
       indexes,
       numArchives,
       name
     } = collection
     return (
-      <Grid>
-        <Row>
+      <Grid fluid>
+        <Row between="xs">
           <Col>
-            <FitText compressor={0.3}>
-              <h3> {colName} </h3>
-            </FitText>
+            <h3>Collection Name:   {colName}</h3>
           </Col>
+          <Col>
+            <h3>Warcs in collection: {numArchives}</h3>
+          </Col>
+        </Row>
+        <Row between="xs">
+          <Col>
+            <h3>Warc Location: {archive}</h3>
+          </Col>
+          <Col>
+            <OpenButton label="Open Location" />
+          </Col>
+        </Row>
+        <Row between="xs">
+          <Col>
+            <h3>Index Location: {indexes}</h3>
+          </Col>
+          <Col>
+            <OpenButton label="Open Location" />
+          </Col>
+        </Row>
+        <Row>
+          <WarcToCollection />
         </Row>
       </Grid>
     )
