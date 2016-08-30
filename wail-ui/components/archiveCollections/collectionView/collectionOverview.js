@@ -35,7 +35,7 @@ export default class CollectionOverview extends Component {
       <Grid fluid>
         <Row between='xs'>
           <Col>
-            <h3>Collection Name:             {colName}</h3>
+            <h3>Collection Name: {colName}</h3>
           </Col>
           <Col>
             <h3>Warcs in collection: {numArchives}</h3>
