@@ -11,7 +11,7 @@ const { mementoTable } = styles.basicTab
 
 export function getNoMementos () {
   return (
-    <TableRow key="noMementosRow">
+    <TableRow key='noMementosRow'>
       <TableRowColumn style={mementoTable.resourceCol}>
         No url entered
       </TableRowColumn>
@@ -89,7 +89,7 @@ export default class MementoTableItem extends Component {
     if (!this.props.maybeArray) {
       if (this.state.count === -1 || this.state.count === -2) {
         countOrFetching = (
-          <Avatar src="icons/mLogo_animated.gif" size={30}/>
+          <Avatar src='icons/mLogo_animated.gif' size={30} />
         )
       } else {
         countOrFetching = this.state.count
@@ -110,7 +110,7 @@ export default class MementoTableItem extends Component {
           {this.state.archivalStatus}
         </TableRowColumn>
         <TableRowColumn>
-          <MementoActionMenu url={this.props.url} archiving={false}/>
+          <MementoActionMenu url={this.props.url} archiving={false} />
         </TableRowColumn>
       </TableRow>
     )

@@ -67,7 +67,7 @@ import styles from '../styles/styles'
 //   }
 // }
 
-const { container } =  {
+const { container } = {
   container: {
     marginTop: '5px',
     display: 'flex',
@@ -88,7 +88,7 @@ export default class MementoMessagePanel extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      count: MemgatorStore.lastCount(),
+      count: MemgatorStore.lastCount()
     }
   }
 
@@ -100,7 +100,6 @@ export default class MementoMessagePanel extends Component {
   componentWillUnmount () {
     MemgatorStore.removeListener('count-update', this.update)
     UrlStore.removeListener('emptyURL', this.empty)
-
   }
 
   @autobind
@@ -124,7 +123,7 @@ export default class MementoMessagePanel extends Component {
       if (this.state.count === -1) {
         ret = <FetchingMementoMessage />
       } else {
-        ret = <MementoCountMessage count={this.state.count}/>
+        ret = <MementoCountMessage count={this.state.count} />
       }
     }
 

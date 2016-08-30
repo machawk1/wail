@@ -15,7 +15,7 @@ export default class ArchivalButtons extends Component {
   render () {
     return (
       <Toolbar style={{ backgroundColor: 'transparent' }}>
-        <ToolbarGroup firstChild={true}>
+        <ToolbarGroup firstChild>
           <RaisedButton
             icon={<ViewArchiveIcon />}
             label='View In Wayback'
@@ -27,10 +27,10 @@ export default class ArchivalButtons extends Component {
             }}
           />
         </ToolbarGroup>
-        <ToolbarGroup lastChild={true}>
+        <ToolbarGroup lastChild>
           <RaisedButton
             icon={<ArchiveNowButton />}
-            label="Archive Via Heritrix!"
+            label='Archive Via Heritrix!'
             labelPosition='before'
             onMouseDown={() => {
               CrawlDispatcher.dispatch({

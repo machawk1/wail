@@ -9,7 +9,7 @@ import styles from '../styles/styles'
 
 const { btBody } = styles.basicTab
 
-//<MementoMessagePanel />
+// <MementoMessagePanel />
 export default class BasicTab extends Component {
   render () {
     return (

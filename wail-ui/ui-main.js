@@ -52,7 +52,7 @@ const control = {
   didLoad: false,
   loading: true,
   firstLoad: false,
-  contextMenu: new ContextMenu(),
+  contextMenu: new ContextMenu()
 }
 
 // let shouldQuit = false
@@ -259,16 +259,16 @@ function setUp () {
   let version = ''
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
-    logPath = control.pathMan.join('waillogs')//path.join(control.base, 'waillogs')
-    version = "1.0.0-rc.2.5"
+    logPath = control.pathMan.join('waillogs')// path.join(control.base, 'waillogs')
+    version = '1.0.0-rc.2.5'
     settingsPath = logPath
   } else {
     version = app.getVersion()
-    logPath = control.pathMan.joinWithBase(app.getPath('userData'), 'waillogs')//path.join(app.getPath('userData'), 'waillogs')
+    logPath = control.pathMan.joinWithBase(app.getPath('userData'), 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
   }
 
   if (process.platform === 'darwin') {
-    control.iconp =  control.pathMan.normalizeJoin('src/icons/whale.icns') //path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.iconp = control.pathMan.normalizeJoin('src/icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
     control.h = 380
   } else if (process.platform === 'win32') {
@@ -453,14 +453,14 @@ function createWindow () {
   }
   // Create the browser window.
 
-  windows.mainWindow = new BrowserWindow(windowConfig) //{show: true})//windowConfig)
+  windows.mainWindow = new BrowserWindow(windowConfig) // {show: true})//windowConfig)
 
   // console.log(windows.mainWindow.getSize())
 
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl //windows.settingsWindowURL windows.mWindowURL
+  var loadUrl // windows.settingsWindowURL windows.mWindowURL
   if (control.loading && control.firstLoad) {
     loadUrl = windows.firstLoadWindowURL
   } else {

@@ -6,5 +6,5 @@ export default keyMirror({
   reindexCol: null,
   convertCDX: null,
   autoIndexCol: null,
-  autoIndexDir: null,
+  autoIndexDir: null
 })

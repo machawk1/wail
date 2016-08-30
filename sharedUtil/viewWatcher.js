@@ -1,8 +1,8 @@
 import EventEmitter from 'eventemitter3'
 
 class _ViewWatcher extends EventEmitter {
-  view(from,viewing) {
-    this.emit(`${from}-view`,viewing)
+  view (from, viewing) {
+    this.emit(`${from}-view`, viewing)
   }
 }
 

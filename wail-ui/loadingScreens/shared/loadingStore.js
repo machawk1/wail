@@ -24,7 +24,7 @@ class loadingStore extends EventEmitter {
         'Checking Heritrix, Wayback Status'
       ],
       javaCheckDone: false,
-      serviceProgressDone: false,
+      serviceProgressDone: false
     }
 
     this.serviceProgressDone = false
@@ -40,13 +40,12 @@ class loadingStore extends EventEmitter {
       case wc.Loading.JAVA_CHECK_DONE:
         this.progress.javaCheckDone = true
         console.log('start migrations')
-        if(settings.get('migrate')) {
+        if (settings.get('migrate')) {
           this.emit('migrate')
         } else {
           this.emit('check-services')
           this.checkServices()
         }
-
 
         this.pMessage = this.progress.messages[ 1 ]
         this.emit('progress')

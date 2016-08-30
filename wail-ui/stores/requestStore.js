@@ -24,24 +24,24 @@ class RequestStore_ {
 
   @autobind
   accessibility (request, havePending) {
-    //// console.log('Request store accessibility')
+    // // console.log('Request store accessibility')
     // I do not want to have multiple pending accessibility requests
     if (havePending) {
       let stillPending = this.pendingRequests.get(request.from)
       // console.log('RequestStore accessibility have pending', this.pendingRequests)
       // console.log(util.inspect(this.pendingRequests,{depth: null, colors:true}))
       if (!stillPending.startOnDown && request.startOnDown) {
-        //// console.log('before swapping error callback for accessibility', stillPending)
+        // // console.log('before swapping error callback for accessibility', stillPending)
         // swap error callbacks on the first one
         // stillPending[ 'error' ] = request.request.error
         stillPending.error = request.error
-        //// console.log('after swapping error callback for accessibility', stillPending)
+        // // console.log('after swapping error callback for accessibility', stillPending)
         this.pendingRequests.set(request.from, stillPending)
         // console.log('RequestStore accessibility have pending adding', this.pendingRequests)
       }
     } else {
       // we have never seen this one before add it and send to requestDaemon
-      //// console.log('Request store accessibility new accessibility request')
+      // // console.log('Request store accessibility new accessibility request')
       this.pendingRequests.set(request.from, request)
       // console.log('RequestStore accessibility no have pending adding', this.pendingRequests)
       ipcRenderer.send('send-to-requestDaemon', {
@@ -84,22 +84,22 @@ class RequestStore_ {
         id: request.timeReceived.format(),
         opts: request.opts
       }
-      //// console.log(toSend)
+      // // console.log(toSend)
       ipcRenderer.send('send-to-requestDaemon', toSend)
     }
   }
 
   @autobind
   pendingRequest (request) {
-    //// console.log('RequestStore got an incoming request', request)
+    // // console.log('RequestStore got an incoming request', request)
     request.timeReceived = moment()
     let havePending = this.pendingRequests.has(request.from)
     if (request.rType === RequestTypes.ACCESSIBILITY) {
-      //// console.log('Request store pendingRequest rType is accessibility')
+      // // console.log('Request store pendingRequest rType is accessibility')
       this.accessibility(request, havePending)
     } else {
       if (heritrixKillCase(request.type, request.rType, havePending)) {
-        //// console.log('Request store pendingRequest is heritrix kill')
+        // // console.log('Request store pendingRequest is heritrix kill')
         // console.log('RequestStore pendingRequest hKill before add', this.pendingRequests)
         this.pendingRequests.set(request.from, request)
         // console.log('RequestStore pendingRequest hKill after add', this.pendingRequests)
@@ -113,7 +113,7 @@ class RequestStore_ {
           opts: request.opts
         })
       } else {
-        //// console.log('Request store pendingRequest doing addDuplicateOrSend')
+        // // console.log('Request store pendingRequest doing addDuplicateOrSend')
         this.addDuplicateOrSend(request, havePending)
       }
     }
@@ -129,7 +129,7 @@ class RequestStore_ {
     if (areDuplicates) {
       let duplicates = this.duplicateRequests.get(handledRequest.from)
       let request = duplicates.shift()
-      //// console.log('Request store we have a handledRequest and there are duplicates the new pendingOne', request)
+      // // console.log('Request store we have a handledRequest and there are duplicates the new pendingOne', request)
       this.pendingRequests.set(request.from, request)
       ipcRenderer.send('send-to-requestDaemon', {
         from: request.from,
@@ -146,27 +146,27 @@ class RequestStore_ {
         // console.log('Request store we have a handledRequest and areDuplicates deleting duplicates before', this.duplicateRequests)
         this.duplicateRequests.delete(handledRequest.from)
         // console.log('Request store we have a handledRequest and areDuplicates deleting duplicates after', this.duplicateRequests)
-        //// console.log('Request store we have a handledRequest and areDuplicates and there are no more duplicates')
+        // // console.log('Request store we have a handledRequest and areDuplicates and there are no more duplicates')
       }
     } else {
       // console.log('Request store we have a handledRequest and there are no duplicates')
     }
-    //// console.log(pendingCompleted)
+    // // console.log(pendingCompleted)
     if (handledRequest.wasError) {
       // console.log('Request store handledRequest wasError pending', this.pendingRequests)
-      //// console.log('Request store we have a handledRequest with error')
+      // // console.log('Request store we have a handledRequest with error')
       if (handledRequest.timeOutTwice) {
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
         })
-        //// console.log('we timed out twice and are not trying again')
+        // // console.log('we timed out twice and are not trying again')
       } else {
         pendingCompleted.error(handledRequest.response)
       }
       // this.pendingRequests.delete(handledRequest.from)
     } else {
-      //// console.log('Request store we have a handledRequest with success')
+      // // console.log('Request store we have a handledRequest with success')
       // console.log('Request store handledRequest no Error pending', this.pendingRequests)
       // console.log('Showing pendingCompleted', pendingCompleted)
       pendingCompleted.success(handledRequest.response)

@@ -12,12 +12,12 @@ import LoadingDispatcher from '../shared/loadingDispatcher'
 
 const style = {
   container: {
-    position: 'relative',
+    position: 'relative'
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative',
-  },
+    position: 'relative'
+  }
 }
 
 let checkInterval = null

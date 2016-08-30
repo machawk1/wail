@@ -4,7 +4,6 @@ import Divider from 'material-ui/Divider'
 import {Scrollbars} from 'react-custom-scrollbars'
 import ColListItem from './collectionListItem'
 
-
 export default class CollectionList extends Component {
   static propTypes = {
     cols: PropTypes.oneOfType([
@@ -12,7 +11,7 @@ export default class CollectionList extends Component {
       PropTypes.arrayOf(PropTypes.string)
     ]).isRequired,
     viewWatcher: PropTypes.object.isRequired,
-    from: PropTypes.string.isRequired,
+    from: PropTypes.string.isRequired
   }
 
   constructor (...args) {
@@ -20,10 +19,10 @@ export default class CollectionList extends Component {
     console.log(this.context)
     this.state = {
       rCols: [
-        <h2 key="CollectionL-Header">
+        <h2 key='CollectionL-Header'>
           Collections
         </h2>,
-        <Divider key="CollectionL-Divider"/>
+        <Divider key='CollectionL-Divider' />
       ]
     }
   }
@@ -42,16 +41,16 @@ export default class CollectionList extends Component {
     if (Array.isArray(cols)) {
       console.log(cols)
       let len = cols.length - 1
-      cols.forEach((name,index) => {
+      cols.forEach((name, index) => {
         rCols.push(<ColListItem key={`colli-${name}`} name={name}
-                                clicked={this.clicked}/>)
-        if(index < len) {
-          rCols.push(<Divider key={`CollectionL-Divider-${name}`}/>)
+          clicked={this.clicked} />)
+        if (index < len) {
+          rCols.push(<Divider key={`CollectionL-Divider-${name}`} />)
         }
       })
     } else {
       rCols.push(<ColListItem key={`colli-${name}`} name={name}
-                              clicked={this.clicked}/>)
+        clicked={this.clicked} />)
     }
     this.setState({ rCols })
   }

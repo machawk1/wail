@@ -8,7 +8,7 @@ export default {
     flex: 1
   },
   newCrawlListBody: {
-    order: -1,
+    order: -1
   },
   newCrawlList: {
     width: '55%',

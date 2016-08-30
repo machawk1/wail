@@ -10,8 +10,8 @@ import fs from 'fs-extra'
 import Promise from 'bluebird'
 import {
   ToastContainer,
-  ToastMessage,
-} from "react-toastr"
+  ToastMessage
+} from 'react-toastr'
 import S from 'string'
 import cp from 'child_process'
 import shelljs from 'shelljs'
@@ -35,12 +35,12 @@ function movePywbStuff (moveMe) {
 
 const style = {
   container: {
-    position: 'relative',
+    position: 'relative'
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative',
-  },
+    position: 'relative'
+  }
 }
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation)
@@ -146,7 +146,6 @@ export default class MigratePywb extends Component {
         this.container.error(
           'There was an error creating the default collection Wail'
         )
-
       } else {
         let ret = shelljs.ls(`${this.props.settings.get('warcs')}/*.warc`)
         if (ret.length > 0) {
@@ -197,9 +196,7 @@ export default class MigratePywb extends Component {
           this.container.success('Created Collection Wail no warc files present to migrate')
           this.done()
         }
-
       }
-
     })
   }
 
@@ -221,7 +218,6 @@ export default class MigratePywb extends Component {
           />
 
         )
-
       }
       return (
         <TableRow>
@@ -235,9 +231,9 @@ export default class MigratePywb extends Component {
               <ToastContainer
                 toastMessageFactory={ToastMessageFactory}
                 ref={(c) => this.container = c}
-                preventDuplicates={true}
-                newestOnTop={true}
-                className="toast-top-center"
+                preventDuplicates
+                newestOnTop
+                className='toast-top-center'
               />
               {check_or_done}
             </div>

@@ -11,9 +11,9 @@ import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
 import wailConstants from '../../constants/wail-constants'
 
 const EventTypes = wailConstants.EventTypes
-const items = [];
+const items = []
 for (let i = 1; i <= 10; i++) {
-  items.push(<MenuItem value={i} key={i} primaryText={`${i}`}/>)
+  items.push(<MenuItem value={i} key={i} primaryText={`${i}`} />)
 }
 
 export default class CrawlDepth extends Component {
@@ -36,13 +36,13 @@ export default class CrawlDepth extends Component {
   render () {
     return (
       <SelectField
-        autoWidth={true}
+        autoWidth
         maxHeight={200}
         style={styles.newCrawlDepth}
         value={this.state.value}
         onChange={this.handleChange}
         children={items}
-        floatingLabelText="Crawl Depth"
+        floatingLabelText='Crawl Depth'
       />
     )
   }

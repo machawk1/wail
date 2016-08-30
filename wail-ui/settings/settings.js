@@ -18,7 +18,7 @@ const templates = {
     login: '-a {usr}:{pass}',
     web_ui: 'https://{usr}:{pass}@localhost:{port}',
     jobUrl: 'https://{host}:{port}/engine/job/',
-    engineUrl: 'https://{host}:{port}/engine',
+    engineUrl: 'https://{host}:{port}/engine'
 
   }
 }
@@ -44,7 +44,7 @@ const managed = {
     { name: 'memgator', path: 'bundledApps/memgator' },
     { name: 'tomcat', path: 'bundledApps/tomcat' },
     { name: 'warcs', path: '/archives' },
-    { name: 'wayBackConf', path: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml' },
+    { name: 'wayBackConf', path: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml' }
   ],
   heritrix: {
     uri_heritrix: 'https://127.0.0.1:8443',
@@ -64,7 +64,7 @@ const managed = {
       timeout: 15000,
       form: {
         action: 'add',
-        addPath: '',
+        addPath: ''
       },
       auth: {
         username: 'lorem',
@@ -73,7 +73,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     sendActionOptions: {
       method: 'POST',
@@ -90,7 +90,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     killOptions: {
       method: 'POST',
@@ -110,7 +110,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     launchJobOptions: {
       method: 'POST',
@@ -127,7 +127,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     optionEngine: {
       method: 'GET',
@@ -140,7 +140,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     buildOptions: {
       method: 'POST',
@@ -157,7 +157,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     reScanJobs: {
       method: 'POST',
@@ -174,7 +174,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     }
 
   },
@@ -228,7 +228,7 @@ const managed = {
   },
   code: {
     crawlerBean: 'crawler-beans.cxml',
-    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
+    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'
   },
   wailCore: {
     dport: '3030',
@@ -280,7 +280,7 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   }
   heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
-  let checkArray = [ 'port', 'url', 'dport', 'dhost','host' ]
+  let checkArray = [ 'port', 'url', 'dport', 'dhost', 'host' ]
   let wc = _.mapValues(managed.wailCore, (v, k) => {
     if (!checkArray.includes(k)) {
       console.log(k)
@@ -293,7 +293,7 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
     return v
   })
 
-  settings.set('wailCore',wc)
+  settings.set('wailCore', wc)
 
   let wb = managed.wayback
   wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
@@ -313,7 +313,6 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
     }
     return v
   })
-
 
   let collections = _.mapValues(managed.collections, (v, k) => {
     return path.normalize(path.join(base, v))
@@ -423,7 +422,6 @@ export function rewriteHeritrixAuth (settings, usr, pwd) {
     settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
     settings.set('heritrix', nh)
   }
-
 }
 
 export default function configSettings (base, userData, v) {
@@ -477,7 +475,6 @@ export default function configSettings (base, userData, v) {
     let uriWB = S(wb.uri_wayback)
     wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
     settings.set('wayback', wb)
-
   })
 
   return settings

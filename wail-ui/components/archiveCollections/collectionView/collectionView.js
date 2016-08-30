@@ -35,7 +35,7 @@ export default class CollectionView extends Component {
     console.log(viewing)
     return (
       <div >
-        <CollectionInfo  collection={viewing}/>
+        <CollectionInfo collection={viewing} />
       </div>
     )
   }

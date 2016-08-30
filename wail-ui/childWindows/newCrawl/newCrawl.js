@@ -10,5 +10,5 @@ window.React = React
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <Layout children={<NewCrawlD />}/>,
+  <Layout children={<NewCrawlD />} />,
   document.getElementById('newCrawl'))

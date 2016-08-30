@@ -8,7 +8,7 @@ import autobind from 'autobind-decorator'
 export default class CollectionHeader extends Component {
   static propTypes = {
     viewWatcher: PropTypes.object.isRequired,
-    from: PropTypes.string.isRequired,
+    from: PropTypes.string.isRequired
   }
 
   constructor (...args) {
@@ -16,7 +16,6 @@ export default class CollectionHeader extends Component {
     this.state = {
       collectionTitle: ''
     }
-
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
@@ -40,10 +39,9 @@ export default class CollectionHeader extends Component {
   }
 
   render () {
-
     return (
       <Grid style={{ backgroundColor: color, zIndex: 1 }} fluid>
-        <Row center="xs">
+        <Row center='xs'>
           <Col>
             <h1>Collections</h1>
           </Col>

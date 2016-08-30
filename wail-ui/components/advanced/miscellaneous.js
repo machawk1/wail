@@ -12,27 +12,27 @@ export default class Misc extends Component {
   render () {
     return (
       <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
-        <ToolbarGroup firstChild={true}>
+        <ToolbarGroup firstChild>
           <RaisedButton
             icon={<SettingIcon />}
-            label="Settings"
-            labelPosition="before"
-            onMouseDown={() => ipcRenderer.send('open-settings-window', "hi") }
+            label='Settings'
+            labelPosition='before'
+            onMouseDown={() => ipcRenderer.send('open-settings-window', 'hi')}
           />
         </ToolbarGroup>
         <ToolbarGroup>
           <RaisedButton
             icon={<FolderOpen />}
-            label="View Archives"
-            labelPosition="before"
+            label='View Archives'
+            labelPosition='before'
             onMouseDown={() => shell.openItem(settings.get('warcs'))}
           />
         </ToolbarGroup>
-        <ToolbarGroup lastChild={true}>
+        <ToolbarGroup lastChild>
           <RaisedButton
             icon={<CheckUpdateIcon />}
-            label="Check For Updates"
-            labelPosition="before"
+            label='Check For Updates'
+            labelPosition='before'
             onMouseDown={() => shell.openExternal('https://github.com/N0taN3rd/wail/releases')}
           />
         </ToolbarGroup>

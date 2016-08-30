@@ -67,7 +67,7 @@ export function heritrixAccesible (startOnDown = false) {
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
         status: false,
-        error: err.message,
+        error: err.message
       })
       if (startOnDown) {
         launchHeritrix()
@@ -96,7 +96,7 @@ export function launchHeritrix (cb) {
       env: {
         JAVA_HOME: settings.get('jdk'),
         JRE_HOME: settings.get('jre'),
-        HERITRIX_HOME: heritrixPath,
+        HERITRIX_HOME: heritrixPath
       },
       detached: true,
       shell: false,
@@ -112,7 +112,7 @@ export function launchHeritrix (cb) {
     }
     ServiceDispatcher.dispatch({
       type: EventTypes.HERITRIX_STATUS_UPDATE,
-      status: !wasError,
+      status: !wasError
     })
 
     if (!wasError) {
@@ -143,7 +143,7 @@ export function launchHeritrix (cb) {
 
       ServiceDispatcher.dispatch({
         type: EventTypes.HERITRIX_STATUS_UPDATE,
-        status: !wasError,
+        status: !wasError
       })
 
       if (!wasError) {
@@ -594,7 +594,7 @@ export function getHeritrixJobsState () {
               path: path.normalize(`${heritrixJobP}/${jid.capture('job')}`),
               logPath: ' ',
               urls,
-              runs: [],
+              runs: []
             }
           }
         }
@@ -623,7 +623,7 @@ export function getHeritrixJobsState () {
             timestamp: moment(nextLastfields[ 0 ]),
             discovered: nextLastfields[ 1 ],
             queued: nextLastfields[ 2 ],
-            downloaded: nextLastfields[ 3 ],
+            downloaded: nextLastfields[ 3 ]
           })
         } else {
           let fields = lastLine.collapseWhitespace().s.split(' ')
@@ -632,7 +632,7 @@ export function getHeritrixJobsState () {
             timestamp: moment(fields[ 0 ]),
             discovered: fields[ 1 ],
             queued: fields[ 2 ],
-            downloaded: fields[ 3 ],
+            downloaded: fields[ 3 ]
           })
         }
       })
@@ -661,7 +661,7 @@ export function getHeritrixJobsState () {
                   return job[ 1 ]
                 })
                 .value()
-              resolve({ count: counter, confs: jobsConfs, jobs: sortedJobs, })
+              resolve({ count: counter, confs: jobsConfs, jobs: sortedJobs })
             } else {
               resolve({ error: 'count zero', count: 0, stack: 'ere' })
             }
@@ -682,19 +682,18 @@ export function moveWarc () {
   if (ret.length > 0) {
     ret.forEach(warc => {
       fs.copy(warc, path.normalize(`${settings.get('collections.defaultCol')}/archive/${path.basename(warc)}`), err => {
-          if (err) {
-            GMessageDispatcher.dispatch({
-              type: EventTypes.QUEUE_MESSAGE,
-              message: `There was an error in moving ${path.basename(warc)} to the Wail collection`
-            })
-          } else {
-            GMessageDispatcher.dispatch({
-              type: EventTypes.QUEUE_MESSAGE,
-              message: `Moved ${path.basename(warc)} to the Wail collection`
-            })
-          }
+        if (err) {
+          GMessageDispatcher.dispatch({
+            type: EventTypes.QUEUE_MESSAGE,
+            message: `There was an error in moving ${path.basename(warc)} to the Wail collection`
+          })
+        } else {
+          GMessageDispatcher.dispatch({
+            type: EventTypes.QUEUE_MESSAGE,
+            message: `Moved ${path.basename(warc)} to the Wail collection`
+          })
+        }
       })
     })
   }
-
 }

@@ -82,9 +82,9 @@ export default class EnterCrawlUrls extends Component {
     return (
       <div style={{ order: 2 }}>
         <TextField
-          floatingLabelText="Enter URL to crawl"
-          id="crawl-url-input"
-          type="url"
+          floatingLabelText='Enter URL to crawl'
+          id='crawl-url-input'
+          type='url'
           style={styles.newCrawlUrlInput}
           value={this.state.url}
           underlineStyle={this.state.underlineStyle}
@@ -92,7 +92,7 @@ export default class EnterCrawlUrls extends Component {
           onChange={this.handleChange}
         />
         <FloatingActionButton
-          mini={true}
+          mini
           onMouseDown={this.addUrl}
         >
           <AddUrlIcon />

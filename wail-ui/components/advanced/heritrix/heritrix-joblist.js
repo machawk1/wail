@@ -49,7 +49,7 @@ export default class HeritrixJobList extends Component {
     } else {
       // JobItems = <ListItem primaryText='No Jobs To Display'/>
       JobItems = (
-        <TableRow key="no-items-tr">
+        <TableRow key='no-items-tr'>
           <TableRowColumn style={crawlUrlS}>
             No Jobs
           </TableRowColumn>
@@ -106,7 +106,7 @@ export default class HeritrixJobList extends Component {
         </TableHeader>
         <TableBody
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
           {JobItems}
         </TableBody>

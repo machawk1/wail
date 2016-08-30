@@ -18,7 +18,6 @@ class EditorStore_ extends EventEmitter {
     if (process.env.NODE_ENV === 'development') {
       this.loadWaybackConf()
     }
-
   }
 
   @autobind

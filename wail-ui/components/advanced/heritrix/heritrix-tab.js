@@ -32,13 +32,13 @@ export default class HeritrixTab extends Component {
 
   render () {
     return (
-      <Grid gutterWidth={20} flexable={true} columnWidth={100}>
+      <Grid gutterWidth={20} flexable columnWidth={100}>
         <Row>
           <HeritrixJobList />
         </Row>
         <Row>
           <Toolbar>
-            <ToolbarGroup firstChild={true}>
+            <ToolbarGroup firstChild>
               <RaisedButton
                 icon={<AddCrawlIcon />}
                 label='New Crawl'
@@ -56,7 +56,7 @@ export default class HeritrixTab extends Component {
                 onMouseDown={() => rescanJobDir()}
               />
             </ToolbarGroup>
-            <ToolbarGroup lastChild={true}>
+            <ToolbarGroup lastChild>
               <RaisedButton
                 icon={<OpenBrowserIcon />}
                 label='Launch Web UI'

@@ -18,16 +18,15 @@ export default {
     //   return hook
     // },
 
-    create(hook) {
+    create (hook) {
       console.log('after', hook.data)
-    },
+    }
 
   },
   after: {
-    create(hook) {
+    create (hook) {
       console.log('after', hook.data)
-
-    },
+    }
     // update(hook) {
     //
     // }

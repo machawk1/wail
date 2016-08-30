@@ -17,8 +17,6 @@ const EventTypes = wailConstants.EventTypes
 
 let focusTime = null
 
-
-
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
     super(props, context)
@@ -86,9 +84,9 @@ export default class ArchiveUrl extends Component {
     return (
       <div style={{ display: 'flex' }}>
         <TextField
-          floatingLabelText="URL"
+          floatingLabelText='URL'
           underlineStyle={this.state.underlineStyle}
-          id="archive-url-input"
+          id='archive-url-input'
           value={this.state.url.s}
           onBlur={this.focusLost}
           onChange={this.handleChange}

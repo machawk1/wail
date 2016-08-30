@@ -9,18 +9,18 @@ import wc from '../../constants/wail-constants'
 
 const style = {
   container: {
-    position: 'relative',
+    position: 'relative'
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative',
-  },
+    position: 'relative'
+  }
 }
 
 export default class CheckServices extends Component {
   static propTypes = {
     firstLoad: PropTypes.bool.isRequired,
-    wait: PropTypes.bool.isRequired,
+    wait: PropTypes.bool.isRequired
   }
 
   constructor (props, context) {

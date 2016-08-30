@@ -28,7 +28,7 @@ export default class MemgatorPather {
   }
 
 // GET /memgator
-  //id cs.odu.edu params { query: {}, url: 'http:', provider: 'rest' }
+  // id cs.odu.edu params { query: {}, url: 'http:', provider: 'rest' }
   get (id, params, cb) {
     console.log('memgator pather get id', id, 'params', params)
     let url = `${params.proto}://${params.url}/${id}`
@@ -95,7 +95,7 @@ export default class MemgatorPather {
       query: params.query,
       provider: 'rest'
     }
-    return this.app.service('/memgator').remove(url, data,mp,cb)
+    return this.app.service('/memgator').remove(url, data, mp, cb)
       .then(result => {
         console.log('Memgator pather patch  then', result)
         return Promise.resolve(result)

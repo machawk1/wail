@@ -3,7 +3,7 @@ import { Row, Column } from 'react-cellblock'
 import Avatar from 'material-ui/Avatar'
 import styles from '../styles/styles'
 
-const { fetching } ={
+const { fetching } = {
   container: {
     paddingTop: '32px',
     display: 'flex',
@@ -14,7 +14,7 @@ const { fetching } ={
   fetching: {
     display: 'flex',
     flexDirection: 'row',
-    cursor: 'default',
+    cursor: 'default'
   }
 }
 
@@ -49,7 +49,7 @@ export class DefaultMementoMessage extends Component {
 
   render () {
     return (
-      <noscript/>
+      <noscript />
     )
   }
 }
@@ -80,7 +80,7 @@ export class FetchingMementoMessage extends Component {
         <p style={{ paddingLeft: '20px', width: '60%' }}>
           Retrieving number of publicly available copies
         </p>
-        <Avatar style={{ marginTop: '10px' }} src="icons/mLogo_animated.gif" size={30}/>
+        <Avatar style={{ marginTop: '10px' }} src='icons/mLogo_animated.gif' size={30} />
       </div>
     )
   }
@@ -130,7 +130,7 @@ export class MementoAllMessage extends Component {
 
   onStart () {
     return (
-      <noscript/>
+      <noscript />
     )
   }
 
@@ -139,19 +139,19 @@ export class MementoAllMessage extends Component {
     if (this.state.count === -1) {
       return <FetchingMementoMessage />
     } else {
-      return <MementoCountMessage count={this.state.count}/>
+      return <MementoCountMessage count={this.state.count} />
     }
   }
 
   render () {
     var ret
     if (this.state.count === -2) {
-      ret = <noscript/>
+      ret = <noscript />
     } else {
       if (this.state.count === -1) {
         ret = <FetchingMementoMessage />
       } else {
-        ret = <MementoCountMessage count={this.state.count}/>
+        ret = <MementoCountMessage count={this.state.count} />
       }
     }
 

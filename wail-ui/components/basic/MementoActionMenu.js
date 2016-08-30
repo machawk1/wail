@@ -81,9 +81,9 @@ export default class MementoActionMenu extends Component {
     const actionIcon = (
       <IconButton
         key={`MAM-${this.props.url}-actionButton`}
-        touch={true}
+        touch
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 

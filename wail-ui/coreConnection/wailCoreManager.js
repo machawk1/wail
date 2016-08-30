@@ -5,10 +5,10 @@ import io from 'socket.io-client'
 
 class _WailCoreManager {
   constructor () {
-    this._io = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
+    this._io = io('http://localhost:3030', { pingTimeout: 120000, timeout: 120000 })
     this._app = feathers()
       .configure(hooks())
-      .configure(socketio(this._io, { pingTimeout: 120000,timeout: 120000  }))
+      .configure(socketio(this._io, { pingTimeout: 120000, timeout: 120000 }))
   }
 
   get io () {
@@ -19,7 +19,7 @@ class _WailCoreManager {
     return this._app
   }
 
-  getService(whichOne) {
+  getService (whichOne) {
     return this._app.service(whichOne)
   }
 }

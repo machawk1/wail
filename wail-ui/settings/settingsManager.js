@@ -29,7 +29,7 @@ const managed = {
     { name: 'memgator', path: 'bundledApps/memgator' },
     { name: 'tomcat', path: 'bundledApps/tomcat' },
     { name: 'warcs', path: '/archives' },
-    { name: 'wayBackConf', path: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml' },
+    { name: 'wayBackConf', path: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml' }
   ],
   heritrix: {
     uri_heritrix: 'https://127.0.0.1:8443',
@@ -49,7 +49,7 @@ const managed = {
       timeout: 15000,
       form: {
         action: 'add',
-        addPath: '',
+        addPath: ''
       },
       auth: {
         username: 'lorem',
@@ -58,7 +58,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     sendActionOptions: {
       method: 'POST',
@@ -75,7 +75,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     killOptions: {
       method: 'POST',
@@ -95,7 +95,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     launchJobOptions: {
       method: 'POST',
@@ -112,7 +112,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     optionEngine: {
       method: 'GET',
@@ -125,7 +125,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     buildOptions: {
       method: 'POST',
@@ -142,7 +142,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     },
     reScanJobs: {
       method: 'POST',
@@ -159,7 +159,7 @@ const managed = {
       },
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     }
 
   },
@@ -201,7 +201,7 @@ const managed = {
     statics: 'bundledApps/pywb/static'
   },
   collections: {
-    defaultCol:'archives/collections/Wail',
+    defaultCol: 'archives/collections/Wail',
     dir: 'archives/collections',
     aCollPath: 'archives/collections/{col}',
     colTemplate: 'archives/collections/{col}/static',
@@ -213,7 +213,7 @@ const managed = {
   },
   code: {
     crawlerBean: 'crawler-beans.cxml',
-    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml',
+    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'
   },
   core: {
     port: '3030',
@@ -402,7 +402,6 @@ export function rewriteHeritrixAuth (settings, usr, pwd) {
     settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
     settings.set('heritrix', nh)
   }
-
 }
 
 export default function configSettings (base, userData, v) {
@@ -456,7 +455,6 @@ export default function configSettings (base, userData, v) {
     let uriWB = S(wb.uri_wayback)
     wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
     settings.set('wayback', wb)
-
   })
 
   return settings

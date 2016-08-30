@@ -7,7 +7,6 @@ import MemgatorPather from './memgatorPather'
 import rewrite from 'express-urlrewrite'
 import notFound from 'feathers-errors/not-found'
 
-
 export default function () {
   const app = this
   const db = new NeDB({
@@ -29,11 +28,9 @@ export default function () {
 
   // app.use('/memgator/')
 
-
   console.log('memgator')
 
   const memgatorDbService = app.service('/memgator')
   memgatorDbService.before(hooks.db.before)
   memgatorDbService.after(hooks.db.after)
-
 }

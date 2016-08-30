@@ -20,8 +20,7 @@ export default function () {
     }
   }
 
-  app.use('/crawls',nedbService(dbOptions))
+  app.use('/crawls', nedbService(dbOptions))
 
   console.log('memgator')
-
 }

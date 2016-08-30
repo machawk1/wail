@@ -9,16 +9,15 @@ import autobind from 'autobind-decorator'
 export default class CollectionOverview extends Component {
   static propTypes = {
     collection: PropTypes.object.isRequired,
-    className: PropTypes.string,
+    className: PropTypes.string
   }
 
   static defaultProps = {
-    className: '',
+    className: ''
   }
 
   constructor (...args) {
     super(...args)
-
   }
 
   render () {
@@ -34,28 +33,28 @@ export default class CollectionOverview extends Component {
     } = collection
     return (
       <Grid fluid>
-        <Row between="xs">
+        <Row between='xs'>
           <Col>
-            <h3>Collection Name:   {colName}</h3>
+            <h3>Collection Name:             {colName}</h3>
           </Col>
           <Col>
             <h3>Warcs in collection: {numArchives}</h3>
           </Col>
         </Row>
-        <Row between="xs">
+        <Row between='xs'>
           <Col>
             <h3>Warc Location: {archive}</h3>
           </Col>
           <Col>
-            <OpenButton label="Open Location" />
+            <OpenButton label='Open Location' />
           </Col>
         </Row>
-        <Row between="xs">
+        <Row between='xs'>
           <Col>
             <h3>Index Location: {indexes}</h3>
           </Col>
           <Col>
-            <OpenButton label="Open Location" />
+            <OpenButton label='Open Location' />
           </Col>
         </Row>
         <Row>

@@ -9,11 +9,11 @@ import Misc from './components/advanced/miscellaneous'
 
 const Routes = (
   <Route path='/' component={Layout}>
-    <IndexRoute component={BasicTab}/>
-    <Route path='services' name='services' component={General}/>
-    <Route path='wayback' name='wayback' component={Wayback}/>
-    <Route path='heritrix' name='heritrix' component={Heritrix}/>
-    <Route path='misc' name='misc' component={Misc}/>
+    <IndexRoute component={BasicTab} />
+    <Route path='services' name='services' component={General} />
+    <Route path='wayback' name='wayback' component={Wayback} />
+    <Route path='heritrix' name='heritrix' component={Heritrix} />
+    <Route path='misc' name='misc' component={Misc} />
   </Route>
 )
 

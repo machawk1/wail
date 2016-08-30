@@ -194,7 +194,6 @@ function generateCDX () {
         prevIndexingDone = true
       })
   }
-
 }
 
 class Indexer {
@@ -235,9 +234,9 @@ class Indexer {
           }
           // prevIndexingDone = false
           // generatePathIndex(generateCDX)
-          cp.exec(S(settings.get('pywb.reindexCol')).template({col:'Wail'}),opts,(error, stdout, stderr) =>{
-            if(error) {
-              logger.error('Indexer error %s','indexing error',stderr)
+          cp.exec(S(settings.get('pywb.reindexCol')).template({col: 'Wail'}), opts, (error, stdout, stderr) => {
+            if (error) {
+              logger.error('Indexer error %s', 'indexing error', stderr)
               console.error(error)
             }
             console.log(stderr)

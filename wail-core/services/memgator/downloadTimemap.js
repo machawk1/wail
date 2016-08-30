@@ -6,13 +6,13 @@ import md5 from 'md5'
 export default class DownloadTimemap {
 
   updateOrNew (what, newone) {
-    console.log('dl timemap updateOrNew',what,newone)
+    console.log('dl timemap updateOrNew', what, newone)
     return rp({
       method: 'GET',
       uri: what.urlm,
       strictSSL: false,
       rejectUnauthorized: false,
-      resolveWithFullResponse: true,
+      resolveWithFullResponse: true
     }).then(res => {
       console.log(res.headers)
       let tmPath = `${this.app.get('timemaps')}/${md5(what.url)}.timemap.${what.format}`
@@ -37,12 +37,11 @@ export default class DownloadTimemap {
           .then(result => Promise.resolve(result))
           .catch(er => console.error('dl Timemap make new one', er))
       } else {
-        _.unset(data,['gotten','archived','_id','url'])
+        _.unset(data, ['gotten', 'archived', '_id', 'url'])
         return this.app.service('/memgator').patch({url}, data, p)
           .then(result => Promise.resolve(result))
           .catch(er => console.error('dl Timemap update', er))
       }
-
     }).catch(error => {
       console.error('DownloadTimemap create error', error)
     })
@@ -54,7 +53,7 @@ export default class DownloadTimemap {
     let url = data.url
     return this.app.service('/memgator').find({ query: {url}, provider: 'socketio' })
       .then(result => {
-        console.log('download timemaps create find result',result)
+        console.log('download timemaps create find result', result)
         let what = {
           urlm: `http://localhost:3031/timemap/${data.format}/${url}`,
           url,
@@ -75,11 +74,11 @@ export default class DownloadTimemap {
           }
         }
       }).catch(error => {
-        console.error('download timemaps create find error',error)
+        console.error('download timemaps create find error', error)
       })
   }
 
-  get(id,params) {
+  get (id, params) {
 
   }
 

@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import SplitPane  from 'react-split-pane'
+import SplitPane from 'react-split-pane'
 import _ from 'lodash'
-import {blueGrey50,darkBlack,lightBlue900} from 'material-ui/styles/colors'
+import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
@@ -55,7 +55,7 @@ export default class Explorer extends Component {
           let { data } = result
           console.log(data)
           data.forEach(col => {
-            colNames.push( col.colName )
+            colNames.push(col.colName)
             collections[ col.colName ] = col
           })
           this.setState({ collections, colNames, loading: false })
@@ -73,34 +73,33 @@ export default class Explorer extends Component {
   render () {
     if (this.state.loading) {
       return (
-        <CircularProgress size={5}/>
+        <CircularProgress size={5} />
       )
     } else {
       return (
 
          <SplitPane
-           split="vertical"
+           split='vertical'
            defaultSize={125}
-           className="primary"
+           className='primary'
            allowResize={false}
          >
            <CollectionList
-             key="the-list"
+             key='the-list'
              cols={this.state.colNames}
              viewWatcher={ViewWatcher}
-             from="Wail-Archive-Collections"
+             from='Wail-Archive-Collections'
            />
            <CollectionView
              collections={this.state.collections}
              viewWatcher={ViewWatcher}
-             from="Wail-Archive-Collections"
-             defaultView="empty"
+             from='Wail-Archive-Collections'
+             defaultView='empty'
            />
          </SplitPane>
 
       )
     }
-
   }
 }
 /*

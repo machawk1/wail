@@ -43,7 +43,7 @@ export default class HeritrixJobInfo extends Component {
         <TableBody
           key={`${this.props.jobId}-TableBody`}
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
           <HeritrixJobInfoRow key={`${this.props.jobId}-HJobInfoRow`} {...this.props} />
         </TableBody>

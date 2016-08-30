@@ -83,7 +83,7 @@ export default class General extends Component {
         </TableHeader>
         <TableBody
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
           <TableRow>
             <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
@@ -93,16 +93,16 @@ export default class General extends Component {
               <RaisedButton
                 disabled={this.state.wbGood}
                 style={style.serviceActionButton}
-                labelPosition="before"
-                label="Start"
+                labelPosition='before'
+                label='Start'
                 onMouseDown={this.wayBackFix}
-                icon={<FixIcon/>}
+                icon={<FixIcon />}
               />
               <RaisedButton
                 disabled={!this.state.wbGood}
                 style={style.serviceActionButton}
-                labelPosition="before"
-                label="Stop"
+                labelPosition='before'
+                label='Stop'
                 onMouseDown={this.wayBackKill}
                 icon={<KillIcon />}
               />
@@ -116,15 +116,15 @@ export default class General extends Component {
               <RaisedButton
                 disabled={this.state.hGood}
                 style={style.serviceActionButton}
-                labelPosition="before"
-                label="Start"
+                labelPosition='before'
+                label='Start'
                 onMouseDown={this.heritrixFix}
-                icon={<FixIcon/>}
+                icon={<FixIcon />}
               />
               <RaisedButton
                 disabled={!this.state.hGood}
                 style={style.serviceActionButton}
-                labelPosition="before" label="Stop"
+                labelPosition='before' label='Stop'
                 onMouseDown={this.heritrixKill}
                 icon={<KillIcon />}
               />

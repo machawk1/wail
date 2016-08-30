@@ -14,7 +14,7 @@ export default class CrawlUrlItem extends Component {
   static propTypes = {
     url: PropTypes.string.isRequired,
     idx: PropTypes.number.isRequired,
-    num: PropTypes.number.isRequired,
+    num: PropTypes.number.isRequired
   }
 
   @autobind
@@ -37,7 +37,7 @@ export default class CrawlUrlItem extends Component {
 
   render () {
     const rightIconMenu = (
-      <IconMenu iconButtonElement={<MoreVertIcon color={grey400}/>}>
+      <IconMenu iconButtonElement={<MoreVertIcon color={grey400} />}>
         <MenuItem onTouchTap={this.editCrawlUrl}>Edit</MenuItem>
         <MenuItem onTouchTap={this.deleteMe}>Delete</MenuItem>
       </IconMenu>

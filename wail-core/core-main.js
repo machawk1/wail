@@ -4,15 +4,12 @@ import path from 'path'
 
 const options = {
   dir: __dirname,
-  icon: path.join(__dirname,'whale.png'),
+  icon: path.join(__dirname, 'whale.png'),
   tooltip: 'WAIL',
   width: 500
 }
 
-
 const wailMenuBar = menubar(options)
-
-
 
 wailMenuBar.on('ready', () => {
   if (process.env.NODE_ENV === 'development') {

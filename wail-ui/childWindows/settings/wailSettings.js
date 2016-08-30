@@ -14,24 +14,24 @@ export default class WailSettings extends Component {
   render () {
     let count = 1
     let fromSettingsFile = [ 'cdx', 'warcs' ]
-      .map(it => <FSLocationChooser key={count++} counter={count++} whichSetting={it} warnOnChange={true}
-                                    settings={this.props.settings}/>)
+      .map(it => <FSLocationChooser key={count++} counter={count++} whichSetting={it} warnOnChange
+        settings={this.props.settings} />)
     let otherSettings = [ { which: 'archives', alt: 'Memgator Archive List', useAlt: true } ]
       .map(it => <FileChooser key={count++} counter={count++} whichSetting={it.which} settings={this.props.settings}
-                              useAltName={it.useAlt} altName={it.alt}/>)
+        useAltName={it.useAlt} altName={it.alt} />)
 
     return (
       <ListItem
-        leftAvatar={<Avatar className="img-circle" backgroundColor={'transparent'} src={'../../icons/whale.ico'}/>}
-        primaryText="WAIL"
-        primaryTogglesNestedList={true}
+        leftAvatar={<Avatar className='img-circle' backgroundColor={'transparent'} src={'../../icons/whale.ico'} />}
+        primaryText='WAIL'
+        primaryTogglesNestedList
         nestedItems={
           fromSettingsFile.concat(otherSettings).concat(
             <SettingHardReset
               key={count++}
               counter={count++}
-              channel="setting-hard-reset"
-              name="Reset Settings"
+              channel='setting-hard-reset'
+              name='Reset Settings'
             />)
         }
       />

@@ -11,7 +11,7 @@ export default class NewCrawlDialog extends Component {
         <CrawlUrlList />
         <div style={styles.newCrawlColRow}>
           <CrawlDepth />
-          <div style={{ height: 75 }}/>
+          <div style={{ height: 75 }} />
           <EnterCrawlUrls />
         </div>
       </div>

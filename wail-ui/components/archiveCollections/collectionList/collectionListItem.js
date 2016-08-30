@@ -2,7 +2,6 @@ import React, {Component, PropTypes} from 'react'
 import Dimensions from 'react-dimensions'
 import FlatButton from 'material-ui/FlatButton'
 
-
 export default class CollectionListItem extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -12,10 +11,10 @@ export default class CollectionListItem extends Component {
   render () {
     let {
       name,
-      clicked,
+      clicked
     } = this.props
     return (
-      <FlatButton label={name} onTouchTap={() => clicked(name)}/>
+      <FlatButton label={name} onTouchTap={() => clicked(name)} />
     )
   }
 }

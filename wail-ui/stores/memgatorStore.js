@@ -87,7 +87,6 @@ class MemgatorStore_ extends EventEmitter {
         break
       }
       case EventTypes.GET_MEMENTO_COUNT: {
-
         if (!this.mementos.has(event.url)) {
           console.log('adding url', event.url)
           let data = {

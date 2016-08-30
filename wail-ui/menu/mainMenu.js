@@ -16,7 +16,7 @@ export function screenShotPDF (window) {
           title: 'Save Screen Shot As PDF',
           defaultPath: app.getPath('documents'),
           filters: [
-            { name: 'PDF', extensions: [ 'pdf' ] },
+            { name: 'PDF', extensions: [ 'pdf' ] }
           ]
         }
         let cb = (path) => {
@@ -49,7 +49,7 @@ export function screenShot (window) {
         defaultPath: app.getPath('documents'),
         filters: [
           { name: 'PNG', extensions: [ 'png' ] },
-          { name: 'JPG', extensions: [ 'jpg' ] },
+          { name: 'JPG', extensions: [ 'jpg' ] }
         ]
       }
       let cb = (path) => {
@@ -176,19 +176,19 @@ const menus = {
           submenu: [
             {
               label: 'WARC Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('warcs'))
               }
             },
             {
               label: 'CDX Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('cdx'))
               }
             },
             {
               label: 'Archive List',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('archives'))
               }
 
@@ -282,7 +282,7 @@ const menus = {
           label: 'Minimize',
           accelerator: 'Ctrl+M',
           role: 'minimize'
-        },
+        }
       ]
     },
     {
@@ -299,7 +299,7 @@ const menus = {
               label: 'Through Github',
               click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
             }
-          ],
+          ]
         }
       ]
     }
@@ -376,19 +376,19 @@ const menus = {
           submenu: [
             {
               label: 'WARC Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('warcs'))
               }
             },
             {
               label: 'CDX Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('cdx'))
               }
             },
             {
               label: 'Archive List',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('archives'))
               }
 
@@ -510,7 +510,7 @@ const menus = {
               label: 'Through Github',
               click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
             }
-          ],
+          ]
         }
       ]
     }
@@ -566,19 +566,19 @@ const menus = {
           submenu: [
             {
               label: 'WARC Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('warcs'))
               }
             },
             {
               label: 'CDX Files Location',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('cdx'))
               }
             },
             {
               label: 'Archive List',
-              click() {
+              click () {
                 shell.openItem(global.settings.get('archives'))
               }
 
@@ -672,7 +672,7 @@ const menus = {
           label: 'Minimize',
           accelerator: 'Ctrl+M',
           role: 'minimize'
-        },
+        }
       ]
     },
     {
@@ -689,7 +689,7 @@ const menus = {
               label: 'Through Github',
               click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
             }
-          ],
+          ]
         }
       ]
     }
@@ -698,16 +698,13 @@ const menus = {
 
 var template
 
-if(process.platform === 'darwin') {
-    template = menus.darwin
+if (process.platform === 'darwin') {
+  template = menus.darwin
 } else if (process.platform === 'linux') {
-    template = menus.linux
+  template = menus.linux
 } else {
-    template = menus.windows
+  template = menus.windows
 }
 
-
 export default template
-
-
 

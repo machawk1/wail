@@ -64,7 +64,6 @@ export default class StringChanger extends Component {
         this.setState(ns)
       }
     })
-
   }
 
   handleInput = (e) => {
@@ -81,11 +80,11 @@ export default class StringChanger extends Component {
   render () {
     const actionIcon = (
       <IconButton
-        touch={true}
+        touch
         tooltip='Modify'
-        tooltipPosition="top-left"
+        tooltipPosition='top-left'
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -95,18 +94,18 @@ export default class StringChanger extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         targetOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <MenuItem style={style} onTouchTap={this.handleOpen} primaryText='Change'/>
-        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default'/>
+        <MenuItem style={style} onTouchTap={this.handleOpen} primaryText='Change' />
+        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default' />
       </IconMenu>
     )
     const actions = [
       <FlatButton
-        label="Cancel"
+        label='Cancel'
         onTouchTap={this.cancelEdit}
       />,
       <FlatButton
-        label="Submit"
-        primary={true}
+        label='Submit'
+        primary
         onTouchTap={this.submitEdit}
       />
     ]
@@ -120,9 +119,9 @@ export default class StringChanger extends Component {
         />
         <Dialog
           key={`stringchanger-d-${this.props.whichSetting}`}
-          title="Change"
+          title='Change'
           actions={actions}
-          modal={true}
+          modal
           open={this.state.open}
         >
           <TextField

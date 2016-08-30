@@ -1,3 +1,3 @@
-import CollectionList from  './collectionList'
+import CollectionList from './collectionList'
 
 export default CollectionList

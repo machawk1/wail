@@ -40,7 +40,7 @@ export default class MementoTable extends Component {
     return (
       <Table
         height={mementoTable.height}
-        fixedHeader={true}
+        fixedHeader
       >
         <TableHeader
           displaySelectAll={false}
@@ -63,7 +63,7 @@ export default class MementoTable extends Component {
         </TableHeader>
         <TableBody
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
           {this.state.mementos}
         </TableBody>

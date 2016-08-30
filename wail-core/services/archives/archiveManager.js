@@ -68,11 +68,10 @@ export default class ArchiveManager {
   find (params, cb) {
     console.log('archive man finding', params)
     return this.app.service('archives').find(params, cb)
-
   }
 
 // GET /memgator
-  //id cs.odu.edu params { query: {}, url: 'http:', provider: 'rest' }
+  // id cs.odu.edu params { query: {}, url: 'http:', provider: 'rest' }
   get (id, params, cb) {
     return this.app.service('archives').get(id, params, cb)
   }
@@ -107,7 +106,6 @@ export default class ArchiveManager {
         return resolve(this.app.service('archives').create(toCreate))
       })
     })
-
   }
 
 // PUT /messages[/<id>]
@@ -119,7 +117,7 @@ export default class ArchiveManager {
       addMetadata,
       reindexCol,
       convertCDX,
-      autoIndexCol,
+      autoIndexCol
     } = consts
     switch (action) {
       case addWarcs:
@@ -134,7 +132,7 @@ export default class ArchiveManager {
         break
       default:
         return Promise.resolve({
-          "yay": "hell yeah"
+          'yay': 'hell yeah'
         })
     }
     // if (params.query.action === 'addWarcs') {
@@ -146,7 +144,6 @@ export default class ArchiveManager {
     //     "yay": "hell yeah"
     //   })
     // }
-
   }
 
 // PATCH /messages[/<id>]

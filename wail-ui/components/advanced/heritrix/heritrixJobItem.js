@@ -35,7 +35,7 @@ export default class HeritrixJobItem extends Component {
     jobId: PropTypes.string.isRequired,
     runs: PropTypes.array.isRequired,
     path: PropTypes.string.isRequired,
-    urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired,
+    urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired
   }
 
   constructor (props, context) {
@@ -145,9 +145,9 @@ export default class HeritrixJobItem extends Component {
     const actionIcon = (
       <IconButton
         key={`HJIR-${this.props.jobId}-actionButton`}
-        touch={true}
+        touch
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -158,18 +158,18 @@ export default class HeritrixJobItem extends Component {
         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config'/>
-        <Divider  />
-        <MenuItem style={style} onTouchTap={this.start} primaryText='Start'/>
-        <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart'/>
-        <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl'/>
-        <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete'/>
+        <MenuItem style={style} onTouchTap={this.viewConf} primaryText='View Config' />
+        <Divider />
+        <MenuItem style={style} onTouchTap={this.start} primaryText='Start' />
+        <MenuItem style={style} onTouchTap={this.restart} primaryText='Restart' />
+        <MenuItem style={style} onTouchTap={this.kill} primaryText='Terminate Crawl' />
+        <MenuItem style={style} onTouchTap={this.deleteJob} primaryText='Delete' />
       </IconMenu>
     )
 
     return (
       <HeritrixJobInfoRow key={`HJIR-${this.props.jobId}`} urls={this.props.urls} jobId={this.props.jobId}
-                          runs={this.state.runs} actionMenu={rightIconMenu}/>
+        runs={this.state.runs} actionMenu={rightIconMenu} />
     )
   }
 }

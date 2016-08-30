@@ -11,7 +11,7 @@ export default class SettingHardReset extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     channel: PropTypes.string.isRequired,
-    counter: PropTypes.number.isRequired,
+    counter: PropTypes.number.isRequired
   }
 
   @autobind
@@ -36,7 +36,7 @@ export default class SettingHardReset extends Component {
         style={{ marginBottom: '20px' }}
         nestedLevel={1}
         key={`SettingHardReset${this.props.name}`}
-        disabled={true}
+        disabled
         primaryText={
           <FlatButton
             style={{ float: 'right' }}

@@ -57,11 +57,11 @@ export default class FSLocationChooser extends Component {
   render () {
     const actionIcon = (
       <IconButton
-        touch={true}
+        touch
         tooltip='Modify'
-        tooltipPosition="top-left"
+        tooltipPosition='top-left'
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -71,15 +71,15 @@ export default class FSLocationChooser extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         targetOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <MenuItem style={style} onTouchTap={this.changeLocation} primaryText='Change Location'/>
-        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default'/>
+        <MenuItem style={style} onTouchTap={this.changeLocation} primaryText='Change Location' />
+        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default' />
       </IconMenu>
     )
     return (
       <ListItem
         nestedLevel={1}
         key={`FSLOCATIONCHOOSER${this.props.whichSetting}`}
-        primaryText={`${ _.upperCase(this.props.whichSetting) } Path`}
+        primaryText={`${_.upperCase(this.props.whichSetting)} Path`}
         rightIconButton={rightIconMenu}
         secondaryText={this.state.settingValue}
       />

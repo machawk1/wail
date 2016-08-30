@@ -27,7 +27,7 @@ const jobLock = new ReadWriteLock()
 const jobCache = {
   cache: null,
   updated: null,
-  index: new Map(),
+  index: new Map()
 }
 
 let prevJobCheckDone = true
@@ -179,7 +179,7 @@ function getHeritrixJobsState () {
               path: path.normalize(`${heritrixJobP}/${jid.capture('job')}`),
               logPath: ' ',
               urls: '',
-              runs: [],
+              runs: []
             }
           }
         }
@@ -215,7 +215,7 @@ function getHeritrixJobsState () {
               timestamp: tsm.format(),
               discovered: nextLastfields[ 1 ],
               queued: nextLastfields[ 2 ],
-              downloaded: nextLastfields[ 3 ],
+              downloaded: nextLastfields[ 3 ]
             })
           } else {
             let fields = lastLine.collapseWhitespace().s.split(' ')
@@ -226,7 +226,7 @@ function getHeritrixJobsState () {
               timestamp: tsm.format(),
               discovered: fields[ 1 ],
               queued: fields[ 2 ],
-              downloaded: fields[ 3 ],
+              downloaded: fields[ 3 ]
             })
           }
         }
@@ -262,7 +262,7 @@ function getHeritrixJobsState () {
               if (jobCache.cache) {
                 if (checkCache(sortedJobs)) {
                   console.log('sending changes')
-                  resolve({ change: true, count: counter, confs: jobsConfs, jobs: jobCache.updated, })
+                  resolve({ change: true, count: counter, confs: jobsConfs, jobs: jobCache.updated })
                 } else {
                   resolve({ change: false })
                 }

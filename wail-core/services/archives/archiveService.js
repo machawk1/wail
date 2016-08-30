@@ -4,7 +4,6 @@ import nedbService from 'feathers-nedb'
 import hooks from './hooks/archiveHooks'
 import ArchiveManager from './archiveManager'
 
-
 export default function () {
   const app = this
   const db = new NeDB({
@@ -24,7 +23,6 @@ export default function () {
   app.use('/archivesManager', new ArchiveManager())
 
   // app.use('/memgator/')
-
 
   console.log('archives')
 

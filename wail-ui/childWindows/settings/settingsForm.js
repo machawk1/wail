@@ -13,21 +13,21 @@ const settings = remote.getGlobal('settings')
 
 export default class SettingsForm extends Component {
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (props, context) {
     super(props, context)
     this.state = {
       muiTheme: baseTheme,
-      slideIndex: 0,
+      slideIndex: 0
     }
   }
 
   @autobind
   handleChange (value) {
     this.setState({
-      slideIndex: value,
+      slideIndex: value
     })
   }
 
@@ -42,9 +42,9 @@ export default class SettingsForm extends Component {
         overflowY: 'auto',
         height: '100%'
       }}>
-        <WailSettings settings={settings}/>
-        <WaybackSettings settings={settings}/>
-        <HeritrixSettings settings={settings}/>
+        <WailSettings settings={settings} />
+        <WaybackSettings settings={settings} />
+        <HeritrixSettings settings={settings} />
       </List>
     )
   }

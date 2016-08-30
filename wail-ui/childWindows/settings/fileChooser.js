@@ -23,7 +23,7 @@ export default class FileChooser extends Component {
     settings: PropTypes.object.isRequired,
     useAltName: PropTypes.bool.isRequired,
     counter: PropTypes.number.isRequired,
-    altName: PropTypes.string,
+    altName: PropTypes.string
   }
 
   constructor (props, context) {
@@ -59,11 +59,11 @@ export default class FileChooser extends Component {
   render () {
     const actionIcon = (
       <IconButton
-        touch={true}
+        touch
         tooltip='Modify'
-        tooltipPosition="top-left"
+        tooltipPosition='top-left'
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -73,15 +73,15 @@ export default class FileChooser extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         targetOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <MenuItem style={style} onTouchTap={this.changeLocation} primaryText='Change Location'/>
-        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default'/>
+        <MenuItem style={style} onTouchTap={this.changeLocation} primaryText='Change Location' />
+        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default' />
       </IconMenu>
     )
     var pt
     if (this.props.useAltName) {
       pt = this.props.altName
     } else {
-      pt = `${ _.upperCase(this.props.whichSetting) } Path`
+      pt = `${_.upperCase(this.props.whichSetting)} Path`
     }
     return (
       <ListItem

@@ -16,7 +16,7 @@ const settings = remote.getGlobal('settings')
 
 export default class LoadingProgress extends Component {
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   getChildContext () {
@@ -37,10 +37,10 @@ export default class LoadingProgress extends Component {
         <TableBody
           key={'check-table-body'}
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
-          <MigratePywb settings={settings} migrate={settings.get('migrate')}/>
-          <CheckServices firstLoad={false} wait={true}/>
+          <MigratePywb settings={settings} migrate={settings.get('migrate')} />
+          <CheckServices firstLoad={false} wait />
 
         </TableBody>
       )
@@ -49,16 +49,15 @@ export default class LoadingProgress extends Component {
         <TableBody
           key={'check-table-body'}
           displayRowCheckbox={false}
-          showRowHover={true}
+          showRowHover
         >
-          <CheckServices firstLoad={false} wait={false}/>
+          <CheckServices firstLoad={false} wait={false} />
         </TableBody>
       )
-
     }
 
     return (
-      <Grid flexible={true}>
+      <Grid flexible>
         <Row>
           <Table key={'check-table'}>
             <TableHeader
@@ -80,7 +79,7 @@ export default class LoadingProgress extends Component {
           </Table>
         </Row>
         <Row>
-          <ProgressMessages/>
+          <ProgressMessages />
         </Row>
       </Grid>
     )

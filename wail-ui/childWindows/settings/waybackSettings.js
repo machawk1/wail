@@ -12,15 +12,15 @@ export default class WaybackSettings extends Component {
   render () {
     return (
       <ListItem
-        leftAvatar={<Avatar backgroundColor={'transparent'} src="../../icons/openWB.png"/>}
-        primaryText="Wayback"
-        primaryTogglesNestedList={true}
+        leftAvatar={<Avatar backgroundColor={'transparent'} src='../../icons/openWB.png' />}
+        primaryText='Wayback'
+        primaryTogglesNestedList
         nestedItems={
           [
             <NumberPicker key={'Numpicker'} counter={1} hint='Port' settings={this.props.settings} warnOnChange={false}
-                          notifyMain={true}
-                          channel={'rewrite-wayback-config'}
-                          whichSetting="wayback.port"/>
+              notifyMain
+              channel={'rewrite-wayback-config'}
+              whichSetting='wayback.port' />
           ]
         }
       />

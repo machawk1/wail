@@ -50,12 +50,12 @@ export default class StatusDialog extends Component {
     const actions = [
       <FlatButton
         label='No'
-        primary={true}
+        primary
         onTouchTap={this.handleCloseDisregard}
       />,
       <FlatButton
         label='Yes'
-        primary={true}
+        primary
         onTouchTap={this.handleCloseFix}
       />
     ]
@@ -63,7 +63,7 @@ export default class StatusDialog extends Component {
       <Dialog
         title='Service Status Update'
         actions={actions}
-        modal={true}
+        modal
         open={this.state.open}
       >
         {this.state.serviceMessage}

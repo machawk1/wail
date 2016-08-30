@@ -10,8 +10,8 @@ import autobind from 'autobind-decorator'
 import S from 'string'
 import {
   ToastContainer,
-  ToastMessage,
-} from "react-toastr"
+  ToastMessage
+} from 'react-toastr'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -47,14 +47,13 @@ export default class WayBackTab extends Component {
         {stdout}
       </p>)
     })
-
   }
 
   render () {
     return (
       <div>
         <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
-          <ToolbarGroup firstChild={true}>
+          <ToolbarGroup firstChild>
             <RaisedButton
               label='View in Browser'
               labelPosition='before'
@@ -64,16 +63,16 @@ export default class WayBackTab extends Component {
           </ToolbarGroup>
           <ToolbarGroup>
             <RaisedButton
-              label="Force Reindexing"
-              labelPosition="before"
+              label='Force Reindexing'
+              labelPosition='before'
               onMouseDown={this.forIndex}
             />
           </ToolbarGroup>
-          <ToolbarGroup lastChild={true}>
+          <ToolbarGroup lastChild>
             <RaisedButton
               icon={<FolderOpen />}
-              label="View Archives"
-              labelPosition="before"
+              label='View Archives'
+              labelPosition='before'
               onMouseDown={() => shell.openItem(settings.get('collections.dir'))}
             />
           </ToolbarGroup>
@@ -81,9 +80,9 @@ export default class WayBackTab extends Component {
         <ToastContainer
           toastMessageFactory={ToastMessageFactory}
           ref={(c) => this.toastr = c}
-          preventDuplicates={true}
-          newestOnTop={true}
-          className="toast-top-center"
+          preventDuplicates
+          newestOnTop
+          className='toast-top-center'
         />
       </div>
     )

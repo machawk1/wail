@@ -16,7 +16,7 @@ export function startHeritrix (logger) {
         env: {
           JAVA_HOME: settings.get('jdk'),
           JRE_HOME: settings.get('jre'),
-          HERITRIX_HOME: heritrixPath,
+          HERITRIX_HOME: heritrixPath
         },
         detached: true,
         shell: false,
@@ -54,7 +54,7 @@ export function startHeritrix (logger) {
 
 export function startWayback (logger) {
   return new Promise((resolve, reject) => {
-    let exec =settings.get('pywb.wayback')
+    let exec = settings.get('pywb.wayback')
     let opts = {
       cwd: settings.get('pywb.home'),
       detached: true,
@@ -64,7 +64,7 @@ export function startWayback (logger) {
     console.log(opts)
     logger.info(util.format('Loading Actions %s', 'launching wayback'))
     try {
-      let wayback = childProcess.spawn(exec,['-d', settings.get('warcs')], opts)
+      let wayback = childProcess.spawn(exec, ['-d', settings.get('warcs')], opts)
       wayback.unref()
     } catch (err) {
       logger.error(util.format('Loading Actions %s', 'launch wayback', err))

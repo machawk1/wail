@@ -5,8 +5,8 @@ import { shell } from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
 import {
   ToastContainer,
-  ToastMessage,
-} from "react-toastr"
+  ToastMessage
+} from 'react-toastr'
 
 const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
@@ -15,7 +15,7 @@ export default class Notifications extends Component {
     super(props, context)
     this.state = {
       message: 'Status Number 1',
-      open: false,
+      open: false
     }
     this.toastr = null
   }
@@ -54,9 +54,9 @@ export default class Notifications extends Component {
     <ToastContainer
       toastMessageFactory={ToastMessageFactory}
       ref={(c) => this.toastr = c}
-      preventDuplicates={true}
-      newestOnTop={true}
-      className="toast-top-center"
+      preventDuplicates
+      newestOnTop
+      className='toast-top-center'
     />
     )
   }

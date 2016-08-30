@@ -29,7 +29,7 @@ export function writeWaybackConf () {
     'wayback.url.prefix.default=${wayback.url.scheme}://${wayback.url.host}:${wayback.url.port}',
     "wayback.url.prefix=#{ systemEnvironment['WAYBACK_URL_PREFIX'] ?: '${wayback.url.prefix.default}' }",
     'wayback.archivedir.1=${wayback.basedir}/files1/',
-    'wayback.archivedir.2=${wayback.basedir}/files2/',
+    'wayback.archivedir.2=${wayback.basedir}/files2/'
   ]
   let wbConfPath = settings.get('wayBackConf')
   let base = settings.get('base')
@@ -73,7 +73,7 @@ export function waybackAccesible (startOnDown = false) {
       console.log('wayback is accessible')
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
-        status: true,
+        status: true
       })
     },
     error: (err) => {
@@ -81,7 +81,7 @@ export function waybackAccesible (startOnDown = false) {
       logger.error(util.format(logStringError, 'waybackAccessible', err.stack))
       ServiceDispatcher.dispatch({
         type: EventTypes.WAYBACK_STATUS_UPDATE,
-        status: false,
+        status: false
       })
       if (startOnDown) {
         startWayback()
@@ -91,7 +91,7 @@ export function waybackAccesible (startOnDown = false) {
 }
 
 export function startWayback (cb) {
-  let exec =settings.get('pywb.wayback')
+  let exec = settings.get('pywb.wayback')
   let opts = {
     cwd: settings.get('pywb.home'),
     detached: true,
@@ -101,12 +101,12 @@ export function startWayback (cb) {
   console.log(opts)
   logger.info(util.format('Wayback-actions %s', 'launching wayback'))
   try {
-    let wayback = childProcess.spawn(exec,['-d', settings.get('warcs')], opts)
+    let wayback = childProcess.spawn(exec, ['-d', settings.get('warcs')], opts)
     wayback.unref()
   } catch (err) {
     logger.error(util.format('Wayback-actions %s', 'launch wayback', err))
   }
-  if(cb) {
+  if (cb) {
     cb()
   }
   // if (process.platform === 'win32') {

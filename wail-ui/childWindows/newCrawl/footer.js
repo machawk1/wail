@@ -11,7 +11,7 @@ export default class Footer extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      cancelHover: false,
+      cancelHover: false
 
     }
   }
@@ -32,15 +32,15 @@ export default class Footer extends Component {
   render () {
     return (
       <Toolbar>
-        <ToolbarGroup firstChild={true}>
+        <ToolbarGroup firstChild>
           <RaisedButton
-            label="Cancel"
+            label='Cancel'
             onTouchTap={this.handleClose}
           />
         </ToolbarGroup>
-        <ToolbarGroup lastChild={true}>
+        <ToolbarGroup lastChild>
           <RaisedButton
-            label="Start Crawl"
+            label='Start Crawl'
             onTouchTap={this.crawlConfigured}
           />
         </ToolbarGroup>

@@ -22,7 +22,7 @@ const darwinBuild = {
   iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale.icns')),
   archiveIcon: 'archive.icns',
   archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
-  extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist')),
+  extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist'))
 }
 
 const deps = Object.keys(pkg.dependencies)
@@ -137,7 +137,7 @@ const windowsSpecificOpts = {
 }
 
 const linuxSpecificOpts = {
-  icon: path.normalize(path.join(cwd, 'buildResources/linux/icon.png')),
+  icon: path.normalize(path.join(cwd, 'buildResources/linux/icon.png'))
 }
 
 function build (cfg) {

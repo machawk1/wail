@@ -22,9 +22,9 @@ export default {
       //   hook.id = normalizeUrl(hook.id)
       //   return hook
       // },
-      create(hook) {
+      create (hook) {
         console.log('before', hook.data)
-        if(hook.data.gotten) {
+        if (hook.data.gotten) {
           delete hook.data.gotten
           return hook
         } else {
@@ -40,11 +40,10 @@ export default {
             hook.data.archived = false
             return hook
           }).catch(error => {
-            console.error('memgator create hook error',error)
+            console.error('memgator create hook error', error)
           })
         }
-
-      },
+      }
       // update(hook) {
       //   hook.id = normalizeUrl(hook.id)
       //   return hook
@@ -52,13 +51,13 @@ export default {
 
     },
     after: {
-      create(hook) {
+      create (hook) {
         console.log('after', hook.data)
-      },
+      }
       // update(hook) {
       //
       // }
     }
-  },
+  }
 
 }

@@ -32,7 +32,7 @@ class ServiceStore_ extends EventEmitter {
     super()
     this.serviceStatus = {
       heritrix: true,
-      wayback: true,
+      wayback: true
     }
 
     this.statusDialog = {
@@ -42,7 +42,7 @@ class ServiceStore_ extends EventEmitter {
         wayback
       ],
       actionIndex: -1,
-      message: '',
+      message: ''
     }
     ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
   }

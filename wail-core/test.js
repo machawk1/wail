@@ -3,10 +3,9 @@ import feathers from 'feathers/client'
 import hooks from 'feathers-hooks'
 import primus from 'feathers-primus/client'
 
-const p = new Primus('http://localhost:3030',{
+const p = new Primus('http://localhost:3030', {
   timeout: 120000
 })
-
 
 const app = feathers()
   .configure(hooks())
@@ -16,7 +15,7 @@ window.app = app
 
 let testResource = p.resource('test')
 testResource.on('ready', () => {
-  testResource.command('sleep', (res) =>  {
+  testResource.command('sleep', (res) => {
     console.log(res)
   })
 })
@@ -29,7 +28,6 @@ memgator.find({})
     archives.find({})
       .then(aData => {
         console.log(aData)
-
       })
       .catch(aError => {
         console.log(aError)

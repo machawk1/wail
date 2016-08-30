@@ -11,7 +11,7 @@ export default class WarcToCollection extends Component {
   }
 
   componentDidMount () {
-    BeamMeUpScotty('#warcUpload',files => {
+    BeamMeUpScotty('#warcUpload', files => {
       files.forEach(f => console.log(f))
     })
   }
@@ -19,7 +19,7 @@ export default class WarcToCollection extends Component {
   render () {
     return (
 
-      <div id="warcUpload">
+      <div id='warcUpload'>
         Try dropping some files here, or click to select files to upload.
       </div>
 

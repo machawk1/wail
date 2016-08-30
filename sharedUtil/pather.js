@@ -16,7 +16,7 @@ export default class Pather {
   }
 
   @autobind
-  joinWithBase() {
+  joinWithBase () {
     return path.join(...arguments)
   }
 
@@ -41,7 +41,7 @@ export default class Pather {
     return path.sep
   }
 
-  get base (){
+  get base () {
     return this.base
   }
 }

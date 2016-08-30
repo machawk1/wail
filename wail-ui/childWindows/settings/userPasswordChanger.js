@@ -57,12 +57,12 @@ export default class UserPasswordChanger extends Component {
   submitEdit (event) {
     let send = {
       usr: this.state.usrModString,
-      pwd: this.state.pwrdModString,
+      pwd: this.state.pwrdModString
     }
     let ns = {
       open: false,
       usernameSetting: this.state.usrModString,
-      passwordSetting: this.state.pwrdModString,
+      passwordSetting: this.state.pwrdModString
     }
 
     dialog.showMessageBox(remote.getCurrentWindow(), {
@@ -82,7 +82,6 @@ export default class UserPasswordChanger extends Component {
         })
       }
     })
-
   }
 
   @autobind
@@ -104,7 +103,7 @@ export default class UserPasswordChanger extends Component {
     if (this.state.passwordSetting !== this.props.pwdOriginal || this.state.usernameSetting !== this.props.usrOriginal) {
       ipcRenderer.send(this.props.channel, {
         usr: this.props.usrOriginal,
-        pwrd: this.props.pwdOriginal,
+        pwrd: this.props.pwdOriginal
       })
       this.setState({
         usernameSetting: this.props.usrOriginal,
@@ -118,11 +117,11 @@ export default class UserPasswordChanger extends Component {
   render () {
     const actionIcon = (
       <IconButton
-        touch={true}
+        touch
         tooltip='Modify'
-        tooltipPosition="top-left"
+        tooltipPosition='top-left'
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -132,18 +131,18 @@ export default class UserPasswordChanger extends Component {
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         targetOrigin={{ vertical: 'top', horizontal: 'left' }}
       >
-        <MenuItem style={style} onTouchTap={this.handleOpen} primaryText='Change'/>
-        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default'/>
+        <MenuItem style={style} onTouchTap={this.handleOpen} primaryText='Change' />
+        <MenuItem style={style} onTouchTap={this.revert} primaryText='Revert To Default' />
       </IconMenu>
     )
     const actions = [
       <FlatButton
-        label="Cancel"
+        label='Cancel'
         onTouchTap={this.cancelEdit}
       />,
       <FlatButton
-        label="Submit"
-        primary={true}
+        label='Submit'
+        primary
         onTouchTap={this.submitEdit}
       />
     ]
@@ -157,9 +156,9 @@ export default class UserPasswordChanger extends Component {
         />
         <Dialog
           key={`UserPasswordChanger-d-${this.state.usernameSetting}:${this.state.passwordSetting}`}
-          title="Change"
+          title='Change'
           actions={actions}
-          modal={true}
+          modal
           open={this.state.open}
         >
           <TextField

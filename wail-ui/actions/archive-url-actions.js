@@ -37,13 +37,12 @@ export function checkUriIsInArchive (uri) {
         message: `The URL ${uri} is not in the archive`
       })
     })
-
 }
 
 export function getMementos (url) {
   UrlDispatcher.dispatch({
     type: EventTypes.GET_MEMENTO_COUNT,
-    url: url,
+    url: url
   })
 }
 
@@ -61,7 +60,6 @@ export function urlUpdated (url) {
 }
 
 export async function askMemgator2 (url) {
-
   childProcess.exec(`${settings.get('memgatorQuery')} ${url}`, (err, stdout, stderr) => {
     if (err) {
       console.error(err)

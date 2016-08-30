@@ -10,8 +10,8 @@ import ServiceStore from '../stores/serviceStore'
 
 const styles = {
   button: {
-    margin: 12,
-  },
+    margin: 12
+  }
 }
 
 export default class Debug extends Component {
@@ -21,7 +21,7 @@ export default class Debug extends Component {
     this.state = {
       hopen: false,
       copen: false,
-      wopen: false,
+      wopen: false
     }
     this.handleTouchTap = this.handleTouchTap.bind(this)
     this.handleRequestClose = this.handleRequestClose.bind(this)
@@ -31,32 +31,31 @@ export default class Debug extends Component {
     this.cClose = this.cClose.bind(this)
     this.wayBackButton = this.wayBackButton.bind(this)
     this.wpopclose = this.wpopclose.bind(this)
-
   }
 
   handleTouchTap (event) {
     event.preventDefault()
     this.setState({
       hopen: true,
-      anchorEl: event.currentTarget,
+      anchorEl: event.currentTarget
     })
   }
 
   handleRequestClose () {
     this.setState({
-      hopen: false,
+      hopen: false
     })
   }
 
   cClose () {
     this.setState({
-      copen: false,
+      copen: false
     })
   }
 
   wpopclose () {
     this.setState({
-      wopen: false,
+      wopen: false
     })
   }
 
@@ -74,7 +73,7 @@ export default class Debug extends Component {
     event.preventDefault()
     this.setState({
       copen: true,
-      anchorElc: event.currentTarget,
+      anchorElc: event.currentTarget
     })
   }
 
@@ -83,7 +82,7 @@ export default class Debug extends Component {
 
     this.setState({
       wopen: true,
-      anchorElw: event.currentTarget,
+      anchorElw: event.currentTarget
     })
   }
 
@@ -92,7 +91,7 @@ export default class Debug extends Component {
       return (
         <div>
           <Toolbar>
-            <ToolbarGroup firstChild={true}>
+            <ToolbarGroup firstChild>
               <RaisedButton
                 onTouchTap={this.handleTouchTap}
                 label='Heritrix'
@@ -111,11 +110,11 @@ export default class Debug extends Component {
             onRequestClose={this.handleRequestClose}
           >
             <Menu>
-              <MenuItem onTouchTap={this.launchHeritrix} primaryText='Start Heritrix'/>
-              <MenuItem onTouchTap={this.killHeritrix} primaryText='Kill Heritrix'/>
+              <MenuItem onTouchTap={this.launchHeritrix} primaryText='Start Heritrix' />
+              <MenuItem onTouchTap={this.killHeritrix} primaryText='Kill Heritrix' />
               <MenuItem onTouchTap={(e) => Heritrix.makeHeritrixJobConf('http://matkelly.com', 1)}
-                        primaryText='make job'/>
-              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText='test-status'/>
+                primaryText='make job' />
+              <MenuItem onTouchTap={(e) => ServiceStore.checkStatues()} primaryText='test-status' />
             </Menu>
           </Popover>
           <Popover
@@ -126,8 +125,8 @@ export default class Debug extends Component {
             onRequestClose={this.wpopclose}
           >
             <Menu>
-              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText='Start Wayback'/>
-              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText='Kill Wayback'/>
+              <MenuItem onTouchTap={(e) => Wayback.startWayback()} primaryText='Start Wayback' />
+              <MenuItem onTouchTap={(e) => Wayback.killWayback()} primaryText='Kill Wayback' />
 
             </Menu>
           </Popover>

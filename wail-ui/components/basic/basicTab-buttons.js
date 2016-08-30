@@ -22,7 +22,7 @@ export default class BasicTabButtons extends Component {
   render () {
     return (
       <Toolbar>
-        <ToolbarGroup firstChild={true}>
+        <ToolbarGroup firstChild>
           <RaisedButton
             icon={<CheckArchiveStatIcon />}
             label='Check Archived Status'
@@ -30,12 +30,12 @@ export default class BasicTabButtons extends Component {
             onMouseDown={this.onClickCheckArchive}
           />
         </ToolbarGroup>
-        <ToolbarGroup lastChild={true}>
+        <ToolbarGroup lastChild>
           <RaisedButton
             icon={<SettingIcon />}
-            label="Settings"
-            labelPosition="before"
-            onMouseDown={() => ipcRenderer.send('open-settings-window', "hi") }
+            label='Settings'
+            labelPosition='before'
+            onMouseDown={() => ipcRenderer.send('open-settings-window', 'hi')}
           />
         </ToolbarGroup>
       </Toolbar>

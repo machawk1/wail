@@ -15,7 +15,7 @@ const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class LoadingProgress extends Component {
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   getChildContext () {
@@ -24,7 +24,7 @@ export default class LoadingProgress extends Component {
 
   render () {
     return (
-      <Grid flexible={true}>
+      <Grid flexible>
         <Row>
           <Table key={'check-table'}>
             <TableHeader
@@ -45,12 +45,12 @@ export default class LoadingProgress extends Component {
             <TableBody
               key={'check-table-body'}
               displayRowCheckbox={false}
-              showRowHover={true}
+              showRowHover
             >
               <CheckOS />
               <CheckJava />
-              <MigratePywb settings={settings} migrate={true} />
-              <CheckServices firstLoad={true} wait={false}/>
+              <MigratePywb settings={settings} migrate />
+              <CheckServices firstLoad wait={false} />
             </TableBody>
           </Table>
         </Row>

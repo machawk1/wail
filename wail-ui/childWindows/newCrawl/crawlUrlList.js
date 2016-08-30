@@ -9,7 +9,7 @@ export default class UrlList extends Component {
   constructor (props, context) {
     super(props, context)
     this.state = {
-      urls: [ <ListItem key="noSeeds" primaryText="No Seed Urls"/> ]
+      urls: [ <ListItem key='noSeeds' primaryText='No Seed Urls' /> ]
     }
   }
 
@@ -32,7 +32,7 @@ export default class UrlList extends Component {
 
   render () {
     return (
-      <List style={styles.newCrawlList} children={this.state.urls}/>
+      <List style={styles.newCrawlList} children={this.state.urls} />
     )
   }
 }

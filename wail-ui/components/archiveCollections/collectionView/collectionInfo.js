@@ -8,13 +8,13 @@ import CollectionOverview from './collectionOverview'
 
 export default class CollectionInfo extends Component {
   static propTypes = {
-    collection: PropTypes.object.isRequired,
+    collection: PropTypes.object.isRequired
   }
 
   constructor (...args) {
     super(...args)
     this.state = {
-      index: 0,
+      index: 0
     }
   }
 
@@ -31,16 +31,16 @@ export default class CollectionInfo extends Component {
           onChange={this.handleChange}
           value={this.state.index}
         >
-          <Tab label="Overview" value={0}/>
-          <Tab label="Metadata" value={1}/>
-          <Tab label="Crawls" value={2}/>
-          <Tab label="Query Collection" value={3}/>
+          <Tab label='Overview' value={0} />
+          <Tab label='Metadata' value={1} />
+          <Tab label='Crawls' value={2} />
+          <Tab label='Query Collection' value={3} />
         </Tabs>
         <SwipeableViews
           index={this.state.index}
           onChangeIndex={this.handleChange}
         >
-          <CollectionOverview collection={collection}/>
+          <CollectionOverview collection={collection} />
           <div >
             Metadata
           </div>
