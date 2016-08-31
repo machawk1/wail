@@ -7,7 +7,7 @@ export default class Pather {
   }
 
   @autobind
-  join () {
+  joinWBase () {
     if (arguments.length === 0) {
       return path.join(this._base)
     } else {
@@ -16,8 +16,17 @@ export default class Pather {
   }
 
   @autobind
-  joinWithBase () {
+  join () {
     return path.join(...arguments)
+  }
+
+  @autobind
+  normalizeJoinWBase () {
+    if (arguments.length === 0) {
+      return path.join(this._base)
+    } else {
+      return path.normalize(this.join(...arguments))
+    }
   }
 
   @autobind
@@ -25,7 +34,7 @@ export default class Pather {
     if (arguments.length === 0) {
       return path.join(this._base)
     } else {
-      return path.normalize(this.join(...arguments))
+      return path.normalize(path.join(...arguments))
     }
   }
 

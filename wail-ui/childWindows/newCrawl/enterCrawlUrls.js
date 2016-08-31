@@ -8,7 +8,7 @@ import { Row, Column } from 'react-cellblock'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
 import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 import wailConstants from '../../constants/wail-constants'
 import CrawlUrlsStore from './crawlUrlsStore'
 

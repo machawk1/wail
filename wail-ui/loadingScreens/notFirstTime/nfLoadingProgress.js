@@ -4,7 +4,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import { Grid, Row } from 'react-cellblock'
 import { remote, ipcRenderer } from 'electron'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 import CheckServices from '../shared/checkServices'
 import ProgressMessages from '../shared/progressMessages'
 import LoadingDispatcher from '../shared/loadingDispatcher'
@@ -41,7 +41,6 @@ export default class LoadingProgress extends Component {
         >
           <MigratePywb settings={settings} migrate={settings.get('migrate')} />
           <CheckServices firstLoad={false} wait />
-
         </TableBody>
       )
     } else {

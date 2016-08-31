@@ -21,7 +21,7 @@ export function checkUriIsInArchive (uri) {
     message: `Checking if ${uri} is in the archive`
   })
 
-  rp({ uri: `${settings.get('pywb.url')}/Wail/*/${uri}` })
+  rp({ uri: `${settings.get('pywb.url')}Wail/*/${uri}` })
     .then(response => {
       // POST succeeded...
       GMessageDispatcher.dispatch({

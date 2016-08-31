@@ -46,7 +46,7 @@ const control = {
   tray: null,
   base: null,
   notDebugUI: true,
-  debug: true,
+  debug: false,
   openBackGroundWindows: false,
   didClose: false,
   didLoad: false,
@@ -254,21 +254,21 @@ function setUp () {
   }
 
   global.pathMan = control.pathMan = new Pather(control.base)
-
+  let {pathMan} = control
   let logPath
   let version = ''
   let settingsPath = app.getPath('userData')
   if (process.env.NODE_ENV === 'development') {
-    logPath = control.pathMan.join('waillogs')// path.join(control.base, 'waillogs')
-    version = '1.0.0-rc.2.5'
+    logPath = pathMan.joinWBase('waillogs')// path.join(control.base, 'waillogs')
+    version = '1.0.0-rc.2.6'
     settingsPath = logPath
   } else {
     version = app.getVersion()
-    logPath = control.pathMan.joinWithBase(app.getPath('userData'), 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
+    logPath = pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
   }
 
   if (process.platform === 'darwin') {
-    control.iconp = control.pathMan.normalizeJoin('src/icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
+    control.iconp = pathMan.normalizeJoinWBase('src/icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
     control.w = 800
     control.h = 380
   } else if (process.platform === 'win32') {
@@ -281,8 +281,6 @@ function setUp () {
     control.w = 800
     control.h = 361
   }
-
-  console.log(app.getPath('documents'))
 
   let settings = configSettings(control.base, settingsPath, version)
   global.settings = control.settings = settings

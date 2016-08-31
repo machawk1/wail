@@ -34,26 +34,28 @@ const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
 const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
-
+///Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes/',
-  '^/archives/',
+  '^/archives/collections/xyz($|/)',
+  '^/archives/collections/Wail/indexes/index.cdxj$',
+  '^/archives/collections/Wail/metadata.yaml$',
+  '^/archives/warcBackup($|/)',
+  '^/archives2($|/)',
   '^/.babelrc($|/)',
   '^/build($|/)',
   '^/build-binary.js$',
   '^/build-binary-old.js$',
-  '^/bundledApps/heritrix-3.2.0($|/)',
-  '^/bundledApps/heritrix-3.3.0/heritrix_out.log$',
-  '^/bundledApps/heritrix-3.3.0/adhoc.keystore$',
-  '^/bundledApps/heritrix-3.3.0/heritrix.pid$',
-  '^/bundledApps/heritrix-3.3.0/jobs/',
+  '^/bundledApps/heritrix/heritrix_out.log$',
+  '^/bundledApps/heritrix/adhoc.keystore$',
+  '^/bundledApps/heritrix/heritrix.pid$',
+  '^/bundledApps/heritrix/jobs/',
   '^/bundledApps/memgator($|/)',
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
   '^/.codeclimate.yml($|/)',
   '^/doElectron.sh$',
   '^/wail-core($|/)',
-  '^/archives/',
   '^/bootstrap.sh$',
   '^/npm-debug.log.*$',
   '^/electron-main-dev.js$',

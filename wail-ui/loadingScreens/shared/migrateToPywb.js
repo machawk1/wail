@@ -7,6 +7,7 @@ import wc from '../../constants/wail-constants'
 import LoadingDispatcher from './loadingDispatcher'
 import LoadingStore from './loadingStore'
 import fs from 'fs-extra'
+import Dialog from 'material-ui/Dialog'
 import Promise from 'bluebird'
 import {
   ToastContainer,
@@ -14,8 +15,9 @@ import {
 } from 'react-toastr'
 import S from 'string'
 import cp from 'child_process'
-import shelljs from 'shelljs'
+import FlatButton from 'material-ui/FlatButton'
 import path from 'path'
+import FitText from 'react-fittext'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -63,19 +65,33 @@ export default class MigratePywb extends Component {
     this.state = {
       progMessage: message,
       completed: 0,
-      done: false
+      done: false,
+      open: true
     }
     this.container = null
   }
 
   componentWillMount () {
-    LoadingStore.on('check-services-done', this.updateProgress)
     LoadingStore.on('migrate', this.doMigration)
   }
 
   componentWillUnMount () {
-    LoadingStore.removeListener('check-services-done', this.updateProgress)
     LoadingStore.removeListener('migrate', this.doMigration)
+  }
+
+  @autobind
+  handleCloseYes () {
+    this.setState({ open: false }, () => {
+      this.doMigration()
+    })
+  }
+
+  @autobind
+  handleClose () {
+    this.props.settings.set('migrate', false)
+    this.setState({ open: false }, () => {
+      this.done()
+    })
   }
 
   @autobind
@@ -83,7 +99,6 @@ export default class MigratePywb extends Component {
     // add some latency to allow for the user to see our update as proof we did the on load check
     this.setState({ done: true }, () => {
       // console.log('checkServices done=true setState callback')
-      this.props.settings.set('migrate', false)
       LoadingDispatcher.dispatch({
         type: wc.Loading.MIGRATION_DONE
       })
@@ -93,14 +108,21 @@ export default class MigratePywb extends Component {
   @autobind
   doMigration () {
     console.log('migrating to pywb')
-    this.doMigaration()
+    this.setState({ progMessage: 'Migrating to pywb' }, () => {
+      console.log('migrating to pywb')
+      if (this.props.settings.get('migrate')) {
+        this.doMigaration()
+      }
+    })
   }
 
   @autobind
   updateProgress () {
     this.setState({ progMessage: 'Migrating to pywb' }, () => {
       console.log('migrating to pywb')
-      this.doMigaration()
+      if (this.props.settings.get('migrate') && !this.state.done) {
+        this.doMigaration()
+      }
     })
   }
 
@@ -133,90 +155,119 @@ export default class MigratePywb extends Component {
   }
 
   @autobind
-  doMigaration () {
-    let archives = this.props.settings.get('warcs')
-    let opts = {
-      cwd: archives
-    }
-    let exec = S(this.props.settings.get('pywb.newCollection')).template({ col: 'Wail' }).s
-    console.log(exec)
-    cp.exec(exec, opts, (error, stdout, stderr) => {
-      if (error) {
-        console.error(stderr, error)
-        this.container.error(
-          'There was an error creating the default collection Wail'
-        )
-      } else {
-        let ret = shelljs.ls(`${this.props.settings.get('warcs')}/*.warc`)
-        if (ret.length > 0) {
-          this.container.success('Created Collection Wail migrating existing warcs')
-          let exec = S(this.props.settings.get('pywb.addWarcsToCol')).template({
-            col: 'Wail',
-            warcs: `${archives}/*.warc`
-          }).s
-          cp.exec(exec, opts, (error, stdout, stderr) => {
-            if (error) {
-              console.error(error)
-              this.refs.container.error(
-                'There was an error migrating warcs to the default collection Wail'
-              )
-            }
-            let c1 = ((stdout || ' ').match(/INFO/g) || []).length
-            let c2 = ((stderr || ' ').match(/INFO/g) || []).length
-            let count = c1 === 0 ? c2 : c1
-            this.container.success(`Migrated ${count} warcs to the default collection Wail`)
-
-            let moveArray = this.getMoveArray()
-            Promise.map(moveArray, movePywbStuff)
-              .then(() => {
-                let backup = path.normalize(`${this.props.settings.get('warcs')}/warcBackup`)
-                fs.ensureDir(backup, err => {
-                  if (!err) {
-                    ret.forEach(warc => {
-                      fs.move(warc, path.normalize(`${backup}/${path.basename(warc)}`), err => {
-                        if (err) {
-                          console.error(err)
-                        } else {
-                          console.log('moved ', warc)
-                        }
-                      })
-                    })
-                    this.done()
-                  }
-                })
-              })
-              .catch(moveError => {
-                console.error(moveError)
-                this.refs.container.error(
-                  'There was an error migrating pywb template static files'
-                )
-              })
-          })
+  askForWarcs (dialog) {
+    return new Promise((resolve, reject) => {
+      let messageOpts = {
+        type: 'question',
+        buttons: [ 'Yes', 'No' ],
+        title: 'Add Warcs',
+        message: 'Do you have any (w)arc files that you wish to add?',
+        detail: 'This adds those (w)arc files to the default collection Wail',
+        cancelId: 666
+      }
+      dialog.showMessageBox(messageOpts, (response) => {
+        if (response === 0) {
+          resolve(response)
         } else {
-          this.container.success('Created Collection Wail no warc files present to migrate')
-          this.done()
+          reject({ response })
         }
+      })
+    })
+  }
+
+  @autobind
+  doMigaration () {
+    const { app, dialog } = require('electron').remote
+    let getWarcOpts = {
+      title: 'Select Directory Containing (w)arcs',
+      filters: [
+        { name: '(w)arcs', extensions: [ 'warc', 'arc' ] }
+      ],
+      properties: [ 'openDirectory' ]
+    }
+    this.props.settings.set('migrate', false)
+    dialog.showOpenDialog(getWarcOpts, warcs => {
+      console.log(warcs)
+      if (warcs) {
+        let exec = S(this.props.settings.get('pywb.addWarcsToCol')).template({
+          col: 'Wail',
+          warcs: path.join(warcs[ 0 ], '*.warc')//`${warcs[ 0 ]}/`
+        }).s
+        let archives = this.props.settings.get('warcs')
+        let opts = {
+          cwd: archives
+        }
+        cp.exec(exec, opts, (error, stdout, stderr) => {
+          if (error) {
+            console.error(error)
+            this.refs.container.error(
+              'There was an error migrating warcs to the default collection Wail'
+            )
+          }
+          let c1 = ((stdout || ' ').match(/INFO/g) || []).length
+          let c2 = ((stderr || ' ').match(/INFO/g) || []).length
+          let count = c1 === 0 ? c2 : c1
+          // `Migrated ${count} warcs to the default collection Wail`
+          this.container.success(
+            <FitText maxFontSize={10}>
+              <p>{`Migrated ${count} warcs to the default collection Wail`}</p>
+            </FitText>
+          )
+          this.done()
+        })
+      } else {
+        this.done()
       }
     })
   }
 
   render () {
     if (this.props.migrate) {
+      const actions = [
+        <FlatButton
+          label="No"
+          primary={true}
+          onTouchTap={this.handleClose}
+        />,
+        <FlatButton
+          label="Yes"
+          primary={true}
+          onTouchTap={this.handleCloseYes}
+        />,
+      ]
       console.log('migrating to pywb')
-      this.doMigaration()
       var check_or_done
       if (this.state.done) {
-        check_or_done = <SvgIcon />
+        check_or_done = (
+            <SvgIcon />
+        )
       } else {
         check_or_done = (
-          <RefreshIndicator
-            size={40}
-            left={10}
-            top={0}
-            status='loading'
-            style={style.refresh}
-          />
-
+          <div>
+            <Dialog
+              title="Dialog With Actions"
+              actions={actions}
+              modal={true}
+              open={this.state.open}
+            >
+              Do you have any (w)arc files that you wish to add to
+              the default collection Wail?
+            </Dialog>
+            <ToastContainer
+              toastMessageFactory={ToastMessageFactory}
+              ref={(c) => this.container = c}
+              preventDuplicates
+              newestOnTop
+              className='toast-top-center'
+            />
+            <RefreshIndicator
+              size={40}
+              left={10}
+              top={0}
+              status='loading'
+              style={style.refresh}
+            />
+          </div>
         )
       }
       return (
@@ -227,16 +278,8 @@ export default class MigratePywb extends Component {
             </p>
           </TableRowColumn>
           <TableRowColumn>
-            <div>
-              <ToastContainer
-                toastMessageFactory={ToastMessageFactory}
-                ref={(c) => this.container = c}
-                preventDuplicates
-                newestOnTop
-                className='toast-top-center'
-              />
-              {check_or_done}
-            </div>
+
+            {check_or_done}
           </TableRowColumn>
         </TableRow>
       )

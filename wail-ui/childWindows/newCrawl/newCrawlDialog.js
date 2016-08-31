@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 import EnterCrawlUrls from './enterCrawlUrls'
 import CrawlDepth from './crawlDepth'
 import CrawlUrlList from './crawlUrlList'

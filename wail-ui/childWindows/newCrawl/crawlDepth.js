@@ -6,7 +6,7 @@ import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Row, Column } from 'react-cellblock'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 import CrawlUrlsDispatcher from './crawlUrlsDispatcher'
 import wailConstants from '../../constants/wail-constants'
 

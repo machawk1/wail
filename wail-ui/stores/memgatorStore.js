@@ -4,7 +4,7 @@ import { shell, remote } from 'electron'
 import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
-import MementoTableItem, { getNoMementos } from '../componets/basic/MementoTableItem'
+import MementoTableItem, { getNoMementos } from '../components/basic/MementoTableItem'
 import * as urlActions from '../actions/archive-url-actions'
 
 const settings = remote.getGlobal('settings')

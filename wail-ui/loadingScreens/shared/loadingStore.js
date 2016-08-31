@@ -68,7 +68,7 @@ class loadingStore extends EventEmitter {
         this.emit('migration-done')
         break
       case wc.Loading.SERVICE_CHECK_DONE:
-        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
         break
     }
   }

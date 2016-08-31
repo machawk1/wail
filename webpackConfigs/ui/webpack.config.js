@@ -6,16 +6,16 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 export default {
   devtool: 'inline-source-map',
   entry: {
-    // accessibility: './wail-ui/background/accessibility',
-    // indexer: './wail-ui/background/indexer',
-    // jobs: './wail-ui/background/jobs',
-    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    // requestD: './wail-ui/background/requestDaemon',
-    // settingsW: './wail-ui/childWindows/settings/settingsW',
-    // wail: './wail-ui/wail',
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
-    explore: './wail-ui/components/archiveCollections/explore'
+    accessibility: './wail-ui/background/accessibility',
+    indexer: './wail-ui/background/indexer',
+    jobs: './wail-ui/background/jobs',
+    newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    requestD: './wail-ui/background/requestDaemon',
+    settingsW: './wail-ui/childWindows/settings/settingsW',
+    wail: './wail-ui/wail',
+    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
+    // explore: './wail-ui/components/archiveCollections/explore'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },
   module: {
@@ -82,5 +82,5 @@ export default {
     publicPath: 'http://localhost:9000/dist/'
   },
   // bail: true,
-  // target: 'electron-renderer',
+  target: 'electron-renderer',
 }

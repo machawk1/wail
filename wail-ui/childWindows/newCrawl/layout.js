@@ -3,7 +3,7 @@ import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 

@@ -3,27 +3,25 @@ import { shell, remote } from 'electron'
 import RaisedButton from 'material-ui/RaisedButton'
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit'
+import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
 import cp from 'child_process'
 import autobind from 'autobind-decorator'
 import S from 'string'
-import {
-  ToastContainer,
-  ToastMessage
-} from 'react-toastr'
+import wailConstants from '../../constants/wail-constants'
+
+const EventTypes = wailConstants.EventTypes
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-const ToastMessageFactory = React.createFactory(ToastMessage.animation)
 
 const settings = remote.getGlobal('settings')
 
 export default class WayBackTab extends Component {
   constructor (props, context) {
     super(props, context)
-    this.toastr = null
   }
   @autobind
   forIndex () {
@@ -35,17 +33,19 @@ export default class WayBackTab extends Component {
     // generatePathIndex(generateCDX)
     cp.exec(S(settings.get('pywb.reindexCol')).template({ col: 'Wail' }), opts, (error, stdout, stderr) => {
       if (error) {
-        let em = `There was an error in force indexing! ${stderr}`
-        this.toastr.error(<p>
-          {em}
-        </p>)
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: `There was an error in force indexing! ${stderr}`
+        })
         console.error(error)
+      } else {
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: stdout
+        })
       }
       console.log(stderr)
       console.log(stdout)
-      this.toastr.success(<p>
-        {stdout}
-      </p>)
     })
   }
 
@@ -77,13 +77,6 @@ export default class WayBackTab extends Component {
             />
           </ToolbarGroup>
         </Toolbar>
-        <ToastContainer
-          toastMessageFactory={ToastMessageFactory}
-          ref={(c) => this.toastr = c}
-          preventDuplicates
-          newestOnTop
-          className='toast-top-center'
-        />
       </div>
     )
   }

@@ -3,6 +3,7 @@ import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import { shell } from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
+import FitText from 'react-fittext'
 import {
   ToastContainer,
   ToastMessage
@@ -30,9 +31,17 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-    this.toastr.info(<p>
-      {GMessageStore.getMessage()}
-    </p>)
+
+
+    this.toastr.info(
+      <FitText maxFontSize={15}>
+        <p> {GMessageStore.getMessage()}</p>
+      </FitText>,
+      'Info',
+      {
+        timeOut: 30000
+      }
+    )
     // if (!this.state.open) {
     //   this.setState({ message: , open: true })
     // }
@@ -53,7 +62,7 @@ export default class Notifications extends Component {
     return (
     <ToastContainer
       toastMessageFactory={ToastMessageFactory}
-      ref={(c) => this.toastr = c}
+      ref={(c) => { this.toastr = c } }
       preventDuplicates
       newestOnTop
       className='toast-top-center'

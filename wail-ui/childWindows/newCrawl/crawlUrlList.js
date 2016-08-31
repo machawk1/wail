@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import { List, ListItem } from 'material-ui/List'
-import styles from '../../componets/styles/styles'
+import styles from '../../components/styles/styles'
 import CrawlUrlsStore from './crawlUrlsStore'
 
 export default class UrlList extends Component {
