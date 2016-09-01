@@ -2,7 +2,7 @@ import 'babel-polyfill'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
-import {encode, compare} from 'bytewise'
+import { encode, compare } from 'bytewise'
 import _ from 'lodash'
 import feathers from 'feathers/client'
 import socketio from 'feathers-socketio/client'
@@ -14,19 +14,57 @@ import util from 'util'
 import mongodb_prebuilt from 'mongodb-prebuilt'
 import shelljs from 'shelljs'
 import cp from 'child_process'
+import named from 'named-regexp'
 import autobind from 'autobind-decorator'
-import {Pather} from '../sharedUtil'
+import { Pather } from '../sharedUtil'
+import Esettings from 'electron-settings'
 
-let metadata= {title:"Test", description:"Making sure this works"}
+let hpidre = named.named(/[a-zA-z0-9\s:]+[(pid]+\s(<:pid>[0-9]+)[)]/)
+let settings = new Esettings({ configDirPath: '/home/john/wail/waillogs/wail-settings' })
+let hStart = settings.get('heritrixStart')
+cp.exec(hStart, (err, stdout, stderr) => {
+  // console.log(hStart)
+  if (err) {
 
-var start = new Date().getTime()
-// for(let it in metadata) {
-//   console.log(it)
+  } else {
+    let soutLines = S(stdout).lines()
+    let pidLine = S(soutLines[ 0 ]).trim().s
+    let maybepid = hpidre.exec(pidLine)
+    if (maybepid) {
+      let pid = maybepid.capture('pid')
+      console.log(pidLine, pid)
+    } else {
+      console.log('fail')
+      console.log(pidLine)
+      console.log(soutLines)
+
+    }
+  }
+})
+// let heritrixPath = settings.get('heritrix.path')
+// let opts = {
+//   env: {
+//     JAVA_HOME: settings.get('jdk'),
+//     JRE_HOME: settings.get('jre'),
+//     HERITRIX_HOME: heritrixPath
+//   },
+//   shell: true,
+//   stdio: [ 'ignore', 'ignore', 'ignore' ]
 // }
+// let heritrix = cp.spawn('/home/john/wail/bundledApps/heritrix/bin/heritrix',['-a', 'lorem:ipsum'],opts)
+//
+// heritrix.on('data', (data) => {
+//   console.log(`stdout: ${data}`)
+// })
+//
+// heritrix.on('data', (data) => {
+//   console.log(`stderr: ${data}`)
+// })
+//
+// heritrix.on('close', (code) => {
+//   console.log(`child process exited with code ${code}`)
+// })
 
-var end = new Date().getTime()
-var time = end - start
-console.log('Execution time: ' + time)
 // const pathMan = new Pather(path.resolve('.'))
 //
 // // let here = path.resolve('.')
