@@ -14,7 +14,10 @@ import schedule from 'node-schedule'
 import util from 'util'
 import Logger from '../logger/logger'
 import cp from 'child_process'
-require('pretty-error').start()
+import chokidar from 'chokidar'
+
+
+
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
@@ -25,6 +28,8 @@ const logStringError = 'indexer error where[ %s ] stack [ %s ]'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 let prevIndexingDone = true
+
+const archiveWatchers = []
 
 function generatePathIndex (genCdx) {
   let index = []
@@ -250,20 +255,70 @@ class Indexer {
   }
 }
 
-let indexer = new Indexer()
 
 ipcRenderer.on('start-index-indexing', (event) => {
-  console.log('Monitor get start indexing monitoring')
-  logger.info(util.format(logString, 'got start indexing monitoring'))
-  ipcRenderer.send('got-it', { from: 'indexer', yes: true })
-  indexer.indexer()
+  let dCol = S(settings.get('collections.colWarcs')).template({col: 'Wail'})
+  let archiveWatcher = chokidar.watch(dCol,{
+    ignoreInitial: true
+  })
+  archiveWatcher.on('add', (event, path) => {
+    let opts = {
+      cwd: settings.get('warcs')
+    }
+    cp.exec(S(settings.get('pywb.reindexCol')).template({col: 'Wail'}), opts, (error, stdout, stderr) => {
+      if (error) {
+        logger.error('Indexer error %s', 'indexing error', stderr)
+        console.error(error)
+      }
+    })
+  })
+
+  archiveWatchers.push(archiveWatcher)
+})
+
+ipcRenderer.on('start-index-indexing-col', (event,col) => {
+  let dCol = S(settings.get('collections.colWarcs')).template({col})
+  let archiveWatcher = chokidar.watch(dCol,{
+    ignoreInitial: true
+  })
+  archiveWatcher.on('add', (event, path) => {
+    let opts = {
+      cwd: settings.get('warcs')
+    }
+    cp.exec(S(settings.get('pywb.reindexCol')).template({col}), opts, (error, stdout, stderr) => {
+      if (error) {
+        logger.error('Indexer error %s', 'indexing error', stderr)
+        console.error(error)
+      }
+    })
+  })
+
+  archiveWatchers.push(archiveWatcher)
 })
 
 ipcRenderer.on('stop', (event) => {
   console.log('Monitor get stop indexing monitoring')
+  archiveWatchers.forEach(watcher => {
+    watcher.close()
+  })
   logger.info(util.format(logString, 'got stop indexing monitoring'))
   logger.cleanUp()
-  indexer.job.cancel()
-  indexer.job = null
-  indexer = null
 })
+
+// let indexer = new Indexer()
+
+// ipcRenderer.on('start-index-indexing', (event) => {
+//   console.log('Monitor get start indexing monitoring')
+//   logger.info(util.format(logString, 'got start indexing monitoring'))
+//   ipcRenderer.send('got-it', { from: 'indexer', yes: true })
+//   indexer.indexer()
+// })
+//
+// ipcRenderer.on('stop', (event) => {
+//   console.log('Monitor get stop indexing monitoring')
+//   logger.info(util.format(logString, 'got stop indexing monitoring'))
+//   logger.cleanUp()
+//   indexer.job.cancel()
+//   indexer.job = null
+//   indexer = null
+// })

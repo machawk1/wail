@@ -18,29 +18,49 @@ import named from 'named-regexp'
 import autobind from 'autobind-decorator'
 import { Pather } from '../sharedUtil'
 import Esettings from 'electron-settings'
+import chokidar from 'chokidar'
 
-let hpidre = named.named(/[a-zA-z0-9\s:]+[(pid]+\s(<:pid>[0-9]+)[)]/)
-let settings = new Esettings({ configDirPath: '/home/john/wail/waillogs/wail-settings' })
-let hStart = settings.get('heritrixStart')
-cp.exec(hStart, (err, stdout, stderr) => {
-  // console.log(hStart)
-  if (err) {
-
-  } else {
-    let soutLines = S(stdout).lines()
-    let pidLine = S(soutLines[ 0 ]).trim().s
-    let maybepid = hpidre.exec(pidLine)
-    if (maybepid) {
-      let pid = maybepid.capture('pid')
-      console.log(pidLine, pid)
-    } else {
-      console.log('fail')
-      console.log(pidLine)
-      console.log(soutLines)
-
-    }
-  }
+let archiveWatcher = chokidar.watch('/home/john/my-fork-wail/archives/collections/Wail/archive',{
+  ignoreInitial: true
 })
+
+archiveWatcher.on('add', (event, path) => {
+  console.log(event, path)
+})
+
+
+// let configDirPath = path.join('.','waillogs/wail-settings')
+// let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
+// let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
+// let settings = new Esettings({ configDirPath })
+// let hStart = settings.get('heritrixStart')
+// let ret = hpidre.exec('Thu Sep  1 00:19:14 EDT 2016 Heritrix starting (pid 24256)')
+// console.log(ret)
+// cp.exec(hStart, (err, stdout, stderr) => {
+//   // console.log(hStart)
+//   if (err) {
+//
+//   } else {
+//     let soutLines = S(stdout).lines()
+//     let pidLine = soutLines[ 0 ]
+//     let maybepid = hpidre.exec(pidLine)
+//     if (maybepid) {
+//       let pid = maybepid.capture('hpid')
+//       console.log(pidLine, pid)
+//       let mbp2 = hpidre2.exec(stdout)
+//       if(mbp2) {
+//         console.log('global found',mbp2)
+//       }
+//     } else {
+//       console.log('fail')
+//       console.log(pidLine)
+//       console.log(soutLines)
+//
+//     }
+//   }
+//
+//   // console.log('stdout',stdout)
+// })
 // let heritrixPath = settings.get('heritrix.path')
 // let opts = {
 //   env: {

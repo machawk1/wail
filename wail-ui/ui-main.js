@@ -6,7 +6,7 @@ import path from 'path'
 import util from 'util'
 import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
 import ContextMenu from './menu/contextMenu'
-import {Pather} from '../sharedUtil'
+import {Pather, createServiceDaemon} from '../sharedUtil'
 
 const windows = {
   accessibilityWindow: null,
@@ -55,7 +55,8 @@ const control = {
   didLoad: false,
   loading: true,
   firstLoad: false,
-  contextMenu: new ContextMenu()
+  contextMenu: new ContextMenu(),
+  ServiceDaemon: null
 }
 
 // let shouldQuit = false
@@ -210,7 +211,8 @@ function setUpIPC () {
 
   ipcMain.on('setting-hard-reset', (event, payload) => {
     console.log('got settings-hard-reset')
-    writeSettings(control.base, control.settings, settings.get('version'), settings.get('didFirstLoad'), settings.get('migrate'))
+    writeSettings(control.base, control.settings, control.settings.get('version'),
+      control.settings.get('didFirstLoad'), control.settings.get('migrate'))
   })
 
   ipcMain.on('rewrite-wayback-config', (event, payload) => {
@@ -221,6 +223,18 @@ function setUpIPC () {
   ipcMain.on('set-heritrix-usrpwd', (event, payload) => {
     console.log('got set heritrix usrpwd', payload)
     rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
+  })
+
+  ipcRenderer.on('start-service', (event, which) => {
+    control.ServiceDaemon.startSerivce(which)
+  })
+
+  ipcRenderer.on('stop-all-service', (event) => {
+
+  })
+
+  ipcRenderer.on('stop-service', (event,which) => {
+
   })
 }
 
@@ -259,7 +273,7 @@ function setUp () {
   }
 
   global.pathMan = control.pathMan = new Pather(control.base)
-  let {pathMan} = control
+  let { pathMan } = control
   let logPath
   let version = ''
   let settingsPath = app.getPath('userData')
@@ -463,7 +477,7 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl  = windows.serviceDeamonUrl// windows.settingsWindowURL windows.mWindowURL
+  var loadUrl = windows.serviceDeamonUrl// windows.settingsWindowURL windows.mWindowURL
   // if (control.loading && control.firstLoad) {
   //   loadUrl = windows.firstLoadWindowURL
   // } else {
