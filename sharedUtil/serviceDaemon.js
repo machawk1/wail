@@ -80,12 +80,14 @@ class ServiceDaemon {
                 pid,
                 error: wasError
               })
+              resolve()
             } else {
               wasError = true
               this._monitoring.set('heritrix', {
                 pid: '',
                 error: wasError
               })
+              reject(err)
             }
           }
 
