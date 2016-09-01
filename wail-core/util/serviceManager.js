@@ -3,21 +3,50 @@ import named from 'named-regexp'
 import S from 'string'
 import Promise from 'bluebird'
 import isRunning from 'is-running'
+import Datastore from 'nedb'
+import path from 'path'
 
 const hpidGetter = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 
-export default class ServiceDaemon {
+export default class ServiceManager {
   constructor (settings) {
     this._monitoring = new Map()
+    this._pidStore = new Datastore({
+      filename: path.join(settings.get('wailCore.db'),'pids.db'),
+      autoload: true
+    })
     this._isWin = process.platform === 'win32'
     this._settings = settings
   }
 
+  init() {
+    this._pidStore.find({},(error,pids) => {
+      if(error){
+        console.error('there was an error in ServiceManage intit get persisted pids',error)
+      } else {
+        if(pids.length > 0) {
+          pids.forEach(pPid => {
+            this._monitoring.set(pPid.who, {
+              pid: pPid.pid,
+              error: false
+            })
+          })
+        }
+      }
+    })
+  }
+
   isServiceUp (which) {
-    let hpid = this._monitoring.get(which)
-    if (hpid) {
-      return isRunning(hpid)
+    let maybeUp = this._monitoring.get(which)
+    if (maybeUp) {
+      console.log(`checking serivce ${which}`, maybeUp)
+      if (maybeUp.error) {
+        return false
+      } else {
+        return isRunning(maybeUp.pid)
+      }
     } else {
+      console.log(`checking serivce ${which} has not been started`)
       return false
     }
   }
@@ -25,8 +54,8 @@ export default class ServiceDaemon {
   killService (which) {
     if (which === 'all') {
       let wasError = []
-      for (let [k,v] of this._monitoring) {
-        if (this.isServiceUp(k) && !v.error) {
+      for (let [k, v] of this._monitoring) {
+        if (this.isServiceUp(k)) {
           if (!this._isWin) {
             process.kill(v.pid, 'SIGTERM')
           } else {
@@ -42,7 +71,7 @@ export default class ServiceDaemon {
     } else {
       let killMe = this._monitoring.get(which)
       if (killMe) {
-        if (this.isServiceUp(which) && !killMe.error) {
+        if (this.isServiceUp(which)) {
           if (!this._isWin) {
             process.kill(killMe.pid, 'SIGTERM')
           } else {
@@ -58,9 +87,12 @@ export default class ServiceDaemon {
   }
 
   startHeritrix () {
-    if (this._monitoring.get('heritrix')) {
+    console.log('starting heritrix')
+    if (this.isServiceUp('heritrix')) {
+      console.log('heritrix is already up')
       return Promise.resolve(true)
     }
+    console.log('heritrix is not up starting')
 
     return new Promise((resolve, reject) => {
       if (this._isWin) {
@@ -77,10 +109,12 @@ export default class ServiceDaemon {
           stdio: [ 'ignore', 'ignore', 'ignore' ]
         }
         let usrpwrd = `${this._settings.get('heritrix.username')}:${this._settings.get('heritrix.password')}`
+        let pid = -1
         try {
           let heritrix = cp.spawn('bin\\heritrix.cmd', [ '-a', `${usrpwrd}` ], opts)
+          pid = heritrix.pid
           this._monitoring.set('heritrix', {
-            pid: heritrix.pid,
+            pid,
             error: false
           })
           heritrix.unref()
@@ -88,11 +122,13 @@ export default class ServiceDaemon {
         } catch (err) {
           // why you no work???
           this._monitoring.set('heritrix', {
-            pid: '',
+            pid,
             error: true
           })
           reject(err)
         }
+
+
       } else {
         var hStart
         if (process.platform === 'darwin') {
@@ -105,6 +141,7 @@ export default class ServiceDaemon {
           // console.log(err, stdout, stderr)
           let wasError = false
           if (err) {
+            console.error('heritrix could not be started due to an error', err, stderr, stdout)
             wasError = true
             this._monitoring.set('heritrix', {
               pid: '',
@@ -120,8 +157,10 @@ export default class ServiceDaemon {
                 pid: S(pid).toInt(),
                 error: wasError
               })
+              console.log('Heritrix was started')
               resolve()
             } else {
+              console.error('the pid extraction could not be done for heritrix')
               wasError = true
               this._monitoring.set('heritrix', {
                 pid: '',
@@ -136,7 +175,9 @@ export default class ServiceDaemon {
   }
 
   startWayback () {
-    if (this._monitoring.get('wayback')) {
+    console.log('starting wayback')
+    if (this.isServiceUp('wayback')) {
+      console.log('wayback was already up')
       return Promise.resolve(true)
     }
 
@@ -155,10 +196,12 @@ export default class ServiceDaemon {
           pid: wayback.pid,
           error: wasError
         })
+        console.log('wayback was started')
         wayback.unref()
         resolve()
       } catch (err) {
         wasError = true
+        console.error('wayback could not be started', err)
         this._monitoring.set('wayback', {
           pid: ' ',
           error: wasError
@@ -168,5 +211,3 @@ export default class ServiceDaemon {
     })
   }
 }
-
-

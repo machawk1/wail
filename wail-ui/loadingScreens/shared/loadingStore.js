@@ -6,16 +6,18 @@ import cp from 'child_process'
 import request from 'request'
 import { remote, ipcRenderer } from 'electron'
 import LoadingDispatcher from './loadingDispatcher'
-import { startHeritrix, startWayback } from './lsActions'
+// import { startHeritrix, startWayback } from './lsActions'
 import wc from '../../constants/wail-constants'
+import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
+const serviceMan = window.serviceMan = remote.getGlobal('ServiceMan')
 const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
 
-class loadingStore extends EventEmitter {
+class _LoadingStore extends EventEmitter {
   constructor () {
     super()
     this.progress = {
@@ -68,7 +70,7 @@ class loadingStore extends EventEmitter {
         this.emit('migration-done')
         break
       case wc.Loading.SERVICE_CHECK_DONE:
-        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
         break
     }
   }
@@ -123,87 +125,80 @@ class loadingStore extends EventEmitter {
 
   @autobind
   wb () {
-    request.get(settings.get('pywb.url'))
-      .on('response', (res) => {
-        console.log(res)
-        let message
-        if (this.startedHeritrix) {
-          message = 'Heritrix was started and Wayback is already started. Done'
-        } else {
-          message = 'Both Heritrix and Wayback were already started. Done'
-        }
-        this.pMessage = message
-        this.serviceProgressDone = true
-        this.emit('progress')
-        this.emit('service-check-done')
-      })
-      .on('error', (err) => {
-        console.error(err)
-        startWayback(logger)
-          .then(() => {
-            let message
-            if (this.startedHeritrix) {
-              message = 'Both Heritrix and Wayback had to be started. Done'
+    if (serviceMan.isServiceUp('wayback')) {
+      let message
+      if (this.startedHeritrix) {
+        message = 'Heritrix was started and Wayback is already started. Done'
+      } else {
+        message = 'Both Heritrix and Wayback were already started. Done'
+      }
+      this.pMessage = message
+      this.serviceProgressDone = true
+      this.emit('progress')
+      this.emit('service-check-done')
+    } else {
+      serviceMan.startWayback()
+        .then(() => {
+          let message
+          if (this.startedHeritrix) {
+            message = 'Both Heritrix and Wayback had to be started. Done'
+          } else {
+            message = 'Heritrix was already started but Wayback had to be started. Done'
+          }
+          this.pMessage = message
+          this.serviceProgressDone = true
+          this.emit('progress')
+          this.emit('service-check-done')
+          // console.log('it worked wayback')
+        })
+        .catch((err) => {
+          console.log('it no work? why wayback', err)
+          logger.error(util.format('Loading Store %s', 'launch wayback', err))
+          let message
+          if (this.startedHeritrix) {
+            if (this.wasHeritrixStartError) {
+              let m1 = 'There were critical errors while starting both Heritrix and Wayback.'
+              let m2 = 'Please ensure that these services are not running already'
+              message = `${m1}\n${m2}\nRestart Wail and try again. If this persists please submit a bug report`
             } else {
-              message = 'Heritrix was already started but Wayback had to be started. Done'
+              message = 'There was a critical error while starting Wayback, but Heritrix was started. You can archive but not replay'
             }
-            this.pMessage = message
-            this.serviceProgressDone = true
-            this.emit('progress')
-            this.emit('service-check-done')
-            // console.log('it worked wayback')
-          })
-          .catch((err) => {
-            console.log('it no work? why wayback', err)
-            let message
-            if (this.startedHeritrix) {
-              if (this.wasHeritrixStartError) {
-                let m1 = 'There were critical errors while starting both Heritrix and Wayback.'
-                let m2 = 'Please ensure that these services are not running already'
-                message = `${m1}\n${m2}\nRestart Wail and try again. If this persists please submit a bug report`
-              } else {
-                message = 'There was a critical error while starting Wayback, but Heritrix was started. You can archive but not replay'
-              }
-            } else {
-              message = 'There was a critical error while starting Wayback, but Heritrix was stareted already started. You can archive but not replay'
-            }
-            this.pMessage = message
-            this.serviceProgressDone = true
-            this.emit('progress')
-            this.emit('service-check-done')
-          })
-      })
+          } else {
+            message = 'There was a critical error while starting Wayback, but Heritrix was stareted already started. You can archive but not replay'
+          }
+          this.pMessage = message
+          this.serviceProgressDone = true
+          this.emit('progress')
+          this.emit('service-check-done')
+        })
+    }
   }
 
   @autobind
   checkServices () {
-    let haReq = request(settings.get('heritrix.optionEngine'))
-    haReq.on('response', (res) => {
-      // console.log(res)
+    if (serviceMan.isServiceUp('heritrix')) {
       this.pMessage = 'Heritrix is already started. Checking Wayback'
       this.emit('progress')
       this.wb()
-    })
-    haReq.on('error', (err) => {
-      console.error(err)
+    } else {
       this.startedHeritrix = true
       this.pMessage = 'Heritrix is not started. Starting'
       this.emit('progress')
-      startHeritrix(logger)
+      serviceMan.startHeritrix()
         .then(() => {
-          // console.log('it worked heritrix!')
           this.pMessage = 'Heritrix has been started. Checking Wayback'
           this.emit('progress')
           this.wb()
         })
         .catch((err) => {
+          logger.error(util.format('Loading Store %s', 'launch heritrix', err))
           console.log('it no work? why heritrix', err)
           this.wasHeritrixStartError = true
           this.pMessage = 'Starting Heritrix failed. Checking Wayback'
           this.emit('progress')
           this.wb()
         })
-    })
+    }
   }
 
   @autobind
@@ -212,7 +207,7 @@ class loadingStore extends EventEmitter {
   }
 }
 
-const LoadingStore = new loadingStore()
+const LoadingStore = new _LoadingStore()
 
 LoadingDispatcher.register(LoadingStore.handleEvent)
 

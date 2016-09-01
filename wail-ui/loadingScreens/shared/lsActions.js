@@ -64,7 +64,7 @@ export function startWayback (logger) {
     console.log(opts)
     logger.info(util.format('Loading Actions %s', 'launching wayback'))
     try {
-      let wayback = childProcess.spawn(exec, ['-d', settings.get('warcs')], opts)
+      let wayback = childProcess.spawn(exec, [ '-d', settings.get('warcs') ], opts)
       wayback.unref()
     } catch (err) {
       logger.error(util.format('Loading Actions %s', 'launch wayback', err))

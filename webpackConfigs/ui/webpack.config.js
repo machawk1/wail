@@ -14,8 +14,8 @@ export default {
     // settingsW: './wail-ui/childWindows/settings/settingsW',
     // wail: './wail-ui/wail',
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
-    serviceD: './wail-ui/background/serviceDaemon/entry'
+    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
+    // serviceD: './wail-ui/background/serviceDaemon/entry'
     // explore: './wail-ui/components/archiveCollections/explore'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },
@@ -28,7 +28,7 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'react', 'stage-0','node6', 'react-hmre' ],
+          presets: [ 'latest', 'react', 'stage-0', 'node6', 'react-hmre' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
             [ "transform-async-to-module-method", {
               "module": "bluebird",
@@ -39,7 +39,7 @@ export default {
           ],
         },
       },
-      { test: /\.css$/, loader: 'style!css',exclude: /flexboxgrid/ },
+      { test: /\.css$/, loader: 'style!css', exclude: /flexboxgrid/ },
       {
         test: /\.css$/,
         loader: 'style!css?modules',

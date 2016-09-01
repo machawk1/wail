@@ -6,7 +6,7 @@ import path from 'path'
 import util from 'util'
 import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
 import ContextMenu from './menu/contextMenu'
-import {Pather, createServiceDaemon} from '../sharedUtil'
+import {Pather,ServiceManager} from '../wail-core'
 
 const windows = {
   accessibilityWindow: null,
@@ -225,17 +225,7 @@ function setUpIPC () {
     rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
   })
 
-  ipcRenderer.on('start-service', (event, which) => {
-    control.ServiceDaemon.startSerivce(which)
-  })
 
-  ipcRenderer.on('stop-all-service', (event) => {
-
-  })
-
-  ipcRenderer.on('stop-service', (event, which) => {
-
-  })
 }
 
 function setUp () {
@@ -307,6 +297,8 @@ function setUp () {
     control.firstLoad = true
     settings.set('didFirstLoad', true)
   }
+
+  global.ServiceMan = new ServiceManager(settings)
 
   global.wailVersion = app.getVersion()
 
@@ -477,17 +469,17 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl = windows.serviceDeamonUrl// windows.settingsWindowURL windows.mWindowURL
-  // if (control.loading && control.firstLoad) {
-  //   loadUrl = windows.firstLoadWindowURL
-  // } else {
-  //   if (!control.didLoad) {
-  //     loadUrl = windows.loadingWindowURL
-  //     control.didLoad = true
-  //   } else {
-  //     loadUrl = windows.mWindowURL
-  //   }
-  // }
+  var loadUrl  // windows.settingsWindowURL windows.mWindowURL
+  if (control.loading && control.firstLoad) {
+    loadUrl = windows.firstLoadWindowURL
+  } else {
+    if (!control.didLoad) {
+      loadUrl = windows.loadingWindowURL
+      control.didLoad = true
+    } else {
+      loadUrl = windows.mWindowURL
+    }
+  }
 
   windows.mainWindow.loadURL(loadUrl)
 

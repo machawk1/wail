@@ -19,15 +19,18 @@ import autobind from 'autobind-decorator'
 import { Pather } from '../sharedUtil'
 import Esettings from 'electron-settings'
 import chokidar from 'chokidar'
+import isRunning from 'is-running'
 
-let archiveWatcher = chokidar.watch('/home/john/my-fork-wail/archives/collections/Wail/archive',{
-  ignoreInitial: true
-})
+// let archiveWatcher = chokidar.watch('/home/john/my-fork-wail/archives/collections/Wail/archive',{
+//   ignoreInitial: true
+// })
+//
+// archiveWatcher.on('add', (event, path) => {
+//   console.log(event, path)
+// })
 
-archiveWatcher.on('add', (event, path) => {
-  console.log(event, path)
-})
-
+// console.log(isRunning(3534))
+console.log(process.kill(3534,'SIGTERM'))
 
 // let configDirPath = path.join('.','waillogs/wail-settings')
 // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
