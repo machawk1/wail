@@ -127,6 +127,7 @@
     "request": "^2.74.0",
     "request-debug": "^0.2.0",
     "request-promise": "^4.1.1",
+    "rgx": "^0.2.4",
     "roboto-fontface": "^0.6.0",
     "rwlock": "^5.0.0",
     "shelljs": "0.7.4",
@@ -224,7 +225,8 @@
     "webpack-dev-server": "1.15.0",
     "webpack-externals-plugin": "^1.0.0",
     "webpack-hot-middleware": "^2.12.2",
-    "webpack-middleware": "^1.5.1"
+    "webpack-middleware": "^1.5.1",
+    "why-did-you-update": "0.0.8"
   },
   "eslintConfig": {
     "parser": "babel-eslint",

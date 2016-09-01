@@ -34,7 +34,10 @@ const windows = {
   loadingWindowURL: null,
 
   timemapStatsWindow: null,
-  timemapStatsURL: null
+  timemapStatsURL: null,
+
+  serviceDeamonWindow: null,
+  serviceDeamonUrl: null,
 }
 
 const control = {
@@ -45,7 +48,7 @@ const control = {
   iconp: null,
   tray: null,
   base: null,
-  notDebugUI: true,
+  notDebugUI: false,
   debug: false,
   openBackGroundWindows: false,
   didClose: false,
@@ -239,6 +242,7 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
+    windows.serviceDeamonUrl = `file://${__dirname}/background/serviceDaemon/serviceDaemon.html`
   } else {
     control.base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${control.base}/wail-ui/background/accessibility.html`
@@ -251,6 +255,7 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${control.base}/wail-ui/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${control.base}/wail-ui/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
+    windows.serviceDeamonUrl = `file://${control.base}/wail-ui/background/serviceDaemon/serviceDaemon.html`
   }
 
   global.pathMan = control.pathMan = new Pather(control.base)
@@ -458,17 +463,17 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl // windows.settingsWindowURL windows.mWindowURL
-  if (control.loading && control.firstLoad) {
-    loadUrl = windows.firstLoadWindowURL
-  } else {
-    if (!control.didLoad) {
-      loadUrl = windows.loadingWindowURL
-      control.didLoad = true
-    } else {
-      loadUrl = windows.mWindowURL
-    }
-  }
+  var loadUrl  = windows.serviceDeamonUrl// windows.settingsWindowURL windows.mWindowURL
+  // if (control.loading && control.firstLoad) {
+  //   loadUrl = windows.firstLoadWindowURL
+  // } else {
+  //   if (!control.didLoad) {
+  //     loadUrl = windows.loadingWindowURL
+  //     control.didLoad = true
+  //   } else {
+  //     loadUrl = windows.mWindowURL
+  //   }
+  // }
 
   windows.mainWindow.loadURL(loadUrl)
 
