@@ -12,19 +12,19 @@ export default class ServiceManager {
   constructor (settings) {
     this._monitoring = new Map()
     this._pidStore = new Datastore({
-      filename: path.join(settings.get('wailCore.db'),'pids.db'),
+      filename: path.join(settings.get('wailCore.db'), 'pids.db'),
       autoload: true
     })
     this._isWin = process.platform === 'win32'
     this._settings = settings
   }
 
-  init() {
-    this._pidStore.find({},(error,pids) => {
-      if(error){
-        console.error('there was an error in ServiceManage intit get persisted pids',error)
+  init () {
+    this._pidStore.find({}, (error, pids) => {
+      if (error) {
+        console.error('there was an error in ServiceManage intit get persisted pids', error)
       } else {
-        if(pids.length > 0) {
+        if (pids.length > 0) {
           pids.forEach(pPid => {
             this._monitoring.set(pPid.who, {
               pid: pPid.pid,
@@ -118,7 +118,15 @@ export default class ServiceManager {
             error: false
           })
           heritrix.unref()
-          resolve()
+          this._pidStore.update({ who: 'heritrix' },{ $set: { pid } },{ upsert: true }, insertError => {
+            if(insertError){
+              console.error('service manager inserting pid error',insertError)
+            } else {
+              reject(insertError)
+            }
+            resolve()
+          })
+
         } catch (err) {
           // why you no work???
           this._monitoring.set('heritrix', {
@@ -127,7 +135,6 @@ export default class ServiceManager {
           })
           reject(err)
         }
-
 
       } else {
         var hStart
