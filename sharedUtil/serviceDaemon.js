@@ -70,6 +70,7 @@ class ServiceDaemon {
               pid: '',
               error: wasError
             })
+            reject(err)
           } else {
             let pidLine = S(stdout).lines()[ 0 ]
             let maybepid = hpidGetter.exec(pidLine)
