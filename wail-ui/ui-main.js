@@ -37,7 +37,7 @@ const windows = {
   timemapStatsURL: null,
 
   serviceDeamonWindow: null,
-  serviceDeamonUrl: null,
+  serviceDeamonUrl: null
 }
 
 const control = {
@@ -233,7 +233,7 @@ function setUpIPC () {
 
   })
 
-  ipcRenderer.on('stop-service', (event,which) => {
+  ipcRenderer.on('stop-service', (event, which) => {
 
   })
 }

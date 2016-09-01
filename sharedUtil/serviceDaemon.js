@@ -22,7 +22,7 @@ class ServiceDaemon {
     }
   }
   _startHeritrix () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       if (this._isWin) {
         let heritrixPath = this._settings.get('heritrix.path')
         let opts = {
@@ -90,14 +90,13 @@ class ServiceDaemon {
               reject(err)
             }
           }
-
         })
       }
     })
   }
 
   _startWayback () {
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       let exec = this._settings.get('pywb.wayback')
       let opts = {
         cwd: this._settings.get('pywb.home'),

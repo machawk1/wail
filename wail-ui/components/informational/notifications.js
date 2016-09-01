@@ -31,8 +31,6 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-
-
     this.toastr.info(
       <FitText maxFontSize={15}>
         <p> {GMessageStore.getMessage()}</p>
@@ -62,7 +60,7 @@ export default class Notifications extends Component {
     return (
     <ToastContainer
       toastMessageFactory={ToastMessageFactory}
-      ref={(c) => { this.toastr = c } }
+      ref={(c) => { this.toastr = c }}
       preventDuplicates
       newestOnTop
       className='toast-top-center'

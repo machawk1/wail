@@ -16,8 +16,6 @@ import Logger from '../logger/logger'
 import cp from 'child_process'
 import chokidar from 'chokidar'
 
-
-
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
@@ -255,10 +253,9 @@ class Indexer {
   }
 }
 
-
 ipcRenderer.on('start-index-indexing', (event) => {
   let dCol = S(settings.get('collections.colWarcs')).template({col: 'Wail'})
-  let archiveWatcher = chokidar.watch(dCol,{
+  let archiveWatcher = chokidar.watch(dCol, {
     ignoreInitial: true
   })
   archiveWatcher.on('add', (event, path) => {
@@ -276,9 +273,9 @@ ipcRenderer.on('start-index-indexing', (event) => {
   archiveWatchers.push(archiveWatcher)
 })
 
-ipcRenderer.on('start-index-indexing-col', (event,col) => {
+ipcRenderer.on('start-index-indexing-col', (event, col) => {
   let dCol = S(settings.get('collections.colWarcs')).template({col})
-  let archiveWatcher = chokidar.watch(dCol,{
+  let archiveWatcher = chokidar.watch(dCol, {
     ignoreInitial: true
   })
   archiveWatcher.on('add', (event, path) => {

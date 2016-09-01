@@ -134,7 +134,7 @@ export default class Debug extends Component {
       )
     } else {
       return (
-        <div></div>
+        <div />
       )
     }
   }

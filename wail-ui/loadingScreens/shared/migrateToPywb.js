@@ -191,7 +191,7 @@ export default class MigratePywb extends Component {
       if (warcs) {
         let exec = S(this.props.settings.get('pywb.addWarcsToCol')).template({
           col: 'Wail',
-          warcs: path.join(warcs[ 0 ], '*.warc')//`${warcs[ 0 ]}/`
+          warcs: path.join(warcs[ 0 ], '*.warc')// `${warcs[ 0 ]}/`
         }).s
         let archives = this.props.settings.get('warcs')
         let opts = {
@@ -225,15 +225,15 @@ export default class MigratePywb extends Component {
     if (this.props.migrate) {
       const actions = [
         <FlatButton
-          label="No"
-          primary={true}
+          label='No'
+          primary
           onTouchTap={this.handleClose}
         />,
         <FlatButton
-          label="Yes"
-          primary={true}
+          label='Yes'
+          primary
           onTouchTap={this.handleCloseYes}
-        />,
+        />
       ]
       console.log('migrating to pywb')
       var check_or_done
@@ -245,9 +245,9 @@ export default class MigratePywb extends Component {
         check_or_done = (
           <div>
             <Dialog
-              title="Dialog With Actions"
+              title='Dialog With Actions'
               actions={actions}
-              modal={true}
+              modal
               open={this.state.open}
             >
               Do you have any (w)arc files that you wish to add to
@@ -285,9 +285,7 @@ export default class MigratePywb extends Component {
       )
     } else {
       return (
-        <TableRow>
-
-        </TableRow>
+        <TableRow />
       )
     }
   }

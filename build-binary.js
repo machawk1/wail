@@ -34,7 +34,7 @@ const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
 const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
-///Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
+// /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes/',
   '^/archives/collections/xyz($|/)',

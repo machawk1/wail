@@ -75,6 +75,5 @@ ReactDOM.render(
     data={yearData}
     chartSeries={chartSeries}
     x={x}
-  >
-  </ScatterPlot>,
+   />,
   document.getElementById('stats'))

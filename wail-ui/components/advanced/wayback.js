@@ -16,7 +16,6 @@ const EventTypes = wailConstants.EventTypes
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-
 const settings = remote.getGlobal('settings')
 
 export default class WayBackTab extends Component {
