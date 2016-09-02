@@ -30,12 +30,26 @@ import isRunning from 'is-running'
 // })
 
 // console.log(isRunning(3534))
-console.log(process.kill(3534,'SIGTERM'))
+// console.log(process.kill(3534,'SIGTERM'))
 
+process.kill(15238,'SIGTERM')
+
+
+// // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
+// // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
 // let configDirPath = path.join('.','waillogs/wail-settings')
-// let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
-// let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
 // let settings = new Esettings({ configDirPath })
+// let opts = {
+//   cwd: settings.get('pywb.home'),
+//   shell: false,
+//   detached: true,
+//   stdio:  ['ignore', 'ignore', 'ignore']
+// }
+// let exec = settings.get('pywb.wayback')
+// let wayback = cp.spawn(exec, [ '-d', settings.get('warcs') ], opts)
+// console.log('wayback pid',wayback.pid)
+// wayback.unref()
+
 // let hStart = settings.get('heritrixStart')
 // let ret = hpidre.exec('Thu Sep  1 00:19:14 EDT 2016 Heritrix starting (pid 24256)')
 // console.log(ret)

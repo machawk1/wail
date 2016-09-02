@@ -17,34 +17,37 @@ export default class ServiceManager {
     })
     this._isWin = process.platform === 'win32'
     this._settings = settings
+    this._doneInit = false
   }
 
   init () {
-    this._pidStore.find({}, (error, pids) => {
-      if (error) {
-        console.error('there was an error in ServiceManage intit get persisted pids', error)
-      } else {
-        if (pids.length > 0) {
-          pids.forEach(pPid => {
-            this._monitoring.set(pPid.who, {
-              pid: pPid.pid,
-              error: false
+    if(!this._doneInit) {
+      return this._pidStore.find({}, (error, pids) => {
+        if (error) {
+          console.error('there was an error in ServiceManage intit get persisted pids', error)
+        } else {
+          if (pids.length > 0) {
+            pids.forEach(pPid => {
+              this._monitoring.set(pPid.who, {
+                pid: pPid.pid,
+                error: false
+              })
             })
-          })
+          }
         }
-      }
-    })
+        this._doneInit = true
+        return this
+      })
+    } else {
+      return this
+    }
   }
 
   isServiceUp (which) {
-    let maybeUp = this._monitoring.get(which)
-    if (maybeUp) {
-      console.log(`checking serivce ${which}`, maybeUp)
-      if (maybeUp.error) {
-        return false
-      } else {
-        return isRunning(maybeUp.pid)
-      }
+    let pid = this._monitoring.get(which)
+    if (pid) {
+      console.log(`checking serivce ${which}`, pid)
+      return isRunning(pid)
     } else {
       console.log(`checking serivce ${which} has not been started`)
       return false
@@ -53,35 +56,55 @@ export default class ServiceManager {
 
   killService (which) {
     if (which === 'all') {
-      let wasError = []
-      for (let [k, v] of this._monitoring) {
-        if (this.isServiceUp(k)) {
+      let forgetMe = []
+      for (let [who, pid] of this._monitoring) {
+        if (this.isServiceUp(who)) {
+          console.log(`ServiceManager killing ${who}`)
           if (!this._isWin) {
-            process.kill(v.pid, 'SIGTERM')
+            process.kill(pid, 'SIGTERM')
           } else {
-            cp.exec('taskkill /PID ' + v.pid + ' /T /F', (error, stdout, stderr) => {
+            cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
               if (error) {
-                console.error('really bad juju')
+                console.error('really bad juju',stderr)
               }
             })
           }
         }
+        forgetMe.push(who)
       }
-      return wasError
+      this._pidStore.remove({}, { multi: true }, (err) => {
+        if (err) {
+          console.error('there was an error removing all services',err)
+        } else {
+          console.log(`Removed all pids from the pidstore`)
+        }
+        forgetMe.forEach(fm => {
+          this._monitoring.delete(fm)
+        })
+      })
     } else {
       let killMe = this._monitoring.get(which)
       if (killMe) {
         if (this.isServiceUp(which)) {
           if (!this._isWin) {
-            process.kill(killMe.pid, 'SIGTERM')
+            process.kill(killMe, 'SIGTERM')
           } else {
-            cp.exec('taskkill /PID ' + killMe.pid + ' /T /F', (error, stdout, stderr) => {
+            cp.exec('taskkill /PID ' + killMe + ' /T /F', (error, stdout, stderr) => {
               if (error) {
                 console.error('really bad juju')
               }
             })
           }
         }
+
+        this._pidStore.remove({who: which},(error) => {
+          if(error) {
+            console.error(`ServiceManager error removing from pidstore ${which}`)
+          } else {
+            console.log(`ServiceManager removed ${which} from pidstore`)
+          }
+        })
+
       }
     }
   }
@@ -113,10 +136,7 @@ export default class ServiceManager {
         try {
           let heritrix = cp.spawn('bin\\heritrix.cmd', [ '-a', `${usrpwrd}` ], opts)
           pid = heritrix.pid
-          this._monitoring.set('heritrix', {
-            pid,
-            error: false
-          })
+          this._monitoring.set('heritrix',pid)
           heritrix.unref()
           this._pidStore.update({ who: 'heritrix' },{ $set: { pid } },{ upsert: true }, insertError => {
             if(insertError){
@@ -129,10 +149,6 @@ export default class ServiceManager {
 
         } catch (err) {
           // why you no work???
-          this._monitoring.set('heritrix', {
-            pid,
-            error: true
-          })
           reject(err)
         }
 
@@ -149,30 +165,24 @@ export default class ServiceManager {
           let wasError = false
           if (err) {
             console.error('heritrix could not be started due to an error', err, stderr, stdout)
-            wasError = true
-            this._monitoring.set('heritrix', {
-              pid: '',
-              error: wasError
-            })
             reject(err)
           } else {
             let pidLine = S(stdout).lines()[ 0 ]
             let maybepid = hpidGetter.exec(pidLine)
             if (maybepid) {
-              let pid = maybepid.capture('hpid')
-              this._monitoring.set('heritrix', {
-                pid: S(pid).toInt(),
-                error: wasError
-              })
+              let pid = S( maybepid.capture('hpid')).toInt()
+              this._monitoring.set('heritrix',pid)
               console.log('Heritrix was started')
-              resolve()
+              this._pidStore.update({ who: 'heritrix' },{ $set: { pid } },{ upsert: true }, insertError => {
+                if(insertError){
+                  console.error('service manager inserting pid error',insertError)
+                  reject(insertError)
+                } else {
+                  resolve()
+                }
+              })
             } else {
               console.error('the pid extraction could not be done for heritrix')
-              wasError = true
-              this._monitoring.set('heritrix', {
-                pid: '',
-                error: wasError
-              })
               reject(err)
             }
           }
@@ -193,26 +203,26 @@ export default class ServiceManager {
       let opts = {
         cwd: this._settings.get('pywb.home'),
         detached: true,
-        shell: true,
+        shell: false,
         stdio: [ 'ignore', 'ignore', 'ignore' ]
       }
-      let wasError = false
+
       try {
         let wayback = cp.spawn(exec, [ '-d', this._settings.get('warcs') ], opts)
-        this._monitoring.set('wayback', {
-          pid: wayback.pid,
-          error: wasError
-        })
+        let pid = wayback.pid
+        this._monitoring.set('wayback', pid)
         console.log('wayback was started')
         wayback.unref()
-        resolve()
-      } catch (err) {
-        wasError = true
-        console.error('wayback could not be started', err)
-        this._monitoring.set('wayback', {
-          pid: ' ',
-          error: wasError
+        this._pidStore.update({ who: 'wayback' },{ $set: { pid } },{ upsert: true }, insertError => {
+          if(insertError){
+            console.error('service manager inserting pid for wayback error',insertError)
+            reject(insertError)
+          } else {
+            resolve()
+          }
         })
+      } catch (err) {
+        console.error('wayback could not be started', err)
         reject(err)
       }
     })
