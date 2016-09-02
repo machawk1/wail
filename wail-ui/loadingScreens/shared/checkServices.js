@@ -43,6 +43,7 @@ export default class CheckServices extends Component {
 
   @autobind
   done () {
+    console.log('service checking done!')
     // add some latency to allow for the user to see our update as proof we did the on load check
     this.setState({ done: true }, () => {
       // console.log('checkServices done=true setState callback')
@@ -53,7 +54,8 @@ export default class CheckServices extends Component {
   }
 
   @autobind
-  updateProgress () {
+  updateProgress (func) {
+    func()
     let { progMessage } = LoadingStore.serviceMessage()
     this.setState({ progMessage })
   }

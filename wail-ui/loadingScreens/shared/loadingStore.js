@@ -38,6 +38,7 @@ class _LoadingStore extends EventEmitter {
 
   @autobind
   handleEvent (event) {
+    console.log('loadingStore got event',event)
     switch (event.type) {
       case wc.Loading.JAVA_CHECK_DONE:
         this.progress.javaCheckDone = true
@@ -66,18 +67,18 @@ class _LoadingStore extends EventEmitter {
         break
       case wc.Loading.MIGRATION_DONE:
         // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
-        this.checkServices()
-        this.emit('migration-done')
+        // this.checkServices()
+        this.emit('migration-done', this.checkServices)
         break
       case wc.Loading.SERVICE_CHECK_DONE:
-        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
         break
     }
   }
 
   @autobind
   serviceMessage () {
-    return { progMessage: this.progress.messages[ 1 ] }
+    return { progMessage: pMessage }
   }
 
   @autobind
@@ -134,7 +135,6 @@ class _LoadingStore extends EventEmitter {
       }
       this.pMessage = message
       this.serviceProgressDone = true
-      this.emit('progress')
       this.emit('service-check-done')
     } else {
       serviceMan.startWayback()
@@ -147,7 +147,6 @@ class _LoadingStore extends EventEmitter {
           }
           this.pMessage = message
           this.serviceProgressDone = true
-          this.emit('progress')
           this.emit('service-check-done')
           // console.log('it worked wayback')
         })
@@ -168,7 +167,6 @@ class _LoadingStore extends EventEmitter {
           }
           this.pMessage = message
           this.serviceProgressDone = true
-          this.emit('progress')
           this.emit('service-check-done')
         })
     }
