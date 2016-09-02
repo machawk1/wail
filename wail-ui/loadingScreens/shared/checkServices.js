@@ -33,7 +33,10 @@ export default class CheckServices extends Component {
 
   componentWillMount () {
     LoadingStore.on('check-services', this.updateProgress)
-    LoadingStore.on('service-check-done', this.done)
+    LoadingStore.on('service-check-done', () => {
+      console.log('service checking done!')
+      this.done()
+    })
   }
 
   componentWillUnMount () {
@@ -43,7 +46,7 @@ export default class CheckServices extends Component {
 
   @autobind
   done () {
-    console.log('service checking done!')
+
     // add some latency to allow for the user to see our update as proof we did the on load check
     this.setState({ done: true }, () => {
       // console.log('checkServices done=true setState callback')

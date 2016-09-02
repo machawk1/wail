@@ -134,20 +134,15 @@ class _LoadingStore extends EventEmitter {
         message = 'Both Heritrix and Wayback were already started. Done'
       }
       this.pMessage = message
+      console.log(this.pMessage)
       this.serviceProgressDone = true
-      this.emit('service-check-done')
+      ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
     } else {
       serviceMan.startWayback()
         .then(() => {
-          let message
-          if (this.startedHeritrix) {
-            message = 'Both Heritrix and Wayback had to be started. Done'
-          } else {
-            message = 'Heritrix was already started but Wayback had to be started. Done'
-          }
-          this.pMessage = message
+          console.log('wayback start then')
           this.serviceProgressDone = true
-          this.emit('service-check-done')
+          ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
           // console.log('it worked wayback')
         })
         .catch((err) => {
@@ -165,6 +160,7 @@ class _LoadingStore extends EventEmitter {
           } else {
             message = 'There was a critical error while starting Wayback, but Heritrix was stareted already started. You can archive but not replay'
           }
+          console.log(message)
           this.pMessage = message
           this.serviceProgressDone = true
           this.emit('service-check-done')
@@ -174,8 +170,10 @@ class _LoadingStore extends EventEmitter {
 
   @autobind
   checkServices () {
+    console.log('checking services')
     if (serviceMan.isServiceUp('heritrix')) {
       this.pMessage = 'Heritrix is already started. Checking Wayback'
+      console.log('Heritrix is already started. Checking Wayback')
       this.emit('progress')
       this.wb()
     } else {
@@ -184,16 +182,16 @@ class _LoadingStore extends EventEmitter {
       this.emit('progress')
       serviceMan.startHeritrix()
         .then(() => {
-          this.pMessage = 'Heritrix has been started. Checking Wayback'
-          this.emit('progress')
+          console.log('Heritrix has been started. Checking Wayback')
+          // this.emit('progress')
           this.wb()
         })
         .catch((err) => {
           logger.error(util.format('Loading Store %s', 'launch heritrix', err))
           console.log('it no work? why heritrix', err)
           this.wasHeritrixStartError = true
-          this.pMessage = 'Starting Heritrix failed. Checking Wayback'
-          this.emit('progress')
+          console.log('Starting Heritrix failed. Checking Wayback')
+          // this.emit('progress')
           this.wb()
         })
     }
