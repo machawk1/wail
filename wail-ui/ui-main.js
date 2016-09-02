@@ -299,7 +299,6 @@ function setUp () {
   }
 
   global.ServiceMan = new ServiceManager(settings)
-
   global.wailVersion = app.getVersion()
 
   global.accessLogPath = path.join(logPath, 'accessibility.log')

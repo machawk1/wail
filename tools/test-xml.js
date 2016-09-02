@@ -32,7 +32,7 @@ import isRunning from 'is-running'
 // console.log(isRunning(3534))
 // console.log(process.kill(3534,'SIGTERM'))
 
-process.kill(15238,'SIGTERM')
+console.log(isRunning(13397),isRunning(13864))
 
 
 // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
