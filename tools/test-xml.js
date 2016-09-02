@@ -20,6 +20,8 @@ import { Pather } from '../sharedUtil'
 import Esettings from 'electron-settings'
 import chokidar from 'chokidar'
 import isRunning from 'is-running'
+import rp from 'request-promise'
+import cheerio from 'cheerio'
 
 // let archiveWatcher = chokidar.watch('/home/john/my-fork-wail/archives/collections/Wail/archive',{
 //   ignoreInitial: true
@@ -32,13 +34,26 @@ import isRunning from 'is-running'
 // console.log(isRunning(3534))
 // console.log(process.kill(3534,'SIGTERM'))
 
-console.log(isRunning(17854),isRunning(17860))
+// console.log(isRunning(17854),isRunning(17860))
 
 
 // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
-// let configDirPath = path.join('.','waillogs/wail-settings')
-// let settings = new Esettings({ configDirPath })
+let configDirPath = path.join('.','waillogs/wail-settings')
+let settings = new Esettings({ configDirPath })
+let opts = {
+  transform: (body) => cheerio.load(body),
+  uri: `${settings.get('pywb.url')}Wail/*/http://cs.odu.edu`
+}
+rp(opts)
+  .then(response => {
+    // POST succeeded...
+    console.log(response.html())
+
+  })
+  .catch(err => {
+    console.log('error in querying wayback', err)
+  })
 // let opts = {
 //   cwd: settings.get('pywb.home'),
 //   shell: false,
