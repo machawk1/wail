@@ -4,12 +4,9 @@ import Snackbar from 'material-ui/Snackbar'
 import { shell } from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
 import FitText from 'react-fittext'
-import {
-  ToastContainer,
-  ToastMessage
-} from 'react-toastr'
+import Notification from 'react-notification-system'
 
-const ToastMessageFactory = React.createFactory(ToastMessage.animation)
+// https://github.com/igorprado/react-notification-system
 
 export default class Notifications extends Component {
   constructor (props, context) {
@@ -18,7 +15,7 @@ export default class Notifications extends Component {
       message: 'Status Number 1',
       open: false
     }
-    this.toastr = null
+    this.notifier = null
   }
 
   componentWillMount () {
@@ -58,13 +55,7 @@ export default class Notifications extends Component {
 
   render () {
     return (
-    <ToastContainer
-      toastMessageFactory={ToastMessageFactory}
-      ref={(c) => { this.toastr = c }}
-      preventDuplicates
-      newestOnTop
-      className='toast-top-center'
-    />
+      <Notification ref={(c) => { this.toastr = c }} />
     )
   }
 }
