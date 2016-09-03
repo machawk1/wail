@@ -12,7 +12,7 @@ export default {
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     // requestD: './wail-ui/background/requestDaemon',
     // settingsW: './wail-ui/childWindows/settings/settingsW',
-    // wail: './wail-ui/wail',
+    wail: './wail-ui/wail',
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
     // serviceD: './wail-ui/background/serviceDaemon/entry'

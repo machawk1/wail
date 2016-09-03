@@ -28,15 +28,11 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-    this.toastr.info(
-      <FitText maxFontSize={15}>
-        <p> {GMessageStore.getMessage()}</p>
-      </FitText>,
-      'Info',
-      {
-        timeOut: 30000
-      }
-    )
+    this.notifier.addNotification({
+      title: 'Info',
+      message: GMessageStore.getMessage(),
+      level: 'info'
+    })
     // if (!this.state.open) {
     //   this.setState({ message: , open: true })
     // }
@@ -55,7 +51,7 @@ export default class Notifications extends Component {
 
   render () {
     return (
-      <Notification ref={(c) => { this.toastr = c }} />
+      <Notification ref={(c) => { this.notifier = c }} />
     )
   }
 }

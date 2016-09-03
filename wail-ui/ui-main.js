@@ -49,7 +49,7 @@ const control = {
   tray: null,
   base: null,
   notDebugUI: false,
-  debug: false,
+  debug: true,
   openBackGroundWindows: false,
   didClose: false,
   didLoad: false,
@@ -506,7 +506,7 @@ function createWindow () {
 
   // Emitted when the window is closed.
   windows.mainWindow.on('closed', () => {
-    // console.log('closed')
+    console.log('closed')
     control.didClose = true
     cleanUp()
   })
@@ -564,6 +564,7 @@ app.on('activate', () => {
 // })
 
 app.on('window-all-closed', () => {
+  console.log('all windows closed')
   if (process.platform !== 'darwin') {
     app.quit()
   }
