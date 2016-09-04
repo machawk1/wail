@@ -2,13 +2,15 @@ import 'babel-polyfill'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
-import { encode, compare } from 'bytewise'
+import {encode, compare} from 'bytewise'
 import _ from 'lodash'
 import feathers from 'feathers/client'
 import socketio from 'feathers-socketio/client'
 import hooks from 'feathers-hooks'
 import io from 'socket.io-client'
 import yaml from 'yamljs'
+import through2 from 'through2'
+import streamSort from 'sort-stream2'
 import path from 'path'
 import util from 'util'
 import mongodb_prebuilt from 'mongodb-prebuilt'
@@ -16,19 +18,111 @@ import shelljs from 'shelljs'
 import cp from 'child_process'
 import named from 'named-regexp'
 import autobind from 'autobind-decorator'
-import { Pather } from '../sharedUtil'
 import Esettings from 'electron-settings'
 import chokidar from 'chokidar'
 import isRunning from 'is-running'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
+import moment from 'moment'
+import {Pather} from '../wail-core'
+import split2 from 'split2'
 
-// let archiveWatcher = chokidar.watch('/home/john/my-fork-wail/archives/collections/Wail/archive',{
-//   ignoreInitial: true
+const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
+const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
+const jobEndRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+const jobStatusRec = /(:<timestamp>[a-zA-Z0-9\-:]+)\s+(:<discovered>[0-9]+)\s+(:<queued>[0-9]+)\s+(:<downloaded>[0-9]+)\s.+/
+const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
+let jobStatus = named.named(jobStatusRec)
+
+// let logWatcher = chokidar.watch('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log',{
+//   awaitWriteFinish: true,
+//   followSymlinks: true,
+// })
+
+///home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log
+///home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log
+
+// let launchId = /^[0-9]+$/
+//
+// let jpath = '/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing'
+//
+// fs.readdir(jpath, (err, files) => {
+//   let latestLaunch = Math.max(...files.filter(item => launchId.test(item)))
+//   let logPath = path.join(jpath, `${latestLaunch}`, 'logs', 'progress-statistics.log')
+//   let jobEnding = false
+//   let jobEnded = false
+//   let latestStats = null
+//   let rstream = fs.createReadStream(logPath)
+//     .pipe(split2())
+//     .on('data',line => {
+//       if(!jobEnding && !jobEnded) {
+//         if (jobEndingRe.test(line)) {
+//           jobEnding = true
+//         } else {
+//           if (jobStatusRe.test(line)) {
+//             latestStats = line
+//           }
+//         }
+//       } else {
+//         if(!jobEnded) {
+//           if (jobEndRe.test(line)) {
+//             jobEnded = true
+//           } else {
+//             if (jobStatusRe.test(line)) {
+//               latestStats = line
+//             }
+//           }
+//         } else {
+//           if (jobStatusRe.test(line)) {
+//             latestStats = line
+//           }
+//         }
+//       }
+//     })
+//     .on('close',() => {
+//       console.log('sClose')
+//       let fields  = S(latestStats).collapseWhitespace().s.split(' ')
+//       let so = {
+//         ended: jobEnding ? ( jobEnded ? jobEnded : true ) : false,
+//         timestamp: moment(fields[ 0 ]),
+//         discovered: fields[ 1 ],
+//         queued: fields[ 2 ],
+//         downloaded: fields[ 3 ]
+//       }
+//       console.log(`Ending? ${jobEnding}, Ended? ${jobEnded}`,so)
+//       rstream.destroy()
+//     })
+//     .on('end',() => {
+//       console.log('send')
+//       let fields  = S(latestStats).collapseWhitespace().s.split(' ')
+//       let so = {
+//         ended: jobEnding ? ( jobEnded ? jobEnded : true ) : false,
+//         timestamp: moment(fields[ 0 ]),
+//         discovered: fields[ 1 ],
+//         queued: fields[ 2 ],
+//         downloaded: fields[ 3 ]
+//       }
+//       console.log(`Ending? ${jobEnding}, Ended? ${jobEnded}`,so)
+//       rstream.destroy()
+//     })
+// })
+
+// let pl = /progress-statistics/g
+//
+// logWatcher.on('change', (path) => {
+//   if(pl.test(path)) {
+//     console.log(`File ${path} has been changed`)
+//   } else {
+//     console.log(`Not stats changed ${path}`)
+//   }
 // })
 //
-// archiveWatcher.on('add', (event, path) => {
-//   console.log(event, path)
+// process.on('SIGINT',() => {
+//   logWatcher.close()
+// })
+//
+// process.on('SIGTERM',() => {
+//   logWatcher.close()
 // })
 
 // console.log(isRunning(3534))
@@ -36,24 +130,40 @@ import cheerio from 'cheerio'
 
 // console.log(isRunning(17854),isRunning(17860))
 
-
 // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
-let configDirPath = path.join('.','waillogs/wail-settings')
-let settings = new Esettings({ configDirPath })
-let opts = {
-  transform: (body) => cheerio.load(body),
-  uri: `${settings.get('pywb.url')}Wail/*/http://cs.odu.edu`
-}
-rp(opts)
-  .then(response => {
-    // POST succeeded...
-    console.log(response.html())
+// let pather = new Pather(path.resolve('.'))
+// console.log(util.inspect(pather,{depth: null,colors: true}))
+// let configDirPath = path.join('.','waillogs/wail-settings')
+// let settings = new Esettings({ configDirPath })
+//
+// var hStart
+// if (process.platform === 'darwin') {
+//   hStart = settings.get('heritrixStartDarwin')
+// } else {
+//   hStart = settings.get('heritrixStart')
+// }
+// cp.exec(hStart, (err, stdout, stderr) => {
+//   if (err) {
+//     console.error('heritrix could not be started due to an error', err, stderr, stdout)
+//   } else {
+//     console.log(stdout, stderr)
+//   }
+// })
 
-  })
-  .catch(err => {
-    console.log('error in querying wayback', err)
-  })
+// let opts = {
+//   transform: (body) => cheerio.load(body),
+//   uri: `${settings.get('pywb.url')}Wail/*/http://cs.odu.edu`
+// }
+// rp(opts)
+//   .then(response => {
+//     // POST succeeded...
+//     console.log(response.html())
+//
+//   })
+//   .catch(err => {
+//     console.log('error in querying wayback', err)
+//   })
 // let opts = {
 //   cwd: settings.get('pywb.home'),
 //   shell: false,

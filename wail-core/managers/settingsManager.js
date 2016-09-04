@@ -4,6 +4,7 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
+import { autobind } from 'core-decorators'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -224,10 +225,118 @@ const managed = {
 
 }
 
-// set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
 const debugOSX = false
+const {pathMan} = global
 
-export function writeSettings (base, settings, v, didFirstLoad, migrate) {
+function rewriteHeritrixPort (settings, was, is) {
+  let mutate = S(' ')
+  let nh = _.mapValues(settings.get('heritrix'), (v, k) => {
+    if (_.has(v, 'url')) {
+      mutate = mutate.setValue(v.url)
+      mutate = mutate.replaceAll(was, is)
+      v.url = mutate.s
+    } else {
+      mutate = mutate.setValue(k)
+      if (mutate.contains('uri') || mutate.contains('ui')) {
+        mutate = mutate.setValue(v)
+        mutate = mutate.replaceAll(was, is)
+        v = mutate.s
+      }
+    }
+    return v
+  })
+
+  let hStart = mutate.setValue(settings.get('heritrixStart'))
+  if (hStart.contains('-p')) {
+    hStart.replaceAll(`-p ${was}`, `-p ${is}`)
+  } else {
+    hStart.setValue(`${settings.get('heritrixStart')} -p ${is}`)
+  }
+  settings.set('heritrixStart', hStart.s)
+  settings.set('heritrix', nh)
+}
+
+export function rewriteHeritrixAuth (settings, usr, pwd) {
+  if (usr && pwd) {
+    let heritrix = settings.get('heritrix')
+    let nh = _.mapValues(heritrix, (v, k) => {
+      if (_.has(v, 'auth')) {
+        v.auth.username = usr
+        v.auth.password = pwd
+      }
+      return v
+    })
+    nh.username = usr
+    nh.password = pwd
+
+    nh.web_ui = `https://${usr}:${pwd}@localhost:${nh.port}`
+    nh.login = `-a ${usr}:${pwd}`
+
+    let hS = S(settings.get('heritrixStart'))
+    let hSD = S(settings.get('heritrixStartDarwin'))
+    settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    settings.set('heritrix', nh)
+  }
+}
+
+function configSettings (base, userData, v) {
+  let settings
+  let settingsDir = path.join(userData, 'wail-settings')
+  try {
+    settings = new ElectronSettings({ configDirPath: settingsDir })
+  } catch (e) {
+    // if something went terrible wrong during a config the json becomes malformed
+    // electron settings throws an error in this case
+    fs.removeSync(settingsDir)
+    settings = new ElectronSettings({ configDirPath: settingsDir })
+  }
+
+  // writeSettings(base, settings)
+  console.log(settings.get('version'), v)
+  if (!settings.get('configured') || settings.get('version') !== v) {
+    console.log('We are not configured')
+    let migrate = settings.get('migrate')
+    let doMigrate = false
+    if (migrate === null || migrate === undefined) {
+      doMigrate = true
+    } else {
+      doMigrate = migrate
+    }
+    writeSettings(base, settings, v, settings.get('didFirstLoad'), doMigrate)
+    // console.log(base, settings)
+  } else {
+    if (settings.get('base') !== base) {
+      /*
+       If the user moves the application directory the settings will
+       will not be correct since I use absolute paths.
+       I did this to myself....
+       */
+      // console.log('We are not configured due to binary directory being moved')
+      writeSettings(base, settings, v)
+    }
+    // console.log('We are configured')
+  }
+
+  settings.watch('heritrix.port', change => {
+    console.log('heritrix.port changed ', change)
+    rewriteHeritrixPort(settings, change.was, change.now)
+  })
+
+  settings.watch('wayback.port', change => {
+    let wb = _.cloneDeep(settings.get('wayback'))
+    wb.port = change.now
+    let uriTomcat = S(wb.uri_tomcat)
+    wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
+    let uriWB = S(wb.uri_wayback)
+    wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+    settings.set('wayback', wb)
+  })
+
+  return settings
+}
+
+function writeSettings (base, settings, v, didFirstLoad, migrate) {
   settings.clear()
   settings.set('version', v)
   let isWindows = os.platform() === 'win32'
@@ -262,6 +371,20 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   }
   heritrix.jobConf = jobConfPath
   settings.set('heritrix', heritrix)
+  let checkArray = [ 'port', 'url', 'dport', 'dhost', 'host' ]
+  let wc = _.mapValues(managed.wailCore, (v, k) => {
+    if (!checkArray.includes(k)) {
+      console.log(k)
+      v = path.normalize(path.join(base, v))
+    }
+
+    if (k === 'url') {
+      v = S(v).template({ port: managed.wailCore.dport, host: managed.wailCore.dhost }).s
+    }
+    return v
+  })
+
+  settings.set('wailCore', wc)
 
   let wb = managed.wayback
   wb.allCDX = `${settings.get('cdx')}${wb.allCDX}`
@@ -281,18 +404,6 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
     }
     return v
   })
-
-  let core = _.mapValues(managed.core, (v, k) => {
-    if (k === 'url') {
-      v = S(v).template({ port: managed.core.port }).s
-    }
-    if (k !== 'port' && k !== 'url') {
-      v = path.normalize(path.join(base, v))
-    }
-    return v
-  })
-
-  settings.set('wailCore', core)
 
   let collections = _.mapValues(managed.collections, (v, k) => {
     return path.normalize(path.join(base, v))
@@ -352,111 +463,98 @@ export function writeSettings (base, settings, v, didFirstLoad, migrate) {
   })
 }
 
-function rewriteHeritrixPort (settings, was, is) {
-  let mutate = S(' ')
-  let nh = _.mapValues(settings.get('heritrix'), (v, k) => {
-    if (_.has(v, 'url')) {
-      mutate = mutate.setValue(v.url)
-      mutate = mutate.replaceAll(was, is)
-      v.url = mutate.s
-    } else {
-      mutate = mutate.setValue(k)
-      if (mutate.contains('uri') || mutate.contains('ui')) {
-        mutate = mutate.setValue(v)
-        mutate = mutate.replaceAll(was, is)
-        v = mutate.s
-      }
-    }
-    return v
-  })
 
-  let hStart = mutate.setValue(settings.get('heritrixStart'))
-  if (hStart.contains('-p')) {
-    hStart.replaceAll(`-p ${was}`, `-p ${is}`)
-  } else {
-    hStart.setValue(`${settings.get('heritrixStart')} -p ${is}`)
+
+export default class SettingsManager {
+  constructor (base, userData, version) {
+    this._userData = userData
+    this._version = version
+    this._base = base
+    this._settings = null
+    this._settingsDir = null
   }
-  settings.set('heritrixStart', hStart.s)
-  settings.set('heritrix', nh)
-}
 
-export function rewriteHeritrixAuth (settings, usr, pwd) {
-  if (usr && pwd) {
-    let heritrix = settings.get('heritrix')
-    let nh = _.mapValues(heritrix, (v, k) => {
-      if (_.has(v, 'auth')) {
-        v.auth.username = usr
-        v.auth.password = pwd
+  @autobind
+  init () {
+    this._settingsDir = pathMan.join('wail-settings')
+    try {
+      this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+    } catch (e) {
+      // if something went terrible wrong during a config the json becomes malformed
+      // electron settings throws an error in this case
+      fs.removeSync(this._settingsDir)
+      this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+    }
+    console.log(this._settings.get('version'), this._version)
+    if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
+      console.log('We are not configured')
+      let migrate = this._settings.get('migrate')
+      let doMigrate = false
+      if (migrate === null || migrate === undefined) {
+        doMigrate = true
+      } else {
+        doMigrate = migrate
       }
-      return v
+      writeSettings(this._base, this._settings, this._version, this._settings.get('didFirstLoad'), doMigrate)
+      // console.log(base, settings)
+    } else {
+      if (this._settings.get('base') !== this._base) {
+        /*
+         If the user moves the application directory the settings will
+         will not be correct since I use absolute paths.
+         I did this to myself....
+         */
+        // console.log('We are not configured due to binary directory being moved')
+        writeSettings(this._base, this._settings, this._version, false, false)
+      }
+      // console.log('We are configured')
+    }
+
+    this._settings.watch('heritrix.port', change => {
+      console.log('heritrix.port changed ', change)
+      rewriteHeritrixPort(this._settings, change.was, change.now)
     })
-    nh.username = usr
-    nh.password = pwd
 
-    nh.web_ui = `https://${usr}:${pwd}@localhost:${nh.port}`
-    nh.login = `-a ${usr}:${pwd}`
-
-    let hS = S(settings.get('heritrixStart'))
-    let hSD = S(settings.get('heritrixStartDarwin'))
-    settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
-    settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
-    settings.set('heritrix', nh)
-  }
-}
-
-export default function configSettings (base, userData, v) {
-  let settings
-  let settingsDir = path.join(userData, 'wail-settings')
-  try {
-    settings = new ElectronSettings({ configDirPath: settingsDir })
-  } catch (e) {
-    // if something went terrible wrong during a config the json becomes malformed
-    // electron settings throws an error in this case
-    fs.removeSync(settingsDir)
-    settings = new ElectronSettings({ configDirPath: settingsDir })
+    this._settings.watch('wayback.port', change => {
+      let wb = _.cloneDeep(this._settings.get('wayback'))
+      wb.port = change.now
+      let uriTomcat = S(wb.uri_tomcat)
+      wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
+      let uriWB = S(wb.uri_wayback)
+      wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+      this._settings.set('wayback', wb)
+    })
   }
 
-  // writeSettings(base, settings)
-  console.log(settings.get('version'), v)
-  if (!settings.get('configured') || settings.get('version') !== v) {
-    console.log('We are not configured')
-    let migrate = settings.get('migrate')
-    let doMigrate = false
-    if (migrate === null || migrate === undefined) {
-      doMigrate = true
-    } else {
-      doMigrate = migrate
-    }
-    writeSettings(base, settings, v, settings.get('didFirstLoad'), doMigrate)
-    // console.log(base, settings)
-  } else {
-    if (settings.get('base') !== base) {
-      /*
-       If the user moves the application directory the settings will
-       will not be correct since I use absolute paths.
-       I did this to myself....
-       */
-      // console.log('We are not configured due to binary directory being moved')
-      writeSettings(base, settings, v)
-    }
-    // console.log('We are configured')
+  @autobind
+  resetToDefault () {
+
   }
 
-  settings.watch('heritrix.port', change => {
-    console.log('heritrix.port changed ', change)
-    rewriteHeritrixPort(settings, change.was, change.now)
-  })
+  @autobind
+  get (what) {
+    return this._settings.get(what)
+  }
 
-  settings.watch('wayback.port', change => {
-    let wb = _.cloneDeep(settings.get('wayback'))
-    wb.port = change.now
-    let uriTomcat = S(wb.uri_tomcat)
-    wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
-    let uriWB = S(wb.uri_wayback)
-    wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
-    settings.set('wayback', wb)
-  })
+  @autobind
+  set (what, replacement) {
+    this._settings.set(what, replacement)
+  }
 
-  return settings
+  get settings () {
+    return this._settings
+  }
+
+  get base () {
+    return this._base
+  }
+
+  get userData () {
+    return this._userData
+  }
+
+  get version () {
+    return this._version
+  }
 }
 

@@ -88,7 +88,6 @@ export default class ServiceManager {
             })
           }
         }
-
         this._pidStore.remove({ _id: which, who: which }, (error) => {
           if (error) {
             console.error(`ServiceManager error removing from pidstore ${which}`)
@@ -96,7 +95,6 @@ export default class ServiceManager {
             console.log(`ServiceManager removed ${which} from pidstore`)
           }
         })
-
       }
     }
   }
@@ -182,7 +180,6 @@ export default class ServiceManager {
         }
       }
     })
-
   }
 
   startWayback () {

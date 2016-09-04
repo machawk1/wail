@@ -9,7 +9,7 @@ export default class Pather {
   @autobind
   joinWBase () {
     if (arguments.length === 0) {
-      return path.join(this._base)
+      return path.join()
     } else {
       return path.join(this._base, ...arguments)
     }
@@ -23,16 +23,16 @@ export default class Pather {
   @autobind
   normalizeJoinWBase () {
     if (arguments.length === 0) {
-      return path.join(this._base)
+      return path.join()
     } else {
-      return path.normalize(this.join(...arguments))
+      return path.normalize(this.joinWBase(...arguments))
     }
   }
 
   @autobind
   normalizeJoin () {
     if (arguments.length === 0) {
-      return path.join(this._base)
+      return path.join()
     } else {
       return path.normalize(path.join(...arguments))
     }
