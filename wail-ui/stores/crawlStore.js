@@ -20,6 +20,7 @@ import {
   teardownJob
 } from '../actions/heritrix-actions'
 
+
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From

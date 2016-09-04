@@ -1,6 +1,8 @@
 export {
   Pather,
-  ViewWatcher
+  ViewWatcher,
+  RunInfo,
+  CrawlInfo
 } from './util'
 
 export {
