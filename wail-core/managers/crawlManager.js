@@ -1,17 +1,18 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
+import Db from 'nedb'
+import {default as wc} from '../constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
+import {ipcRenderer as ipc, remote} from 'electron'
 import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
 import path from 'path'
-import Db from 'nedb'
 import Promise from 'bluebird'
 import S from 'string'
-import {ipcRender, remote} from 'electron'
 import util from 'util'
-import {default as wc} from '../constants'
+import CrawlStatsMonitor from './crawlStatsMonitor'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -28,125 +29,74 @@ export default class CrawlManager {
       filename: pathMan.join(settings.get('wailCore.db'), 'crawls'),
       autoload: true
     })
-  }
-
-  addJobDirectoryHeritrix (confPath) {
-    let options = _.cloneDeep(settings.get('heritrix.addJobDirectoryOptions'))
-    options.form.addPath = confPath
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.ADD_HERITRIX_JOB_DIRECTORY,
-      opts: options,
-      from: `addJobToHeritrix[${confPath}]`,
-      timeReceived: null
-    }
-  }
-
-  buildHeritrixJob (jobId) {
-    let options = _.cloneDeep(settings.get('heritrix.buildOptions'))
-    console.log('options url before setting', options.url)
-    options.url = `${options.url}${jobId}`
-    console.log(options)
-    console.log('options url before setting', options.url)
-    // options.agent = httpsAgent
-    console.log(`building heritrix job ${jobId}`)
-    console.log('Options after setting options.url', options.url)
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.BUILD_HERITIX_JOB,
-      opts: options,
-      from: `buildHeritrixJob[${jobId}]`,
-      jId: jobId,
-      timeReceived: null
-    }
-  }
-
-  *deleteHeritrixJob (jobId) {
-    yield* this.forceCrawlFinish(jobId)
-  }
-
-  extractUrlsFromConf (confPath) {
-    return new Promise((resolve, reject) => {
-      fs.readFile(confPath, 'utf8', (err, confText) => {
-        if (err) {
-          reject(err)
-        } else {
-          let doc = cheerio.load(confText, {
-            xmlMode: true
-          })
-          let urlElemText = S(doc('bean[id="longerOverrides"]').find('prop[key="seeds.textSource.value"]').text().trim())
-          let maybeMultiple = urlElemText.lines()
-          resolve(maybeMultiple.length > 1 ? maybeMultiple : maybeMultiple[ 0 ])
-        }
-      })
+    this.csMonitor = new CrawlStatsMonitor()
+    this.csMonitor.on('crawljob-status-update', update => {
+      console.log('crawljob-status-update', update)
+      ipc.send('crawljob-status-update', update)
+    })
+    this.csMonitor.on('crawljob-status-ended', update => {
+      console.log('crawljob-status-ended', update)
+      ipc.send('crawljob-status-update', update)
+      this.crawlEnded(update)
     })
   }
 
   @autobind
-  *forceCrawlFinish (jobId) {
-    yield this.teardownJob(jobId)
-    yield this.terminateJob(jobId)
-  }
-
-  launchHeritrixJob (jobId) {
-    let options = _.cloneDeep(settings.get('heritrix.launchJobOptions'))
-    console.log('options url before setting', options.url)
-    console.log('the jobid', jobId)
-    options.url = `${options.url}${jobId}`
-    console.log(`launching heritrix job ${jobId}`)
-    console.log('Options after setting options.url', options.url)
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.LAUNCH_HERITRIX_JOB,
-      opts: options,
-      from: `launchHeritrixJob[${jobId}]`,
-      jId: jobId,
-      timeReceived: null,
-    }
-  }
-
-  @autobind
-  *crawlSequance (jobId, confPath) {
-    yield  this.addJobDirectoryHeritrix(confPath)
-    yield  this.buildHeritrixJob(jobId)
-    yield  this.launchHeritrixJob(jobId)
-    yield* this.forceCrawlFinish(jobId)
+  getAllRuns () {
+    return new Promise((resolve, reject) => {
+      this.db.find({}, (err, docs) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
   }
 
   @autobind
   crawlStarted (jobId) {
-    return new Promise((resolve, reject) => {
-      this.db.update({ jobId }, { $set: { crawlStarted: true } }, {}, (error, updated) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(updated)
-        }
-      })
+    this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+      this.csMonitor.startMonitoring(updated.path, jobId)
+      if (error) {
+        console.error('error inserting document', error)
+      } else {
+        console.log(`updated job ${jobId} it has started`, updated)
+      }
     })
   }
 
   @autobind
-  crawlEnded (jobId) {
-    return new Promise((resolve, reject) => {
-      this.db.update({ jobId }, { $set: { crawlStarted: false } }, {}, (error, updated) => {
-        if (error) {
-          reject(error)
-        } else {
-          resolve(updated)
+  crawlEnded (id,update) {
+    let theUpdate = {
+      $set: { running: false },
+      $push: {
+        runs: {
+          ended: update.ended,
+          timestamp: update.timestamp,
+          discovered: update.discovered,
+          queued: update.queued,
+          downloaded: update.downloaded
         }
-      })
+      }
+    }
+    this.db.update({ id: update.id }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+      if (error) {
+        console.error('error updating document', update, error)
+      } else {
+        console.error('updated document', updated)
+      }
     })
   }
 
   @autobind
   areCrawlsRunning () {
     return new Promise((resolve, reject) => {
-      this.db.find({ crawlStarted: true }, (err, docs) => {
+      this.db.count({ running: true }, (err, runningCount) => {
         if (err) {
           reject(err)
         } else {
-          let areRunning = docs.length > 0
+          let areRunning = runningCount > 0
           resolve(areRunning)
         }
       })
@@ -155,15 +105,15 @@ export default class CrawlManager {
 
   /**
    * @param {Object} options
-   * @param {ArchiveManager} archiveMan
    * @returns {Promise|Promise<Object>}
    */
-  makeDefaultCrawlConf (options, archiveMan) {
+  makeCrawlConf (options) {
     return new Promise((resolve, reject) => {
       let {
         urls,
         forCol,
-        jobId
+        jobId,
+        depth
       } = options
       fs.readFile(settings.get('heritrix.jobConf'), 'utf8', (err, data) => {
         if (err) {
@@ -185,6 +135,8 @@ export default class CrawlManager {
             urlText = `${os.EOL}${urls}${os.EOL}`
           }
           urlConf.text(urlText)
+          let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
+          maxHops.attr('value', `${depth}`)
           let confPath = pathMan.join(settings.get('heritrixJob'), jobId)
           fs.ensureDir(confPath, er => {
             if (er) {
@@ -196,29 +148,28 @@ export default class CrawlManager {
                 } else {
                   console.log('done writting file')
                   let crawlInfo = {
-                    id: jobId,
-                    path: confPath,
-                    urls: urls
+                    jobId,
+                    path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
+                    confP: confPath,
+                    urls: urls,
+                    running: false,
+                    forCol
                   }
-                  ipcRender.send('made-heritrix-jobconf', Object.assign({}, crawlInfo, { forCol }))
-                  this.db.insert({ jobId, _id: jobId, started: false, forCol }, (iError, doc) => {
+                  ipc.send('made-heritrix-jobconf', crawlInfo)
+                  this.db.insert(Object.assign({}, { _id: `${jobId}`, runs: [] }, crawlInfo), (iError, doc) => {
                     if (iError) {
                       console.error(iError)
+                      resolve({
+                        crawlInfo,
+                        wasError: true,
+                        iError
+                      })
+                    } else {
+                      resolve({
+                        wasError: false,
+                        crawlInfo
+                      })
                     }
-                    archiveMan.addCrawlInfo(forCol, crawlInfo)
-                      .then((updated) => {
-                        resolve({
-                          wasError: false,
-                          crawlInfo
-                        })
-                      })
-                      .catch((error) => {
-                        resolve({
-                          error,
-                          wasError: true,
-                          crawlInfo
-                        })
-                      })
                   })
                 }
               })
@@ -228,56 +179,4 @@ export default class CrawlManager {
       })
     })
   }
-
-  @autobind
-  moveWarc (jobId) {
-
-  }
-
-  rescanJobDir () {
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.RESCAN_JOB_DIR,
-      from: 'rescanJobDir',
-      opts: settings.get('heritrix.reScanJobs'),
-      jId: 666,
-      timeReceived: null,
-    }
-  }
-
-  @autobind
-  *restartJob (jobId) {
-    yield  this.buildHeritrixJob(jobId)
-    yield  this.launchHeritrixJob(jobId)
-    yield* this.forceCrawlFinish(jobId)
-  }
-
-  teardownJob (jobId) {
-    let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-    teardown.url = `${teardown.url}${jobId}`
-    teardown.form.action = 'teardown'
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.TEARDOWN_JOB,
-      opts: teardown,
-      from: `tearDownJob[${jobId}]`,
-      jId: jobId,
-      timeReceived: null,
-    }
-  }
-
-  terminateJob (jobId) {
-    let teardown = _.cloneDeep(settings.get('heritrix.sendActionOptions'))
-    teardown.url = `${teardown.url}${jobId}`
-    teardown.form.action = 'teardown'
-    return {
-      type: EventTypes.REQUEST_HERITRIX,
-      rType: RequestTypes.TERMINATE_JOB,
-      opts: teardown,
-      from: `terminateJob[${jobId}]`,
-      jId: jobId,
-      timeReceived: null,
-    }
-  }
-
 }

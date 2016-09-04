@@ -9,7 +9,7 @@ import moment from 'moment'
 import _ from 'lodash'
 import Promise from 'bluebird'
 import os from 'os'
-import { remote } from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import util from 'util'
 import wc from '../constants/wail-constants'
 import ServiceStore from '../stores/serviceStore'
@@ -208,6 +208,7 @@ export function addJobDirectoryHeritrix (confPath) {
 
 export function makeHeritrixJobConf (urls, hops = 1, jobId) {
   console.log('in makeHeritrixJobConf')
+  ipc.send('makeHeritrixJobConf',{urls,hops,jobId})
   fs.readFileAsync(settings.get('heritrix.jobConf'), 'utf8')
     .then(data => {
       let doc = cheerio.load(data, {

@@ -247,6 +247,7 @@ function setUp () {
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
     windows.serviceDeamonUrl = `file://${__dirname}/background/serviceDaemon/serviceDaemon.html`
+    windows.managersUrl = `file://${__dirname}/background/managers/managers.html`
   } else {
     control.base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${control.base}/wail-ui/background/accessibility.html`
@@ -260,6 +261,7 @@ function setUp () {
     windows.loadingWindowURL = `file://${control.base}/wail-ui/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
     windows.serviceDeamonUrl = `file://${control.base}/wail-ui/background/serviceDaemon/serviceDaemon.html`
+    windows.managersUrl = `file://${control.base}/wail-ui/background/managers/managers.html`
   }
 
   global.pathMan = control.pathMan = new Pather(control.base)

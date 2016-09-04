@@ -24,15 +24,39 @@ import isRunning from 'is-running'
 import rp from 'request-promise'
 import cheerio from 'cheerio'
 import moment from 'moment'
-import {Pather} from '../wail-core'
+import CrawlStatsManager from '../wail-core/managers/crawlStatsManager'
 import split2 from 'split2'
 
-const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
-const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
-const jobEndRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
-const jobStatusRec = /(:<timestamp>[a-zA-Z0-9\-:]+)\s+(:<discovered>[0-9]+)\s+(:<queued>[0-9]+)\s+(:<downloaded>[0-9]+)\s.+/
-const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
-let jobStatus = named.named(jobStatusRec)
+function startHeritrix () {
+  let configDirPath = path.join('.', 'waillogs/wail-settings')
+  let settings = new Esettings({ configDirPath })
+
+  var hStart
+  if (process.platform === 'darwin') {
+    hStart = settings.get('heritrixStartDarwin')
+  } else {
+    hStart = settings.get('heritrixStart')
+  }
+  cp.exec(hStart, (err, stdout, stderr) => {
+    if (err) {
+      console.error('heritrix could not be started due to an error', err, stderr, stdout)
+    } else {
+      console.log(stdout, stderr)
+    }
+  })
+}
+
+let statMonitor = new CrawlStatsManager()
+statMonitor.startMonitoring('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing','testing')
+
+// startHeritrix()
+
+// const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
+// const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
+// const jobEndRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
+// const jobStatusRec = /(:<timestamp>[a-zA-Z0-9\-:]+)\s+(:<discovered>[0-9]+)\s+(:<queued>[0-9]+)\s+(:<downloaded>[0-9]+)\s.+/
+// const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
+// let jobStatus = named.named(jobStatusRec)
 
 // let logWatcher = chokidar.watch('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log',{
 //   awaitWriteFinish: true,

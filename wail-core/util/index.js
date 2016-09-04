@@ -1,5 +1,7 @@
-import Pather from './pather'
-import ViewWatcher from './viewWatcher'
+export Pather from './pather'
+export ViewWatcher from './viewWatcher'
+export getCrawlStats from './getCrawStats'
 
-exports.Pather = Pather
-exports.ViewWatcher = ViewWatcher
+
+// exports.Pather = Pather
+// exports.ViewWatcher = ViewWatcher
