@@ -1,53 +1,69 @@
 import 'babel-polyfill'
-import fs from 'fs-extra'
-import Promise from 'bluebird'
-import S from 'string'
-import {encode, compare} from 'bytewise'
-import _ from 'lodash'
-import feathers from 'feathers/client'
-import socketio from 'feathers-socketio/client'
-import hooks from 'feathers-hooks'
-import io from 'socket.io-client'
-import yaml from 'yamljs'
-import through2 from 'through2'
-import streamSort from 'sort-stream2'
-import path from 'path'
-import util from 'util'
-import mongodb_prebuilt from 'mongodb-prebuilt'
-import shelljs from 'shelljs'
-import cp from 'child_process'
-import named from 'named-regexp'
-import autobind from 'autobind-decorator'
-import Esettings from 'electron-settings'
-import chokidar from 'chokidar'
-import isRunning from 'is-running'
-import rp from 'request-promise'
-import cheerio from 'cheerio'
-import moment from 'moment'
-import CrawlStatsManager from '../wail-core/managers/crawlStatsManager'
-import split2 from 'split2'
+// import fs from 'fs-extra'
+// import Promise from 'bluebird'
+// import S from 'string'
+// import {encode, compare} from 'bytewise'
+// import _ from 'lodash'
+// import feathers from 'feathers/client'
+// import socketio from 'feathers-socketio/client'
+// import hooks from 'feathers-hooks'
+// import io from 'socket.io-client'
+// import yaml from 'yamljs'
+// import through2 from 'through2'
+// import streamSort from 'sort-stream2'
+// import path from 'path'
+// import util from 'util'
+// import mongodb_prebuilt from 'mongodb-prebuilt'
+// import shelljs from 'shelljs'
+// import cp from 'child_process'
+// import named from 'named-regexp'
+// import autobind from 'autobind-decorator'
+// import Esettings from 'electron-settings'
+// import chokidar from 'chokidar'
+// import isRunning from 'is-running'
+// import rp from 'request-promise'
+// import cheerio from 'cheerio'
+// import moment from 'moment'
+// import CrawlStatsManager from '../wail-core/managers/crawlStatsManager'
+// import split2 from 'split2'
+//
+// function startHeritrix () {
+//   let configDirPath = path.join('.', 'waillogs/wail-settings')
+//   let settings = new Esettings({ configDirPath })
+//
+//   var hStart
+//   if (process.platform === 'darwin') {
+//     hStart = settings.get('heritrixStartDarwin')
+//   } else {
+//     hStart = settings.get('heritrixStart')
+//   }
+//   cp.exec(hStart, (err, stdout, stderr) => {
+//     if (err) {
+//       console.error('heritrix could not be started due to an error', err, stderr, stdout)
+//     } else {
+//       console.log(stdout, stderr)
+//     }
+//   })
+// }
+//
+// let statMonitor = new CrawlStatsManager()
+// statMonitor.startMonitoring('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing','testing')
 
-function startHeritrix () {
-  let configDirPath = path.join('.', 'waillogs/wail-settings')
-  let settings = new Esettings({ configDirPath })
 
-  var hStart
-  if (process.platform === 'darwin') {
-    hStart = settings.get('heritrixStartDarwin')
-  } else {
-    hStart = settings.get('heritrixStart')
-  }
-  cp.exec(hStart, (err, stdout, stderr) => {
-    if (err) {
-      console.error('heritrix could not be started due to an error', err, stderr, stdout)
-    } else {
-      console.log(stdout, stderr)
-    }
-  })
+const it = {
+  me: 'john',
+  you: 'josh',
+  friends: [
+    'caleb',
+    'ben'
+  ]
 }
 
-let statMonitor = new CrawlStatsManager()
-statMonitor.startMonitoring('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing','testing')
+let {
+  me,
+  ...rest
+} = it
+console.log(me,rest)
 
 // startHeritrix()
 
