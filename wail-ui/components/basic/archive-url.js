@@ -2,20 +2,27 @@ import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
 import { Row, Column } from 'react-cellblock'
+import AutoComplete from 'material-ui/AutoComplete'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
 import UrlStore from '../../stores/urlStore'
 import * as aua from '../../actions/archive-url-actions'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
+import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
 
 const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
-
-let focusTime = null
+const dataSource = [
+  'http://',
+  'https://',
+  'www.',
+  '.com',
+  '.org'
+]
 
 export default class ArchiveUrl extends Component {
   constructor (props, context) {
@@ -42,13 +49,6 @@ export default class ArchiveUrl extends Component {
   @autobind
   handleChange (e) {
     let val = e.target.value
-    clearTimeout(focusTime)
-    focusTime = setTimeout(() => {
-      console.log('Timeout focus time')
-      if (isURL(val)) {
-        aua.urlUpdated(val)
-      }
-    }, 1500)
     let value = e.target.value
     let err = styles.underlineStyleError
     if (isURL(value) || S(value).isEmpty()) {
@@ -60,13 +60,17 @@ export default class ArchiveUrl extends Component {
   @autobind
   focusLost (event) {
     // console.log('checking url for archiving', this.state.url, event.target.value)
-    clearTimeout(focusTime)
     if (isURL(event.target.value)) {
       console.log('its valid')
-      aua.urlUpdated(event.target.value)
+      UrlDispatcher.dispatch({
+        type: EventTypes.HAS_VAILD_URI,
+        url: event.target.value
+      })
     } else {
       if (S(event.target.value).isEmpty()) {
-        aua.emptyURL()
+        UrlDispatcher.dispatch({
+          type: EventTypes.EMPTY_URL
+        })
       }
     }
   }

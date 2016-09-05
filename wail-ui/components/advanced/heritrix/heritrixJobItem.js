@@ -32,7 +32,7 @@ const settings = remote.getGlobal('settings')
 export default class HeritrixJobItem extends Component {
 
   static propTypes = {
-    jobId: PropTypes.string.isRequired,
+    jobId: PropTypes.number.isRequired,
     runs: PropTypes.array.isRequired,
     path: PropTypes.string.isRequired,
     urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired

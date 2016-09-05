@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {Row} from 'react-flexbox-grid'
 import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
@@ -35,12 +36,12 @@ export default class Header extends Component {
 
   render () {
     return (
-      <div>
+      <Row >
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
           zDepth={0}
-          style={styles.appBar}
+          style={{...styles.appBar, paddingRight: 0}}
         />
         <Drawer
           docked={false}
@@ -75,7 +76,7 @@ export default class Header extends Component {
             containerElement={<Link to='misc' />}
             onTouchTap={(e) => this.handleClose('Miscellaneous')} />
         </Drawer>
-      </div>
+      </Row>
     )
   }
 }

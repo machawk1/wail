@@ -323,10 +323,10 @@
   <!-- <property name="skipIdenticalDigests" value="false" /> -->
   <!-- <property name="maxTotalBytesToWrite" value="0" /> -->
   <!-- <property name="directory" value="C:\\WAIL\\tomcat\\webapps\\ROOT\\" /> -->
-  <property name="storePaths">
+  <!-- <property name="storePaths">
    <list>
    </list>
-  </property>
+  </property> -->
   <!-- <property name="writeRequests" value="true" /> -->
   <!-- <property name="writeMetadata" value="true" /> -->
   <!-- <property name="writeRevisitForIdenticalDigests" value="true" /> -->

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import {ipcRenderer as ipc} from 'electron'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import SplitPane from 'react-split-pane'
@@ -7,11 +8,10 @@ import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
-import wailCoreManager from '../../coreConnection'
 import CollectionHeader from './collectionHeader'
-import {ViewWatcher} from '../../../sharedUtil'
+import {ViewWatcher} from '../../../wail-core'
 import Dimensions from 'react-dimensions'
-import './css/archiveCol.css'
+import './css/wail.css'
 // import 'react-flexbox-layout/lib/styles.css'
 // import {VLayout, VLayoutItem} from 'react-flexbox-layout'
 // import {Flex, Box, Grid} from 'reflexbox'
@@ -28,10 +28,6 @@ const baseTheme = getMuiTheme({
 })
 
 export default class Explorer extends Component {
-  static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired
-  }
-
   constructor (props, context) {
     super(props, context)
     this.state = {
@@ -39,7 +35,6 @@ export default class Explorer extends Component {
       collections: { 'empty': { colName: 'void', description: 'nothings' } },
       colNames: []
     }
-    this.archiveService = wailCoreManager.getService('/archivesManager')
   }
 
   componentWillMount () {

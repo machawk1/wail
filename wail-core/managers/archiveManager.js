@@ -23,13 +23,33 @@ export default class ArchiveManager {
 
   }
 
-  addCrawlInfo (col, crawlInfo) {
-    return new Promise((resolve, reject) => {
-      this.db.update({ col }, { $push: { crawls: crawlInfo } },{}, (error,updated) => {
-        if (error) {
-          reject(error)
+  getAllCollections() {
+    return new Promise((resolve) => {
+      this.db.find({},(err,docs)=>{
+        if(err) {
+          resolve({
+            wasError: true,
+            err
+          })
         } else {
-          resolve(updated)
+          resolve({
+            wasError: false,
+            docs
+          })
+        }
+      })
+    })
+  }
+
+  addCrawlInfo (colName, crawlInfo) {
+    console.log('addCrawlInfo ArchiveManager ',colName,crawlInfo)
+    return new Promise((resolve, reject) => {
+      this.db.update({ colName }, { $push: { crawls: crawlInfo } },{}, (error,updated) => {
+        if (error) {
+          console.error('addCrawlInfo error',error)
+          return reject(error)
+        } else {
+          return resolve(updated)
         }
       })
     })

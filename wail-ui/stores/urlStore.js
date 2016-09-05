@@ -15,12 +15,9 @@ class UrlStore_ extends EventEmitter {
   constructor () {
     super()
     this.urlMemento = { url: S(''), mementos: -1, inArchive: false }
+    this.urls = new Map()
   }
 
-  /*
-   CHECK_URI_IN_ARCHIVE: null,
-   VIEW_ARCHIVED_URI: null,
-   */
 
   @autobind
   handleEvent (event) {
@@ -31,7 +28,6 @@ class UrlStore_ extends EventEmitter {
         // makeEmpty.setValue('')
         // this.urlMemento = { url: makeEmpty, mementos: -1, inArchive: false }
         this.urlMemento.url.setValue('')
-        this.urlMemento.mementos = -1
         this.urlMemento.inArchive = false
         this.emit('emptyURL')
         break

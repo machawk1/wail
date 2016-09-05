@@ -6,7 +6,7 @@ import styles from '../../styles/styles'
 
 export default class HeritrixJobInfo extends Component {
   static propTypes = {
-    jobId: PropTypes.string.isRequired,
+    jobId: PropTypes.number.isRequired,
     runs: PropTypes.array.isRequired
   }
 

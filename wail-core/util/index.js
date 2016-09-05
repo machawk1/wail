@@ -1,3 +1,4 @@
+export ColCrawlInfo from './colCrawlInfo'
 export CrawlInfo from './crawlInfo'
 export getCrawlStats from './getCrawStats'
 export Pather from './pather'

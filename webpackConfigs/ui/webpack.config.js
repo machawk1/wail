@@ -15,7 +15,7 @@ export default {
     managers: './wail-ui/background/managers',
     wail: './wail-ui/wail',
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
+    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
     // serviceD: './managersserviceDaemon/entry'
     // explore: './wail-ui/components/archiveCollections/explore'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
@@ -40,10 +40,10 @@ export default {
           ],
         },
       },
-      { test: /\.css$/, loader: 'style!css', exclude: /flexboxgrid/ },
+      { test: /\.css$/, loader: 'style!css?sourceMap=inline', exclude: /flexboxgrid/ },
       {
         test: /\.css$/,
-        loader: 'style!css?modules',
+        loader: 'style!css?modules?sourceMap=inline',
         include: /flexboxgrid/,
       },
       {

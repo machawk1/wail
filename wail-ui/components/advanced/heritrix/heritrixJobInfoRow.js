@@ -47,7 +47,7 @@ const style = {
 export default class HeritrixJobInfoRow extends Component {
   static propTypes = {
     urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired,
-    jobId: PropTypes.string.isRequired,
+    jobId: PropTypes.number.isRequired,
     runs: PropTypes.array.isRequired,
     actionMenu: PropTypes.element.isRequired
   }

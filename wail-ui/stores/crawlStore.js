@@ -12,6 +12,7 @@ import MementoDispatcher from '../dispatchers/memgatorDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import {readCode} from '../actions/editor-actions'
+import {CrawlInfo} from '../../wail-core'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -31,8 +32,10 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs = []
     this.jobIndex = new Map()
 
-    this.intialJobStateLoad()
+    ipc.send('get-all-runs')
+    ipc.on('got-all-runs',this.intialJobStateLoad)
     ipc.on('made-heritrix-jobconf', (event, conf) => {
+      console.log('made-heritrix-jobconf')
       this.createJob(conf)
     })
     ipc.on('crawljob-status-update', (event, crawlStatus) => this.crawlJobUpdate(crawlStatus))
@@ -67,28 +70,44 @@ class CrawlStore_ extends EventEmitter {
   }
 
   @autobind
-  intialJobStateLoad () {
+  intialJobStateLoad (event, allRuns) {
+    console.log(allRuns)
+    if (!allRuns.wasError && allRuns.runs.length > 0) {
+      let {
+        runs
+      } = allRuns
+      this.crawlJobs = runs.map((r,idx) => {
+        console.log(r)
+        this.jobIndex.set(r.jobId,idx)
+        return new CrawlInfo(r)
+      })
+      this.jobIndex.clear()
+      this.emit('jobs-updated')
+    } else {
+      console.error('getting all runs had an error ',allRuns.error)
+    }
+
     // console.log('initial load of crawl store')
-    getHeritrixJobsState()
-      .then(status => {
-        // console.log(status)
-        if (status.count > 0) {
-          EditorDispatcher.dispatch({
-            type: EventTypes.STORE_HERITRIX_JOB_CONFS,
-            confs: status.confs
-          })
-          this.jobIndex.clear()
-          status.jobs.forEach((jrb, idx) => {
-            this.jobIndex.set(jrb.jobId, idx)
-          })
-          // console.log(status.jobs)
-          this.crawlJobs = status.jobs
-          this.emit('jobs-updated')
-        }
-      })
-      .catch(error => {
-        console.log('There was an error in getting the configs', error)
-      })
+    // getHeritrixJobsState()
+      // .then(status => {
+      //   // console.log(status)
+      //   if (status.count > 0) {
+      //     EditorDispatcher.dispatch({
+      //       type: EventTypes.STORE_HERITRIX_JOB_CONFS,
+      //       confs: status.confs
+      //     })
+      //     this.jobIndex.clear()
+      //     status.jobs.forEach((jrb, idx) => {
+      //       this.jobIndex.set(jrb.jobId, idx)
+      //     })
+      //     // console.log(status.jobs)
+      //     this.crawlJobs = status.jobs
+      //     this.emit('jobs-updated')
+      //   }
+      // })
+      // .catch(error => {
+      //   console.log('There was an error in getting the configs', error)
+      // })
   }
 
   @autobind
@@ -124,11 +143,13 @@ class CrawlStore_ extends EventEmitter {
       teardownJob(jobId)
     }
     let jobIdx = this.jobIndex.get(jobId)
-    this.crawlJobs[ jobIdx ].runs = job.runs
-    this.crawlJobs[ jobIdx ].log = job.log
-    this.crawlJobs[ jobIdx ].launch = job.launch
-    this.crawlJobs[ jobIdx ].logPath = job.logPath
+    // this.crawlJobs[ jobIdx ].runs = job.runs
+    // this.crawlJobs[ jobIdx ].log = job.log
+    // this.crawlJobs[ jobIdx ].launch = job.launch
+    // this.crawlJobs[ jobIdx ].logPath = job.logPath
 
+    this.emit(`${jobId}-updated`)
+    // })
     // let updated = []
     // jobs.jobs.forEach(job => {
     //   let jobIdx = this.jobIndex.get(job.jobId)

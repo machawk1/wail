@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
+import {Grid, Row, Col} from 'react-flexbox-grid'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
@@ -26,13 +27,15 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div>
+      <Grid fluid className="layOutGrid">
         <Header />
-        <div style={styles.root}>
-          {this.props.children}
-        </div>
+        <Row>
+            <div style={styles.root}>
+              {this.props.children}
+            </div>
+        </Row>
         <Footer />
-      </div>
+      </Grid>
     )
   }
 }

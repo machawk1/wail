@@ -46,7 +46,9 @@ const windows = {
   timemapStatsURL: null,
 
   managersWindow: null,
-  managersUrl: null
+  managersUrl: null,
+
+  loadingWindow: null
 }
 
 const control = {
@@ -213,9 +215,14 @@ function setUpIPC () {
     windows.mainWindow = null
   })
 
-  ipcMain.on('loading-finished', (event, payload) => {
-    windows.mainWindow.hide()
-    windows.mainWindow.loadURL(windows.mWindowURL)
+  ipcMain.once('loading-finished', (event, payload) => {
+    console.log('loading-finished')
+    windows.loadingWindow.close()
+    // windows.mainWindow.show()
+    // windows.mainWindow.focus()
+    // openDebug(control.openBackGroundWindows)
+    // windows.mainWindow.hide()
+    // windows.mainWindow.loadURL(windows.mWindowURL)
   })
 
   ipcMain.on('setting-hard-reset', (event, payload) => {
@@ -239,11 +246,15 @@ function setUpIPC () {
   })
 
   ipcMain.on('get-all-runs',(event) => {
-    windows.managersWindow.send('get-all-runs')
+    // windows.managersWindow.webContents.send('get-all-runs')
+  })
+
+  ipcMain.on('got-all-runs',(event,runs) => {
+    windows.mainWindow.webContents.send('got-all-runs',runs)
   })
 
   ipcMain.on('makeHeritrixJobConf',(event, confDetails) =>{
-    windows.managersWindow.send('makeHeritrixJobConf',confDetails)
+    windows.managersWindow.webContents.send('makeHeritrixJobConf',confDetails)
   })
 
 
@@ -358,7 +369,7 @@ function openDebug () {
       }
     }
     windows.mainWindow.webContents.openDevTools()
-    windows.managersWindow.webContents.openDevTools()
+    // windows.managersWindow.webContents.openDevTools()
   }
   // windows.accessibilityWindow.hide()
   // windows.indexWindow.hide()
@@ -409,28 +420,35 @@ function cleanUp () {
   // in an array if your app supports multi windows, this is the time
   // when you should delete the corresponding element.
   stopMonitoring()
-  if (windows.accessibilityWindow != null) {
+  if (windows.accessibilityWindow !== null) {
     windows.accessibilityWindow.close()
   }
-  if (windows.indexWindow != null) {
+
+  if (windows.mainWindow !== null) {
+    windows.mainWindow.close()
+  }
+
+  if (windows.indexWindow !== null) {
     windows.indexWindow.close()
   }
 
-  if (windows.jobWindow != null) {
+  if (windows.jobWindow !== null) {
     windows.jobWindow.close()
   }
 
-  if (windows.reqDaemonWindow != null) {
+  if (windows.reqDaemonWindow !== null) {
     windows.reqDaemonWindow.close()
   }
 
-  if (windows.newCrawlWindow != null) {
+  if (windows.newCrawlWindow !== null) {
     windows.newCrawlWindow.destroy()
   }
 
-  if (windows.settingsWindow != null) {
+  if (windows.settingsWindow !== null) {
     windows.settingsWindow.destroy()
   }
+
+
 
   windows.accessibilityWindow = null
   windows.indexWindow = null
@@ -458,6 +476,52 @@ function checkBackGroundWindows () {
     windows.reqDaemonWindow = new BrowserWindow({ show: false, frame: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
+}
+
+function createLoadingWindow () {
+  let windowConfig = {
+    width: control.w,
+    minWidth: control.w,
+    // maxWidth: control.w,
+    height: control.h,
+    minHeight: control.h,
+    // maxHeight: control.h,
+    title: 'Web Archiving Integration Layer',
+    fullscreenable: false,
+    maximizable: false,
+    show: false,
+    icon: control.iconp
+  }
+  // Create the browser window.
+
+  windows.loadingWindow = new BrowserWindow(windowConfig)
+  var loadUrl  // windows.settingsWindowURL windows.mWindowURL
+  if (control.loading && control.firstLoad) {
+    loadUrl = windows.firstLoadWindowURL
+  } else {
+    loadUrl = windows.loadingWindowURL
+    control.didLoad = true
+  }
+
+  windows.loadingWindow.loadURL(loadUrl)
+
+  windows.loadingWindow.webContents.on('did-finish-load', () => {
+    // console.log('did-finish-load man win')
+    // console.log(windows.mainWindow.getSize())
+    windows.loadingWindow.show()
+    // openDebug(control.openBackGroundWindows)
+    windows.loadingWindow.focus()
+  })
+
+  windows.loadingWindow.on('unresponsive', () => {
+    console.log('loading screen is unresponsive')
+  })
+
+  windows.loadingWindow.on('closed', () => {
+    console.log('loadingWindow closed')
+    windows.loadingWindow = null
+  })
+
 }
 
 function createWindow () {
@@ -493,22 +557,22 @@ function createWindow () {
   // and load the index.html of the app.
   // console.log(`activating the main window did close? ${control.didClose}`)
 
-  var loadUrl  // windows.settingsWindowURL windows.mWindowURL
-  if (control.loading && control.firstLoad) {
-    loadUrl = windows.firstLoadWindowURL
-  } else {
-    if (!control.didLoad) {
-      loadUrl = windows.loadingWindowURL
-      control.didLoad = true
-    } else {
-      loadUrl = windows.mWindowURL
-    }
-  }
+  // var loadUrl = windows.mWindowURL // windows.settingsWindowURL windows.mWindowURL
+  // if (control.loading && control.firstLoad) {
+  //   loadUrl = windows.firstLoadWindowURL
+  // } else {
+  //   if (!control.didLoad) {
+  //     loadUrl = windows.loadingWindowURL
+  //     control.didLoad = true
+  //   } else {
+  //     loadUrl = windows.mWindowURL
+  //   }
+  // }
 
-  windows.mainWindow.loadURL(loadUrl)
+  windows.mainWindow.loadURL(windows.mWindowURL)
 
   windows.mainWindow.webContents.on('did-finish-load', () => {
-    // console.log('did-finish-load man win')
+    console.log('did-finish-load man win')
     // console.log(windows.mainWindow.getSize())
     windows.mainWindow.show()
     openDebug(control.openBackGroundWindows)
@@ -556,8 +620,9 @@ app.on('ready', () => {
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  createBackGroundWindows(control.notDebugUI)
+  // createBackGroundWindows(control.notDebugUI)
   createWindow()
+  // createLoadingWindow()
 })
 
 app.on('activate', () => {

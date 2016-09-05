@@ -49,21 +49,30 @@ import 'babel-polyfill'
 // let statMonitor = new CrawlStatsManager()
 // statMonitor.startMonitoring('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing','testing')
 
+class it {
+  constructor (num) {
+    this.num = num
+  }
 
-const it = {
-  me: 'john',
-  you: 'josh',
-  friends: [
-    'caleb',
-    'ben'
-  ]
+  compare(it2) {
+    if (this.num < it2.num) {
+      return 1
+    }
+
+    if (this.num > it2.num) {
+      return -1
+    }
+
+    return 0
+  }
 }
 
-let {
-  me,
-  ...rest
-} = it
-console.log(me,rest)
+let ar = [new it(1),new it(2),new it(3),new it(4),new it(5)]
+
+let {compare} = it.prototype
+
+ar.sort(::compare)
+console.log(ar)
 
 // startHeritrix()
 

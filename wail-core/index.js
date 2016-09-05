@@ -1,4 +1,5 @@
 export {
+  ColCrawlInfo,
   CrawlInfo,
   Pather,
   RunInfo,

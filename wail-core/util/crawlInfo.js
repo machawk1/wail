@@ -1,35 +1,20 @@
 import RunInfo from './runInfo'
 
 export default class CrawlInfo {
-  constructor (urls, depth, path, confP, running = false, runs = [], forCol = 'Wail') {
-    this.urls = urls
-    this.forCol = forCol
-    this.depth = depth
-    this.path = path
-    this.confP = confP
-    this.running = running
-    let Runs = null
-    if (Runs.length > 0) {
-      Runs = runs.map(r => new RunInfo(...r))
-    } else {
-      Runs = runs
-    }
-    this.runs = Runs
+  constructor (crawlInfo) {
+    this.jobId = crawlInfo.jobId
+    this.urls = crawlInfo.urls
+    this.forCol = crawlInfo.forCol
+    this.depth = crawlInfo.depth
+    this.path = crawlInfo.path
+    this.confP = crawlInfo.confP
+    this.running = crawlInfo.running
+    this.runs = crawlInfo.runs.map(r => new RunInfo(r, this.jobId))
     this._sortRuns()
   }
 
   _sortRuns () {
-    this.runs.sort((j1, j2) => {
-      if (j1.tsMoment.isBefore(j2.tsMoment)) {
-        return 1
-      }
-
-      if (j1.tsMoment.isAfter(j2.tsMoment)) {
-        return -1
-      }
-
-      return 0
-    })
+    this.runs.sort((j1, j2) => j1.compare(j2))
   }
 
   toString () {

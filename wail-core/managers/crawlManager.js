@@ -1,10 +1,10 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
 import Db from 'nedb'
-import { default as wc } from '../constants'
+import {default as wc} from '../constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
-import { ipcRenderer as ipc, remote } from 'electron'
+import {ipcRenderer as ipc, remote} from 'electron'
 import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
@@ -13,7 +13,7 @@ import Promise from 'bluebird'
 import S from 'string'
 import util from 'util'
 import CrawlStatsMonitor from './crawlStatsMonitor'
-import { CrawlInfo } from '../util'
+import {CrawlInfo} from '../util'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -49,8 +49,9 @@ export default class CrawlManager {
         if (err) {
           reject(err)
         } else {
+          console.log(docs)
           if (docs.length > 0) {
-            docs = docs.map(r => new CrawlInfo(...r))
+            docs = docs.map(r => new CrawlInfo(r))
           }
           resolve(docs)
         }
@@ -61,10 +62,14 @@ export default class CrawlManager {
   @autobind
   crawlStarted (jobId) {
     this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
-      this.csMonitor.startMonitoring(updated.path, jobId)
       if (error) {
         console.error('error inserting document', error)
+        ipc.send('managers-error',{
+          where: 'crawlStarted insert',
+          error
+        })
       } else {
+        this.csMonitor.startMonitoring(updated.path, jobId)
         console.log(`updated job ${jobId} it has started`, updated)
       }
     })
@@ -123,7 +128,6 @@ export default class CrawlManager {
         if (err) {
           reject(err)
         } else {
-          console.log(data)
           let doc = cheerio.load(data, {
             xmlMode: true
           })
@@ -146,33 +150,30 @@ export default class CrawlManager {
             if (er) {
               reject(er)
             } else {
-              fs.writeFile(pathMan.join(confPath, 'crawler-beans.cxml'), doc.xml(), 'utf8', error => {
+              let cfp = pathMan.join(confPath, 'crawler-beans.cxml')
+              fs.writeFile(cfp, doc.xml(), 'utf8', error => {
                 if (error) {
                   console.log('done writting file with error', error)
+                  reject(error)
                 } else {
                   console.log('done writting file')
                   let crawlInfo = {
+                    depth,
                     jobId,
                     path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
-                    confP: confPath,
+                    confP: cfp,
                     urls: urls,
                     running: false,
                     forCol
                   }
-                  ipc.send('made-heritrix-jobconf', crawlInfo)
-                  this.db.insert(Object.assign({}, { _id: `${jobId}`, runs: [] }, crawlInfo), (iError, doc) => {
+                  let wRuns = Object.assign({}, { _id: `${jobId}`, runs: [] }, crawlInfo)
+                  ipc.send('made-heritrix-jobconf', wRuns)
+                  this.db.insert(wRuns, (iError, doc) => {
                     if (iError) {
                       console.error(iError)
-                      resolve({
-                        crawlInfo,
-                        wasError: true,
-                        iError
-                      })
+                      reject(iError)
                     } else {
-                      resolve({
-                        wasError: false,
-                        crawlInfo
-                      })
+                      resolve(crawlInfo)
                     }
                   })
                 }

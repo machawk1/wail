@@ -9,8 +9,7 @@ import { ipcRenderer, remote } from 'electron'
 import Routes from './routes'
 import { writeWaybackConf } from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
-require('./css/toaster.css')
-require('./css/animate.css')
+require('./css/wail.css')
 // require('pretty-error').start()
 
 ipcRenderer.on('rewrite-wayback-config', (event, payload) => {
@@ -28,11 +27,10 @@ window.ReqStore = RequestStore
 
 injectTapEventPlugin()
 
-ipcRenderer.send('start-index-indexing')
-ipcRenderer.send('start-crawljob-monitoring')
-ipcRenderer.send('start-service-monitoring')
+// ipcRenderer.send('start-index-indexing')
+// ipcRenderer.send('start-crawljob-monitoring')
+// ipcRenderer.send('start-service-monitoring')
 
-writeWaybackConf()
 
 const wail = document.getElementById('wail')
 

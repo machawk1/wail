@@ -25,7 +25,7 @@ export default class BasicTabButtons extends Component {
         <ToolbarGroup firstChild>
           <RaisedButton
             icon={<CheckArchiveStatIcon />}
-            label='Check Archived Status'
+            label='Check Local Collection'
             labelPosition='before'
             onMouseDown={this.onClickCheckArchive}
           />
