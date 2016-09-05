@@ -6,7 +6,16 @@ import path from 'path'
 import util from 'util'
 import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
 import ContextMenu from './menu/contextMenu'
-import {Pather,ServiceManager} from '../wail-core'
+import {Pather} from '../wail-core/util'
+import ServiceManager from '../wail-core/managers/serviceManager'
+
+process.on('uncaughtException', (err) => {
+  console.log(`Caught exception: ${err}`, err, err.stack)
+  // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
+  cleanUp()
+  app.quit()
+})
+
 
 const windows = {
   accessibilityWindow: null,
@@ -36,8 +45,8 @@ const windows = {
   timemapStatsWindow: null,
   timemapStatsURL: null,
 
-  serviceDeamonWindow: null,
-  serviceDeamonUrl: null
+  managersWindow: null,
+  managersUrl: null
 }
 
 const control = {
@@ -225,6 +234,18 @@ function setUpIPC () {
     rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
   })
 
+  ipcMain.on('crawl-started',(event,jobId) => {
+    windows.managersWindow.send('crawl-started',jobId)
+  })
+
+  ipcMain.on('get-all-runs',(event) => {
+    windows.managersWindow.send('get-all-runs')
+  })
+
+  ipcMain.on('makeHeritrixJobConf',(event, confDetails) =>{
+    windows.managersWindow.send('makeHeritrixJobConf',confDetails)
+  })
+
 
 }
 
@@ -246,8 +267,7 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${__dirname}/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
-    windows.serviceDeamonUrl = `file://${__dirname}/background/serviceDaemon/serviceDaemon.html`
-    windows.managersUrl = `file://${__dirname}/background/managers/managers.html`
+    windows.managersUrl = `file://${__dirname}/background/managers.html`
   } else {
     control.base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${control.base}/wail-ui/background/accessibility.html`
@@ -260,7 +280,6 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${control.base}/wail-ui/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${control.base}/wail-ui/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
-    windows.serviceDeamonUrl = `file://${control.base}/wail-ui/background/serviceDaemon/serviceDaemon.html`
     windows.managersUrl = `file://${control.base}/wail-ui/background/managers/managers.html`
   }
 
@@ -339,6 +358,7 @@ function openDebug () {
       }
     }
     windows.mainWindow.webContents.openDevTools()
+    windows.managersWindow.webContents.openDevTools()
   }
   // windows.accessibilityWindow.hide()
   // windows.indexWindow.hide()
@@ -356,11 +376,14 @@ function createBackGroundWindows (notDebugUI) {
 
     windows.jobWindow = new BrowserWindow({ show: false })
     windows.jobWindow.loadURL(windows.jobWindowURL)
-    windows.jobWindow.webContents.toggleDevTools()
+    // windows.jobWindow.webContents.toggleDevTools()
 
     windows.reqDaemonWindow = new BrowserWindow({ show: false })
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
+
+  windows.managersWindow = new BrowserWindow({show: true})
+  windows.managersWindow.loadURL(windows.managersUrl)
 }
 
 function stopMonitoring () {
@@ -493,7 +516,7 @@ function createWindow () {
   })
 
   windows.mainWindow.on('unresponsive', () => {
-    // console.log('we are unresponsive')
+    console.log('we are unresponsive')
   })
 
   windows.mainWindow.webContents.on('crashed', () => {
@@ -523,29 +546,16 @@ function createWindow () {
   })
 }
 
-process.on('uncaughtException', (err) => {
-  console.log(`Caught exception: ${err}`, err, err.stack)
-  // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
-  cleanUp()
-  app.quit()
-})
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  // console.log('app ready')
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  // control.tray = new Tray(control.iconp)
-  // const contextMenu = Menu.buildFromTemplate([
-  //   { label: 'Item1', type: 'radio' },
-  //   { label: 'Item2', type: 'radio' },
-  //   { label: 'Item3', type: 'radio', checked: true },
-  //   { label: 'Item4', type: 'radio' }
-  // ])
-  // control.tray.setToolTip('WAIL')
-  // control.tray.setContextMenu(contextMenu)
   createBackGroundWindows(control.notDebugUI)
   createWindow()
 })
@@ -568,6 +578,7 @@ app.on('activate', () => {
 app.on('window-all-closed', () => {
   console.log('all windows closed')
   if (process.platform !== 'darwin') {
+    console.log('not darwin we should close')
     app.quit()
   }
 })

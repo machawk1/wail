@@ -193,7 +193,7 @@ export default class ServiceManager {
         let opts = {
           cwd: this._settings.get('pywb.home'),
           detached: true,
-          shell: false,
+          shell: true,
           stdio: [ 'ignore', 'ignore', 'ignore' ]
         }
         try {

@@ -12,10 +12,11 @@ export default {
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     // requestD: './wail-ui/background/requestDaemon',
     // settingsW: './wail-ui/childWindows/settings/settingsW',
+    managers: './wail-ui/background/managers',
     wail: './wail-ui/wail',
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
-    // serviceD: './wail-ui/background/serviceDaemon/entry'
+    // serviceD: './managersserviceDaemon/entry'
     // explore: './wail-ui/components/archiveCollections/explore'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },

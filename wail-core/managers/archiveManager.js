@@ -4,7 +4,7 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
-import {ipcRender,remote} from 'electron'
+import {remote} from 'electron'
 import util from 'util'
 
 S.TMPL_OPEN = '{'
@@ -17,7 +17,7 @@ const settings = remote.getGlobal('settings')
 export default class ArchiveManager {
   constructor () {
     this.db = new Db({
-      filename: path.join(settings.get('wailCore.db'),'archives'),
+      filename: path.join(settings.get('wailCore.db'),'archives.db'),
       autoload: true
     })
 

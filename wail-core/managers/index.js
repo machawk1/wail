@@ -1,6 +1,6 @@
 export ArchiveManager    from './archiveManager'
 export CrawlManager      from './crawlManager'
-export CrawlStatsMonitor from './CrawlStatsMonitor'
+export CrawlStatsMonitor from './crawlStatsMonitor'
 export ServiceManager    from './serviceManager'
 export SettingsManager   from './settingsManager'
 

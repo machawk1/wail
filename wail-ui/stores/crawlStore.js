@@ -279,6 +279,7 @@ class CrawlStore_ extends EventEmitter {
         //   type: EventTypes.LAUNCHED_CRAWL_JOB,
         //   jId: event.id
         // })
+        ipc.send('cr')
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: `Heritrix Crawl Built launched job: ${event.id}`

@@ -425,6 +425,7 @@ export function rewriteHeritrixAuth (settings, usr, pwd) {
 }
 
 export default function configSettings (base, userData, v) {
+  console.log('configsettings')
   let settings
   let settingsDir = path.join(userData, 'wail-settings')
   try {

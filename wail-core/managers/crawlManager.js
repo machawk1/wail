@@ -27,7 +27,7 @@ export default class CrawlManager {
 
   constructor () {
     this.db = new Db({
-      filename: pathMan.join(settings.get('wailCore.db'), 'crawls'),
+      filename: pathMan.join(settings.get('wailCore.db'), 'crawls.db'),
       autoload: true
     })
     this.csMonitor = new CrawlStatsMonitor()
@@ -71,7 +71,7 @@ export default class CrawlManager {
   }
 
   @autobind
-  crawlEnded (id, update) {
+  crawlEnded (update) {
     let theUpdate = {
       $set: { running: false },
       $push: {
@@ -84,7 +84,7 @@ export default class CrawlManager {
         }
       }
     }
-    this.db.update({ id: update.id }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.db.update({ jobId: update.id }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
       } else {
@@ -141,7 +141,7 @@ export default class CrawlManager {
           urlConf.text(urlText)
           let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
           maxHops.attr('value', `${depth}`)
-          let confPath = pathMan.join(settings.get('heritrixJob'), jobId)
+          let confPath = pathMan.join(settings.get('heritrixJob'), `${jobId}`)
           fs.ensureDir(confPath, er => {
             if (er) {
               reject(er)
