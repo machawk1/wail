@@ -1,12 +1,24 @@
 import React, {Component, PropTypes} from 'react'
 import {Grid, Row, Col} from 'react-flexbox-grid'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
 import styles from '../styles/styles'
 
-const baseTheme = getMuiTheme(lightBaseTheme)
+
+
+const baseTheme = getMuiTheme({
+  tabs: {
+    backgroundColor: blueGrey50,
+    textColor: darkBlack,
+    selectedTextColor: darkBlack
+  },
+  inkBar: {
+    backgroundColor: lightBlue900
+  }
+})
 
 export default class Layout extends Component {
   static propTypes = {
@@ -27,15 +39,13 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <Grid fluid className="layOutGrid">
+      <div style={{ width: '100%' }}>
         <Header />
-        <Row>
-            <div style={styles.root}>
-              {this.props.children}
-            </div>
-        </Row>
+        <div style={styles.root}>
+          {this.props.children}
+        </div>
         <Footer />
-      </Grid>
+      </div>
     )
   }
 }

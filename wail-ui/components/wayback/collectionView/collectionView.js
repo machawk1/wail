@@ -13,6 +13,7 @@ export default class CollectionView extends Component {
   constructor (...args) {
     super(...args)
     let { collections, defaultView } = this.props
+    console.log(this.props)
     this.state = {
       viewing: collections[ defaultView ]
     }
@@ -34,9 +35,7 @@ export default class CollectionView extends Component {
     let { viewing } = this.state
     console.log(viewing)
     return (
-      <div >
-        <CollectionInfo collection={viewing} />
-      </div>
+      <CollectionInfo collection={viewing} />
     )
   }
 }

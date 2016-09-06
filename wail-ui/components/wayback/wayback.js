@@ -1,14 +1,16 @@
-import React, { Component } from 'react'
-import { shell, remote } from 'electron'
+import React, {Component} from 'react'
+import {shell, remote} from 'electron'
 import RaisedButton from 'material-ui/RaisedButton'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit'
+import {Grid, Row, Col} from 'react-flexbox-grid'
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
 import cp from 'child_process'
 import autobind from 'autobind-decorator'
 import S from 'string'
+import Explorer from './explorer'
 import wailConstants from '../../constants/wail-constants'
 
 const EventTypes = wailConstants.EventTypes
@@ -22,6 +24,7 @@ export default class WayBackTab extends Component {
   constructor (props, context) {
     super(props, context)
   }
+
   @autobind
   forIndex () {
     let opts = {
@@ -50,33 +53,40 @@ export default class WayBackTab extends Component {
 
   render () {
     return (
-      <div>
-        <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
-          <ToolbarGroup firstChild>
-            <RaisedButton
-              label='View in Browser'
-              labelPosition='before'
-              icon={<OpenBrowserIcon />}
-              onMouseDown={() => shell.openExternal(settings.get('pywb.url'))}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <RaisedButton
-              label='Force Reindexing'
-              labelPosition='before'
-              onMouseDown={this.forIndex}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup lastChild>
-            <RaisedButton
-              icon={<FolderOpen />}
-              label='View Archives'
-              labelPosition='before'
-              onMouseDown={() => shell.openItem(settings.get('collections.dir'))}
-            />
-          </ToolbarGroup>
-        </Toolbar>
-      </div>
+      <Grid fluid className="layOutGrid">
+        <Row >
+          <Explorer />
+        </Row>
+        <Row>
+          <Col xs>
+            <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
+              <ToolbarGroup firstChild>
+                <RaisedButton
+                  label='View in Browser'
+                  labelPosition='before'
+                  icon={<OpenBrowserIcon />}
+                  onMouseDown={() => shell.openExternal(settings.get('pywb.url'))}
+                />
+              </ToolbarGroup>
+              <ToolbarGroup>
+                <RaisedButton
+                  label='Force Reindexing'
+                  labelPosition='before'
+                  onMouseDown={this.forIndex}
+                />
+              </ToolbarGroup>
+              <ToolbarGroup lastChild>
+                <RaisedButton
+                  icon={<FolderOpen />}
+                  label='View Archives'
+                  labelPosition='before'
+                  onMouseDown={() => shell.openItem(settings.get('collections.dir'))}
+                />
+              </ToolbarGroup>
+            </Toolbar>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }

@@ -27,27 +27,7 @@ class _CollectionStore extends EventEmitter {
   @autobind
   _init () {
     ipc.send('get-all-collections')
-    ipc.once('got-all-collections', (event, ac) => {
-      console.log('collection store got all collections',ac)
-      let cols = []
-      let {
-        collections,
-        wasError
-      } = ac
-      if (wasError) {
-        console.error(wasError)
-      } else {
-        collections.forEach(col => {
-          let {runs} = col
-          runs = runs.map(r => new ColCrawlInfo(col))
-          runs.sort((r1,r2) => r1.compare(r2))
-          col.runs = runs
-          cols.push(col)
-          this.collections.set(col.col, col)
-        })
-        this.emit('got-all-collections', cols)
-      }
-    })
+    ipc.once('got-all-collections', ::this.loadCollections)
     ipc.on('crawl-to-collection',(event,crawl) => {
       let {
         wasError
@@ -66,6 +46,35 @@ class _CollectionStore extends EventEmitter {
         this.emit(`${forCol}-newCrawl`,cinfo)
       }
     })
+  }
+
+  loadCollections(event,ac) {
+    console.log('collection store got all collections',ac)
+    let collections = []
+    let {
+      cols: {
+        docs
+      },
+      wasError
+    } = ac
+    if (wasError) {
+      console.error(wasError)
+    } else {
+      docs.forEach(col => {
+        console.log(col)
+        let {crawls} = col
+        crawls = crawls.map(r => new ColCrawlInfo(col))
+        crawls.sort((r1,r2) => r1.compare(r2))
+        col.crawls = crawls
+        collections.push(col)
+        this.collections.set(col.colName, col)
+      })
+      this.emit('got-all-collections', collections)
+    }
+  }
+
+  getColNames () {
+    return Array.from(this.collections.keys())
   }
 
   @autobind

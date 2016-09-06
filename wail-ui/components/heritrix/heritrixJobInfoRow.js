@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { TableRow, TableRowColumn } from 'material-ui/Table'
 import moment from 'moment'
 import { joinStrings } from 'joinable'
-import styles from '../../styles/styles'
-import {moveWarc} from '../../../actions/heritrix-actions'
+import styles from '../styles/styles'
+import {moveWarc} from '../../actions/heritrix-actions'
 const {
   crawlUrlS,
   statusS,

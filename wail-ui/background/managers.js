@@ -46,6 +46,7 @@ ipc.on('crawl-started', (event, jobId) => {
 })
 
 ipc.on('get-all-runs', (event) => {
+  console.log('managers got get-all-runs')
   crawlMan.getAllRuns()
     .then(runs => {
       ipc.send('got-all-runs', {

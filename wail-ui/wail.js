@@ -1,13 +1,13 @@
 import 'babel-polyfill'
 import React from 'react'
-import { Router, hashHistory } from 'react-router'
-import ReactDOM from 'react-dom'
+import {Router, hashHistory} from 'react-router'
+import {render} from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import Routes from './routes'
-import { writeWaybackConf } from './actions/wayback-actions'
+import {writeWaybackConf} from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
 require('./css/wail.css')
 // require('pretty-error').start()
@@ -31,10 +31,9 @@ injectTapEventPlugin()
 // ipcRenderer.send('start-crawljob-monitoring')
 // ipcRenderer.send('start-service-monitoring')
 
-
 const wail = document.getElementById('wail')
 
-ReactDOM.render(
+render(
   <Router
     history={hashHistory}
     routes={Routes}

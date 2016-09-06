@@ -16,7 +16,6 @@ process.on('uncaughtException', (err) => {
   app.quit()
 })
 
-
 const windows = {
   accessibilityWindow: null,
   accessibilityWindowURL: null,
@@ -241,22 +240,38 @@ function setUpIPC () {
     rewriteHeritrixAuth(control.settings, payload.usr, payload.pwd)
   })
 
-  ipcMain.on('crawl-started',(event,jobId) => {
-    windows.managersWindow.send('crawl-started',jobId)
+  ipcMain.on('crawl-started', (event, jobId) => {
+    windows.managersWindow.send('crawl-started', jobId)
   })
 
-  ipcMain.on('get-all-runs',(event) => {
-    // windows.managersWindow.webContents.send('get-all-runs')
+  ipcMain.on('get-all-runs', (event) => {
+    windows.managersWindow.webContents.send('get-all-runs')
   })
 
-  ipcMain.on('got-all-runs',(event,runs) => {
-    windows.mainWindow.webContents.send('got-all-runs',runs)
+  ipcMain.on('got-all-runs', (event, runs) => {
+    windows.mainWindow.webContents.send('got-all-runs', runs)
   })
 
-  ipcMain.on('makeHeritrixJobConf',(event, confDetails) =>{
-    windows.managersWindow.webContents.send('makeHeritrixJobConf',confDetails)
+  ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
+    windows.managersWindow.webContents.send('makeHeritrixJobConf', confDetails)
   })
 
+  ipcMain.on('get-all-collections', (event) => {
+    windows.managersWindow.webContents.send('get-all-collections')
+  })
+
+  ipcMain.on('got-all-collections', (event, cols) => {
+    windows.mainWindow.webContents.send('got-all-collections', cols)
+  })
+
+  ipcMain.on('crawl-to-collection', (event, colCrawl) => {
+    windows.mainWindow.webContents.send('crawl-to-collection', colCrawl)
+  })
+  /*
+   get-all-collections
+   got-all-collections
+   crawl-to-collection
+   */
 
 }
 
@@ -310,17 +325,17 @@ function setUp () {
 
   if (process.platform === 'darwin') {
     control.iconp = pathMan.normalizeJoinWBase('src/icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
-    control.w = 800
-    control.h = 380
+    control.w = 1000
+    control.h = 500
   } else if (process.platform === 'win32') {
     // console.log('windows')
     control.iconp = path.normalize(path.join(control.base, 'src/icons/whale.ico'))
-    control.w = 800
-    control.h = 420
+    control.w = 1000
+    control.h = 500
   } else {
     control.iconp = path.normalize(path.join(control.base, 'src/icons/linux/whale_64.png'))
-    control.w = 800
-    control.h = 361
+    control.w = 1000
+    control.h = 500
   }
 
   let settings = configSettings(control.base, settingsPath, version)
@@ -393,7 +408,7 @@ function createBackGroundWindows (notDebugUI) {
     windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
   }
 
-  windows.managersWindow = new BrowserWindow({show: true})
+  windows.managersWindow = new BrowserWindow({ show: true })
   windows.managersWindow.loadURL(windows.managersUrl)
 }
 
@@ -424,7 +439,7 @@ function cleanUp () {
     windows.accessibilityWindow.close()
   }
 
-  if (windows.mainWindow !== null) {
+  if (windows.mainWindow) {
     windows.mainWindow.close()
   }
 
@@ -447,8 +462,6 @@ function cleanUp () {
   if (windows.settingsWindow !== null) {
     windows.settingsWindow.destroy()
   }
-
-
 
   windows.accessibilityWindow = null
   windows.indexWindow = null
@@ -610,8 +623,6 @@ function createWindow () {
   })
 }
 
-
-
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -620,7 +631,7 @@ app.on('ready', () => {
   app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   setUp()
-  // createBackGroundWindows(control.notDebugUI)
+  createBackGroundWindows(control.notDebugUI)
   createWindow()
   // createLoadingWindow()
 })

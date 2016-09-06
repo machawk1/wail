@@ -3,9 +3,9 @@ import { List, ListItem } from 'material-ui/List'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import Divider from 'material-ui/Divider'
 import autobind from 'autobind-decorator'
-import CrawlStore from '../.././../stores/crawlStore'
+import CrawlStore from '../.././stores/crawlStore'
 import HeritrixJobItem from './heritrixJobItem'
-import styles from '../../styles/styles'
+import styles from '../styles/styles'
 
 const {
   crawlUrlS,

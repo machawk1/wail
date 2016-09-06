@@ -8,7 +8,7 @@ import AddCrawlIcon from 'material-ui/svg-icons/content/add'
 import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
 import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
-import { rescanJobDir } from '../../../actions/heritrix-actions'
+import { rescanJobDir } from '../../actions/heritrix-actions'
 const styles = {
   button: {
     margin: 12

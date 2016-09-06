@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import { Row, Column } from 'react-cellblock'
+import {Row, Col} from 'react-flexbox-grid'
 import AutoComplete from 'material-ui/AutoComplete'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
@@ -86,17 +86,28 @@ export default class ArchiveUrl extends Component {
 
   render () {
     return (
-      <div style={{ display: 'flex' }}>
-        <TextField
-          floatingLabelText='URL'
-          underlineStyle={this.state.underlineStyle}
-          id='archive-url-input'
-          value={this.state.url.s}
-          onBlur={this.focusLost}
-          onChange={this.handleChange}
-          style={styles.urlInput}
-        />
-      </div>
+      <TextField
+        floatingLabelText='URL'
+        underlineStyle={this.state.underlineStyle}
+        id='archive-url-input'
+        value={this.state.url.s}
+        onBlur={this.focusLost}
+        onChange={this.handleChange}
+        style={styles.urlInput}
+      />
     )
   }
 }
+/*
+ <div style={{ display: 'flex' }}>
+ <TextField
+ floatingLabelText='URL'
+ underlineStyle={this.state.underlineStyle}
+ id='archive-url-input'
+ value={this.state.url.s}
+ onBlur={this.focusLost}
+ onChange={this.handleChange}
+ style={styles.urlInput}
+ />
+ </div>
+ */

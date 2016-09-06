@@ -36,7 +36,7 @@ export default class Header extends Component {
 
   render () {
     return (
-      <Row >
+      <div>
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
@@ -76,7 +76,7 @@ export default class Header extends Component {
             containerElement={<Link to='misc' />}
             onTouchTap={(e) => this.handleClose('Miscellaneous')} />
         </Drawer>
-      </Row>
+      </div>
     )
   }
 }

@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import General from './general'
-import WayBackTab from './wayback'
-import HeritrixTab from './heritrix/heritrix-tab'
+import WayBackTab from '../archiveCollections/wayback'
+import HeritrixTab from '../heritrix/heritrix-tab'
 import Miscellaneous from './miscellaneous'
 
 export default class AdvancedTab extends Component {

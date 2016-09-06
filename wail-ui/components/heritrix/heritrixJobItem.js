@@ -12,15 +12,15 @@ import fs from 'fs-extra'
 import cp from 'child_process'
 import path from 'path'
 import autobind from 'autobind-decorator'
-import wc from '../../../constants/wail-constants'
-import CrawlStore from '../../../stores/crawlStore'
-import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
+import wc from '../../constants/wail-constants'
+import CrawlStore from '../../stores/crawlStore'
+import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import {
   forceCrawlFinish,
   deleteHeritrixJob,
   restartJob,
   rescanJobDir
-} from '../../../actions/heritrix-actions'
+} from '../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
 

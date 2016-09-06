@@ -135,10 +135,11 @@ export default class ArchiveManager {
         let colpath = path.join(settings.get('warcs'),'collections',col)
         let toCreate = {
           _id: col,
+          name: col,
           colpath,
           archive: path.join(colpath,'archive'),
           indexes: path.join(colpath,'indexes'),
-          col,
+          colName: col,
           numArchives: 0,
           metadata: [],
           crawls: [],
