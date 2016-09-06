@@ -154,16 +154,17 @@ function setUpIPC () {
       windows.indexWindow.webContents.send('start-index-indexing', payload)
     })
 
-    ipcMain.on('service-status-update', (event, payload) => {
-      // console.log('got test-status-update')
-      windows.mainWindow.webContents.send('service-status-update', payload)
-    })
 
-    ipcMain.on('crawljob-status-update', (event, payload) => {
-      // console.log('got crawljob-status-update')
-      windows.mainWindow.webContents.send('crawljob-status-update', payload)
-    })
   }
+  ipcMain.on('service-status-update', (event, payload) => {
+    // console.log('got test-status-update')
+    windows.mainWindow.webContents.send('service-status-update', payload)
+  })
+
+  ipcMain.on('crawljob-status-update', (event, payload) => {
+    // console.log('got crawljob-status-update')
+    windows.mainWindow.webContents.send('crawljob-status-update', payload)
+  })
 
   ipcMain.on('open-newCrawl-window', (event, payload) => {
     // console.log('got open-newCrawl-window')
@@ -404,9 +405,10 @@ function createBackGroundWindows (notDebugUI) {
     windows.jobWindow.loadURL(windows.jobWindowURL)
     // windows.jobWindow.webContents.toggleDevTools()
 
-    windows.reqDaemonWindow = new BrowserWindow({ show: false })
-    windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
+
   }
+  windows.reqDaemonWindow = new BrowserWindow({ show: false })
+  windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
 
   windows.managersWindow = new BrowserWindow({ show: true })
   windows.managersWindow.loadURL(windows.managersUrl)

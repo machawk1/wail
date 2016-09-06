@@ -34,31 +34,33 @@ export default class CollectionOverview extends Component {
     return (
       <Grid fluid>
         <Row between='xs'>
-          <Col>
+          <Col xs>
             <h3>Collection Name: {colName}</h3>
           </Col>
-          <Col>
+          <Col xs>
             <h3>Warcs in collection: {numArchives}</h3>
           </Col>
         </Row>
         <Row between='xs'>
-          <Col>
+          <Col xs>
             <h3>Warc Location: {archive}</h3>
           </Col>
-          <Col>
+          <Col xs>
             <OpenButton label='Open Location' />
           </Col>
         </Row>
         <Row between='xs'>
-          <Col>
+          <Col xs>
             <h3>Index Location: {indexes}</h3>
           </Col>
-          <Col>
+          <Col xs>
             <OpenButton label='Open Location' />
           </Col>
         </Row>
         <Row>
+          <Col xs>
           <WarcToCollection />
+          </Col>
         </Row>
       </Grid>
     )

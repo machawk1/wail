@@ -115,6 +115,7 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs.push(conf)
     let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
     this.jobIndex.set(conf.jobId.toString(), idx)
+    this.crawlJobs[idx] = conf
     this.emit('jobs-updated')
   }
 
@@ -143,10 +144,7 @@ class CrawlStore_ extends EventEmitter {
       teardownJob(jobId)
     }
     let jobIdx = this.jobIndex.get(jobId)
-    // this.crawlJobs[ jobIdx ].runs = job.runs
-    // this.crawlJobs[ jobIdx ].log = job.log
-    // this.crawlJobs[ jobIdx ].launch = job.launch
-    // this.crawlJobs[ jobIdx ].logPath = job.logPath
+    this.crawlJobs[ jobIdx ].runs[0] = stats
 
     this.emit(`${jobId}-updated`)
     // })
@@ -300,10 +298,10 @@ class CrawlStore_ extends EventEmitter {
         //   type: EventTypes.LAUNCHED_CRAWL_JOB,
         //   jId: event.id
         // })
-        ipc.send('cr')
+        ipc.send('crawl-started',event.id)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `Heritrix Crawl Built launched job: ${event.id}`
+          message: `Heritrix Crawl Started: ${event.id}`
         })
         break
       }

@@ -5,6 +5,7 @@ import autobind from 'autobind-decorator'
 import Dimensions from 'react-dimensions'
 import { Grid, Row, Col } from 'react-flexbox-grid'
 import CollectionOverview from './collectionOverview'
+import CollectionMetadata from './collectionMetadata'
 
 export default class CollectionInfo extends Component {
   static propTypes = {
@@ -41,9 +42,7 @@ export default class CollectionInfo extends Component {
           onChangeIndex={this.handleChange}
         >
           <CollectionOverview collection={collection} />
-          <div >
-            Metadata
-          </div>
+          <CollectionMetadata collection={collection} />
           <div >
             Crawls
           </div>

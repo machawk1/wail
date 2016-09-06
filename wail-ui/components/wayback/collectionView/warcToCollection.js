@@ -20,7 +20,7 @@ export default class WarcToCollection extends Component {
     return (
 
       <div id='warcUpload'>
-        Try dropping some files here, or click to select files to upload.
+        Drop Warc Files To Add To Collection
       </div>
 
     )

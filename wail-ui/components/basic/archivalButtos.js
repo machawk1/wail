@@ -24,7 +24,7 @@ export default class ArchivalButtons extends Component {
           <ToolbarGroup firstChild>
             <RaisedButton
               icon={<ViewArchiveIcon />}
-              label='View In Wayback'
+              label='Check Local Collection'
               labelPosition='before'
               onMouseDown={() => {
                 UrlDispatcher.dispatch({

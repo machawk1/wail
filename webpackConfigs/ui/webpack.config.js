@@ -10,7 +10,7 @@ export default {
     // indexer: './wail-ui/background/indexer',
     // jobs: './wail-ui/background/jobs',
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    // requestD: './wail-ui/background/requestDaemon',
+    requestD: './wail-ui/background/requestDaemon',
     // settingsW: './wail-ui/childWindows/settings/settingsW',
     managers: './wail-ui/background/managers',
     wail: './wail-ui/wail',

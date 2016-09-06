@@ -32,6 +32,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
         errorCount: 0
       })
       logWatcher.on('change', (path) => {
+        console.log('changed ',path)
         getCrawlStats(path)
           .then(stats => {
             log(`crawlJob-status-update ${jobId}`, stats)
