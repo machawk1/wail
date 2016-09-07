@@ -4,7 +4,7 @@ import { ipcRenderer, remote } from 'electron'
 import rp from 'request-promise'
 import _ from 'lodash'
 import util from 'util'
-import Logger from '../logger/logger'
+import Logger from '../../logger/logger'
 
 require('request-debug')(rp)
 

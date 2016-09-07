@@ -47,6 +47,12 @@ const windows = {
   managersWindow: null,
   managersUrl: null,
 
+  crawlManWindow: null,
+  crawlManUrl: null,
+
+  archiveManWindow: null,
+  archiveManUrl: null,
+
   loadingWindow: null
 }
 
@@ -242,27 +248,31 @@ function setUpIPC () {
   })
 
   ipcMain.on('crawl-started', (event, jobId) => {
-    windows.managersWindow.send('crawl-started', jobId)
+    console.log('got crawl-started')
+    windows.crawlManWindow.send('crawl-started', jobId)
   })
 
   ipcMain.on('get-all-runs', (event) => {
-    windows.managersWindow.webContents.send('get-all-runs')
+    console.log('got get-all-runs')
+    windows.crawlManWindow.webContents.send('get-all-runs')
   })
 
   ipcMain.on('got-all-runs', (event, runs) => {
+    console.log('got get-all-runs')
     windows.mainWindow.webContents.send('got-all-runs', runs)
   })
 
   ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
-    windows.managersWindow.webContents.send('makeHeritrixJobConf', confDetails)
+    windows.crawlManWindow.webContents.send('makeHeritrixJobConf', confDetails)
   })
 
   ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
-    windows.mainWindow.webContents.send('makeHeritrixJobConf', confDetails)
+    windows.mainWindow.webContents.send('made-heritrix-jobconf', confDetails)
+    windows.archiveManWindow.webContents.send('made-heritrix-jobconf', confDetails)
   })
 
   ipcMain.on('get-all-collections', (event) => {
-    windows.managersWindow.webContents.send('get-all-collections')
+    windows.archiveManWindow.webContents.send('get-all-collections')
   })
 
   ipcMain.on('got-all-collections', (event, cols) => {
@@ -299,6 +309,8 @@ function setUp () {
     windows.loadingWindowURL = `file://${__dirname}/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${__dirname}/childWindows/timemapStats/timemapStats.html`
     windows.managersUrl = `file://${__dirname}/background/managers.html`
+    windows.archiveManUrl = `file://${__dirname}/background/crawls.html`
+    windows.crawlManUrl = `file://${__dirname}/background/archives.html`
   } else {
     control.base = app.getAppPath()
     windows.accessibilityWindowURL = `file://${control.base}/wail-ui/background/accessibility.html`
@@ -311,7 +323,9 @@ function setUp () {
     windows.firstLoadWindowURL = `file://${control.base}/wail-ui/loadingScreens/firstTime/loadingScreen.html`
     windows.loadingWindowURL = `file://${control.base}/wail-ui/loadingScreens/notFirstTime/loadingScreen.html`
     windows.timemapStatsURL = `file://${control.base}/wail-ui/childWindows/timemapStats/timemapStats.html`
-    windows.managersUrl = `file://${control.base}/wail-ui/background/managers/managers.html`
+    windows.managersUrl = `file://${control.base}/wail-ui/background/managers.html`
+    windows.archiveManUrl = `file://${control.base}/wail-ui/background/crawls.html`
+    windows.crawlManUrl = `file://${control.base}/wail-ui/background/archives.html`
   }
 
   global.pathMan = control.pathMan = new Pather(control.base)
@@ -370,25 +384,27 @@ function setUp () {
 function openDebug () {
   if (control.debug) {
     if (control.openBackGroundWindows) {
-      if (windows.accessibilityWindow != null) {
-        windows.accessibilityWindow.show()
-        windows.accessibilityWindow.webContents.openDevTools()
-      }
-      if (windows.indexWindow != null) {
-        windows.indexWindow.show()
-        windows.indexWindow.webContents.openDevTools()
-      }
-
-      if (windows.jobWindow != null) {
-        windows.jobWindow.show()
-        windows.jobWindow.webContents.openDevTools()
-      }
+      // if (windows.accessibilityWindow != null) {
+      //   windows.accessibilityWindow.show()
+      //   windows.accessibilityWindow.webContents.openDevTools()
+      // }
+      // if (windows.indexWindow != null) {
+      //   windows.indexWindow.show()
+      //   windows.indexWindow.webContents.openDevTools()
+      // }
+      //
+      // if (windows.jobWindow != null) {
+      //   windows.jobWindow.show()
+      //   windows.jobWindow.webContents.openDevTools()
+      // }
       if (windows.reqDaemonWindow != null) {
         windows.reqDaemonWindow.show()
         windows.reqDaemonWindow.webContents.openDevTools()
       }
     }
     windows.mainWindow.webContents.openDevTools()
+    windows.archiveManWindow.webContents.openDevTools()
+    windows.crawlManWindow.webContents.openDevTools()
     // windows.managersWindow.webContents.openDevTools()
   }
   // windows.accessibilityWindow.hide()
@@ -399,37 +415,46 @@ function openDebug () {
 
 function createBackGroundWindows (notDebugUI) {
   if (notDebugUI) {
-    windows.accessibilityWindow = new BrowserWindow({ show: false })
-    windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
-
-    windows.indexWindow = new BrowserWindow({ show: false })
-    windows.indexWindow.loadURL(windows.indexWindowURL)
-
-    windows.jobWindow = new BrowserWindow({ show: false })
-    windows.jobWindow.loadURL(windows.jobWindowURL)
+    // windows.accessibilityWindow = new BrowserWindow({ show: false })
+    // windows.accessibilityWindow.loadURL(windows.accessibilityWindowURL)
+    //
+    // windows.indexWindow = new BrowserWindow({ show: false })
+    // windows.indexWindow.loadURL(windows.indexWindowURL)
+    //
+    // windows.jobWindow = new BrowserWindow({ show: false })
+    // windows.jobWindow.loadURL(windows.jobWindowURL)
     // windows.jobWindow.webContents.toggleDevTools()
 
 
   }
+
+  windows.crawlManWindow = new BrowserWindow({ show: true })
+  windows.crawlManWindow.loadURL(windows.crawlManUrl)
+
+  windows.archiveManWindow = new BrowserWindow({ show: true })
+  windows.archiveManWindow.loadURL(windows.archiveManUrl)
+
   windows.reqDaemonWindow = new BrowserWindow({ show: false })
   windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
 
-  windows.managersWindow = new BrowserWindow({ show: true })
-  windows.managersWindow.loadURL(windows.managersUrl)
+
+
+  // windows.managersWindow = new BrowserWindow({ show: true })
+  // windows.managersWindow.loadURL(windows.managersUrl)
 }
 
 function stopMonitoring () {
-  if (windows.accessibilityWindow != null) {
-    windows.accessibilityWindow.webContents.send('stop')
-  }
-
-  if (windows.indexWindow != null) {
-    windows.indexWindow.webContents.send('stop')
-  }
-
-  if (windows.jobWindow != null) {
-    windows.jobWindow.webContents.send('stop')
-  }
+  // if (windows.accessibilityWindow != null) {
+  //   windows.accessibilityWindow.webContents.send('stop')
+  // }
+  //
+  // if (windows.indexWindow != null) {
+  //   windows.indexWindow.webContents.send('stop')
+  // }
+  //
+  // if (windows.jobWindow != null) {
+  //   windows.jobWindow.webContents.send('stop')
+  // }
 
   if (windows.reqDaemonWindow != null) {
     windows.reqDaemonWindow.webContents.send('stop')
@@ -441,9 +466,9 @@ function cleanUp () {
   // in an array if your app supports multi windows, this is the time
   // when you should delete the corresponding element.
   stopMonitoring()
-  if (windows.accessibilityWindow !== null) {
-    windows.accessibilityWindow.close()
-  }
+  // if (windows.accessibilityWindow !== null) {
+  //   windows.accessibilityWindow.close()
+  // }
 
   if (windows.mainWindow) {
     windows.mainWindow.close()
@@ -593,9 +618,9 @@ function createWindow () {
   windows.mainWindow.webContents.on('did-finish-load', () => {
     console.log('did-finish-load man win')
     // console.log(windows.mainWindow.getSize())
-    // windows.mainWindow.show()
+    windows.mainWindow.show()
     // openDebug(control.openBackGroundWindows)
-    // windows.mainWindow.focus()
+    windows.mainWindow.focus()
   })
 
   windows.mainWindow.on('unresponsive', () => {
@@ -639,7 +664,7 @@ app.on('ready', () => {
   setUp()
   createBackGroundWindows(control.notDebugUI)
   createWindow()
-  createLoadingWindow()
+  // createLoadingWindow()
 })
 
 app.on('activate', () => {

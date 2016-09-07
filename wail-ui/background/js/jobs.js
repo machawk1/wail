@@ -13,7 +13,7 @@ import ReadWriteLock from 'rwlock'
 import schedule from 'node-schedule'
 import os from 'os'
 import util from 'util'
-import Logger from '../logger/logger'
+import Logger from '../../logger/logger'
 
 const settings = remote.getGlobal('settings')
 const logger = new Logger({ path: remote.getGlobal('jobLogPath') })

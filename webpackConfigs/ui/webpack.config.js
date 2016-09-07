@@ -7,17 +7,17 @@ export default {
   devtool: 'eval-source-map',
   entry: {
     // accessibility: './wail-ui/background/accessibility',
+    archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
+    crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
+    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     // indexer: './wail-ui/background/indexer',
     // jobs: './wail-ui/background/jobs',
+    // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    requestD: ['babel-polyfill', './wail-ui/background/requestDaemon'],
+    // notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/notFirstTime/notFirstLoad'],
+    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
     // settingsW: './wail-ui/childWindows/settings/settingsW',
-    managers: ['babel-polyfill','./wail-ui/background/managers'],
-    wail: ['babel-polyfill','./wail-ui/wail'],
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/notFirstTime/notFirstLoad'],
-    // serviceD: './managersserviceDaemon/entry'
-    // timemapStats: './src/childWindows/timemapStats/timemapStats'
+    wail: ['babel-polyfill','./wail-ui/wail']
   },
   module: {
     noParse: noParseRe,

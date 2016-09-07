@@ -32,7 +32,7 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs = []
     this.jobIndex = new Map()
 
-    ipc.send('get-all-runs')
+    // ipc.send('get-all-runs')/
     ipc.on('got-all-runs',this.intialJobStateLoad)
     ipc.on('made-heritrix-jobconf', (event, conf) => {
       console.log('made-heritrix-jobconf')

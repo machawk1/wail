@@ -3,7 +3,7 @@ import autobind from 'autobind-decorator'
 import { ipcRenderer, remote } from 'electron'
 import rp from 'request-promise'
 import schedule from 'node-schedule'
-import Logger from '../logger/logger'
+import Logger from '../../logger/logger'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 

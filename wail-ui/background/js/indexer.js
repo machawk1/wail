@@ -12,7 +12,7 @@ import streamSort from 'sort-stream2'
 import bytewise from 'bytewise'
 import schedule from 'node-schedule'
 import util from 'util'
-import Logger from '../logger/logger'
+import Logger from '../../logger/logger'
 import cp from 'child_process'
 import chokidar from 'chokidar'
 
