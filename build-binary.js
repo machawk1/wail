@@ -378,7 +378,7 @@ console.log('building webpack.config.electron')
 build(electronCfg)
   .then((stats) => {
     console.log('building webpack.config.production')
-    build(cfg)
+    return build(cfg)
   })
   .then((stats) => {
     if (shouldBuildCurrent) {

@@ -162,7 +162,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('crawljob-status-update', (event, payload) => {
-    // console.log('got crawljob-status-update')
+    console.log('got crawljob-status-update',payload)
     windows.mainWindow.webContents.send('crawljob-status-update', payload)
   })
 
@@ -218,9 +218,9 @@ function setUpIPC () {
   ipcMain.once('loading-finished', (event, payload) => {
     console.log('loading-finished')
     windows.loadingWindow.close()
-    // windows.mainWindow.show()
-    // windows.mainWindow.focus()
-    // openDebug(control.openBackGroundWindows)
+    windows.mainWindow.show()
+    windows.mainWindow.focus()
+    openDebug(control.openBackGroundWindows)
     // windows.mainWindow.hide()
     // windows.mainWindow.loadURL(windows.mWindowURL)
   })
@@ -255,6 +255,10 @@ function setUpIPC () {
 
   ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
     windows.managersWindow.webContents.send('makeHeritrixJobConf', confDetails)
+  })
+
+  ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
+    windows.mainWindow.webContents.send('makeHeritrixJobConf', confDetails)
   })
 
   ipcMain.on('get-all-collections', (event) => {
@@ -589,9 +593,9 @@ function createWindow () {
   windows.mainWindow.webContents.on('did-finish-load', () => {
     console.log('did-finish-load man win')
     // console.log(windows.mainWindow.getSize())
-    windows.mainWindow.show()
-    openDebug(control.openBackGroundWindows)
-    windows.mainWindow.focus()
+    // windows.mainWindow.show()
+    // openDebug(control.openBackGroundWindows)
+    // windows.mainWindow.focus()
   })
 
   windows.mainWindow.on('unresponsive', () => {
@@ -635,7 +639,7 @@ app.on('ready', () => {
   setUp()
   createBackGroundWindows(control.notDebugUI)
   createWindow()
-  // createLoadingWindow()
+  createLoadingWindow()
 })
 
 app.on('activate', () => {

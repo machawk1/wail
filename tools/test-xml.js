@@ -24,7 +24,7 @@ import 'babel-polyfill'
 // import rp from 'request-promise'
 // import cheerio from 'cheerio'
 // import moment from 'moment'
-// import CrawlStatsManager from '../wail-core/managers/crawlStatsManager'
+import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 // import split2 from 'split2'
 //
 // function startHeritrix () {
@@ -46,33 +46,10 @@ import 'babel-polyfill'
 //   })
 // }
 //
-// let statMonitor = new CrawlStatsManager()
-// statMonitor.startMonitoring('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing','testing')
+let statMonitor = new CrawlStatsManager()
+statMonitor.startMonitoring('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473194483199','testing')
+statMonitor.on('crawljob-status-update',it => console.log(it))
 
-class it {
-  constructor (num) {
-    this.num = num
-  }
-
-  compare(it2) {
-    if (this.num < it2.num) {
-      return 1
-    }
-
-    if (this.num > it2.num) {
-      return -1
-    }
-
-    return 0
-  }
-}
-
-let ar = [new it(1),new it(2),new it(3),new it(4),new it(5)]
-
-let {compare} = it.prototype
-
-ar.sort(::compare)
-console.log(ar)
 
 // startHeritrix()
 

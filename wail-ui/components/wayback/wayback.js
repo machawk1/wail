@@ -53,7 +53,7 @@ export default class WayBackTab extends Component {
 
   render () {
     return (
-      <Grid fluid className="layOutGrid">
+      <Grid fluid className="layOutGridFH">
         <Row >
           <Explorer />
         </Row>

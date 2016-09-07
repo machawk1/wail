@@ -21,7 +21,7 @@
   "scripts": {
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
-    "dev-ui": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=1024 -r babel-register ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
+    "dev-ui": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024 -r babel-register ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
     "nightmare": "babel-node tools/testNightmare",
     "standard": "standard --verbose | snazzy",
@@ -101,6 +101,7 @@
     "react-notification-system": "^0.2.10",
     "react-nowtify": "^0.3.2",
     "react-panels": "^2.5.1",
+    "react-portal-tooltip": "^1.1.4",
     "react-redux": "^4.4.5",
     "react-router": "^2.7.0",
     "react-router-redux": "^4.0.5",

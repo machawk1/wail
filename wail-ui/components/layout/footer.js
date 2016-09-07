@@ -7,8 +7,7 @@ import BottomNav from './bottomNav'
 export default class Footer extends Component {
   render () {
     return (
-      <div >
-        <BottomNav />
+      <div>
         <Notifications />
         <StatusDialog />
       </div>

@@ -1,12 +1,19 @@
+@charset "UTF-8";
 /* wail */
 
 .layOutGrid {
     margin: 0;
-    padding: 0;
+    padding: 0 8px;
+}
+
+.layOutGridFH {
+    height: 100%;
+    margin: 0;
+    padding: 0 8px;
 }
 
 /* animate css */
-@charset "UTF-8";
+
 
 /*!
  * animate.css -http://daneden.me/animate

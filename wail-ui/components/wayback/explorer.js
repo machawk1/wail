@@ -1,20 +1,19 @@
-import React, {Component, PropTypes} from 'react'
-import {ipcRenderer as ipc} from 'electron'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import React, { Component, PropTypes } from 'react'
+import { ipcRenderer as ipc } from 'electron'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import SplitPane from 'react-split-pane'
 import _ from 'lodash'
 import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
 import CollectionHeader from './collectionHeader'
-import {ViewWatcher} from '../../../wail-core'
+import { ViewWatcher } from '../../../wail-core'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import '../../css/wail.css'
-// import 'react-flexbox-layout/lib/styles.css'
-// import {VLayout, VLayoutItem} from 'react-flexbox-layout'
-// import {Flex, Box, Grid} from 'reflexbox'
 
+
+@Dimensions()
 export default class Explorer extends Component {
   constructor (props, context) {
     super(props, context)
@@ -53,24 +52,24 @@ export default class Explorer extends Component {
 
   render () {
     return (
-      <Row>
-        <Col xs={3}>
-          <CollectionList
-            key='the-list'
-            cols={this.state.colNames}
-            viewWatcher={ViewWatcher}
-            from='Wail-Archive-Collections'
-          />
-        </Col>
-        <Col xs>
-          <CollectionView
-            collections={this.state.collections}
-            viewWatcher={ViewWatcher}
-            from='Wail-Archive-Collections'
-            defaultView='Wail'
-          />
-        </Col>
-      </Row>
+      <div>
+        <CollectionList
+          key='the-list'
+          cols={this.state.colNames}
+          viewWatcher={ViewWatcher}
+          from='Wail-Archive-Collections'
+        />
+        <Row>
+          <Col xs>
+            <CollectionView
+              collections={this.state.collections}
+              viewWatcher={ViewWatcher}
+              from='Wail-Archive-Collections'
+              defaultView='Wail'
+            />
+          </Col>
+        </Row>
+      </div>
 
     )
   }

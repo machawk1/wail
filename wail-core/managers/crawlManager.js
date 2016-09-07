@@ -77,10 +77,12 @@ export default class CrawlManager {
 
   @autobind
   crawlEnded (update) {
+    console.log(update)
     let theUpdate = {
       $set: { running: false },
       $push: {
         runs: {
+          started: update.started,
           ended: update.ended,
           timestamp: update.timestamp,
           discovered: update.discovered,
@@ -93,7 +95,7 @@ export default class CrawlManager {
       if (error) {
         console.error('error updating document', update, error)
       } else {
-        console.error('updated document', updated)
+        console.console.log('updated document', numUpdated,updated)
       }
     })
   }

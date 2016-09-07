@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import React, { Component, PropTypes } from 'react'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import OpenButton from 'material-ui/FlatButton'
-import {Scrollbars} from 'react-custom-scrollbars'
+import { Scrollbars } from 'react-custom-scrollbars'
 import FitText from 'react-fittext'
 import Dimensions from 'react-dimensions'
 import autobind from 'autobind-decorator'
@@ -27,24 +27,25 @@ export default class CollectionOverview extends Component {
     let {
       metadata
     } = collection
-    let renderMe = []
-
-    for (let [k, v] of Object.entries(metadata)) {
-      renderMe.push(
-        <div key={`${collection.colName}${k}${v}`}>
+    metadata.forEach(md => console.log(md))
+    let renderMe = metadata.map(md => {
+      console.log(md)
+      return (
+        <div key={`${collection.colName}${md.k}${md.v}`}>
           <Grid fluid>
-            <Row key={`${collection.colName}${k}${v}grid`} between='xs'>
-              <Col key={`${collection.colName}${k}${v}kcol`} xs>
-                <h3 key={`${collection.colName}${k}${v}kh3`}>{k}:</h3>
+            <Row key={`${collection.colName}${md.k}${md.v}grid`} between='xs'>
+              <Col key={`${collection.colName}${md.k}${md.v}kcol`} xs>
+                <h3 key={`${collection.colName}${md.k}${md.v}kh3`}>{md.k}:</h3>
               </Col>
-              <Col xs key={`${collection.colName}${k}${v}vcol`}>
-                <h3 key={`${collection.colName}${k}${v}vh3`}>{v}</h3>
+              <Col xs key={`${collection.colName}${md.k}${md.v}vcol`}>
+                <h3 key={`${collection.colName}${md.k}${md.v}vh3`}>{md.v}</h3>
               </Col>
             </Row>
           </Grid>
         </div>
       )
-    }
+    })
+
     return (
       <Scrollbars>
         {renderMe}

@@ -4,18 +4,18 @@ import path from 'path'
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   entry: {
     // accessibility: './wail-ui/background/accessibility',
     // indexer: './wail-ui/background/indexer',
     // jobs: './wail-ui/background/jobs',
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    requestD: './wail-ui/background/requestDaemon',
+    requestD: ['babel-polyfill', './wail-ui/background/requestDaemon'],
     // settingsW: './wail-ui/childWindows/settings/settingsW',
-    managers: './wail-ui/background/managers',
-    wail: './wail-ui/wail',
+    managers: ['babel-polyfill','./wail-ui/background/managers'],
+    wail: ['babel-polyfill','./wail-ui/wail'],
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
+    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/notFirstTime/notFirstLoad'],
     // serviceD: './managersserviceDaemon/entry'
     // timemapStats: './src/childWindows/timemapStats/timemapStats'
   },

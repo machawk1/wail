@@ -2,6 +2,7 @@ import RunInfo from './runInfo'
 
 export default class CrawlInfo {
   constructor (crawlInfo) {
+    console.log('new crawlinfo',crawlInfo)
     this.jobId = crawlInfo.jobId
     this.urls = crawlInfo.urls
     this.forCol = crawlInfo.forCol
@@ -9,7 +10,7 @@ export default class CrawlInfo {
     this.path = crawlInfo.path
     this.confP = crawlInfo.confP
     this.running = crawlInfo.running
-    this.runs = crawlInfo.runs.map(r => new RunInfo(r, this.jobId))
+    this.runs = (crawlInfo.runs || [] ).map(r => new RunInfo(r, this.jobId))
     this._sortRuns()
   }
 

@@ -12,7 +12,7 @@ import MementoDispatcher from '../dispatchers/memgatorDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import {readCode} from '../actions/editor-actions'
-import {CrawlInfo} from '../../wail-core'
+import {CrawlInfo, RunInfo} from '../../wail-core'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -72,17 +72,22 @@ class CrawlStore_ extends EventEmitter {
   @autobind
   intialJobStateLoad (event, allRuns) {
     console.log(allRuns)
-    if (!allRuns.wasError && allRuns.runs.length > 0) {
-      let {
-        runs
-      } = allRuns
-      this.crawlJobs = runs.map((r,idx) => {
-        console.log(r)
-        this.jobIndex.set(r.jobId,idx)
-        return new CrawlInfo(r)
-      })
-      this.jobIndex.clear()
-      this.emit('jobs-updated')
+    this.jobIndex.clear()
+    if (!allRuns.wasError) {
+      if ( (allRuns.runs || [] ).length > 0) {
+        let {
+          runs
+        } = allRuns
+        this.crawlJobs = runs.map((r,idx) => {
+          console.log(r)
+          this.jobIndex.set(r.jobId,idx)
+          return new CrawlInfo(r)
+        })
+        this.emit('jobs-updated')
+      } else {
+        console.log('there was no runs in the db')
+      }
+
     } else {
       console.error('getting all runs had an error ',allRuns.error)
     }
@@ -115,7 +120,7 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs.push(conf)
     let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
     this.jobIndex.set(conf.jobId.toString(), idx)
-    this.crawlJobs[idx] = conf
+    this.crawlJobs[idx] = new CrawlInfo(conf)
     this.emit('jobs-updated')
   }
 
@@ -143,10 +148,21 @@ class CrawlStore_ extends EventEmitter {
     if (stats.ended) {
       teardownJob(jobId)
     }
+    console.log(this.jobIndex,this.crawlJobs)
     let jobIdx = this.jobIndex.get(jobId)
-    this.crawlJobs[ jobIdx ].runs[0] = stats
+    let runs = ( this.crawlJobs[ jobIdx ].runs || [])
+    if (runs.length > 0) {
+      if(runs[0].started === stats.started) {
+        runs[0].update(stats)
+      } else {
+        runs.unshift(new RunInfo(stats,jobId))
+      }
+    } else {
+      runs.push(new RunInfo(stats,jobId))
+    }
+    this.crawlJobs[jobIdx].runs = runs
 
-    this.emit(`${jobId}-updated`)
+    this.emit(`${jobId}-updated`,runs[0])
     // })
     // let updated = []
     // jobs.jobs.forEach(job => {

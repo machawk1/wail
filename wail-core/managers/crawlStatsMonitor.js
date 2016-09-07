@@ -21,10 +21,10 @@ export default class CrawlStatsMonitor extends EventEmitter {
       // heritrix launch ids are dates in YYYYMMDD... basically an integer
       // so babel will make this Math.max.apply(Math,array)
       let latestLaunch = Math.max(...files.filter(item => this.launchId.test(item)))
+      let started = new Date().getTime()
       let logPath = path.join(jobPath, `${latestLaunch}`, 'logs', 'progress-statistics.log')
-      log(`found log for latest launch ${logPath}`)
+      console.log(`found log for latest launch ${logPath}`)
       let logWatcher = chokidar.watch(logPath, {
-        awaitWriteFinish: true,
         followSymlinks: true,
       })
       this.monitoring.set(jobId, {
@@ -35,18 +35,18 @@ export default class CrawlStatsMonitor extends EventEmitter {
         console.log('changed ',path)
         getCrawlStats(path)
           .then(stats => {
-            log(`crawlJob-status-update ${jobId}`, stats)
+            console.log(`crawlJob-status-update ${jobId}`, stats)
             if (stats.ended) {
               logWatcher.close()
               this.monitoring.delete(jobId)
               this.emit('crawljob-status-ended', {
                 jobId,
-                stats
+                stats: Object.assign({},{started},stats)
               })
             } else {
               this.emit('crawljob-status-update', {
                 jobId,
-                stats
+                stats: Object.assign({},{started},stats)
               })
             }
           })

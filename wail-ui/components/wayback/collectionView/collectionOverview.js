@@ -3,9 +3,12 @@ import { Grid, Row, Col } from 'react-flexbox-grid'
 import OpenButton from 'material-ui/FlatButton'
 import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
-import Dimensions from 'react-dimensions'
 import autobind from 'autobind-decorator'
+import Dimensions from 'react-dimensions'
 
+const textSize = 15
+
+@Dimensions()
 export default class CollectionOverview extends Component {
   static propTypes = {
     collection: PropTypes.object.isRequired,
@@ -35,31 +38,39 @@ export default class CollectionOverview extends Component {
       <Grid fluid>
         <Row between='xs'>
           <Col xs>
-            <h3>Collection Name: {colName}</h3>
+            <FitText maxFontSize={textSize} >
+              <h3>Collection Name: {colName}</h3>
+            </FitText>
           </Col>
           <Col xs>
-            <h3>Warcs in collection: {numArchives}</h3>
-          </Col>
-        </Row>
-        <Row between='xs'>
-          <Col xs>
-            <h3>Warc Location: {archive}</h3>
-          </Col>
-          <Col xs>
-            <OpenButton label='Open Location' />
+            <FitText maxFontSize={textSize} >
+              <h3>Warcs in collection: {numArchives}</h3>
+            </FitText>
           </Col>
         </Row>
         <Row between='xs'>
           <Col xs>
-            <h3>Index Location: {indexes}</h3>
+            <FitText maxFontSize={textSize} >
+              <h3>Warc Location: {archive}</h3>
+            </FitText>
           </Col>
           <Col xs>
-            <OpenButton label='Open Location' />
+            <OpenButton label='Open Location'/>
+          </Col>
+        </Row>
+        <Row between='xs'>
+          <Col xs>
+            <FitText maxFontSize={textSize} >
+              <h3>Index Location: {indexes}</h3>
+            </FitText>
+          </Col>
+          <Col xs>
+            <OpenButton label='Open Location'/>
           </Col>
         </Row>
         <Row>
           <Col xs>
-          <WarcToCollection />
+            <WarcToCollection />
           </Col>
         </Row>
       </Grid>

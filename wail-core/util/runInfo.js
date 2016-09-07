@@ -1,8 +1,8 @@
 import moment from 'moment'
 
 export default class RunInfo {
-  constructor (run,jobId) {
-
+  constructor (run, jobId) {
+    this.started = run.started
     this.jobId = jobId
     this.ending = run.ending
     this.ended = run.ended
@@ -13,7 +13,17 @@ export default class RunInfo {
     this.downloaded = run.downloaded
   }
 
-  compare(ri) {
+  update (stats) {
+    this.ended = stats.ended
+    this.ending = stats.ending
+    this.timestamp = stats.timestamp
+    this.tsMoment = moment(stats.timestamp)
+    this.discovered = stats.discovered
+    this.queued = stats.queued
+    this.downloaded = stats.downloaded
+  }
+
+  compare (ri) {
     if (this.tsMoment.isBefore(ri.tsMoment)) {
       return 1
     }

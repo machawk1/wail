@@ -8,6 +8,9 @@ import { launchHeritrix, killHeritrix } from '../../actions/heritrix-actions'
 import { startWayback, killWayback } from '../../actions/wayback-actions'
 import ServiceStore from '../../stores/serviceStore'
 import style from '../styles/styles'
+import { remote } from 'electron'
+
+const ServiceMan = remote.getGlobal('ServiceMan')
 
 export default class General extends Component {
   constructor (props, context) {
@@ -47,22 +50,36 @@ export default class General extends Component {
 
   wayBackFix (event) {
     // console.log('Wayback fix')
-    startWayback()
+    ServiceMan.startWayback()
+      .then(() => {
+        console.log('wayback up')
+        this.setState({wGood: true})
+      })
+      .catch(error => {
+        console.error('cant start wayback')
+      })
   }
 
   wayBackKill (event) {
     // console.log('Wayback Kill')
-    killWayback()
+    ServiceMan.killService('wayback')
   }
 
   heritrixFix (event) {
     // console.log(' Generalv HeritrixTab fix')
-    launchHeritrix()
+    ServiceMan.startHeritrix()
+      .then(() => {
+        console.log('hereitrix up')
+        this.setState({hGood: true})
+      })
+      .catch(error => {
+        console.error('cant start heritrix')
+      })
   }
 
   heritrixKill (event) {
     // console.log('General HeritrixTab Kill')
-    killHeritrix()
+    ServiceMan.killService('heritrix')
   }
 
   render () {
@@ -88,7 +105,7 @@ export default class General extends Component {
           <TableRow>
             <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
             <TableRowColumn style={style.servicesSS}>{waybackStatus}</TableRowColumn>
-            <TableRowColumn style={style.servicesSS}>2.3.1</TableRowColumn>
+            <TableRowColumn style={style.servicesSS}>pywb</TableRowColumn>
             <TableRowColumn style={style.servicesActions}>
               <RaisedButton
                 disabled={this.state.wbGood}
