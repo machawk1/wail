@@ -3,7 +3,7 @@ import autobind from 'autobind-decorator'
 
 export default class Pather {
   constructor (base) {
-    this._base = base
+    this.base = base
   }
 
   @autobind
@@ -11,7 +11,7 @@ export default class Pather {
     if (arguments.length === 0) {
       return path.join()
     } else {
-      return path.join(this._base, ...arguments)
+      return path.join(this.base, ...arguments)
     }
   }
 
@@ -44,13 +44,5 @@ export default class Pather {
 
   baseNameNoExt (what, ext) {
     return path.basename(what, ext)
-  }
-
-  sep () {
-    return path.sep
-  }
-
-  get base () {
-    return this.base
   }
 }

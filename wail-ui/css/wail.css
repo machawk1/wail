@@ -12,6 +12,17 @@
     padding: 0 8px;
 }
 
+.loadingLayoutGrid {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0 8px;
+}
+
+.stepRefresh {
+    display: block;
+}
+
 /* animate css */
 
 

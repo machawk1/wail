@@ -14,8 +14,9 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
-const serviceMan = window.servMan = remote.getGlobal('ServiceMan')
+const serviceMan = window.servMan = remote.getGlobal('serviceMan')
 const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
+
 
 class _LoadingStore extends EventEmitter {
   constructor () {
@@ -29,11 +30,40 @@ class _LoadingStore extends EventEmitter {
       serviceProgressDone: false
     }
 
+    this.internals = {
+      message: 'Loading WAIL Internals',
+      done: false,
+      gotHeritrix: false,
+      gotCollections: false
+    }
+
     this.serviceProgressDone = false
 
     this.startedHeritrix = false
     this.wasHeritrixStartError = false
     this.pMessage = this.progress.messages[ 0 ]
+
+    ipcRenderer.on('got-all-runs',(event,runs) => {
+      console.log('loading store got all runs')
+      this.internals.gotHeritrix = true
+      if(this.internals.gotCollections) {
+        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+      } else {
+        this.internals.message = 'Collected The Run Information'
+        this.emit('internal-progress',this.internals.message)
+      }
+    })
+
+    ipcRenderer.on('got-all-collections',() => {
+      console.log('loading store got all collections')
+      this.internals.gotCollections = true
+      if(this.internals.gotHeritrix) {
+        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+      } else {
+        this.internals.message = 'Collected Collection Information'
+        this.emit('internal-progress',this.internals.message)
+      }
+    })
   }
 
   @autobind
@@ -51,7 +81,7 @@ class _LoadingStore extends EventEmitter {
         }
 
         this.pMessage = this.progress.messages[ 1 ]
-        this.emit('progress')
+
 
         break
       case wc.Loading.DOWNLOAD_JAVA:
@@ -71,14 +101,15 @@ class _LoadingStore extends EventEmitter {
         this.emit('migration-done', this.checkServices)
         break
       case wc.Loading.SERVICE_CHECK_DONE:
-        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        // ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
+        this.emit('progress')
         break
     }
   }
 
   @autobind
   serviceMessage () {
-    return { progMessage: pMessage }
+    return { progMessage: this.pMessage }
   }
 
   @autobind
@@ -183,7 +214,7 @@ class _LoadingStore extends EventEmitter {
       serviceMan.startHeritrix()
         .then(() => {
           console.log('Heritrix has been started. Checking Wayback')
-          // this.emit('progress')
+          this.emit('progress')
           this.wb()
         })
         .catch((err) => {
@@ -191,7 +222,7 @@ class _LoadingStore extends EventEmitter {
           console.log('it no work? why heritrix', err)
           this.wasHeritrixStartError = true
           console.log('Starting Heritrix failed. Checking Wayback')
-          // this.emit('progress')
+          this.emit('progress')
           this.wb()
         })
     }

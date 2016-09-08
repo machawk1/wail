@@ -24,32 +24,45 @@ import 'babel-polyfill'
 // import rp from 'request-promise'
 // import cheerio from 'cheerio'
 // import moment from 'moment'
-import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
-// import split2 from 'split2'
-//
-// function startHeritrix () {
-//   let configDirPath = path.join('.', 'waillogs/wail-settings')
-//   let settings = new Esettings({ configDirPath })
-//
-//   var hStart
-//   if (process.platform === 'darwin') {
-//     hStart = settings.get('heritrixStartDarwin')
-//   } else {
-//     hStart = settings.get('heritrixStart')
-//   }
-//   cp.exec(hStart, (err, stdout, stderr) => {
-//     if (err) {
-//       console.error('heritrix could not be started due to an error', err, stderr, stdout)
-//     } else {
-//       console.log(stdout, stderr)
-//     }
-//   })
-// }
-//
-let statMonitor = new CrawlStatsManager()
-statMonitor.startMonitoring('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473194483199','testing')
-statMonitor.on('crawljob-status-update',it => console.log(it))
+// import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
+// // import split2 from 'split2'
+// //
+// // function startHeritrix () {
+// //   let configDirPath = path.join('.', 'waillogs/wail-settings')
+// //   let settings = new Esettings({ configDirPath })
+// //
+// //   var hStart
+// //   if (process.platform === 'darwin') {
+// //     hStart = settings.get('heritrixStartDarwin')
+// //   } else {
+// //     hStart = settings.get('heritrixStart')
+// //   }
+// //   cp.exec(hStart, (err, stdout, stderr) => {
+// //     if (err) {
+// //       console.error('heritrix could not be started due to an error', err, stderr, stdout)
+// //     } else {
+// //       console.log(stdout, stderr)
+// //     }
+// //   })
+// // }
+// //
+// let statMonitor = new CrawlStatsManager()
+// statMonitor.startMonitoring('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473194483199','testing')
+// statMonitor.on('crawljob-status-update',it => console.log(it))
 
+let it = {
+  a: 'a',
+  b: 'b',
+  c: 'c'
+}
+
+let {
+  a
+} = it
+
+a = 'k'
+
+console.log(it)
 
 // startHeritrix()
 

@@ -100,6 +100,7 @@ export default class ServiceManager {
   }
 
   startHeritrix () {
+    console.log('service man starting heritrix')
     return new Promise((resolve,reject) => {
       if (this.isServiceUp('heritrix')) {
         console.log('heritrix is already up', this._monitoring)
@@ -183,6 +184,7 @@ export default class ServiceManager {
   }
 
   startWayback () {
+    console.log('service man starting wayback')
     return new Promise((resolve,reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')

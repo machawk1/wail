@@ -1,5 +1,6 @@
-export ColCrawlInfo from './colCrawlInfo'
 export CrawlInfo from './crawlInfo'
+export ColCrawlInfo from './colCrawlInfo'
+export ContextMenu from './contextMenu'
 export getCrawlStats from './getCrawStats'
 export Pather from './pather'
 export RunInfo from './runInfo'

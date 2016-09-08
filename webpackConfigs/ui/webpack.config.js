@@ -14,9 +14,9 @@ export default {
     // jobs: './wail-ui/background/jobs',
     // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    // notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/notFirstTime/notFirstLoad'],
-    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
-    // settingsW: './wail-ui/childWindows/settings/settingsW',
+    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
+    // requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    // // settingsW: './wail-ui/childWindows/settings/settingsW',
     wail: ['babel-polyfill','./wail-ui/wail']
   },
   module: {

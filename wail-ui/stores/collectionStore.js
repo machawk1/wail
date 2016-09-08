@@ -26,8 +26,7 @@ class _CollectionStore extends EventEmitter {
 
   @autobind
   _init () {
-    ipc.send('get-all-collections')
-    ipc.once('got-all-collections', ::this.loadCollections)
+    ipc.on('got-all-collections', ::this.loadCollections)
     ipc.on('crawl-to-collection',(event,crawl) => {
       let {
         wasError
