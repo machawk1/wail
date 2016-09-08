@@ -4,6 +4,7 @@ import OpenButton from 'material-ui/FlatButton'
 import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
 import autobind from 'autobind-decorator'
+import {shell} from 'electron'
 import Dimensions from 'react-dimensions'
 
 const textSize = 15
@@ -55,7 +56,7 @@ export default class CollectionOverview extends Component {
             </FitText>
           </Col>
           <Col xs>
-            <OpenButton label='Open Location'/>
+            <OpenButton label='Open Location' onTouchTap={() => shell.openItem(archive)}/>
           </Col>
         </Row>
         <Row between='xs'>
@@ -65,7 +66,7 @@ export default class CollectionOverview extends Component {
             </FitText>
           </Col>
           <Col xs>
-            <OpenButton label='Open Location'/>
+            <OpenButton label='Open Location' onTouchTap={() => shell.openItem(indexes)}/>
           </Col>
         </Row>
         <Row>

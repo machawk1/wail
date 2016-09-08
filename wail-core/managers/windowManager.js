@@ -365,10 +365,10 @@ export default class WindowManager extends EventEmitter {
       this.emit('window-unresponsive', 'mainWindow')
     })
 
-    this.windows[ 'mainWindow' ].window.webContents.on('new-window', (event, url) => {
-      event.preventDefault()
-      shell.openExternal(url)
-    })
+    // this.windows[ 'mainWindow' ].window.webContents.on('new-window', (event, url) => {
+    //   event.preventDefault()
+    //   shell.openExternal(url)
+    // })
 
     this.windows[ 'mainWindow' ].window.webContents.on('crashed', () => {
       this.emit('window-crashed', 'mainWindow')

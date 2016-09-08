@@ -5,11 +5,6 @@ import autobind from 'autobind-decorator'
 
 export default class WarcToCollection extends Component {
 
-  @autobind
-  onDrop (files) {
-    console.log(files)
-  }
-
   componentDidMount () {
     BeamMeUpScotty('#warcUpload', files => {
       files.forEach(f => console.log(f))
@@ -19,7 +14,9 @@ export default class WarcToCollection extends Component {
   render () {
     return (
 
-      <div id='warcUpload'>
+      <div id='warcUpload'
+        className="warcUpload"
+      >
         Drop Warc Files To Add To Collection
       </div>
 

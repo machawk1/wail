@@ -19,6 +19,14 @@
     padding: 0 8px;
 }
 
+.warcUpload {
+    width: 100%;
+    border-width: 2px;
+    border-color: #666;
+    border-style: dashed;
+    border-radius: 5px;
+}
+
 .stepRefresh {
     display: block;
 }

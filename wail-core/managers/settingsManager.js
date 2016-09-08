@@ -217,7 +217,8 @@ const managed = {
     waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
     waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
     templates: 'bundledApps/pywb/templates',
-    statics: 'bundledApps/pywb/static'
+    statics: 'bundledApps/pywb/static',
+    checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
   },
   collections: {
     defaultCol: 'archives/collections/Wail',

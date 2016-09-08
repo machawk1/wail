@@ -66,10 +66,13 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        let metadata = {}
+        let metadata = []
         mdata.forEach(m => {
           let split = m.split('=')
-          metadata[ split[ 0 ] ] = S(split[ 1 ]).replaceAll('"', '').s
+          metadata.push({
+            k: split[ 0 ],
+            v:  S(split[ 1 ]).replaceAll('"', '').s
+          })
         })
         console.log('added metadata to collection', col)
         console.log('stdout', stdout)
