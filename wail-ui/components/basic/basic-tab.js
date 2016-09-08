@@ -6,6 +6,7 @@ import MementoTable from './mementoTable'
 import ArchivalButtons from './archivalButtos'
 import MementoMessagePanel from './mementoMessage-panel'
 import BasicColList from './basicCollectionList'
+import ArchiveOrCheckCol from './archiveOrCheckCol'
 import styles from '../styles/styles'
 
 const { btBody } = styles.basicTab
@@ -30,21 +31,19 @@ const { btBody } = styles.basicTab
  </Row>
  */
 export default class BasicTab extends Component {
+
+  constructor (...args) {
+    super(...args)
+    this.state = {
+      colNames: [],
+      selectedIndex: 0
+    }
+  }
   render () {
     return (
-      <Grid fluid className="layOutGrid">
+      <Grid fluid className="loadingLayoutGrid">
         <Row >
-          <Col xs>
-            <BasicColList />
-          </Col>
-          <Col xs>
-            <ArchiveUrl />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs>
-            <ArchivalButtons />
-          </Col>
+          <ArchiveOrCheckCol />
         </Row>
       </Grid>
     )

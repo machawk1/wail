@@ -9,6 +9,7 @@ import {ipcRenderer, remote} from 'electron'
 import Routes from './routes'
 import {writeWaybackConf} from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
+import ColStore from './stores/collectionStore'
 require('./css/wail.css')
 // require('pretty-error').start()
 
@@ -19,10 +20,10 @@ ipcRenderer.on('rewrite-wayback-config', (event, payload) => {
 
 Promise.promisifyAll(fs)
 
-window.React = React
 
 //  ensure out RequestStore is alive and kicking
-
+window.React = React
+window.colStore = ColStore
 window.ReqStore = RequestStore
 
 injectTapEventPlugin()

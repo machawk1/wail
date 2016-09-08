@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, PropTypes} from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
 import {Row, Col} from 'react-flexbox-grid'
@@ -25,6 +25,15 @@ const dataSource = [
 ]
 
 export default class ArchiveUrl extends Component {
+  static propTypes =  {
+    forCol: PropTypes.string,
+  }
+
+  static defaultProps = {
+    forCol: 'Wail'
+  }
+
+
   constructor (props, context) {
     super(props, context)
     this.state = { url: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
@@ -80,7 +89,8 @@ export default class ArchiveUrl extends Component {
     // console.log('archive now')
     CrawlDispatcher.dispatch({
       type: EventTypes.BUILD_CRAWL_JOB,
-      from: From.BASIC_ARCHIVE_NOW
+      from: From.BASIC_ARCHIVE_NOW,
+      forCol: this.props.forCol
     })
   }
 
@@ -88,7 +98,6 @@ export default class ArchiveUrl extends Component {
     return (
       <TextField
         floatingLabelText='URL'
-        underlineStyle={this.state.underlineStyle}
         id='archive-url-input'
         value={this.state.url.s}
         onBlur={this.focusLost}

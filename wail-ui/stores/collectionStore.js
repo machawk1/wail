@@ -26,6 +26,7 @@ class _CollectionStore extends EventEmitter {
 
   @autobind
   _init () {
+    console.log('collection store init')
     ipc.on('got-all-collections', ::this.loadCollections)
     ipc.on('crawl-to-collection',(event,crawl) => {
       let {
@@ -109,7 +110,8 @@ class _CollectionStore extends EventEmitter {
   }
 }
 
-const CollectionStore = window.colStore = new _CollectionStore()
+const CollectionStore  = new _CollectionStore()
+window.colStore = CollectionStore
 
 CollectionDispatcher.register(CollectionStore.handleEvent)
 

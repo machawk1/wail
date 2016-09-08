@@ -329,7 +329,6 @@ export default class WindowManager extends EventEmitter {
         this.windows[ 'archiveManWindow' ].loadComplete = true
         if (control.debug && control.openBackGroundWindows) {
           this.windows[ 'archiveManWindow' ].window.show()
-          this.windows[ 'archiveManWindow' ].window.focus()
           this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         }
         return resolve()
