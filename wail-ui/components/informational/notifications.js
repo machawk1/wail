@@ -28,11 +28,7 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-    this.notifier.addNotification({
-      title: 'Info',
-      message: GMessageStore.getMessage(),
-      level: 'info'
-    })
+    this.notifier.addNotification(GMessageStore.getMessage())
     // if (!this.state.open) {
     //   this.setState({ message: , open: true })
     // }

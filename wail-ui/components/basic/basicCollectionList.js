@@ -30,9 +30,7 @@ export default class BasicCollectionList extends Component {
 
   componentWillReceiveProps (nextProps, nextContext) {
     console.log(nextProps)
-    this.setState({colNames: nextProps.cols},() => {
-      this.buildList()
-    })
+    this.setState({colNames: nextProps.cols,cols: this.buildList(nextProps.cols)})
   }
 
   clicked (name) {
@@ -47,8 +45,9 @@ export default class BasicCollectionList extends Component {
     })
   }
 
-  buildList () {
+  buildList (useMe) {
     let { cols } = this.props
+    cols = useMe ? useMe : cols
     let rCols = []
     if (Array.isArray(cols)) {
       console.log(cols)
@@ -68,7 +67,12 @@ export default class BasicCollectionList extends Component {
       <Row
       >
         <Col xs>
-          <SelectField value={this.state.selection} onChange={::this.handleChange} maxHeight={200}>
+          <SelectField
+            value={this.state.selection}
+            onChange={::this.handleChange}
+            maxHeight={200}
+            style={{width: 150}}
+          >
             {this.state.cols}
           </SelectField>
         </Col>

@@ -12,12 +12,6 @@ ipc.on('makeHeritrixJobConf', (event, confDetails) => {
   crawlMan.makeCrawlConf(confDetails)
     .then(conf => {
       console.log('makeConfThen')
-      let { forCol } = conf
-      ipc.send('crawl-to-collection', {
-        wasError: false,
-        forCol,
-        conf
-      })
     })
     .catch(error => {
       console.error('managers makeHeritrixJobConf catch error', error)

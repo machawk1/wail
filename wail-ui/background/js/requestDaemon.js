@@ -6,7 +6,6 @@ import _ from 'lodash'
 import util from 'util'
 import Logger from '../../logger/logger'
 
-require('request-debug')(rp)
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 

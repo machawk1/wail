@@ -28,24 +28,6 @@ class _CollectionStore extends EventEmitter {
   _init () {
     console.log('collection store init')
     ipc.on('got-all-collections', ::this.loadCollections)
-    ipc.on('crawl-to-collection',(event,crawl) => {
-      let {
-        wasError
-      } = crawl
-      if (wasError) {
-          console.error('collectionStore adding crawl to collection error',crawl.err)
-      } else {
-        let {
-          forCol,
-          conf
-        } = crawl
-        let collection = this.collections.get(forCol)
-        let cinfo = new ColCrawlInfo(conf)
-        collection.crawls.unshift(cinfo)
-        this.collections.set(forCol,collection)
-        this.emit(`${forCol}-newCrawl`,cinfo)
-      }
-    })
   }
 
   loadCollections(event,ac) {

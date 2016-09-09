@@ -80,6 +80,15 @@ class ServiceStore_ extends EventEmitter {
           type: EventTypes.QUEUE_MESSAGE,
           message
         })
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: {
+            title: 'Info',
+            level: 'info',
+            message,
+            uuid:  message
+          }
+        })
       }
     }
 

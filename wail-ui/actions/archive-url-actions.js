@@ -1,6 +1,6 @@
 import childProcess from 'child_process'
 import rp from 'request-promise'
-import { remote } from 'electron'
+import { remote, shell } from 'electron'
 import util from 'util'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
@@ -13,28 +13,66 @@ const logger = remote.getGlobal('logger')
 const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
-export function checkUriIsInArchive (uri) {
-  console.log('checking if uri is in archive', uri)
+export function checkUriIsInArchive (uri,forCol) {
+  console.log('checking if uri is in archive', uri, forCol)
 
   GMessageDispatcher.dispatch({
     type: EventTypes.QUEUE_MESSAGE,
-    message: `Checking if ${uri} is in the archive`
+    message: {
+      title: 'Info',
+      level: 'info',
+      message: `Checking if ${uri} is in the archive ${forCol}`,
+      uuid: `Checking if ${uri} is in the archive ${forCol}`,
+    }
   })
 
-  rp({ uri: `${settings.get('pywb.url')}Wail/*/${uri}` })
+  rp({
+    uri: `${settings.get('pywb.url')}${forCol}-cdx?url=${uri}/*`,
+    resolveWithFullResponse: true
+  })
     .then(response => {
       // POST succeeded...
-      GMessageDispatcher.dispatch({
-        type: EventTypes.QUEUE_MESSAGE,
-        message: `The URL ${uri} is in the archive`
-      })
+      if (response.statusCode === 200) {
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: {
+            title: 'Success',
+            level: 'success',
+            message: `${uri} is in the archive ${forCol}`,
+            uuid:  `${uri} is in the archive ${forCol}`,
+            autoDismiss: 0,
+            action: {
+              label: `View in ${forCol}?`,
+              callback() {
+                shell.openExternal(`${settings.get('pywb.url')}${forCol}/*/${uri}`)
+              }
+            }
+          }
+        })
+      } else {
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: {
+            title: 'Warning',
+            level: 'warning',
+            message: `${uri} is in the archive ${forCol}`,
+            uuid: `${uri} is in the archive ${forCol}`
+          }
+        })
+      }
+
     })
     .catch(err => {
       console.log('error in querying wayback', err)
       logger.error(util.format(logStringError, 'checkUriIsInArchive', err.stack))
       GMessageDispatcher.dispatch({
         type: EventTypes.QUEUE_MESSAGE,
-        message: `The URL ${uri} is not in the archive`
+        message: {
+          title: 'Error',
+          level: 'error',
+          message: `An internal error occurred while seeing if ${uri} is in the archive ${forCol}`,
+          uuid: `An internal error occurred while seeing if ${uri} is in the archive ${forCol}`
+        }
       })
     })
 }

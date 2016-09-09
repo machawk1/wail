@@ -19,6 +19,11 @@
     padding: 0 8px;
 }
 
+.layoutLayoutGrid {
+    margin: 0;
+    padding: 0;
+}
+
 .warcUpload {
     width: 100%;
     border-width: 2px;

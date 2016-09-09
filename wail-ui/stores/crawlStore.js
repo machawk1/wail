@@ -1,8 +1,8 @@
 import EventEmitter from 'eventemitter3'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import _ from 'lodash'
 import S from 'string'
-import {joinStrings} from 'joinable'
+import { joinStrings } from 'joinable'
 import os from 'os'
 import autobind from 'autobind-decorator'
 import UrlStore from '../stores/urlStore'
@@ -11,8 +11,8 @@ import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import MementoDispatcher from '../dispatchers/memgatorDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
-import {readCode} from '../actions/editor-actions'
-import {CrawlInfo, RunInfo} from '../../wail-core'
+import { readCode } from '../actions/editor-actions'
+import { CrawlInfo, RunInfo } from '../../wail-core'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -20,7 +20,6 @@ import {
   launchHeritrixJob,
   teardownJob
 } from '../actions/heritrix-actions'
-
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -32,7 +31,7 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs = []
     this.jobIndex = new Map()
 
-    ipc.on('got-all-runs',this.intialJobStateLoad)
+    ipc.on('got-all-runs', this.intialJobStateLoad)
     ipc.on('made-heritrix-jobconf', (event, conf) => {
       console.log('made-heritrix-jobconf')
       this.createJob(conf)
@@ -63,7 +62,12 @@ class CrawlStore_ extends EventEmitter {
 
       GMessageDispatcher.dispatch({
         type: EventTypes.QUEUE_MESSAGE,
-        message: `Building Heritrix crawl for ${urls}`
+        message: {
+          title: 'Info',
+          level: 'info',
+          message: `Building Heritrix crawl for ${urls}`,
+          uuid: `Building Heritrix crawl for ${urls}`
+        }
       })
     })
   }
@@ -73,13 +77,13 @@ class CrawlStore_ extends EventEmitter {
     console.log(allRuns)
     this.jobIndex.clear()
     if (!allRuns.wasError) {
-      if ( (allRuns.runs || [] ).length > 0) {
+      if ((allRuns.runs || [] ).length > 0) {
         let {
           runs
         } = allRuns
-        this.crawlJobs = runs.map((r,idx) => {
+        this.crawlJobs = runs.map((r, idx) => {
           console.log(r)
-          this.jobIndex.set(r.jobId,idx)
+          this.jobIndex.set(r.jobId, idx)
           return new CrawlInfo(r)
         })
         this.emit('jobs-updated')
@@ -88,39 +92,50 @@ class CrawlStore_ extends EventEmitter {
       }
 
     } else {
-      console.error('getting all runs had an error ',allRuns.error)
+      console.error('getting all runs had an error ', allRuns.error)
     }
 
     // console.log('initial load of crawl store')
     // getHeritrixJobsState()
-      // .then(status => {
-      //   // console.log(status)
-      //   if (status.count > 0) {
-      //     EditorDispatcher.dispatch({
-      //       type: EventTypes.STORE_HERITRIX_JOB_CONFS,
-      //       confs: status.confs
-      //     })
-      //     this.jobIndex.clear()
-      //     status.jobs.forEach((jrb, idx) => {
-      //       this.jobIndex.set(jrb.jobId, idx)
-      //     })
-      //     // console.log(status.jobs)
-      //     this.crawlJobs = status.jobs
-      //     this.emit('jobs-updated')
-      //   }
-      // })
-      // .catch(error => {
-      //   console.log('There was an error in getting the configs', error)
-      // })
+    // .then(status => {
+    //   // console.log(status)
+    //   if (status.count > 0) {
+    //     EditorDispatcher.dispatch({
+    //       type: EventTypes.STORE_HERITRIX_JOB_CONFS,
+    //       confs: status.confs
+    //     })
+    //     this.jobIndex.clear()
+    //     status.jobs.forEach((jrb, idx) => {
+    //       this.jobIndex.set(jrb.jobId, idx)
+    //     })
+    //     // console.log(status.jobs)
+    //     this.crawlJobs = status.jobs
+    //     this.emit('jobs-updated')
+    //   }
+    // })
+    // .catch(error => {
+    //   console.log('There was an error in getting the configs', error)
+    // })
   }
 
   @autobind
   createJob (conf) {
+    console.log('made conf', conf)
     this.crawlJobs.push(conf)
     let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
-    this.jobIndex.set(conf.jobId.toString(), idx)
-    this.crawlJobs[idx] = new CrawlInfo(conf)
+    this.jobIndex.set(conf.jobId, idx)
+    this.crawlJobs[ idx ] = new CrawlInfo(conf)
     this.emit('jobs-updated')
+    buildHeritrixJob(conf.jobId)
+    GMessageDispatcher.dispatch({
+      type: EventTypes.QUEUE_MESSAGE,
+      message: {
+        title: 'Info',
+        level: 'info',
+        message: `Built the Heritrix crawl config for job: ${conf.urls}`,
+        uuid: `Built the Heritrix crawl config for job: ${conf.urls}`
+      }
+    })
   }
 
   // @autobind
@@ -147,21 +162,21 @@ class CrawlStore_ extends EventEmitter {
     if (stats.ended) {
       teardownJob(jobId)
     }
-    console.log(this.jobIndex,this.crawlJobs)
+    console.log(this.jobIndex, this.crawlJobs)
     let jobIdx = this.jobIndex.get(jobId)
     let runs = ( this.crawlJobs[ jobIdx ].runs || [])
     if (runs.length > 0) {
-      if(runs[0].started === stats.started) {
-        runs[0].update(stats)
+      if (runs[ 0 ].started === stats.started) {
+        runs[ 0 ].update(stats)
       } else {
-        runs.unshift(new RunInfo(stats,jobId))
+        runs.unshift(new RunInfo(stats, jobId))
       }
     } else {
-      runs.push(new RunInfo(stats,jobId))
+      runs.push(new RunInfo(stats, jobId))
     }
-    this.crawlJobs[jobIdx].runs = runs
+    this.crawlJobs[ jobIdx ].runs = runs
 
-    this.emit(`${jobId}-updated`,runs[0])
+    this.emit(`${jobId}-updated`, runs[ 0 ])
     // })
     // let updated = []
     // jobs.jobs.forEach(job => {
@@ -243,13 +258,23 @@ class CrawlStore_ extends EventEmitter {
               urls = urls.s
               GMessageDispatcher.dispatch({
                 type: EventTypes.QUEUE_MESSAGE,
-                message: 'Archiving Now!'
+                message: {
+                  title: 'Info',
+                  level: 'info',
+                  message: `Archiving ${urls} Now!`,
+                  uuid: `Archiving ${urls} Now!`
+                }
               })
             } else {
               showMessage = false
               GMessageDispatcher.dispatch({
                 type: EventTypes.QUEUE_MESSAGE,
-                message: 'You cannot archive an none existent URL!'
+                message: {
+                  title: 'Error',
+                  level: 'error',
+                  message: 'Please enter an URL to archive',
+                  uuid: 'Please enter an URL to archive'
+                }
               })
             }
             break
@@ -281,7 +306,12 @@ class CrawlStore_ extends EventEmitter {
           // })
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: `Building Heritrix crawl for ${crawlingUrlsMessage}`
+            message: {
+              title: 'Info',
+              level: 'info',
+              message: `Building Heritrix crawl for ${crawlingUrlsMessage}`,
+              uuid: `Building Heritrix crawl for ${crawlingUrlsMessage}`
+            }
           })
           ipc.send('makeHeritrixJobConf', { urls, depth, jobId: jId, forCol: 'Wail' })
         }
@@ -294,7 +324,12 @@ class CrawlStore_ extends EventEmitter {
         buildHeritrixJob(event.id)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `Built the Heritrix crawl config for job: ${event.id}`
+          message: {
+            title: 'Info',
+            level: 'info',
+            message:`Built the Heritrix crawl config for job: ${event.id}`,
+            uuid: `Built the Heritrix crawl config for job: ${event.id}`
+          }
         })
         break
       }
@@ -304,7 +339,12 @@ class CrawlStore_ extends EventEmitter {
         launchHeritrixJob(event.id)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `Heritrix Crawl Built for job: ${event.id}`
+          message: {
+            title: 'Info',
+            level: 'info',
+            message:`Heritrix Crawl Built for job: ${event.id}`,
+            uuid: `Heritrix Crawl Built for job: ${event.id}`
+          }
         })
         break
       }
@@ -313,10 +353,15 @@ class CrawlStore_ extends EventEmitter {
         //   type: EventTypes.LAUNCHED_CRAWL_JOB,
         //   jId: event.id
         // })
-        ipc.send('crawl-started',event.id)
+        ipc.send('crawl-started', event.id)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `Heritrix Crawl Started: ${event.id}`
+          message: {
+            title: 'Info',
+            level: 'info',
+            message:`Heritrix Crawl Started: ${event.id}`,
+            uuid: `Heritrix Crawl Started: ${event.id}`
+          }
         })
         break
       }

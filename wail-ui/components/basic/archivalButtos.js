@@ -30,20 +30,20 @@ export default class ArchivalButtons extends Component {
     return (
       <Toolbar style={{ backgroundColor: 'transparent' }}>
         <ToolbarGroup firstChild>
-          {this.props.archiveList}
-        </ToolbarGroup>
-        <ToolbarGroup>
           <RaisedButton
             icon={<ViewArchiveIcon />}
             label='Check Local Collection'
             labelPosition='before'
             onMouseDown={() => {
               UrlDispatcher.dispatch({
-                type: EventTypes.VIEW_ARCHIVED_URI,
+                type: EventTypes.CHECK_URI_IN_ARCHIVE,
                 forCol: this.props.forCol
               })
             }}
           />
+        </ToolbarGroup>
+        <ToolbarGroup >
+          {this.props.archiveList}
         </ToolbarGroup>
         <ToolbarGroup lastChild>
           <RaisedButton

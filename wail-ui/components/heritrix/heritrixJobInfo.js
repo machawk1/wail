@@ -12,7 +12,7 @@ export default class HeritrixJobInfo extends Component {
 
   render () {
     return (
-      <Table key={`${this.props.jobId}-Table`} height={'50px'} width={"100%"}>
+      <Table key={`${this.props.jobId}-Table`}  width={"100%"}>
         <TableHeader
           key={`${this.props.jobId}-TableHeader`}
           displaySelectAll={false}

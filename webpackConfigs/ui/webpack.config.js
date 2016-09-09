@@ -15,7 +15,7 @@ export default {
     // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
     // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
-    // requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
     // // settingsW: './wail-ui/childWindows/settings/settingsW',
     wail: ['babel-polyfill','./wail-ui/wail']
   },

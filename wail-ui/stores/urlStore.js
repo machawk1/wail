@@ -38,10 +38,6 @@ class UrlStore_ extends EventEmitter {
           this.urlMemento.url.setValue(event.url)
           console.log('adding url in urlStore', event.url)
           // console.log(`url updated ${event.url}`)
-          MemgatorDispatcher.dispatch({
-            type: EventTypes.GET_MEMENTO_COUNT,
-            url: event.url
-          })
           this.emit('url-updated')
         } else {
           console.log(`crawlStore has valid url url.s === event.url ${this.urlMemento.url} === ${event.url} `)
@@ -54,7 +50,12 @@ class UrlStore_ extends EventEmitter {
         this.emit('memento-count-updated')
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
+          message: {
+            title: 'Info',
+            level: 'info',
+            message: `The memento count for ${event.url} is: ${this.urlMemento.mementos}`,
+            uuid:   `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
+          }
         })
         break
       }
@@ -70,11 +71,16 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
-          urlActions.checkUriIsInArchive(this.urlMemento.url.s)
+          urlActions.checkUriIsInArchive(this.urlMemento.url.s,event.forCol)
         } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: 'You must enter a url first to check if it is in the archive'
+            message: {
+              title: 'Warning',
+              level: 'warning',
+              message: 'You must enter a URL first to check if it is in the archive',
+              uuid:   'You must enter a URL first to check if it is in the archive'
+            }
           })
         }
         break
@@ -83,13 +89,23 @@ class UrlStore_ extends EventEmitter {
         if (!this.urlMemento.url.isEmpty()) {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: `Viewing archived version of: ${this.urlMemento.url.s}`
+            message: {
+              title: 'Warning',
+              level: 'warning',
+              message: `Viewing archived version of: ${this.urlMemento.url.s}`,
+              uuid:   `Viewing archived version of: ${this.urlMemento.url.s}`
+            }
           })
-          shell.openExternal(`${settings.get('pywb.url')}Wail/*/${this.urlMemento.url.s}`)
+          shell.openExternal(`${settings.get('pywb.url')}${event.forCol}/*/${this.urlMemento.url.s}`)
         } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: 'You must enter a url first and it be in the archive for you to view it'
+            message: {
+              title: 'Warning',
+              level: 'warning',
+              message: 'You must enter a url first and it be in the archive for you to view it',
+              uuid:   'You must enter a url first and it be in the archive for you to view it'
+            }
           })
         }
         break

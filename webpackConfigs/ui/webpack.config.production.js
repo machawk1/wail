@@ -8,15 +8,18 @@ export default {
   devtool: 'source-map',
 
   entry: {
-    wail: './wail-ui/wail',
-    newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    accessibility: './wail-ui/background/accessibility',
-    indexer: './wail-ui/background/indexer',
-    requestD: './wail-ui/background/requestDaemon',
-    settingsW: './wail-ui/childWindows/settings/settingsW',
-    jobs: './wail-ui/background/jobs',
-    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad'
+    // accessibility: './wail-ui/background/accessibility',
+    archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
+    crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
+    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    // indexer: './wail-ui/background/indexer',
+    // jobs: './wail-ui/background/jobs',
+    // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
+    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
+    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    // // settingsW: './wail-ui/childWindows/settings/settingsW',
+    wail: ['babel-polyfill','./wail-ui/wail']
   },
 
   output: {

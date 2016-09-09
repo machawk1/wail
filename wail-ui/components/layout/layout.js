@@ -39,13 +39,22 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
-        <Header />
-        <div style={styles.root}>
-          {this.props.children}
-        </div>
-        <Footer />
-      </div>
+
+        <Grid fluid
+        className="layoutLayoutGrid"
+        >
+          <Row>
+            <Col xs >
+              <Header />
+              <div style={styles.root}>
+                {this.props.children}
+              </div>
+              <Footer />
+              </Col>
+          </Row>
+          </Grid>
+
+
     )
   }
 }

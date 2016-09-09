@@ -405,7 +405,16 @@ export function teardownJob (jobId) {
   })
 }
 
-export function forceCrawlFinish (jobId, cb) {
+export function forceCrawlFinish (jobId, urls, cb) {
+  GMessageDispatcher.dispatch({
+    type: EventTypes.QUEUE_MESSAGE,
+    message: {
+      title: 'Info',
+      level: 'info',
+      message:`Terminating Crawl for ${urls}`,
+      uuid: `Terminating Crawl for ${urls}`
+    }
+  })
   if (!ServiceStore.heritrixStatus()) {
     if (cb) {
       cb()
@@ -434,6 +443,15 @@ export function forceCrawlFinish (jobId, cb) {
     success: function (response) {
       // POST succeeded...
       console.log(`forceCrawlFinish action post succeeded in sendAction to heritrix for ${jobId}`, response)
+      GMessageDispatcher.dispatch({
+        type: EventTypes.QUEUE_MESSAGE,
+        message: {
+          title: 'Success',
+          level: 'success',
+          message:`TerminatedCrawl for ${urls}`,
+          uuid: `Terminated Crawl for ${urls}`
+        }
+      })
       if (cb) {
         cb()
       }
@@ -441,6 +459,15 @@ export function forceCrawlFinish (jobId, cb) {
     error: function (err) {
       logger.error(util.format(logStringError, `sendAction for ${jobId} to heritrix ${err.message}`, err.stack))
       console.log(`forceCrawlFinish action post failed? in sendAction to heritrix for ${jobId}`, err)
+      GMessageDispatcher.dispatch({
+        type: EventTypes.QUEUE_MESSAGE,
+        message: {
+          title: 'Error',
+          level: 'error',
+          message:`Terminated Crawl for ${urls} failed`,
+          uuid: `Terminated Crawl for ${urls} failed`
+        }
+      })
       if (cb) {
         cb()
       }
@@ -453,7 +480,7 @@ export function restartJob (jobId) {
 }
 
 export function deleteHeritrixJob (jobId, cb) {
-  forceCrawlFinish(jobId, cb)
+  forceCrawlFinish(jobId,this.props.urls, cb)
 }
 
 export function sendActionToHeritrix (act, jobId, cb) {
@@ -686,12 +713,22 @@ export function moveWarc () {
         if (err) {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: `There was an error in moving ${path.basename(warc)} to the Wail collection`
+            message: {
+              title: 'Error',
+              level: 'error',
+              message:`There was an error in moving ${path.basename(warc)} to the Wail collection`,
+              uuid: `There was an error in moving ${path.basename(warc)} to the Wail collection`
+            }
           })
         } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
-            message: `Moved ${path.basename(warc)} to the Wail collection`
+            message: {
+              title: 'Success',
+              level: 'success',
+              message:`Moved ${path.basename(warc)} to the Wail collection`,
+              uuid: `Moved ${path.basename(warc)} to the Wail collection`
+            }
           })
         }
       })

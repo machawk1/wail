@@ -4,6 +4,7 @@ import moment from 'moment'
 import { joinStrings } from 'joinable'
 import styles from '../styles/styles'
 import {moveWarc} from '../../actions/heritrix-actions'
+import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 const {
   crawlUrlS,
   statusS,
@@ -67,7 +68,13 @@ export default class HeritrixJobInfoRow extends Component {
       let queued = job.queued || ''
       let downloaded = job.downloaded || ''
       if (job.ended) {
-        moveWarc()
+        GMessageDispatcher.dispatch({
+          title: 'Crawl Finished!',
+          level: 'success',
+          message: `Crawl for ${url} has finished`,
+          uuid:  `Crawl for ${url} has finished`,
+          autoDismiss: 0,
+        })
       }
       // console.log('the job being displayed', job)
       return (

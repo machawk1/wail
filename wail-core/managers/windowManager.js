@@ -415,7 +415,7 @@ export default class WindowManager extends EventEmitter {
 
         ipcMain.on('crawljob-status-update', (event, payload) => {
           console.log('got crawljob-status-update', payload)
-          this.windows[ 'mainWindow' ].window.webContents.send('mainWindow', 'crawljob-status-update', payload)
+          this.windows[ 'mainWindow' ].window.webContents.send('crawljob-status-update', payload)
         })
 
         ipcMain.on('crawl-started', (event, jobId) => {
@@ -442,7 +442,6 @@ export default class WindowManager extends EventEmitter {
 
         ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
           this.windows[ 'mainWindow' ].window.webContents.send('made-heritrix-jobconf', confDetails)
-          this.windows[ 'archiveManWindow' ].window.webContents.send('made-heritrix-jobconf', confDetails)
         })
 
         ipcMain.on('get-all-collections', (event) => {
@@ -465,6 +464,14 @@ export default class WindowManager extends EventEmitter {
           this.windows[ 'loadingWindow' ].window.close()
           this.windows[ 'mainWindow' ].window.show()
           this.windows[ 'mainWindow' ].window.focus()
+        })
+
+        ipcMain.on('send-to-requestDaemon', (event, request) => {
+          this.windows[ 'reqDaemonWindow'].window.webContents.send('handle-request', request)
+        })
+
+        ipcMain.on('handled-request', (event, request) => {
+          this.windows[ 'mainWindow' ].window.webContents.send('handled-request', request)
         })
 
         // start the loading of serivices finally

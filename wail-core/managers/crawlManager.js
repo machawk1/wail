@@ -82,20 +82,25 @@ export default class CrawlManager {
       $set: { running: false },
       $push: {
         runs: {
-          started: update.started,
-          ended: update.ended,
-          timestamp: update.timestamp,
-          discovered: update.discovered,
-          queued: update.queued,
-          downloaded: update.downloaded
+          started: update.stats.started,
+          ended: update.stats.ended,
+          timestamp: update.stats.timestamp,
+          discovered: update.stats.discovered,
+          queued: update.stats.queued,
+          downloaded: update.stats.downloaded
         }
       }
     }
-    this.db.update({ jobId: update.id }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.db.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
       } else {
-        console.console.log('updated document', numUpdated,updated)
+        console.log('updated document', numUpdated,updated)
+        let {
+          forCol
+        } = updated[0]
+        ipc.send('')
+
       }
     })
   }

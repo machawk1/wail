@@ -12,9 +12,9 @@ import ArchiveUrl from './archive-url'
 import BasicColList from './basicCollectionList'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 
-const from = 'archiveOrCheckCols'
+const from = 'editOrCreateCollection'
 
-export default class ArchiveOrCheckCol extends Component {
+export default class EditOrCreateCollection extends Component {
 
 
 
@@ -25,7 +25,8 @@ export default class ArchiveOrCheckCol extends Component {
     console.log(maybeNames)
     this.state = {
       colNames: maybeNames.length > 0 ? maybeNames : [ 'Wail' ],
-      viewing: 'Wail'
+      viewing: 'Wail',
+      expanded: false
     }
   }
 
@@ -48,31 +49,38 @@ export default class ArchiveOrCheckCol extends Component {
     })
   }
 
+  handleExpand = () => {
+    this.setState({expanded: true})
+  }
+
+  handleReduce = () => {
+    this.setState({expanded: false})
+  }
+
+  handleExpandChange = (expanded) => {
+    this.setState({expanded: expanded})
+  }
+
   render () {
     return (
-      <Card style={{width: '100%'}}>
+      <Card style={{width: '100%'}}
+      >
         <CardHeader
-          title="Archive URL"
-          subtitle="Single Page Crawl"
+          title="Collections"
+          subtitle="Edit Or Create A Collection"
+          showExpandableButton={true}
         />
         <Grid fluid>
           <Row>
             <Col xs>
-              <ArchiveUrl forCol={this.state.viewing}/>
-            </Col>
-          </Row>
-          <Row>
-            <Col xs>
-              <ArchivalButtons
-              archiveList={
-                <BasicColList
-                  cols={this.state.colNames}
-                  viewWatcher={ViewWatcher}
-                  from={from}
-                />
-              }
-              forCol={this.state.viewing}
+              <BasicColList
+                cols={this.state.colNames}
+                viewWatcher={ViewWatcher}
+                from={from}
               />
+            </Col>
+            <Col xs>
+             <p>alskjdlsak</p>
             </Col>
           </Row>
         </Grid>

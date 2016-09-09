@@ -158,7 +158,12 @@ class RequestStore_ {
       if (handledRequest.timeOutTwice) {
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
+          message: {
+            title: 'Error',
+            level: 'error',
+            message:`Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`,
+            uuid: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
+          }
         })
         // // console.log('we timed out twice and are not trying again')
       } else {

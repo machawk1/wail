@@ -70,3 +70,23 @@ ipc.on('add-metadata-to-col', (event, addMe) => {
       })
     })
 })
+
+ipc.on('add-warcs-to-col', (event, addMe) => {
+  let {
+    forCol,
+    warcs
+  } = addMe
+  archiveMan.addWarcsToCol(forCol, warcs)
+    .then(numUpdate => {
+      ipc.send('added-metadata-to-col', {
+        wasError: false,
+        numUpdate
+      })
+    })
+    .catch(error => {
+      ipc.send('added-metadata-to-col', {
+        wasError: true,
+        error
+      })
+    })
+})

@@ -39,11 +39,25 @@ export default class WayBackTab extends Component {
           type: EventTypes.QUEUE_MESSAGE,
           message: `There was an error in force indexing! ${stderr}`
         })
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: {
+            title: 'Error',
+            level: 'error',
+            message: `There was an error in force indexing! ${stderr}`,
+            uuid: `There was an error in force indexing! ${stderr}`
+          }
+        })
         console.error(error)
       } else {
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
-          message: stdout
+          message: {
+            title: 'Success',
+            level: 'success',
+            message: stdout,
+            uuid: stdout
+          }
         })
       }
       console.log(stderr)
