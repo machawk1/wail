@@ -4,9 +4,6 @@ import {
   Menu, shell, ipcMain
 } from 'electron'
 import path from 'path'
-import util from 'util'
-import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
-import ContextMenu from './menu/contextMenu'
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
@@ -24,7 +21,7 @@ const debug = true, notDebugUI = true, openBackGroundWindows = true
 
 export function showSettingsWindow (parent) {
   console.log('showing settings window')
-  winMan.showNewCrawlWindow(control.contextMenu)
+  winMan.showSettingsWindow(control)
 }
 
 winMan.once('windowman-init-done', () => {
@@ -40,9 +37,10 @@ winMan.on('window-crashed', who => {
   console.log('we have a crashed window ', who)
 })
 
-winMan.on('main-window-closed', () => {
-
+winMan.on('killed-services',() => {
+  winMan.closeAllWindows()
 })
+
 
 app.on('ready', () => {
   console.log('app ready')
@@ -78,6 +76,7 @@ app.on('ready', () => {
       global.logger = new Logger({ path: logPath })
 
       global.wailLogp = logPath
+      global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
 
       global.showSettingsMenu = showSettingsWindow
 
@@ -96,5 +95,19 @@ app.on('window-all-closed', () => {
     console.log('not darwin we should close')
     app.quit()
   }
+})
+
+app.on('activate', () => {
+  // On OS X it's common to re-create a window in the app when the
+  // dock icon is clicked and there are no other windows open.
+  if (control.didClose) {
+    winMan.initWail(control)
+  }
+})
+
+app.on('before-quit', () => {
+  // console.log('before-quit')
+
+  global.logger.cleanUp()
 })
 

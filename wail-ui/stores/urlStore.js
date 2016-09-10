@@ -54,7 +54,7 @@ class UrlStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message: `The memento count for ${event.url} is: ${this.urlMemento.mementos}`,
-            uuid:   `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
+            uid:   `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
           }
         })
         break
@@ -79,7 +79,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: 'You must enter a URL first to check if it is in the archive',
-              uuid:   'You must enter a URL first to check if it is in the archive'
+              uid:   'You must enter a URL first to check if it is in the archive'
             }
           })
         }
@@ -93,7 +93,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: `Viewing archived version of: ${this.urlMemento.url.s}`,
-              uuid:   `Viewing archived version of: ${this.urlMemento.url.s}`
+              uid:   `Viewing archived version of: ${this.urlMemento.url.s}`
             }
           })
           shell.openExternal(`${settings.get('pywb.url')}${event.forCol}/*/${this.urlMemento.url.s}`)
@@ -104,7 +104,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: 'You must enter a url first and it be in the archive for you to view it',
-              uuid:   'You must enter a url first and it be in the archive for you to view it'
+              uid:   'You must enter a url first and it be in the archive for you to view it'
             }
           })
         }

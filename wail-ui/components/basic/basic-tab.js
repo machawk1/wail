@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import React, { Component } from 'react'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import ArchiveUrl from './archive-url'
 import BasicTabButtons from './basicTab-buttons'
 import MementoTable from './mementoTable'
@@ -7,6 +7,7 @@ import ArchivalButtons from './archivalButtos'
 import MementoMessagePanel from './mementoMessage-panel'
 import BasicColList from './basicCollectionList'
 import ArchiveOrCheckCol from './archiveOrCheckCol'
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import EditOrCreateCollection from './editOrCreateCollection'
 import styles from '../styles/styles'
 
@@ -40,15 +41,21 @@ export default class BasicTab extends Component {
       selectedIndex: 0
     }
   }
+
   render () {
     return (
-      <Grid className="loadingLayoutGrid">
-        <Row >
-          <ArchiveOrCheckCol />
+      <Grid fluid
+       className="basicTabLayout"
+      >
+        <Row>
+          <Col xs>
+            <CardHeader
+              title="Archive URL"
+              subtitle="Single Page Crawl"
+            />
+          </Col>
         </Row>
-        <Row >
-          <EditOrCreateCollection />
-        </Row>
+        <ArchiveOrCheckCol />
       </Grid>
     )
   }

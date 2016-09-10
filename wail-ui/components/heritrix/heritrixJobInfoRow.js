@@ -4,6 +4,8 @@ import moment from 'moment'
 import { joinStrings } from 'joinable'
 import styles from '../styles/styles'
 import {moveWarc} from '../../actions/heritrix-actions'
+import FitText from 'react-fittext'
+
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 const {
   crawlUrlS,
@@ -45,6 +47,10 @@ const style = {
 
 }
 
+const textSize = 12
+
+
+
 export default class HeritrixJobInfoRow extends Component {
   static propTypes = {
     urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired,
@@ -72,7 +78,7 @@ export default class HeritrixJobInfoRow extends Component {
           title: 'Crawl Finished!',
           level: 'success',
           message: `Crawl for ${url} has finished`,
-          uuid:  `Crawl for ${url} has finished`,
+          uid:  `Crawl for ${url} has finished`,
           autoDismiss: 0,
         })
       }
@@ -80,7 +86,9 @@ export default class HeritrixJobInfoRow extends Component {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
-            {url}
+            <FitText maxFontSize={textSize} >
+              <p>{url}</p>
+            </FitText>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             {status}
@@ -106,7 +114,9 @@ export default class HeritrixJobInfoRow extends Component {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
-            {url}
+            <FitText maxFontSize={textSize} >
+              <p>{url}</p>
+            </FitText>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             Not Started

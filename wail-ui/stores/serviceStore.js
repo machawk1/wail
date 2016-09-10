@@ -86,7 +86,7 @@ class ServiceStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message,
-            uuid:  message
+            uid:  message
           }
         })
       }

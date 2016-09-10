@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h2>pywb Wayback Machine</h2>
+
+This archive contains the following collections:
+
+<ul>
+{% for route in routes %}
+  {% if route | is_wb_handler %}
+    <li>
+    <a href="{{ '/' + route.path }}">{{ '/' + route.path }}</a>
+    {% if route.user_metadata.title is defined %}
+    ({{ route.user_metadata.title }})
+    {% endif %}
+    </li>
+  {% endif %}
+{% endfor %}
+</ul>
+</body>
+</html>

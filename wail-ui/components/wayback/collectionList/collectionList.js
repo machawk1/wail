@@ -9,6 +9,7 @@ import MenuItem from 'material-ui/MenuItem'
 import AutoComplete from 'material-ui/AutoComplete'
 import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
 import Dimensions from 'react-dimensions'
+import NewCollection from '../collectionView/newCollection'
 
 @Dimensions()
 export default class CollectionList extends Component {
@@ -78,6 +79,9 @@ export default class CollectionList extends Component {
             {this.state.cols}
           </SelectField>
         </Col>
+        <Col xs>
+          <NewCollection />
+          </Col>
       </Row>
     )
   }

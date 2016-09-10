@@ -22,6 +22,7 @@ export default class AppManager {
     this.debug = false
     this.openBackGroundWindows = false
     this.didClose = false
+    this.crawlsRunning = false
     this.didLoad = false
     this.loading = true
     this.firstLoad = false
@@ -123,7 +124,7 @@ export default class AppManager {
                 autoHideMenuBar: true
               },
               url: `file://${loadFrom}/childWindows/settings/settingsW.html`,
-              name: 'newCrawlWindow'
+              name: 'settingsWindow'
             },
             {
               conf: { show: false },

@@ -1,9 +1,6 @@
 import 'babel-polyfill'
 import {remote, ipcRenderer as ipc} from 'electron'
-import {
-  CrawlManager,
-  constants
-} from '../../../wail-core'
+import CrawlManager from '../../../wail-core/managers/crawlManager'
 
 const crawlMan = window.cm = new CrawlManager()
 
@@ -40,6 +37,18 @@ ipc.on('get-all-runs', (event) => {
         wasError: true,
         error
       })
+    })
+})
+
+ipc.on('are-crawls-running',(event) => {
+  crawlMan.areCrawlsRunning()
+    .then((areRunning) => {
+      if(areRunning) {
+        ipc.send('yes-crawls-running')
+      } else {
+        ipc.send('no-crawls-running')
+      }
+
     })
 })
 

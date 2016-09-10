@@ -412,7 +412,7 @@ export function forceCrawlFinish (jobId, urls, cb) {
       title: 'Info',
       level: 'info',
       message:`Terminating Crawl for ${urls}`,
-      uuid: `Terminating Crawl for ${urls}`
+      uid: `Terminating Crawl for ${urls}`
     }
   })
   if (!ServiceStore.heritrixStatus()) {
@@ -449,7 +449,7 @@ export function forceCrawlFinish (jobId, urls, cb) {
           title: 'Success',
           level: 'success',
           message:`TerminatedCrawl for ${urls}`,
-          uuid: `Terminated Crawl for ${urls}`
+          uid: `Terminated Crawl for ${urls}`
         }
       })
       if (cb) {
@@ -465,7 +465,7 @@ export function forceCrawlFinish (jobId, urls, cb) {
           title: 'Error',
           level: 'error',
           message:`Terminated Crawl for ${urls} failed`,
-          uuid: `Terminated Crawl for ${urls} failed`
+          uid: `Terminated Crawl for ${urls} failed`
         }
       })
       if (cb) {
@@ -717,7 +717,7 @@ export function moveWarc () {
               title: 'Error',
               level: 'error',
               message:`There was an error in moving ${path.basename(warc)} to the Wail collection`,
-              uuid: `There was an error in moving ${path.basename(warc)} to the Wail collection`
+              uid: `There was an error in moving ${path.basename(warc)} to the Wail collection`
             }
           })
         } else {
@@ -727,7 +727,7 @@ export function moveWarc () {
               title: 'Success',
               level: 'success',
               message:`Moved ${path.basename(warc)} to the Wail collection`,
-              uuid: `Moved ${path.basename(warc)} to the Wail collection`
+              uid: `Moved ${path.basename(warc)} to the Wail collection`
             }
           })
         }

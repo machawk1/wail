@@ -12,7 +12,8 @@ import MementoDispatcher from '../dispatchers/memgatorDispatcher'
 import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import { readCode } from '../actions/editor-actions'
-import { CrawlInfo, RunInfo } from '../../wail-core'
+import CrawlInfo from '../../wail-core/util/crawlInfo'
+import RunInfo  from '../../wail-core/util/runInfo'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -66,7 +67,7 @@ class CrawlStore_ extends EventEmitter {
           title: 'Info',
           level: 'info',
           message: `Building Heritrix crawl for ${urls}`,
-          uuid: `Building Heritrix crawl for ${urls}`
+          uid: `Building Heritrix crawl for ${urls}`
         }
       })
     })
@@ -74,7 +75,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   intialJobStateLoad (event, allRuns) {
-    console.log(allRuns)
+    console.log('inital Job state load',allRuns)
     this.jobIndex.clear()
     if (!allRuns.wasError) {
       if ((allRuns.runs || [] ).length > 0) {
@@ -133,7 +134,7 @@ class CrawlStore_ extends EventEmitter {
         title: 'Info',
         level: 'info',
         message: `Built the Heritrix crawl config for job: ${conf.urls}`,
-        uuid: `Built the Heritrix crawl config for job: ${conf.urls}`
+        uid: `Built the Heritrix crawl config for job: ${conf.urls}`
       }
     })
   }
@@ -235,7 +236,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   jobs () {
-    return this.crawlJobs
+    return _.orderBy(this.crawlJobs,['jobId','desc'])
   }
 
   @autobind
@@ -262,7 +263,7 @@ class CrawlStore_ extends EventEmitter {
                   title: 'Info',
                   level: 'info',
                   message: `Archiving ${urls} Now!`,
-                  uuid: `Archiving ${urls} Now!`
+                  uid: `Archiving ${urls} Now!`
                 }
               })
             } else {
@@ -273,7 +274,7 @@ class CrawlStore_ extends EventEmitter {
                   title: 'Error',
                   level: 'error',
                   message: 'Please enter an URL to archive',
-                  uuid: 'Please enter an URL to archive'
+                  uid: 'Please enter an URL to archive'
                 }
               })
             }
@@ -310,7 +311,7 @@ class CrawlStore_ extends EventEmitter {
               title: 'Info',
               level: 'info',
               message: `Building Heritrix crawl for ${crawlingUrlsMessage}`,
-              uuid: `Building Heritrix crawl for ${crawlingUrlsMessage}`
+              uid: `Building Heritrix crawl for ${crawlingUrlsMessage}`
             }
           })
           ipc.send('makeHeritrixJobConf', { urls, depth, jobId: jId, forCol: 'Wail' })
@@ -328,7 +329,7 @@ class CrawlStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message:`Built the Heritrix crawl config for job: ${event.id}`,
-            uuid: `Built the Heritrix crawl config for job: ${event.id}`
+            uid: `Built the Heritrix crawl config for job: ${event.id}`
           }
         })
         break
@@ -343,7 +344,7 @@ class CrawlStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message:`Heritrix Crawl Built for job: ${event.id}`,
-            uuid: `Heritrix Crawl Built for job: ${event.id}`
+            uid: `Heritrix Crawl Built for job: ${event.id}`
           }
         })
         break
@@ -360,7 +361,7 @@ class CrawlStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message:`Heritrix Crawl Started: ${event.id}`,
-            uuid: `Heritrix Crawl Started: ${event.id}`
+            uid: `Heritrix Crawl Started: ${event.id}`
           }
         })
         break

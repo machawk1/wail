@@ -6,9 +6,15 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
 import { List, ListItem } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import ColStore from '../../stores/collectionStore'
+import DropDownMenu from 'material-ui/DropDownMenu'
 import autobind from 'autobind-decorator'
 import MenuItem from 'material-ui/MenuItem'
 import ColDispatcher from '../../dispatchers/collectionDispatcher'
+
+let defForCol = 'default'
+if (process.env.NODE_ENV === 'development') {
+  defForCol = 'Wail'
+}
 
 export default class BasicCollectionList extends Component {
 
@@ -21,7 +27,7 @@ export default class BasicCollectionList extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      colNames: ['Wail'],
+      colNames: [defForCol],
       cols: this.buildList(),
       selection: 0
 
@@ -64,19 +70,14 @@ export default class BasicCollectionList extends Component {
 
   render () {
     return (
-      <Row
-      >
-        <Col xs>
-          <SelectField
+
+          <DropDownMenu
             value={this.state.selection}
             onChange={::this.handleChange}
-            maxHeight={200}
-            style={{width: 150}}
           >
             {this.state.cols}
-          </SelectField>
-        </Col>
-      </Row>
+          </DropDownMenu>
+
     )
   }
 

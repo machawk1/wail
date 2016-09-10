@@ -1,17 +1,19 @@
 import autobind from 'autobind-decorator'
 import EventEmitter from 'eventemitter3'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import S from 'string'
 import CollectionDispatcher from '../dispatchers/collectionDispatcher'
 import wailConstants from '../constants/wail-constants'
-import { ColCrawlInfo } from '../../wail-core'
+import ColCrawlInfo  from '../../wail-core/util/colCrawlInfo'
+import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 
 const settings = remote.getGlobal('settings')
 const {
   GET_COLLECTIONS,
   CREATE_NEW_COLLECTION,
   ADD_METADATA_TO_COLLECTION,
-  GET_COLLECTION_NAMES
+  GET_COLLECTION_NAMES,
+  QUEUE_MESSAGE
 } = wailConstants.EventTypes
 const From = wailConstants.From
 
@@ -21,14 +23,10 @@ class _CollectionStore extends EventEmitter {
   constructor () {
     super()
     this.collections = new Map()
-    this._init()
+    ipc.on('got-all-collections', ::this.loadCollections)
+    ipc.on('created-collection', ::this.addNewCol)
   }
 
-  @autobind
-  _init () {
-    console.log('collection store init')
-    ipc.on('got-all-collections', ::this.loadCollections)
-  }
 
   loadCollections(event,ac) {
     console.log('collection store got all collections',ac)
@@ -53,6 +51,21 @@ class _CollectionStore extends EventEmitter {
       })
       this.emit('got-all-collections', collections)
     }
+  }
+
+  addNewCol(event,col) {
+    this.collections.set(col.colName, new ColCrawlInfo(col))
+    this.emit('added-new-collection',Array.from(this.collections.values()))
+    GMessageDispatcher.dispatch({
+      type: QUEUE_MESSAGE,
+      message: {
+        title: 'Success',
+        level: 'success',
+        autoDismiss: 0,
+        message: `Created new collection ${col.colName}`,
+        uid:    `Created new collection ${col.colName}`,
+      }
+    })
   }
 
   getColNames () {

@@ -1,15 +1,14 @@
 import React, { Component, PropTypes } from 'react'
 import { Grid, Row, Col } from 'react-flexbox-grid'
-import OpenButton from 'material-ui/FlatButton'
+import OpenButton from 'material-ui/RaisedButton'
 import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
 import autobind from 'autobind-decorator'
-import {shell} from 'electron'
-import Dimensions from 'react-dimensions'
+import CollectionToolBar from './collectionToolBar'
+import { shell } from 'electron'
 
 const textSize = 15
 
-@Dimensions()
 export default class CollectionOverview extends Component {
   static propTypes = {
     collection: PropTypes.object.isRequired,
@@ -36,37 +35,28 @@ export default class CollectionOverview extends Component {
       name
     } = collection
     return (
-      <Grid fluid>
+      <Grid fluid className="waybackGrid">
         <Row between='xs'>
           <Col xs>
-            <FitText maxFontSize={textSize} >
-              <h3>Collection Name: {colName}</h3>
-            </FitText>
+            <p>Collection Name: {colName}</p>
           </Col>
           <Col xs>
-            <FitText maxFontSize={textSize} >
-              <h3>Warcs in collection: {numArchives}</h3>
-            </FitText>
+            <Col xs>
+              <p>Warcs in collection: {numArchives}</p>
+            </Col>
+
           </Col>
         </Row>
         <Row between='xs'>
           <Col xs>
-            <FitText maxFontSize={textSize} >
-              <h3>Warc Location: {archive}</h3>
-            </FitText>
+
+                <OpenButton label='Open Index Location' onTouchTap={() => shell.openItem(indexes)}/>
+
           </Col>
           <Col xs>
-            <OpenButton label='Open Location' onTouchTap={() => shell.openItem(archive)}/>
-          </Col>
-        </Row>
-        <Row between='xs'>
-          <Col xs>
-            <FitText maxFontSize={textSize} >
-              <h3>Index Location: {indexes}</h3>
-            </FitText>
-          </Col>
-          <Col xs>
-            <OpenButton label='Open Location' onTouchTap={() => shell.openItem(indexes)}/>
+
+                <OpenButton label='Open Warc Location' onTouchTap={() => shell.openItem(archive)}/>
+
           </Col>
         </Row>
         <Row>

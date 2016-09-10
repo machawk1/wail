@@ -7,16 +7,10 @@ import fs from 'fs-extra'
 import Promise from 'bluebird'
 import {ipcRenderer, remote} from 'electron'
 import Routes from './routes'
-import {writeWaybackConf} from './actions/wayback-actions'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
-require('./css/wail.css')
-// require('pretty-error').start()
+import './css/wail.css'
 
-ipcRenderer.on('rewrite-wayback-config', (event, payload) => {
-  console.log('wail got rewrite-wayback-config')
-  writeWaybackConf()
-})
 
 Promise.promisifyAll(fs)
 
@@ -28,9 +22,8 @@ window.ReqStore = RequestStore
 
 injectTapEventPlugin()
 
-// ipcRenderer.send('start-index-indexing')
-// ipcRenderer.send('start-crawljob-monitoring')
-// ipcRenderer.send('start-service-monitoring')
+// ipcRenderer.send('get-all-collections')
+// ipcRenderer.send('get-all-runs')
 
 const wail = document.getElementById('wail')
 

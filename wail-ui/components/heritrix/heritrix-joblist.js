@@ -17,6 +17,7 @@ const {
   actionS
 } = styles.heritrixTable
 
+
 export default class HeritrixJobList extends Component {
 
   constructor (props, context) {
@@ -43,6 +44,7 @@ export default class HeritrixJobList extends Component {
   render () {
     // console.log('rendering the joblist', this.state)
     let { jobs } = this.state
+    console.log(jobs)
     let JobItems
     if (jobs.length > 0) {
       JobItems = jobs.map(job => <HeritrixJobItem key={job.jobId} {...job} />)
@@ -75,7 +77,9 @@ export default class HeritrixJobList extends Component {
       )
     }
     return (
-      <Table height={'179px'}>
+      <Table
+      height='290px'
+      >
         <TableHeader
           displaySelectAll={false}
           adjustForCheckbox={false}

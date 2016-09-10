@@ -33,7 +33,6 @@ export default class CollectionView extends Component {
 
   render () {
     let { viewing } = this.state
-    console.log(viewing)
     return (
       <CollectionInfo collection={viewing} />
     )

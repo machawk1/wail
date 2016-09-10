@@ -4,29 +4,28 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import util from 'util'
+import fs from 'fs-extra'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-
 const settings = remote.getGlobal('settings')
-
 
 export default class ArchiveManager {
   constructor () {
     this.db = new Db({
-      filename: path.join(settings.get('wailCore.db'),'archives.db'),
+      filename: path.join(settings.get('wailCore.db'), 'archives.db'),
       autoload: true
     })
 
   }
 
-  getAllCollections() {
+  getAllCollections () {
     return new Promise((resolve) => {
-      this.db.find({},(err,docs)=>{
-        if(err) {
+      this.db.find({}, (err, docs)=> {
+        if (err) {
           resolve({
             wasError: true,
             err
@@ -42,15 +41,42 @@ export default class ArchiveManager {
   }
 
   addCrawlInfo (colName, crawlInfo) {
-    console.log('addCrawlInfo ArchiveManager ',colName,crawlInfo)
+    console.log('addCrawlInfo ArchiveManager ', colName, crawlInfo)
     return new Promise((resolve, reject) => {
-      this.db.update({ colName }, { $push: { crawls: crawlInfo } },{}, (error,updated) => {
+      this.db.update({ colName }, { $push: { crawls: crawlInfo } }, {}, (error, updated) => {
         if (error) {
-          console.error('addCrawlInfo error',error)
+          console.error('addCrawlInfo error', error)
           return reject(error)
         } else {
           return resolve(updated)
         }
+      })
+    })
+  }
+
+  addInitialMData (col,mdata) {
+    let opts = {
+      cwd: settings.get('warcs')
+    }
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: join(...mdata) }).s
+      cp.exec(exec, opts, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        }
+        let metadata = []
+        mdata.forEach(m => {
+          let split = m.split('=')
+          metadata.push({
+            k: split[ 0 ],
+            v: S(split[ 1 ]).replaceAll('"', '').s
+          })
+        })
+        console.log('added metadata to collection', col)
+        console.log('stdout', stdout)
+        console.log('stderr', stderr)
+        return resolve()
       })
     })
   }
@@ -71,7 +97,7 @@ export default class ArchiveManager {
           let split = m.split('=')
           metadata.push({
             k: split[ 0 ],
-            v:  S(split[ 1 ]).replaceAll('"', '').s
+            v: S(split[ 1 ]).replaceAll('"', '').s
           })
         })
         console.log('added metadata to collection', col)
@@ -114,18 +140,59 @@ export default class ArchiveManager {
           if (err) {
             return reject(err)
           } else {
-            return resolve(count)
+            return resolve({
+              forCol: col,
+              count,
+              wasError: false
+            })
           }
         })
       })
     })
-
   }
 
-  createCollection (col) {
+  movePywbStuffForNewCol (col) {
+    return new Promise((resolve, reject) => {
+      let opts = {
+        clobber: true
+      }
+      let colTemplate = S(settings.get('collections.colTemplate')).template({ col })
+      let colStatic = S(settings.get('collections.colStatic')).template({ col })
+      fs.copy(settings.get('collections.templateDir'), colTemplate, opts, (errT) => {
+        if (errT) {
+          console.error('moving templates failed for col',col,errT)
+        }
+        fs.copy(settings.get('collections.staticsDir'), colStatic, opts, (errS) => {
+          if(errS) {
+            if(errT) {
+              reject({
+                errors: 2,
+                errS,
+                errT
+              })
+            } else {
+              reject({
+                errors: 1,
+                errS
+              })
+            }
+          } else {
+            console.log('moved pywbs stuff for a collection',col)
+            resolve()
+          }
+        })
+      })
+    })
+  }
+
+  createCollection (ncol) {
     let opts = {
       cwd: settings.get('warcs')
     }
+    let {
+      col,
+      metaData
+    } = ncol
     let exec = S(settings.get('pywb.newCollection')).template({ col }).s
     return new Promise((resolve, reject) => {
       cp.exec(exec, opts, (error, stdout, stderr) => {
@@ -133,18 +200,18 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        console.log('created collection')
+        console.log('created collection', stderr, stdout)
         //`${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
-        let colpath = path.join(settings.get('warcs'),'collections',col)
+        let colpath = path.join(settings.get('warcs'), 'collections', col)
         let toCreate = {
           _id: col,
           name: col,
           colpath,
-          archive: path.join(colpath,'archive'),
-          indexes: path.join(colpath,'indexes'),
+          archive: path.join(colpath, 'archive'),
+          indexes: path.join(colpath, 'indexes'),
           colName: col,
           numArchives: 0,
-          metadata: [],
+          metaData,
           crawls: [],
           hasRunningCrawl: false
         }

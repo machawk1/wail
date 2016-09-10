@@ -1,9 +1,9 @@
-import React, {Component} from 'react'
-import {shell, remote} from 'electron'
+import React, { Component } from 'react'
+import { shell, remote } from 'electron'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
 import EditIcon from 'material-ui/svg-icons/editor/mode-edit'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
@@ -12,6 +12,17 @@ import autobind from 'autobind-decorator'
 import S from 'string'
 import Explorer from './explorer'
 import wailConstants from '../../constants/wail-constants'
+import { ipcRenderer as ipc } from 'electron'
+import _ from 'lodash'
+import CircularProgress from 'material-ui/CircularProgress'
+import CollectionView from './collectionView'
+import CollectionList from './collectionList'
+import CollectionHeader from './collectionHeader'
+import  ViewWatcher  from '../../../wail-core/util/viewWatcher'
+import Dimensions from 'react-dimensions'
+import ColStore from '../../stores/collectionStore'
+import CollectionToolBar from './collectionView/collectionToolBar'
+
 
 const EventTypes = wailConstants.EventTypes
 
@@ -23,6 +34,39 @@ const settings = remote.getGlobal('settings')
 export default class WayBackTab extends Component {
   constructor (props, context) {
     super(props, context)
+    let colNames = []
+    let collections = {}
+    let entries = ColStore.collections
+    console.log(entries)
+    for (let [cname,collection] of ColStore.collections) {
+      colNames.push(cname)
+      collections[ cname ] = collection
+    }
+    this.state = {
+      loading: true,
+      collections,
+      colNames
+    }
+  }
+
+  componentWillMount () {
+    ColStore.on('got-all-collections', ::this.getCollections)
+    ColStore.on('added-new-collection', ::this.getCollections)
+  }
+
+  componentWillUnmount () {
+    ColStore.removeListener('got-all-collections', ::this.getCollections)
+    ColStore.removeListener('added-new-collection', ::this.getCollections)
+  }
+
+  getCollections (cols) {
+    let { collections, colNames } = this.state
+    console.log(cols)
+    cols.forEach(col => {
+      colNames.push(col.colName)
+      collections[ col.colName ] = col
+    })
+    this.setState({ collections, colNames })
   }
 
   @autobind
@@ -45,7 +89,7 @@ export default class WayBackTab extends Component {
             title: 'Error',
             level: 'error',
             message: `There was an error in force indexing! ${stderr}`,
-            uuid: `There was an error in force indexing! ${stderr}`
+            uid: `There was an error in force indexing! ${stderr}`
           }
         })
         console.error(error)
@@ -56,7 +100,7 @@ export default class WayBackTab extends Component {
             title: 'Success',
             level: 'success',
             message: stdout,
-            uuid: stdout
+            uid: stdout
           }
         })
       }
@@ -67,39 +111,22 @@ export default class WayBackTab extends Component {
 
   render () {
     return (
-      <Grid fluid className="layOutGridFH">
-        <Row >
-          <Explorer />
-        </Row>
-        <Row>
-          <Col xs>
-            <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
-              <ToolbarGroup firstChild>
-                <RaisedButton
-                  label='View in Browser'
-                  labelPosition='before'
-                  icon={<OpenBrowserIcon />}
-                  onMouseDown={() => shell.openExternal(settings.get('pywb.url'))}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <RaisedButton
-                  label='Force Reindexing'
-                  labelPosition='before'
-                  onMouseDown={this.forIndex}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup lastChild>
-                <RaisedButton
-                  icon={<FolderOpen />}
-                  label='View Archives'
-                  labelPosition='before'
-                  onMouseDown={() => shell.openItem(settings.get('collections.dir'))}
-                />
-              </ToolbarGroup>
-            </Toolbar>
-          </Col>
-        </Row>
+      <Grid
+        fluid
+        className="waybackGrid"
+      >
+        <CollectionList
+          key='the-list'
+          cols={this.state.colNames}
+          viewWatcher={ViewWatcher}
+          from='Wail-Archive-Collections'
+        />
+        <CollectionView
+          collections={this.state.collections}
+          viewWatcher={ViewWatcher}
+          from='Wail-Archive-Collections'
+          defaultView='Wail'
+        />
       </Grid>
     )
   }

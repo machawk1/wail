@@ -1,18 +1,18 @@
 import React, { Component, PropTypes } from 'react'
-import Paper from 'material-ui/Paper'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
-import { List, ListItem } from 'material-ui/List'
-import Divider from 'material-ui/Divider'
+import { Row, Col } from 'react-flexbox-grid'
 import CollectionStore from '../../stores/collectionStore'
-import ColDispatcher from '../../dispatchers/collectionDispatcher'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import ArchivalButtons from './archivalButtos'
 import ArchiveUrl from './archive-url'
 import BasicColList from './basicCollectionList'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import autobind from 'autobind-decorator'
 
 const from = 'archiveOrCheckCols'
+
+let defForCol = 'default'
+if (process.env.NODE_ENV === 'development') {
+  defForCol = 'Wail'
+}
 
 export default class ArchiveOrCheckCol extends Component {
 
@@ -25,22 +25,26 @@ export default class ArchiveOrCheckCol extends Component {
     console.log(maybeNames)
     this.state = {
       colNames: maybeNames.length > 0 ? maybeNames : [ 'Wail' ],
-      viewing: 'Wail'
+      viewing: defForCol
     }
   }
 
   componentWillMount () {
-    CollectionStore.on('got-all-collections', ::this.gotAllNames)
+    CollectionStore.on('got-all-collections', this.gotAllNames)
+    CollectionStore.on('added-new-collection', this.gotAllNames)
     ViewWatcher.on(`${from}-view`, viewMe => {
       this.setState({ viewing: viewMe })
     })
   }
 
   componentWillUnmount () {
-    CollectionStore.removeListener('got-all-collections', ::this.gotAllNames)
+    console.log('componet willl un mount archive or check col')
+    CollectionStore.removeListener('got-all-collections', this.gotAllNames)
+    CollectionStore.removeListener('added-new-collection', this.gotAllNames)
     ViewWatcher.removeListener(`${from}-view`)
   }
 
+  @autobind
   gotAllNames (cols) {
     console.log('got allNames archive or checkCol',cols)
     this.setState({
@@ -50,12 +54,8 @@ export default class ArchiveOrCheckCol extends Component {
 
   render () {
     return (
-      <Card style={{width: '100%'}}>
-        <CardHeader
-          title="Archive URL"
-          subtitle="Single Page Crawl"
-        />
-        <Grid fluid>
+
+        <div>
           <Row>
             <Col xs>
               <ArchiveUrl forCol={this.state.viewing}/>
@@ -75,8 +75,7 @@ export default class ArchiveOrCheckCol extends Component {
               />
             </Col>
           </Row>
-        </Grid>
-      </Card>
+        </div>
     )
   }
 

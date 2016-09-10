@@ -162,7 +162,7 @@ class RequestStore_ {
             title: 'Error',
             level: 'error',
             message:`Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`,
-            uuid: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
+            uid: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
           }
         })
         // // console.log('we timed out twice and are not trying again')

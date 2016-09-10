@@ -99,7 +99,7 @@ export default class CrawlManager {
         let {
           forCol
         } = updated[0]
-        ipc.send('')
+        ipc.send('add-warcs-to-col',{forCol,warcs: pathMan.normalizeJoin(updated.path,'latest','warcs/*.warc')})
 
       }
     })
@@ -107,11 +107,14 @@ export default class CrawlManager {
 
   @autobind
   areCrawlsRunning () {
+    console.log('checking if crawls are running')
     return new Promise((resolve, reject) => {
       this.db.count({ running: true }, (err, runningCount) => {
         if (err) {
+          console.error('error finding if crawls are running')
           reject(err)
         } else {
+          console.log('are crawls running',runningCount)
           let areRunning = runningCount > 0
           resolve(areRunning)
         }

@@ -22,7 +22,7 @@ export function checkUriIsInArchive (uri,forCol) {
       title: 'Info',
       level: 'info',
       message: `Checking if ${uri} is in the archive ${forCol}`,
-      uuid: `Checking if ${uri} is in the archive ${forCol}`,
+      uid: `Checking if ${uri} is in the archive ${forCol}`,
     }
   })
 
@@ -39,7 +39,7 @@ export function checkUriIsInArchive (uri,forCol) {
             title: 'Success',
             level: 'success',
             message: `${uri} is in the archive ${forCol}`,
-            uuid:  `${uri} is in the archive ${forCol}`,
+            uid:  `${uri} is in the archive ${forCol}`,
             autoDismiss: 0,
             action: {
               label: `View in ${forCol}?`,
@@ -56,7 +56,7 @@ export function checkUriIsInArchive (uri,forCol) {
             title: 'Warning',
             level: 'warning',
             message: `${uri} is in the archive ${forCol}`,
-            uuid: `${uri} is in the archive ${forCol}`
+            uid: `${uri} is in the archive ${forCol}`
           }
         })
       }
@@ -71,7 +71,7 @@ export function checkUriIsInArchive (uri,forCol) {
           title: 'Error',
           level: 'error',
           message: `An internal error occurred while seeing if ${uri} is in the archive ${forCol}`,
-          uuid: `An internal error occurred while seeing if ${uri} is in the archive ${forCol}`
+          uid: `An internal error occurred while seeing if ${uri} is in the archive ${forCol}`
         }
       })
     })

@@ -13,9 +13,9 @@ export default {
     // indexer: './wail-ui/background/indexer',
     // jobs: './wail-ui/background/jobs',
     // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
-    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
     notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
-    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    // requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
     // // settingsW: './wail-ui/childWindows/settings/settingsW',
     wail: ['babel-polyfill','./wail-ui/wail']
   },
@@ -84,4 +84,7 @@ export default {
   },
   // bail: true,
   target: 'electron-renderer',
+  alias: {
+    'dtrace-provider': './wail-ui/bunyanshim.js'
+  }
 }

@@ -5,7 +5,7 @@ import Promise from 'bluebird'
 import isRunning from 'is-running'
 import Datastore from 'nedb'
 import path from 'path'
-
+import psTree from 'ps-tree'
 const hpidGetter = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 
 let debug = false
@@ -46,62 +46,106 @@ export default class ServiceManager {
     }
   }
 
-  killService (which) {
-    if (which === 'all') {
-      let forgetMe = []
-      for (let [who, pid] of this._monitoring) {
-        if (this.isServiceUp(who)) {
-          console.log(`ServiceManager killing ${who}`)
-          if (!this._isWin) {
+  restartWayback () {
+    return new Promise((resolve, reject) => {
+      if (this.isServiceUp('wayback')) {
+        console.log('wayback was already up')
+        let pid = this._monitoring.get('wayback')
+        psTree(pid, (err, kids) => {
+          if (err) {
+            console.error('ps tree error', err)
             process.kill(pid, 'SIGTERM')
           } else {
-            cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
-              if (error) {
-                console.error('really bad juju', stderr)
-              }
+            let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+              detached: true,
+              shell: true,
+              stdio: [ 'ignore', 'ignore', 'ignore' ]
+            })
+            dukeNukem.on('close', (code) => {
+             return this.startWayback()
+               .then(() => {
+                 resolve()
+               })
+               .catch((err) => {
+                 reject(err)
+               })
             })
           }
-        }
-        forgetMe.push(who)
-      }
-      this._pidStore.remove({}, { multi: true }, (err) => {
-        if (err) {
-          console.error('there was an error removing all services', err)
-        } else {
-          console.log(`Removed all pids from the pidstore`)
-        }
-        forgetMe.forEach(fm => {
-          this._monitoring.delete(fm)
         })
-      })
-    } else {
-      let killMe = this._monitoring.get(which)
-      if (killMe) {
-        if (this.isServiceUp(which)) {
-          if (!this._isWin) {
-            process.kill(killMe, 'SIGTERM')
-          } else {
-            cp.exec('taskkill /PID ' + killMe + ' /T /F', (error, stdout, stderr) => {
-              if (error) {
-                console.error('really bad juju')
-              }
-            })
-          }
-        }
-        this._pidStore.remove({ _id: which, who: which }, (error) => {
-          if (error) {
-            console.error(`ServiceManager error removing from pidstore ${which}`)
-          } else {
-            console.log(`ServiceManager removed ${which} from pidstore`)
-          }
-        })
+      } else {
+        return this.startWayback()
+          .then(() => {
+            resolve()
+          })
+          .catch((err) => {
+            reject(err)
+          })
       }
-    }
+    })
+  }
+
+  killService (which) {
+    return new Promise((resolve, reject) => {
+      if (which === 'all') {
+        let forgetMe = []
+        for (let [who, pid] of this._monitoring) {
+          if (this.isServiceUp(who)) {
+            console.log(`ServiceManager killing ${who}`)
+            if (!this._isWin) {
+              process.kill(pid, 'SIGTERM')
+            } else {
+              cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
+                if (error) {
+                  console.error('really bad juju', stderr)
+                }
+              })
+            }
+          }
+          forgetMe.push(who)
+        }
+        this._pidStore.remove({}, { multi: true }, (err) => {
+          if (err) {
+            console.error('there was an error removing all services', err)
+          } else {
+            console.log(`Removed all pids from the pidstore`)
+          }
+          forgetMe.forEach(fm => {
+            this._monitoring.delete(fm)
+          })
+          resolve()
+        })
+      } else {
+        let killMe = this._monitoring.get(which)
+        if (killMe) {
+          if (this.isServiceUp(which)) {
+            if (!this._isWin) {
+              process.kill(killMe, 'SIGTERM')
+            } else {
+              cp.exec('taskkill /PID ' + killMe + ' /T /F', (error, stdout, stderr) => {
+                if (error) {
+                  console.error('really bad juju')
+                }
+              })
+            }
+          }
+          this._pidStore.remove({ _id: which, who: which }, (error) => {
+            if (error) {
+              console.error(`ServiceManager error removing from pidstore ${which}`)
+            } else {
+              console.log(`ServiceManager removed ${which} from pidstore`)
+            }
+
+            resolve()
+          })
+        }
+      }
+    })
+
   }
 
   startHeritrix () {
     console.log('service man starting heritrix')
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       if (this.isServiceUp('heritrix')) {
         console.log('heritrix is already up', this._monitoring)
         resolve()
@@ -185,7 +229,7 @@ export default class ServiceManager {
 
   startWayback () {
     console.log('service man starting wayback')
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
         resolve()

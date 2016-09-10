@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup,ToolbarTitle} from 'material-ui/Toolbar'
 import { findDOMNode } from 'react-dom'
 import RaisedButton from 'material-ui/RaisedButton'
 import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
@@ -7,10 +7,16 @@ import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import wailConstants from '../../constants/wail-constants'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import ReactTooltip from 'react-tooltip'
+import DropDownMenu from 'material-ui/DropDownMenu'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
+
+let defForCol = 'default'
+if (process.env.NODE_ENV === 'development') {
+  defForCol = 'Wail'
+}
 
 export default class ArchivalButtons extends Component {
   static propTypes = {
@@ -19,7 +25,7 @@ export default class ArchivalButtons extends Component {
   }
 
   static defaultProps = {
-    forCol: 'Wail'
+    forCol: defForCol
   }
 
   constructor (...args) {
@@ -30,6 +36,10 @@ export default class ArchivalButtons extends Component {
     return (
       <Toolbar style={{ backgroundColor: 'transparent' }}>
         <ToolbarGroup firstChild>
+          <ToolbarTitle text="Collections:" />
+          {this.props.archiveList}
+        </ToolbarGroup>
+        <ToolbarGroup >
           <RaisedButton
             icon={<ViewArchiveIcon />}
             label='Check Local Collection'
@@ -41,9 +51,6 @@ export default class ArchivalButtons extends Component {
               })
             }}
           />
-        </ToolbarGroup>
-        <ToolbarGroup >
-          {this.props.archiveList}
         </ToolbarGroup>
         <ToolbarGroup lastChild>
           <RaisedButton

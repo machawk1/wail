@@ -24,13 +24,18 @@ const dataSource = [
   '.org'
 ]
 
+let defForCol = 'default'
+if (process.env.NODE_ENV === 'development') {
+  defForCol = 'Wail'
+}
+
 export default class ArchiveUrl extends Component {
   static propTypes =  {
     forCol: PropTypes.string,
   }
 
   static defaultProps = {
-    forCol: 'Wail'
+    forCol: defForCol
   }
 
 

@@ -11,7 +11,7 @@ import fileExists from 'file-exists'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-const templates = {
+export const templates = {
   heritrix: {
     defaultHost: 'localhost',
     defaultPort: '8443',
@@ -19,7 +19,7 @@ const templates = {
     uri_engine: 'https://{host}:{port}/engine/',
     login: '-a {usr}:{pass}',
     web_ui: 'https://{usr}:{pass}@localhost:{port}',
-    jobUrl: 'https://{host}:{port}/engine/job/',
+    jobUrl: 'https://{host}:{port}/engine/job/{job}',
     engineUrl: 'https://{host}:{port}/engine',
     start: '{export} {bpath} {login}',
     startW: '{bpath} {login}'
@@ -30,224 +30,455 @@ const templates = {
   notIndexCDX: '!{cdx}{notIndex}'
 }
 
-const managed = {
-  paths: [
-    { name: 'bundledApps', path: 'bundledApps' },
-    { name: 'logs', path: 'waillogs/wail.log' },
-    { name: 'archives', path: 'config/archives.json' },
-    { name: 'cdx', path: 'archiveIndexes' },
-    { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
-    { name: 'crawlerBean', path: 'crawler-beans.cxml' },
-    { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
-    { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
-    { name: 'heritrix', path: 'bundledApps/heritrix' },
-    { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
-    { name: 'index', path: '/config/path-index.txt' },
-    { name: 'jdk', path: 'bundledApps/openjdk' },
-    { name: 'jobConf', path: 'crawler-beans.cxml' },
-    { name: 'jre', path: 'bundledApps/openjdk' },
-    { name: 'memgator', path: 'bundledApps/memgator' },
-    { name: 'tomcat', path: 'bundledApps/tomcat' },
-    { name: 'warcs', path: '/archives' }
-  ],
-  heritrix: {
-    uri_heritrix: 'https://127.0.0.1:8443',
-    uri_engine: 'https://localhost:8443/engine/',
-    port: '8843',
-    username: 'lorem',
-    password: 'ipsum',
-    login: '-a lorem:ipsum',
-    path: '',
-    jobConf: 'crawler-beans.cxml',
-    jobConfWin: 'crawler-beans-win.cxml',
-    web_ui: 'https://lorem:ipsum@localhost:8443',
-    addJobDirectoryOptions: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      timeout: 15000,
-      form: {
-        action: 'add',
-        addPath: ''
+
+var mngd
+var dbgOSX
+
+
+if (process.env.NODE_ENV === 'development') {
+  console.log('dev settings')
+  // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
+  dbgOSX = true
+  mngd  = {
+    paths: [
+      { name: 'bundledApps', path: 'bundledApps' },
+      { name: 'logs', path: 'waillogs/wail.log' },
+      { name: 'archives', path: 'config/archives.json' },
+      { name: 'cdx', path: 'archiveIndexes' },
+      { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
+      { name: 'crawlerBean', path: 'crawler-beans.cxml' },
+      { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
+      { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
+      { name: 'heritrix', path: 'bundledApps/heritrix' },
+      { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
+      { name: 'index', path: '/config/path-index.txt' },
+      { name: 'jdk', path: 'bundledApps/openjdk' },
+      { name: 'jobConf', path: 'crawler-beans.cxml' },
+      { name: 'jre', path: 'bundledApps/openjdk' },
+      { name: 'memgator', path: 'bundledApps/memgator' },
+      { name: 'tomcat', path: 'bundledApps/tomcat' },
+      { name: 'warcs', path: '/archives2' }
+    ],
+    heritrix: {
+      uri_heritrix: 'https://127.0.0.1:8443',
+      uri_engine: 'https://localhost:8443/engine/',
+      port: '8843',
+      username: 'lorem',
+      password: 'ipsum',
+      login: '-a lorem:ipsum',
+      path: '',
+      jobConf: 'crawler-beans.cxml',
+      jobConfWin: 'crawler-beans-win.cxml',
+      web_ui: 'https://lorem:ipsum@localhost:8443',
+      addJobDirectoryOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        timeout: 15000,
+        form: {
+          action: 'add',
+          addPath: ''
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
       },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
+      sendActionOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        timeout: 15000,
+        form: {
+          action: ''
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
       },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+      killOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        timeout: 15000,
+        body: 'im_sure=on&action=exit java process',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Connection': 'keep-alive'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      launchJobOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        timeout: 15000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'launch'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      optionEngine: {
+        method: 'GET',
+        url: 'https://localhost:8443/engine',
+        timeout: 15000,
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      buildOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        timeout: 15000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'build'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      reScanJobs: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        timeout: 5000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'rescan'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      }
+
     },
-    sendActionOptions: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine/job/',
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      timeout: 15000,
-      form: {
-        action: ''
-      },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+    wayback: {
+      port: '8080',
+      uri_tomcat: 'http://localhost:8080/',
+      uri_wayback: 'http://localhost:8080/wayback/',
+      allCDX: `${path.sep}*.cdx`,
+      notIndexCDX: `${path.sep}index.cdx`
     },
-    killOptions: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine',
-      timeout: 15000,
-      body: 'im_sure=on&action=exit java process',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
-        Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.5',
-        'Connection': 'keep-alive'
-      },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+    commands: [
+      { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
+      { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
+      { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
+      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
+      { name: 'memgator' }
+    ],
+    pywb: {
+      home: 'bundledApps/pywb',
+      port: '8080',
+      url: 'http://localhost:{port}/',
+      wbMan: 'bundledApps/pywb/wb-manager',
+      newCollection: 'bundledApps/pywb/wb-manager init {col}',
+      addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
+      addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
+      reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
+      convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
+      autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
+      autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
+      sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
+      sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
+      cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
+      cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
+      wayback: 'bundledApps/pywb/wayback',
+      waybackPort: 'bundledApps/pywb/wayback -p {port}',
+      waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
+      waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
+      templates: 'bundledApps/pywb/templates',
+      statics: 'bundledApps/pywb/static',
+      checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
     },
-    launchJobOptions: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine/job/',
-      timeout: 15000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      form: {
-        action: 'launch'
-      },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+    collections: {
+      defaultCol: 'archives2/collections/Wail',
+      dir: 'archives2/collections',
+      aCollPath: 'archives2/collections/{col}',
+      colTemplate: 'archives2/collections/{col}/static',
+      colStatic: 'archives2/collections/{col}/templates',
+      colWarcs: 'archives2/collections/{col}/archive',
+      colIndexs: 'archives2/collections/{col}/indexes',
+      templateDir: 'archives2/templates',
+      staticsDir: 'archives2/static'
     },
-    optionEngine: {
-      method: 'GET',
-      url: 'https://localhost:8443/engine',
-      timeout: 15000,
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+    code: {
+      crawlerBean: 'crawler-beans.cxml',
+      wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'
     },
-    buildOptions: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine/job/',
-      timeout: 15000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      form: {
-        action: 'build'
-      },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
-    },
-    reScanJobs: {
-      method: 'POST',
-      url: 'https://localhost:8443/engine',
-      timeout: 5000,
-      headers: { 'content-type': 'application/x-www-form-urlencoded' },
-      form: {
-        action: 'rescan'
-      },
-      auth: {
-        username: 'lorem',
-        password: 'ipsum',
-        sendImmediately: false
-      },
-      strictSSL: false,
-      rejectUnauthorized: false,
-      resolveWithFullResponse: true
+    wailCore: {
+      dport: '3030',
+      port: '3030',
+      dhost: 'localhost',
+      host: 'localhost',
+      url: 'http://{host}:{port}',
+      db: 'dev_coreData/database',
+      timemaps: 'dev_coreData/timemaps'
     }
 
-  },
-  wayback: {
-    port: '8080',
-    uri_tomcat: 'http://localhost:8080/',
-    uri_wayback: 'http://localhost:8080/wayback/',
-    allCDX: `${path.sep}*.cdx`,
-    notIndexCDX: `${path.sep}index.cdx`
-  },
-  commands: [
-    { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
-    { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
-    { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-    { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
-    { name: 'memgator' }
-  ],
-  pywb: {
-    home: 'bundledApps/pywb',
-    port: '8080',
-    url: 'http://localhost:{port}/',
-    wbMan: 'bundledApps/pywb/wb-manager',
-    newCollection: 'bundledApps/pywb/wb-manager init {col}',
-    addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
-    addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
-    reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
-    convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
-    autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
-    autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
-    sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
-    sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
-    cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
-    cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
-    wayback: 'bundledApps/pywb/wayback',
-    waybackPort: 'bundledApps/pywb/wayback -p {port}',
-    waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
-    waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
-    templates: 'bundledApps/pywb/templates',
-    statics: 'bundledApps/pywb/static',
-    checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
-  },
-  collections: {
-    defaultCol: 'archives/collections/Wail',
-    dir: 'archives/collections',
-    aCollPath: 'archives/collections/{col}',
-    colTemplate: 'archives/collections/{col}/static',
-    colStatic: 'archives/collections/{col}/templates',
-    colWarcs: 'archives/collections/{col}/archive',
-    colIndexs: 'archives/collections/{col}/indexes',
-    templateDir: 'archives/templates',
-    staticsDir: 'archives/static'
-  },
-  code: {
-    crawlerBean: 'crawler-beans.cxml',
-    wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'
-  },
-  wailCore: {
-    dport: '3030',
-    port: '3030',
-    dhost: 'localhost',
-    host: 'localhost',
-    url: 'http://{host}:{port}',
-    db: 'coreData/database',
-    timemaps: 'coreData/timemaps'
+  }
+
+} else {
+  dbgOSX = false
+  mngd  = {
+    paths: [
+      { name: 'bundledApps', path: 'bundledApps' },
+      { name: 'logs', path: 'waillogs/wail.log' },
+      { name: 'archives', path: 'config/archives.json' },
+      { name: 'cdx', path: 'archiveIndexes' },
+      { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
+      { name: 'crawlerBean', path: 'crawler-beans.cxml' },
+      { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
+      { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
+      { name: 'heritrix', path: 'bundledApps/heritrix' },
+      { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
+      { name: 'index', path: '/config/path-index.txt' },
+      { name: 'jdk', path: 'bundledApps/openjdk' },
+      { name: 'jobConf', path: 'crawler-beans.cxml' },
+      { name: 'jre', path: 'bundledApps/openjdk' },
+      { name: 'memgator', path: 'bundledApps/memgator' },
+      { name: 'tomcat', path: 'bundledApps/tomcat' },
+      { name: 'warcs', path: '/archives' }
+    ],
+    heritrix: {
+      uri_heritrix: 'https://127.0.0.1:8443',
+      uri_engine: 'https://localhost:8443/engine/',
+      port: '8843',
+      username: 'lorem',
+      password: 'ipsum',
+      login: '-a lorem:ipsum',
+      path: '',
+      jobConf: 'crawler-beans.cxml',
+      jobConfWin: 'crawler-beans-win.cxml',
+      web_ui: 'https://lorem:ipsum@localhost:8443',
+      addJobDirectoryOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        timeout: 15000,
+        form: {
+          action: 'add',
+          addPath: ''
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      sendActionOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        timeout: 15000,
+        form: {
+          action: ''
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      killOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        timeout: 15000,
+        body: 'im_sure=on&action=exit java process',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0',
+          Accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+          'Accept-Language': 'en-US,en;q=0.5',
+          'Connection': 'keep-alive'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      launchJobOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        timeout: 15000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'launch'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      optionEngine: {
+        method: 'GET',
+        url: 'https://localhost:8443/engine',
+        timeout: 15000,
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      buildOptions: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine/job/',
+        timeout: 15000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'build'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      },
+      reScanJobs: {
+        method: 'POST',
+        url: 'https://localhost:8443/engine',
+        timeout: 5000,
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        form: {
+          action: 'rescan'
+        },
+        auth: {
+          username: 'lorem',
+          password: 'ipsum',
+          sendImmediately: false
+        },
+        strictSSL: false,
+        rejectUnauthorized: false,
+        resolveWithFullResponse: true
+      }
+
+    },
+    wayback: {
+      port: '8080',
+      uri_tomcat: 'http://localhost:8080/',
+      uri_wayback: 'http://localhost:8080/wayback/',
+      allCDX: `${path.sep}*.cdx`,
+      notIndexCDX: `${path.sep}index.cdx`
+    },
+    commands: [
+      { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
+      { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
+      { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
+      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
+      { name: 'memgator' }
+    ],
+    pywb: {
+      home: 'bundledApps/pywb',
+      port: '8080',
+      url: 'http://localhost:{port}/',
+      wbMan: 'bundledApps/pywb/wb-manager',
+      newCollection: 'bundledApps/pywb/wb-manager init {col}',
+      addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
+      addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
+      reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
+      convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
+      autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
+      autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
+      sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
+      sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
+      cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
+      cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
+      wayback: 'bundledApps/pywb/wayback',
+      waybackPort: 'bundledApps/pywb/wayback -p {port}',
+      waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
+      waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
+      templates: 'bundledApps/pywb/templates',
+      statics: 'bundledApps/pywb/static',
+      checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
+    },
+    collections: {
+      defaultCol: 'archives/collections/default',
+      dir: 'archives/collections',
+      aCollPath: 'archives/collections/{col}',
+      colTemplate: 'archives/collections/{col}/static',
+      colStatic: 'archives/collections/{col}/templates',
+      colWarcs: 'archives/collections/{col}/archive',
+      colIndexs: 'archives/collections/{col}/indexes',
+      templateDir: 'archives/templates',
+      staticsDir: 'archives/static'
+    },
+    code: {
+      crawlerBean: 'crawler-beans.cxml',
+      wayBackConf: 'bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml'
+    },
+    wailCore: {
+      dport: '3030',
+      port: '3030',
+      dhost: 'localhost',
+      host: 'localhost',
+      url: 'http://{host}:{port}',
+      db: 'coreData/database',
+      timemaps: 'coreData/timemaps'
+    }
+
   }
 
 }
 
-const debugOSX = false
+const managed = mngd
+const debugOSX = dbgOSX
 
 export default class SettingsManager {
   constructor (base, settingsDir, version) {
@@ -261,7 +492,6 @@ export default class SettingsManager {
   configure () {
     let { pathMan } = global
     this._settingsDir = pathMan.join(this._settingsDir,'wail-settings')
-    console.log('settingsMan ',this._settingsDir)
     return new Promise((resolve,reject) => {
       try {
         this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
@@ -271,8 +501,7 @@ export default class SettingsManager {
         fs.removeSync(this._settingsDir)
         this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
       }
-      console.log(this._settings.get('version'), this._version)
-      console.log(this._settings)
+
       if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
         console.log('We are not configured')
         let didFirstLoad = this._settings.get('didFirstLoad')

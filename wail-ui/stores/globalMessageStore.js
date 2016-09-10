@@ -1,14 +1,20 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
+import {ipcRenderer as ipc, remote} from 'electron'
 import wailConstants from '../constants/wail-constants'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 
 const EventTypes = wailConstants.EventTypes
 
+
 class GlobalMessageStore_ extends EventEmitter {
   constructor () {
     super()
     this.messageQ = []
+    ipc.on('display-message',(e,m) => {
+      this.messageQ.push(m)
+      this.emit('new-message')
+    })
   }
 
   @autobind

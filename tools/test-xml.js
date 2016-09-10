@@ -1,70 +1,29 @@
 import 'babel-polyfill'
-// import fs from 'fs-extra'
-// import Promise from 'bluebird'
-// import S from 'string'
-// import {encode, compare} from 'bytewise'
-// import _ from 'lodash'
-// import feathers from 'feathers/client'
-// import socketio from 'feathers-socketio/client'
-// import hooks from 'feathers-hooks'
-// import io from 'socket.io-client'
-// import yaml from 'yamljs'
-// import through2 from 'through2'
-// import streamSort from 'sort-stream2'
-// import path from 'path'
-// import util from 'util'
-// import mongodb_prebuilt from 'mongodb-prebuilt'
-// import shelljs from 'shelljs'
-// import cp from 'child_process'
-// import named from 'named-regexp'
-// import autobind from 'autobind-decorator'
-// import Esettings from 'electron-settings'
-// import chokidar from 'chokidar'
-// import isRunning from 'is-running'
-// import rp from 'request-promise'
-// import cheerio from 'cheerio'
-// import moment from 'moment'
+import fs from 'fs-extra'
+import Promise from 'bluebird'
+import S from 'string'
+import {encode, compare} from 'bytewise'
+import through2 from 'through2'
+import streamSort from 'sort-stream2'
+import path from 'path'
+import util from 'util'
+import shelljs from 'shelljs'
+import cp from 'child_process'
+import named from 'named-regexp'
+import autobind from 'autobind-decorator'
+import Esettings from 'electron-settings'
+import chokidar from 'chokidar'
+import isRunning from 'is-running'
+import rp from 'request-promise'
+import cheerio from 'cheerio'
+import moment from 'moment'
+import psTree from 'ps-tree'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
-// // import split2 from 'split2'
-// //
-// // function startHeritrix () {
-// //   let configDirPath = path.join('.', 'waillogs/wail-settings')
-// //   let settings = new Esettings({ configDirPath })
-// //
-// //   var hStart
-// //   if (process.platform === 'darwin') {
-// //     hStart = settings.get('heritrixStartDarwin')
-// //   } else {
-// //     hStart = settings.get('heritrixStart')
-// //   }
-// //   cp.exec(hStart, (err, stdout, stderr) => {
-// //     if (err) {
-// //       console.error('heritrix could not be started due to an error', err, stderr, stdout)
-// //     } else {
-// //       console.log(stdout, stderr)
-// //     }
-// //   })
-// // }
-// //
-// let statMonitor = new CrawlStatsManager()
-// statMonitor.startMonitoring('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473194483199','testing')
-// statMonitor.on('crawljob-status-update',it => console.log(it))
 
-let it = {
-  a: 'a',
-  b: 'b',
-  c: 'c'
-}
 
-let {
-  a
-} = it
 
-a = 'k'
 
-console.log(it)
 
-// startHeritrix()
 
 // const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
 // const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
@@ -78,104 +37,43 @@ console.log(it)
 //   followSymlinks: true,
 // })
 
-///home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log
-///home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log
+psTree(10223,(err,kids)=>{
+  if(err){
+    console.error(err)
+  } else {
+    console.log(kids)
+  }
+})
 
-// let launchId = /^[0-9]+$/
+// S.TMPL_CLOSE = '}'
+// S.TMPL_OPEN= '{'
 //
-// let jpath = '/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing'
-//
-// fs.readdir(jpath, (err, files) => {
-//   let latestLaunch = Math.max(...files.filter(item => launchId.test(item)))
-//   let logPath = path.join(jpath, `${latestLaunch}`, 'logs', 'progress-statistics.log')
-//   let jobEnding = false
-//   let jobEnded = false
-//   let latestStats = null
-//   let rstream = fs.createReadStream(logPath)
-//     .pipe(split2())
-//     .on('data',line => {
-//       if(!jobEnding && !jobEnded) {
-//         if (jobEndingRe.test(line)) {
-//           jobEnding = true
-//         } else {
-//           if (jobStatusRe.test(line)) {
-//             latestStats = line
-//           }
-//         }
-//       } else {
-//         if(!jobEnded) {
-//           if (jobEndRe.test(line)) {
-//             jobEnded = true
-//           } else {
-//             if (jobStatusRe.test(line)) {
-//               latestStats = line
-//             }
-//           }
-//         } else {
-//           if (jobStatusRe.test(line)) {
-//             latestStats = line
-//           }
-//         }
-//       }
-//     })
-//     .on('close',() => {
-//       console.log('sClose')
-//       let fields  = S(latestStats).collapseWhitespace().s.split(' ')
-//       let so = {
-//         ended: jobEnding ? ( jobEnded ? jobEnded : true ) : false,
-//         timestamp: moment(fields[ 0 ]),
-//         discovered: fields[ 1 ],
-//         queued: fields[ 2 ],
-//         downloaded: fields[ 3 ]
-//       }
-//       console.log(`Ending? ${jobEnding}, Ended? ${jobEnded}`,so)
-//       rstream.destroy()
-//     })
-//     .on('end',() => {
-//       console.log('send')
-//       let fields  = S(latestStats).collapseWhitespace().s.split(' ')
-//       let so = {
-//         ended: jobEnding ? ( jobEnded ? jobEnded : true ) : false,
-//         timestamp: moment(fields[ 0 ]),
-//         discovered: fields[ 1 ],
-//         queued: fields[ 2 ],
-//         downloaded: fields[ 3 ]
-//       }
-//       console.log(`Ending? ${jobEnding}, Ended? ${jobEnded}`,so)
-//       rstream.destroy()
-//     })
-// })
-
-// let pl = /progress-statistics/g
-//
-// logWatcher.on('change', (path) => {
-//   if(pl.test(path)) {
-//     console.log(`File ${path} has been changed`)
-//   } else {
-//     console.log(`Not stats changed ${path}`)
-//   }
-// })
-//
-// process.on('SIGINT',() => {
-//   logWatcher.close()
-// })
-//
-// process.on('SIGTERM',() => {
-//   logWatcher.close()
-// })
-
-// console.log(isRunning(3534))
-// console.log(process.kill(3534,'SIGTERM'))
-
-// console.log(isRunning(17854),isRunning(17860))
-
-// // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
-// // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
-// let pather = new Pather(path.resolve('.'))
-// console.log(util.inspect(pather,{depth: null,colors: true}))
+// // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
+// // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
+// // let pather = new Pather(path.resolve('.'))
+// // console.log(util.inspect(pather,{depth: null,colors: true}))
 // let configDirPath = path.join('.','waillogs/wail-settings')
 // let settings = new Esettings({ configDirPath })
+// let tmplVal = { warcs: '/Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive/*.warc'}
+// let tmplVal2 = {col: 'Wail'}
+// let command = S(settings.get('pywb.sortedCombinedCdxj')).template(tmplVal).s
 //
+// let opts = {
+//   cwd: settings.get('warcs')
+// }
+//
+// cp.exec(command,opts,(error,stdout,stderr) => {
+//   if (error) {
+//     console.error(`exec error: ${error}`)
+//     console.log(`stdout: ${stdout}`)
+//     console.log(`stderr: ${stderr}`)
+//     return
+//   }
+//
+//   console.log(`stdout: ${stdout}`)
+//   console.log(`stderr: ${stderr}`)
+// })
+
 // var hStart
 // if (process.platform === 'darwin') {
 //   hStart = settings.get('heritrixStartDarwin')

@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
 import Snackbar from 'material-ui/Snackbar'
 import { shell } from 'electron'
@@ -9,8 +9,12 @@ import Notification from 'react-notification-system'
 // https://github.com/igorprado/react-notification-system
 
 export default class Notifications extends Component {
+  static contextTypes = {
+    logger: PropTypes.object.isRequired,
+  }
   constructor (props, context) {
     super(props, context)
+    console.log(context)
     this.state = {
       message: 'Status Number 1',
       open: false
@@ -28,7 +32,9 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
-    this.notifier.addNotification(GMessageStore.getMessage())
+    let message = GMessageStore.getMessage()
+    this.notifier.addNotification(message)
+    this.context.logger.info(message.message)
     // if (!this.state.open) {
     //   this.setState({ message: , open: true })
     // }
