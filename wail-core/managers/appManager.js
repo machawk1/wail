@@ -4,10 +4,13 @@ import Promise from 'bluebird'
 import SettingsManager from './settingsManager'
 import ServiceManager from './serviceManager'
 import S from 'string'
+
+
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const isDev = process.env.NODE_ENV === 'development'
+const loadingSequence = [ 'lsDone' ]
 
 export default class AppManager {
   constructor () {
@@ -31,6 +34,14 @@ export default class AppManager {
     this.winConfigs = null
     this.winConf = null
     this.logPath = null
+    this.loadingState = {
+      archiveManWindow: null,
+      crawlManWindow: null,
+      haveBothStates: false,
+      wailHasArchives: false,
+      wailHasCrawls: false,
+      wailHasBothStates: false
+    }
   }
 
   init (base, userData, version, loadFrom, debug = false, notDebugUI = false, openBackGroundWindows = false) {
@@ -165,6 +176,41 @@ export default class AppManager {
           return resolve()
         })
     })
+  }
+
+  addLoadingState (who, state) {
+    this.loadingState[ who ] = state
+    let { archiveManWindow, crawlManWindow } = this.loadingState
+    if (archiveManWindow && crawlManWindow) {
+      this.loadingState.haveBothStates = true
+    }
+    return this.loadingState.haveBothStates
+  }
+
+  wailHasLoadState (has) {
+    this.loadingState[ has ] = true
+    let { wailHasArchives, wailHasCrawls } = this.loadingState
+    if (wailHasArchives && wailHasCrawls) {
+      this.loadingState.wailHasBothStates = true
+    }
+    return this.loadingState.wailHasBothStates
+  }
+
+  bothLoadingStatesGotten () {
+    return this.loadingState.haveBothStates
+  }
+
+  doesWailHaveBothLoadStates () {
+    return this.loadingState.wailHasBothStates
+  }
+
+  resetLoadinState () {
+    this.loadingState.archiveManWindow = this.loadingState.crawlManWindow = null
+    this.loadingState.haveBothStates = this.loadingState.wailHasArchives = this.loadingState.wailHasCrawls = this.loadingState.wailHasBothStates = false
+  }
+
+  uiLoadedFast () {
+    this.loadingState.wailHasArchives = this.loadingState.wailHasCrawls = this.loadingState.wailHasBothStates = true
   }
 
 }

@@ -1,14 +1,13 @@
 import 'babel-polyfill'
-import {remote, ipcRenderer as ipc} from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 import constants from '../../../wail-core/constants'
 
 const archiveMan = window.am = new ArchiveManager()
 
-
 ipc.on('made-heritrix-jobconf', (event, confDetails) => {
   console.log('archive man makeHeritrixJobConf', confDetails)
-  if(!confDetails.wasError) {
+  if (!confDetails.wasError) {
     let {
       forCol,
       conf
@@ -70,34 +69,40 @@ ipc.on('add-metadata-to-col', (event, addMe) => {
 })
 
 ipc.on('add-warcs-to-col', (event, addMe) => {
+  console.log('archive man got add warcs to col', addMe)
   let {
     forCol,
     warcs
   } = addMe
   archiveMan.addWarcsToCol(forCol, warcs)
     .then(update => {
-      ipc.send('add-warcs-to-col', update)
+      ipc.send('added-warcs-to-col', {
+        wasError: false,
+        count: update,
+        forCol
+      })
     })
     .catch(error => {
-      ipc.send('add-warcs-to-col', {
+      ipc.send('added-warcs-to-col', {
         wasError: true,
+        forCol,
         error
       })
     })
 })
 
-ipc.on('create-collection',(event,nc) => {
+ipc.on('create-collection', (event, nc) => {
   let {
     mdata
   } = nc
   archiveMan.createCollection(nc)
     .then((newCol) => {
-      console.log('archiveman really did create the new collection',newCol)
-      ipc.send('created-collection',newCol)
-      return archiveMan.addInitialMData(nc.col,mdata)
+      console.log('archiveman really did create the new collection', newCol)
+      ipc.send('created-collection', newCol)
+      return archiveMan.addInitialMData(nc.col, mdata)
         .then(() => {
           console.log('mdata was successfully added')
-          ipc.send('display-message',{
+          ipc.send('display-message', {
             title: 'Info',
             level: 'info',
             message: `Added metadata for ${nc.col}`,
@@ -105,23 +110,35 @@ ipc.on('create-collection',(event,nc) => {
           })
         })
         .catch(error => {
-          ipc.send('display-message',{
+          ipc.send('display-message', {
             title: 'Error',
             level: 'error',
             autoDismiss: 0,
             message: `Pywb was unable to add metadata for ${nc.col} because ${error}`,
-            uid:    `Pywb was unable to add metadata for ${nc.col} because ${error}`,
+            uid: `Pywb was unable to add metadata for ${nc.col} because ${error}`
           })
         })
     })
     .catch((error) => {
       console.error(error)
-      ipc.send('display-message',{
+      ipc.send('display-message', {
         title: 'Error',
         level: 'error',
         autoDismiss: 0,
         message: `Creating new collection ${nc.col} for ${error}`,
-        uid:    `Creating new collection ${nc.col} for ${error}`,
+        uid: `Creating new collection ${nc.col} for ${error}`
       })
     })
 })
+
+archiveMan.initialLoad()
+  .then((loaded) => {
+    console.log('archive man inital load')
+    ipc.send('archiveMan-initial-load', {
+      cols: loaded,
+      wasError: false
+    })
+  })
+  .catch(error => {
+    ipc.send('archiveMan-initial-load-failed', error)
+  })

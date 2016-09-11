@@ -11,7 +11,6 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import NewCollection from './newCollection'
 
-
 export default class CollectionToolBar extends Component {
 
   render () {
@@ -20,11 +19,9 @@ export default class CollectionToolBar extends Component {
         <Col xs>
           <Toolbar>
             <ToolbarGroup firstChild>
-              <ToolbarTitle text="Create New Collection"/>
+              <ToolbarTitle text='Create New Collection' />
             </ToolbarGroup>
-            <ToolbarGroup lastChild>
-
-            </ToolbarGroup>
+            <ToolbarGroup lastChild />
           </Toolbar>
         </Col>
       </Row>

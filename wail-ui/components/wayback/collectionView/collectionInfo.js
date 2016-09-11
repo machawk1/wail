@@ -7,7 +7,6 @@ import { Row, Col } from 'react-flexbox-grid'
 import CollectionOverview from './collectionOverview'
 import CollectionMetadata from './collectionMetadata'
 
-
 @Dimensions()
 export default class CollectionInfo extends Component {
   static propTypes = {
@@ -31,23 +30,7 @@ export default class CollectionInfo extends Component {
     return (
       <Row>
         <Col xs>
-          <Tabs
-            onChange={this.handleChange}
-            value={this.state.index}
-          >
-            <Tab label='Overview' value={0}/>
-
-            <Tab label='Query Collection' value={1}/>
-          </Tabs>
-          <SwipeableViews
-            index={this.state.index}
-            onChangeIndex={this.handleChange}
-          >
-            <CollectionOverview collection={collection}/>
-            <div >
-              Query
-            </div>
-          </SwipeableViews>
+          <CollectionOverview collection={collection} />
         </Col>
       </Row>
     )

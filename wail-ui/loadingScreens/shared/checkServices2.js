@@ -32,7 +32,7 @@ export default class CheckServices2 extends Component {
   }
 
   componentWillMount () {
-    LoadingStore.on('progress',this.updateProgress)
+    LoadingStore.on('progress', this.updateProgress)
     LoadingStore.on('service-check-done', () => {
       console.log('service checking done!')
       this.done()

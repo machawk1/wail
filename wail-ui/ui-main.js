@@ -1,15 +1,27 @@
 import 'babel-polyfill'
 import {
   app, BrowserWindow,
-  Menu, shell, ipcMain
+  Menu, shell, ipcMain,
+  dialog
 } from 'electron'
 import path from 'path'
 import Logger from './logger/logger'
+import bunyan from 'bunyan'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
 
-app.commandLine.appendSwitch('js-flags', '--expose_gc --harmony')
+process.on('uncaughtException', (err) => {
+  console.log(`uncaughtException: ${err}`, err, err.stack)
+  let { logger } = global
+  if (logger) {
+    logger.fatal(err)
+  }
+  // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
+  app.quit()
+})
+
+app.commandLine.appendSwitch('js-flags', '--harmony')
 // do not lower the priority of our invisible background windows
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
@@ -17,7 +29,7 @@ app.commandLine.appendSwitch('allow-http-screen-capture')
 
 const winMan = new WindowManager()
 const control = new AppManager()
-const debug = true, notDebugUI = true, openBackGroundWindows = true
+const debug = false, notDebugUI = true, openBackGroundWindows = false
 
 export function showSettingsWindow (parent) {
   console.log('showing settings window')
@@ -37,10 +49,14 @@ winMan.on('window-crashed', who => {
   console.log('we have a crashed window ', who)
 })
 
-winMan.on('killed-services',() => {
+winMan.on('killed-services', () => {
   winMan.closeAllWindows()
 })
 
+winMan.on('send-failed', (report) => {
+  console.log('send failed')
+  console.log(report)
+})
 
 app.on('ready', () => {
   console.log('app ready')
@@ -73,7 +89,15 @@ app.on('ready', () => {
 
       let logPath = path.join(control.logPath, 'wail.log')
       //  bdb
-      global.logger = new Logger({ path: logPath })
+      global.logger = bunyan.createLogger({
+        name: 'wail-ui-main',
+        streams: [
+          {
+            level: 'info',
+            path: logPath // log ERROR and above to a file
+          }
+        ]
+      })
 
       global.wailLogp = logPath
       global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
@@ -107,7 +131,9 @@ app.on('activate', () => {
 
 app.on('before-quit', () => {
   // console.log('before-quit')
-
-  global.logger.cleanUp()
+  let {serviceMan} = global
+  if (serviceMan) {
+    serviceMan.killService('all')
+  }
 })
 

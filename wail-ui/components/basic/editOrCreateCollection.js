@@ -16,8 +16,6 @@ const from = 'editOrCreateCollection'
 
 export default class EditOrCreateCollection extends Component {
 
-
-
   constructor (...args) {
     super(...args)
     console.log(CollectionStore)
@@ -43,7 +41,7 @@ export default class EditOrCreateCollection extends Component {
   }
 
   gotAllNames (cols) {
-    console.log('got allNames archive or checkCol',cols)
+    console.log('got allNames archive or checkCol', cols)
     this.setState({
       colNames: cols.map(c => c.colName)
     })
@@ -66,9 +64,9 @@ export default class EditOrCreateCollection extends Component {
       <Card style={{width: '100%'}}
       >
         <CardHeader
-          title="Collections"
-          subtitle="Edit Or Create A Collection"
-          showExpandableButton={true}
+          title='Collections'
+          subtitle='Edit Or Create A Collection'
+          showExpandableButton
         />
         <Grid fluid>
           <Row>

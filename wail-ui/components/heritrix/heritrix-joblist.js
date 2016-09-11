@@ -17,7 +17,6 @@ const {
   actionS
 } = styles.heritrixTable
 
-
 export default class HeritrixJobList extends Component {
 
   constructor (props, context) {
@@ -78,7 +77,7 @@ export default class HeritrixJobList extends Component {
     }
     return (
       <Table
-      height='290px'
+        height='290px'
       >
         <TableHeader
           displaySelectAll={false}

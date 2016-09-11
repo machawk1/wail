@@ -10,6 +10,7 @@ import AutoComplete from 'material-ui/AutoComplete'
 import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
 import Dimensions from 'react-dimensions'
 import NewCollection from '../collectionView/newCollection'
+import _ from 'lodash'
 
 @Dimensions()
 export default class CollectionList extends Component {
@@ -51,20 +52,19 @@ export default class CollectionList extends Component {
       console.log(cols)
       let len = cols.length
       for (let i = 0; i < len; i++) {
-        rCols.push(<MenuItem value={i} key={i} primaryText={cols[ i ]}/>)
+        rCols.push(<MenuItem value={i} key={i} primaryText={cols[ i ]} />)
       }
     } else {
-      rCols.push(<MenuItem value={0} key={0} primaryText={cols}/>)
+      rCols.push(<MenuItem value={0} key={0} primaryText={cols} />)
     }
     return rCols
-
   }
 
   render () {
     return (
 
       <Row
-        between="xs"
+        between='xs'
         style={{
           backgroundColor: blueGrey50
         }}

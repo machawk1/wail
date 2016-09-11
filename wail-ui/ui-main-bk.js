@@ -159,8 +159,6 @@ function setUpIPC () {
       // console.log('got start-index-indexing')
       windows.indexWindow.webContents.send('start-index-indexing', payload)
     })
-
-
   }
   ipcMain.on('service-status-update', (event, payload) => {
     // console.log('got test-status-update')
@@ -168,7 +166,7 @@ function setUpIPC () {
   })
 
   ipcMain.on('crawljob-status-update', (event, payload) => {
-    console.log('got crawljob-status-update',payload)
+    console.log('got crawljob-status-update', payload)
     windows.mainWindow.webContents.send('crawljob-status-update', payload)
   })
 
@@ -287,7 +285,6 @@ function setUpIPC () {
    got-all-collections
    crawl-to-collection
    */
-
 }
 
 function setUp () {
@@ -425,7 +422,6 @@ function createBackGroundWindows (notDebugUI) {
     // windows.jobWindow.loadURL(windows.jobWindowURL)
     // windows.jobWindow.webContents.toggleDevTools()
 
-
   }
 
   windows.crawlManWindow = new BrowserWindow({ show: true })
@@ -437,12 +433,9 @@ function createBackGroundWindows (notDebugUI) {
   windows.reqDaemonWindow = new BrowserWindow({ show: false })
   windows.reqDaemonWindow.loadURL(windows.reqDaemonWindowURL)
 
-
-
   // windows.managersWindow = new BrowserWindow({ show: true })
   // windows.managersWindow.loadURL(windows.managersUrl)
 }
-
 
 function stopMonitoring () {
   // if (windows.accessibilityWindow != null) {
@@ -566,7 +559,6 @@ function createLoadingWindow () {
     console.log('loadingWindow closed')
     windows.loadingWindow = null
   })
-
 }
 
 function createWindow () {

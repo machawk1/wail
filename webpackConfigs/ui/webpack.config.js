@@ -15,8 +15,8 @@ export default {
     // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
     newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
     notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
-    // requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
-    // // settingsW: './wail-ui/childWindows/settings/settingsW',
+    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    settingsW: './wail-ui/childWindows/settings/settingsW',
     wail: ['babel-polyfill','./wail-ui/wail']
   },
   module: {
@@ -66,9 +66,11 @@ export default {
     ]
 
   },
-  // resolve: {
-  //   extensions: [ '', '.webpack.js', '.web.js', '.js', '.jsx', '.json' ],
-  // },
+  resolve: {
+    alias: {
+      'dtrace-provider': './wail-ui/bunyanshim.js'
+    }
+  },
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -84,7 +86,5 @@ export default {
   },
   // bail: true,
   target: 'electron-renderer',
-  alias: {
-    'dtrace-provider': './wail-ui/bunyanshim.js'
-  }
+
 }

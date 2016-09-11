@@ -6,11 +6,10 @@ import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
 import CollectionHeader from './collectionHeader'
-import  ViewWatcher  from '../../../wail-core/util/viewWatcher'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import '../../css/wail.css'
-
 
 @Dimensions()
 export default class Explorer extends Component {
@@ -20,7 +19,7 @@ export default class Explorer extends Component {
     let collections = {}
     let entries = ColStore.collections
     console.log(entries)
-    for (let [cname,collection] of ColStore.collections) {
+    for (let [cname, collection] of ColStore.collections) {
       colNames.push(cname)
       collections[ cname ] = collection
     }

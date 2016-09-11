@@ -7,26 +7,7 @@ import Header from './header'
 import Footer from './footer'
 import Dimensions from 'react-dimensions'
 import styles from '../styles/styles'
-import bunyan from 'bunyan'
 import { remote } from 'electron'
-
-const ringbuffer = new bunyan.RingBuffer({ limit: 100 })
-
-const logger = bunyan.createLogger({
-  name: 'wail-ui',
-  streams: [
-    {
-      level: 'debug',
-      path: remote.getGlobal('wailUILogp'),
-      src: true
-    },
-    {
-      level: 'debug',
-      type: 'raw',    // use 'raw' to get raw log record objects
-      stream: ringbuffer
-    }
-  ]
-})
 
 const baseTheme = getMuiTheme({
   tabs: {
@@ -44,8 +25,7 @@ export default class Layout extends Component {
     children: PropTypes.any.isRequired
   }
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-    logger: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (props, context) {
@@ -55,14 +35,13 @@ export default class Layout extends Component {
 
   getChildContext () {
     return {
-      muiTheme: this.state.muiTheme,
-      logger: logger
+      muiTheme: this.state.muiTheme
     }
   }
 
   render () {
     return (
-      <Grid fluid className="layOutGrid">
+      <Grid fluid className='layOutGrid'>
         <Row>
           <Col xs>
             <Header />

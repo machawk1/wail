@@ -20,7 +20,6 @@ const styles = {
 
 const settings = remote.getGlobal('settings')
 
-
 @Dimensions()
 export default class HeritrixTab extends Component {
 
@@ -37,7 +36,7 @@ export default class HeritrixTab extends Component {
 
   render () {
     return (
-      <Grid fluid className="basicTabLayout">
+      <Grid fluid className='basicTabLayout'>
         <Row>
           <Col xs>
             <HeritrixJobList />

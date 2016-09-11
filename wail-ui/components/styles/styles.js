@@ -69,7 +69,7 @@ export default {
     height: 140
   },
   root: {
-    paddingTop: spacing.desktopKeylineIncrement,
+    paddingTop: spacing.desktopKeylineIncrement
   },
   appBar: {
     position: 'fixed',

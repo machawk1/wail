@@ -18,7 +18,6 @@ class UrlStore_ extends EventEmitter {
     this.urls = new Map()
   }
 
-
   @autobind
   handleEvent (event) {
     console.log('Got an event url store', event)
@@ -36,7 +35,8 @@ class UrlStore_ extends EventEmitter {
         console.log('hasValidUrl')
         if (this.urlMemento.url.s !== event.url) {
           this.urlMemento.url.setValue(event.url)
-          console.log('adding url in urlStore', event.url)
+          console.log()
+          window.logger.debug(`adding url in urlStore ${event.url}`)
           // console.log(`url updated ${event.url}`)
           this.emit('url-updated')
         } else {
@@ -54,7 +54,7 @@ class UrlStore_ extends EventEmitter {
             title: 'Info',
             level: 'info',
             message: `The memento count for ${event.url} is: ${this.urlMemento.mementos}`,
-            uid:   `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
+            uid: `The memento count for ${event.url} is: ${this.urlMemento.mementos}`
           }
         })
         break
@@ -71,7 +71,7 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
-          urlActions.checkUriIsInArchive(this.urlMemento.url.s,event.forCol)
+          urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
         } else {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
@@ -79,7 +79,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: 'You must enter a URL first to check if it is in the archive',
-              uid:   'You must enter a URL first to check if it is in the archive'
+              uid: 'You must enter a URL first to check if it is in the archive'
             }
           })
         }
@@ -93,7 +93,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: `Viewing archived version of: ${this.urlMemento.url.s}`,
-              uid:   `Viewing archived version of: ${this.urlMemento.url.s}`
+              uid: `Viewing archived version of: ${this.urlMemento.url.s}`
             }
           })
           shell.openExternal(`${settings.get('pywb.url')}${event.forCol}/*/${this.urlMemento.url.s}`)
@@ -104,7 +104,7 @@ class UrlStore_ extends EventEmitter {
               title: 'Warning',
               level: 'warning',
               message: 'You must enter a url first and it be in the archive for you to view it',
-              uid:   'You must enter a url first and it be in the archive for you to view it'
+              uid: 'You must enter a url first and it be in the archive for you to view it'
             }
           })
         }

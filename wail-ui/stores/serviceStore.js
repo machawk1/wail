@@ -5,27 +5,15 @@ import { ipcRenderer, remote } from 'electron'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
-import { heritrixAccesible, launchHeritrix } from '../actions/heritrix-actions'
-import { waybackAccesible, startWayback } from '../actions/wayback-actions'
-
-const logger = remote.getGlobal('logger')
+import * as notify from '../actions/notification-actions'
+import S from 'string'
 
 const EventTypes = wailConstants.EventTypes
 
 const logString = 'service store %s'
+const {logger} = global
+
 // const serviceDialogeTemplate = '%s %s down'
-
-function both () {
-  // console.log('Both')
-  startWayback(() => {
-    // console.log('started wayback')
-    launchHeritrix()
-    // console.log('started heritrix')
-  })
-}
-
-const wayback = () => startWayback()
-const heritrix = () => launchHeritrix()
 
 class ServiceStore_ extends EventEmitter {
   constructor () {
@@ -35,68 +23,39 @@ class ServiceStore_ extends EventEmitter {
       wayback: true
     }
 
-    this.statusDialog = {
-      actions: [
-        both,
-        heritrix,
-        wayback
-      ],
-      actionIndex: -1,
-      message: ''
-    }
-    ipcRenderer.on('service-status-update', (event, update) => this.updateStatues(update))
+    ipcRenderer.on('service-started', (event, update) => this.updateStatues(update))
+    ipcRenderer.on('service-killed', (event, update) => this.updateStatues(update, true))
   }
 
   @autobind
-  updateStatues (update) {
+  updateStatues (update, isKill = false) {
     // console.log('service updated')
-    this.serviceStatus.heritrix = update.heritrix
-    this.serviceStatus.wayback = update.wayback
-    var logMessage = ''
-    if (!update.heritrix && !update.wayback) {
-      logMessage = 'heritrix and wayback are down asking to start'
-      this.statusDialog.message = 'Heritrix and Wayback are not running. Restart services?'
-      this.statusDialog.actionIndex = 0
-    } else {
-      var message = null
-      if (!update.heritrix && update.wayback) {
-        logMessage = 'heritrix was down but wayback was up asking to start'
-        this.statusDialog.message = 'Heritrix is not running. Restart service?'
-        this.statusDialog.actionIndex = 1
-        message = 'Wayback is now running'
-      } else if (update.heritrix && !update.wayback) {
-        logMessage = 'wayback was down but heritrix was up asking to start'
-        this.statusDialog.message = 'Wayback is not running. Restart service?'
-        this.statusDialog.actionIndex = 2
-        message = 'Hertrix is now running'
+    let service = S(update.who).capitalize().s
+    let alive = false
+    if (isKill) {
+      if (update.wasError) {
+        notify.notifyError(`Stopping Service ${service} encountered an error ${update.err}`, true)
+        alive = true
       } else {
-        logMessage = 'heritrix and wayback are up'
-        this.statusDialog.message = logMessage
-        this.statusDialog.actionIndex = -1
-        message = 'Hertrix and Wayback are now running'
+        notify.notifySuccess(`Stopped Service ${service}`)
+        logger.debug(`Stopped Service ${service}`)
       }
-      if (message != null) {
-        GMessageDispatcher.dispatch({
-          type: EventTypes.QUEUE_MESSAGE,
-          message
-        })
-        GMessageDispatcher.dispatch({
-          type: EventTypes.QUEUE_MESSAGE,
-          message: {
-            title: 'Info',
-            level: 'info',
-            message,
-            uid:  message
-          }
-        })
+    } else {
+      if (update.wasError) {
+        notify.notifyError(`Starting Service ${service} encountered an error ${update.err}`, true)
+      } else {
+        alive = true
+        notify.notifySuccess(`Started Service ${service}`)
+        logger.debug(`Started Service ${service}`)
       }
     }
 
-    if (this.statusDialog.actionIndex !== -1) {
-      this.emit('statusDialog')
+    if (update.who === 'wayback') {
+      this.serviceStatus.wayback = alive
+    } else if (update.who === 'heritrix') {
+      this.serviceStatus.heritrix = alive
     }
 
-    logger.info(util.format(logString, logMessage))
     this.emit('monitor-status-update')
   }
 
@@ -111,11 +70,6 @@ class ServiceStore_ extends EventEmitter {
   @autobind
   statusActionMessage () {
     return this.statusDialog
-  }
-
-  checkStatues () {
-    heritrixAccesible(true)
-    waybackAccesible(true)
   }
 
   serviceStatuses () {

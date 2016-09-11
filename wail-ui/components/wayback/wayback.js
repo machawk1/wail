@@ -18,11 +18,10 @@ import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
 import CollectionHeader from './collectionHeader'
-import  ViewWatcher  from '../../../wail-core/util/viewWatcher'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import CollectionToolBar from './collectionView/collectionToolBar'
-
 
 const EventTypes = wailConstants.EventTypes
 
@@ -38,7 +37,7 @@ export default class WayBackTab extends Component {
     let collections = {}
     let entries = ColStore.collections
     console.log(entries)
-    for (let [cname,collection] of ColStore.collections) {
+    for (let [cname, collection] of ColStore.collections) {
       colNames.push(cname)
       collections[ cname ] = collection
     }
@@ -52,11 +51,13 @@ export default class WayBackTab extends Component {
   componentWillMount () {
     ColStore.on('got-all-collections', ::this.getCollections)
     ColStore.on('added-new-collection', ::this.getCollections)
+    ColStore.on('updated-col', ::this.getUpdate)
   }
 
   componentWillUnmount () {
     ColStore.removeListener('got-all-collections', ::this.getCollections)
     ColStore.removeListener('added-new-collection', ::this.getCollections)
+    ColStore.removeListener('updated-col', ::this.getUpdate)
   }
 
   getCollections (cols) {
@@ -69,6 +70,12 @@ export default class WayBackTab extends Component {
     this.setState({ collections, colNames })
   }
 
+  getUpdate (updated) {
+    let { collections } = this.state
+    collections[updated.colName] = updated
+    this.setState({collections})
+  }
+
   @autobind
   forIndex () {
     let opts = {
@@ -79,10 +86,6 @@ export default class WayBackTab extends Component {
     // generatePathIndex(generateCDX)
     cp.exec(S(settings.get('pywb.reindexCol')).template({ col: 'Wail' }), opts, (error, stdout, stderr) => {
       if (error) {
-        GMessageDispatcher.dispatch({
-          type: EventTypes.QUEUE_MESSAGE,
-          message: `There was an error in force indexing! ${stderr}`
-        })
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: {
@@ -113,7 +116,7 @@ export default class WayBackTab extends Component {
     return (
       <Grid
         fluid
-        className="waybackGrid"
+        className='waybackGrid'
       >
         <CollectionList
           key='the-list'

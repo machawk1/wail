@@ -45,13 +45,13 @@ export default class BasicTab extends Component {
   render () {
     return (
       <Grid fluid
-       className="basicTabLayout"
+        className='basicTabLayout'
       >
         <Row>
           <Col xs>
             <CardHeader
-              title="Archive URL"
-              subtitle="Single Page Crawl"
+              title='Archive URL'
+              subtitle='Single Page Crawl'
             />
           </Col>
         </Row>

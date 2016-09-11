@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { Toolbar, ToolbarGroup,ToolbarTitle} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
 import { findDOMNode } from 'react-dom'
 import RaisedButton from 'material-ui/RaisedButton'
 import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
@@ -36,7 +36,7 @@ export default class ArchivalButtons extends Component {
     return (
       <Toolbar style={{ backgroundColor: 'transparent' }}>
         <ToolbarGroup firstChild>
-          <ToolbarTitle text="Collections:" />
+          <ToolbarTitle text='Collections:' />
           {this.props.archiveList}
         </ToolbarGroup>
         <ToolbarGroup >
@@ -54,7 +54,7 @@ export default class ArchivalButtons extends Component {
         </ToolbarGroup>
         <ToolbarGroup lastChild>
           <RaisedButton
-            icon={<ArchiveNowButton/>}
+            icon={<ArchiveNowButton />}
             label='Archive Via Heritrix!'
             labelPosition='before'
             onMouseDown={() => {

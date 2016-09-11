@@ -17,7 +17,6 @@ const logger = remote.getGlobal('logger')
 const serviceMan = window.servMan = remote.getGlobal('serviceMan')
 const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
 
-
 class _LoadingStore extends EventEmitter {
   constructor () {
     super()
@@ -43,32 +42,15 @@ class _LoadingStore extends EventEmitter {
     this.wasHeritrixStartError = false
     this.pMessage = this.progress.messages[ 0 ]
 
-    ipcRenderer.on('got-all-runs',(event,runs) => {
-      console.log('loading store got all runs')
-      this.internals.gotHeritrix = true
-      if(this.internals.gotCollections) {
-        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
-      } else {
-        this.internals.message = 'Collected The Run Information'
-        this.emit('internal-progress',this.internals.message)
-      }
-    })
-
-    ipcRenderer.on('got-all-collections',() => {
-      console.log('loading store got all collections')
-      this.internals.gotCollections = true
-      if(this.internals.gotHeritrix) {
-        ipcRenderer.send('loading-finished', { yes: 'Make it so number 1' })
-      } else {
-        this.internals.message = 'Collected Collection Information'
-        this.emit('internal-progress',this.internals.message)
-      }
+    ipcRenderer.on('initial-load', (e, m) => {
+      this.internals.message = m
+      this.emit('internal-progress', this.internals.message)
     })
   }
 
   @autobind
   handleEvent (event) {
-    console.log('loadingStore got event',event)
+    console.log('loadingStore got event', event)
     switch (event.type) {
       case wc.Loading.JAVA_CHECK_DONE:
         this.progress.javaCheckDone = true
@@ -81,7 +63,6 @@ class _LoadingStore extends EventEmitter {
         }
 
         this.pMessage = this.progress.messages[ 1 ]
-
 
         break
       case wc.Loading.DOWNLOAD_JAVA:

@@ -161,7 +161,7 @@ class RequestStore_ {
           message: {
             title: 'Error',
             level: 'error',
-            message:`Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`,
+            message: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`,
             uid: `Technical reasons did not allow us to complete ${handledRequest.from}.\nAre the services up?`
           }
         })

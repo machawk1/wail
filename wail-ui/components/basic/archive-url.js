@@ -30,14 +30,13 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default class ArchiveUrl extends Component {
-  static propTypes =  {
-    forCol: PropTypes.string,
+  static propTypes = {
+    forCol: PropTypes.string
   }
 
   static defaultProps = {
     forCol: defForCol
   }
-
 
   constructor (props, context) {
     super(props, context)

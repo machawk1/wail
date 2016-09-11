@@ -3,7 +3,7 @@ export {
   CrawlInfo,
   Pather,
   RunInfo,
-  ViewWatcher,
+  ViewWatcher
 } from './util'
 
 export {
@@ -17,7 +17,7 @@ export {
   default as constants
 } from './constants'
 
-export  {
+export {
   NullStatsError
 } from './errors'
 
@@ -30,5 +30,4 @@ export  {
 // exports.ViewWatcher = ViewWatcher
 // exports.NullStatsError = NullStatsError
 // exports.constants = constants
-
 

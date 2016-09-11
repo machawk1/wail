@@ -28,13 +28,12 @@ export default class WailInternals extends Component {
   }
 
   componentWillMount () {
-    LoadingStore.on('internal-progress',this.updateProgress)
+    LoadingStore.on('internal-progress', this.updateProgress)
   }
 
   componentWillUnMount () {
     LoadingStore.removeListener('internal-progress', this.updateProgress)
   }
-
 
   @autobind
   updateProgress (progMessage) {

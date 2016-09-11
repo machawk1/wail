@@ -37,10 +37,6 @@ const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildO
 // /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes/',
-  '^/archives/collections/xyz($|/)',
-  '^/archives/collections/Wail/indexes/index.cdxj$',
-  '^/archives/collections/Wail/metadata.yaml$',
-  '^/archives/warcBackup($|/)',
   '^/archives2($|/)',
   '^/.babelrc($|/)',
   '^/build($|/)',
@@ -54,8 +50,9 @@ const ignore = [
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
   '^/.codeclimate.yml($|/)',
+  '^/dev_coreData',
   '^/doElectron.sh$',
-  '^/wail-core($|/)',
+  '^/wail-core_old($|/)',
   '^/bootstrap.sh$',
   '^/npm-debug.log.*$',
   '^/electron-main-dev.js$',
@@ -377,10 +374,11 @@ fs.emptyDirSync(path.join(cwd, 'release'))
 console.log('building webpack.config.electron')
 build(electronCfg)
   .then((stats) => {
-    console.log('building webpack.config.production')
+    console.log('building webpack.config.production', stats)
     return build(cfg)
   })
   .then((stats) => {
+    console.log(stats)
     if (shouldBuildCurrent) {
       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))

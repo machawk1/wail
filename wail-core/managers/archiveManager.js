@@ -19,22 +19,45 @@ export default class ArchiveManager {
       filename: path.join(settings.get('wailCore.db'), 'archives.db'),
       autoload: true
     })
+  }
 
+  initialLoad () {
+    return this.getAllCollections()
   }
 
   getAllCollections () {
-    return new Promise((resolve) => {
-      this.db.find({}, (err, docs)=> {
+    return new Promise((resolve, reject) => {
+      this.db.find({}, (err, docs) => {
         if (err) {
-          resolve({
-            wasError: true,
-            err
-          })
+          reject(err)
         } else {
-          resolve({
-            wasError: false,
-            docs
-          })
+          if (docs.length === 0) {
+            // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+            let colpath = path.join(settings.get('warcs'), 'collections', 'default')
+            // description: Default Collection
+            // title: Default
+            let toCreate = {
+              _id: 'default',
+              name: 'default',
+              colpath,
+              archive: path.join(colpath, 'archive'),
+              indexes: path.join(colpath, 'indexes'),
+              colName: 'default',
+              numArchives: 0,
+              metaData: [ { k: 'title', v: 'Default' }, { k: 'description', v: 'Default Collection' } ],
+              crawls: [],
+              hasRunningCrawl: false
+            }
+            this.db.insert(toCreate, (err, doc) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve([ doc ])
+              }
+            })
+          } else {
+            resolve(docs)
+          }
         }
       })
     })
@@ -54,7 +77,7 @@ export default class ArchiveManager {
     })
   }
 
-  addInitialMData (col,mdata) {
+  addInitialMData (col, mdata) {
     let opts = {
       cwd: settings.get('warcs')
     }
@@ -103,7 +126,7 @@ export default class ArchiveManager {
         console.log('added metadata to collection', col)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        //{ $push: { metadata: { $each: mdata } } }
+        // { $push: { metadata: { $each: mdata } } }
         this.db.update({ col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
@@ -136,7 +159,7 @@ export default class ArchiveManager {
         console.log('added warcs to collection', col)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        this.db.update({ col }, { $inc: { numArchives: count } }, {}, (err, numUpdated) => {
+        this.db.update({ colName: col }, { $inc: { numArchives: count } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
           } else {
@@ -160,11 +183,11 @@ export default class ArchiveManager {
       let colStatic = S(settings.get('collections.colStatic')).template({ col })
       fs.copy(settings.get('collections.templateDir'), colTemplate, opts, (errT) => {
         if (errT) {
-          console.error('moving templates failed for col',col,errT)
+          console.error('moving templates failed for col', col, errT)
         }
         fs.copy(settings.get('collections.staticsDir'), colStatic, opts, (errS) => {
-          if(errS) {
-            if(errT) {
+          if (errS) {
+            if (errT) {
               reject({
                 errors: 2,
                 errS,
@@ -177,7 +200,7 @@ export default class ArchiveManager {
               })
             }
           } else {
-            console.log('moved pywbs stuff for a collection',col)
+            console.log('moved pywbs stuff for a collection', col)
             resolve()
           }
         })
@@ -198,10 +221,10 @@ export default class ArchiveManager {
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
           console.error(stderr)
-          return reject(error)
+          reject(error)
         }
         console.log('created collection', stderr, stdout)
-        //`${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+        // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
         let colpath = path.join(settings.get('warcs'), 'collections', col)
         let toCreate = {
           _id: col,

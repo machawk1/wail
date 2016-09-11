@@ -2,7 +2,7 @@
   "name": "WAIL",
   "description": "Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web page",
   "license": "LGPL-3.0",
-  "version": "1.0.0-rc.2.6",
+  "version": "1.0.0-rc.2.7",
   "contributors": [
     {
       "name": "John Berlin",
@@ -19,6 +19,8 @@
   },
   "bugs": "https://github.com/N0taN3rd/wail/issues",
   "scripts": {
+    "build-main": "cross-env NODE_ENV=production node --max-old-space-size=2024 -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "cross-env NODE_ENV=production node --max-old-space-size=2024 -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
     "dev-ui": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024 -r babel-register ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
@@ -97,6 +99,8 @@
     "react-flex": "^2.2.7",
     "react-flexbox-grid": "^0.10.2",
     "react-flexbox-layout": "^1.2.3",
+    "react-json-inspector": "^7.0.0",
+    "react-json-tree": "^0.10.0",
     "react-layout-pane": "^0.1.16",
     "react-motion": "^0.4.4",
     "react-notification-system": "^0.2.10",
@@ -238,6 +242,8 @@
     "ignore": [
       "archiveIndexes/*",
       "archives/*",
+      "archives2/*",
+      "collections/*",
       "buildResources/*",
       "bundledApps",
       "config/*",

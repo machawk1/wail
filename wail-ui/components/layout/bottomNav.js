@@ -8,12 +8,9 @@ import Paper from 'material-ui/Paper'
 import IconLocationOn from 'material-ui/svg-icons/communication/location-on'
 import { ipcRenderer } from 'electron'
 
-
-
-
 export default class BottomNav extends Component {
 
-  render() {
+  render () {
     return (
       <Toolbar>
         <ToolbarGroup lastChild>

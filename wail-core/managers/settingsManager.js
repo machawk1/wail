@@ -4,7 +4,7 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
-import autobind  from 'autobind-decorator'
+import autobind from 'autobind-decorator'
 import Promise from 'bluebird'
 import fileExists from 'file-exists'
 
@@ -39,7 +39,7 @@ if (process.env.NODE_ENV === 'development') {
   console.log('dev settings')
   // set to try only if your on an osx machine with java installed or one that can play nice with X11 free types
   dbgOSX = true
-  mngd  = {
+  mngd = {
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
       { name: 'logs', path: 'waillogs/wail.log' },
@@ -255,10 +255,10 @@ if (process.env.NODE_ENV === 'development') {
     }
 
   }
-
 } else {
+  // dbgOSX = true
   dbgOSX = false
-  mngd  = {
+  mngd = {
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
       { name: 'logs', path: 'waillogs/wail.log' },
@@ -474,7 +474,6 @@ if (process.env.NODE_ENV === 'development') {
     }
 
   }
-
 }
 
 const managed = mngd
@@ -491,8 +490,8 @@ export default class SettingsManager {
   @autobind
   configure () {
     let { pathMan } = global
-    this._settingsDir = pathMan.join(this._settingsDir,'wail-settings')
-    return new Promise((resolve,reject) => {
+    this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
+    return new Promise((resolve, reject) => {
       try {
         this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
       } catch (e) {
@@ -582,7 +581,7 @@ export default class SettingsManager {
       this._settings.set('cdxIndexer', cdxWin)
       jobConfPath = pathMan.normalizeJoinWBase(heritrix.jobConfWin)
     } else {
-      jobConfPath = pathMan.normalizeJoinWBase(heritrix.jobConf) //path.normalize(path.join(base, heritrix.jobConf))
+      jobConfPath = pathMan.normalizeJoinWBase(heritrix.jobConf) // path.normalize(path.join(base, heritrix.jobConf))
       var cdx
       if (process.platform === 'darwin') {
         cdx = `${darwinExport} ${this._settings.get('cdxIndexer')}`
@@ -638,7 +637,7 @@ export default class SettingsManager {
     this._settings.set('migrate', false)
     this._settings.set('didFirstLoad', didFirstLoad)
 
-    this._settings.set('winDeleteJob', pathMan.normalizeJoinWBase( 'windowsNukeDir.bat'))
+    this._settings.set('winDeleteJob', pathMan.normalizeJoinWBase('windowsNukeDir.bat'))
 
     this._settings.set('isWindows', isWindows)
     managed.commands.forEach(cmd => {
@@ -648,38 +647,38 @@ export default class SettingsManager {
           break
         case 'catalina':
           if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
+            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
           } else {
             this._settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
           }
           break
         case 'tomcatStart':
           if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
+            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
+            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
           } else {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase( 'bundledApps/wayback.bat')} start`)
+            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} start`)
           }
           break
         case 'tomcatStop':
           if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
+            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
+            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
           } else {
             this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} stop`)
           }
           break
         case 'heritrixStart':
           if (isWindows) {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase( 'bundledApps/heritrix.bat')} ${this._settings.get('heritrix.login')}`)
+            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/heritrix.bat')} ${this._settings.get('heritrix.login')}`)
           } else {
-            let hStart = `${pathMan.normalizeJoinWBase( cmd.path)} ${this._settings.get('heritrix.login')}`
+            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')}`
             this._settings.set(cmd.name, `${cmdexport} ${hStart}`)
             this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${hStart}`)
           }
           break
         default:
-          this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase( cmd.path)}`)
+          this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
           break
       }
     })
@@ -720,7 +719,7 @@ export default class SettingsManager {
   }
 
   @autobind
-  rewriteHeritrixAuth ( usr, pwd) {
+  rewriteHeritrixAuth (usr, pwd) {
     if (usr && pwd) {
       let heritrix = this._settings.get('heritrix')
       let nh = _.mapValues(heritrix, (v, k) => {

@@ -25,14 +25,14 @@ export default class CrawlStatsMonitor extends EventEmitter {
       let logPath = path.join(jobPath, `${latestLaunch}`, 'logs', 'progress-statistics.log')
       console.log(`found log for latest launch ${logPath}`)
       let logWatcher = chokidar.watch(logPath, {
-        followSymlinks: true,
+        followSymlinks: true
       })
       this.monitoring.set(jobId, {
         logWatcher,
         errorCount: 0
       })
       logWatcher.on('change', (path) => {
-        console.log('changed ',path)
+        console.log('changed ', path)
         getCrawlStats(path)
           .then(stats => {
             console.log(`crawlJob-status-update ${jobId}`, stats)
@@ -41,12 +41,12 @@ export default class CrawlStatsMonitor extends EventEmitter {
               this.monitoring.delete(jobId)
               this.emit('crawljob-status-ended', {
                 jobId,
-                stats: Object.assign({},{started},stats)
+                stats: Object.assign({}, {started}, stats)
               })
             } else {
               this.emit('crawljob-status-update', {
                 jobId,
-                stats: Object.assign({},{started},stats)
+                stats: Object.assign({}, {started}, stats)
               })
             }
           })
@@ -65,7 +65,6 @@ export default class CrawlStatsMonitor extends EventEmitter {
               this.monitoring.set(jobId, mo)
             }
           })
-
       })
         .on('error', error => log(`Watcher error: ${error}`))
     })
@@ -80,11 +79,11 @@ export default class CrawlStatsMonitor extends EventEmitter {
   }
 
   @autobind
-  stopMonitoring(jobId) {
+  stopMonitoring (jobId) {
     if (this.monitoring.has(jobId)) {
       let {
         logWatcher,
-        errorCount,
+        errorCount
       } = this.monitoring.get(jobId)
       logWatcher.close()
       this.monitoring.delete(jobId)

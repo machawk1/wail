@@ -10,10 +10,9 @@ import Routes from './routes'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
 import './css/wail.css'
-
+import bunyan from 'bunyan'
 
 Promise.promisifyAll(fs)
-
 
 //  ensure out RequestStore is alive and kicking
 window.React = React
@@ -26,6 +25,22 @@ injectTapEventPlugin()
 // ipcRenderer.send('get-all-runs')
 
 const wail = document.getElementById('wail')
+const ringbuffer = window.eventLog = new bunyan.RingBuffer({ limit: 100 })
+
+window.logger = bunyan.createLogger({
+  name: 'wail-ui',
+  streams: [
+    {
+      level: 'warn',
+      path: remote.getGlobal('wailUILogp')
+    },
+    {
+      level: 'debug',
+      type: 'raw',    // use 'raw' to get raw log record objects
+      stream: ringbuffer
+    }
+  ]
+})
 
 render(
   <Router

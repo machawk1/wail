@@ -9,9 +9,6 @@ import Notification from 'react-notification-system'
 // https://github.com/igorprado/react-notification-system
 
 export default class Notifications extends Component {
-  static contextTypes = {
-    logger: PropTypes.object.isRequired,
-  }
   constructor (props, context) {
     super(props, context)
     console.log(context)
@@ -34,7 +31,7 @@ export default class Notifications extends Component {
   receiveMessage () {
     let message = GMessageStore.getMessage()
     this.notifier.addNotification(message)
-    this.context.logger.info(message.message)
+
     // if (!this.state.open) {
     //   this.setState({ message: , open: true })
     // }

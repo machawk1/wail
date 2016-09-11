@@ -16,7 +16,7 @@ class NCD extends Component {
     this.state = {
       col: '',
       description: '',
-      title: '',
+      title: ''
     }
   }
 
@@ -25,7 +25,7 @@ class NCD extends Component {
       col: '',
       description: '',
       title: ''
-    },() => {
+    }, () => {
       this.props.handleClose()
     })
   }
@@ -46,7 +46,7 @@ class NCD extends Component {
         mdata: [ `title=${rt}`, `description=${description}` ],
         metaData: [
           { 'k': 'title', 'v': rt },
-          { 'k': 'description', 'v': description },
+          { 'k': 'description', 'v': description }
         ]
       }
       ipc.send('create-collection', newCol)
@@ -57,18 +57,17 @@ class NCD extends Component {
           title: 'Info',
           level: 'info',
           message: `Creating new collection ${col}`,
-          uid: `Creating new collection ${col}`,
+          uid: `Creating new collection ${col}`
         }
       })
       this.setState({
-         col: '',
+        col: '',
         description: '',
         title: ''
-      },() => {
+      }, () => {
         this.props.handleClose()
       })
     } else {
-
       let message
       if (colEmpty && !descriptEmpty) {
         message = 'The description can not be empty when creating a new collection!'
@@ -84,73 +83,72 @@ class NCD extends Component {
           title: 'Warning',
           level: 'warning',
           message,
-          uid: message,
+          uid: message
         }
       })
     }
-
   }
 
   nameChange (event) {
     this.setState({
-      col: event.target.value,
+      col: event.target.value
     })
   }
 
   descriptionChange (event) {
     this.setState({
-      description: event.target.value,
+      description: event.target.value
     })
   }
 
   titleChange (event) {
     this.setState({
-      title: event.target.value,
+      title: event.target.value
     })
   }
 
   render () {
     const actions = [
       <FlatButton
-        label="Cancel"
+        label='Cancel'
         onTouchTap={::this.cancel}
       />,
       <FlatButton
-        label="Create"
-        primary={true}
+        label='Create'
+        primary
         onTouchTap={::this.handleClose}
-      />,
+      />
     ]
 
     return (
         <Dialog
-          title="New Collection"
+          title='New Collection'
           actions={actions}
-          modal={true}
+          modal
           open={this.props.open}
         >
           <Grid fluid>
             <Row>
               <Col xs>
                 <TextField
-                  hintText="Collection Name"
-                  floatingLabelText="Name"
+                  hintText='Collection Name'
+                  floatingLabelText='Name'
                   value={this.state.col}
                   onChange={::this.nameChange}
                 />
               </Col>
               <Col xs>
                 <TextField
-                  hintText="Collection Description"
-                  floatingLabelText="Description"
+                  hintText='Collection Description'
+                  floatingLabelText='Description'
                   value={this.state.description}
                   onChange={::this.descriptionChange}
                 />
               </Col>
               <Col xs>
                 <TextField
-                  hintText="Collection Title optional defaults to name"
-                  floatingLabelText="Title"
+                  hintText='Collection Title optional defaults to name'
+                  floatingLabelText='Title'
                   value={this.state.title}
                   onChange={::this.titleChange}
                 />
@@ -170,7 +168,7 @@ export default class NewCollection extends Component {
       open: false,
       col: '',
       description: '',
-      title: '',
+      title: ''
     }
   }
 
@@ -182,18 +180,15 @@ export default class NewCollection extends Component {
     this.setState({ open: false })
   }
 
-
-
   render () {
-
     return (
       <div>
         <FlatButton
-          label="New Collection"
-          primary={true}
+          label='New Collection'
+          primary
           onTouchTap={::this.handleOpen}
         />
-       <NCD open={this.state.open} handleClose={::this.handleClose}/>
+       <NCD open={this.state.open} handleClose={::this.handleClose} />
       </div>
     )
   }

@@ -25,7 +25,7 @@ export default class ServiceDaemon {
   killService (which) {
     if (which === 'all') {
       let wasError = []
-      for (let [k,v] of this._monitoring) {
+      for (let [k, v] of this._monitoring) {
         if (this.isServiceUp(k) && !v.error) {
           if (!this._isWin) {
             process.kill(v.pid, 'SIGTERM')

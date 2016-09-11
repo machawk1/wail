@@ -16,15 +16,10 @@ if (process.env.NODE_ENV === 'development') {
 
 export default class ArchiveOrCheckCol extends Component {
 
-
-
   constructor (...args) {
     super(...args)
-    console.log(CollectionStore)
-    let maybeNames = CollectionStore.getColNames()
-    console.log(maybeNames)
     this.state = {
-      colNames: maybeNames.length > 0 ? maybeNames : [ 'Wail' ],
+      colNames: CollectionStore.getColNames(),
       viewing: defForCol
     }
   }
@@ -46,7 +41,7 @@ export default class ArchiveOrCheckCol extends Component {
 
   @autobind
   gotAllNames (cols) {
-    console.log('got allNames archive or checkCol',cols)
+    console.log('got allNames archive or checkCol', cols)
     this.setState({
       colNames: cols.map(c => c.colName)
     })
@@ -58,20 +53,20 @@ export default class ArchiveOrCheckCol extends Component {
         <div>
           <Row>
             <Col xs>
-              <ArchiveUrl forCol={this.state.viewing}/>
+              <ArchiveUrl forCol={this.state.viewing} />
             </Col>
           </Row>
           <Row>
             <Col xs>
               <ArchivalButtons
-              archiveList={
+                archiveList={
                 <BasicColList
-                  cols={this.state.colNames}
+                  colNames={this.state.colNames}
                   viewWatcher={ViewWatcher}
                   from={from}
                 />
               }
-              forCol={this.state.viewing}
+                forCol={this.state.viewing}
               />
             </Col>
           </Row>

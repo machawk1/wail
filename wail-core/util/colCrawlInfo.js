@@ -7,7 +7,7 @@ export default class ColCrawlInfo {
     this.urls = crawlInfo.urls
   }
 
-  compare(ri) {
+  compare (ri) {
     if (this.timestamp.isBefore(ri.timestamp)) {
       return 1
     }

@@ -10,6 +10,6 @@ window.React = React
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <Loading  />,
+  <Loading />,
   document.getElementById('loading'))
 

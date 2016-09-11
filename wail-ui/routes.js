@@ -7,7 +7,6 @@ import Wayback from './components/wayback/wayback'
 import Heritrix from './components/heritrix/heritrix-tab'
 import Misc from './components/advanced/miscellaneous'
 
-
 const Routes = (
   <Route path='/' component={Layout}>
     <IndexRoute component={BasicTab} />

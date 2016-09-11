@@ -1,12 +1,11 @@
 {
-  "presets": ["react", "latest",  "stage-0","node6" ],
+  "presets": [ "latest", "react",  "stage-0","node6" ],
   "plugins": [
     "transform-runtime",
     "add-module-exports",
     "babel-plugin-transform-decorators-legacy",
     "react-html-attrs",
-    "transform-class-properties",
-    "react-html-attrs"
+    "transform-class-properties"
   ],
   "env": {
     "development": {

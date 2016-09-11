@@ -35,7 +35,7 @@ export default class CollectionOverview extends Component {
       name
     } = collection
     return (
-      <Grid fluid className="waybackGrid">
+      <Grid fluid className='waybackGrid'>
         <Row between='xs'>
           <Col xs>
             <p>Collection Name: {colName}</p>
@@ -50,20 +50,16 @@ export default class CollectionOverview extends Component {
         <Row between='xs'>
           <Col xs>
 
-                <OpenButton label='Open Index Location' onTouchTap={() => shell.openItem(indexes)}/>
+                <OpenButton label='Open Index Location' onTouchTap={() => shell.openItem(indexes)} />
 
           </Col>
           <Col xs>
 
-                <OpenButton label='Open Warc Location' onTouchTap={() => shell.openItem(archive)}/>
+                <OpenButton label='Open Warc Location' onTouchTap={() => shell.openItem(archive)} />
 
           </Col>
         </Row>
-        <Row>
-          <Col xs>
-            <WarcToCollection />
-          </Col>
-        </Row>
+        <WarcToCollection colName={colName} />
       </Grid>
     )
   }

@@ -8,8 +8,11 @@ import { launchHeritrix, killHeritrix } from '../../actions/heritrix-actions'
 import { startWayback, killWayback } from '../../actions/wayback-actions'
 import ServiceStore from '../../stores/serviceStore'
 import style from '../styles/styles'
-import { remote } from 'electron'
+import wc from '../../constants/wail-constants'
+import { remote, ipcRenderer as ipc } from 'electron'
+import * as notify from '../../actions/notification-actions'
 
+const EventTypes = wc.EventTypes
 const ServiceMan = remote.getGlobal('ServiceMan')
 
 export default class General extends Component {
@@ -48,38 +51,35 @@ export default class General extends Component {
     this.setState({ hGood: ServiceStore.heritrixStatus() })
   }
 
+  @autobind
   wayBackFix (event) {
-    // console.log('Wayback fix')
-    ServiceMan.startWayback()
-      .then(() => {
-        console.log('wayback up')
-        this.setState({wGood: true})
-      })
-      .catch(error => {
-        console.error('cant start wayback')
-      })
+    notify.notifyInfo(`Starting Wayback`)
+    ipc.send('start-service', 'wayback')
+    this.setState({wbGood: true})
   }
 
+  @autobind
   wayBackKill (event) {
+    notify.notifyInfo(`Stopping Wayback`)
+    ipc.send('kill-service', 'wayback')
+    this.setState({wbGood: false})
     // console.log('Wayback Kill')
-    ServiceMan.killService('wayback')
   }
 
+  @autobind
   heritrixFix (event) {
+    notify.notifyInfo(`Starting Heritrix`)
+    ipc.send('start-service', 'heritrix')
+    this.setState({hGood: true})
     // console.log(' Generalv HeritrixTab fix')
-    ServiceMan.startHeritrix()
-      .then(() => {
-        console.log('hereitrix up')
-        this.setState({hGood: true})
-      })
-      .catch(error => {
-        console.error('cant start heritrix')
-      })
   }
 
+  @autobind
   heritrixKill (event) {
+    notify.notifyInfo(`Stopping Heritrix`)
+    this.setState({hGood: false})
     // console.log('General HeritrixTab Kill')
-    ServiceMan.killService('heritrix')
+    ipc.send('kill-service', 'heritrix')
   }
 
   render () {

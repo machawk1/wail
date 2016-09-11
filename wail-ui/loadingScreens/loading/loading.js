@@ -5,7 +5,7 @@ import {Grid, Row, Col} from 'react-flexbox-grid'
 import {
   Step,
   Stepper,
-  StepLabel,
+  StepLabel
 } from 'material-ui/Stepper'
 import ExpandTransition from 'material-ui/internal/ExpandTransition'
 import {remote, ipcRenderer} from 'electron'
@@ -37,7 +37,7 @@ export default class Loading extends Component {
     this.state = {
       loading: false,
       finished: false,
-      stepIndex: 0,
+      stepIndex: 0
     }
   }
 
@@ -60,15 +60,15 @@ export default class Loading extends Component {
       switch (stepIndex) {
         case 0:
           return (
-            <CheckOS/>
+            <CheckOS />
           )
         case 1:
           return (
-            <CheckJava/>
+            <CheckJava />
           )
         case 2:
           return (
-            <CheckServices2 firstLoad={true} wait={true}/>
+            <CheckServices2 firstLoad wait />
           )
         case 3:
           return (
@@ -82,14 +82,16 @@ export default class Loading extends Component {
       switch (stepIndex) {
         case 0:
           return (
-            <CheckServices2 firstLoad={false} wait={false}/>
+            <CheckServices2 firstLoad={false} wait={false} />
           )
         case 1:
           return (
             <WailInternals />
           )
         default:
-          return 'These are not the droids you are looking for'
+          return (
+            <WailInternals />
+          )
       }
     }
   }
@@ -160,7 +162,7 @@ export default class Loading extends Component {
             <StepLabel>Wail Internals</StepLabel>
           </Step>
         </Stepper>
-        <ExpandTransition loading={loading} open={true}>
+        <ExpandTransition loading={loading} open>
           {this.renderContent()}
         </ExpandTransition>
       </div>

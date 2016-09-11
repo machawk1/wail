@@ -1,10 +1,10 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
 import Db from 'nedb'
-import {default as wc} from '../constants'
+import { default as wc } from '../constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
@@ -13,7 +13,7 @@ import Promise from 'bluebird'
 import S from 'string'
 import util from 'util'
 import CrawlStatsMonitor from './crawlStatsMonitor'
-import {CrawlInfo} from '../util'
+import { CrawlInfo } from '../util'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -40,6 +40,22 @@ export default class CrawlManager {
       ipc.send('crawljob-status-update', update)
       this.crawlEnded(update)
     })
+    this.launchId = /^[0-9]+$/
+  }
+
+  initialLoad () {
+    return this.getAllRuns()
+  }
+
+  moveWarc (forCol, jobPath) {
+    fs.readdir(jobPath, (err, files) => {
+      // really abuse js evaluation of integers as strings
+      // heritrix launch ids are dates in YYYYMMDD... basically an integer
+      // so babel will make this Math.max.apply(Math,array)
+      let latestLaunch = Math.max(...files.filter(item => this.launchId.test(item)))
+      let warcPath = path.join(jobPath, `${latestLaunch}`, 'warcs', '*.warc')
+      ipc.send('add-warcs-to-col', { forCol, warcs: warcPath })
+    })
   }
 
   @autobind
@@ -50,10 +66,11 @@ export default class CrawlManager {
           reject(err)
         } else {
           console.log(docs)
-          if (docs.length > 0) {
-            docs = docs.map(r => new CrawlInfo(r))
+          let pDocs = docs
+          if (pDocs.length > 0) {
+            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), [ 'jobId' ], [ 'desc' ])
           }
-          resolve(docs)
+          resolve(pDocs)
         }
       })
     })
@@ -64,7 +81,7 @@ export default class CrawlManager {
     this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error inserting document', error)
-        ipc.send('managers-error',{
+        ipc.send('managers-error', {
           where: 'crawlStarted insert',
           error
         })
@@ -95,12 +112,10 @@ export default class CrawlManager {
       if (error) {
         console.error('error updating document', update, error)
       } else {
-        console.log('updated document', numUpdated,updated)
+        console.log('updated document', numUpdated, updated)
         let {
           forCol
-        } = updated[0]
-        ipc.send('add-warcs-to-col',{forCol,warcs: pathMan.normalizeJoin(updated.path,'latest','warcs/*.warc')})
-
+        } = updated[ 0 ]
       }
     })
   }
@@ -114,7 +129,7 @@ export default class CrawlManager {
           console.error('error finding if crawls are running')
           reject(err)
         } else {
-          console.log('are crawls running',runningCount)
+          console.log('are crawls running', runningCount)
           let areRunning = runningCount > 0
           resolve(areRunning)
         }

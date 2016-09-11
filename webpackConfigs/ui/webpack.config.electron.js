@@ -13,9 +13,11 @@ export default {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'es2015', 'stage-0', 'node6', 'react', ],
-          plugins: [ 'transform-runtime', "add-module-exports",
-            "babel-plugin-transform-decorators-legacy", 'transform-class-properties', 'react-html-attrs',
+          cacheDirectory: true,
+          presets: [ 'latest', 'stage-0', 'node6'],
+          plugins: [ 'transform-runtime', 'add-module-exports',
+            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
+            'react-html-attrs',
           ],
         }
       },
@@ -42,15 +44,6 @@ export default {
   },
 
   plugins: [
-    new ExternalsPlugin({
-      type: 'commonjs',
-      include: './node_modules/winston',
-    }),
-    new webpack.optimize.UglifyJsPlugin({
-      compressor: {
-        warnings: false
-      }
-    }),
     new webpack.BannerPlugin(
       'require("source-map-support").install();',
       { raw: true, entryOnly: false }

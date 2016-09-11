@@ -49,8 +49,6 @@ const style = {
 
 const textSize = 12
 
-
-
 export default class HeritrixJobInfoRow extends Component {
   static propTypes = {
     urls: PropTypes.oneOfType([ PropTypes.string, PropTypes.array ]).isRequired,
@@ -78,8 +76,8 @@ export default class HeritrixJobInfoRow extends Component {
           title: 'Crawl Finished!',
           level: 'success',
           message: `Crawl for ${url} has finished`,
-          uid:  `Crawl for ${url} has finished`,
-          autoDismiss: 0,
+          uid: `Crawl for ${url} has finished`,
+          autoDismiss: 0
         })
       }
       // console.log('the job being displayed', job)

@@ -62,7 +62,7 @@ export default class ServiceManager {
               stdio: [ 'ignore', 'ignore', 'ignore' ]
             })
             dukeNukem.on('close', (code) => {
-             return this.startWayback()
+              return this.startWayback()
                .then(() => {
                  resolve()
                })
@@ -128,6 +128,7 @@ export default class ServiceManager {
               })
             }
           }
+          this._monitoring.delete(killMe)
           this._pidStore.remove({ _id: which, who: which }, (error) => {
             if (error) {
               console.error(`ServiceManager error removing from pidstore ${which}`)
@@ -140,17 +141,21 @@ export default class ServiceManager {
         }
       }
     })
-
   }
 
   startHeritrix () {
+    let {logger} = global
     console.log('service man starting heritrix')
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('heritrix')) {
+        if (logger) {
+          logger.info('starting heritrix but it was up already')
+        }
         console.log('heritrix is already up', this._monitoring)
         resolve()
       } else {
         console.log('heritrix is not up starting')
+
         if (this._isWin) {
           let heritrixPath = this._settings.get('heritrix.path')
           let opts = {
@@ -177,10 +182,10 @@ export default class ServiceManager {
             }, { $set: { pid } }, { upsert: true }, insertError => {
               if (insertError) {
                 console.error('service manager inserting pid error', insertError)
-              } else {
                 reject(insertError)
+              } else {
+                resolve()
               }
-              resolve()
             })
           } catch (err) {
             // why you no work???
@@ -196,6 +201,9 @@ export default class ServiceManager {
           cp.exec(hStart, (err, stdout, stderr) => {
             if (err) {
               console.error('heritrix could not be started due to an error', err, stderr, stdout)
+              if (logger) {
+                logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
+              }
               reject(err)
             } else {
               console.log(stdout, stderr)
@@ -205,11 +213,17 @@ export default class ServiceManager {
                 let pid = S(maybepid.capture('hpid')).toInt()
                 this._monitoring.set('heritrix', pid)
                 console.log('Heritrix was started')
+                if (logger) {
+                  logger.info(`heritrix was started ${pid}`)
+                }
                 this._pidStore.update({
                   who: 'heritrix',
                   _id: 'heritrix'
                 }, { $set: { pid } }, { upsert: true }, insertError => {
                   if (insertError) {
+                    if (logger) {
+                      logger.fatal({err: insertError, msg: 'service manager inserting heritrix pid error'})
+                    }
                     console.error('service manager inserting pid error', insertError)
                     reject(insertError)
                   } else {
@@ -217,6 +231,9 @@ export default class ServiceManager {
                   }
                 })
               } else {
+                if (logger) {
+                  logger.fatal('the pid extraction could not be done for heritrix')
+                }
                 console.error('the pid extraction could not be done for heritrix')
                 reject(err)
               }
@@ -229,9 +246,13 @@ export default class ServiceManager {
 
   startWayback () {
     console.log('service man starting wayback')
+    let {logger} = global
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
+        if (logger) {
+          logger.info('starting wayback but was already up')
+        }
         resolve()
       } else {
         console.log('starting wayback')
@@ -254,12 +275,21 @@ export default class ServiceManager {
           }, { $set: { pid } }, { upsert: true }, insertError => {
             if (insertError) {
               console.error('service manager inserting pid for wayback error', insertError)
+              if (logger) {
+                logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
+              }
               reject(insertError)
             } else {
+              if (logger) {
+                logger.info(`wayback was started ${pid}`)
+              }
               resolve()
             }
           })
         } catch (err) {
+          if (logger) {
+            logger.fatal({err, msg: 'wayback could not be started'})
+          }
           console.error('wayback could not be started', err)
           reject(err)
         }

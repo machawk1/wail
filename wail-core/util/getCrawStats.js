@@ -11,7 +11,6 @@ const jobEndRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
 const jobStatusRec = /(:<timestamp>[a-zA-Z0-9\-:]+)\s+(:<discovered>[0-9]+)\s+(:<queued>[0-9]+)\s+(:<downloaded>[0-9]+)\s.+/
 const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
 
-
 export default function getCrawlStats (logPath) {
   return new Promise((resolve, reject) => {
     let jobEnding = false

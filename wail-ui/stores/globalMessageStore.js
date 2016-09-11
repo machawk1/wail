@@ -6,12 +6,11 @@ import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 
 const EventTypes = wailConstants.EventTypes
 
-
 class GlobalMessageStore_ extends EventEmitter {
   constructor () {
     super()
     this.messageQ = []
-    ipc.on('display-message',(e,m) => {
+    ipc.on('display-message', (e, m) => {
       this.messageQ.push(m)
       this.emit('new-message')
     })

@@ -13,7 +13,7 @@ import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import { readCode } from '../actions/editor-actions'
 import CrawlInfo from '../../wail-core/util/crawlInfo'
-import RunInfo  from '../../wail-core/util/runInfo'
+import RunInfo from '../../wail-core/util/runInfo'
 import {
   getHeritrixJobsState,
   makeHeritrixJobConf,
@@ -21,6 +21,8 @@ import {
   launchHeritrixJob,
   teardownJob
 } from '../actions/heritrix-actions'
+
+
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -75,25 +77,21 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   intialJobStateLoad (event, allRuns) {
-    console.log('inital Job state load',allRuns)
+    let {logger} = global
+    console.log('inital Job state load', allRuns)
     this.jobIndex.clear()
-    if (!allRuns.wasError) {
-      if ((allRuns.runs || [] ).length > 0) {
-        let {
-          runs
-        } = allRuns
-        this.crawlJobs = runs.map((r, idx) => {
-          console.log(r)
-          this.jobIndex.set(r.jobId, idx)
-          return new CrawlInfo(r)
-        })
-        this.emit('jobs-updated')
-      } else {
-        console.log('there was no runs in the db')
-      }
 
+    if ((allRuns || []).length > 0) {
+      logger.debug(`intial job state load ${allRuns.length} jobs`)
+      this.crawlJobs = allRuns.map((r, idx) => {
+        console.log(r)
+        this.jobIndex.set(r.jobId, idx)
+        return new CrawlInfo(r)
+      })
+      this.emit('jobs-updated')
     } else {
-      console.error('getting all runs had an error ', allRuns.error)
+      console.log('there was no runs in the db')
+      logger.debug('there was no runs in the db')
     }
 
     // console.log('initial load of crawl store')
@@ -121,6 +119,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   createJob (conf) {
+    window.logger.debug(`made config for ${conf.jobId}`)
     console.log('made conf', conf)
     this.crawlJobs.push(conf)
     let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
@@ -161,11 +160,14 @@ class CrawlStore_ extends EventEmitter {
       stats
     } = crawlStatus
     if (stats.ended) {
+      window.logger.debug(`crawl status update for ${jobId} its ended tearing down`)
       teardownJob(jobId)
+    } else {
+      window.logger.debug(`crawl status update for ${jobId}`)
     }
     console.log(this.jobIndex, this.crawlJobs)
     let jobIdx = this.jobIndex.get(jobId)
-    let runs = ( this.crawlJobs[ jobIdx ].runs || [])
+    let runs = (this.crawlJobs[ jobIdx ].runs || [])
     if (runs.length > 0) {
       if (runs[ 0 ].started === stats.started) {
         runs[ 0 ].update(stats)
@@ -236,7 +238,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   jobs () {
-    return _.orderBy(this.crawlJobs,['jobId','desc'])
+    return _.orderBy(this.crawlJobs, ['jobId'], ['desc'])
   }
 
   @autobind
@@ -254,6 +256,7 @@ class CrawlStore_ extends EventEmitter {
           case From.BASIC_ARCHIVE_NOW: {
             urls = UrlStore.getUrl()
             if (!urls.isEmpty()) {
+              window.logger.debug(`Archiving ${urls} Now!`)
               // console.log('crawlstore archiving the url is ', urls
               crawlingUrlsMessage = urls.s
               urls = urls.s
@@ -305,6 +308,8 @@ class CrawlStore_ extends EventEmitter {
           //   maybeArray,
           //   jId
           // })
+
+          window.logger.debug(`Building Heritrix crawl for ${crawlingUrlsMessage}`)
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: {
@@ -323,13 +328,14 @@ class CrawlStore_ extends EventEmitter {
         // console.log('Built crawl conf', event)
         this.createJob(event.id, event.path, event.urls)
         buildHeritrixJob(event.id)
+        window.logger.debug(`Built the Heritrix crawl config for job: ${event.urls}`)
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: {
             title: 'Info',
             level: 'info',
-            message:`Built the Heritrix crawl config for job: ${event.id}`,
-            uid: `Built the Heritrix crawl config for job: ${event.id}`
+            message: `Built the Heritrix crawl config for job: ${event.urls}`,
+            uid: `Built the Heritrix crawl config for job: ${event.urls}`
           }
         })
         break
@@ -338,15 +344,17 @@ class CrawlStore_ extends EventEmitter {
         // console.log('Built crawl', event)
         // this.createJob(event.id, event.path)
         launchHeritrixJob(event.id)
+        let conf = this.crawlJobs[this.jobIndex.get(event.id)]
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: {
             title: 'Info',
             level: 'info',
-            message:`Heritrix Crawl Built for job: ${event.id}`,
-            uid: `Heritrix Crawl Built for job: ${event.id}`
+            message: `Heritrix Crawl Built for job: ${conf.urls}`,
+            uid: `Heritrix Crawl Built for job: ${conf.urls}`
           }
         })
+        window.logger.debug(`Heritrix Crawl Built for job: ${conf.urls}`)
         break
       }
       case EventTypes.LAUNCHED_CRAWL_JOB: {
@@ -355,18 +363,30 @@ class CrawlStore_ extends EventEmitter {
         //   jId: event.id
         // })
         ipc.send('crawl-started', event.id)
+        let conf = this.crawlJobs[this.jobIndex.get(event.id)]
         GMessageDispatcher.dispatch({
           type: EventTypes.QUEUE_MESSAGE,
           message: {
             title: 'Info',
             level: 'info',
-            message:`Heritrix Crawl Started: ${event.id}`,
-            uid: `Heritrix Crawl Started: ${event.id}`
+            message: `Heritrix Crawl Started: ${conf.urls}`,
+            uid: `Heritrix Crawl Started: ${conf.urls}`
           }
         })
+        window.logger.debug(`Heritrix Crawl Started: ${conf.urls}`)
         break
       }
       case EventTypes.CRAWL_JOB_DELETED:
+        let conf = this.crawlJobs[this.jobIndex.get(event.jobId)]
+        GMessageDispatcher.dispatch({
+          type: EventTypes.QUEUE_MESSAGE,
+          message: {
+            title: 'Info',
+            level: 'info',
+            message: `Deleting Heritrix Job: ${conf.urls}`,
+            uid: `Heritrix Crawl Started: ${conf.urls}`
+          }
+        })
         this.crawlJobs = _.filter(this.crawlJobs, jb => jb.jobId !== event.jobId)
         this.jobIndex.delete(event.jobId)
         this.emit('jobs-updated')

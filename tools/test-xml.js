@@ -37,26 +37,39 @@ import psTree from 'ps-tree'
 //   followSymlinks: true,
 // })
 
-psTree(10223,(err,kids)=>{
-  if(err){
-    console.error(err)
-  } else {
-    console.log(kids)
-  }
-})
 
-// S.TMPL_CLOSE = '}'
-// S.TMPL_OPEN= '{'
+
+S.TMPL_CLOSE = '}'
+S.TMPL_OPEN= '{'
 //
 // // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 // // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
 // // let pather = new Pather(path.resolve('.'))
 // // console.log(util.inspect(pather,{depth: null,colors: true}))
-// let configDirPath = path.join('.','waillogs/wail-settings')
-// let settings = new Esettings({ configDirPath })
-// let tmplVal = { warcs: '/Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive/*.warc'}
-// let tmplVal2 = {col: 'Wail'}
-// let command = S(settings.get('pywb.sortedCombinedCdxj')).template(tmplVal).s
+let configDirPath = path.join('.','waillogs/wail-settings')
+
+let settings = new Esettings({ configDirPath })
+let opts = {
+  cwd: settings.get('warcs')
+}
+let tmplVal = { col: 'ghhhkjlhkj' ,warcs: '/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473573838942/20160911060401/warcs/*.warc'}
+let tmplVal2 = {col: 'Wail'}
+let command = S(settings.get('pywb.addWarcsToCol')).template(tmplVal).s
+cp.exec(command, opts, (error, stdout, stderr) => {
+  if (error) {
+    console.error(error,stderr,stdout)
+  } else {
+    let c1 = ((stdout || ' ').match(/INFO/g) || []).length
+    let c2 = ((stderr || ' ').match(/INFO/g) || []).length
+    let count = c1 === 0 ? c2 : c1
+
+    console.log('added warcs to collection iy',count)
+    console.log('stdout', stdout)
+    console.log('stderr', stderr)
+  }
+
+})
+
 //
 // let opts = {
 //   cwd: settings.get('warcs')
