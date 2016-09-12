@@ -63,12 +63,12 @@ export default class ServiceManager {
             })
             dukeNukem.on('close', (code) => {
               return this.startWayback()
-               .then(() => {
-                 resolve()
-               })
-               .catch((err) => {
-                 reject(err)
-               })
+                .then(() => {
+                  resolve()
+                })
+                .catch((err) => {
+                  reject(err)
+                })
             })
           }
         })
@@ -92,7 +92,20 @@ export default class ServiceManager {
           if (this.isServiceUp(who)) {
             console.log(`ServiceManager killing ${who}`)
             if (!this._isWin) {
-              process.kill(pid, 'SIGTERM')
+              // process.kill(pid, 'SIGTERM')
+              psTree(pid, (err, kids) => {
+                if (err) {
+                  console.error('ps tree error', err)
+                  process.kill(pid, 'SIGTERM')
+                } else {
+                  let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                    detached: true,
+                    shell: true,
+                    stdio: [ 'ignore', 'ignore', 'ignore' ]
+                  })
+                  dukeNukem.unref()
+                }
+              })
             } else {
               cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
                 if (error) {
@@ -115,36 +128,48 @@ export default class ServiceManager {
           resolve()
         })
       } else {
-        let killMe = this._monitoring.get(which)
-        if (killMe) {
-          if (this.isServiceUp(which)) {
-            if (!this._isWin) {
-              process.kill(killMe, 'SIGTERM')
-            } else {
-              cp.exec('taskkill /PID ' + killMe + ' /T /F', (error, stdout, stderr) => {
-                if (error) {
-                  console.error('really bad juju')
-                }
-              })
-            }
+        if (this.isServiceUp(which)) {
+          let pid = this._monitoring.get(which)
+          if (!this._isWin) {
+            // process.kill(killMe, 'SIGTERM')
+            psTree(pid, (err, kids) => {
+              console.log(kids)
+              if (err) {
+                console.error('ps tree error', err)
+                process.kill(pid, 'SIGTERM')
+              } else {
+                let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                  detached: true,
+                  shell: true,
+                  stdio: [ 'ignore', 'ignore', 'ignore' ]
+                })
+                dukeNukem.unref()
+              }
+            })
+          } else {
+            cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
+              if (error) {
+                console.error('really bad juju')
+              }
+            })
           }
-          this._monitoring.delete(killMe)
-          this._pidStore.remove({ _id: which, who: which }, (error) => {
-            if (error) {
-              console.error(`ServiceManager error removing from pidstore ${which}`)
-            } else {
-              console.log(`ServiceManager removed ${which} from pidstore`)
-            }
-
-            resolve()
-          })
         }
+        this._monitoring.delete(which)
+        this._pidStore.remove({ _id: which, who: which }, (error) => {
+          if (error) {
+            console.error(`ServiceManager error removing from pidstore ${which}`)
+          } else {
+            console.log(`ServiceManager removed ${which} from pidstore`)
+          }
+
+          resolve()
+        })
       }
     })
   }
 
   startHeritrix () {
-    let {logger} = global
+    let { logger } = global
     console.log('service man starting heritrix')
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('heritrix')) {
@@ -202,7 +227,7 @@ export default class ServiceManager {
             if (err) {
               console.error('heritrix could not be started due to an error', err, stderr, stdout)
               if (logger) {
-                logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
+                logger.fatal({ err, msg: `heritrix could not be started ${stderr}` })
               }
               reject(err)
             } else {
@@ -222,7 +247,7 @@ export default class ServiceManager {
                 }, { $set: { pid } }, { upsert: true }, insertError => {
                   if (insertError) {
                     if (logger) {
-                      logger.fatal({err: insertError, msg: 'service manager inserting heritrix pid error'})
+                      logger.fatal({ err: insertError, msg: 'service manager inserting heritrix pid error' })
                     }
                     console.error('service manager inserting pid error', insertError)
                     reject(insertError)
@@ -246,7 +271,7 @@ export default class ServiceManager {
 
   startWayback () {
     console.log('service man starting wayback')
-    let {logger} = global
+    let { logger } = global
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
@@ -276,7 +301,7 @@ export default class ServiceManager {
             if (insertError) {
               console.error('service manager inserting pid for wayback error', insertError)
               if (logger) {
-                logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
+                logger.fatal({ msg: 'service manager inserting pid for wayback error', err: insertError })
               }
               reject(insertError)
             } else {
@@ -288,7 +313,7 @@ export default class ServiceManager {
           })
         } catch (err) {
           if (logger) {
-            logger.fatal({err, msg: 'wayback could not be started'})
+            logger.fatal({ err, msg: 'wayback could not be started' })
           }
           console.error('wayback could not be started', err)
           reject(err)

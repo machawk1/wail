@@ -253,7 +253,7 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('kill-service', (e, who) => {
-      control.killService(who)
+      control.serviceMan.killService(who)
         .then(() => {
           this.send('mainWindow', 'service-killed', { who, wasError: false })
         })

@@ -11,7 +11,7 @@ import S from 'string'
 const EventTypes = wailConstants.EventTypes
 
 const logString = 'service store %s'
-const {logger} = global
+
 
 // const serviceDialogeTemplate = '%s %s down'
 
@@ -38,7 +38,7 @@ class ServiceStore_ extends EventEmitter {
         alive = true
       } else {
         notify.notifySuccess(`Stopped Service ${service}`)
-        logger.debug(`Stopped Service ${service}`)
+        window.logger.debug(`Stopped Service ${service}`)
       }
     } else {
       if (update.wasError) {
@@ -46,7 +46,7 @@ class ServiceStore_ extends EventEmitter {
       } else {
         alive = true
         notify.notifySuccess(`Started Service ${service}`)
-        logger.debug(`Started Service ${service}`)
+        window.logger.debug(`Started Service ${service}`)
       }
     }
 
@@ -67,10 +67,7 @@ class ServiceStore_ extends EventEmitter {
     }
   }
 
-  @autobind
-  statusActionMessage () {
-    return this.statusDialog
-  }
+
 
   serviceStatuses () {
     return this.serviceStatus

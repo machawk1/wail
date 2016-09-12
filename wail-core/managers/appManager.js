@@ -58,7 +58,7 @@ export default class AppManager {
       let settingsPath = userData
       if (process.env.NODE_ENV === 'development') {
         logPath = this.pathMan.joinWBase('waillogs')// path.join(control.base, 'waillogs')
-        v = '1.0.0-rc.2.6'
+        v = '1.0.0-rc.2.7'
         settingsPath = logPath
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')

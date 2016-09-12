@@ -13,7 +13,7 @@ import { remote, ipcRenderer as ipc } from 'electron'
 import * as notify from '../../actions/notification-actions'
 
 const EventTypes = wc.EventTypes
-const ServiceMan = remote.getGlobal('ServiceMan')
+
 
 export default class General extends Component {
   constructor (props, context) {
@@ -77,9 +77,9 @@ export default class General extends Component {
   @autobind
   heritrixKill (event) {
     notify.notifyInfo(`Stopping Heritrix`)
-    this.setState({hGood: false})
     // console.log('General HeritrixTab Kill')
     ipc.send('kill-service', 'heritrix')
+    this.setState({hGood: false})
   }
 
   render () {
