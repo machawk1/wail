@@ -98,7 +98,7 @@ export default class WindowManager extends EventEmitter {
         this.send('mainWindow', 'got-all-runs', cLoadState)
         let wailHasBoth = control.wailHasLoadState('wailHasCrawls')
         if (wailHasBoth) {
-          onsole.log('wail has both loading states')
+          console.log('wail has both loading states')
           this.loadComplete('@wailHasCrawls')
         } else {
           // we have not sent the archive man state
@@ -463,11 +463,13 @@ export default class WindowManager extends EventEmitter {
       this.windows[ 'loadingWindow' ].window.webContents.on('crashed', () => {
         this.emit('window-crashed', 'loadingWindow')
       })
+
       this.windows[ 'loadingWindow' ].window.on('closed', () => {
         console.log('loadingWindow is closed')
         this.windows[ 'loadingWindow' ].window = null
         this.windows[ 'loadingWindow' ].open = false
       })
+
       this.windows[ 'loadingWindow' ].window.loadURL(loadUrl)
       this.windows[ 'loadingWindow' ].window.on('ready-to-show', () => {
         console.log('loadingWindow is ready to show')
