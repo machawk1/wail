@@ -36,6 +36,7 @@
 }
 
 .basicTabLayout {
+    min-height: inherit;
     width: 100%;
     margin: 0;
     padding: 0;
@@ -50,11 +51,16 @@
 }
 
 .waybackGrid {
+    min-width: 100%;
+    min-height: 100%;
     padding-right: 0;
     padding-left: 0;
     margin-left: 0;
     margin-right: 0;
-    width: 100vw;
+}
+
+.wbCollectionOverviewRow {
+    min-height: 200px;
 }
 
 .stepRefresh {

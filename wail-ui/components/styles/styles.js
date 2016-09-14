@@ -69,7 +69,8 @@ export default {
     height: 140
   },
   root: {
-    paddingTop: spacing.desktopKeylineIncrement
+    paddingTop: spacing.desktopKeylineIncrement,
+    height: '86vh'
   },
   appBar: {
     position: 'fixed',
@@ -168,7 +169,6 @@ export default {
     crawlUrlS: {
       width: '100px',
       wordWrap: 'break-word',
-      textOverflow: 'none',
       whiteSpace: 'normal',
       cursor: 'default'
     },

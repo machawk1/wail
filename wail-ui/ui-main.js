@@ -5,8 +5,6 @@ import {
   dialog
 } from 'electron'
 import path from 'path'
-import Logger from './logger/logger'
-import bunyan from 'bunyan'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
@@ -17,6 +15,7 @@ process.on('uncaughtException', (err) => {
   if (logger) {
     logger.fatal(err)
   }
+  dialog.showErrorBox('uncaughtException', `${err} ${err.stack}`)
   // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
   app.quit()
 })
@@ -60,7 +59,6 @@ winMan.on('send-failed', (report) => {
 
 app.on('ready', () => {
   console.log('app ready')
-  app.isQuitting = false
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   let base = path.resolve('./')
   let loadFrom = __dirname
@@ -87,19 +85,7 @@ app.on('ready', () => {
       global.indexLogPath = path.join(control.logPath, 'index.log')
       global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
 
-      let logPath = path.join(control.logPath, 'wail.log')
-      //  bdb
-      global.logger = bunyan.createLogger({
-        name: 'wail-ui-main',
-        streams: [
-          {
-            level: 'info',
-            path: logPath // log ERROR and above to a file
-          }
-        ]
-      })
-
-      global.wailLogp = logPath
+      global.wailLogp = path.join(control.logPath, 'wail.log')
       global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
 
       global.showSettingsMenu = showSettingsWindow
@@ -116,6 +102,7 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   console.log('all windows closed')
   if (process.platform !== 'darwin') {
+    control.isQuitting = true
     console.log('not darwin we should close')
     app.quit()
   }
@@ -125,15 +112,22 @@ app.on('activate', () => {
   // On OS X it's common to re-create a window in the app when the
   // dock icon is clicked and there are no other windows open.
   if (control.didClose) {
+    control.isQuitting = false
     winMan.initWail(control)
   }
 })
 
-app.on('before-quit', () => {
-  // console.log('before-quit')
-  let {serviceMan} = global
-  if (serviceMan) {
-    serviceMan.killService('all')
+app.on('before-quit', (e) => {
+  console.log('before quit')
+  if (control.isQuitting) {
+    return
   }
+  control.isQuitting = true
+  // console.log('before-quit')
+  e.preventDefault()
+  console.log('killing all serivices')
+  control.serviceMan.killService('all')
+    .then(() => app.quit())
+
 })
 

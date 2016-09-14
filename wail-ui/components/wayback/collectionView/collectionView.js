@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
-import CollectionInfo from './collectionInfo'
+import CollectionOverview from './collectionOverview'
+import { Row, Col } from 'react-flexbox-grid'
 
 export default class CollectionView extends Component {
   static propTypes = {
@@ -34,7 +34,11 @@ export default class CollectionView extends Component {
   render () {
     let { viewing } = this.state
     return (
-      <CollectionInfo collection={viewing} />
+      <Row style={{height: '72vh'}}>
+        <Col xs>
+          <CollectionOverview collection={viewing} />
+        </Col>
+      </Row>
     )
   }
 }

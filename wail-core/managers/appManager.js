@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import SettingsManager from './settingsManager'
 import ServiceManager from './serviceManager'
 import S from 'string'
+import bunyan from 'bunyan'
 
 
 S.TMPL_OPEN = '{'
@@ -14,6 +15,7 @@ const loadingSequence = [ 'lsDone' ]
 
 export default class AppManager {
   constructor () {
+    this.isQuitting = false
     this.settingsMan = null
     this.pathMan = null
     this.w = 1000
@@ -63,6 +65,16 @@ export default class AppManager {
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
       }
+      //  bdb
+      global.logger = bunyan.createLogger({
+        name: 'wail-ui-main',
+        streams: [
+          {
+            level: 'info',
+            path: this.pathMan.join(logPath, 'wail.log') // log ERROR and above to a file
+          }
+        ]
+      })
       this.logPath = logPath
       this.settingsMan = new SettingsManager(base, settingsPath, v)
       return this.settingsMan.configure()
@@ -95,7 +107,6 @@ export default class AppManager {
             minHeight: this.h,
             // maxHeight: this.h,
             title: 'Web Archiving Integration Layer',
-            fullscreenable: false,
             maximizable: false,
             show: false,
             icon: this.iconp

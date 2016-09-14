@@ -71,6 +71,7 @@ export default {
       'dtrace-provider': './wail-ui/bunyanshim.js'
     }
   },
+  externals: ['fsevents'],
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({

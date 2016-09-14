@@ -21,9 +21,8 @@ import psTree from 'ps-tree'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 
 
-
-
-
+// const base = path.join(path.resolve('.'),'bundledApps/heritrix/jobs/**/progress-statistics.log')
+// console.log(base)
 
 // const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
 // const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
@@ -32,43 +31,62 @@ import psTree from 'ps-tree'
 // const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
 // let jobStatus = named.named(jobStatusRec)
 
-// let logWatcher = chokidar.watch('/home/john/my-fork-wail/bundledApps/heritrix/jobs/testing/20160904011113/logs/progress-statistics.log',{
-//   awaitWriteFinish: true,
+console.log(path.resolve('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log','../../'))
+console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log/../../warcs/*.warc`))
+
+// let logWatcher = chokidar.watch(base,{
 //   followSymlinks: true,
+// })
+//
+// logWatcher.on('add',path => console.log(`File ${path} has been added`))
+// logWatcher.on('change',path => console.log(`File ${path} has been changed`))
+
+
+// psTree(32516,(err, kids) => {
+//   if(err) {
+//     console.error(err)
+//   } else {
+//     console.log(kids)
+//     if(kids.length > 0) {
+//       console.log('we have length')
+//     } else {
+//       console.log('we have no length')
+//       process.kill(32516, 'SIGTERM')
+//     }
+//   }
 // })
 
 
-
-S.TMPL_CLOSE = '}'
-S.TMPL_OPEN= '{'
+// S.TMPL_CLOSE = '}'
+// S.TMPL_OPEN= '{'
+// //
+// // // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
+// // // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
+// // // let pather = new Pather(path.resolve('.'))
+// // // console.log(util.inspect(pather,{depth: null,colors: true}))
+// let configDirPath = path.join('.','waillogs/wail-settings')
 //
-// // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
-// // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
-// // let pather = new Pather(path.resolve('.'))
-// // console.log(util.inspect(pather,{depth: null,colors: true}))
-let configDirPath = path.join('.','waillogs/wail-settings')
-
-let settings = new Esettings({ configDirPath })
-let opts = {
-  cwd: settings.get('warcs')
-}
-let tmplVal = { col: 'ghhhkjlhkj' ,warcs: '/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473573838942/20160911060401/warcs/*.warc'}
-let tmplVal2 = {col: 'Wail'}
-let command = S(settings.get('pywb.addWarcsToCol')).template(tmplVal).s
-cp.exec(command, opts, (error, stdout, stderr) => {
-  if (error) {
-    console.error(error,stderr,stdout)
-  } else {
-    let c1 = ((stdout || ' ').match(/INFO/g) || []).length
-    let c2 = ((stderr || ' ').match(/INFO/g) || []).length
-    let count = c1 === 0 ? c2 : c1
-
-    console.log('added warcs to collection iy',count)
-    console.log('stdout', stdout)
-    console.log('stderr', stderr)
-  }
-
-})
+// let settings = new Esettings({ configDirPath })
+// let opts = {
+//   cwd: settings.get('warcs')
+// }
+// let tmplVal = { col: 'ghhhkjlhkj' ,warcs: '/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473573838942/20160911060401/warcs/*.warc'}
+// let tmplVal2 = {col: 'Wail'}
+// let command = S(settings.get('pywb.addWarcsToCol')).template(tmplVal).s
+// cp.exec(command, opts, (error, stdout, stderr) => {
+//   if (error) {
+//     console.error(error,stderr,stdout)
+//   } else {
+//     let c1 = ((stdout || ' ').match(/INFO/g) || []).length
+//     let c2 = ((stderr || ' ').match(/INFO/g) || []).length
+//     let count = c1 === 0 ? c2 : c1
+//
+//     console.log('added warcs to collection iy',count)
+//     console.log('stdout', stdout)
+//     console.log('stderr', stderr)
+//   }
+//
+// })
 
 //
 // let opts = {

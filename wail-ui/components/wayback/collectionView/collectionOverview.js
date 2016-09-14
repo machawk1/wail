@@ -5,9 +5,10 @@ import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
 import autobind from 'autobind-decorator'
 import CollectionToolBar from './collectionToolBar'
-import { shell } from 'electron'
+import { remote } from 'electron'
+import { openUrlInBrowser, openFSLocation } from '../../../actions/util-actions'
 
-const textSize = 15
+const settings = remote.getGlobal('settings')
 
 export default class CollectionOverview extends Component {
   static propTypes = {
@@ -35,32 +36,32 @@ export default class CollectionOverview extends Component {
       name
     } = collection
     return (
-      <Grid fluid className='waybackGrid'>
-        <Row between='xs'>
-          <Col xs>
-            <p>Collection Name: {colName}</p>
-          </Col>
-          <Col xs>
+      <WarcToCollection colName={colName} className="wbCollectionOverviewRow">
+        <div>
+          <Row between='xs'>
             <Col xs>
-              <p>Warcs in collection: {numArchives}</p>
+              <p>Collection Name: {colName}</p>
             </Col>
-
-          </Col>
-        </Row>
-        <Row between='xs'>
-          <Col xs>
-
-                <OpenButton label='Open Index Location' onTouchTap={() => shell.openItem(indexes)} />
-
-          </Col>
-          <Col xs>
-
-                <OpenButton label='Open Warc Location' onTouchTap={() => shell.openItem(archive)} />
-
-          </Col>
-        </Row>
-        <WarcToCollection colName={colName} />
-      </Grid>
+            <Col xs>
+              <Col xs>
+                <p>Warcs in collection: {numArchives}</p>
+              </Col>
+            </Col>
+          </Row>
+          <Row between='xs'>
+            <Col xs>
+              <OpenButton label='View In Wayback'
+                          onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${colName}`)}/>
+            </Col>
+            <Col xs>
+              <OpenButton label='Open Index Location' onTouchTap={() => openFSLocation(indexes)}/>
+            </Col>
+            <Col xs>
+              <OpenButton label='Open Warc Location' onTouchTap={() => openFSLocation(archive)}/>
+            </Col>
+          </Row>
+        </div>
+      </WarcToCollection>
     )
   }
 

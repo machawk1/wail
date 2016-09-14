@@ -45,7 +45,6 @@ export default class WindowManager extends EventEmitter {
     winConfigs.forEach(wc => {
       if (wc.name === 'loadingWindow') {
         this.windows[ wc.name ].conf = wc.conf
-
         this.windows[ wc.name ].urls = {
           firstLoad: wc.fLoadUrl,
           notFirstLoad: wc.notFLoadUrl
@@ -59,6 +58,7 @@ export default class WindowManager extends EventEmitter {
   }
 
   initIpc (control) {
+    /* Loading */
     ipcMain.once('archiveMan-initial-load', (e, aLoadState) => {
       console.log('archive man intial load')
       let haveBoth = control.addLoadingState('archiveManWindow', aLoadState)
@@ -120,26 +120,6 @@ export default class WindowManager extends EventEmitter {
       }
     })
 
-    ipcMain.on('setting-hard-reset', (event, payload) => {
-      console.log('got settings-hard-reset')
-      control.settings.resetToDefault()
-    })
-
-    ipcMain.on('set-heritrix-usrpwd', (event, payload) => {
-      console.log('got set heritrix usrpwd', payload)
-      control.settings.rewriteHeritrixAuth(payload.usr, payload.pwd)
-    })
-
-    ipcMain.on('crawljob-status-update', (event, payload) => {
-      console.log('got crawljob-status-update', payload)
-      this.windows[ 'mainWindow' ].window.webContents.send('crawljob-status-update', payload)
-    })
-
-    ipcMain.on('crawl-started', (event, jobId) => {
-      console.log('got crawl-started')
-      this.windows[ 'crawlManWindow' ].window.webContents.send('crawl-started', jobId)
-    })
-
     ipcMain.on('get-all-runs', (event) => {
       console.log('got get-all-runs')
       this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
@@ -164,47 +144,14 @@ export default class WindowManager extends EventEmitter {
       }
     })
 
-    ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
-      this.windows[ 'crawlManWindow' ].window.webContents.send('makeHeritrixJobConf', confDetails)
-    })
-
-    ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
-      this.windows[ 'mainWindow' ].window.webContents.send('made-heritrix-jobconf', confDetails)
-    })
-
-    ipcMain.on('crawl-to-collection', (event, colCrawl) => {
-      this.windows[ 'mainWindow' ].window.webContents.send('crawl-to-collection', colCrawl)
-    })
-
-    ipcMain.on('add-warcs-to-col', (event, warcs) => {
-      this.windows[ 'archiveManWindow' ].window.webContents.send('add-warcs-to-col', warcs)
-    })
-
     ipcMain.on('loading-finished', (event, payload) => {
       console.log('loading-finished')
       // this.windows[ 'loadingWindow' ].window.close()
     })
 
-    ipcMain.on('send-to-requestDaemon', (event, request) => {
-      this.windows[ 'reqDaemonWindow' ].window.webContents.send('handle-request', request)
-    })
-
-    ipcMain.on('handled-request', (event, request) => {
-      this.windows[ 'mainWindow' ].window.webContents.send('handled-request', request)
-    })
-
-    ipcMain.on('yes-crawls-running', () => {
-      control.serviceMan.killService('wayback')
-        .then(() => {
-          this.emit('killed-services')
-        })
-    })
-
-    ipcMain.on('no-crawls-running', () => {
-      control.serviceMan.killService('all')
-        .then(() => {
-          this.emit('killed-services')
-        })
+    /* Settings NewCrawlWindow */
+    ipcMain.on('open-settings-window', (e) => {
+      this.showSettingsWindow(control)
     })
 
     ipcMain.on('open-newCrawl-window', () => {
@@ -212,25 +159,108 @@ export default class WindowManager extends EventEmitter {
       this.showNewCrawlWindow(control)
     })
 
+    ipcMain.on('setting-hard-reset', (event, payload) => {
+      console.log('got settings-hard-reset')
+      control.settings.resetToDefault()
+    })
+
+    ipcMain.on('set-heritrix-usrpwd', (event, payload) => {
+      console.log('got set heritrix usrpwd', payload)
+      control.settings.rewriteHeritrixAuth(payload.usr, payload.pwd)
+    })
+
+    /* Heritrix */
+
+    ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
+      this.send('crawlManWindow','makeHeritrixJobConf', confDetails)
+    })
+
+    ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
+      this.send('mainWindow','made-heritrix-jobconf', confDetails)
+    })
+
+    ipcMain.on('crawl-started', (event, jobId) => {
+      console.log('got crawl-started')
+      this.send('crawlManWindow','crawl-started', jobId)
+    })
+
+    ipcMain.on('stop-monitoring-job', (event, jobId) => {
+      this.send('crawlManWindow', 'stop-monitoring-job', jobId)
+    })
+
+    ipcMain.on('crawljob-status-update', (event, payload) => {
+      console.log('got crawljob-status-update', payload)
+      this.send('mainWindow','crawljob-status-update', payload)
+    })
+
+    ipcMain.on('yes-crawls-running', () => {
+      console.log('yes-crawls are running')
+      control.serviceMan.killService('wayback')
+        .then(() => {
+          this.emit('killed-services')
+        })
+    })
+
+    ipcMain.on('no-crawls-running', () => {
+      console.log('no-crawls are running')
+      control.serviceMan.killService('all')
+        .then(() => {
+          this.emit('killed-services')
+        })
+    })
+
+
+    /* Wayback */
+
+    ipcMain.on('crawl-to-collection', (event, colCrawl) => {
+      this.send('mainWindow','crawl-to-collection', colCrawl)
+    })
+
+    ipcMain.on('add-warcs-to-col', (event, warcs) => {
+      this.send('archiveManWindow','add-warcs-to-col', warcs)
+    })
+
     ipcMain.on('create-collection', (event, nc) => {
       console.log('create-collection', nc)
-      this.windows[ 'archiveManWindow' ].window.webContents.send('create-collection', nc)
+      this.send('archiveManWindow','create-collection', nc)
     })
 
     ipcMain.on('created-collection', (event, nc) => {
       console.log('crated-collection', nc)
-      this.windows[ 'mainWindow' ].window.webContents.send('created-collection', nc)
-    })
-    ipcMain.on('create-collection-failed', (event, fail) => {
-      console.log('create-collection-failed', fail)
-      this.windows[ 'mainWindow' ].window.webContents.send('create-collection-failed', fail)
+      this.send('mainWindow','created-collection', nc)
     })
 
+    ipcMain.on('create-collection-failed', (event, fail) => {
+      console.log('create-collection-failed', fail)
+      this.send('mainWindow', 'create-collection-failed', fail)
+    })
+
+    ipcMain.on('add-warcs-to-col', (e, addMe) => {
+      this.send('archiveManWindow', 'add-warcs-to-col', addMe)
+    })
+
+    ipcMain.on('added-warcs-to-col', (e, update) => {
+      this.send('mainWindow', 'added-warcs-to-col', update)
+    })
+
+    /* Control */
     ipcMain.on('display-message', (event, m) => {
       console.log('display-message', m)
       this.send('mainWindow', 'display-message', m)
-      // this.windows[ 'mainWindow' ].window.webContents.send('display-message', m)
     })
+
+    ipcMain.on('managers-error',(e,report) => {
+      this.send('mainWindow', 'display-message', report)
+    })
+
+    ipcMain.on('send-to-requestDaemon', (event, request) => {
+      this.send('reqDaemonWindow','handle-request', request)
+    })
+
+    ipcMain.on('handled-request', (event, request) => {
+      this.send('mainWindow','handled-request', request)
+    })
+
 
     ipcMain.on('start-service', (e, who) => {
       if (who === 'wayback') {
@@ -262,13 +292,7 @@ export default class WindowManager extends EventEmitter {
         })
     })
 
-    ipcMain.on('add-warcs-to-col', (e, addMe) => {
-      this.send('archiveManWindow', 'add-warcs-to-col', addMe)
-    })
 
-    ipcMain.on('added-warcs-to-col', (e, update) => {
-      this.send('mainWindow', 'added-warcs-to-col', update)
-    })
   }
 
   loadComplete (where) {
@@ -607,10 +631,7 @@ export default class WindowManager extends EventEmitter {
         dlExtensions()
       }
 
-      let {
-        conf,
-        url
-      } = this.windows[ 'mainWindow' ]
+      let { conf, url } = this.windows[ 'mainWindow' ]
 
       this.windows[ 'mainWindow' ].window = new BrowserWindow(conf)
       this.windows[ 'mainWindow' ].window.loadURL(url)
@@ -642,7 +663,7 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows[ 'mainWindow' ].window.on('closed', () => {
-        console.log('new crawl window is closed')
+        console.log('mainWindow is closed')
         control.didClose = true
         this.windows[ 'mainWindow' ].window = null
         this.windows[ 'mainWindow' ].loadComplete = false
@@ -650,7 +671,7 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows[ 'mainWindow' ].window.on('show', () => {
-        console.log('new crawl window is closed')
+        console.log('mainWindow is showing')
         this.windows[ 'mainWindow' ].open = true
       })
       this.windows[ 'mainWindow' ].window.on('ready-to-show', () => {
@@ -693,16 +714,20 @@ export default class WindowManager extends EventEmitter {
       this.windows[ who ].window.webContents.send(channel, what)
     } else {
       console.error(`the window ${who} was not alive`)
-      this.emit('send-failed', { who, ...args })
+      this.emit('send-failed', { who, channel, what })
     }
   }
 
   closeAllWindows () {
     for (let [winName, winHolder] of Object.entries(this.windows)) {
-      if (winHolder.open && winHolder.window) {
-        winHolder.window.close()
-      } else {
+
+      if (winName !== 'mainWindo') {
+        if (winHolder.open && winHolder.window) {
+          console.log(winName)
+        } else {
+        }
       }
+
     }
   }
 }

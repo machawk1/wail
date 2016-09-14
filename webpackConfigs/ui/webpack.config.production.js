@@ -75,6 +75,9 @@ export default {
       }
     ]
   },
+  externals: [
+    'fsevents'
+  ],
   resolve: {
     alias: {
       'dtrace-provider': './wail-ui/bunyanshim.js'

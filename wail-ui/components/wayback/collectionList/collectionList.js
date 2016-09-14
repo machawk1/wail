@@ -12,7 +12,6 @@ import Dimensions from 'react-dimensions'
 import NewCollection from '../collectionView/newCollection'
 import _ from 'lodash'
 
-@Dimensions()
 export default class CollectionList extends Component {
   static propTypes = {
     cols: PropTypes.arrayOf(PropTypes.string).isRequired,

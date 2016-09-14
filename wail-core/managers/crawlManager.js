@@ -82,8 +82,11 @@ export default class CrawlManager {
       if (error) {
         console.error('error inserting document', error)
         ipc.send('managers-error', {
-          where: 'crawlStarted insert',
-          error
+          title: 'Error',
+          level: 'error',
+          message: `There was an error during adding the job ${jobId} to it collection collection`,
+          uid: `There was an error during adding the job ${jobId} to it collection collection`,
+          autoDismiss: 0
         })
       } else {
         this.csMonitor.startMonitoring(updated.path, jobId)
@@ -111,11 +114,16 @@ export default class CrawlManager {
     this.db.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
+        ipc.send('managers-error', {
+          title: 'Error',
+          level: 'error',
+          message: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the warc(s) produced by this crawl ${update.stats.warcs}.`,
+          uid: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the warc(s) produced by this crawl ${update.stats.warcs}.`,
+          autoDismiss: 0
+        })
       } else {
         console.log('updated document', numUpdated, updated)
-        let {
-          forCol
-        } = updated[ 0 ]
+        ipc.send('add-warcs-to-col', { forCol: updated.forCol, warcs: update.stats.warcs })
       }
     })
   }
@@ -208,5 +216,9 @@ export default class CrawlManager {
         }
       })
     })
+  }
+
+  stopMonitoringJob(jobId) {
+    this.csMonitor.stopMonitoring(jobId)
   }
 }

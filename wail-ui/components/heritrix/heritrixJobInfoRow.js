@@ -84,9 +84,7 @@ export default class HeritrixJobInfoRow extends Component {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
-            <FitText maxFontSize={textSize} >
-              <p>{url}</p>
-            </FitText>
+            <p>{url}</p>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             {status}
@@ -112,9 +110,7 @@ export default class HeritrixJobInfoRow extends Component {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
-            <FitText maxFontSize={textSize} >
-              <p>{url}</p>
-            </FitText>
+            <p>{url}</p>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             Not Started

@@ -1,11 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { Grid, Row, Col } from 'react-flexbox-grid'
-import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import Dimensions from 'react-dimensions'
 import styles from '../styles/styles'
 import { remote } from 'electron'
 

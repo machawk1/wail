@@ -71,9 +71,18 @@ const ignore = [
   '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
-    deps.filter(name => !electronCfg.externals.includes(name))
+    deps.filter(name => {
+      console.log(name,!electronCfg.externals.includes(name),electronCfg.externals)
+      return !electronCfg.externals.includes(name)
+    } )
+      .filter(name => {
+        console.log(name,!cfg.externals.includes(name),electronCfg.externals)
+
+        return !cfg.externals.includes(name)
+      })
       .map(name => `/node_modules/${name}($|/)`)
   )
+console.log(ignore)
 
 const DEFAULT_OPTS = {
   'app-copyright': 'jberlin',

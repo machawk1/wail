@@ -3,8 +3,6 @@ import Inspector from 'react-json-inspector'
 import { Card, CardActions, CardHeader, CardText, CardMedia } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
-const { logger } = global
-
 const input = React.DOM.input
 
 class Selector extends Component {

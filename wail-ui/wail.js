@@ -31,7 +31,7 @@ window.logger = bunyan.createLogger({
   name: 'wail-ui',
   streams: [
     {
-      level: 'warn',
+      level: 'info',
       path: remote.getGlobal('wailUILogp')
     },
     {
@@ -40,6 +40,12 @@ window.logger = bunyan.createLogger({
       stream: ringbuffer
     }
   ]
+})
+
+
+
+process.on('uncaughtException', (err) => {
+  window.logger.error(err)
 })
 
 render(

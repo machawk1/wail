@@ -94,16 +94,21 @@ export default class ServiceManager {
             if (!this._isWin) {
               // process.kill(pid, 'SIGTERM')
               psTree(pid, (err, kids) => {
+                console.log(kids)
                 if (err) {
                   console.error('ps tree error', err)
                   process.kill(pid, 'SIGTERM')
                 } else {
-                  let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
-                    detached: true,
-                    shell: true,
-                    stdio: [ 'ignore', 'ignore', 'ignore' ]
-                  })
-                  dukeNukem.unref()
+                  if (kids.length > 0) {
+                    let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                      detached: true,
+                      shell: true,
+                      stdio: [ 'ignore', 'ignore', 'ignore' ]
+                    })
+                    dukeNukem.unref()
+                  } else {
+                    process.kill(pid, 'SIGTERM')
+                  }
                 }
               })
             } else {
@@ -138,12 +143,16 @@ export default class ServiceManager {
                 console.error('ps tree error', err)
                 process.kill(pid, 'SIGTERM')
               } else {
-                let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
-                  detached: true,
-                  shell: true,
-                  stdio: [ 'ignore', 'ignore', 'ignore' ]
-                })
-                dukeNukem.unref()
+                if (kids.length > 0) {
+                  let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                    detached: true,
+                    shell: true,
+                    stdio: [ 'ignore', 'ignore', 'ignore' ]
+                  })
+                  dukeNukem.unref()
+                } else {
+                  process.kill(pid, 'SIGTERM')
+                }
               }
             })
           } else {
@@ -239,7 +248,7 @@ export default class ServiceManager {
                 this._monitoring.set('heritrix', pid)
                 console.log('Heritrix was started')
                 if (logger) {
-                  logger.info(`heritrix was started ${pid}`)
+                  logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
                 }
                 this._pidStore.update({
                   who: 'heritrix',

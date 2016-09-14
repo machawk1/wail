@@ -61,10 +61,15 @@ export default {
     __dirname: false,
     __filename: false
   },
-
+  esolve: {
+    alias: {
+      'dtrace-provider': './wail-ui/bunyanshim.js'
+    }
+  },
   externals: [
     'source-map-support',
     'material-design-icons-iconfont',
     'roboto-fontface',
+    'fsevents'
   ]
 }

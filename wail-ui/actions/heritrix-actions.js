@@ -474,8 +474,8 @@ export function restartJob (jobId) {
   buildHeritrixJob(jobId)
 }
 
-export function deleteHeritrixJob (jobId, cb) {
-  forceCrawlFinish(jobId, this.props.urls, cb)
+export function deleteHeritrixJob (jobId, urls, cb) {
+  forceCrawlFinish(jobId, urls, cb)
 }
 
 export function sendActionToHeritrix (act, jobId, cb) {

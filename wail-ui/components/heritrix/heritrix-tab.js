@@ -20,7 +20,6 @@ const styles = {
 
 const settings = remote.getGlobal('settings')
 
-@Dimensions()
 export default class HeritrixTab extends Component {
 
   @autobind

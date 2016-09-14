@@ -14,7 +14,6 @@ const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function checkUriIsInArchive (uri, forCol) {
-  console.log(global)
   console.log('checking if uri is in archive', uri, forCol)
   notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
   window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
@@ -24,6 +23,7 @@ export function checkUriIsInArchive (uri, forCol) {
     resolveWithFullResponse: true
   })
     .then(response => {
+      console.log(response)
       // POST succeeded...
       if (response.statusCode === 200) {
         window.logger.debug(`${uri} is in the archive ${forCol}`)

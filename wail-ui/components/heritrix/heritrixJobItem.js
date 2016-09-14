@@ -1,5 +1,5 @@
 import React, { Component, PropTypes } from 'react'
-import { shell, remote } from 'electron'
+import { shell, remote, ipcRender as ipc } from 'electron'
 import { ListItem } from 'material-ui/List'
 import { grey400 } from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
@@ -17,7 +17,6 @@ import CrawlStore from '../../stores/crawlStore'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import {
   forceCrawlFinish,
-  deleteHeritrixJob,
   restartJob,
   rescanJobDir
 } from '../../actions/heritrix-actions'
@@ -99,46 +98,55 @@ export default class HeritrixJobItem extends Component {
   }
 
   @autobind
+  rmJob(jpath,stopWatching = false) {
+    if (stopWatching) {
+      ipc.send('stop-watching-job',this.props.jobId)
+    }
+    if (process.platform === 'win32') {
+      cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
+        if (error) {
+          // console.log(stderr)
+          // console.log(error)
+        } else {
+          rescanJobDir()
+        }
+      })
+    } else {
+      cp.exec(`rm -rf ${jpath}`,(error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`)
+          return
+        }
+        console.log(`stdout: ${stdout}`)
+        console.log(`stderr: ${stderr}`)
+        rescanJobDir()
+        CrawlDispatcher.dispatch({
+          type: wc.EventTypes.CRAWL_JOB_DELETED,
+          jobId: this.props.jobId
+        })
+      })
+    }
+  }
+
+  @autobind
   deleteJob (event) {
     // console.log('Deleting Job')
     let runs = this.state.runs
     let jPath = `${settings.get('heritrixJob')}${path.sep}${this.props.jobId}`
-    let cb = () => {
-      if (process.platform === 'win32') {
-        cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
-          if (error) {
-            // console.log(stderr)
-            // console.log(error)
-          } else {
-            rescanJobDir()
-          }
-        })
-      } else {
-        fs.remove(jPath, error => {
-          if (error) return // console.error(error)
-          rescanJobDir()
-        })
-      }
-    }
     if (runs.length > 0) {
       if (!runs[ 0 ].ended) {
         // console.log('We have runs and the running one has not ended')
         forceCrawlFinish(this.props.jobId, this.props.urls, () => {
-          deleteHeritrixJob(this.props.jobId, cb)
+          this.rmJob(jPath,true)
         })
       } else {
         // console.log('We have runs and the run has ended')
-        deleteHeritrixJob(this.props.jobId, cb)
+        this.rmJob(jPath )
       }
     } else {
       // console.log('We have no runs delete ok')
-      deleteHeritrixJob(this.props.jobId, cb)
+      this.rmJob(jPath )
     }
-
-    CrawlDispatcher.dispatch({
-      type: wc.EventTypes.CRAWL_JOB_DELETED,
-      jobId: this.props.jobId
-    })
   }
 
   @autobind
