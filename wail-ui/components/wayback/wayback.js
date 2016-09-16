@@ -29,14 +29,13 @@ S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
+const defaultCol = process.env.NODE_ENV === 'development' ? 'Wail' : 'default'
 
 export default class WayBackTab extends Component {
   constructor (props, context) {
     super(props, context)
     let colNames = []
     let collections = {}
-    let entries = ColStore.collections
-    console.log(entries)
     for (let [cname, collection] of ColStore.collections) {
       colNames.push(cname)
       collections[ cname ] = collection
@@ -113,6 +112,7 @@ export default class WayBackTab extends Component {
   }
 
   render () {
+    console.log('wayback default col is',defaultCol)
     return (
       <Grid
         fluid
@@ -128,7 +128,7 @@ export default class WayBackTab extends Component {
           collections={this.state.collections}
           viewWatcher={ViewWatcher}
           from='Wail-Archive-Collections'
-          defaultView='Wail'
+          defaultView={defaultCol}
         />
       </Grid>
     )

@@ -11,7 +11,8 @@ import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import '../../css/wail.css'
 
-@Dimensions()
+const defaultCol = process.env.NODE_ENV === 'development' ? 'Wail' : 'default'
+
 export default class Explorer extends Component {
   constructor (props, context) {
     super(props, context)
@@ -63,7 +64,7 @@ export default class Explorer extends Component {
               collections={this.state.collections}
               viewWatcher={ViewWatcher}
               from='Wail-Archive-Collections'
-              defaultView='Wail'
+              defaultView={defaultCol}
             />
           </Col>
         </Row>

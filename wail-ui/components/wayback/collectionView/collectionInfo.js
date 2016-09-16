@@ -7,7 +7,6 @@ import { Row, Col } from 'react-flexbox-grid'
 import CollectionOverview from './collectionOverview'
 import CollectionMetadata from './collectionMetadata'
 
-@Dimensions()
 export default class CollectionInfo extends Component {
   static propTypes = {
     collection: PropTypes.object.isRequired
