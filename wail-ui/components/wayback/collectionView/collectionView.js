@@ -34,7 +34,7 @@ export default class CollectionView extends Component {
   render () {
     let { viewing } = this.state
     return (
-      <Row style={{height: '72vh'}}>
+      <Row  middle="xs">
         <Col xs>
           <CollectionOverview collection={viewing} />
         </Col>

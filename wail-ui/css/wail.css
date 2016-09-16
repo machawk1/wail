@@ -4,17 +4,17 @@
 .layOutGrid {
     padding-right: 0;
     padding-left: 0;
-    margin-left: 0;
-    margin-right: 0;
-    height: 95vh;
-    width: 99%;
 }
 
 .layoutRow {
-    margin-left: 0;
     margin-right: 0;
-    padding-right: 0;
-    padding-left: 0;
+    margin-left: 0;
+}
+
+
+.layoutCol {
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
 }
 
 .layOutGridFH {

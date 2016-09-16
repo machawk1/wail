@@ -59,10 +59,10 @@ export default class Header extends Component {
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
           zDepth={0}
-          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png' className="pulse" style={
+          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png'  className="pulse" style={
             {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
           }
-          style={{ ...styles.appBar, paddingRight: 0 }}
+
         />
         <Drawer
           docked={false}

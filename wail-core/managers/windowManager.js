@@ -390,16 +390,16 @@ export default class WindowManager extends EventEmitter {
         console.log('new crawl window is ready to show')
 
         ipcMain.once('close-newCrawl-window', (event, payload) => {
-          console.log('window man got close new crawl window')
+          console.log('window man got close new crawl window',this.windows[ 'newCrawlWindow' ].window)
           if(this.windows[ 'newCrawlWindow' ].window) {
-            this.windows[ 'newCrawlWindow' ].window.close()
+            this.windows[ 'newCrawlWindow' ].window.destroy()
           }
         })
 
         ipcMain.once('close-newCrawl-window-configured', (event, payload) => {
           this.windows[ 'mainWindow' ].window.webContents.send('crawljob-configure-dialogue', payload)
           if(this.windows[ 'newCrawlWindow' ].window) {
-            this.windows[ 'newCrawlWindow' ].window.close()
+            this.windows[ 'newCrawlWindow' ].window.destroy()
           }
         })
 

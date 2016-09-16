@@ -63,7 +63,7 @@ export default class CollectionList extends Component {
     return (
 
       <Row
-        between='xs'
+        middle="xs"
         style={{
           backgroundColor: blueGrey50
         }}
