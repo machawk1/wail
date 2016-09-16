@@ -9,20 +9,37 @@ import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
 import styles from '../styles/styles'
 import { Link, IndexLink } from 'react-router'
+import CrawlStore from '../../stores/crawlStore'
 
 export default class Header extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { open: false, location: 'WAIL' }
+    this.state = { open: false, location: 'WAIL', crawlIconVisible: 'hidden' }
   }
 
   @autobind
   handleToggle () {
-    if (!this.state.open) {
-      // console.log('we are opening the drawer')
-    }
     this.setState({ open: !this.state.open })
+  }
+
+  componentWillMount () {
+    CrawlStore.on('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+  }
+
+  componentWillUnmount () {
+    CrawlStore.removeListener('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+  }
+
+  @autobind
+  maybeToggleCrawlIcon(started = false){
+    if(started && this.state.crawlIconVisible === 'hidden') {
+      this.setState({crawlIconVisible: 'visible'})
+    } else {
+      if(this.state.crawlIconVisible === 'visible') {
+        this.setState({crawlIconVisible: 'hidden'})
+      }
+    }
   }
 
   @autobind
@@ -42,6 +59,9 @@ export default class Header extends Component {
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
           zDepth={0}
+          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png' className="pulse" style={
+            {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
+          }
           style={{ ...styles.appBar, paddingRight: 0 }}
         />
         <Drawer

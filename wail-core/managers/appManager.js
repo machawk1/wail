@@ -127,9 +127,10 @@ export default class AppManager {
               conf: {
                 width: 800,
                 height: process.platform === 'win32' ? 380 : 360,
+                maxHeight: process.platform === 'win32' ? 380 : 360,
                 modal: true,
                 show: false,
-                closable: true,
+                closable: false,
                 minimizable: false,
                 autoHideMenuBar: true
               },

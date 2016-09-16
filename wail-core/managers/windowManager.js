@@ -391,12 +391,16 @@ export default class WindowManager extends EventEmitter {
 
         ipcMain.once('close-newCrawl-window', (event, payload) => {
           console.log('window man got close new crawl window')
-          this.windows[ 'newCrawlWindow' ].window.destroy()
+          if(this.windows[ 'newCrawlWindow' ].window) {
+            this.windows[ 'newCrawlWindow' ].window.close()
+          }
         })
 
         ipcMain.once('close-newCrawl-window-configured', (event, payload) => {
           this.windows[ 'mainWindow' ].window.webContents.send('crawljob-configure-dialogue', payload)
-          this.windows[ 'newCrawlWindow' ].window.destroy()
+          if(this.windows[ 'newCrawlWindow' ].window) {
+            this.windows[ 'newCrawlWindow' ].window.close()
+          }
         })
 
         this.windows[ 'newCrawlWindow' ].open = true
@@ -653,6 +657,14 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'mainWindow')
       })
 
+      this.windows['mainWindow'].window.on('app-command',(e, cmd) => {
+        console.log('app-command',cmd)
+        // Navigate the window back when the user hits their mouse back button
+        if (cmd === 'browser-backward' && this.windows['mainWindow'].window.webContents.canGoBack()) {
+          this.windows['mainWindow'].window.webContents.goBack()
+        }
+      })
+
       this.windows[ 'mainWindow' ].window.on('close', (e) => {
         console.log('window man mainWindow close')
         control.resetLoadinState()
@@ -718,12 +730,29 @@ export default class WindowManager extends EventEmitter {
     }
   }
 
+  destroyWindow(who) {
+    if (this.windows[who].open) {
+      if(this.windows[who].window) {
+        this.windows[who].window.destroy()
+        this.windows[who].window = null
+        this.windows[who].open = false
+      } else {
+        this.windows[who].open = false
+      }
+    } else {
+      if(this.windows[who].window) {
+
+      }
+    }
+  }
+
   closeAllWindows () {
     for (let [winName, winHolder] of Object.entries(this.windows)) {
 
-      if (winName !== 'mainWindo') {
+      if (winName !== 'mainWindow') {
         if (winHolder.open && winHolder.window) {
           console.log(winName)
+          winHolder.window.close()
         } else {
         }
       }

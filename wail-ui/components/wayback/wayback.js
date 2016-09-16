@@ -23,6 +23,7 @@ import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import CollectionToolBar from './collectionView/collectionToolBar'
 
+
 const EventTypes = wailConstants.EventTypes
 
 S.TMPL_OPEN = '{'
@@ -48,17 +49,18 @@ export default class WayBackTab extends Component {
   }
 
   componentWillMount () {
-    ColStore.on('got-all-collections', ::this.getCollections)
-    ColStore.on('added-new-collection', ::this.getCollections)
-    ColStore.on('updated-col', ::this.getUpdate)
+    ColStore.on('got-all-collections', this.getCollections)
+    ColStore.on('added-new-collection', this.getCollections)
+    ColStore.on('updated-col', this.getUpdate)
   }
 
   componentWillUnmount () {
-    ColStore.removeListener('got-all-collections', ::this.getCollections)
-    ColStore.removeListener('added-new-collection', ::this.getCollections)
-    ColStore.removeListener('updated-col', ::this.getUpdate)
+    ColStore.removeListener('got-all-collections', this.getCollections)
+    ColStore.removeListener('added-new-collection', this.getCollections)
+    ColStore.removeListener('updated-col', this.getUpdate)
   }
 
+  @autobind
   getCollections (cols) {
     let { collections, colNames } = this.state
     console.log(cols)
@@ -69,6 +71,7 @@ export default class WayBackTab extends Component {
     this.setState({ collections, colNames })
   }
 
+  @autobind
   getUpdate (updated) {
     let { collections } = this.state
     collections[updated.colName] = updated

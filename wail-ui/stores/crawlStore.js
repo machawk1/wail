@@ -33,6 +33,7 @@ class CrawlStore_ extends EventEmitter {
     super()
     this.crawlJobs = []
     this.jobIndex = new Map()
+    this.runningJobs = 0
 
     ipc.on('got-all-runs', this.intialJobStateLoad)
     ipc.on('made-heritrix-jobconf', (event, conf) => {
@@ -162,6 +163,10 @@ class CrawlStore_ extends EventEmitter {
     if (stats.ended) {
       window.logger.debug(`crawl status update for ${jobId} its ended tearing down`)
       teardownJob(jobId)
+      this.runningJobs -= 1
+      if(this.runningJobs === 0) {
+        this.emit('maybe-toggle-ci')
+      }
     } else {
       window.logger.debug(`crawl status update for ${jobId}`)
     }
@@ -374,6 +379,8 @@ class CrawlStore_ extends EventEmitter {
           }
         })
         window.logger.debug(`Heritrix Crawl Started: ${conf.urls}`)
+        this.emit('maybe-toggle-ci',true)
+        this.runningJobs += 1
         break
       }
       case EventTypes.CRAWL_JOB_DELETED:
