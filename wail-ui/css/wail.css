@@ -1,6 +1,52 @@
 @charset "UTF-8";
 /* wail */
 
+/*
+.dark-primary-color    { background: #00796B; }
+.default-primary-color { background: #009688; }
+.light-primary-color   { background: #B2DFDB; }
+.text-primary-color    { color: #FFFFFF; }
+.accent-color          { background: #536DFE; }
+.primary-text-color    { color: #212121; }
+.secondary-text-color  { color: #757575; }
+.divider-color         { border-color: #BDBDBD; }
+*/
+
+.layoutChildDiv {
+    position: absolute;
+    overflow: auto;
+    width: 99%;
+    top:250px;
+    bottom: 57px;
+    border: 1px solid red;
+}
+
+.contentFab {
+    margin: 0;
+    top: auto;
+    right: 20px;
+    bottom: 70px;
+    left: auto;
+    position: fixed;
+}
+
+.noMarginGrid {
+    margin: 0;
+    padding: 0;
+}
+
+.layoutHeader {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.layoutFooter {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
 .layOutGrid {
     padding-right: 0;
     padding-left: 0;
@@ -36,8 +82,6 @@
 }
 
 .basicTabLayout {
-    min-height: inherit;
-    width: 100%;
     margin: 0;
     padding: 0;
 }
@@ -55,7 +99,6 @@
     min-height: 100%;
     padding-right: 0;
     padding-left: 0;
-    margin-left: 0;
     margin-right: 0;
 }
 

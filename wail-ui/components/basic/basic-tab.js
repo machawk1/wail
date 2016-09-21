@@ -6,6 +6,7 @@ import MementoTable from './mementoTable'
 import ArchivalButtons from './archivalButtos'
 import MementoMessagePanel from './mementoMessage-panel'
 import BasicColList from './basicCollectionList'
+
 import ArchiveOrCheckCol from './archiveOrCheckCol'
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import EditOrCreateCollection from './editOrCreateCollection'
@@ -36,18 +37,14 @@ export default class BasicTab extends Component {
 
   constructor (...args) {
     super(...args)
-    this.state = {
-      colNames: [],
-      selectedIndex: 0
-    }
   }
 
   render () {
     return (
-      <Grid fluid
-        className='basicTabLayout'
+      <Grid
+        fluid
       >
-        <Row>
+        <Row top="xs">
           <Col xs>
             <CardHeader
               title='Archive URL'
@@ -55,7 +52,16 @@ export default class BasicTab extends Component {
             />
           </Col>
         </Row>
-        <ArchiveOrCheckCol />
+        <Row middle="xs">
+          <Col xs>
+            <ArchiveUrl />
+          </Col>
+        </Row>
+        <Row bottom="xs">
+          <Col xs>
+            <ArchivalButtons />
+          </Col>
+        </Row>
       </Grid>
     )
   }

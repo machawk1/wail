@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { Grid, Row, Col } from 'react-flexbox-grid'
 import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import Header from './header'
-import Footer from './footer'
+import Header from './header2'
+import Footer from './footer2'
 import styles from '../styles/styles'
 import { remote } from 'electron'
 
@@ -40,10 +40,8 @@ export default class Layout extends Component {
   render () {
     return (
       <div>
-        <Header/>
-        <div style={styles.root}>
-          { this.props.children }
-        </div>
+        <Header />
+        {this.props.children}
         <Footer/>
       </div>
     )

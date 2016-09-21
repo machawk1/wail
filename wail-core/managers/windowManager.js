@@ -316,33 +316,46 @@ export default class WindowManager extends EventEmitter {
   }
 
   initWail (control) {
-    this.initIpc(control)
-    console.log('init wail')
-    this.showLoadingWindow(control)
+    this.createWail(control)
       .then(() => {
-        console.log('loading window shown')
-        this.createRequestD(control)
-          .then(() => {
-            this.createArchiveMan(control)
-              .then(() => {
-                this.createCrawlMan(control)
-                  .then(() => {
-                    this.createWail(control)
-                      .then(() => {
-                        console.log('all windows loaded')
-                        // this.send('crawlManWindow','get-all-runs')
-                        // this.send('archiveManWindow','get-all-collections')
-                        // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
-                        // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
-                        // this.windows[ 'mainWindow' ].open = true
-                        // this.windows[ 'mainWindow' ].window.show()
-                        // this.windows[ 'mainWindow' ].window.focus()
-                        // start the loading of serivices finally
-                      })
-                  })
-              })
-          })
+        console.log('all windows loaded')
+        this.windows['mainWindow'].window.show()
+        // this.send('crawlManWindow','get-all-runs')
+        // this.send('archiveManWindow','get-all-collections')
+        // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
+        // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
+        // this.windows[ 'mainWindow' ].open = true
+        // this.windows[ 'mainWindow' ].window.show()
+        // this.windows[ 'mainWindow' ].window.focus()
+        // start the loading of serivices finally
       })
+    // this.initIpc(control)
+    // console.log('init wail')
+    // this.showLoadingWindow(control)
+    //   .then(() => {
+    //     console.log('loading window shown')
+    //     this.createRequestD(control)
+    //       .then(() => {
+    //         this.createArchiveMan(control)
+    //           .then(() => {
+    //             this.createCrawlMan(control)
+    //               .then(() => {
+    //                 this.createWail(control)
+    //                   .then(() => {
+    //                     console.log('all windows loaded')
+    //                     // this.send('crawlManWindow','get-all-runs')
+    //                     // this.send('archiveManWindow','get-all-collections')
+    //                     // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
+    //                     // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
+    //                     // this.windows[ 'mainWindow' ].open = true
+    //                     // this.windows[ 'mainWindow' ].window.show()
+    //                     // this.windows[ 'mainWindow' ].window.focus()
+    //                     // start the loading of serivices finally
+    //                   })
+    //               })
+    //           })
+    //       })
+    //   })
   }
 
   didCoreLoad () {

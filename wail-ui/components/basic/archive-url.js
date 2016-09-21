@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import {Row, Col} from 'react-flexbox-grid'
+import { Row, Col } from 'react-flexbox-grid'
 import AutoComplete from 'material-ui/AutoComplete'
 import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
@@ -13,6 +13,7 @@ import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 
 const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes
@@ -30,25 +31,32 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default class ArchiveUrl extends Component {
-  static propTypes = {
-    forCol: PropTypes.string
-  }
-
-  static defaultProps = {
-    forCol: defForCol
-  }
 
   constructor (props, context) {
     super(props, context)
-    this.state = { url: UrlStore.getUrl(), underlineStyle: styles.underlineStyle }
+    this.state = {
+      url: UrlStore.getUrl(),
+      underlineStyle: styles.underlineStyle,
+      forCol: defForCol
+    }
   }
 
   componentWillMount () {
+    console.log('archiveurl cwm')
     UrlStore.on('url-updated', this.getUrl)
+    ViewWatcher.on('basicColList-selected',this.updateForCol)
   }
 
   componentWillUnmount () {
+    console.log('archiveurl cwum')
     UrlStore.removeListener('url-updated', this.getUrl)
+    ViewWatcher.removeListener('basicColList-selected',this.updateForCol)
+  }
+
+  @autobind
+  updateForCol (forCol) {
+    console.log('archive url got an for col update',forCol)
+    this.setState({ forCol })
   }
 
   @autobind
@@ -94,7 +102,7 @@ export default class ArchiveUrl extends Component {
     CrawlDispatcher.dispatch({
       type: EventTypes.BUILD_CRAWL_JOB,
       from: From.BASIC_ARCHIVE_NOW,
-      forCol: this.props.forCol
+      forCol: this.state.forCol
     })
   }
 

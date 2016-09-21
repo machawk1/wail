@@ -1,5 +1,10 @@
 import keyMirror from 'keymirror'
 
+let defForCol = 'default'
+if (process.env.NODE_ENV === 'development') {
+  defForCol = 'Wail'
+}
+
 export default {
   Code: {
     which: keyMirror({
@@ -63,5 +68,6 @@ export default {
     SERVICE_HW_DOWN: null,
     SERVICE_CHECK_DONE: null,
     MIGRATION_DONE: null
-  })
+  }),
+  Default_Collection: defForCol
 }

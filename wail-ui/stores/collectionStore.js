@@ -7,6 +7,7 @@ import wailConstants from '../constants/wail-constants'
 import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import * as notify from '../actions/notification-actions'
+import { Schema, arrayOf, normalize } from 'normalizr'
 
 const settings = remote.getGlobal('settings')
 const {
@@ -16,7 +17,7 @@ const {
   GET_COLLECTION_NAMES,
   QUEUE_MESSAGE
 } = wailConstants.EventTypes
-const From = wailConstants.From
+
 
 let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
@@ -27,6 +28,7 @@ class _CollectionStore extends EventEmitter {
   constructor () {
     super()
     this.collections = new Map()
+    this.colNames = []
     ipc.on('got-all-collections', ::this.loadCollections)
     ipc.on('created-collection', ::this.addNewCol)
     ipc.on('added-warcs-to-col', ::this.addedWarcs)
@@ -52,6 +54,7 @@ class _CollectionStore extends EventEmitter {
         crawls.sort((r1, r2) => r1.compare(r2))
         col.crawls = crawls
         collections.push(col)
+        this.colNames.push(col.colName)
         this.collections.set(col.colName, col)
       })
       this.emit('got-all-collections', collections)
@@ -79,7 +82,7 @@ class _CollectionStore extends EventEmitter {
 
   addNewCol (event, col) {
     this.collections.set(col.colName, new ColCrawlInfo(col))
-    this.names.push(col.colName)
+    this.colNames.push(col.colName)
     this.emit('added-new-collection', Array.from(this.collections.values()))
     GMessageDispatcher.dispatch({
       type: QUEUE_MESSAGE,
@@ -94,7 +97,11 @@ class _CollectionStore extends EventEmitter {
   }
 
   getColNames () {
-    return Array.from(this.collections.keys())
+    return this.colNames
+  }
+
+  getCollection(name) {
+    return this.collections.get(name)
   }
 
   @autobind
@@ -124,7 +131,7 @@ class _CollectionStore extends EventEmitter {
         this.emit('have-collections', this.collections.values())
         break
       case GET_COLLECTION_NAMES:
-        this.emit('collection-names', this.collections.keys())
+        this.emit('collection-names', this.colNames)
         break
     }
   }

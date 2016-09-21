@@ -1,14 +1,17 @@
 import React, { Component, PropTypes } from 'react'
-import { Toolbar, ToolbarGroup, ToolbarTitle} from 'material-ui/Toolbar'
+import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar'
 import { findDOMNode } from 'react-dom'
+import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
 import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import wailConstants from '../../constants/wail-constants'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
-import ReactTooltip from 'react-tooltip'
-import DropDownMenu from 'material-ui/DropDownMenu'
+import BasicColList from './basicCollectionList'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import IconButton from 'material-ui/IconButton'
+import SearchIcon from 'material-ui/svg-icons/action/search'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -19,25 +22,40 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default class ArchivalButtons extends Component {
-  static propTypes = {
-    forCol: PropTypes.string,
-    archiveList: PropTypes.node.isRequired
-  }
-
-  static defaultProps = {
-    forCol: defForCol
-  }
 
   constructor (...args) {
     super(...args)
+    this.state = {
+      forCol: defForCol
+    }
+
+  }
+
+  componentWillMount () {
+    console.log('archival buttons cwm')
+    ViewWatcher.on('basicColList-selected', this.updateForCol)
+  }
+
+  componentWillUnmount () {
+    console.log('archival buttons cwum')
+    ViewWatcher.removeListener('basicColList-selected',this.updateForCol)
+  }
+
+  @autobind
+  updateForCol (forCol) {
+    console.log('archivalButtos got an updateForCol', forCol)
+    this.setState({ forCol })
   }
 
   render () {
+    //  <ToolbarTitle text='Collections:' style={{paddingLeft: '20px'}}/>
     return (
       <Toolbar style={{ backgroundColor: 'transparent' }}>
         <ToolbarGroup firstChild>
-          <ToolbarTitle text='Collections:' />
-          {this.props.archiveList}
+          <BasicColList />
+          <IconButton tooltip="Select Collection From Available Collections">
+            <SearchIcon/>
+          </IconButton>
         </ToolbarGroup>
         <ToolbarGroup >
           <RaisedButton
@@ -47,7 +65,7 @@ export default class ArchivalButtons extends Component {
             onMouseDown={() => {
               UrlDispatcher.dispatch({
                 type: EventTypes.CHECK_URI_IN_ARCHIVE,
-                forCol: this.props.forCol
+                forCol: this.state.forCol
               })
             }}
           />
@@ -61,7 +79,7 @@ export default class ArchivalButtons extends Component {
               CrawlDispatcher.dispatch({
                 type: EventTypes.BUILD_CRAWL_JOB,
                 from: From.BASIC_ARCHIVE_NOW,
-                forCol: this.props.forCol
+                forCol: this.state.forCol
               })
             }}
           />

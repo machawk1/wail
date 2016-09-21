@@ -78,7 +78,7 @@ class CrawlStore_ extends EventEmitter {
 
   @autobind
   intialJobStateLoad (event, allRuns) {
-    let {logger} = global
+    let {logger} = window
     console.log('inital Job state load', allRuns)
     this.jobIndex.clear()
 
