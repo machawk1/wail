@@ -1,6 +1,6 @@
 import 'babel-polyfill'
 import { remote, ipcRenderer as ipc } from 'electron'
-import CrawlManager from '../../../wail-core/managers/crawlManager'
+import CrawlManager from '../../../wail-core/managers/heritrix/crawlManager'
 
 const crawlMan = window.cm = new CrawlManager()
 

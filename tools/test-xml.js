@@ -18,6 +18,7 @@ import rp from 'request-promise'
 import cheerio from 'cheerio'
 import moment from 'moment'
 import psTree from 'ps-tree'
+import _ from 'lodash'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 
 
@@ -31,8 +32,8 @@ import psTree from 'ps-tree'
 // const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
 // let jobStatus = named.named(jobStatusRec)
 
-console.log(path.resolve('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log','../../'))
-console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log/../../warcs/*.warc`))
+// console.log(path.resolve('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log','../../'))
+// console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log/../../warcs/*.warc`))
 
 // let logWatcher = chokidar.watch(base,{
 //   followSymlinks: true,
@@ -56,6 +57,47 @@ console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/her
 //   }
 // })
 
+const it = Symbol('it')
+let itAskey = {
+  it: 'it2'
+}
+let itAskey2 = {
+  [it]: {
+    'it2': it
+  }
+}
+console.log(it)
+console.log({
+  [it]: 'it2'
+})
+console.log(itAskey)
+console.log(itAskey2[it].it2)
+// let configDirPath = path.join('.','waillogs/wail-settings')
+// //
+// let settings = new Esettings({ configDirPath })
+// const makeOptsReplaceUrl = (jobId, settingsKey) => {
+//   let options = _.cloneDeep(settings.get(settingsKey))
+//   options.url = `${options.url}${jobId}`
+//   return options
+// }
+//
+// rp(makeOptsReplaceUrl(1473098189935,'heritrix.buildOptions'))
+//   .then(respone => {
+//     console.log('success!!')
+//     console.log(util.inspect(respone,{depth: null,colors: true}))
+//   })
+//   .catch(error => {
+//     console.log('err')
+//     if (error.error.code === 'ETIMEDOUT') {
+//       console.log('timeout')
+//     } else {
+//       console.log(error.statusCode)
+//     }
+//     console.log(util.inspect(error,{depth: null,colors: true}))
+//   })
+
+
+// 1473098189935
 
 // S.TMPL_CLOSE = '}'
 // S.TMPL_OPEN= '{'
@@ -64,9 +106,18 @@ console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/her
 // // // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
 // // // let pather = new Pather(path.resolve('.'))
 // // // console.log(util.inspect(pather,{depth: null,colors: true}))
-// let configDirPath = path.join('.','waillogs/wail-settings')
+
 //
-// let settings = new Esettings({ configDirPath })
+// cp.exec(settings.get('heritrixStart'),(err, stdout, stderr) => {
+//   if (err) {
+//     console.error(err)
+//     console.error(stderr)
+//     console.error(stdout)
+//   } else {
+//     console.log(stdout)
+//     console.log(stderr)
+//   }
+// })
 // let opts = {
 //   cwd: settings.get('warcs')
 // }

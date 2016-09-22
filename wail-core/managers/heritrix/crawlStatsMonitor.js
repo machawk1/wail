@@ -2,7 +2,7 @@ import autobind from 'autobind-decorator'
 import chokidar from 'chokidar'
 import EventEmitter from 'eventemitter3'
 import fs from 'fs-extra'
-import getCrawlStats from '../util/getCrawStats'
+import getCrawlStats from '../../util/getCrawStats'
 import path from 'path'
 import { remote } from 'electron'
 
