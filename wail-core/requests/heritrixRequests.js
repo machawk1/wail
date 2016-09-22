@@ -45,7 +45,7 @@ const optsReplaceUrlForm = (jobId,formVal,settingsKey) => {
   return options
 }
 
-class BuildJobRequest extends HeritrixRequest {
+export class BuildJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, BUILD_HERITIX_JOB, `buildHeritrixJob[${jobId}]`,
       optsReplaceUrl(jobId, 'heritrix.buildOptions'),1)
@@ -71,7 +71,7 @@ class BuildJobRequest extends HeritrixRequest {
   }
 }
 
-class LaunchJobRequest extends HeritrixRequest {
+export class LaunchJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, LAUNCH_HERITRIX_JOB, `launchHeritrixJob[${jobId}]`,
       optsReplaceUrl(jobId, 'heritrix.launchJobOptions'),2)
@@ -97,7 +97,7 @@ class LaunchJobRequest extends HeritrixRequest {
   }
 }
 
-class TerminateJobRequest extends HeritrixRequest {
+export class TerminateJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, TERMINATE_CRAWL, `TerminateHeritrixJob[${jobId}]`,
       optsReplaceUrlForm(jobId, 'terminate','heritrix.sendActionOptions'),3)
@@ -123,7 +123,7 @@ class TerminateJobRequest extends HeritrixRequest {
   }
 }
 
-class TeardownJobRequest extends HeritrixRequest {
+export class TeardownJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, TEARDOWN_CRAWL, `TerminateHeritrixJob[${jobId}]`,
       optsReplaceUrlForm(jobId,  'teardown' ,'heritrix.sendActionOptions'),4)
@@ -229,6 +229,160 @@ const makeJobLifeCycle = (jobId, starting) => {
       new TerminateJobRequest(jobId),
       new TeardownJobRequest(jobId)
     ]
+  }
+}
+
+export class BuildLaunchJob {
+  constructor (jobId) {
+    this.q = [
+      new BuildJobRequest(jobId),
+      new LaunchJobRequest(jobId)
+    ]
+    this.type = 'build'
+    this.curStatePriority = 1
+  }
+  maybeMore () {
+    return this.q.length > 0
+  }
+
+  makeRequest () {
+    return new Promise((resolve, reject) => {
+      let request = this.q.shift()
+      this.curStatePriority = request.priority
+      console.log(`Build Launch Job making request for jobId ${this.jobId} of type ${this.rtype}`)
+      rp(request.options)
+        .then(success => {
+          console.log(`Build Launch Job made request for jobId ${this.jobId} of type ${this.rtype} it was successful`)
+          request.completedSuccess()
+          if (this.maybeMore()) {
+            console.log(`Build Launch Job made request for jobId ${this.jobId} has more`)
+            resolve({
+              done: false,
+              doRetry: false
+            })
+          } else {
+            console.log(`Build Launch Job made request for jobId ${this.jobId} is done`)
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          }
+        })
+        .catch(error => {
+          console.log(`Build Launch Job made request for jobId ${this.jobId} had error`,error)
+          request.handleError(error)
+          if (request.doRetry) {
+            console.log(`Build Launch Job made request for jobId ${this.jobId} had retrying`)
+            this.q.unshift(request)
+            resolve({
+              done: false,
+              doRetry: true
+            })
+          } else {
+            if (request.trueFailure) {
+              console.log(`Build Launch Job made request for jobId ${this.jobId} had error it was a true error`)
+              request.completedError()
+              resolve({
+                done: true,
+                doRetry: false
+              })
+            } else {
+              console.log(`Build Launch Job made request for jobId ${this.jobId} had error it was not a true error`)
+              request.completedSuccess()
+              if (this.maybeMore()) {
+                console.log(`Build Launch Job made request for jobId ${this.jobId} has more`)
+                resolve({
+                  done: false,
+                  doRetry: false
+                })
+              } else {
+                console.log(`Build Launch Job made request for jobId ${this.jobId} is done`)
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              }
+            }
+          }
+        })
+    })
+  }
+}
+
+export class StopJob {
+  constructor (jobId) {
+    this.q = [
+      new TerminateJobRequest(jobId),
+      new TeardownJobRequest(jobId)
+    ]
+    this.type = 'stopjob'
+    this.curStatePriority = 3
+  }
+  maybeMore () {
+    return this.q.length > 0
+  }
+
+  makeRequest () {
+    return new Promise((resolve, reject) => {
+      let request = this.q.shift()
+      this.curStatePriority = request.priority
+      console.log(`Stop Job making request for jobId ${this.jobId} of type ${this.rtype}`)
+      rp(request.options)
+        .then(success => {
+          console.log(`Stop Job made request for jobId ${this.jobId} of type ${this.rtype} it was successful`)
+          request.completedSuccess()
+          if (this.maybeMore()) {
+            console.log(`Stop Job made request for jobId ${this.jobId} has more`)
+            resolve({
+              done: false,
+              doRetry: false
+            })
+          } else {
+            console.log(`Stop Job made request for jobId ${this.jobId} is done`)
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          }
+        })
+        .catch(error => {
+          console.log(`Stop Job made request for jobId ${this.jobId} had error`,error)
+          request.handleError(error)
+          if (request.doRetry) {
+            console.log(`Stop Job made request for jobId ${this.jobId} had retrying`)
+            this.q.unshift(request)
+            resolve({
+              done: false,
+              doRetry: true
+            })
+          } else {
+            if (request.trueFailure) {
+              console.log(`Stop Job made request for jobId ${this.jobId} had error it was a true error`)
+              request.completedError()
+              resolve({
+                done: true,
+                doRetry: false
+              })
+            } else {
+              console.log(`Stop Job made request for jobId ${this.jobId} had error it was not a true error`)
+              request.completedSuccess()
+              if (this.maybeMore()) {
+                console.log(`Stop Job made request for jobId ${this.jobId} has more`)
+                resolve({
+                  done: false,
+                  doRetry: false
+                })
+              } else {
+                console.log(`Stop Job made request for jobId ${this.jobId} is done`)
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              }
+            }
+          }
+        })
+    })
   }
 }
 

@@ -1,6 +1,12 @@
 import autobind from 'autobind-decorator'
-import {default as wc} from '../../constants'
+import { default as wc } from '../../constants'
 import {
+  BuildJobRequest
+  LaunchJobRequest,
+  TerminateJobRequest,
+  TeardownJobRequest
+  BuildLaunchJob
+  StopJob
   JobLifeCycle,
   RescanJobDirRequest
 } from '../../requests'
@@ -42,36 +48,31 @@ export default class HeritrixRequestManager {
 
   @autobind
   queueRequest (request) {
-    console.log('heritrix request manager queuing request',request)
+    console.log('heritrix request manager queuing request', request)
     let {
       jobId,
       rType
     } = request
     switch (rType) {
       case BUILD_HERITIX_JOB:
+        // TODO(Get smarter about requests, disable at the ui stop if not running, start when running)
+        // _.filter(this.q,r => r.jobId != jobId && priorities[rType] < r.priority )
+        break
       case LAUNCH_HERITRIX_JOB:
         let haveRequestFor = this.requestForJob.has(jobId)
         if (!haveRequestFor) {
-          console.log('heritrix request manager no duplicates for request',request)
-          this.jobLifeCyle(request.jobId, priorities[ rType ])
+          console.log('heritrix request manager no duplicates for request', request)
+          this.buildLaunchJob(request.jobId)
         } else {
-          console.log('heritrix request manager has duplicates for request',request)
+          console.log('heritrix request manager has duplicates for request', request)
         }
         break
       case TERMINATE_CRAWL:
       case TEARDOWN_CRAWL:
         let haveRequestFor = this.requestForJob.has(jobId)
         if (!haveRequestFor) {
-          console.log('heritrix request manager no duplicates for request',request)
-          this.jobLifeCyle(request.jobId, priorities[ rType ])
-        } else {
-          console.log('heritrix request manager has duplicates for request',request)
-          let theJobsLc = this.requestForJob.get(jobId)
-          let maybeNext = priorities[ rType ]
-          if (theJobsLc.curStatePriority < maybeNext) {
-            console.log('heritrix request manager has duplicates for request and its priority is greater',request)
-            theJobsLc.goto(3)
-          }
+          console.log('heritrix request manager no duplicates for request', request)
+          this.stopJob(request.jobId)
         }
         break
       case RESCAN_JOB_DIR:
@@ -87,7 +88,7 @@ export default class HeritrixRequestManager {
   handleRequest () {
     let jobId = this.jobRequestQ.shift()
     let jr = this.requestForJob.get(jobId)
-    console.log('heritrix request manager making for request for job',jobId)
+    console.log('heritrix request manager making for request for job', jobId)
     jr.makeRequest()
       .then(maybeDone => {
         let {
@@ -124,9 +125,35 @@ export default class HeritrixRequestManager {
   }
 
   @autobind
+  buildLaunchJob (jobId) {
+    let jbl = new BuildLaunchJob(jobId)
+    this.requestForJob.set(jobId, jbl)
+    console.log(`heritrix request manager creating build launch job for job ${jobId}`)
+    this.jobRequestQ.push(jobId)
+    if (!this.working) {
+      console.log('heritrix request manager was not working it is now')
+      this.working = true
+      this.handleRequest()
+    }
+  }
+
+  @autobind
+  stopJob (jobId) {
+    let stopper = new StopJob(jobId)
+    this.requestForJob.set(jobId, stopper)
+    console.log(`heritrix request manager creating stopper for job ${jobId}`)
+    this.jobRequestQ.push(jobId)
+    if (!this.working) {
+      console.log('heritrix request manager was not working it is now')
+      this.working = true
+      this.handleRequest()
+    }
+  }
+
+  @autobind
   jobLifeCyle (jobId, starting) {
     let jlc = new JobLifeCycle(jobId, starting)
-    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[starting]}`)
+    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[ starting ]}`)
     this.requestForJob.set(jobId, jlc)
     this.jobRequestQ.push(jobId)
     if (!this.working) {
@@ -137,7 +164,7 @@ export default class HeritrixRequestManager {
   }
 
   @autobind
-  rescanJobDir(jobId) {
+  rescanJobDir (jobId) {
     let rsjd = new RescanJobDirRequest()
     console.log(`heritrix request manager creating rescanJobDir`)
     this.requestForJob.set(jobId, rsjd)
