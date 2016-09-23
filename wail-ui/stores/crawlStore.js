@@ -61,7 +61,7 @@ class CrawlStore_ extends EventEmitter {
       //   maybeArray,
       //   jId
       // })
-      ipc.send('makeHeritrixJobConf', { urls: newCrawl.urls, depth: newCrawl.depth, jobId: jId, forCol: 'Wail' })
+      ipc.send('makeHeritrixJobConf', { urls: newCrawl.urls, depth: newCrawl.depth, jobId: jId, forCol: newCrawl.forCol || wailConstants.Default_Collection })
       // makeHeritrixJobConf(newCrawl.urls, newCrawl.depth, jId)
 
       GMessageDispatcher.dispatch({

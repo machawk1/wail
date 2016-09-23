@@ -69,7 +69,6 @@ export default class BasicCollectionList extends Component {
         style={{paddingLeft: '20px'}}
         openOnFocus
         maxSearchResults={4}
-        onUpdateInput={(text,array) => console.log(text,array)}
         hintText="Available Collection"
         filter={AutoComplete.fuzzyFilter}
         dataSource={this.state.colNames}

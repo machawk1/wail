@@ -257,7 +257,7 @@ if (process.env.NODE_ENV === 'development') {
   }
 } else {
   // dbgOSX = true
-  dbgOSX = false
+  dbgOSX = true
   mngd = {
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },

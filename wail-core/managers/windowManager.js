@@ -1,5 +1,6 @@
 import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron'
 import EventEmitter from 'eventemitter3'
+import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
 
 async function dlExtensions (update = false) {
@@ -154,9 +155,9 @@ export default class WindowManager extends EventEmitter {
       this.showSettingsWindow(control)
     })
 
-    ipcMain.on('open-newCrawl-window', () => {
+    ipcMain.on('open-newCrawl-window', (e,colNames) => {
       console.log('got open newCrawl window')
-      this.showNewCrawlWindow(control)
+      this.showNewCrawlWindow(control,colNames)
     })
 
     ipcMain.on('setting-hard-reset', (event, payload) => {
@@ -316,46 +317,46 @@ export default class WindowManager extends EventEmitter {
   }
 
   initWail (control) {
-    this.createWail(control)
-      .then(() => {
-        console.log('all windows loaded')
-        this.windows['mainWindow'].window.show()
-        // this.send('crawlManWindow','get-all-runs')
-        // this.send('archiveManWindow','get-all-collections')
-        // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
-        // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
-        // this.windows[ 'mainWindow' ].open = true
-        // this.windows[ 'mainWindow' ].window.show()
-        // this.windows[ 'mainWindow' ].window.focus()
-        // start the loading of serivices finally
-      })
-    // this.initIpc(control)
-    // console.log('init wail')
-    // this.showLoadingWindow(control)
+    // this.createWail(control)
     //   .then(() => {
-    //     console.log('loading window shown')
-    //     this.createRequestD(control)
-    //       .then(() => {
-    //         this.createArchiveMan(control)
-    //           .then(() => {
-    //             this.createCrawlMan(control)
-    //               .then(() => {
-    //                 this.createWail(control)
-    //                   .then(() => {
-    //                     console.log('all windows loaded')
-    //                     // this.send('crawlManWindow','get-all-runs')
-    //                     // this.send('archiveManWindow','get-all-collections')
-    //                     // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
-    //                     // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
-    //                     // this.windows[ 'mainWindow' ].open = true
-    //                     // this.windows[ 'mainWindow' ].window.show()
-    //                     // this.windows[ 'mainWindow' ].window.focus()
-    //                     // start the loading of serivices finally
-    //                   })
-    //               })
-    //           })
-    //       })
+    //     console.log('all windows loaded')
+    //     this.windows['mainWindow'].window.show()
+    //     // this.send('crawlManWindow','get-all-runs')
+    //     // this.send('archiveManWindow','get-all-collections')
+    //     // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
+    //     // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
+    //     // this.windows[ 'mainWindow' ].open = true
+    //     // this.windows[ 'mainWindow' ].window.show()
+    //     // this.windows[ 'mainWindow' ].window.focus()
+    //     // start the loading of serivices finally
     //   })
+    this.initIpc(control)
+    console.log('init wail')
+    this.showLoadingWindow(control)
+      .then(() => {
+        console.log('loading window shown')
+        this.createRequestD(control)
+          .then(() => {
+            this.createArchiveMan(control)
+              .then(() => {
+                this.createCrawlMan(control)
+                  .then(() => {
+                    this.createWail(control)
+                      .then(() => {
+                        console.log('all windows loaded')
+                        // this.send('crawlManWindow','get-all-runs')
+                        // this.send('archiveManWindow','get-all-collections')
+                        // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
+                        // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
+                        // this.windows[ 'mainWindow' ].open = true
+                        // this.windows[ 'mainWindow' ].window.show()
+                        // this.windows[ 'mainWindow' ].window.focus()
+                        // start the loading of serivices finally
+                      })
+                  })
+              })
+          })
+      })
   }
 
   didCoreLoad () {
@@ -391,35 +392,56 @@ export default class WindowManager extends EventEmitter {
     return this.windows[ win ].window && !this.windows[ win ].open
   }
 
-  showNewCrawlWindow (control) {
+  showNewCrawlWindow (control,colNames) {
     if (!this.windows[ 'newCrawlWindow' ].open) {
       let {
         conf,
         url
       } = this.windows[ 'newCrawlWindow' ]
-      this.windows[ 'newCrawlWindow' ].window = new BrowserWindow(conf)
-      this.windows[ 'newCrawlWindow' ].window.loadURL(url)
-      this.windows[ 'newCrawlWindow' ].window.on('ready-to-show', () => {
+      this.windows[ 'newCrawlWindow' ].window = makeWindowWArgs.createWindow(conf)
+      // this.windows[ 'newCrawlWindow' ].window = new BrowserWindow(conf)
+      this.windows[ 'newCrawlWindow' ].window.showUrl(url,colNames, () => {
         console.log('new crawl window is ready to show')
 
         ipcMain.once('close-newCrawl-window', (event, payload) => {
           console.log('window man got close new crawl window',this.windows[ 'newCrawlWindow' ].window)
           if(this.windows[ 'newCrawlWindow' ].window) {
-            this.windows[ 'newCrawlWindow' ].window.destroy()
+            this.windows[ 'newCrawlWindow' ].window.close()
           }
         })
 
         ipcMain.once('close-newCrawl-window-configured', (event, payload) => {
           this.windows[ 'mainWindow' ].window.webContents.send('crawljob-configure-dialogue', payload)
           if(this.windows[ 'newCrawlWindow' ].window) {
-            this.windows[ 'newCrawlWindow' ].window.destroy()
+            this.windows[ 'newCrawlWindow' ].window.close()
           }
         })
 
         this.windows[ 'newCrawlWindow' ].open = true
-        this.windows[ 'newCrawlWindow' ].window.show()
+        // this.windows[ 'newCrawlWindow' ].window.show()
         this.windows[ 'newCrawlWindow' ].window.focus()
       })
+      // this.windows[ 'newCrawlWindow' ].window.on('ready-to-show', () => {
+      //   console.log('new crawl window is ready to show')
+      //
+      //   ipcMain.once('close-newCrawl-window', (event, payload) => {
+      //     console.log('window man got close new crawl window',this.windows[ 'newCrawlWindow' ].window)
+      //     if(this.windows[ 'newCrawlWindow' ].window) {
+      //       this.windows[ 'newCrawlWindow' ].window.destroy()
+      //     }
+      //   })
+      //
+      //   ipcMain.once('close-newCrawl-window-configured', (event, payload) => {
+      //     this.windows[ 'mainWindow' ].window.webContents.send('crawljob-configure-dialogue', payload)
+      //     if(this.windows[ 'newCrawlWindow' ].window) {
+      //       this.windows[ 'newCrawlWindow' ].window.destroy()
+      //     }
+      //   })
+      //
+      //   this.windows[ 'newCrawlWindow' ].open = true
+      //   this.windows[ 'newCrawlWindow' ].window.show()
+      //   this.windows[ 'newCrawlWindow' ].window.focus()
+      // })
 
       this.windows[ 'newCrawlWindow' ].window.webContents.on('context-menu', (e, props) => {
         e.preventDefault()

@@ -14,6 +14,8 @@ class CrawlUrlsStore_ extends EventEmitter {
 
   constructor () {
     super()
+    this.forCol = wailConstants.Default_Collection
+    this.cols = window.__args__ // this is the collection names
     this.urls = []
     this.depth = 1
     this.editing = ''
@@ -56,6 +58,9 @@ class CrawlUrlsStore_ extends EventEmitter {
         this.depth = event.depth
         console.log('CrawlUrlStore depth added after', this.depth)
         break
+      case EventTypes.NEW_CRAWL_COL_SELECTED:
+        this.forCol = event.forCol
+        break
       default:
         console.log('wtf why are we here')
         break
@@ -73,7 +78,7 @@ class CrawlUrlsStore_ extends EventEmitter {
         urls = urls[ 0 ]
       }
       let depth = this.depth
-      return { urls, depth }
+      return { urls, depth, forCol: this.forCol }
     }
   }
 
@@ -107,11 +112,11 @@ class CrawlUrlsStore_ extends EventEmitter {
             url={url.url}
           />)
         if (i + 1 !== len) {
-          items.push(<Divider key={`Divider${url.url}${url.idx}`} />)
+          items.push(<Divider key={`Divider${url.url}${url.idx}`}/>)
         }
       }
     } else {
-      items.push(<ListItem key='noSeeds' primaryText='No Seed Urls' />)
+      items.push(<ListItem key='noSeeds' primaryText='No Seed Urls'/>)
     }
 
     console.log('CrawlUrlStore getCrawlUrlItems', items)

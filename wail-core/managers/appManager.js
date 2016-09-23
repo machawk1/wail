@@ -86,7 +86,7 @@ export default class AppManager {
           if (process.platform === 'darwin') {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
             this.w = 1100
-            this.h = 700
+            this.h = 600
           } else if (process.platform === 'win32') {
             // console.log('windows')
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.ico')
@@ -125,16 +125,15 @@ export default class AppManager {
             },
             {
               conf: {
-                width: 800,
+                width: 900,
                 height: process.platform === 'win32' ? 380 : 360,
-                maxHeight: process.platform === 'win32' ? 380 : 360,
+                // maxHeight: process.platform === 'win32' ? 380 : 360,
                 modal: true,
                 show: false,
-                closable: false,
                 minimizable: false,
                 autoHideMenuBar: true
               },
-              url: `file://${loadFrom}/childWindows/newCrawl/newCrawl.html`,
+              url: `${loadFrom}/childWindows/newCrawl/newCrawl.html`,
               name: 'newCrawlWindow'
             },
             {

@@ -22,6 +22,10 @@ import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 import CollectionToolBar from './collectionView/collectionToolBar'
+import WarcToCollection from './collectionView/warcToCollection'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
+import NewCollection from './collectionView/newCollection'
 
 const EventTypes = wailConstants.EventTypes
 
@@ -30,18 +34,52 @@ S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
 const defaultCol = wailConstants.Default_Collection
+/*
+ <WarcToCollection colName={colName} className="wbCollectionOverviewRow">
+ <div>
+ <Row between='xs'>
+ <Col xs>
+ <p>Collection Name: {colName}</p>
+ </Col>
+ <Col xs>
+ <Col xs>
+ <p>Warcs in collection: {numArchives}</p>
+ </Col>
+ </Col>
+ </Row>
+ <Row between='xs'>
+ <Col xs>
+ <OpenButton label='View In Wayback'
+ onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${colName}`)}/>
+ </Col>
+ <Col xs>
+ <OpenButton label='Open Index Location' onTouchTap={() => openFSLocation(indexes)}/>
+ </Col>
+ <Col xs>
+ <OpenButton label='Open Warc Location' onTouchTap={() => openFSLocation(archive)}/>
+ </Col>
+ </Row>
+ </div>
+ </WarcToCollection>
+ */
 
 export default class WayBackTab extends Component {
 
   render () {
     console.log('wayback default col is', this.props)
     return (
-      <Grid
-        fluid
-      >
-        <CollectionList />
-        {this.props.children}
-      </Grid>
+      <div>
+        <WarcToCollection colName={this.props.params.col} className="wbCollectionOverviewRow">
+
+          <Grid
+            fluid
+          >
+            <CollectionList />
+            {this.props.children || <p>Select Collection To View</p>}
+          </Grid>
+        </WarcToCollection>
+        <NewCollection />
+      </div>
     )
   }
 }

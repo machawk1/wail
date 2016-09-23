@@ -42,7 +42,7 @@ export default class WarcToCollection extends Component {
 
   render () {
     return (
-      <div id='warcUpload' style={{height: '100%'}}>
+      <div id='warcUpload' style={{height: '88vh'}}>
         {this.props.children}
       </div>
     )

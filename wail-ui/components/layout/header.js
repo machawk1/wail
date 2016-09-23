@@ -10,6 +10,8 @@ import Divider from 'material-ui/Divider'
 import styles from '../styles/styles'
 import { Link, IndexLink } from 'react-router'
 import CrawlStore from '../../stores/crawlStore'
+import wailConstants from '../../constants/wail-constants'
+const defaultCol = wailConstants.Default_Collection
 
 export default class Header extends Component {
 
@@ -79,7 +81,7 @@ export default class Header extends Component {
           <MenuItem
             primaryText={'Wayback'}
             rightIcon={<Avatar backgroundColor={'transparent'} src='icons/openWB.png' />}
-            containerElement={<Link to='wayback' />}
+            containerElement={<Link to={`wayback/${defaultCol}`} />}
             onTouchTap={(e) => this.handleClose('Wayback')} />
           <MenuItem
             primaryText={'Heritrix'}

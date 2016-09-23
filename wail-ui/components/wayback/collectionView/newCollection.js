@@ -7,6 +7,8 @@ import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
 import wc from '../../../constants/wail-constants'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
@@ -121,44 +123,45 @@ class NCD extends Component {
     ]
 
     return (
-        <Dialog
-          title='New Collection'
-          actions={actions}
-          modal
-          open={this.props.open}
-        >
-          <Grid fluid>
-            <Row>
-              <Col xs>
-                <TextField
-                  hintText='Collection Name'
-                  floatingLabelText='Name'
-                  value={this.state.col}
-                  onChange={::this.nameChange}
-                />
-              </Col>
-              <Col xs>
-                <TextField
-                  hintText='Collection Description'
-                  floatingLabelText='Description'
-                  value={this.state.description}
-                  onChange={::this.descriptionChange}
-                />
-              </Col>
-              <Col xs>
-                <TextField
-                  hintText='Collection Title optional defaults to name'
-                  floatingLabelText='Title'
-                  value={this.state.title}
-                  onChange={::this.titleChange}
-                />
-              </Col>
-            </Row>
-          </Grid>
-        </Dialog>
+      <Dialog
+        title='New Collection'
+        actions={actions}
+        modal
+        open={this.props.open}
+      >
+        <TextField
+          ref="cName"
+          hintText='Collection Name'
+          floatingLabelText='Name'
+          value={this.state.col}
+          style={{marginRight: '25px'}}
+          onChange={::this.nameChange}
+        />
+        <TextField
+          ref="cDescription"
+          hintText='Collection Description'
+          floatingLabelText='Description'
+          value={this.state.description}
+          onChange={::this.descriptionChange}
+        />
+        <TextField
+          ref="cTitle"
+          hintText='Optional defaults to name'
+          floatingLabelText='Title'
+          value={this.state.title}
+          onChange={::this.titleChange}
+        />
+      </Dialog>
     )
   }
 }
+/*
+ <div className='contentFab'>
+ <FloatingActionButton onTouchTap={() => console.log('fab clicked')}>
+ <ContentAdd />
+ </FloatingActionButton>
+ </div>
+ */
 
 export default class NewCollection extends Component {
 
@@ -182,14 +185,13 @@ export default class NewCollection extends Component {
 
   render () {
     return (
-      <div>
-        <FlatButton
-          label='New Collection'
-          primary
-          onTouchTap={::this.handleOpen}
-        />
-       <NCD open={this.state.open} handleClose={::this.handleClose} />
+      <div className='contentFab'>
+        <FloatingActionButton onTouchTap={::this.handleOpen}>
+          <ContentAdd />
+        </FloatingActionButton>
+        <NCD open={this.state.open} handleClose={::this.handleClose}/>
       </div>
+
     )
   }
 }

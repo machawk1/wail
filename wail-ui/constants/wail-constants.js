@@ -32,6 +32,7 @@ export default {
     HERITRIX_CRAWL_ALL_STATUS: null,
     HERITRIX_STATUS_UPDATE: null,
     LAUNCHED_CRAWL_JOB: null,
+    NEW_CRAWL_COL_SELECTED: null,
     NEW_CRAWL_ADD_DEPTH: null,
     NEW_CRAWL_ADD_URL: null,
     NEW_CRAWL_EDITED_URL: null,

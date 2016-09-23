@@ -14,7 +14,7 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'stage-0', 'node6'],
+          presets: [ 'latest', 'stage-0', 'node6' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
             'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
             'react-html-attrs',
@@ -70,6 +70,8 @@ export default {
     'source-map-support',
     'material-design-icons-iconfont',
     'roboto-fontface',
-    'fsevents'
-  ]
+    'fsevents',
+    'electron-window'
+  ],
+
 }

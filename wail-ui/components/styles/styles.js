@@ -11,6 +11,7 @@ export default {
     order: -1
   },
   newCrawlList: {
+    height: 200,
     maxHeight: 200,
     order: -1,
     overflow: 'hidden',
@@ -30,7 +31,7 @@ export default {
     marginLeft: 15
   },
   newCrawlUrlInput: {
-    width: '80%',
+    width: '85%',
     marginLeft: 15
   },
   buttonBasic: {
@@ -168,9 +169,9 @@ export default {
   heritrixTable: {
     crawlUrlS: {
       width: '100px',
-      wordWrap: 'break-word',
-      whiteSpace: 'normal',
-      cursor: 'default'
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis'
     },
     statusS: {
       width: '50px',

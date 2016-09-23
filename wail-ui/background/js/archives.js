@@ -78,7 +78,7 @@ ipc.on('add-warcs-to-col', (event, addMe) => {
     .then(update => {
       ipc.send('added-warcs-to-col', {
         wasError: false,
-        count: update,
+        count: update.count,
         forCol
       })
     })

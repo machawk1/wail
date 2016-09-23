@@ -41,13 +41,20 @@ export function checkUriIsInArchive (uri, forCol) {
           }
         })
       } else {
-        notify.notifyWarning(`${uri} is in the archive ${forCol}`)
+        notify.notifyWarning(`${uri} is not in the archive ${forCol}`)
       }
     })
     .catch(err => {
-      console.log('error in querying wayback', err)
-      window.logger.error({ err: err, msg: 'error in querying wayback' })
-      notify.notifyError(`An internal error occurred while seeing if ${uri} is in the archive ${forCol}`, true)
+      if (err.statusCode) {
+        if(err.statusCode === 404){
+          notify.notifyWarning(`${uri} is not in the archive ${forCol}`)
+        }
+      } else {
+        console.log('error in querying wayback', err)
+        window.logger.error({ err: err, msg: 'error in querying wayback' })
+        notify.notifyError(`An internal error occurred while seeing if ${uri} is in the archive ${forCol}`, true)
+      }
+
     })
 }
 

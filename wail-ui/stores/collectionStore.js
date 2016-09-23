@@ -66,22 +66,22 @@ class _CollectionStore extends EventEmitter {
       notify.notifyError(`Error updating warc count for collection ${update.forCol}`)
       window.logger.error({err: update.error, msg: `Error updating warc count for collection ${update.forCol}`})
     } else {
-      window.logger.debug('collection store got all collections')
-
       let {
         forCol,
         count
       } = update
       let upDateMe = this.collections.get(forCol)
+      window.logger.debug(`added warcs to ${forCol} with count ${count} `)
       notify.notifySuccess(`Added ${count} Warc/Arc Files To Collection ${forCol}`)
-      upDateMe.numArchives = Number(upDateMe.numArchives) + Number(count)
+      upDateMe.numArchives += count
       this.collections.set(forCol, upDateMe)
       this.emit('updated-col', upDateMe)
     }
   }
 
   addNewCol (event, col) {
-    this.collections.set(col.colName, new ColCrawlInfo(col))
+    console.log('added new collection',)
+    this.collections.set(col.colName, col)
     this.colNames.push(col.colName)
     this.emit('added-new-collection', Array.from(this.collections.values()))
     GMessageDispatcher.dispatch({

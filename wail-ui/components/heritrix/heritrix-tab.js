@@ -12,6 +12,7 @@ import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
 import { rescanJobDir } from '../../actions/heritrix-actions'
 import Dimensions from 'react-dimensions'
+import ColStore from '../../stores/collectionStore'
 const styles = {
   button: {
     margin: 12
@@ -25,7 +26,7 @@ export default class HeritrixTab extends Component {
   @autobind
   onClickNewCrawl (event) {
     // console.log('New Crawl')
-    ipcRenderer.send('open-newCrawl-window')
+    ipcRenderer.send('open-newCrawl-window', ColStore.colNames)
   }
 
   @autobind
@@ -35,47 +36,44 @@ export default class HeritrixTab extends Component {
 
   render () {
     return (
-      <Grid fluid className='basicTabLayout'>
-        <Row>
-          <Col xs>
-            <HeritrixJobList />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs>
-            <Toolbar>
-              <ToolbarGroup firstChild>
-                <RaisedButton
-                  icon={<AddCrawlIcon />
-                  }
-                  label='New Crawl'
-                  labelPosition='before'
-                  style={styles.button}
-                  onMouseDown={this.onClickNewCrawl}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup >
-                <RaisedButton
-                  icon={<JobScanIcon />}
-                  label='Rescan Job Directory'
-                  labelPosition='before'
-                  style={styles.button}
-                  onMouseDown={() => rescanJobDir()}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup lastChild>
-                <RaisedButton
-                  icon={<OpenBrowserIcon />}
-                  label='Launch Web UI'
-                  labelPosition='before'
-                  style={styles.button}
-                  onMouseDown={this.onClickLaunchWebUI}
-                />
-              </ToolbarGroup>
-            </Toolbar>
-          </Col>
-        </Row>
-      </Grid>
+      <div>
+        <Grid fluid>
+          <Row middle="xs">
+            <Col xs>
+              <HeritrixJobList />
+            </Col>
+          </Row>
+        </Grid>
+        <Toolbar className='layoutFooter'>
+          <ToolbarGroup firstChild>
+            <RaisedButton
+              icon={<AddCrawlIcon />}
+              label='New Crawl'
+              labelPosition='before'
+              style={styles.button}
+              onMouseDown={this.onClickNewCrawl}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup >
+            <RaisedButton
+              icon={<JobScanIcon />}
+              label='Rescan Job Directory'
+              labelPosition='before'
+              style={styles.button}
+              onMouseDown={() => rescanJobDir()}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup lastChild>
+            <RaisedButton
+              icon={<OpenBrowserIcon />}
+              label='Launch Web UI'
+              labelPosition='before'
+              style={styles.button}
+              onMouseDown={this.onClickLaunchWebUI}
+            />
+          </ToolbarGroup>
+        </Toolbar>
+      </div>
     )
   }
 }
