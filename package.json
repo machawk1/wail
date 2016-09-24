@@ -78,6 +78,7 @@
     "lunr": "^0.7.1",
     "material-design-icons-iconfont": "^3.0.0",
     "material-ui": "^0.15.4",
+    "materialize-css": "^0.97.7",
     "md5": "^2.2.1",
     "menubar": "^5.1.0",
     "mkdirp": "^0.5.1",
