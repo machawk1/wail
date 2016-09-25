@@ -1,11 +1,11 @@
-import React, { Component, PropTypes } from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
+import React, {Component, PropTypes} from 'react'
+import {Grid, Row, Col} from 'react-flexbox-grid'
+import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
 import styles from '../styles/styles'
-import { remote } from 'electron'
+import {remote} from 'electron'
 
 const baseTheme = getMuiTheme({
   tabs: {
@@ -41,7 +41,9 @@ export default class Layout extends Component {
     return (
       <div>
         <Header />
-        {this.props.children}
+        <div className="layoutBody">
+          {this.props.children}
+        </div>
         <Footer/>
       </div>
     )

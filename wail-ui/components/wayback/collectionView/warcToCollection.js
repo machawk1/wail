@@ -4,47 +4,22 @@ import { ipcRenderer as ipc } from 'electron'
 import * as notify from '../../../actions/notification-actions'
 import path from 'path'
 import { joinStrings } from 'joinable'
+import FloatingActionButton from 'material-ui/FloatingActionButton'
+import IconButton from 'material-ui/IconButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 
 export default class WarcToCollection extends Component {
   static propTypes = {
-    colName: PropTypes.string.isRequired,
-    children: React.PropTypes.element.isRequired
+    currCollection: PropTypes.string,
   }
 
-  componentDidMount () {
-    BeamMeUpScotty('#warcUpload', files => {
-      let addMe = []
-      let badFiles = new Set()
 
-      files.forEach(f => {
-        console.log(f)
-        let ext = path.extname(f.path)
-        if (ext === '.warc' || ext === '.arc') {
-          addMe.push(f.path)
-        } else {
-          badFiles.add(ext)
-        }
-      })
-
-      if (badFiles.size > 0) {
-        notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
-      }
-
-      if (addMe.length > 0) {
-        notify.notifyInfo(`Adding ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-        ipc.send('add-warcs-to-col', {
-          forCol: this.props.colName,
-          warcs: joinStrings(...addMe, { separator: ' ' })
-        })
-      }
-    })
-  }
 
   render () {
     return (
-      <div id='warcUpload' style={{height: '88vh'}}>
-        {this.props.children}
-      </div>
+      <FloatingActionButton mini onTouchTap={()=> console.log('touchtap')}>
+        <ContentAdd />
+      </FloatingActionButton>
     )
   }
 

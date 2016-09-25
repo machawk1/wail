@@ -185,10 +185,8 @@ export default class NewCollection extends Component {
 
   render () {
     return (
-      <div className='contentFab'>
-        <FloatingActionButton onTouchTap={::this.handleOpen}>
-          <ContentAdd />
-        </FloatingActionButton>
+      <div>
+        <FlatButton label={'New Collection'} onTouchTap={::this.handleOpen}/>
         <NCD open={this.state.open} handleClose={::this.handleClose}/>
       </div>
 

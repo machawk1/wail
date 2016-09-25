@@ -11,6 +11,7 @@ import Routes from './routes'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
+import wailConstants from './constants/wail-constants'
 
 Promise.promisifyAll(fs)
 
@@ -19,6 +20,8 @@ Promise.promisifyAll(fs)
 window.React = React
 window.colStore = ColStore
 window.ReqStore = RequestStore
+
+window.lastWaybackPath = wailConstants.Default_Collection
 
 injectTapEventPlugin()
 

@@ -80,7 +80,7 @@ export default class EnterCrawlUrls extends Component {
 
   render () {
     return (
-      <div style={{ order: 2 }}>
+      <div style={{marginTop: '80px'}}>
         <TextField
           floatingLabelText='Enter URL to crawl'
           id='crawl-url-input'

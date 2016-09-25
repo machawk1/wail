@@ -6,18 +6,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 export default {
   devtool: 'eval-source-map',
   entry: {
-    // accessibility: './wail-ui/background/accessibility',
-    // archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
-    // crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // indexer: './wail-ui/background/indexer',
-    // jobs: './wail-ui/background/jobs',
-    // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
-    newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
-    // notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
-    // requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
-    // settingsW: './wail-ui/childWindows/settings/settingsW',
-    // wail: ['babel-polyfill','./wail-ui/wail']
+    wail: ['babel-polyfill','./wail-ui/wail']
   },
   module: {
     noParse: noParseRe,

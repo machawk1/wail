@@ -6,7 +6,6 @@ import MementoTable from './mementoTable'
 import ArchivalButtons from './archivalButtos'
 import MementoMessagePanel from './mementoMessage-panel'
 import BasicColList from './basicCollectionList'
-
 import ArchiveOrCheckCol from './archiveOrCheckCol'
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import EditOrCreateCollection from './editOrCreateCollection'

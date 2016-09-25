@@ -56,7 +56,7 @@ export default class Header extends Component {
 
   render () {
     return (
-      <div>
+      <div className="layoutHeader">
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
@@ -81,7 +81,7 @@ export default class Header extends Component {
           <MenuItem
             primaryText={'Wayback'}
             rightIcon={<Avatar backgroundColor={'transparent'} src='icons/openWB.png' />}
-            containerElement={<Link to={`wayback/${defaultCol}`} />}
+            containerElement={<Link to={`wayback/${window.lastWaybackPath}`} />}
             onTouchTap={(e) => this.handleClose('Wayback')} />
           <MenuItem
             primaryText={'Heritrix'}

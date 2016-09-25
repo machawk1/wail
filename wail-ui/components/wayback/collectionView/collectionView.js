@@ -1,44 +1,62 @@
 import React, {Component, PropTypes} from 'react'
-import CollectionOverview from './collectionOverview'
-import { Row, Col } from 'react-flexbox-grid'
+import CollectionStore from '../../../stores/collectionStore'
+import {Grid, Row, Col} from 'react-flexbox-grid'
+import OpenButton from 'material-ui/RaisedButton'
+import S from 'string'
+import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
+import cp from 'child_process'
+import autobind from 'autobind-decorator'
+import {remote} from 'electron'
+import wailConstants from '../../../constants/wail-constants'
+import CollectionMetadata from './collectionMetadata'
+import {CardTitle} from 'material-ui/Card'
+import IconButton from 'material-ui/IconButton'
+import InfoIcon from 'material-ui/svg-icons/action/info-outline'
+const EventTypes = wailConstants.EventTypes
+
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
+
+const settings = remote.getGlobal('settings')
 
 export default class CollectionView extends Component {
+
   static propTypes = {
-    collections: PropTypes.object.isRequired,
-    viewWatcher: PropTypes.object.isRequired,
-    from: PropTypes.string.isRequired,
-    defaultView: PropTypes.string.isRequired
+    currCollection: PropTypes.string.isRequired
   }
 
-  constructor (...args) {
-    super(...args)
-    let { collections, defaultView } = this.props
-    console.log(this.props)
-    this.state = {
-      viewing: collections[ defaultView ]
-    }
-  }
-
-  componentWillMount () {
-    let { viewWatcher, from, collections } = this.props
-    viewWatcher.on(`${from}-view`, viewMe => {
-      this.setState({ viewing: collections[ viewMe ] })
-    })
-  }
-
-  componentWillUnmount () {
-    let { viewWatcher, from } = this.props
-    viewWatcher.removeListener(`${from}-view`)
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    console.log(this.props, nextProps)
+    return this.props.currCollection !== nextProps.currCollection
   }
 
   render () {
-    let { viewing } = this.state
+    console.log(this.props)
+    let {
+      archive,
+      colName,
+      colpath,
+      indexes,
+      numArchives,
+      metadata,
+      name
+    } = CollectionStore.getCollection(this.props.currCollection)
     return (
-      <Row  middle="xs">
-        <Col xs>
-          <CollectionOverview collection={viewing} />
-        </Col>
-      </Row>
+      <Grid fluid>
+        <Row top="xs">
+          <Col xs>
+            {`Archives in collection: ${numArchives}`}
+            <IconButton tooltip={'Drag drop archives to add or click the plus button'}>
+              <InfoIcon/>
+            </IconButton>
+          </Col>
+        </Row>
+        <Row middle="xs">
+          <Col xs>
+            <CollectionMetadata metadata={metadata}/>
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }

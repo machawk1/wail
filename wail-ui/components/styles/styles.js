@@ -11,8 +11,8 @@ export default {
     order: -1
   },
   newCrawlList: {
-    height: 330,
-    maxHeight: 330,
+    height: 230,
+    maxHeight: 230,
     order: -1,
     overflow: 'hidden',
     overflowY: 'scroll'

@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react'
-import { withRouter } from 'react-router'
+import React, {Component, PropTypes} from 'react'
+import {withRouter} from 'react-router'
 import ColStore from '../../../stores/collectionStore'
 import FlatButton from 'material-ui/FlatButton'
 import AutoComplete from 'material-ui/AutoComplete'
@@ -10,6 +10,9 @@ import autobind from 'autobind-decorator'
 const defaultCol = wc.Default_Collection
 
 class CollectionListSearch extends Component {
+  static propTypes = {
+    currCollection: PropTypes.string.isRequired,
+  }
 
   constructor (...args) {
     super(...args)
@@ -48,12 +51,14 @@ class CollectionListSearch extends Component {
   }
 
   render () {
-
+    console.log(this.props)
     return (
       <AutoComplete
+        style={{ width: '200px' }}
         openOnFocus
         maxSearchResults={4}
-        hintText="Available Collection"
+        searchText={this.props.currCollection}
+        hintText="Select Collection To View"
         filter={AutoComplete.fuzzyFilter}
         dataSource={this.state.colNames}
         onNewRequest={this.handleChange}

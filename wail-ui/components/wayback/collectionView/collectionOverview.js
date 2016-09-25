@@ -5,6 +5,7 @@ import WarcToCollection from './warcToCollection'
 import FitText from 'react-fittext'
 import autobind from 'autobind-decorator'
 import CollectionToolBar from './collectionToolBar'
+import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 import { remote } from 'electron'
 import { openUrlInBrowser, openFSLocation } from '../../../actions/util-actions'
 

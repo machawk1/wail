@@ -4,12 +4,15 @@ import path from 'path'
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   entry: {
-    core: './wail-core/test.js'
-  },
-  resolveLoader: {
-    root: path.join(path.resolve('.'), 'node_modules')
+    archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
+    crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
+    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    // newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
+    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
+    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
+    // settingsW: './wail-ui/childWindows/settings/settingsW',
   },
   module: {
     noParse: noParseRe,
@@ -20,13 +23,23 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'stage-0'],
+          presets: [ 'latest', 'react', 'stage-0', 'node6', 'react-hmre' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
-            'babel-plugin-transform-decorators-legacy'
+            [ "transform-async-to-module-method", {
+              "module": "bluebird",
+              "method": "coroutine"
+            } ],
+            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
+            'react-html-attrs',
           ],
         },
       },
-      { test: /\.css$/, loader: 'style!css' },
+      { test: /\.css$/, loader: 'style!css?sourceMap', exclude: /flexboxgrid/ },
+      {
+        test: /\.css$/,
+        loader: 'style!css?sourceMap&modules&localIdentName=[name]__[local]___[hash:base64:5]',
+        include: /flexboxgrid/,
+      },
       {
         test: /\.scss$/,
         loaders: [ 'style!css!less|scss', 'style-loader',
@@ -48,6 +61,14 @@ export default {
     ]
 
   },
+  resolve: {
+    alias: {
+      'dtrace-provider': './wail-ui/bunyanshim.js'
+    }
+  },
+  externals: [
+    'fsevents'
+  ],
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
@@ -56,11 +77,11 @@ export default {
     }),
   ],
   output: {
+    path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
     chunkFilename: '[id].chunk.js',
-    path: path.join(__dirname, 'dist'),
-    publicPath: '/dist/'
+    publicPath: 'http://localhost:9001/dist/'
   },
   // bail: true,
-  // target: 'electron-renderer',
+  target: 'electron-renderer',
 }

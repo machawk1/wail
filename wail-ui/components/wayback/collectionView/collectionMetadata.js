@@ -7,14 +7,9 @@ import Dimensions from 'react-dimensions'
 import autobind from 'autobind-decorator'
 import TextField from 'material-ui/TextField'
 
-export default class CollectionOverview extends Component {
+export default class CollectionMetadata extends Component {
   static propTypes = {
-    collection: PropTypes.object.isRequired,
-    className: PropTypes.string
-  }
-
-  static defaultProps = {
-    className: ''
+    metadata: PropTypes.array.isRequired,
   }
 
   constructor (...args) {
@@ -22,22 +17,17 @@ export default class CollectionOverview extends Component {
   }
 
   render () {
-    let { collection } = this.props
-    console.log(collection)
-    let {
-      metadata
-    } = collection
-    metadata.forEach(md => console.log(md))
+    let { metadata } = this.props
     let renderMe = metadata.map(md => {
       console.log(md)
       return (
-        <Grid key={`${collection.colName}${md.k}${md.v}`} fluid>
-          <Row key={`${collection.colName}${md.k}${md.v}grid`} between='xs'>
-            <Col key={`${collection.colName}${md.k}${md.v}kcol`} xs>
-              <h3 key={`${collection.colName}${md.k}${md.v}kh3`}>{md.k}:</h3>
+        <Grid key={`${md.k}${md.v}`} fluid>
+          <Row key={`${md.k}${md.v}grid`} between='xs'>
+            <Col key={`${md.k}${md.v}kcol`} xs>
+              <h3 key={`${md.k}${md.v}kh3`}>{md.k}:</h3>
             </Col>
-            <Col xs key={`${collection.colName}${md.k}${md.v}vcol`}>
-              <h3 key={`${collection.colName}${md.k}${md.v}vh3`}>{md.v}</h3>
+            <Col xs key={`${md.k}${md.v}vcol`}>
+              <h3 key={`${md.k}${md.v}vh3`}>{md.v}</h3>
             </Col>
           </Row>
         </Grid>
@@ -45,9 +35,9 @@ export default class CollectionOverview extends Component {
     })
 
     return (
-      <Scrollbars>
-        {renderMe}
-      </Scrollbars>
+        <Scrollbars style={{width: '100%', height: '250px'}}>
+          {renderMe}
+        </Scrollbars>
     )
   }
 

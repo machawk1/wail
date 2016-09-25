@@ -23,6 +23,7 @@
     "build-renderer": "cross-env NODE_ENV=production node --max-old-space-size=2024 -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
+    "dev-core": "cross-env HOT=1 NODE_ENV=development node -r babel-register ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/core/webpack.config.js --port 9001 --content-base ./wail-ui/ --hot --inline",
     "dev-ui": "cross-env HOT=1 NODE_ENV=development node -r babel-register ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
     "nightmare": "babel-node tools/testNightmare",

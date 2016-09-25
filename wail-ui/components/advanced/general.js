@@ -105,7 +105,7 @@ export default class General extends Component {
           <TableRow>
             <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
             <TableRowColumn style={style.servicesSS}>{waybackStatus}</TableRowColumn>
-            <TableRowColumn style={style.servicesSS}>pywb</TableRowColumn>
+            <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
             <TableRowColumn style={style.servicesActions}>
               <RaisedButton
                 disabled={this.state.wbGood}
