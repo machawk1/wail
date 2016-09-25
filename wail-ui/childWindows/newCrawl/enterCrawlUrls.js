@@ -87,7 +87,6 @@ export default class EnterCrawlUrls extends Component {
           type='url'
           style={styles.newCrawlUrlInput}
           value={this.state.url}
-          underlineStyle={this.state.underlineStyle}
           onKeyDown={this.checkKeyCode}
           onChange={this.handleChange}
         />

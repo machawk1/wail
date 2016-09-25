@@ -1,4 +1,5 @@
 import 'babel-polyfill'
+import './css/wail.css'
 import React from 'react'
 import {Router, hashHistory} from 'react-router'
 import {render} from 'react-dom'
@@ -9,7 +10,6 @@ import {ipcRenderer, remote} from 'electron'
 import Routes from './routes'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
-import './css/wail.css'
 import bunyan from 'bunyan'
 
 Promise.promisifyAll(fs)

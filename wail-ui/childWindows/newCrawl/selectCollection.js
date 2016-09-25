@@ -42,6 +42,7 @@ export default class SelectCollection extends Component {
           openOnFocus
           maxSearchResults={5}
           hintText="For Collection"
+          floatingLabelText={'Archive To Collection'}
           filter={AutoComplete.fuzzyFilter}
           dataSource={this.state.cols}
           onNewRequest={this.handleChange}

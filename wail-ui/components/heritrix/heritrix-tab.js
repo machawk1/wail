@@ -1,16 +1,16 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import IconButton from 'material-ui/IconButton'
 import ToolTip from 'material-ui/internal/Tooltip'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import {Grid, Row, Col} from 'react-flexbox-grid'
 import autobind from 'autobind-decorator'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import AddCrawlIcon from 'material-ui/svg-icons/content/add'
 import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
-import { ipcRenderer, remote, shell } from 'electron'
+import {ipcRenderer, remote, shell} from 'electron'
 import HeritrixJobList from './heritrix-joblist'
-import { rescanJobDir } from '../../actions/heritrix-actions'
+import {rescanJobDir} from '../../actions/heritrix-actions'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 const styles = {
@@ -23,13 +23,11 @@ const settings = remote.getGlobal('settings')
 
 export default class HeritrixTab extends Component {
 
-  @autobind
   onClickNewCrawl (event) {
     // console.log('New Crawl')
     ipcRenderer.send('open-newCrawl-window', ColStore.colNames)
   }
 
-  @autobind
   onClickLaunchWebUI (event) {
     shell.openExternal(settings.get('heritrix.web_ui'))
   }
@@ -37,13 +35,7 @@ export default class HeritrixTab extends Component {
   render () {
     return (
       <div>
-        <Grid fluid>
-          <Row middle="xs">
-            <Col xs>
-              <HeritrixJobList />
-            </Col>
-          </Row>
-        </Grid>
+        <HeritrixJobList />
         <Toolbar className='layoutFooter'>
           <ToolbarGroup firstChild>
             <RaisedButton

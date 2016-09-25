@@ -31,7 +31,7 @@ export default class Footer extends Component {
 
   render () {
     return (
-      <Toolbar>
+      <Toolbar className='layoutFooter'>
         <ToolbarGroup firstChild>
           <RaisedButton
             label='Cancel'

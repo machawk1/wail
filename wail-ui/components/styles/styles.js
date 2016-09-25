@@ -18,8 +18,7 @@ export default {
     overflowY: 'scroll'
   },
   newCrawlChildren: {
-    paddingTop: spacing.desktopKeylineIncrement,
-    flexDirection: 'column'
+    height: '50vh'
   },
   newCrawlColRow: {
     flex: 1,
@@ -28,6 +27,7 @@ export default {
     justifyContent: 'center'
   },
   newCrawlDepth: {
+    width: '100px',
     marginLeft: 15
   },
   newCrawlUrlInput: {

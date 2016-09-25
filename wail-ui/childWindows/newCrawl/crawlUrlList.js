@@ -32,7 +32,7 @@ export default class UrlList extends Component {
 
   render () {
     return (
-      <List style={styles.newCrawlList} children={this.state.urls} />
+      <List className="newCrawlSeedList" children={this.state.urls} />
     )
   }
 }

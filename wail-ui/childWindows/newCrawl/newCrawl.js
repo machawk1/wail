@@ -3,12 +3,12 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import Layout from './layout'
-import NewCrawlD from './newCrawlDialog'
+import '../../css/wail.css'
 
 window.React = React
 
 injectTapEventPlugin()
 
 ReactDOM.render(
-  <Layout children={<NewCrawlD />} />,
+  <Layout />,
   document.getElementById('newCrawl'))

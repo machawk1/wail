@@ -1,0 +1,272 @@
+.flexing {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+}
+
+.flex-rwise {
+  @extend .flexing;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.flex-cwise {
+  @extend .flexing;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.flex-rwises, .flex-cwises {
+  flex-wrap: wrap;
+}
+
+[class^='flex-rwise'][class*="reverse"]{
+  @extend .flexing;
+  -ms-flex-direction: row-reverse;
+  flex-direction: row-reverse;
+}
+
+[class^='flex-cwise'][class*="reverse"]{
+  @extend .flexing;
+  -ms-flex-direction: column-reverse;
+  flex-direction: column-reverse;
+}
+
+[class^='flex-cwise'][class*="top-"],
+[class^='flex-rwise'][class*="-left"] {
+  justify-content: flex-start;
+}
+
+[class^='flex-cwise'][class~="centered"],
+[class^='flex-rwise'][class~="centered"],
+[class^='flex-cwise'][class*="center-"],
+[class^='flex-rwise'][class*="-center"]{
+  justify-content: center;
+}
+
+[class^="flex-cwise"][class*="bottom-"],
+[class^="flex-rwise"][class*="-right"] {
+  justify-content: flex-end;
+}
+
+[class^="flex-cwise"][class*="spread-"],
+[class^="flex-rwise"][class*="-spread"]{
+  justify-content: space-around;
+}
+
+[class^="flex-cwise"][class*="justify-"],
+[class^="flex-rwise"][class*="-justify"]{
+  justify-content: space-between;
+}
+
+[class^="flex-cwise"][class*="-left"],
+[class^="flex-rwise"][class*="top-"] {
+  align-items: flex-start;
+}
+
+[class~="centered"],
+[class^="flex-cwise"][class*="-center"],
+[class^="flex-rwise"][class*="center-"] {
+  align-items: center;
+}
+
+[class^="flex-cwise"][class*="-right"],
+[class^="flex-rwise"][class*="bottom-"] {
+  align-items: flex-end;
+}
+
+[class^="flex-cwise"][class*="-stretch"],
+[class^="flex-rwise"][class*="stretch-"]{
+  align-items: stretch;
+}
+
+
+
+[class^="flex-rwises"][class*="top-"],
+[class^="flex-cwises"][class*="-left"] {
+  align-content: flex-start
+}
+
+
+[class^="flex-rwises"][class*="bottom-"],
+[class^="flex-cwises"][class*="-right"]{
+  align-content: flex-end
+}
+
+
+[class^="flex-rwises"][class*="center-"],
+[class^="flex-cwises"][class*="-center"] {
+  align-content: center
+}
+
+
+[class^="flex-rwises"][class*="justify-"],
+[class^="flex-cwises"][class*="-justify"] {
+  align-content: space-between
+}
+
+
+[class^="flex-rwises"][class*="spread-"],
+[class^="flex-cwises"][class*="-spread"] {
+  align-content: space-around
+}
+
+
+[class^="flex-rwises"][class*="stretch-"],
+[class^="flex-cwises"][class*="-stretch"]{
+  align-content: stretch
+}
+
+@media screen and ( max-width: 64em ){
+  [class*="lg-row"] {
+    flex-direction: row;
+  }
+
+  [class*="lg-column"] {
+    flex-direction: column;
+  }
+
+  [class*="lg-rows"],
+  [class*="lg-columns"] {
+    flex-wrap: wrap;
+  }
+}
+
+
+@media screen and ( max-width: 52em ){
+  [class*="md-row"] {
+    flex-direction: row;
+  }
+
+  [class*="md-column"] {
+    flex-direction: column;
+  }
+
+  [class*="md-rows"],
+  [class*="md-columns"] {
+    flex-wrap: wrap;
+  }
+}
+
+
+@media screen and ( max-width: 40em ){
+  [class*="sm-row"] {
+    flex-direction: row;
+  }
+
+  [class*="sm-column"] {
+    flex-direction: column;
+  }
+
+  [class*="sm-rows"],
+  [class*="sm-columns"] {
+    flex-wrap: wrap;
+  }
+}
+
+[class^="flex-cwise"][class*="center"],
+[class^="flex-rwise"][class*="center"] {
+  align-self: center;
+}
+
+[class^="flex-cwise"]:not([class*="flex-rwise"]) [class*="left"],
+[class^="flex-rwise"]:not([class*="flex-cwise"]) [class*="top"] {
+  align-self: flex-start;
+}
+
+
+[class^="flex-cwise"]:not([class*="flex-rwise"])  [class*="right"],
+[class^="flex-rwise"]:not([class*="flex-cwise"]) [class*="bottom"] {
+  align-self: flex-end;
+}
+
+[class^="flex-cwise"][class*="stretch"],
+[class^="flex-rwise"][class*="stretch"] {
+  align-self: stretch;
+}
+
+
+[class^="flex-cwise"][class*="center"]
+[class^="flex-rwise"][class*="center"] {
+  margin-left:  auto;
+  margin-right: auto;
+}
+
+[class^="flex-cwise"][class*="right"]
+[class^="flex-rwise"][class*="right"] {
+  margin-right: 0;
+}
+
+[class^="flex-cwise"][class*="left"]
+[class^="flex-rwise"][class*="left"] {
+  margin-left: 0;
+}
+
+
+[class^="flex-cwise"] [class*="bottom"] { margin-top: auto; }
+[class^="flex-cwise"] [class*="top"]    { margin-bottom: auto; }
+
+[class^="flex-rwise"] [class*="left"]      { margin-right: auto; }
+[class^="flex-rwise"] [class*="right"]     { margin-left: auto; }
+
+
+[class~="size-1of5"] { width: 20%;  }
+[class~="size-1of4"] { width: 25%;  }
+[class~="size-1of3"] { width: 33.33333%;  }
+[class~="size-2of5"] { width: 40% ; }
+[class~="size-1of2"] { width: 50%; }
+[class~="size-3of5"] { width: 60%; }
+[class~="size-2of3"] { width: 66.6666%; }
+[class~="size-3of4"] { width: 75%; }
+[class~="size-4of5"] { width: 80%; }
+[class~="size-1of1"] { width: 100% ; }
+
+
+
+[class^="flex-rwise"][class*="-stretch"] > *:not([class*="size-"]),
+[class^="flex-cwise"][class*="stretch-"] > *:not([class*="size-"]),
+[class~="size-x1"] { flex : 1 0 0% !important; }
+[class~="size-x2"] { flex : 2 0 0% !important; }
+[class~="size-x3"] { flex : 3 0 0% !important; }
+[class~="size-x4"] { flex : 4 0 0% !important; }
+[class~="size-x5"] { flex : 5 0 0% !important; }
+[class~="size-x6"] { flex : 6 0 0% !important; }
+[class~="size-x7"] { flex : 7 0 0% !important; }
+[class~="size-x8"] { flex : 8 0 0% !important; }
+[class~="size-x9"] { flex : 9 0 0% !important; }
+
+[class*="size-auto"] { flex: 1 1 auto; }
+[class*="size-x0"]   { flex: 0 0 auto; }
+
+
+/* Fixed max-width size */
+[class~="size-xxlarge"] { max-width: 1440px ; width:100% }
+[class~="size-xlarge"]  { max-width: 1200px ; width:100% }
+[class~="size-large"]   { max-width: 960px ;  width:100%  }
+[class~="size-larger"]  { max-width: 840px ;  width:100% }
+[class~="size-medium"]  { max-width: 720px ;  width:100% }
+[class~="size-smaller"] { max-width: 600px ;  width:100% }
+[class~="size-small"]   { max-width: 480px ;  width:100% }
+[class~="size-xsmall"]  { max-width: 360px ;  width:100% }
+[class~="size-xxsmall"] { max-width: 240px ;  width:100% }
+
+
+// BUG FIX: https://github.com/philipwalton/flexbugs#1-minimum-content-sizing-of-flex-items-not-honored
+[class*="size-x"]:not([class*="small"]):not([class*="large"]) {
+  flex-shrink: 1;
+}
+
+
+// ITEMS ORDER
+[class~="first"]     { order: -1;}
+[class~="order-1"]   { order: 1;}
+[class~="order-2"]   { order: 2;}
+[class~="order-3"]   { order: 3;}
+[class~="last"]      { order: 999;}
+
+
+[class^="flex-cwise"]:not([class*="row"]) > * {
+  flex-shrink: 0;
+  flex-basis: auto; // <-- Force elements natural height
+}

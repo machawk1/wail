@@ -4,13 +4,11 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
 import styles from '../../components/styles/styles'
+import NewCrawlD from './newCrawlDialog'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 
 export default class Layout extends Component {
-  static propTypes = {
-    children: PropTypes.any.isRequired
-  }
   static childContextTypes = {
     muiTheme: PropTypes.object.isRequired
   }
@@ -26,10 +24,10 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div style={{ height: '100%' }}>
+      <div style={{width: '100%',height: '100%'}}>
         <Header />
         <div style={styles.newCrawlChildren}>
-          {this.props.children}
+          <NewCrawlD />
         </div>
         <Footer />
       </div>
