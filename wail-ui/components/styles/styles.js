@@ -11,14 +11,14 @@ export default {
     order: -1
   },
   newCrawlList: {
-    height: 200,
-    maxHeight: 200,
+    height: 330,
+    maxHeight: 330,
     order: -1,
     overflow: 'hidden',
     overflowY: 'scroll'
   },
   newCrawlChildren: {
-    height: '50vh'
+    height: '70vh'
   },
   newCrawlColRow: {
     flex: 1,

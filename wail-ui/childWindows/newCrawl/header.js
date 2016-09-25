@@ -9,7 +9,7 @@ export default class Header extends Component {
         title='New Crawl Configuration'
         showMenuIconButton={false}
         zDepth={0}
-        style={{marginBottom: '1px'}}
+        style={{marginBottom: '5px'}}
       />
     )
   }

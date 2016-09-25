@@ -26,9 +26,7 @@ export default class Layout extends Component {
     return (
       <div style={{width: '100%',height: '100%'}}>
         <Header />
-        <div style={styles.newCrawlChildren}>
-          <NewCrawlD />
-        </div>
+        <NewCrawlD />
         <Footer />
       </div>
     )
