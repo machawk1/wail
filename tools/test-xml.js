@@ -22,6 +22,8 @@ import _ from 'lodash'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 
 
+
+
 // const base = path.join(path.resolve('.'),'bundledApps/heritrix/jobs/**/progress-statistics.log')
 // console.log(base)
 

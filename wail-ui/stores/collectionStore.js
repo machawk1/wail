@@ -50,7 +50,7 @@ class _CollectionStore extends EventEmitter {
       cols.forEach(col => {
         console.log(col)
         let { crawls } = col
-        crawls = crawls.map(r => new ColCrawlInfo(col))
+        crawls = crawls.map(r => new ColCrawlInfo(r))
         crawls.sort((r1, r2) => r1.compare(r2))
         col.crawls = crawls
         collections.push(col)
@@ -75,7 +75,7 @@ class _CollectionStore extends EventEmitter {
       notify.notifySuccess(`Added ${count} Warc/Arc Files To Collection ${forCol}`)
       upDateMe.numArchives += count
       this.collections.set(forCol, upDateMe)
-      this.emit('updated-col', upDateMe)
+      this.emit(`updated-${forCol}-warcs`, upDateMe.numArchives)
     }
   }
 
@@ -90,8 +90,8 @@ class _CollectionStore extends EventEmitter {
         title: 'Success',
         level: 'success',
         autoDismiss: 0,
-        message: `Created new collection ${col.colName}`,
-        uid: `Created new collection ${col.colName}`
+        message: `Created new collection ${col.viewingCol}`,
+        uid: `Created new collection ${col.viewingCol}`
       }
     })
   }
@@ -102,6 +102,10 @@ class _CollectionStore extends EventEmitter {
 
   getCollection(name) {
     return this.collections.get(name)
+  }
+
+  getNumberOfArchives(name) {
+    return this.getCollection(name).numArchives
   }
 
   @autobind

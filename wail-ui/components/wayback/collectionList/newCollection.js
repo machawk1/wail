@@ -155,13 +155,6 @@ class NCD extends Component {
     )
   }
 }
-/*
- <div className='contentFab'>
- <FloatingActionButton onTouchTap={() => console.log('fab clicked')}>
- <ContentAdd />
- </FloatingActionButton>
- </div>
- */
 
 export default class NewCollection extends Component {
 

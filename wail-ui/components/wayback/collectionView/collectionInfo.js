@@ -4,7 +4,7 @@ import SwipeableViews from 'react-swipeable-views'
 import autobind from 'autobind-decorator'
 import Dimensions from 'react-dimensions'
 import { Row, Col } from 'react-flexbox-grid'
-import CollectionOverview from './collectionOverview'
+import CollectionOverview from '../collectionHeader/collectionOverview'
 import CollectionMetadata from './collectionMetadata'
 
 export default class CollectionInfo extends Component {

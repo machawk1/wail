@@ -15,12 +15,10 @@ import Test from './components/test/test'
  <IndexRoute component={Test}/>
  </Route>
  */
-console.log(window.lastWaybackPath)
 const Routes = (
   <Route path='/' component={Layout}>
     <IndexRoute component={BasicTab}/>
     <Route path='services' name='services' component={General}/>
-    <Redirect from='wayback' to={`wayback/${window.lastWaybackPath}`}/>
     <Route path='wayback/:col' name='wayback' component={Wayback}/>
     <Route path='heritrix' name='heritrix' component={Heritrix}/>
     <Route path='misc' name='misc' component={Misc}/>

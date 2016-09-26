@@ -78,8 +78,8 @@ export function addedNewCol (event, col) {
     title: 'Success',
     level: 'success',
     autoDismiss: 0,
-    message: `Created new collection ${col.colName}`,
-    uid: `Created new collection ${col.colName}`
+    message: `Created new collection ${col.viewingCol}`,
+    uid: `Created new collection ${col.viewingCol}`
   }))
   return {
     type: 'added-new-collection',

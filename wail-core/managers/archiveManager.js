@@ -156,13 +156,14 @@ export default class ArchiveManager {
         let c2 = ((stderr || ' ').match(/INFO/g) || []).length
         let count = c1 === 0 ? c2 : c1
 
-        console.log('added warcs to collection', col)
+        console.log('added warcs to collection', col,count)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        this.db.update({ colName: col }, { $inc: { numArchives: count } }, {}, (err, numUpdated) => {
+        this.db.update({ colName: col }, { $inc: { numArchives: count } }, {returnUpdatedDocs: true}, (err, numUpdated,affectedDocuments) => {
           if (err) {
             return reject(err)
           } else {
+            console.log(numUpdated,affectedDocuments)
             return resolve({
               forCol: col,
               count,
@@ -293,6 +294,14 @@ export default class ArchiveManager {
         } else {
           resolve(docs)
         }
+      })
+    })
+  }
+
+  checkWarcsAndReport(forCol){
+    return new Promise((resolve,reject) => {
+      this.db.findOne({_id: forCol},{archive: 1},(err,document) => {
+        console.log(document)
       })
     })
   }

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import BeamMeUpScotty from 'drag-drop'
-import { ipcRenderer as ipc } from 'electron'
+import { ipcRenderer as ipc,dialogue } from 'electron'
 import * as notify from '../../../actions/notification-actions'
 import path from 'path'
 import { joinStrings } from 'joinable'

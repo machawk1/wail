@@ -5,7 +5,7 @@ import _ from 'lodash'
 import CircularProgress from 'material-ui/CircularProgress'
 import CollectionView from './collectionView'
 import CollectionList from './collectionList'
-import CollectionHeader from './collectionHeader'
+import CollectionHeader from './collectionHeader/collectionCard'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
@@ -43,8 +43,8 @@ export default class Explorer extends Component {
     let { collections, colNames } = this.state
     console.log(cols)
     cols.forEach(col => {
-      colNames.push(col.colName)
-      collections[ col.colName ] = col
+      colNames.push(col.viewingCol)
+      collections[ col.viewingCol ] = col
     })
     this.setState({ collections, colNames })
   }

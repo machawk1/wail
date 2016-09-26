@@ -2,6 +2,7 @@ import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron'
 import EventEmitter from 'eventemitter3'
 import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
+import S from 'string'
 
 async function dlExtensions (update = false) {
   if (process.env.NODE_ENV === 'development') {
@@ -217,10 +218,6 @@ export default class WindowManager extends EventEmitter {
       this.send('mainWindow','crawl-to-collection', colCrawl)
     })
 
-    ipcMain.on('add-warcs-to-col', (event, warcs) => {
-      this.send('archiveManWindow','add-warcs-to-col', warcs)
-    })
-
     ipcMain.on('create-collection', (event, nc) => {
       console.log('create-collection', nc)
       this.send('archiveManWindow','create-collection', nc)
@@ -335,21 +332,16 @@ export default class WindowManager extends EventEmitter {
     this.showLoadingWindow(control)
       .then(() => {
         console.log('loading window shown')
-        this.createArchiveMan(control)
+        this.createRequestD(control)
           .then(() => {
-            this.createCrawlMan(control)
+            this.createArchiveMan(control)
               .then(() => {
-                this.createWail(control)
+                this.createCrawlMan(control)
                   .then(() => {
-                    console.log('all windows loaded')
-                    // this.send('crawlManWindow','get-all-runs')
-                    // this.send('archiveManWindow','get-all-collections')
-                    // this.windows[ 'crawlManWindow' ].window.webContents.send('get-all-runs')
-                    // this.windows[ 'archiveManWindow' ].window.webContents.send('get-all-collections')
-                    // this.windows[ 'mainWindow' ].open = true
-                    // this.windows[ 'mainWindow' ].window.show()
-                    // this.windows[ 'mainWindow' ].window.focus()
-                    // start the loading of serivices finally
+                    this.createWail(control)
+                      .then(() => {
+                        console.log('all windows loaded')
+                      })
                   })
               })
           })
@@ -689,6 +681,10 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'mainWindow')
       })
 
+      this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event,url) => {
+        console.log('mainWindow will navigate to',url)
+      })
+
       this.windows['mainWindow'].window.on('app-command',(e, cmd) => {
         console.log('app-command',cmd)
         // Navigate the window back when the user hits their mouse back button
@@ -789,6 +785,15 @@ export default class WindowManager extends EventEmitter {
         }
       }
 
+    }
+  }
+
+  windowWebcontentOn(winName,event,handler) {
+    if(this.windows[winName].window) {
+      this.windows[winName].window.webContents.on(event,handler)
+      return true
+    } else {
+      return false
     }
   }
 }

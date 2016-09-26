@@ -18,7 +18,7 @@
 <script>
     (function () {
         const script = document.createElement('script')
-        script.src = (process.env.HOT) ? 'http://localhost:9000/dist/notFirstLoad.bundle.js' : '../../../dist/notFirstLoad.bundle.js'
+        script.src = (process.env.HOT) ? 'http://localhost:9001/dist/notFirstLoad.bundle.js' : '../../../dist/notFirstLoad.bundle.js'
         document.write(script.outerHTML)
     }())
 </script>
