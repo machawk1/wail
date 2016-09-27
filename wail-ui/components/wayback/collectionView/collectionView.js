@@ -43,19 +43,22 @@ export default class CollectionView extends Component {
 
   constructor (...args) {
     super(...args)
-    this.state = CollectionStore.getCollection(this.props.viewingCol)
+    this.state = {
+      theCol: CollectionStore.getCollection(this.props.viewingCol)
+    }
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
+    console.log('collection view cwrp',this.props,nextProps)
     if (this.props.viewingCol !== nextProps.viewingCol) {
-      this.setState({ ...CollectionStore.getCollection(nextProps.viewingCol) })
+      let theCol =  CollectionStore.getCollection(nextProps.viewingCol)
+      console.log(theCol)
+      this.setState({ theCol})
     }
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    let shouldUpdate = shallowCompare(this, nextProps, nextState)
-    console.log(this.props, nextProps, shouldUpdate)
-    return shouldUpdate
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
@@ -68,7 +71,7 @@ export default class CollectionView extends Component {
       numArchives,
       metadata,
       name
-    } = this.state
+    } = this.state.theCol
     let tmdata = metadataTransform(metadata)
 
     return (

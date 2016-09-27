@@ -1,17 +1,21 @@
-import React, {Component, PropTypes} from 'react'
-import {CardActions} from 'material-ui/Card'
-import {Grid, Row, Col} from 'react-flexbox-grid'
+import React, { Component, PropTypes } from 'react'
+import { CardActions } from 'material-ui/Card'
+import { Grid, Row, Col } from 'react-flexbox-grid'
 import ActionButton from 'material-ui/RaisedButton'
-import {remote} from 'electron'
+import {remote, ipcRenderer as ipc} from 'electron'
 import cp from 'child_process'
 import S from 'string'
 import autobind from 'autobind-decorator'
 import shallowCompare from 'react-addons-shallow-compare'
 import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
-import {openUrlInBrowser, openFSLocation} from '../../../actions/util-actions'
+import { openUrlInBrowser, openFSLocation } from '../../../actions/util-actions'
 import wailConstants from '../../../constants/wail-constants'
 import CollectionStore from '../../../stores/collectionStore'
 import WarcToCollection from '../collectionView/warcToCollection'
+import path from 'path'
+import { joinStrings } from 'joinable'
+import * as notify from '../../../actions/notification-actions'
+import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -39,9 +43,7 @@ export default class CollectionToolBar extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    let shouldUpdate = shallowCompare(this, nextProps, nextState)
-    console.log(this.props, nextProps, shouldUpdate)
-    return shouldUpdate
+    return shallowCompare(this, nextProps, nextState)
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
@@ -50,9 +52,43 @@ export default class CollectionToolBar extends Component {
         colName,
         indexes,
         archive,
-      } = CollectionStore.getCollection(this.props.viewingCol)
+      } = CollectionStore.getCollection(nextProps.viewingCol)
       this.setState({ colName, indexes, archive })
     }
+  }
+
+  @autobind
+  addWarcs () {
+    console.log('add Warcs')
+    const {dialog} = remote
+    let archiveChooserOpts = {
+      title: `Add Warc Files To ${this.props.viewingCol}`,
+      defaultPath: remote.app.getPath('home'),
+      properties: ['openFile','openDirectory', 'multiSelections'],
+      filters: [
+        {name: 'Archives', extensions: ['warc']}
+      ]
+    }
+    console.log(archiveChooserOpts)
+    dialog.showOpenDialog(remote.getCurrentWindow(),archiveChooserOpts,(files) => {
+      if (files) {
+        console.log(files)
+        let addMe = []
+        files.forEach(f => {
+          if (S(path.extname(f)).isEmpty()) {
+            addMe.push(path.join(f,'*.warc'))
+          } else {
+            addMe.push(f)
+          }
+        })
+
+        console.log(addMe)
+        ipc.send('add-warcs-to-col',{
+          forCol: this.props.viewingCol,
+          warcs: joinStrings(...addMe, {separator: ' '})
+        })
+      }
+    })
   }
 
   @autobind
@@ -121,38 +157,68 @@ export default class CollectionToolBar extends Component {
   render () {
     return (
       <div className="layoutFooter">
-        <CardActions>
-          <Grid fluid>
-            <Row between="xs">
-              <Col>
-                <ActionButton
-                  label='Open Index Location'
-                  onTouchTap={() => openFSLocation(this.state.indexes)}
-                />
-              </Col>
-              <Col>
-                <ActionButton
-                  label='Open Warc Location'
-                  onTouchTap={() => openFSLocation(this.state.archive)}
-                />
-              </Col>
-              <Col>
-                <ActionButton
-                  label='View In Wayback'
-                  onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.state.colName}`)}
-                />
-              </Col>
-              <Col>
-                <ActionButton
-                  label='Reindex'
-                  onTouchTap={() => this.forceIndex()}
-                />
-              </Col>
-            </Row>
-          </Grid>
-        </CardActions>
+        <Toolbar>
+          <ToolbarGroup firstChild>
+            <ActionButton
+              label='Open Index Location'
+              onTouchTap={() => openFSLocation(this.state.indexes)}
+            />
+            <ActionButton
+              label='Open Warc Location'
+              onTouchTap={() => openFSLocation(this.state.archive)}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <ActionButton
+              label='View In Wayback'
+              onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.state.colName}`)}
+            />
+            <ActionButton
+              label='Reindex'
+              onTouchTap={() => this.forceIndex()}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup lastChild>
+          <ActionButton
+            label='Add Warcs'
+            onTouchTap={() => this.addWarcs()}
+            />
+          </ToolbarGroup>
+        </Toolbar>
       </div>
     )
   }
 
 }
+/*
+ <CardActions>
+ <Grid fluid>
+ <Row between="xs">
+ <Col>
+ <ActionButton
+ label='Open Index Location'
+ onTouchTap={() => openFSLocation(this.state.indexes)}
+ />
+ </Col>
+ <Col>
+ <ActionButton
+ label='Open Warc Location'
+ onTouchTap={() => openFSLocation(this.state.archive)}
+ />
+ </Col>
+ <Col>
+ <ActionButton
+ label='View In Wayback'
+ onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.state.colName}`)}
+ />
+ </Col>
+ <Col>
+ <ActionButton
+ label='Reindex'
+ onTouchTap={() => this.forceIndex()}
+ />
+ </Col>
+ </Row>
+ </Grid>
+ </CardActions>
+ */

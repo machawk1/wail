@@ -44,7 +44,7 @@ export default class ArchiveManager {
               indexes: path.join(colpath, 'indexes'),
               colName: 'default',
               numArchives: 0,
-              metaData: [ { k: 'title', v: 'Default' }, { k: 'description', v: 'Default Collection' } ],
+              metadata: [ { k: 'title', v: 'Default' }, { k: 'description', v: 'Default Collection' } ],
               crawls: [],
               hasRunningCrawl: false
             }
@@ -88,14 +88,6 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        let metadata = []
-        mdata.forEach(m => {
-          let split = m.split('=')
-          metadata.push({
-            k: split[ 0 ],
-            v: S(split[ 1 ]).replaceAll('"', '').s
-          })
-        })
         console.log('added metadata to collection', col)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
@@ -148,7 +140,9 @@ export default class ArchiveManager {
       let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
+          console.error(error)
           console.error(stderr)
+          console.error(stdout)
           return reject(error)
         }
 
@@ -215,7 +209,7 @@ export default class ArchiveManager {
     }
     let {
       col,
-      metaData
+      metadata
     } = ncol
     let exec = S(settings.get('pywb.newCollection')).template({ col }).s
     return new Promise((resolve, reject) => {
@@ -235,7 +229,7 @@ export default class ArchiveManager {
           indexes: path.join(colpath, 'indexes'),
           colName: col,
           numArchives: 0,
-          metaData,
+          metadata,
           crawls: [],
           hasRunningCrawl: false
         }

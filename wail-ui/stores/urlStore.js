@@ -7,6 +7,7 @@ import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import S from 'string'
 import * as urlActions from '../actions/archive-url-actions'
+import * as notify from '../actions/notification-actions'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -71,8 +72,21 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
-          urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
+          // urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
+          this.emit('checking-in-archive',{
+            url: this.urlMemento.url.s, col: event.forCol
+          })
+          urlActions.grabCaptures(this.urlMemento.url.s, event.forCol)
+            .then($ => {
+               this.emit('checking-in-archive-done',$)
+            })
+            .catch(error => {
+              console.error(error)
+              window.logger.error({ err: error, msg: 'error in querying wayback' })
+              notify.notifyError(`An internal error occurred while seeing querying the archive ${event.forCol}`, true)
+            })
         } else {
+          window.logger.debug('Entered in a empty url at WAIL page')
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: {
@@ -90,14 +104,15 @@ class UrlStore_ extends EventEmitter {
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: {
-              title: 'Warning',
-              level: 'warning',
+              title: 'Info',
+              level: 'Info',
               message: `Viewing archived version of: ${this.urlMemento.url.s}`,
               uid: `Viewing archived version of: ${this.urlMemento.url.s}`
             }
           })
           shell.openExternal(`${settings.get('pywb.url')}${event.forCol}/*/${this.urlMemento.url.s}`)
         } else {
+          window.logger.debug('Entered in a empty url at WAIL page')
           GMessageDispatcher.dispatch({
             type: EventTypes.QUEUE_MESSAGE,
             message: {

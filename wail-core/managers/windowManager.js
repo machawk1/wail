@@ -682,16 +682,10 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event,url) => {
+        event.preventDefault()
         console.log('mainWindow will navigate to',url)
       })
 
-      this.windows['mainWindow'].window.on('app-command',(e, cmd) => {
-        console.log('app-command',cmd)
-        // Navigate the window back when the user hits their mouse back button
-        if (cmd === 'browser-backward' && this.windows['mainWindow'].window.webContents.canGoBack()) {
-          this.windows['mainWindow'].window.webContents.goBack()
-        }
-      })
 
       this.windows[ 'mainWindow' ].window.on('close', (e) => {
         console.log('window man mainWindow close')

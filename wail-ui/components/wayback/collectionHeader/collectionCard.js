@@ -55,7 +55,7 @@ export default class CollectionCard extends Component {
     console.log(this.props.children)
     return (
       <Card
-        style={{ height: '100%' }}
+        style={{ height: '103%' }}
         expanded={this.state.expanded} onExpandChange={this.handleExpandChange}
       >
         <CardHeader

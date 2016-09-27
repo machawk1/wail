@@ -12,6 +12,7 @@ import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import IconButton from 'material-ui/IconButton'
 import SearchIcon from 'material-ui/svg-icons/action/search'
+import shallowCompare from 'react-addons-shallow-compare'
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -38,8 +39,13 @@ export default class ArchivalButtons extends Component {
 
   componentWillUnmount () {
     console.log('archival buttons cwum')
-    ViewWatcher.removeListener('basicColList-selected',this.updateForCol)
+    ViewWatcher.removeListener('basicColList-selected', this.updateForCol)
   }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
+  }
+
 
   @autobind
   updateForCol (forCol) {

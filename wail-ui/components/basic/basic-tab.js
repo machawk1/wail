@@ -9,6 +9,8 @@ import BasicColList from './basicCollectionList'
 import ArchiveOrCheckCol from './archiveOrCheckCol'
 import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import EditOrCreateCollection from './editOrCreateCollection'
+import InArchiveResults from './inArchiveResults'
+import shallowCompare from 'react-addons-shallow-compare'
 import styles from '../styles/styles'
 
 const { btBody } = styles.basicTab
@@ -34,34 +36,37 @@ const { btBody } = styles.basicTab
  */
 export default class BasicTab extends Component {
 
-  constructor (...args) {
-    super(...args)
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
     return (
-      <Grid
-        fluid
-      >
-        <Row top="xs">
-          <Col xs>
-            <CardHeader
-              title='Archive URL'
-              subtitle='Single Page Crawl'
-            />
-          </Col>
-        </Row>
-        <Row middle="xs">
-          <Col xs>
-            <ArchiveUrl />
-          </Col>
-        </Row>
-        <Row bottom="xs">
-          <Col xs>
-            <ArchivalButtons />
-          </Col>
-        </Row>
-      </Grid>
+      <div>
+        <Grid
+          fluid
+        >
+          <Row top="xs">
+            <Col xs>
+              <CardHeader
+                title='Archive URL'
+                subtitle='Single Page Crawl'
+              />
+            </Col>
+          </Row>
+          <Row middle="xs">
+            <Col xs>
+              <ArchiveUrl />
+            </Col>
+          </Row>
+          <Row bottom="xs">
+            <Col xs>
+              <ArchivalButtons />
+            </Col>
+          </Row>
+        </Grid>
+        <InArchiveResults />
+      </div>
     )
   }
 }

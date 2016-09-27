@@ -9,7 +9,7 @@ import CollectionStore from '../../stores/collectionStore'
 import wailConstants from '../../constants/wail-constants'
 import CollectionList from './collectionList'
 import CollectionCard from './collectionHeader/collectionCard'
-import {CollectionView, CollectionToolBar} from './collectionView'
+import {CollectionView, CollectionToolBar, CollectionSearch} from './collectionView'
 
 import * as notify from '../../actions/notification-actions'
 
@@ -112,15 +112,14 @@ export default class WayBackTab extends Component {
     return (
       <div
         id='warcUpload' className="wbCollectionOverviewRow"
-        onDrop={(...args) => console.log('manual on drop event',...args)}
       >
         <CollectionCard viewingCol={this.props.params.col}>
           <CollectionView viewingCol={this.props.params.col}/>
+          <CollectionSearch viewingCol={this.props.params.col}/>
           <CollectionToolBar
             viewingCol={this.props.params.col}
           />
         </CollectionCard>
-
       </div>
     )
   }

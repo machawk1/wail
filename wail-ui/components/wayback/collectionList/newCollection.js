@@ -3,7 +3,7 @@ import { Grid, Row, Col } from 'react-flexbox-grid'
 import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
 import { ipcRenderer as ipc } from 'electron'
 import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
+import FlatButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
 import wc from '../../../constants/wail-constants'
@@ -46,7 +46,7 @@ class NCD extends Component {
       let newCol = {
         col,
         mdata: [ `title=${rt}`, `description=${description}` ],
-        metaData: [
+        metadata: [
           { 'k': 'title', 'v': rt },
           { 'k': 'description', 'v': description }
         ]
@@ -179,7 +179,7 @@ export default class NewCollection extends Component {
   render () {
     return (
       <div>
-        <FlatButton label={'New Collection'} onTouchTap={::this.handleOpen}/>
+        <FlatButton primary label={'New Collection'} onTouchTap={::this.handleOpen}/>
         <NCD open={this.state.open} handleClose={::this.handleClose}/>
       </div>
 

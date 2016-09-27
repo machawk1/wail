@@ -11,6 +11,7 @@ import * as aua from '../../actions/archive-url-actions'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
+import shallowCompare from 'react-addons-shallow-compare'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
@@ -29,13 +30,14 @@ let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
   defForCol = 'Wail'
 }
+let focusTime = null
 
 export default class ArchiveUrl extends Component {
 
   constructor (props, context) {
     super(props, context)
     this.state = {
-      url: UrlStore.getUrl(),
+      url: UrlStore.getUrl().s,
       underlineStyle: styles.underlineStyle,
       forCol: defForCol
     }
@@ -53,6 +55,7 @@ export default class ArchiveUrl extends Component {
     ViewWatcher.removeListener('basicColList-selected',this.updateForCol)
   }
 
+
   @autobind
   updateForCol (forCol) {
     console.log('archive url got an for col update',forCol)
@@ -62,25 +65,32 @@ export default class ArchiveUrl extends Component {
   @autobind
   getUrl () {
     let maybeUpdate = UrlStore.getUrl()
-    if (this.state.url.s !== maybeUpdate.s) {
-      this.setState({ url: this.state.url.setValue(maybeUpdate.s) })
+    if (this.state.url !== maybeUpdate.s) {
+      this.setState({ url: maybeUpdate.s })
     }
   }
 
   @autobind
   handleChange (e) {
     let val = e.target.value
-    let value = e.target.value
-    let err = styles.underlineStyleError
-    if (isURL(value) || S(value).isEmpty()) {
-      err = styles.underlineStyle
-    }
-    this.setState({ url: this.state.url.setValue(value), underlineStyle: err })
+    clearTimeout(focusTime)
+    focusTime = setTimeout(() => {
+      console.log('Timeout focus time',val)
+      if (isURL(val)) {
+        UrlDispatcher.dispatch({
+          type: EventTypes.HAS_VAILD_URI,
+          url: val
+        })
+
+      }
+    }, 600)
+    this.setState({ url:  e.target.value})
   }
 
   @autobind
   focusLost (event) {
     // console.log('checking url for archiving', this.state.url, event.target.value)
+    clearTimeout(focusTime)
     if (isURL(event.target.value)) {
       console.log('its valid')
       UrlDispatcher.dispatch({
@@ -111,7 +121,7 @@ export default class ArchiveUrl extends Component {
       <TextField
         floatingLabelText='URL'
         id='archive-url-input'
-        value={this.state.url.s}
+        value={this.state.url}
         onBlur={this.focusLost}
         onChange={this.handleChange}
         style={styles.urlInput}

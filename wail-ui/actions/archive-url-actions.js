@@ -7,11 +7,21 @@ import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
 import * as notify from './notification-actions'
+import cheerio from  'cheerio'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
 const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
+
+export function grabCaptures(uri,forCol) {
+  notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
+  window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
+  return rp({
+    uri: `${settings.get('pywb.url')}${forCol}/*/${uri}`,
+    transform: body => cheerio.load(body)
+  })
+}
 
 export function checkUriIsInArchive (uri, forCol) {
   console.log('checking if uri is in archive', uri, forCol)

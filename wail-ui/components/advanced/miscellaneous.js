@@ -7,55 +7,44 @@ import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
 import { remote, ipcRenderer } from 'electron'
 import { Grid, Row, Col } from 'react-flexbox-grid'
 import EventLog from './eventLog'
-import {openUrlInBrowser,openFSLocation} from '../../actions/util-actions'
+import { openUrlInBrowser, openFSLocation } from '../../actions/util-actions'
 
 const settings = remote.getGlobal('settings')
 
 export default class Misc extends Component {
   render () {
     return (
-      <Grid
-        fluid
-        className='waybackGrid'
-      >
-        <Row>
-          <Col xs>
-            <EventLog />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs>
-            <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
-              <ToolbarGroup firstChild>
-                <RaisedButton
-                  icon={<SettingIcon />}
-                  label='Settings'
-                  labelPosition='before'
-                  onMouseDown={() => ipcRenderer.send('open-settings-window', 'hi')}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup>
-                <RaisedButton
-                  icon={<FolderOpen />}
-                  label='View Archives'
-                  labelPosition='before'
-                  onMouseDown={() => {
-                    openFSLocation(settings.get('warcs'))
-                  }}
-                />
-              </ToolbarGroup>
-              <ToolbarGroup lastChild>
-                <RaisedButton
-                  icon={<CheckUpdateIcon />}
-                  label='Check For Updates'
-                  labelPosition='before'
-                  onMouseDown={() => openUrlInBrowser('https://github.com/N0taN3rd/wail/releases')}
-                />
-              </ToolbarGroup>
-            </Toolbar>
-          </Col>
-        </Row>
-      </Grid>
+      <div>
+        <EventLog />
+        <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
+          <ToolbarGroup firstChild>
+            <RaisedButton
+              icon={<SettingIcon />}
+              label='Settings'
+              labelPosition='before'
+              onMouseDown={() => ipcRenderer.send('open-settings-window', 'hi')}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup>
+            <RaisedButton
+              icon={<FolderOpen />}
+              label='View Archives'
+              labelPosition='before'
+              onMouseDown={() => {
+                openFSLocation(settings.get('warcs'))
+              }}
+            />
+          </ToolbarGroup>
+          <ToolbarGroup lastChild>
+            <RaisedButton
+              icon={<CheckUpdateIcon />}
+              label='Check For Updates'
+              labelPosition='before'
+              onMouseDown={() => openUrlInBrowser('https://github.com/N0taN3rd/wail/releases')}
+            />
+          </ToolbarGroup>
+        </Toolbar>
+      </div>
     )
   }
 }

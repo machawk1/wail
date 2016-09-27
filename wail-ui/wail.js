@@ -29,7 +29,7 @@ injectTapEventPlugin()
 // ipcRenderer.send('get-all-runs')
 
 const wail = document.getElementById('wail')
-const ringbuffer = window.eventLog = new bunyan.RingBuffer({ limit: 100 })
+window.eventLog = new bunyan.RingBuffer({ limit: 100 })
 
 window.logger = bunyan.createLogger({
   name: 'wail-ui',
@@ -39,9 +39,9 @@ window.logger = bunyan.createLogger({
       path: remote.getGlobal('wailUILogp')
     },
     {
-      level: 'debug',
+      level: 'trace',
       type: 'raw',    // use 'raw' to get raw log record objects
-      stream: ringbuffer
+      stream: window.eventLog
     }
   ]
 })
