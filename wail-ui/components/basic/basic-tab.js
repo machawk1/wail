@@ -65,7 +65,6 @@ export default class BasicTab extends Component {
             </Col>
           </Row>
         </Grid>
-        <InArchiveResults />
       </div>
     )
   }

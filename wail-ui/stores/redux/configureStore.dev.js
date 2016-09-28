@@ -2,8 +2,11 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
 import createLogger from 'redux-logger'
-import api from '../middleware/api'
-import rootReducer from '../reducers'
+import {
+  ipc,
+  requestHandler
+} from '../../middleware'
+import rootReducer from '../../reducers'
 import DevTools from '../../containers/devTools'
 
 const configureStore = preloadedState => {
@@ -11,7 +14,7 @@ const configureStore = preloadedState => {
     rootReducer,
     preloadedState,
     compose(
-      applyMiddleware(thunk, promiseMiddleware(), api, createLogger()),
+      applyMiddleware(thunk, promiseMiddleware(), ipc, requestHandler, createLogger()),
       DevTools.instrument()
     )
   )
@@ -19,7 +22,7 @@ const configureStore = preloadedState => {
   if (module.hot) {
     // Enable Webpack hot module replacement for reducers
     module.hot.accept('../reducers', () => {
-      const nextRootReducer = require('../reducers').default
+      const nextRootReducer = require('../../reducers').default
       store.replaceReducer(nextRootReducer)
     })
   }

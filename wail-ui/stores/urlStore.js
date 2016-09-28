@@ -72,19 +72,7 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
-          // urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
-          this.emit('checking-in-archive',{
-            url: this.urlMemento.url.s, col: event.forCol
-          })
-          urlActions.grabCaptures(this.urlMemento.url.s, event.forCol)
-            .then($ => {
-               this.emit('checking-in-archive-done',$)
-            })
-            .catch(error => {
-              console.error(error)
-              window.logger.error({ err: error, msg: 'error in querying wayback' })
-              notify.notifyError(`An internal error occurred while seeing querying the archive ${event.forCol}`, true)
-            })
+          urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
         } else {
           window.logger.debug('Entered in a empty url at WAIL page')
           GMessageDispatcher.dispatch({

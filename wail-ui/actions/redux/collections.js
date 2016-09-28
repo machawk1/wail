@@ -1,6 +1,14 @@
 import {Schema, arrayOf, normalize} from 'normalizr'
 import {ipcRenderer as ipc, remote} from 'electron'
 import ColCrawlInfo from '../../../wail-core/util/colCrawlInfo'
+import wailConstants from '../../constants/wail-constants'
+const {
+  GET_COLLECTIONS,
+  CREATE_NEW_COLLECTION,
+  ADD_METADATA_TO_COLLECTION,
+  GET_COLLECTION_NAMES,
+  QUEUE_MESSAGE
+} = wailConstants.EventTypes
 import * as notify from './notifications'
 
 const settings = remote.getGlobal('settings')
@@ -66,7 +74,7 @@ export function addedWarcs (event, update) {
       count
     } = update
     return {
-      type: 'updated-col',
+      type: 'added-warcs-to-col',
       forCol,
       count
     }
@@ -84,6 +92,15 @@ export function addedNewCol (event, col) {
   return {
     type: 'added-new-collection',
     col
+  }
+}
+
+export function addMetadata ( mdata, forCol) {
+  ipc.send('add-metadata-to-col', { mdata, forCol })
+  return {
+    type: ADD_METADATA_TO_COLLECTION,
+    mdata,
+    forCol
   }
 }
 

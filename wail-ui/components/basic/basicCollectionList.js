@@ -67,7 +67,7 @@ export default class BasicCollectionList extends Component {
   render () {
     return (
       <AutoComplete
-        style={{paddingLeft: '20px'}}
+        style={{paddingLeft: '20px', width: '200px'}}
         openOnFocus
         maxSearchResults={4}
         hintText="Available Collection"

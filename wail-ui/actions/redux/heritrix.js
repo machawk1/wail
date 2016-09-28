@@ -13,15 +13,22 @@ export function gotAllRuns (event, allRuns) {
 
 export function createJob (conf) {
   return {
-    type: 'create-job',
+    type: EventTypes.CREATE_JOB,
     conf
   }
 }
 
 export function madeJobConf (conf) {
   return {
-    type: 'create-job',
+    type: EventTypes.CREATE_JOB,
     conf
+  }
+}
+
+export function crawlJobUpdate (e,crawlStatus) {
+  return {
+    type: 'crawljob-status-update',
+    crawlStatus
   }
 }
 
@@ -45,7 +52,7 @@ export function buildCrawlJob (url, forCol = wc.Default_Collection) {
   }
 }
 
-export function buildDialogueCrawlJob (event, newCrawl, forCol = wc.Default_Collection) {
+export function buildDialogueCrawlJob (event, newCrawl) {
   let forMTI
   let urls
   let maybeArray = Array.isArray(newCrawl.urls)
@@ -60,15 +67,16 @@ export function buildDialogueCrawlJob (event, newCrawl, forCol = wc.Default_Coll
   ipc.send('makeHeritrixJobConf', {
     urls: newCrawl.urls,
     depth: newCrawl.depth,
-    jobId: jId, forCol
+    jobId: jId,
+    forCol: newCrawl.forCol
   })
-  window.logger.debug(`Building Heritrix crawl for ${forCol} ${urls}`)
+  window.logger.debug(`Building Heritrix crawl for ${newCrawl.forCol} ${urls}`)
   return {
     type: EventTypes.QUEUE_MESSAGE,
     message: {
       title: 'Info',
       level: 'info',
-      message: `Building Heritrix crawl for ${forCol} with seeds:  ${urls}`,
+      message: `Building Heritrix crawl for ${newCrawl.forCol} with seeds:  ${urls}`,
       uid: `Building Heritrix crawl for ${urls}`
     }
   }

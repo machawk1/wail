@@ -324,7 +324,7 @@ class CrawlStore_ extends EventEmitter {
               uid: `Building Heritrix crawl for ${crawlingUrlsMessage}`
             }
           })
-          ipc.send('makeHeritrixJobConf', { urls, depth, jobId: jId, forCol: 'Wail' })
+          ipc.send('makeHeritrixJobConf', { urls, depth, jobId: jId, forCol: event.forCol })
         }
 
         break

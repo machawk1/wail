@@ -17,12 +17,18 @@ const {
   actionS
 } = styles.heritrixTable
 
+
+
 export default class HeritrixJobList extends Component {
 
   constructor (props, context) {
     super(props, context)
     this.state = {
       jobs: CrawlStore.jobs()
+    }
+    this.tableHeight = '375px'
+    if (process.platform !== 'darwin') {
+      this.tableHeight = '325px'
     }
   }
 
@@ -41,14 +47,11 @@ export default class HeritrixJobList extends Component {
   }
 
   render () {
-    // console.log('rendering the joblist', this.state)
     let { jobs } = this.state
-    console.log(jobs)
     let JobItems
     if (jobs.length > 0) {
       JobItems = jobs.map(job => <HeritrixJobItem key={job.jobId} {...job} />)
     } else {
-      // JobItems = <ListItem primaryText='No Jobs To Display'/>
       JobItems = (
         <TableRow key='no-items-tr'>
           <TableRowColumn style={crawlUrlS}>
@@ -77,7 +80,7 @@ export default class HeritrixJobList extends Component {
     }
     return (
       <Table
-        height='375px'
+        height={this.tableHeight}
       >
         <TableHeader
           displaySelectAll={false}

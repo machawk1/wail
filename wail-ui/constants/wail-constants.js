@@ -18,6 +18,7 @@ export default {
     BUILT_CRAWL_CONF: null,
     BUILT_CRAWL_JOB: null,
     CHECK_URI_IN_ARCHIVE: null,
+    CREATE_JOB: null,
     CRAWL_JOB_DELETED: null,
     CREATE_NEW_COLLECTION: null,
     EMPTY_URL: null,

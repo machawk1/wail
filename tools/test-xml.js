@@ -1,25 +1,7 @@
 import 'babel-polyfill'
-import fs from 'fs-extra'
-import Promise from 'bluebird'
-import S from 'string'
-import {encode, compare} from 'bytewise'
-import through2 from 'through2'
-import streamSort from 'sort-stream2'
-import path from 'path'
-import util from 'util'
-import shelljs from 'shelljs'
-import cp from 'child_process'
-import named from 'named-regexp'
-import autobind from 'autobind-decorator'
-import Esettings from 'electron-settings'
-import chokidar from 'chokidar'
-import isRunning from 'is-running'
-import rp from 'request-promise'
-import cheerio from 'cheerio'
-import moment from 'moment'
-import psTree from 'ps-tree'
-import _ from 'lodash'
+import {Map,List} from 'immutable'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
+
 
 
 
@@ -58,22 +40,15 @@ import _ from 'lodash'
 //     }
 //   }
 // })
+let a = 'a'
+let key = 'a'
+let theMap = Map({aa: Map({a: Map({a1: 1,a2: 2}), b: Map({b1: 1,b2: 2})}),bb: List([1,2,3])})
+theMap = theMap.mergeDeep({'aa':{ [a]: {a3: 3}}}).set('bb',theMap.get('bb').push(4))
+console.log(theMap)
+console.log(theMap.updateIn(['aa',key,'a1'],it => it + 3))
 
-const it = Symbol('it')
-let itAskey = {
-  it: 'it2'
-}
-let itAskey2 = {
-  [it]: {
-    'it2': it
-  }
-}
-console.log(it)
-console.log({
-  [it]: 'it2'
-})
-console.log(itAskey)
-console.log(itAskey2[it].it2)
+const theMap2 = Map({})
+console.log(theMap2.set('a',1).set('b',2))
 // let configDirPath = path.join('.','waillogs/wail-settings')
 // //
 // let settings = new Esettings({ configDirPath })

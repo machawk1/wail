@@ -15,7 +15,8 @@ const baseTheme = getMuiTheme({
   },
   inkBar: {
     backgroundColor: lightBlue900
-  }
+  },
+  userAgent: false
 })
 
 export default class Layout extends Component {
@@ -28,12 +29,11 @@ export default class Layout extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { muiTheme: baseTheme }
   }
 
   getChildContext () {
     return {
-      muiTheme: this.state.muiTheme
+      muiTheme: baseTheme
     }
   }
 

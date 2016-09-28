@@ -53,6 +53,16 @@ export default class ArchivalButtons extends Component {
     this.setState({ forCol })
   }
 
+  @autobind
+  crawlNow() {
+    console.log('crawaling now for collection',this.state.forCol)
+    CrawlDispatcher.dispatch({
+      type: EventTypes.BUILD_CRAWL_JOB,
+      from: From.BASIC_ARCHIVE_NOW,
+      forCol: this.state.forCol
+    })
+  }
+
   render () {
     //  <ToolbarTitle text='Collections:' style={{paddingLeft: '20px'}}/>
     return (
@@ -81,13 +91,7 @@ export default class ArchivalButtons extends Component {
             icon={<ArchiveNowButton />}
             label='Archive Via Heritrix!'
             labelPosition='before'
-            onMouseDown={() => {
-              CrawlDispatcher.dispatch({
-                type: EventTypes.BUILD_CRAWL_JOB,
-                from: From.BASIC_ARCHIVE_NOW,
-                forCol: this.state.forCol
-              })
-            }}
+            onMouseDown={this.crawlNow}
           />
         </ToolbarGroup>
       </Toolbar>

@@ -36,7 +36,7 @@ export default class HeritrixTab extends Component {
     return (
       <div>
         <HeritrixJobList />
-        <Toolbar className='layoutFooter'>
+        <Toolbar >
           <ToolbarGroup firstChild>
             <RaisedButton
               icon={<AddCrawlIcon />}

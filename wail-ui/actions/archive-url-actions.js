@@ -29,6 +29,7 @@ export function checkUriIsInArchive (uri, forCol) {
   window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
 
   rp({
+    method: 'HEAD',
     uri: `${settings.get('pywb.url')}${forCol}-cdx?url=${uri}/*`,
     resolveWithFullResponse: true
   })
