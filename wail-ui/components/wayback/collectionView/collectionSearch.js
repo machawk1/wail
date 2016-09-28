@@ -37,14 +37,6 @@ export default class CollectionSearch extends Component {
     }
   }
 
-  componentWillMount () {
-    console.log('archival buttons cwm')
-  }
-
-  componentWillUnmount () {
-    console.log('archival buttons cwum')
-
-  }
 
   componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.viewingCol !== nextProps.viewingCol) {

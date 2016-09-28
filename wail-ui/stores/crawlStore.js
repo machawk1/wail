@@ -236,6 +236,10 @@ class CrawlStore_ extends EventEmitter {
     return this.crawlJobs[ jobIdx ].runs
   }
 
+  getCrawlsForCol(forCol) {
+    return _.filter(this.crawlJobs,c => c.forCol === forCol)
+  }
+
   @autobind
   latestJob () {
     return this.crawlJobs[ this.crawlJobs.length - 1 ]

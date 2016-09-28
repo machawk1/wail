@@ -25,9 +25,19 @@ export default class WayBackTab extends Component {
     muiTheme: PropTypes.object.isRequired,
   }
 
+  static childContextTypes = {
+    viewingCol: PropTypes.string.isRequired
+  }
+
   constructor (...args){
     super(...args)
     this.removeWarcAdder = null
+  }
+
+  getChildContext () {
+    return {
+      viewingCol: this.props.params.col
+    }
   }
 
   componentDidMount () {
@@ -115,7 +125,6 @@ export default class WayBackTab extends Component {
       >
         <CollectionCard viewingCol={this.props.params.col}>
           <CollectionView viewingCol={this.props.params.col}/>
-          <CollectionSearch viewingCol={this.props.params.col}/>
           <CollectionToolBar
             viewingCol={this.props.params.col}
           />

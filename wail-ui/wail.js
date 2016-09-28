@@ -11,15 +11,11 @@ import Routes from './routes'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
-import { syncHistoryWithStore } from 'react-router-redux'
-import Root from './containers/Root'
-import configureStore from './stores/redux/configureStore'
 import wailConstants from './constants/wail-constants'
 
 Promise.promisifyAll(fs)
 
-const store = configureStore()
-const history = syncHistoryWithStore(hashHistory, store)
+
 //  ensure out RequestStore is alive and kicking
 window.React = React
 window.colStore = ColStore
@@ -57,6 +53,9 @@ process.on('uncaughtException', (err) => {
 })
 
 render(
-  <Root store={store} history={history}/>,
+  <Router
+    history={hashHistory}
+    routes={Routes}
+  />,
   wail)
 

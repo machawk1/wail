@@ -682,7 +682,9 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event,url) => {
-        event.preventDefault()
+        if (!S(url).contains('wail.html')) {
+          event.preventDefault()
+        }
         console.log('mainWindow will navigate to',url)
       })
 
