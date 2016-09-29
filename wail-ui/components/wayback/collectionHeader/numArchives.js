@@ -57,10 +57,10 @@ export default class NumArchives extends Component {
         <p
           data-tip='Drag drop archives to add'
           data-delay-show='100'
+          data-class="wailToolTip"
         >
           {`Archives in collection: ${this.state.numArchives}`}
         </p>
-        <ReactTooltip />
       </div>
     )
   }

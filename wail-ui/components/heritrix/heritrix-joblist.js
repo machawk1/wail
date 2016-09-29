@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { List, ListItem } from 'material-ui/List'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import Divider from 'material-ui/Divider'
@@ -21,14 +21,14 @@ const {
 
 export default class HeritrixJobList extends Component {
 
+  static propTypes = {
+    height: PropTypes.number.isRequired
+  }
+
   constructor (props, context) {
     super(props, context)
     this.state = {
       jobs: CrawlStore.jobs()
-    }
-    this.tableHeight = '375px'
-    if (process.platform !== 'darwin') {
-      this.tableHeight = '325px'
     }
   }
 
@@ -80,7 +80,10 @@ export default class HeritrixJobList extends Component {
     }
     return (
       <Table
-        height={this.tableHeight}
+        height={this.props.height / 1.2}
+        style={{
+          minHeight: `${this.props.height / 1.2}px`
+        }}
       >
         <TableHeader
           displaySelectAll={false}

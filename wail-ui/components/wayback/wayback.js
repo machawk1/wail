@@ -9,6 +9,7 @@ import CollectionStore from '../../stores/collectionStore'
 import wailConstants from '../../constants/wail-constants'
 import CollectionList from './collectionList'
 import CollectionCard from './collectionHeader/collectionCard'
+import {AutoSizer} from 'react-virtualized'
 import {CollectionView, CollectionToolBar, CollectionSearch} from './collectionView'
 
 import * as notify from '../../actions/notification-actions'
@@ -25,26 +26,17 @@ export default class WayBackTab extends Component {
     muiTheme: PropTypes.object.isRequired,
   }
 
-  static childContextTypes = {
-    viewingCol: PropTypes.string.isRequired
-  }
-
-  constructor (...args){
+  constructor (...args) {
     super(...args)
     this.removeWarcAdder = null
   }
 
-  getChildContext () {
-    return {
-      viewingCol: this.props.params.col
-    }
-  }
 
   componentDidMount () {
     if (!this.removeWarcAdder) {
       console.log('attaching warc adder on live dom')
       this.removeWarcAdder = BeamMeUpScotty('#warcUpload', (files) => {
-        console.log(`adding warcs maybe to col ${this.props.params.col}`,files)
+        console.log(`adding warcs maybe to col ${this.props.params.col}`, files)
         let addMe = []
         let badFiles = new Set()
 
@@ -87,8 +79,8 @@ export default class WayBackTab extends Component {
     return this.props.params.col !== nextProps.params.col
   }
 
-  addWarcs(files) {
-    console.log('adding warcs maybe',files)
+  addWarcs (files) {
+    console.log('adding warcs maybe', files)
     let addMe = []
     let badFiles = new Set()
 
@@ -123,12 +115,17 @@ export default class WayBackTab extends Component {
       <div
         id='warcUpload' className="wbCollectionOverviewRow"
       >
-        <CollectionCard viewingCol={this.props.params.col}>
-          <CollectionView viewingCol={this.props.params.col}/>
-          <CollectionToolBar
-            viewingCol={this.props.params.col}
-          />
-        </CollectionCard>
+        <AutoSizer>
+          {({ height, width }) => (
+            <div style={{ width, height }}>
+              <CollectionCard viewingCol={this.props.params.col}/>
+              <CollectionView height={height} viewingCol={this.props.params.col}/>
+              <CollectionToolBar
+                viewingCol={this.props.params.col}
+              />
+            </div>
+          )}
+        </AutoSizer>
       </div>
     )
   }

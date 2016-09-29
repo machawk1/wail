@@ -1,17 +1,13 @@
 import React, {Component} from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import IconButton from 'material-ui/IconButton'
-import ToolTip from 'material-ui/internal/Tooltip'
-import {Grid, Row, Col} from 'react-flexbox-grid'
-import autobind from 'autobind-decorator'
+import {AutoSizer} from 'react-virtualized'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import AddCrawlIcon from 'material-ui/svg-icons/content/add'
 import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
 import {ipcRenderer, remote, shell} from 'electron'
 import HeritrixJobList from './heritrix-joblist'
 import {rescanJobDir} from '../../actions/heritrix-actions'
-import Dimensions from 'react-dimensions'
 import ColStore from '../../stores/collectionStore'
 const styles = {
   button: {
@@ -34,9 +30,15 @@ export default class HeritrixTab extends Component {
 
   render () {
     return (
-      <div>
-        <HeritrixJobList />
-        <Toolbar >
+      <div style={{ width: '100%', height: '100%' }}>
+        <AutoSizer>
+          {({ height, width }) => (
+            <div style={{ width, height }}>
+              <HeritrixJobList height={height} />
+            </div>
+          )}
+        </AutoSizer>
+        <Toolbar className='layoutFooter'>
           <ToolbarGroup firstChild>
             <RaisedButton
               icon={<AddCrawlIcon />}

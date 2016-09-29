@@ -4,11 +4,9 @@ import CollectionList from '../collectionList'
 import autobind from 'autobind-decorator'
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
 
-
 export default class CollectionCard extends Component {
   static propTypes = {
     viewingCol: PropTypes.string.isRequired,
-    children:  PropTypes.node.isRequired
   }
 
   static contextTypes = {
@@ -55,7 +53,6 @@ export default class CollectionCard extends Component {
     console.log(this.props.children)
     return (
       <Card
-        style={{ height: '103%' }}
         expanded={this.state.expanded} onExpandChange={this.handleExpandChange}
       >
         <CardHeader
@@ -68,7 +65,6 @@ export default class CollectionCard extends Component {
         <CardText expandable style={this.state.expanderStyle}>
           <CollectionList currCollection={this.props.viewingCol}/>
         </CardText>
-        {this.props.children}
       </Card>
     )
   }

@@ -1,27 +1,24 @@
-import React, { Component, PropTypes } from 'react'
-import { Card, CardActions, CardHeader, CardText, CardMedia, CardTitle } from 'material-ui/Card'
-import { shell } from 'electron'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { List, ListItem } from 'material-ui/List'
+import React, {Component, PropTypes} from 'react'
+import {CardTitle} from 'material-ui/Card'
+import {shell} from 'electron'
+import {Grid, Row, Col} from 'react-flexbox-grid'
+import {List, ListItem} from 'material-ui/List'
 import autobind from 'autobind-decorator'
 import shallowCompare from 'react-addons-shallow-compare'
 import TextField from 'material-ui/TextField'
 import * as notify from '../../../actions/notification-actions'
 import Subheader from 'material-ui/Subheader'
-import isURL from 'validator/lib/isURL'
-import RefreshIndicator from 'material-ui/RefreshIndicator'
 import RaisedButton from 'material-ui/RaisedButton'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-new'
 import IconButton from 'material-ui/IconButton'
-import url from 'url'
-import S from 'string'
 import * as urlActions from '../../../actions/archive-url-actions'
 import moment from 'moment'
 
 export default class CollectionSearch extends Component {
 
   static propTypes = {
-    viewingCol: PropTypes.string.isRequired
+    viewingCol: PropTypes.string.isRequired,
+    height: PropTypes.number.isRequired
   }
 
   static contextTypes = {
@@ -37,10 +34,9 @@ export default class CollectionSearch extends Component {
     }
   }
 
-
   componentWillReceiveProps (nextProps, nextContext) {
     if (this.props.viewingCol !== nextProps.viewingCol) {
-      this.setState({view: <ListItem primaryText={'No Search Made'}/>, searchText: ''})
+      this.setState({ view: <ListItem primaryText={'No Search Made'}/>, searchText: '' })
     }
   }
 
@@ -54,7 +50,8 @@ export default class CollectionSearch extends Component {
     if (a.length === 0) {
       console.log('its empty')
       this.setState({
-        view: <ListItem key={`${this.props.viewingCol}-noArchives`} primaryText={'No Captures Are Contained In The Archive'}/>
+        view: <ListItem key={`${this.props.viewingCol}-noArchives`}
+                        primaryText={'No Captures Are Contained In The Archive'}/>
       })
     } else {
       this.setState({
@@ -114,56 +111,32 @@ export default class CollectionSearch extends Component {
   render () {
     let { muiTheme } = this.context
     return (
-        <Grid
-          fluid
+      <div>
+        <CardTitle
+          subtitle={'Search For Captures'}
+        />
+        <TextField
+          style={{ marginLeft: '15px', width: '75%' }}
+          floatingLabelText='URL'
+          id='archive-url-input'
+          value={this.state.searchText}
+          onChange={this.handleChange}
+        />
+        <RaisedButton
+          style={{ marginTop: '25px',marginLeft: '15px' }}
+          label={'Search'}
+          onTouchTap={this.check}/>
+        <List
           style={{
-            border: `thin solid ${muiTheme.palette.accent3Color}`,
-            width: '94%',
-            height: '100%'
+            maxHeight: `${this.props.height / 1.4}px`,
+            overflowY: 'auto',
+            overflowX: 'hidden'
           }}
         >
-          <Row top="xs">
-            <Col xs>
-              <CardTitle
-                subtitle={'Search For Captures'}
-              />
-            </Col>
-          </Row>
-          <Row center="xs">
-            <Col xs>
-              <TextField
-                style={{ marginLeft: '15px' }}
-                fullWidth
-                floatingLabelText='URL'
-                id='archive-url-input'
-                value={this.state.searchText}
-                onChange={this.handleChange}
-              />
-            </Col>
-            <Col xs>
-              <RaisedButton
-                style={{ marginTop: '25px' }}
-                label={'Search'}
-                onTouchTap={this.check}/>
-            </Col>
-          </Row>
-          <Row bottom="xs">
-            <Col xs>
-              <List
-                style={{
-                  width: '100%',
-                  minHeight: '185px',
-                  maxHeight: '185px',
-                  overflowY: 'auto',
-                  overflowX: 'hidden'
-                }}
-              >
-                <Subheader>Search Results</Subheader>
-                {this.state.view}
-              </List>
-            </Col>
-          </Row>
-        </Grid>
+          <Subheader>Search Results</Subheader>
+          {this.state.view}
+        </List>
+      </div>
     )
   }
 }

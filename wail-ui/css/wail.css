@@ -62,9 +62,16 @@
     height: 90%;
 }
 
+.wailToolTip {
+    color: #ffffff !important;
+    background-color: #616161 !important;
+    border-radius: 2px !important;
+    z-index: 3000 !important;
+}
+
 .layoutFooter {
-    position: absolute;
-    bottom: 5px;
+    position: fixed;
+    bottom: 0;
     width: 100%;
 }
 
