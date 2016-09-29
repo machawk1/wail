@@ -109,7 +109,10 @@ export default class AppManager {
             title: 'Web Archiving Integration Layer',
             maximizable: false,
             show: false,
-            icon: this.iconp
+            icon: this.iconp,
+            webPreferences: {
+              webSecurity:false
+            }
           }
           this.winConfigs = [
             {

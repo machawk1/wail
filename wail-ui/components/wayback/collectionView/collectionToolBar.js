@@ -156,7 +156,7 @@ export default class CollectionToolBar extends Component {
 
   render () {
     return (
-      <div className="layoutFooter">
+      <div >
         <Toolbar>
           <ToolbarGroup firstChild>
             <ActionButton

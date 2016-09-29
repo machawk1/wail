@@ -56,7 +56,7 @@ export default class Header extends Component {
 
   render () {
     return (
-      <div className="layoutHeader">
+      <div>
         <AppBar
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}

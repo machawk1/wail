@@ -1,16 +1,16 @@
-import React, {Component, PropTypes} from 'react'
-import {shell, remote} from 'electron'
+import React, { Component, PropTypes } from 'react'
+import { shell, remote } from 'electron'
 import S from 'string'
 import BeamMeUpScotty from 'drag-drop'
-import {ipcRenderer as ipc} from 'electron'
+import { ipcRenderer as ipc } from 'electron'
 import path from 'path'
-import {joinStrings} from 'joinable'
+import { joinStrings } from 'joinable'
 import CollectionStore from '../../stores/collectionStore'
 import wailConstants from '../../constants/wail-constants'
 import CollectionList from './collectionList'
 import CollectionCard from './collectionHeader/collectionCard'
-import {AutoSizer} from 'react-virtualized'
-import {CollectionView, CollectionToolBar, CollectionSearch} from './collectionView'
+import { AutoSizer } from 'react-virtualized'
+import { CollectionView, CollectionToolBar, CollectionSearch } from './collectionView'
 
 import * as notify from '../../actions/notification-actions'
 
@@ -30,7 +30,6 @@ export default class WayBackTab extends Component {
     super(...args)
     this.removeWarcAdder = null
   }
-
 
   componentDidMount () {
     if (!this.removeWarcAdder) {
@@ -73,38 +72,7 @@ export default class WayBackTab extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    console.log(this.props.params.col !== nextProps.params.col)
-    console.log(nextState, nextContext)
-    console.log(this.props, nextProps)
     return this.props.params.col !== nextProps.params.col
-  }
-
-  addWarcs (files) {
-    console.log('adding warcs maybe', files)
-    let addMe = []
-    let badFiles = new Set()
-
-    files.forEach(f => {
-      console.log(f)
-      let ext = path.extname(f.path)
-      if (ext === '.warc' || ext === '.arc') {
-        addMe.push(f.path)
-      } else {
-        badFiles.add(ext)
-      }
-    })
-
-    if (badFiles.size > 0) {
-      notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
-    }
-
-    if (addMe.length > 0) {
-      notify.notifyInfo(`Adding ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-      ipc.send('add-warcs-to-col', {
-        forCol: this.props.params.col,
-        warcs: joinStrings(...addMe, { separator: ' ' })
-      })
-    }
   }
 
   render () {
@@ -112,17 +80,19 @@ export default class WayBackTab extends Component {
 
     window.lastWaybackPath = this.props.params.col
     return (
-      <div
-        id='warcUpload' className="wbCollectionOverviewRow"
+      <div id='warcUpload' className="wbCollectionOverviewRow"
+        style={{backgroundColor: '#f2f2f2'}}
       >
+        <CollectionCard viewingCol={this.props.params.col}/>
         <AutoSizer>
           {({ height, width }) => (
-            <div style={{ width, height }}>
-              <CollectionCard viewingCol={this.props.params.col}/>
-              <CollectionView height={height} viewingCol={this.props.params.col}/>
-              <CollectionToolBar
-                viewingCol={this.props.params.col}
-              />
+            <div>
+              <div style={{ width, height }}>
+                <CollectionView height={height} viewingCol={this.props.params.col}/>
+                <CollectionToolBar
+                  viewingCol={this.props.params.col}
+                />
+              </div>
             </div>
           )}
         </AutoSizer>

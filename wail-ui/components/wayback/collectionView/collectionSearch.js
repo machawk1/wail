@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import {CardTitle} from 'material-ui/Card'
-import {shell} from 'electron'
-import {Grid, Row, Col} from 'react-flexbox-grid'
-import {List, ListItem} from 'material-ui/List'
+import React, { Component, PropTypes } from 'react'
+import { shell } from 'electron'
+import { Grid, Row, Col } from 'react-flexbox-grid'
+import { List, ListItem } from 'material-ui/List'
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
 import autobind from 'autobind-decorator'
 import shallowCompare from 'react-addons-shallow-compare'
 import TextField from 'material-ui/TextField'
@@ -111,32 +111,36 @@ export default class CollectionSearch extends Component {
   render () {
     let { muiTheme } = this.context
     return (
-      <div>
+      <Card>
         <CardTitle
           subtitle={'Search For Captures'}
         />
-        <TextField
-          style={{ marginLeft: '15px', width: '75%' }}
-          floatingLabelText='URL'
-          id='archive-url-input'
-          value={this.state.searchText}
-          onChange={this.handleChange}
-        />
-        <RaisedButton
-          style={{ marginTop: '25px',marginLeft: '15px' }}
-          label={'Search'}
-          onTouchTap={this.check}/>
-        <List
-          style={{
-            maxHeight: `${this.props.height / 1.4}px`,
-            overflowY: 'auto',
-            overflowX: 'hidden'
-          }}
-        >
-          <Subheader>Search Results</Subheader>
-          {this.state.view}
-        </List>
-      </div>
+        <CardActions>
+          <TextField
+            style={{ marginLeft: '15px', width: '75%' }}
+            floatingLabelText='URL'
+            id='archive-url-input'
+            value={this.state.searchText}
+            onChange={this.handleChange}
+          />
+          <RaisedButton
+            style={{ marginTop: '25px', marginLeft: '15px' }}
+            label={'Search'}
+            onTouchTap={this.check}/>
+          </CardActions>
+        <CardMedia>
+          <List
+            style={{
+              maxHeight: `${this.props.height -57}px`,
+              overflowY: 'auto',
+              overflowX: 'hidden',
+              border: 'thin 1px #d9d9d9'
+            }}
+          >
+            {this.state.view}
+          </List>
+        </CardMedia>
+      </Card>
     )
   }
 }

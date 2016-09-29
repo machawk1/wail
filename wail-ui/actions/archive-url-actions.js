@@ -15,8 +15,8 @@ const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
 export function grabCaptures(uri,forCol) {
-  notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
-  window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
+  // notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
+  // window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
   return rp({
     uri: `${settings.get('pywb.url')}${forCol}/*/${uri}`,
     transform: body => cheerio.load(body)
