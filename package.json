@@ -116,6 +116,7 @@
     "react-json-inspector": "^7.0.0",
     "react-json-tree": "^0.10.0",
     "react-layout-pane": "^0.1.16",
+    "react-mdl": "^1.7.2",
     "react-motion": "^0.4.5",
     "react-notification-system": "^0.2.10",
     "react-nowtify": "^0.3.2",
