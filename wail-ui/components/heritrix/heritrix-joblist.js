@@ -6,6 +6,7 @@ import autobind from 'autobind-decorator'
 import CrawlStore from '../.././stores/crawlStore'
 import HeritrixJobItem from './heritrixJobItem'
 import styles from '../styles/styles'
+import  shallowCompare from 'react-addons-shallow-compare'
 
 const {
   crawlUrlS,
@@ -46,6 +47,10 @@ export default class HeritrixJobList extends Component {
     CrawlStore.removeListener('jobs-updated', this.getJobs)
   }
 
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this,nextProps,nextState)
+  }
+
   render () {
     let { jobs } = this.state
     let JobItems
@@ -80,7 +85,7 @@ export default class HeritrixJobList extends Component {
     }
     return (
       <Table
-        height={this.props.height / 1.2}
+        height={`${this.props.height / 1.2}`}
         style={{
           minHeight: `${this.props.height / 1.2}px`
         }}

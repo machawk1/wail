@@ -13,11 +13,12 @@ import CrawlStore from '../../stores/crawlStore'
 import wailConstants from '../../constants/wail-constants'
 const defaultCol = wailConstants.Default_Collection
 
-export default class Header extends Component {
+
+export default class Header_ extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { open: false, location: 'WAIL', crawlIconVisible: 'hidden' }
+    this.state = { open: false, location: 'WAIL', crawlIconVisible: 'hidden', search: '' }
   }
 
   @autobind
@@ -103,3 +104,17 @@ export default class Header extends Component {
     )
   }
 }
+
+/*
+ <AppBar
+ title={this.state.location}
+ onLeftIconButtonTouchTap={this.handleToggle}
+ zDepth={0}
+ iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png'  className="pulse" style={
+ {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
+ }
+ style={{height: '50px'}}
+ titleStyle={{height: '50px'}}
+
+ />
+ */

@@ -22,10 +22,30 @@ import {
 } from '../../actions/heritrix-actions'
 import HeritrixJobInfo from './heritrixJobInfo'
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
+import shallowCompare from 'react-addons-shallow-compare'
+import { TableRow, TableRowColumn } from 'material-ui/Table'
+import moment from 'moment'
+import { joinStrings } from 'joinable'
+import styles from '../styles/styles'
+import {moveWarc} from '../../actions/heritrix-actions'
+import FitText from 'react-fittext'
+
+import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 
 const style = {
   cursor: 'pointer'
 }
+
+const {
+  crawlUrlS,
+  statusS,
+  timestampS,
+  discoveredS,
+  queuedS,
+  downloadedS,
+  actionS
+} = styles.heritrixTable
+
 const settings = remote.getGlobal('settings')
 
 export default class HeritrixJobItem extends Component {
@@ -50,6 +70,10 @@ export default class HeritrixJobItem extends Component {
 
   componentWillUnmount () {
     CrawlStore.removeListener(`${this.props.jobId}-updated`, this.updateRuns)
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this,nextProps,nextState)
   }
 
   @autobind
@@ -182,9 +206,74 @@ export default class HeritrixJobItem extends Component {
       </IconMenu>
     )
 
-    return (
-      <HeritrixJobInfoRow key={`HJIR-${this.props.jobId}`} urls={this.props.urls} jobId={this.props.jobId}
-        runs={this.state.runs} actionMenu={rightIconMenu} />
-    )
+    let runs = this.props.runs
+    var url
+    if (Array.isArray(this.props.urls)) {
+      url = joinStrings(...this.props.urls, { separator: ',' })
+    } else {
+      url = this.props.urls
+    }
+    if (runs.length > 0) {
+      let job = runs[ 0 ]
+      let status = job.ended ? 'Ended' : 'Running'
+      let discovered = job.discovered || ''
+      let queued = job.queued || ''
+      let downloaded = job.downloaded || ''
+      if (job.ended) {
+        GMessageDispatcher.dispatch({
+          title: 'Crawl Finished!',
+          level: 'success',
+          message: `Crawl for ${url} has finished`,
+          uid: `Crawl for ${url} has finished`,
+          autoDismiss: 0
+        })
+      }
+      // console.log('the job being displayed', job)
+      return (
+        <TableRow key={`${this.props.jobId}-TableRow`}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
+            <p>{url}</p>
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
+            {status}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={timestampS}>
+            {moment(job.timestamp).format('MM/DD/YYYY h:mm:ssa')}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={discoveredS}>
+            {discovered}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={queuedS}>
+            {queued}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={downloadedS}>
+            {downloaded}
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={actionS}>
+            {rightIconMenu}
+          </TableRowColumn>
+        </TableRow>
+      )
+    } else {
+      return (
+        <TableRow key={`${this.props.jobId}-TableRow`}>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
+            <p>{url}</p>
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
+            Not Started
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={timestampS}>
+            Not Started
+          </TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={discoveredS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Que`} style={queuedS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Dld`} style={downloadedS}>0</TableRowColumn>
+          <TableRowColumn key={`${this.props.jobId}-TRCol-Action`} style={actionS}>
+            {rightIconMenu}
+          </TableRowColumn>
+        </TableRow>
+      )
+    }
   }
 }

@@ -39,7 +39,7 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{width: '100%', height: '100%'}}>
         <Header />
         <div className="layoutBody">
           {this.props.children}

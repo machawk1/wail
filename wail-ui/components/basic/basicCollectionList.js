@@ -6,6 +6,7 @@ import MenuItem from 'material-ui/MenuItem'
 import CollectionStore from '../../stores/collectionStore'
 import ColDispatcher from '../../dispatchers/collectionDispatcher'
 import shallowCompare from 'react-addons-shallow-compare'
+import VirtualizedSelect from 'react-virtualized-select'
 import AutoComplete from 'material-ui/AutoComplete'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import wc from '../../constants/wail-constants'
@@ -19,7 +20,7 @@ export default class BasicCollectionList extends Component {
     super(...args)
     this.state = {
       colNames: CollectionStore.colNames.length > 0 ? CollectionStore.colNames : [ defForCol ],
-      selection: 0
+      selectValue: defForCol
     }
 
   }
@@ -66,15 +67,21 @@ export default class BasicCollectionList extends Component {
 
   render () {
     return (
-      <AutoComplete
-        style={{paddingLeft: '20px', width: '200px'}}
-        openOnFocus
-        maxSearchResults={4}
-        hintText="Available Collection"
-        filter={AutoComplete.fuzzyFilter}
-        dataSource={this.state.colNames}
-        onNewRequest={this.handleChange}
-      />
+      <div style={{width: '200px'}}>
+        <VirtualizedSelect
+          options={this.state.colNames.map((cn,i) => {
+            return {
+              label: cn,
+              value: i
+            }
+          })}
+          onChange={(selectValue) => {
+            console.log(selectValue)
+            this.setState({ selectValue })
+          }}
+          value={this.state.selectValue}
+        />
+      </div>
     )
   }
 

@@ -1,5 +1,8 @@
 import 'babel-polyfill'
 import './css/wail.css'
+import 'react-select/dist/react-select.css'
+import 'react-virtualized/styles.css'
+import 'react-virtualized-select/styles.css'
 import React from 'react'
 import {Router, hashHistory} from 'react-router'
 import {render} from 'react-dom'
@@ -12,7 +15,6 @@ import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
-
 Promise.promisifyAll(fs)
 
 

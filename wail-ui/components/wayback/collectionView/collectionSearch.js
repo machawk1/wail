@@ -95,7 +95,7 @@ export default class CollectionSearch extends Component {
         <ListItem
           key={`${elem.attribs.href}`}
           style={{ cursor: 'default' }}
-          primaryText={moment(+maybeCapture[ 1 ]).format('dddd, MMMM Do YYYY, h:mm:ss a')}
+          primaryText={moment(maybeCapture[ 1 ],'YYYYMMDDHHmmss').format('dddd, MMMM Do YYYY, h:mm:ss a')}
           rightIconButton={
             <IconButton onTouchTap={() => shell.openExternal(elem.attribs.href) }>
               <OpenInBrowser/>

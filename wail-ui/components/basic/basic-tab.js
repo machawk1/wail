@@ -42,30 +42,28 @@ export default class BasicTab extends Component {
 
   render () {
     return (
-      <div>
-        <Grid
-          fluid
-        >
-          <Row top="xs">
-            <Col xs>
-              <CardHeader
-                title='Archive URL'
-                subtitle='Single Page Crawl'
-              />
-            </Col>
-          </Row>
-          <Row middle="xs">
-            <Col xs>
-              <ArchiveUrl />
-            </Col>
-          </Row>
-          <Row bottom="xs">
-            <Col xs>
-              <ArchivalButtons />
-            </Col>
-          </Row>
-        </Grid>
-      </div>
+      <Grid
+        fluid
+      >
+        <Row top="xs">
+          <Col xs>
+            <CardHeader
+              title='Archive URL'
+              subtitle='Single Page Crawl'
+            />
+          </Col>
+        </Row>
+        <Row middle="xs">
+          <Col xs>
+            <ArchiveUrl />
+          </Col>
+        </Row>
+        <Row bottom="xs">
+          <Col xs>
+            <ArchivalButtons />
+          </Col>
+        </Row>
+      </Grid>
     )
   }
 }

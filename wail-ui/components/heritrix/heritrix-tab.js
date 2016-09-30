@@ -17,6 +17,7 @@ const styles = {
 
 const settings = remote.getGlobal('settings')
 
+
 export default class HeritrixTab extends Component {
 
   onClickNewCrawl (event) {
@@ -28,9 +29,13 @@ export default class HeritrixTab extends Component {
     shell.openExternal(settings.get('heritrix.web_ui'))
   }
 
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return false
+  }
+
   render () {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
+      <div style={{ width: '100%', height: '100%'}}>
         <AutoSizer>
           {({ height, width }) => (
             <div style={{ width, height }}>
