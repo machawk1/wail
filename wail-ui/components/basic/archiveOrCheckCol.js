@@ -1,8 +1,7 @@
-import React, { Component, PropTypes } from 'react'
-import { Row, Col } from 'react-flexbox-grid'
+import React, {Component, PropTypes} from 'react'
+import {Row, Col} from 'react-flexbox-grid'
 import ArchivalButtons from './archivalButtos'
 import ArchiveUrl from './archive-url'
-
 
 export default class ArchiveOrCheckCol extends Component {
 

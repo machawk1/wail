@@ -1,20 +1,14 @@
-import React, { Component, PropTypes } from 'react'
-import DropDownMenu from 'material-ui/DropDownMenu'
+import React, {Component, PropTypes} from 'react'
+import ListItem from 'material-ui/List/ListItem'
 import autobind from 'autobind-decorator'
-import _ from 'lodash'
-import MenuItem from 'material-ui/MenuItem'
 import CollectionStore from '../../stores/collectionStore'
-import ColDispatcher from '../../dispatchers/collectionDispatcher'
-import shallowCompare from 'react-addons-shallow-compare'
-import VirtualizedSelect from 'react-virtualized-select'
-import AutoComplete from 'material-ui/AutoComplete'
+import AutoComplete from 'material-ui/AutoComplete/AutoComplete'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import wc from '../../constants/wail-constants'
 
 const defForCol = wc.Default_Collection
 
 export default class BasicCollectionList extends Component {
-
 
   constructor (...args) {
     super(...args)
@@ -53,41 +47,43 @@ export default class BasicCollectionList extends Component {
   }
 
   @autobind
-  handleChange (choice,index) {
-    console.log('basic col list handle Change',choice,index)
+  handleChange (choice, index) {
+    console.log('basic col list handle Change', choice, index)
     if (index === -1) {
       if (this.state.colNames.includes(choice)) {
         ViewWatcher.selected('basicColList', choice)
       }
     } else {
-      ViewWatcher.selected('basicColList', this.state.colNames[index])
+      ViewWatcher.selected('basicColList', this.state.colNames[ index ])
     }
+  }
 
+  @autobind
+  renderItem (optRend) {
+    console.log(optRend)
+    return <ListItem
+      primaryText={optRend.option.label}
+      onTouchTap={() => optRend.selectValue(optRend.option)}/>
   }
 
   render () {
     return (
-      <div style={{width: '200px'}}>
-        <VirtualizedSelect
-          options={this.state.colNames.map((cn,i) => {
-            return {
-              label: cn,
-              value: i
-            }
-          })}
-          onChange={(selectValue) => {
-            console.log(selectValue)
-            this.setState({ selectValue })
-          }}
-          value={this.state.selectValue}
-        />
-      </div>
+      <AutoComplete
+        style={{float: 'right'}}
+        menuProps={{desktop: true}}
+        openOnFocus
+        maxSearchResults={10}
+        floatingLabelText='Collection'
+        filter={AutoComplete.fuzzyFilter}
+        dataSource={this.state.colNames}
+        onNewRequest={this.handleChange}
+      />
     )
   }
 
 }
 /*
-
+ <ViewArchiveIcon />
  <DropDownMenu
  value={this.state.selection}
  onChange={::this.handleChange}

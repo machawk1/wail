@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import { RouteTransition,presets } from 'react-router-transition/lib/react-router-transition'
 import {Grid, Row, Col} from 'react-flexbox-grid'
 import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -38,8 +39,12 @@ export default class Layout extends Component {
   }
 
   render () {
+    const style = {
+      width: '100%', height: '100%'
+    }
+    console.log(this.props.location.pathname)
     return (
-      <div style={{width: '100%', height: '100%'}}>
+      <div style={style}>
         <Header />
         <div className="layoutBody">
           {this.props.children}

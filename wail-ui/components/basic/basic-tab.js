@@ -1,40 +1,16 @@
-import React, { Component } from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import React, {Component, PropTypes} from 'react'
+import {Card, CardActions, CardMedia} from 'material-ui/Card'
+import BasicTabHeader from './basicTabHeader'
 import ArchiveUrl from './archive-url'
-import BasicTabButtons from './basicTab-buttons'
-import MementoTable from './mementoTable'
 import ArchivalButtons from './archivalButtos'
-import MementoMessagePanel from './mementoMessage-panel'
-import BasicColList from './basicCollectionList'
-import ArchiveOrCheckCol from './archiveOrCheckCol'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
-import EditOrCreateCollection from './editOrCreateCollection'
-import InArchiveResults from './inArchiveResults'
+import Container from 'muicss/lib/react/container'
 import shallowCompare from 'react-addons-shallow-compare'
-import styles from '../styles/styles'
 
-const { btBody } = styles.basicTab
-
-// <MementoMessagePanel />
-/*
- <div style={{width: '50%'}}>
- <BasicColList />
- </div>
- <div style={{width: '50%'}}>
- <ArchiveUrl />
- </div>
- <Row>
- <Col xs>
- <ArchivalButtons />
- </Col>
- </Row>
- <Row>
- <Col xs>
- <BasicTabButtons />
- </Col>
- </Row>
- */
 export default class BasicTab extends Component {
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     return shallowCompare(this, nextProps, nextState)
@@ -42,32 +18,60 @@ export default class BasicTab extends Component {
 
   render () {
     return (
-      <Grid
-        fluid
-      >
-        <Row top="xs">
-          <Col xs>
-            <CardHeader
-              title='Archive URL'
-              subtitle='Single Page Crawl'
-            />
-          </Col>
-        </Row>
-        <Row middle="xs">
-          <Col xs>
-            <ArchiveUrl />
-          </Col>
-        </Row>
-        <Row bottom="xs">
-          <Col xs>
-            <ArchivalButtons />
-          </Col>
-        </Row>
-      </Grid>
+      <Container fluid>
+        <div className="child">
+          <Card>
+            <BasicTabHeader/>
+            <CardMedia>
+              <ArchiveUrl />
+            </CardMedia>
+            <CardActions>
+              <ArchivalButtons />
+            </CardActions>
+          </Card>
+        </div>
+      </Container>
     )
   }
 }
+/*
 
+ <Container fluid>
+ <div className="child">
+ <Card>
+ <BasicTabHeader/>
+ <CardMedia>
+ <ArchiveUrl />
+ </CardMedia>
+ <CardActions>
+ <ArchivalButtons />
+ </CardActions>
+ </Card>
+ </div>
+ </Container>
+ <Grid
+ fluid
+ >
+ <Row top="xs">
+ <Col xs>
+ <CardHeader
+ title='Archive URL'
+ subtitle='Single Page Crawl'
+ />
+ </Col>
+ </Row>
+ <Row middle="xs">
+ <Col xs>
+ <ArchiveUrl />
+ </Col>
+ </Row>
+ <Row bottom="xs">
+ <Col xs>
+ <ArchivalButtons />
+ </Col>
+ </Row>
+ </Grid>
+ */
 /*
  <div style={btBody}>
  <ArchiveUrl />

@@ -1,16 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import TextField from 'material-ui/TextField'
 import autobind from 'autobind-decorator'
-import { Row, Col } from 'react-flexbox-grid'
-import AutoComplete from 'material-ui/AutoComplete'
-import RaisedButton from 'material-ui/RaisedButton'
 import S from 'string'
 import isURL from 'validator/lib/isURL'
 import UrlStore from '../../stores/urlStore'
-import * as aua from '../../actions/archive-url-actions'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
-import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 import shallowCompare from 'react-addons-shallow-compare'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
@@ -46,19 +41,18 @@ export default class ArchiveUrl extends Component {
   componentWillMount () {
     console.log('archiveurl cwm')
     UrlStore.on('url-updated', this.getUrl)
-    ViewWatcher.on('basicColList-selected',this.updateForCol)
+    ViewWatcher.on('basicColList-selected', this.updateForCol)
   }
 
   componentWillUnmount () {
     console.log('archiveurl cwum')
     UrlStore.removeListener('url-updated', this.getUrl)
-    ViewWatcher.removeListener('basicColList-selected',this.updateForCol)
+    ViewWatcher.removeListener('basicColList-selected', this.updateForCol)
   }
-
 
   @autobind
   updateForCol (forCol) {
-    console.log('archive url got an for col update',forCol)
+    console.log('archive url got an for col update', forCol)
     this.setState({ forCol })
   }
 
@@ -75,7 +69,7 @@ export default class ArchiveUrl extends Component {
     let val = e.target.value
     clearTimeout(focusTime)
     focusTime = setTimeout(() => {
-      console.log('Timeout focus time',val)
+      console.log('Timeout focus time', val)
       if (isURL(val)) {
         UrlDispatcher.dispatch({
           type: EventTypes.HAS_VAILD_URI,
@@ -84,7 +78,7 @@ export default class ArchiveUrl extends Component {
 
       }
     }, 600)
-    this.setState({ url:  e.target.value})
+    this.setState({ url: e.target.value })
   }
 
   @autobind
@@ -114,6 +108,10 @@ export default class ArchiveUrl extends Component {
       from: From.BASIC_ARCHIVE_NOW,
       forCol: this.state.forCol
     })
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {

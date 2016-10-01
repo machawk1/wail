@@ -1,15 +1,10 @@
-import React, { Component, PropTypes } from 'react'
-import TextField from 'material-ui/TextField'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import { Row, Column } from 'react-cellblock'
-import RaisedButton from 'material-ui/RaisedButton'
-import { List, ListItem } from 'material-ui/List'
-import Avatar from 'material-ui/Avatar'
+import {Row, Column} from 'react-cellblock'
 import MemgatorStore from '../../stores/memgatorStore'
-import ArchiveNowButton from 'material-ui/svg-icons/content/archive'
 import wailConstants from '../../constants/wail-constants'
 import styles from '../styles/styles'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 
 const From = wailConstants.From
 const EventTypes = wailConstants.EventTypes

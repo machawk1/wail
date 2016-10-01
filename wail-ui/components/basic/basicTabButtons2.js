@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import React, {Component} from 'react'
+import {ToolbarGroup} from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/RaisedButton'
 import autobind from 'autobind-decorator'
-import { Row } from 'react-cellblock'
+import {Row} from 'react-cellblock'
 import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
 import CheckArchiveStatIcon from 'material-ui/svg-icons/action/schedule'
 import UrlDispatcher from '../../dispatchers/url-dispatcher'
 import wailConstants from '../../constants/wail-constants'
-import styles from '../styles/styles'
 
 const EventTypes = wailConstants.EventTypes
 
