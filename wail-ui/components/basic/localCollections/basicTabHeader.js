@@ -1,5 +1,4 @@
 import React, {Component, PropTypes} from 'react'
-import BasicColList from './basicCollectionList'
 import {CardHeader} from 'material-ui/Card'
 import {Flex, Item} from 'react-flex'
 import 'react-flex/index.css'
@@ -12,24 +11,25 @@ export default class BasicTabHeader extends Component {
 
   render () {
     return (
-      <Flex row wrap={false} alignItems="space-between">
-        <Item>
-          <CardHeader
-            title='Archive URL'
-            subtitle='Single Page'
-          />
-        </Item>
-        <Item>
-          <BasicColList/>
-        </Item>
-
-      </Flex>
+      <div></div>
     )
   }
 
 }
 
 /*
+ <Flex row wrap={false} alignItems="space-between">
+ <Item>
+ <CardHeader
+ title='Archive URL'
+ subtitle='Single Page'
+ />
+ </Item>
+ <Item>
+ <BasicColList/>
+ </Item>
+
+ </Flex>
  <Row>
  <Col md="6">
 

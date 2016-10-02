@@ -85,7 +85,7 @@ class CrawlStore_ extends EventEmitter {
     if ((allRuns || []).length > 0) {
       logger.debug(`intial job state load ${allRuns.length} jobs`)
       this.crawlJobs = allRuns.map((r, idx) => {
-        console.log(r)
+        // console.log(r)
         this.jobIndex.set(r.jobId, idx)
         return new CrawlInfo(r)
       })
@@ -121,7 +121,7 @@ class CrawlStore_ extends EventEmitter {
   @autobind
   createJob (conf) {
     window.logger.debug(`made config for ${conf.jobId}`)
-    console.log('made conf', conf)
+    // console.log('made conf', conf)
     this.crawlJobs.push(conf)
     let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
     this.jobIndex.set(conf.jobId, idx)
@@ -170,7 +170,7 @@ class CrawlStore_ extends EventEmitter {
     } else {
       window.logger.debug(`crawl status update for ${jobId}`)
     }
-    console.log(this.jobIndex, this.crawlJobs)
+    // console.log(this.jobIndex, this.crawlJobs)
     let jobIdx = this.jobIndex.get(jobId)
     let runs = (this.crawlJobs[ jobIdx ].runs || [])
     if (runs.length > 0) {

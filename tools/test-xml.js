@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import {Map,List} from 'immutable'
+import S from 'string'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 
 
@@ -40,15 +41,16 @@ import {Map,List} from 'immutable'
 //     }
 //   }
 // })
-let a = 'a'
-let key = 'a'
-let theMap = Map({aa: Map({a: Map({a1: 1,a2: 2}), b: Map({b1: 1,b2: 2})}),bb: List([1,2,3])})
-theMap = theMap.mergeDeep({'aa':{ [a]: {a3: 3}}}).set('bb',theMap.get('bb').push(4))
-console.log(theMap)
-console.log(theMap.updateIn(['aa',key,'a1'],it => it + 3))
-
-const theMap2 = Map({})
-console.log(theMap2.set('a',1).set('b',2))
+console.log('wayback/ssdsa'.split('/'))
+// let a = 'a'
+// let key = 'a'
+// let theMap = Map({aa: Map({a: Map({a1: 1,a2: 2}), b: Map({b1: 1,b2: 2})}),bb: List([1,2,3])})
+// theMap = theMap.mergeDeep({'aa':{ [a]: {a3: 3}}}).set('bb',theMap.get('bb').push(4))
+// console.log(theMap)
+// console.log(theMap.updateIn(['aa',key,'a1'],it => it + 3))
+//
+// const theMap2 = Map({})
+// console.log(theMap2.set('a',1).set('b',2))
 // let configDirPath = path.join('.','waillogs/wail-settings')
 // //
 // let settings = new Esettings({ configDirPath })

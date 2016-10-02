@@ -1,12 +1,14 @@
 import React, {Component, PropTypes} from 'react'
 import {findDOMNode} from 'react-dom'
 import autobind from 'autobind-decorator'
-import RaisedButton from 'material-ui/FlatButton'
-import wailConstants from '../../constants/wail-constants'
-import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import shallowCompare from 'react-addons-shallow-compare'
-import Menu from 'react-motion-menu'
+import * as colors from 'material-ui/styles/colors'
+import RaisedButton from 'material-ui/FlatButton'
+import CardActions from 'material-ui/Card/CardActions'
+import wailConstants from '../../../constants/wail-constants'
+import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
+import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -17,6 +19,10 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export default class ArchivalButtons extends Component {
+
+  static contextTypes = {
+    muiTheme: PropTypes.object.isRequired,
+  }
 
   constructor (...args) {
     super(...args)
@@ -65,8 +71,9 @@ export default class ArchivalButtons extends Component {
     <SearchIcon/>
     </IconButton>
     */
+    let {muiTheme} = this.context
     return (
-      <div>
+      <CardActions>
         <RaisedButton
           primary
           label='Archive Via Heritrix!'
@@ -74,10 +81,11 @@ export default class ArchivalButtons extends Component {
           onMouseDown={this.crawlNow}
         />
         <RaisedButton
+          primary
           label='Check Local Collection'
           labelPosition='before'
         />
-      </div>
+      </CardActions>
     )
   }
 }

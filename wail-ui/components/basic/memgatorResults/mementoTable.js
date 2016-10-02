@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import {Row, Column} from 'react-cellblock'
-import MemgatorStore from '../../stores/memgatorStore'
-import wailConstants from '../../constants/wail-constants'
-import styles from '../styles/styles'
+import MemgatorStore from '../../../stores/memgatorStore'
+import wailConstants from '../../../constants/wail-constants'
+import styles from '../../styles/styles'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 
 const From = wailConstants.From

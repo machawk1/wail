@@ -1,14 +1,16 @@
 import React, {Component, PropTypes} from 'react'
-import { RouteTransition,presets } from 'react-router-transition/lib/react-router-transition'
-import {Grid, Row, Col} from 'react-flexbox-grid'
-import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
+import {RouteTransition} from 'react-router-transition/lib/react-router-transition'
+import {blueGrey50, darkBlack, lightBlue900, cyan500, cyan700} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import styles from '../styles/styles'
 import {remote} from 'electron'
 
 const baseTheme = getMuiTheme({
+  palette: {
+    primary1Color: cyan700,
+    primary2Color: cyan500,
+  },
   tabs: {
     backgroundColor: blueGrey50,
     textColor: darkBlack,
@@ -25,7 +27,8 @@ export default class Layout extends Component {
     children: PropTypes.any.isRequired
   }
   static childContextTypes = {
-    muiTheme: PropTypes.object.isRequired
+    muiTheme: PropTypes.object.isRequired,
+    routeInfo: PropTypes.object.isRequired
   }
 
   constructor (props, context) {
@@ -34,17 +37,19 @@ export default class Layout extends Component {
 
   getChildContext () {
     return {
-      muiTheme: baseTheme
+      muiTheme: baseTheme,
+      routeInfo: {
+        params: this.props.params,
+        location: this.props.location,
+        route: this.props.route
+      }
     }
   }
 
   render () {
-    const style = {
-      width: '100%', height: '100%'
-    }
-    console.log(this.props.location.pathname)
+    console.log(this.props)
     return (
-      <div style={style}>
+      <div className="wailContainer">
         <Header />
         <div className="layoutBody">
           {this.props.children}

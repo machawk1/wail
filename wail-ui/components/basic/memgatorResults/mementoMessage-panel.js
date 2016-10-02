@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
-import UrlStore from '../../stores/urlStore'
-import MemgatorStore from '../../stores/memgatorStore'
+import UrlStore from '../../../stores/urlStore'
+import MemgatorStore from '../../../stores/memgatorStore'
 import {FetchingMementoMessage, MementoCountMessage, DefaultMementoMessage} from './mementoMessages'
 //
 // export default class MementoMessagePanel extends Component {

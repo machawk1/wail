@@ -1,10 +1,14 @@
 import React, {Component, PropTypes} from 'react'
-import ListItem from 'material-ui/List/ListItem'
 import autobind from 'autobind-decorator'
-import CollectionStore from '../../stores/collectionStore'
+import shallowCompare from 'react-addons-shallow-compare'
+import ListItem from 'material-ui/List/ListItem'
+import CardTitle from 'material-ui/Card/CardTitle'
+import CardText from 'material-ui/Card/CardText'
 import AutoComplete from 'material-ui/AutoComplete/AutoComplete'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
-import wc from '../../constants/wail-constants'
+import {Flex, Item} from 'react-flex'
+import CollectionStore from '../../../stores/collectionStore'
+import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+import wc from '../../../constants/wail-constants'
 
 const defForCol = wc.Default_Collection
 
@@ -16,15 +20,10 @@ export default class BasicCollectionList extends Component {
       colNames: CollectionStore.colNames.length > 0 ? CollectionStore.colNames : [ defForCol ],
       selectValue: defForCol
     }
-
   }
 
-  componentWillReceiveProps (nextProps, nextContext) {
-    console.log(nextProps)
-    // if (this.state.colNames.length !== nextProps.colNames)
-    //   if (!_.isEqual(this.state.colNames.sort(), nextProps.colNames.sort())) {
-    //     this.setState({ colNames: nextProps.colNames })
-    //   }
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this,nextProps,nextState)
   }
 
   componentWillMount () {
@@ -58,22 +57,14 @@ export default class BasicCollectionList extends Component {
     }
   }
 
-  @autobind
-  renderItem (optRend) {
-    console.log(optRend)
-    return <ListItem
-      primaryText={optRend.option.label}
-      onTouchTap={() => optRend.selectValue(optRend.option)}/>
-  }
-
   render () {
     return (
       <AutoComplete
-        style={{float: 'right'}}
-        menuProps={{desktop: true}}
+        style={{float: 'right', bottom: '75px'}}
+        menuProps={{ desktop: true }}
         openOnFocus
         maxSearchResults={10}
-        floatingLabelText='Collection'
+        floatingLabelText='Collections'
         filter={AutoComplete.fuzzyFilter}
         dataSource={this.state.colNames}
         onNewRequest={this.handleChange}
@@ -82,12 +73,3 @@ export default class BasicCollectionList extends Component {
   }
 
 }
-/*
- <ViewArchiveIcon />
- <DropDownMenu
- value={this.state.selection}
- onChange={::this.handleChange}
- >
- {::this.buildList()}
- </DropDownMenu>
- */

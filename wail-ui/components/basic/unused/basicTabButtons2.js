@@ -5,8 +5,8 @@ import autobind from 'autobind-decorator'
 import {Row} from 'react-cellblock'
 import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
 import CheckArchiveStatIcon from 'material-ui/svg-icons/action/schedule'
-import UrlDispatcher from '../../dispatchers/url-dispatcher'
-import wailConstants from '../../constants/wail-constants'
+import UrlDispatcher from '../../../dispatchers/url-dispatcher'
+import wailConstants from '../../../constants/wail-constants'
 
 const EventTypes = wailConstants.EventTypes
 

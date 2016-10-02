@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Row } from 'react-flexbox-grid'
+import shallowCompare from 'react-addons-shallow-compare'
 import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
@@ -7,7 +8,9 @@ import Avatar from 'material-ui/Avatar'
 import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
+import * as colors from 'material-ui/styles/colors'
 import styles from '../styles/styles'
+import Breadcrumbs from './breadCrumbs'
 import { Link, IndexLink } from 'react-router'
 import CrawlStore from '../../stores/crawlStore'
 import wailConstants from '../../constants/wail-constants'
@@ -20,6 +23,7 @@ export default class Header_ extends Component {
     super(props, context)
     this.state = { open: false, location: 'WAIL', crawlIconVisible: 'hidden', search: '' }
   }
+
 
   @autobind
   handleToggle () {
@@ -59,12 +63,11 @@ export default class Header_ extends Component {
     return (
       <div>
         <AppBar
-          title={this.state.location}
+          title={<Breadcrumbs />}
           onLeftIconButtonTouchTap={this.handleToggle}
           iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png'  className="pulse" style={
             {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
           }
-
         />
         <Drawer
           docked={false}
@@ -81,7 +84,7 @@ export default class Header_ extends Component {
           <MenuItem
             primaryText={'Wayback'}
             rightIcon={<Avatar backgroundColor={'transparent'} src='icons/openWB.png' />}
-            containerElement={<Link to={`wayback/${window.lastWaybackPath}`} />}
+            containerElement={<Link to={`wayback`} />}
             onTouchTap={(e) => this.handleClose('Wayback')} />
           <MenuItem
             primaryText={'Heritrix'}

@@ -1,11 +1,11 @@
 import 'babel-polyfill'
 import 'muicss/dist/css/mui.css'
+import 'react-flex/index.css'
 import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
 import 'react-virtualized-select/styles.css'
 import './css/wail.css'
 import React from 'react'
-import {Router, hashHistory} from 'react-router'
 import {render} from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
@@ -17,7 +17,6 @@ import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
 Promise.promisifyAll(fs)
-
 
 //  ensure out RequestStore is alive and kicking
 window.React = React
@@ -49,16 +48,9 @@ window.logger = bunyan.createLogger({
   ]
 })
 
-
-
 process.on('uncaughtException', (err) => {
   window.logger.error(err)
 })
 
-render(
-  <Router
-    history={hashHistory}
-    routes={Routes}
-  />,
-  wail)
+render(Routes, wail)
 

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import shallowCompare from 'react-addons-shallow-compare'
 import autobind from 'autobind-decorator'
 import CollectionStore from '../../../stores/collectionStore'
@@ -46,22 +47,19 @@ export default class NumArchives extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    let shouldUpdate = shallowCompare(this, nextProps, nextState)
-    console.log(this.props, nextProps, shouldUpdate)
-    return shouldUpdate
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
     return (
-      <div>
-        <p
-          data-tip='Drag drop archives to add'
-          data-delay-show='100'
-          data-class="wailToolTip"
-        >
-          {`Archives in collection: ${this.state.numArchives}`}
-        </p>
-      </div>
+      <CardTitle style={{ float: 'right', bottom: '40px', display: 'inline-block',
+        position: 'relative', }}
+        data-tip='Drag drop archives to add' data-delay-show='100'
+        data-class="wailToolTip"
+        subtitle={`(W)arcs in collection: ${this.state.numArchives}`}
+      >
+
+      </CardTitle>
     )
   }
 

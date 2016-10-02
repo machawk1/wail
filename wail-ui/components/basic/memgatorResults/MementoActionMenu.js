@@ -9,7 +9,7 @@ import ViewArchiveIcon from 'material-ui/svg-icons/image/remove-red-eye'
 import CheckArchiveStatIcon from 'material-ui/svg-icons/action/schedule'
 import ArchiveNowIcon from 'material-ui/svg-icons/content/archive'
 import autobind from 'autobind-decorator'
-import wailConstants from '../../constants/wail-constants'
+import wailConstants from '../../../constants/wail-constants'
 
 const style = {
   cursor: 'pointer'

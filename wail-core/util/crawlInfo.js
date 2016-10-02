@@ -3,7 +3,6 @@ import moment from 'moment'
 
 export default class CrawlInfo {
   constructor (crawlInfo) {
-    console.log('new crawlinfo', crawlInfo)
     this.jobId = crawlInfo.jobId
     this.urls = crawlInfo.urls
     this.forCol = crawlInfo.forCol

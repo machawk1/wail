@@ -7,7 +7,6 @@ import wailConstants from '../constants/wail-constants'
 import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import * as notify from '../actions/notification-actions'
-import { Schema, arrayOf, normalize } from 'normalizr'
 
 const settings = remote.getGlobal('settings')
 const {

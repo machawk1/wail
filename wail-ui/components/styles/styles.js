@@ -61,7 +61,6 @@ export default {
     margin: 45
   },
   urlInput: {
-    left: 20,
     width: '95%'
   },
   heritrixJobList: {

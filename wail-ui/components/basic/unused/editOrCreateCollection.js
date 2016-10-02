@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import {Grid, Row, Col} from 'react-flexbox-grid'
-import CollectionStore from '../../stores/collectionStore'
+import CollectionStore from '../../../stores/collectionStore'
 import {Card, CardHeader} from 'material-ui/Card'
-import BasicColList from './basicCollectionList'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import BasicColList from './localCollection/basicCollectionList'
+import ViewWatcher from '../../../../wail-core/util/viewWatcher'
 
 const from = 'editOrCreateCollection'
 

@@ -29,19 +29,41 @@ html, body {
     -o-transform: matrix(-1, 0, 0, 1, 0, 0);
     transform: matrix(-1, 0, 0, 1, 0, 0);
 }
-.child {
+
+.basicMiddle {
     width: 95%;
     position: absolute;
-    top: 30%;
+    top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.wbTest {
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.waybackCLMiddle2 {
+    position: relative;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+}
+
+.waybackCLMiddle {
+    margin: auto;
+    width: 75%;
+    border: 3px solid green;
+    padding: 10px;
 }
 
 .layoutChildDiv {
     position: absolute;
     overflow: auto;
     width: 99%;
-    top:250px;
+    top: 250px;
     bottom: 57px;
     border: 1px solid red;
 }
@@ -49,7 +71,7 @@ html, body {
 .ncChildDiv {
     position: absolute;
     overflow: auto;
-    top:50px;
+    top: 50px;
     width: 100%;
     height: 100%;
 }
@@ -78,6 +100,12 @@ html, body {
     position: absolute;
     top: 0;
     width: 100%;
+}
+
+.wailContainer {
+    width: 100%;
+    height: 100%;
+    background-color: #f2f2f2;
 }
 
 .layoutBody {
@@ -110,7 +138,6 @@ html, body {
     margin-right: 0;
     margin-left: 0;
 }
-
 
 .layoutCol {
     /*padding-right: 0;*/
@@ -166,23 +193,37 @@ html, body {
     display: block;
 }
 
-
-
 @keyframes pulse_animation {
-    0% { transform: scale(1); }
-    30% { transform: scale(1); }
-    40% { transform: scale(1.08); }
-    50% { transform: scale(1); }
-    60% { transform: scale(1); }
-    70% { transform: scale(1.05); }
-    80% { transform: scale(1); }
-    100% { transform: scale(1); }
+    0% {
+        transform: scale(1);
+    }
+    30% {
+        transform: scale(1);
+    }
+    40% {
+        transform: scale(1.08);
+    }
+    50% {
+        transform: scale(1);
+    }
+    60% {
+        transform: scale(1);
+    }
+    70% {
+        transform: scale(1.05);
+    }
+    80% {
+        transform: scale(1);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .pulse {
     animation-name: pulse_animation;
     animation-duration: 5000ms;
-    transform-origin:70% 70%;
+    transform-origin: 70% 70%;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 }
@@ -198,7 +239,6 @@ html, body {
     border-radius: 3px;
     text-align: center;
 }
-
 
 @-webkit-keyframes breathing {
     0% {

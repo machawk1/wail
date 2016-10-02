@@ -2,9 +2,9 @@ import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import Avatar from 'material-ui/Avatar'
 import {TableRow, TableRowColumn} from 'material-ui/Table'
-import MemgatorStore from '../../stores/memgatorStore'
+import MemgatorStore from '../../../stores/memgatorStore'
 import MementoActionMenu from './MementoActionMenu'
-import styles from '../styles/styles'
+import styles from '../../styles/styles'
 
 const { mementoTable } = styles.basicTab
 

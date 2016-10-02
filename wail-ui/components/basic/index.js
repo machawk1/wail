@@ -1,10 +1,11 @@
 import React, {Component, PropTypes} from 'react'
-import {Card, CardActions, CardMedia} from 'material-ui/Card'
-import BasicTabHeader from './basicTabHeader'
-import ArchiveUrl from './archive-url'
-import ArchivalButtons from './archivalButtos'
-import Container from 'muicss/lib/react/container'
 import shallowCompare from 'react-addons-shallow-compare'
+import Container from 'muicss/lib/react/container'
+import * as colors from 'material-ui/styles/colors'
+import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
+import {ArchivalButtons, ArchiveUrl} from './archive'
+import Divider from 'muicss/lib/react/divider'
+import BasicCollectionList from './localCollections'
 
 export default class BasicTab extends Component {
 
@@ -19,15 +20,18 @@ export default class BasicTab extends Component {
   render () {
     return (
       <Container fluid>
-        <div className="child">
+        <div className="basicMiddle">
           <Card>
-            <BasicTabHeader/>
-            <CardMedia>
+            <CardTitle
+              title='Archive Page'
+              subtitle='To Collection'
+              children={ <BasicCollectionList />}
+            />
+
+            <CardText>
               <ArchiveUrl />
-            </CardMedia>
-            <CardActions>
-              <ArchivalButtons />
-            </CardActions>
+            </CardText>
+            <ArchivalButtons />
           </Card>
         </div>
       </Container>
@@ -35,7 +39,10 @@ export default class BasicTab extends Component {
   }
 }
 /*
-
+ style={{
+ backgroundColor: muiTheme.palette.primary2Color
+ }}
+ style={{backgroundColor: colors.cyan500}}
  <Container fluid>
  <div className="child">
  <Card>
