@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcMain, shell, dialog } from 'electron'
+import {app, BrowserWindow, ipcMain, shell, dialog} from 'electron'
 import EventEmitter from 'eventemitter3'
 import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
@@ -156,9 +156,9 @@ export default class WindowManager extends EventEmitter {
       this.showSettingsWindow(control)
     })
 
-    ipcMain.on('open-newCrawl-window', (e,colNames) => {
+    ipcMain.on('open-newCrawl-window', (e, colNames) => {
       console.log('got open newCrawl window')
-      this.showNewCrawlWindow(control,colNames)
+      this.showNewCrawlWindow(control, colNames)
     })
 
     ipcMain.on('setting-hard-reset', (event, payload) => {
@@ -174,16 +174,16 @@ export default class WindowManager extends EventEmitter {
     /* Heritrix */
 
     ipcMain.on('makeHeritrixJobConf', (event, confDetails) => {
-      this.send('crawlManWindow','makeHeritrixJobConf', confDetails)
+      this.send('crawlManWindow', 'makeHeritrixJobConf', confDetails)
     })
 
     ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
-      this.send('mainWindow','made-heritrix-jobconf', confDetails)
+      this.send('mainWindow', 'made-heritrix-jobconf', confDetails)
     })
 
     ipcMain.on('crawl-started', (event, jobId) => {
       console.log('got crawl-started')
-      this.send('crawlManWindow','crawl-started', jobId)
+      this.send('crawlManWindow', 'crawl-started', jobId)
     })
 
     ipcMain.on('stop-monitoring-job', (event, jobId) => {
@@ -192,7 +192,7 @@ export default class WindowManager extends EventEmitter {
 
     ipcMain.on('crawljob-status-update', (event, payload) => {
       console.log('got crawljob-status-update', payload)
-      this.send('mainWindow','crawljob-status-update', payload)
+      this.send('mainWindow', 'crawljob-status-update', payload)
     })
 
     ipcMain.on('yes-crawls-running', () => {
@@ -211,26 +211,35 @@ export default class WindowManager extends EventEmitter {
         })
     })
 
-
     /* Wayback */
 
     ipcMain.on('crawl-to-collection', (event, colCrawl) => {
-      this.send('mainWindow','crawl-to-collection', colCrawl)
+      this.send('mainWindow', 'crawl-to-collection', colCrawl)
     })
 
     ipcMain.on('create-collection', (event, nc) => {
       console.log('create-collection', nc)
-      this.send('archiveManWindow','create-collection', nc)
+      this.send('archiveManWindow', 'create-collection', nc)
     })
 
     ipcMain.on('created-collection', (event, nc) => {
       console.log('crated-collection', nc)
-      this.send('mainWindow','created-collection', nc)
+      this.send('mainWindow', 'created-collection', nc)
     })
 
     ipcMain.on('create-collection-failed', (event, fail) => {
       console.log('create-collection-failed', fail)
       this.send('mainWindow', 'create-collection-failed', fail)
+    })
+
+    ipcMain.on('update-metadata', (e, update) => {
+      console.log('update-metadata',  update)
+      this.send('archiveManWindow', 'update-metadata', update)
+    })
+
+    ipcMain.on('updated-metadata', (e, update) => {
+      console.log( 'updated-metadata', update)
+      this.send('mainWindow', 'updated-metadata', update)
     })
 
     ipcMain.on('add-warcs-to-col', (e, addMe) => {
@@ -247,18 +256,17 @@ export default class WindowManager extends EventEmitter {
       this.send('mainWindow', 'display-message', m)
     })
 
-    ipcMain.on('managers-error',(e,report) => {
+    ipcMain.on('managers-error', (e, report) => {
       this.send('mainWindow', 'display-message', report)
     })
 
     ipcMain.on('send-to-requestDaemon', (event, request) => {
-      this.send('reqDaemonWindow','handle-request', request)
+      this.send('reqDaemonWindow', 'handle-request', request)
     })
 
     ipcMain.on('handled-request', (event, request) => {
-      this.send('mainWindow','handled-request', request)
+      this.send('mainWindow', 'handled-request', request)
     })
-
 
     ipcMain.on('start-service', (e, who) => {
       if (who === 'wayback') {
@@ -289,7 +297,6 @@ export default class WindowManager extends EventEmitter {
           this.send('mainWindow', 'service-killed', { who, wasError: true, err })
         })
     })
-
 
   }
 
@@ -381,7 +388,7 @@ export default class WindowManager extends EventEmitter {
     return this.windows[ win ].window && !this.windows[ win ].open
   }
 
-  showNewCrawlWindow (control,colNames) {
+  showNewCrawlWindow (control, colNames) {
     if (!this.windows[ 'newCrawlWindow' ].open) {
       let {
         conf,
@@ -389,19 +396,19 @@ export default class WindowManager extends EventEmitter {
       } = this.windows[ 'newCrawlWindow' ]
       this.windows[ 'newCrawlWindow' ].window = makeWindowWArgs.createWindow(conf)
       // this.windows[ 'newCrawlWindow' ].window = new BrowserWindow(conf)
-      this.windows[ 'newCrawlWindow' ].window.showUrl(url,colNames, () => {
+      this.windows[ 'newCrawlWindow' ].window.showUrl(url, colNames, () => {
         console.log('new crawl window is ready to show')
 
         ipcMain.once('close-newCrawl-window', (event, payload) => {
-          console.log('window man got close new crawl window',this.windows[ 'newCrawlWindow' ].window)
-          if(this.windows[ 'newCrawlWindow' ].window) {
+          console.log('window man got close new crawl window', this.windows[ 'newCrawlWindow' ].window)
+          if (this.windows[ 'newCrawlWindow' ].window) {
             this.windows[ 'newCrawlWindow' ].window.close()
           }
         })
 
         ipcMain.once('close-newCrawl-window-configured', (event, payload) => {
           this.windows[ 'mainWindow' ].window.webContents.send('crawljob-configure-dialogue', payload)
-          if(this.windows[ 'newCrawlWindow' ].window) {
+          if (this.windows[ 'newCrawlWindow' ].window) {
             this.windows[ 'newCrawlWindow' ].window.close()
           }
         })
@@ -681,13 +688,12 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'mainWindow')
       })
 
-      this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event,url) => {
+      this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event, url) => {
         if (!S(url).contains('wail.html')) {
           event.preventDefault()
         }
-        console.log('mainWindow will navigate to',url)
+        console.log('mainWindow will navigate to', url)
       })
-
 
       this.windows[ 'mainWindow' ].window.on('close', (e) => {
         console.log('window man mainWindow close')
@@ -754,17 +760,17 @@ export default class WindowManager extends EventEmitter {
     }
   }
 
-  destroyWindow(who) {
-    if (this.windows[who].open) {
-      if(this.windows[who].window) {
-        this.windows[who].window.destroy()
-        this.windows[who].window = null
-        this.windows[who].open = false
+  destroyWindow (who) {
+    if (this.windows[ who ].open) {
+      if (this.windows[ who ].window) {
+        this.windows[ who ].window.destroy()
+        this.windows[ who ].window = null
+        this.windows[ who ].open = false
       } else {
-        this.windows[who].open = false
+        this.windows[ who ].open = false
       }
     } else {
-      if(this.windows[who].window) {
+      if (this.windows[ who ].window) {
 
       }
     }
@@ -784,9 +790,9 @@ export default class WindowManager extends EventEmitter {
     }
   }
 
-  windowWebcontentOn(winName,event,handler) {
-    if(this.windows[winName].window) {
-      this.windows[winName].window.webContents.on(event,handler)
+  windowWebcontentOn (winName, event, handler) {
+    if (this.windows[ winName ].window) {
+      this.windows[ winName ].window.webContents.on(event, handler)
       return true
     } else {
       return false

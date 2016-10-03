@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import { remote, ipcRenderer as ipc } from 'electron'
+import {remote, ipcRenderer as ipc} from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 import constants from '../../../wail-core/constants'
 
@@ -129,6 +129,13 @@ ipc.on('create-collection', (event, nc) => {
         uid: `Creating new collection ${nc.col} for ${error}`
       })
     })
+})
+
+ipc.on('update-metadata', (e, update) => {
+  let { forCol, mdata } = update
+  archiveMan.updateMetadata(forCol, mdata)
+    .then(update => ipc.send('updated-metadata', { wasError: false, forCol }))
+    .catch(error => ipc.send('updated-metadata', { wasError: true, error, forCol }))
 })
 
 archiveMan.initialLoad()

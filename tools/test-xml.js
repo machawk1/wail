@@ -1,6 +1,9 @@
 import 'babel-polyfill'
 import {Map,List} from 'immutable'
 import S from 'string'
+import   yaml  from 'node-yaml'
+import Db from 'nedb'
+import _ from 'lodash'
 // import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
 
 
@@ -27,7 +30,22 @@ import S from 'string'
 // logWatcher.on('add',path => console.log(`File ${path} has been added`))
 // logWatcher.on('change',path => console.log(`File ${path} has been changed`))
 
+const db = new Db({
+  filename: '/home/john/my-fork-wail/dev_coreData/archives2.db',
+  autoload: true
+})
 
+db.findOne({colName:'xyz'},{metadata: 1,_id: 0},(err,doc) => {
+  console.log(err,doc)
+  doc.metadata.forEach(md => {
+   if (md.k === 'title') {
+     md.v = 2
+   }
+  })
+  db.update({colName:'xyz'},{$set: { metadata: doc.metadata}},(err,numReplaces) => {
+    console.log(err,numReplaces)
+  })
+})
 // psTree(32516,(err, kids) => {
 //   if(err) {
 //     console.error(err)
@@ -41,7 +59,6 @@ import S from 'string'
 //     }
 //   }
 // })
-console.log('wayback/ssdsa'.split('/'))
 // let a = 'a'
 // let key = 'a'
 // let theMap = Map({aa: Map({a: Map({a1: 1,a2: 2}), b: Map({b1: 1,b2: 2})}),bb: List([1,2,3])})

@@ -3,6 +3,8 @@ import autobind from 'autobind-decorator'
 import {shell, remote} from 'electron'
 import {withRouter} from 'react-router'
 import S from 'string'
+import { decorate } from 'core-decorators'
+import { memoize } from 'lodash'
 import {TransitionMotion, spring, presets} from 'react-motion'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import Container from 'muicss/lib/react/container'
@@ -108,7 +110,7 @@ export default class WayBackTab extends Component {
     let {colNames} = CollectionStore
     this.state = {
       searchText: '',
-      colNames: colNames.concat(colNames).concat(colNames)
+      colNames: colNames.concat(colNames).concat(colNames).concat(colNames).concat(colNames)
     }
   }
 
@@ -157,27 +159,9 @@ export default class WayBackTab extends Component {
     )
   }
 
-  @autobind
-  renderList () {
-    let renderMe = []
-    let len = CollectionStore.colNames.length
-    for (let i = 0; i < 5; ++i) {
-      for (let j = 0; j < len; ++j) {
-        let n = CollectionStore.colNames[ j ]
-        if (fuzzyFilter(this.state.searchText, n)) {
-          renderMe.push(<ListItem
-            innerDivStyle={{ padding: 1 }}
-            primaryText={this.renderLi(n, i, j)}
-            key={`${n}${j}${i}-li`}
-          />)
-        }
-
-      }
-    }
-    return renderMe
-  }
-
+  @decorate(memoize)
   getDefaultStyles () {
+    console.log('wb get default styles')
     return this.state.colNames.map((colName,i) => {
       return {
         key: `${i}${colName}`,
@@ -187,8 +171,10 @@ export default class WayBackTab extends Component {
     })
   }
 
-  getStyles () {
-    let { colNames, searchText } = this.state
+  @decorate(memoize)
+  getStyles (searchText) {
+    console.log('wb get styles',searchText)
+    let { colNames} = this.state
     return colNames.filter(cName => fuzzyFilter(searchText, cName))
       .map((colName,i) => {
         return {
@@ -231,6 +217,7 @@ export default class WayBackTab extends Component {
 
   render () {
     // window.lastWaybackPath = this.props.params.col
+    let { searchText } = this.state
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', overflowX: 'hidden', overflowY: 'scroll' }}>
         <Container>
@@ -249,7 +236,7 @@ export default class WayBackTab extends Component {
             </Card>
             <TransitionMotion
               defaultStyles={this.getDefaultStyles()}
-              styles={this.getStyles()}
+              styles={this.getStyles(searchText)}
               willLeave={this.willLeave}
               willEnter={this.willEnter}
             >

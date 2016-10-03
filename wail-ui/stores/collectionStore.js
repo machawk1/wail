@@ -17,6 +17,18 @@ const {
   QUEUE_MESSAGE
 } = wailConstants.EventTypes
 
+const metadataTransform = (mdata) => {
+  if (mdata) {
+    let tmdata = {}
+    mdata.forEach(md => {
+      tmdata[ md.k ] = md.v
+    })
+    return tmdata
+  } else {
+    return mdata
+  }
+}
+
 
 let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
@@ -52,6 +64,7 @@ class _CollectionStore extends EventEmitter {
         crawls = crawls.map(r => new ColCrawlInfo(r))
         crawls.sort((r1, r2) => r1.compare(r2))
         col.crawls = crawls
+        col.metadata = metadataTransform(col.metadata)
         collections.push(col)
         this.colNames.push(col.colName)
         this.collections.set(col.colName, col)

@@ -22,6 +22,34 @@ html, body {
     overflow: hidden;
 }
 
+/*.colActionButton {*/
+    /*top: 40%;*/
+    /*left: 50%;*/
+    /*position: absolute;*/
+    /*width: 50px;*/
+    /*height: 50px;*/
+    /*border-radius: 100%;*/
+    /*cursor: pointer;*/
+    /*display: flex;*/
+    /*justify-content : center;*/
+    /*align-items: center;*/
+    /*font-weight: lighter;*/
+    /*border: 1px solid rgba(0, 0, 0, 0.1);*/
+/*}*/
+
+/*.colActionChild {*/
+    /*cursor: pointer;*/
+    /*display: flex;*/
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    /*width: 50px;*/
+    /*height: 50px;*/
+    /*border-radius: 100%;*/
+    /*background-color: white;*/
+    /*box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px;*/
+    /*color: #8898A5;*/
+/*}*/
+
 .flipText {
     display: block;
     -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
@@ -36,6 +64,15 @@ html, body {
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.colActionMenu {
+    margin: 0;
+    top: auto;
+    right: 20px;
+    bottom: 80px;
+    left: auto;
+    position: fixed;
 }
 
 .wbTest {

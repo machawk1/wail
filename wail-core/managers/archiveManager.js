@@ -4,8 +4,7 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
-import { remote } from 'electron'
-import util from 'util'
+import {remote} from 'electron'
 import fs from 'fs-extra'
 
 S.TMPL_OPEN = '{'
@@ -96,6 +95,46 @@ export default class ArchiveManager {
     })
   }
 
+  updateMetadata (col, mdata) {
+    let opts = {
+      cwd: settings.get('warcs')
+    }
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: `${mdata.k}="${mdata.v}"` }).s
+      cp.exec(exec, opts, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        }
+        this.db.findOne({ colName: col }, { metadata: 1, _id: 0 }, (errFind, doc) => {
+          console.log(err, doc)
+          if (errFind) {
+            return reject(errFind)
+          }
+          let didFind = false
+          let len = doc.metadata.length
+          for (let i = 0; i < len; ++i) {
+            if (doc.metadata[ i ].k === mdata.k) {
+              doc.metadata[ i ].v = mdata.v
+              didFind = true
+              break
+            }
+          }
+          if (!didFind) {
+            doc.metadata.push(mdata)
+          }
+          this.db.update({ colName: col }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
+            if (errUpdate) {
+              return reject(errUpdate)
+            } else {
+              return resolve(numUpdated)
+            }
+          })
+        })
+      })
+    })
+  }
+
   addMetadata (col, mdata) {
     let opts = {
       cwd: settings.get('warcs')
@@ -119,7 +158,7 @@ export default class ArchiveManager {
         console.log('stdout', stdout)
         console.log('stderr', stderr)
         // { $push: { metadata: { $each: mdata } } }
-        this.db.update({ col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
+        this.db.update({ colName: col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
           } else {
@@ -150,14 +189,14 @@ export default class ArchiveManager {
         let c2 = ((stderr || ' ').match(/INFO/g) || []).length
         let count = c1 === 0 ? c2 : c1
 
-        console.log('added warcs to collection', col,count)
+        console.log('added warcs to collection', col, count)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        this.db.update({ colName: col }, { $inc: { numArchives: count } }, {returnUpdatedDocs: true}, (err, numUpdated,affectedDocuments) => {
+        this.db.update({ colName: col }, { $inc: { numArchives: count } }, { returnUpdatedDocs: true }, (err, numUpdated, affectedDocuments) => {
           if (err) {
             return reject(err)
           } else {
-            console.log(numUpdated,affectedDocuments)
+            console.log(numUpdated, affectedDocuments)
             return resolve({
               forCol: col,
               count,
@@ -292,9 +331,9 @@ export default class ArchiveManager {
     })
   }
 
-  checkWarcsAndReport(forCol){
-    return new Promise((resolve,reject) => {
-      this.db.findOne({_id: forCol},{archive: 1},(err,document) => {
+  checkWarcsAndReport (forCol) {
+    return new Promise((resolve, reject) => {
+      this.db.findOne({ _id: forCol }, { archive: 1 }, (err, document) => {
         console.log(document)
       })
     })
