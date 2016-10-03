@@ -107,7 +107,6 @@ export default class ArchiveManager {
           return reject(error)
         }
         this.db.findOne({ colName: col }, { metadata: 1, _id: 0 }, (errFind, doc) => {
-          console.log(err, doc)
           if (errFind) {
             return reject(errFind)
           }

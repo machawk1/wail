@@ -146,7 +146,6 @@ export default class CollectionActions extends Component {
 
   render () {
     let { primary1Color } = this.context.muiTheme.palette
-    let { opened } = this.state
     return (
       <Menu direction="horizontal" distance={-80}
             width={50} height={50} y={1} x={1}
