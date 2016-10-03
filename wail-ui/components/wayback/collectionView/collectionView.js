@@ -11,6 +11,8 @@ import BeamMeUpScotty from 'drag-drop'
 import * as notify from '../../../actions/notification-actions'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import {Grid, Row, Col} from 'react-flexbox-grid'
+import { decorate } from 'core-decorators'
+import { memoize } from 'lodash'
 import S from 'string'
 import shallowCompare from 'react-addons-shallow-compare'
 import {remote} from 'electron'
@@ -62,7 +64,14 @@ const styles = {
 export default class CollectionView extends Component {
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
+  }
+
+  static childContextTypes = {
+    viewingCol: PropTypes.object.isRequired,
+    viewingColRuns: PropTypes.arrayOf(PropTypes.object).isRequired,
+    uniqueSeeds:  PropTypes.object.isRequired,
+    totalCrawls:  PropTypes.number.isRequired
   }
 
   constructor (...args) {
@@ -71,6 +80,34 @@ export default class CollectionView extends Component {
     this.state = {
       slideIndex: 0,
     }
+  }
+
+  // @decorate(memoize)
+  makeChildContext(col) {
+    let viewingCol =  CollectionStore.getCollection(col)
+    let viewingColRuns =  CrawlStore.getCrawlsForCol(col)
+    let uniqueSeeds = new Set()
+    let len = viewingColRuns.length
+    let totalCrawls = 0
+    for(let i = 0; i < len; ++i) {
+      if(Array.isArray(viewingColRuns[i].urls)){
+        viewingColRuns[i].urls.forEach(url => uniqueSeeds.add(url))
+      } else {
+        uniqueSeeds.add(viewingColRuns[i].urls)
+      }
+      totalCrawls += viewingColRuns[i].runs.length
+    }
+    return {
+      viewingCol,
+      viewingColRuns,
+      uniqueSeeds,
+      totalCrawls
+    }
+  }
+
+  getChildContext () {
+    console.log('collectionView getChildContext')
+    return this.makeChildContext(this.props.params.col)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -117,19 +154,11 @@ export default class CollectionView extends Component {
     this.removeWarcAdder = null
   }
 
-  @autobind
-  handleChange(value) {
-    this.setState({
-      slideIndex: value,
-    })
-  }
-
   render () {
-    let viewingCol = CollectionStore.getCollection(this.props.params.col)
     return (
       <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
         <CollectionTabs viewingCol={this.props.params.col}/>
-        <CollectionActions archive={viewingCol.archive} colName={this.props.params.col} indexes={viewingCol.indexes} />
+        <CollectionActions />
       </div>
     )
   }

@@ -85,7 +85,7 @@ export default class HeritrixJobList extends Component {
     }
     return (
       <Table
-        height={`${this.props.height / 1.2}`}
+        height={`${this.props.height / 1.2}px`}
         style={{
           minHeight: `${this.props.height / 1.2}px`
         }}

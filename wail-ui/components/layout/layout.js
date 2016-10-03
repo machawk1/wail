@@ -1,10 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import {RouteTransition} from 'react-router-transition/lib/react-router-transition'
-import {blueGrey50, darkBlack, lightBlue900, cyan500, cyan700} from 'material-ui/styles/colors'
+import {blueGrey50, darkBlack, lightBlue900, cyan500, cyan700,white} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import {remote} from 'electron'
 
 const baseTheme = getMuiTheme({
   palette: {
@@ -12,9 +11,9 @@ const baseTheme = getMuiTheme({
     primary2Color: cyan500,
   },
   tabs: {
-    backgroundColor: cyan500,
+    backgroundColor: white,
     textColor: darkBlack,
-    selectedTextColor: darkBlack
+    selectedTextColor: lightBlue900
   },
   inkBar: {
     backgroundColor: lightBlue900

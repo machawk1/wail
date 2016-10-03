@@ -4,7 +4,6 @@ import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header2'
 import Footer from './footer2'
-import styles from '../styles/styles'
 import { remote } from 'electron'
 
 const baseTheme = getMuiTheme({

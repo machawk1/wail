@@ -37,8 +37,7 @@ export default class NumArchives extends Component {
 
   render () {
     return (
-      <CardTitle style={{ float: 'right', bottom: '40px', display: 'inline-block',
-        position: 'relative', }}
+      <CardTitle
         data-tip='Drag drop archives to add' data-delay-show='100'
         data-class="wailToolTip"
         subtitle={`(W)arcs in collection: ${this.state.numArchives}`}

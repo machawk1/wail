@@ -4,29 +4,14 @@ import CrawlStore from '../../../stores/crawlStore'
 import autobind from 'autobind-decorator'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import SwipeableViews from 'react-swipeable-views'
-import {ipcRenderer as ipc} from 'electron'
-import path from 'path'
-import {joinStrings} from 'joinable'
-import BeamMeUpScotty from 'drag-drop'
-import * as notify from '../../../actions/notification-actions'
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
-import {Grid, Row, Col} from 'react-flexbox-grid'
 import S from 'string'
 import shallowCompare from 'react-addons-shallow-compare'
 import {remote} from 'electron'
-import Menu from 'react-motion-menu'
 import wailConstants from '../../../constants/wail-constants'
 import NumArchives from '../collectionHeader/numArchives'
-import ReactTooltip from 'react-tooltip'
-import Home from 'material-ui/svg-icons/action/home'
-import Apps from 'material-ui/svg-icons/navigation/apps'
-import Adb from 'material-ui/svg-icons/notification/adb'
-import CollectionActions from '../util/collectionActions'
-import Plus from 'material-ui/svg-icons/content/add'
-import MenuIcon from 'material-ui/svg-icons/navigation/menu'
-import IconButton from 'material-ui/IconButton'
 import CollectionSearch from './collectionSearch'
 import CollectionCrawls from './collectionCrawls'
+import CollectionInfo from './collectionInfo'
 // From https://github.com/oliviertassinari/react-swipeable-views
 
 const EventTypes = wailConstants.EventTypes
@@ -62,11 +47,9 @@ export default class CollectionTabs extends Component {
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
+    viewingCol: PropTypes.object.isRequired,
   }
 
-  static propTypes = {
-    viewingCol: PropTypes.string.isRequired
-  }
 
   constructor (...args) {
     super(...args)
@@ -94,17 +77,16 @@ export default class CollectionTabs extends Component {
           onChange={this.handleChange}
           value={this.state.slideIndex}
         >
-          <Tab label="Tab One" value={0} />
-          <Tab label="Tab Two" value={1} />
-          <Tab label="Tab Three" value={2} />
+          <Tab label='Overview' value={0} />
+          <Tab label='Seeds' value={1} />
+          <Tab label='Captures' value={2} />
         </Tabs>
         <SwipeableViews
           index={this.state.slideIndex}
           onChangeIndex={this.handleChange}
         >
           <div>
-            <h2 style={styles.headline}>Tabs with slide effect</h2>
-            Swipe to see the next slide.<br />
+           <CollectionInfo />
           </div>
           <div style={styles.slide}>
             slide n°2

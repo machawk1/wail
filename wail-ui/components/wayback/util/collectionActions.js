@@ -9,7 +9,7 @@ import ActionButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
 import Apps from 'material-ui/svg-icons/navigation/apps'
 import Add from 'material-ui/svg-icons/content/add'
-import Close from 'material-ui/svg-icons/navigation/close'
+import OpenCollection from 'material-ui/svg-icons/file/folder-open'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-browser'
 import Reindex from 'material-ui/svg-icons/action/cached'
 import RotatingAction from './rotatingAction'
@@ -29,13 +29,9 @@ const closed = {}
 export default class CollectionActions extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
+    viewingCol: PropTypes.object.isRequired
   }
 
-  static propTypes = {
-    colName: PropTypes.string.isRequired,
-    indexes: PropTypes.string.isRequired,
-    archive: PropTypes.string.isRequired
-  }
 
   constructor (...args) {
     super(...args)
@@ -53,7 +49,7 @@ export default class CollectionActions extends Component {
     console.log('add Warcs')
     const { dialog } = remote
     let archiveChooserOpts = {
-      title: `Add Warc Files To ${this.props.colName}`,
+      title: `Add Warc Files To ${this.context.viewingCol.colName}`,
       defaultPath: remote.app.getPath('home'),
       properties: [ 'openFile', 'multiSelections' ],
       filters: [
@@ -74,7 +70,7 @@ export default class CollectionActions extends Component {
 
         console.log(addMe)
         ipc.send('add-warcs-to-col', {
-          forCol: this.props.colName,
+          forCol: this.context.viewingCol.colName,
           warcs: joinStrings(...addMe, { separator: ' ' })
         })
       }
@@ -87,7 +83,7 @@ export default class CollectionActions extends Component {
       cwd: settings.get('warcs')
       // stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
-    let col = this.props.colName
+    let col = this.context.viewingCol.colName
     // prevIndexingDone = false
     // generatePathIndex(generateCDX)
     cp.exec(S(settings.get('pywb.reindexCol')).template({ col }), opts, (error, stdout, stderr) => {
@@ -163,20 +159,29 @@ export default class CollectionActions extends Component {
         </span>
         <span>
           <IconButton
+            tooltip='View In Wayback'
+            tooltipPosition='top-center'
+            onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.context.viewingCol.colName}`)}
+          >
+            <OpenInBrowser/>
+          </IconButton>
+        </span>
+        <span>
+          <IconButton
+            tooltip='Open Collection Location'
+            tooltipPosition='top-center'
+            onTouchTap={() => openFSLocation(this.context.viewingCol.colpath)}
+          >
+            <OpenCollection/>
+          </IconButton>
+        </span>
+        <span>
+          <IconButton
             tooltip='Reindex Collection'
             tooltipPosition='top-center'
             onTouchTap={this.forceIndex}
           >
             <Reindex/>
-          </IconButton>
-        </span>
-        <span>
-          <IconButton
-            tooltip='View In Wayback'
-            tooltipPosition='top-center'
-            onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.props.colName}`)}
-          >
-            <OpenInBrowser/>
           </IconButton>
         </span>
         <span>
