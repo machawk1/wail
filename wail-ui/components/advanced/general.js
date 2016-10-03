@@ -1,15 +1,13 @@
-import React, { Component } from 'react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
+import React, {Component} from 'react'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import autobind from 'autobind-decorator'
 import RaisedButton from 'material-ui/RaisedButton'
 import FixIcon from 'material-ui/svg-icons/action/build'
 import KillIcon from 'material-ui/svg-icons/content/clear'
-import { launchHeritrix, killHeritrix } from '../../actions/heritrix-actions'
-import { startWayback, killWayback } from '../../actions/wayback-actions'
 import ServiceStore from '../../stores/serviceStore'
 import style from '../styles/styles'
 import wc from '../../constants/wail-constants'
-import { remote, ipcRenderer as ipc } from 'electron'
+import {remote, ipcRenderer as ipc} from 'electron'
 import * as notify from '../../actions/notification-actions'
 
 const EventTypes = wc.EventTypes

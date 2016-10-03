@@ -2,13 +2,12 @@ import React, {Component, PropTypes} from 'react'
 import {findDOMNode} from 'react-dom'
 import autobind from 'autobind-decorator'
 import shallowCompare from 'react-addons-shallow-compare'
-import * as colors from 'material-ui/styles/colors'
 import RaisedButton from 'material-ui/FlatButton'
 import CardActions from 'material-ui/Card/CardActions'
 import wailConstants from '../../../constants/wail-constants'
 import CrawlDispatcher from '../../../dispatchers/crawl-dispatcher'
+import UrlDispatcher from '../../../dispatchers/url-dispatcher'
 import ViewWatcher from '../../../../wail-core/util/viewWatcher'
-
 
 const EventTypes = wailConstants.EventTypes
 const From = wailConstants.From
@@ -26,20 +25,6 @@ export default class ArchivalButtons extends Component {
 
   constructor (...args) {
     super(...args)
-    this.state = {
-      forCol: defForCol
-    }
-
-  }
-
-  componentWillMount () {
-    console.log('archival buttons cwm')
-    ViewWatcher.on('basicColList-selected', this.updateForCol)
-  }
-
-  componentWillUnmount () {
-    console.log('archival buttons cwum')
-    ViewWatcher.removeListener('basicColList-selected', this.updateForCol)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -48,18 +33,10 @@ export default class ArchivalButtons extends Component {
 
 
   @autobind
-  updateForCol (forCol) {
-    console.log('archivalButtos got an updateForCol', forCol)
-    this.setState({ forCol })
-  }
-
-  @autobind
   crawlNow() {
-    console.log('crawaling now for collection',this.state.forCol)
     CrawlDispatcher.dispatch({
       type: EventTypes.BUILD_CRAWL_JOB,
       from: From.BASIC_ARCHIVE_NOW,
-      forCol: this.state.forCol
     })
   }
 
@@ -84,6 +61,11 @@ export default class ArchivalButtons extends Component {
           primary
           label='Check Local Collection'
           labelPosition='before'
+          onMouseDown={() => {
+            UrlDispatcher.dispatch({
+              type: EventTypes.CHECK_URI_IN_ARCHIVE
+            })
+          }}
         />
       </CardActions>
     )

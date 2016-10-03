@@ -1,4 +1,4 @@
-import React, {Component, Proptypes}  from 'react'
+import React, {Component, Proptypes} from 'react'
 import autobind from 'autobind-decorator'
 import AutoComplete from 'material-ui/AutoComplete'
 import wailConstants from '../../constants/wail-constants'

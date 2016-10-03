@@ -1,11 +1,11 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
-import { remote } from 'electron'
+import {remote} from 'electron'
 import Divider from 'material-ui/Divider'
 import wailConstants from '../../constants/wail-constants'
 import UrlSeedDispatcher from './crawlUrlsDispatcher'
 import CrawlUrlItem from './crawlUrlItem'
-import { ListItem } from 'material-ui/List'
+import {ListItem} from 'material-ui/List'
 import _ from 'lodash'
 
 const EventTypes = wailConstants.EventTypes

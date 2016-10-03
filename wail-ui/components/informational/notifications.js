@@ -1,9 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import Snackbar from 'material-ui/Snackbar'
-import { shell } from 'electron'
+import {shell} from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
-import FitText from 'react-fittext'
 import Notification from 'react-notification-system'
 
 // https://github.com/igorprado/react-notification-system

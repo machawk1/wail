@@ -2,9 +2,8 @@ import React, {Component, PropTypes} from 'react'
 import IconButton from 'material-ui/IconButton'
 import SearchIcon from 'material-ui/svg-icons/action/search'
 import {Grid, Row, Col} from 'react-flexbox-grid'
-import {CardTitle} from 'material-ui/Card'
 import ColListSearch from './collectionListSearch'
-import NewCollection from './newCollection'
+import NewCollection from '../util/newCollection'
 /*
  <Grid fluid>
  <Row

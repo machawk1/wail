@@ -1,5 +1,5 @@
 import React from 'react'
-import {Router, hashHistory, Route, IndexRoute, Redirect} from 'react-router'
+import {Router, hashHistory, Route, IndexRoute} from 'react-router'
 import Layout from './components/layout/layout'
 import BasicTab from './components/basic'
 import General from './components/advanced/general'
@@ -7,8 +7,6 @@ import Wayback from './components/wayback/wayback'
 import CollectionView from './components/wayback/collectionView/collectionView'
 import Heritrix from './components/heritrix/heritrix-tab'
 import Misc from './components/advanced/miscellaneous'
-import Test from './components/test/test'
-
 
 // const Routes = (
 //   <Route path='/' component={Layout}>

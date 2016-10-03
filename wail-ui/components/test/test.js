@@ -1,9 +1,8 @@
-import React, { Component, Proptypes } from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
+import React, {Component, Proptypes} from 'react'
+import {Card, CardHeader, CardText} from 'material-ui/Card'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
-import { withRouter } from 'react-router'
+import {withRouter} from 'react-router'
 import Avatar from 'material-ui/Avatar'
 class Test extends Component {
   render () {

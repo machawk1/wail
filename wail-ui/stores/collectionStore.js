@@ -1,6 +1,6 @@
 import autobind from 'autobind-decorator'
 import EventEmitter from 'eventemitter3'
-import { ipcRenderer as ipc, remote } from 'electron'
+import {ipcRenderer as ipc, remote} from 'electron'
 import S from 'string'
 import CollectionDispatcher from '../dispatchers/collectionDispatcher'
 import wailConstants from '../constants/wail-constants'
@@ -92,7 +92,8 @@ class _CollectionStore extends EventEmitter {
   }
 
   addNewCol (event, col) {
-    console.log('added new collection',)
+    console.log('added new collection')
+    col.metadata = metadataTransform(col.metadata)
     this.collections.set(col.colName, col)
     this.colNames.push(col.colName)
     this.emit('added-new-collection', Array.from(this.collections.values()))
@@ -102,8 +103,8 @@ class _CollectionStore extends EventEmitter {
         title: 'Success',
         level: 'success',
         autoDismiss: 0,
-        message: `Created new collection ${col.viewingCol}`,
-        uid: `Created new collection ${col.viewingCol}`
+        message: `Created new collection ${col.colName}`,
+        uid: `Created new collection ${col.colName}`
       }
     })
   }

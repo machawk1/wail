@@ -3,7 +3,6 @@ import {app, BrowserWindow, Menu, shell, ipcMain, nativeImage, Tray, clipboard} 
 import Logger from './logger/logger'
 import menuTemplate from './menu/mainMenu'
 import path from 'path'
-import util from 'util'
 import configSettings, {writeSettings, rewriteHeritrixAuth} from './settings/settings'
 import ContextMenu from './menu/contextMenu'
 import {Pather} from '../wail-core/util'

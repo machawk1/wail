@@ -1,10 +1,10 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
-import { shell, remote } from 'electron'
+import {shell, remote} from 'electron'
 import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
-import MementoTableItem, { getNoMementos } from '../components/basic/mementoResults/MementoTableItem'
+import MementoTableItem, {getNoMementos} from '../components/basic/mementoResults/MementoTableItem'
 import * as urlActions from '../actions/archive-url-actions'
 
 const settings = remote.getGlobal('settings')

@@ -1,6 +1,5 @@
-import React, { Component, PropTypes } from 'react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
-
+import React, {Component, PropTypes} from 'react'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
 import HeritrixJobInfoRow from './heritrixJobInfoRow'
 import styles from '../styles/styles'
 

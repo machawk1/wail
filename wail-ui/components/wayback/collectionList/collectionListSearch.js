@@ -1,10 +1,8 @@
 import React, {Component, PropTypes} from 'react'
 import {withRouter} from 'react-router'
 import ColStore from '../../../stores/collectionStore'
-import FlatButton from 'material-ui/FlatButton'
 import AutoComplete from 'material-ui/AutoComplete'
 import wc from '../../../constants/wail-constants'
-import MenuItem from 'material-ui/MenuItem'
 import autobind from 'autobind-decorator'
 
 const defaultCol = wc.Default_Collection

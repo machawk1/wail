@@ -1,11 +1,8 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
 import createLogger from 'redux-logger'
-import {
-  ipc,
-  requestHandler
-} from '../../middleware'
+import {ipc, requestHandler} from '../../middleware'
 import rootReducer from '../../reducers'
 import DevTools from '../../containers/devTools'
 

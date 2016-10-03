@@ -1,6 +1,4 @@
 import React, {Component, PropTypes} from 'react'
-import {CardHeader} from 'material-ui/Card'
-import {Flex, Item} from 'react-flex'
 import 'react-flex/index.css'
 import shallowCompare from 'react-addons-shallow-compare'
 

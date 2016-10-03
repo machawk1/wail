@@ -1,7 +1,6 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import {Link} from 'react-router'
-import S from 'string'
 
 export default class BreadCrumbs extends Component {
   static contextTypes = {

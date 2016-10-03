@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react'
-import { TableRow, TableRowColumn } from 'material-ui/Table'
+import React, {Component, PropTypes} from 'react'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import autobind from 'autobind-decorator'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
@@ -9,10 +9,7 @@ import LoadingStore from './loadingStore'
 import fs from 'fs-extra'
 import Dialog from 'material-ui/Dialog'
 import Promise from 'bluebird'
-import {
-  ToastContainer,
-  ToastMessage
-} from 'react-toastr'
+import {ToastContainer, ToastMessage} from 'react-toastr'
 import S from 'string'
 import cp from 'child_process'
 import FlatButton from 'material-ui/FlatButton'

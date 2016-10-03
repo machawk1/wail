@@ -1,10 +1,9 @@
-import { ipcRenderer } from 'electron'
+import {ipcRenderer} from 'electron'
 import autobind from 'autobind-decorator'
 import moment from 'moment'
 import RequestDispatcher from '../dispatchers/requestDispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wc from '../constants/wail-constants'
-import util from 'util'
 
 const EventTypes = wc.EventTypes
 const RequestTypes = wc.RequestTypes

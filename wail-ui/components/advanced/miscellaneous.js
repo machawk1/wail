@@ -1,13 +1,12 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
 import CheckUpdateIcon from 'material-ui/svg-icons/action/open-in-browser'
 import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
-import { remote, ipcRenderer } from 'electron'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import {remote, ipcRenderer} from 'electron'
 import EventLog from './eventLog'
-import { openUrlInBrowser, openFSLocation } from '../../actions/util-actions'
+import {openUrlInBrowser, openFSLocation} from '../../actions/util-actions'
 
 const settings = remote.getGlobal('settings')
 

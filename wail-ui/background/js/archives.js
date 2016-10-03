@@ -1,7 +1,6 @@
 import 'babel-polyfill'
 import {remote, ipcRenderer as ipc} from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
-import constants from '../../../wail-core/constants'
 
 const archiveMan = window.am = new ArchiveManager()
 

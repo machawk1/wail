@@ -1,55 +1,23 @@
 import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
+import {Flex,Item} from 'react-flex'
 import {shell, remote} from 'electron'
 import {withRouter} from 'react-router'
 import S from 'string'
-import { decorate } from 'core-decorators'
-import { memoize } from 'lodash'
+import PageView from 'material-ui/svg-icons/action/pageview'
+import FlatButton from 'material-ui/FlatButton'
+import {decorate} from 'core-decorators'
+import {memoize} from 'lodash'
 import {TransitionMotion, spring, presets} from 'react-motion'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
+import Search from 'material-ui/svg-icons/action/search'
 import Container from 'muicss/lib/react/container'
 import TextField from 'material-ui/TextField'
-import Panel from 'muicss/lib/react/panel'
-import BeamMeUpScotty from 'drag-drop'
-import {ipcRenderer as ipc} from 'electron'
-import path from 'path'
-import {joinStrings} from 'joinable'
 import CollectionStore from '../../stores/collectionStore'
 import wailConstants from '../../constants/wail-constants'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
-import CollectionList from './collectionList'
-import CollectionCard from './collectionHeader/collectionCard'
-import {AutoSizer} from 'react-virtualized'
-import {CollectionView, CollectionToolBar, CollectionSearch} from './collectionView'
-
-import * as notify from '../../actions/notification-actions'
-
-const EventTypes = wailConstants.EventTypes
-
-S.TMPL_OPEN = '{'
-S.TMPL_CLOSE = '}'
-
-const settings = remote.getGlobal('settings')
-
-const levenshteinDistance = (searchText, key) => {
-  const current = [];
-  let prev;
-  let value;
-  for (let i = 0; i <= key.length; i++) {
-    for (let j = 0; j <= searchText.length; j++) {
-      if (i && j) {
-        if (searchText.charAt(j - 1) === key.charAt(i - 1)) value = prev
-        else value = Math.min(current[ j ], current[ j - 1 ], prev) + 1
-      } else {
-        value = i + j
-      }
-      prev = current[ j ]
-      current[ j ] = value
-    }
-  }
-  return current.pop()
-}
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 
 const fuzzyFilter = (searchText, key) => {
   const compareString = key.toLowerCase()
@@ -65,39 +33,6 @@ const fuzzyFilter = (searchText, key) => {
   return searchTextIndex === searchText.length
 }
 
-// if (!this.removeWarcAdder) {
-//   console.log('attaching warc adder on live dom')
-//   this.removeWarcAdder = BeamMeUpScotty('#warcUpload', (files) => {
-//     console.log(`adding warcs maybe to col ${this.props.params.col}`, files)
-//     let addMe = []
-//     let badFiles = new Set()
-//
-//     files.forEach(f => {
-//       console.log(f)
-//       let ext = path.extname(f.path)
-//       if (ext === '.warc' || ext === '.arc') {
-//         addMe.push(f.path)
-//       } else {
-//         badFiles.add(ext)
-//       }
-//     })
-//
-//     if (badFiles.size > 0) {
-//       notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
-//     }
-//
-//     if (addMe.length > 0) {
-//       notify.notifyInfo(`Adding ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-//       ipc.send('add-warcs-to-col', {
-//         forCol: this.props.params.col,
-//         warcs: joinStrings(...addMe, { separator: ' ' })
-//       })
-//     }
-//   })
-// } else {
-//   console.log('we mounted but already have the warc upload listener attached')
-// }
-
 @withRouter
 export default class WayBackTab extends Component {
   static contextTypes = {
@@ -107,7 +42,7 @@ export default class WayBackTab extends Component {
   constructor (...args) {
     super(...args)
     this.removeWarcAdder = null
-    let {colNames} = CollectionStore
+    let { colNames } = CollectionStore
     this.state = {
       searchText: '',
       colNames: colNames.concat(colNames).concat(colNames).concat(colNames).concat(colNames)
@@ -123,10 +58,6 @@ export default class WayBackTab extends Component {
     // this.removeWarcAdder()
     // this.removeWarcAdder = null
   }
-
-  // shouldComponentUpdate (nextProps, nextState, nextContext) {
-  //   return this.props.params.col !== nextProps.params.col
-  // }
 
   @autobind
   updateColNames () {
@@ -145,24 +76,12 @@ export default class WayBackTab extends Component {
     })
   }
 
-  @autobind
-  renderLi (colName, i) {
-    return (
-      <Card
-        key={`card-${colName}${i}`}
-      >
-        <CardHeader
-          key={`cardheader-${colName}${i}`}
-          title={colName}
-        />
-      </Card>
-    )
-  }
+
 
   @decorate(memoize)
   getDefaultStyles () {
     console.log('wb get default styles')
-    return this.state.colNames.map((colName,i) => {
+    return this.state.colNames.map((colName, i) => {
       return {
         key: `${i}${colName}`,
         data: { colName },
@@ -173,10 +92,10 @@ export default class WayBackTab extends Component {
 
   @decorate(memoize)
   getStyles (searchText) {
-    console.log('wb get styles',searchText)
-    let { colNames} = this.state
+    console.log('wb get styles', searchText)
+    let { colNames } = this.state
     return colNames.filter(cName => fuzzyFilter(searchText, cName))
-      .map((colName,i) => {
+      .map((colName, i) => {
         return {
           key: `${i}${colName}`,
           data: { colName },
@@ -202,13 +121,38 @@ export default class WayBackTab extends Component {
     }
   }
 
+  @autobind
+  renderLi (colName, i) {
+    return (
+      <Card
+        key={`card-${colName}${i}`}
+      >
+        <CardHeader
+          key={`cardheader-${colName}${i}`}
+          textStyle={{textAlign: 'center'}}
+          title={colName}
+        />
+      </Card>
+    )
+  }
+
   buildList (styles) {
     return styles.map(({ key, style, data: { colName } }, i) => {
       return <div key={key} style={style}>
         <ListItem
+          rightIcon={<PageView />}
           innerDivStyle={{ padding: 0 }}
           onTouchTap={() => this.props.router.push(`wayback/${colName}`)}
-          primaryText={this.renderLi(colName, i)}
+          primaryText={
+            <Card
+              key={`card-${colName}${i}`}
+            >
+              <CardHeader
+                key={`cardheader-${colName}${i}`}
+                title={colName}
+              />
+            </Card>
+          }
           key={`li-${colName}${i}`}
         />
       </div>
@@ -216,22 +160,31 @@ export default class WayBackTab extends Component {
   }
 
   render () {
-    // window.lastWaybackPath = this.props.params.col
     let { searchText } = this.state
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', overflowX: 'hidden', overflowY: 'scroll' }}>
         <Container>
           <div className="waybackCLMiddle">
-            <Card>
+            <Flex row alignItems='center' justifyContent='space-between'>
+              <CardTitle
+                title='Collections'
+              />
+              <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
+            </Flex>
+            <Card style={{ height: '75px' }}>
               <CardText>
-                <CardTitle
-                  title='Collections'
-                />
-                <TextField
-                  id='collectionSearch'
-                  value={this.state.searchText}
-                  onChange={this.handleChange}
-                />
+                <span>
+                   <Search />
+                </span>
+                <span>
+                 <TextField
+                   style={{ width: '90%', paddingLeft: '10px' }}
+                   id='collectionSearch'
+                   hintText='Search'
+                   value={this.state.searchText}
+                   onChange={this.handleChange}
+                 />
+              </span>
               </CardText>
             </Card>
             <TransitionMotion
@@ -252,22 +205,3 @@ export default class WayBackTab extends Component {
     )
   }
 }
-/*
- <div id='warcUpload' className="wbCollectionOverviewRow"
- style={{backgroundColor: '#f2f2f2'}}
- >
- <CollectionCard viewingCol={this.props.params.col}/>
- <AutoSizer>
- {({ height, width }) => (
- <div>
- <div style={{ width, height }}>
- <CollectionView height={height} viewingCol={this.props.params.col}/>
- <CollectionToolBar
- viewingCol={this.props.params.col}
- />
- </div>
- </div>
- )}
- </AutoSizer>
- </div>
- */

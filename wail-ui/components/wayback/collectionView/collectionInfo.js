@@ -1,18 +1,12 @@
 import React, {Component, PropTypes} from 'react'
 import {Card, CardHeader, CardTitle, CardText, CardActions} from 'material-ui/Card'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import autobind from 'autobind-decorator'
-import _ from 'lodash'
 import {Flex, Item} from 'react-flex'
 import FlatButton from 'material-ui/FlatButton'
-import IconButton from 'material-ui/IconButton'
-import Edit from 'material-ui/svg-icons/editor/mode-edit'
 import Container from 'muicss/lib/react/container'
 import Divider from 'muicss/lib/react/divider'
 import ReactTooltip from 'react-tooltip'
 import shallowCompare from 'react-addons-shallow-compare'
 import NumArchives from '../collectionHeader/numArchives'
-import CollectionMetadata from './collectionMetadata'
 
 export default class CollectionInfo extends Component {
   static contextTypes = {

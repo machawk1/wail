@@ -2,8 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import CollectionList from '../collectionList'
 import autobind from 'autobind-decorator'
-import CollectionToolBar from '../collectionView/collectionToolBar'
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card'
+import {Card, CardHeader, CardText} from 'material-ui/Card'
 
 export default class CollectionCard extends Component {
   static propTypes = {

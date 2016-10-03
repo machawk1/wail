@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
+import {CardTitle} from 'material-ui/Card'
 import shallowCompare from 'react-addons-shallow-compare'
 import autobind from 'autobind-decorator'
 import CollectionStore from '../../../stores/collectionStore'

@@ -8,6 +8,10 @@ class _ViewWatcher extends EventEmitter {
   selected (from, selected) {
     this.emit(`${from}-selected`, selected)
   }
+
+  createCollection () {
+    this.emit('newCollection')
+  }
 }
 
 const ViewWatcher = window.vw = new _ViewWatcher()

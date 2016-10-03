@@ -1,8 +1,7 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
-import ToolTip from 'material-ui/internal/Tooltip'
-import { ipcRenderer } from 'electron'
+import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import {ipcRenderer} from 'electron'
 import autobind from 'autobind-decorator'
 import CrawlUrlsStore from './crawlUrlsStore'
 

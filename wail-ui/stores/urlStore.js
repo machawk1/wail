@@ -1,13 +1,12 @@
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
-import { shell, remote } from 'electron'
+import {shell, remote} from 'electron'
+import ViewWatcher from '../../wail-core/util/viewWatcher'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
-import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import S from 'string'
 import * as urlActions from '../actions/archive-url-actions'
-import * as notify from '../actions/notification-actions'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -15,8 +14,9 @@ const EventTypes = wailConstants.EventTypes
 class UrlStore_ extends EventEmitter {
   constructor () {
     super()
-    this.urlMemento = { url: S(''), mementos: -1, inArchive: false }
+    this.urlMemento = { url: S(''), mementos: -1,forCol:  wailConstants.Default_Collection, inArchive: false }
     this.urls = new Map()
+    ViewWatcher.on('basicColList-selected', forCol => this.urlMemento.forCol = forCol)
   }
 
   @autobind
@@ -72,7 +72,7 @@ class UrlStore_ extends EventEmitter {
 
       case EventTypes.CHECK_URI_IN_ARCHIVE: {
         if (!this.urlMemento.url.isEmpty()) {
-          urlActions.checkUriIsInArchive(this.urlMemento.url.s, event.forCol)
+          urlActions.checkUriIsInArchive(this.urlMemento.url.s, this.urlMemento.forCol)
         } else {
           window.logger.debug('Entered in a empty url at WAIL page')
           GMessageDispatcher.dispatch({

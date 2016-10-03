@@ -1,7 +1,6 @@
-import {Schema, arrayOf, normalize} from 'normalizr'
 import {ipcRenderer as ipc, remote} from 'electron'
-import ColCrawlInfo from '../../../wail-core/util/colCrawlInfo'
 import wailConstants from '../../constants/wail-constants'
+import * as notify from './notifications'
 const {
   GET_COLLECTIONS,
   CREATE_NEW_COLLECTION,
@@ -9,7 +8,6 @@ const {
   GET_COLLECTION_NAMES,
   QUEUE_MESSAGE
 } = wailConstants.EventTypes
-import * as notify from './notifications'
 
 const settings = remote.getGlobal('settings')
 let defForCol = 'default'

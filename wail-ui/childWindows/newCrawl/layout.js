@@ -1,9 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
-import styles from '../../components/styles/styles'
 import NewCrawlD from './newCrawlDialog'
 
 const baseTheme = getMuiTheme(lightBaseTheme)

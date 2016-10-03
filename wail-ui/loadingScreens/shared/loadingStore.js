@@ -4,11 +4,11 @@ import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
 import cp from 'child_process'
 import request from 'request'
-import { remote, ipcRenderer } from 'electron'
+import {remote, ipcRenderer} from 'electron'
 import LoadingDispatcher from './loadingDispatcher'
-// import { startHeritrix, startWayback } from './lsActions'
 import wc from '../../constants/wail-constants'
 import util from 'util'
+// import { startHeritrix, startWayback } from './lsActions'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 

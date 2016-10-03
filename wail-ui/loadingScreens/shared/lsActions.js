@@ -1,8 +1,7 @@
-import { remote } from 'electron'
+import {remote} from 'electron'
 import Promise from 'bluebird'
 import childProcess from 'child_process'
 import util from 'util'
-import S from 'string'
 
 const settings = remote.getGlobal('settings')
 

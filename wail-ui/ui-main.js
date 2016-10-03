@@ -1,9 +1,5 @@
 import 'babel-polyfill'
-import {
-  app, BrowserWindow,
-  Menu, shell, ipcMain,
-  dialog
-} from 'electron'
+import {app, BrowserWindow, Menu, shell, ipcMain, dialog} from 'electron'
 import path from 'path'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'

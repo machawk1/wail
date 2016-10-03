@@ -1,5 +1,5 @@
 import ipc from './ipc'
-import  requestHandler from './requestHandler'
+import requestHandler from './requestHandler'
 
 export  {
   ipc,

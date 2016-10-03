@@ -1,6 +1,6 @@
-import React, { Component, PropTypes } from 'react'
-import { ipcRenderer, remote } from 'electron'
-import { ListItem } from 'material-ui/List'
+import React, {Component, PropTypes} from 'react'
+import {ipcRenderer, remote} from 'electron'
+import {ListItem} from 'material-ui/List'
 import NumberPicker from './numberPicker'
 import Avatar from 'material-ui/Avatar'
 

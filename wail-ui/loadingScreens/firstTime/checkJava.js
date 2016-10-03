@@ -1,5 +1,5 @@
-import React, { Component, PropTypes } from 'react'
-import { TableRow, TableRowColumn } from 'material-ui/Table'
+import React, {Component, PropTypes} from 'react'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import shelljs from 'shelljs'
 import named from 'named-regexp'
 import autobind from 'autobind-decorator'

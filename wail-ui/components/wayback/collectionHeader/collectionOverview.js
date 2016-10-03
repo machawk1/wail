@@ -3,7 +3,6 @@ import {Grid, Row, Col} from 'react-flexbox-grid'
 import {remote} from 'electron'
 import NumArchives from './numArchives'
 
-
 export default class CollectionOverview extends Component {
   static propTypes = {
     viewingCol: PropTypes.string.isRequired

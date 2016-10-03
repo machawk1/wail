@@ -1,6 +1,6 @@
 import createIpc from 'redux-electron-ipc'
-import {addedNewCol,addedWarcs,gotAllCollections} from '../actions/redux/collections'
-import {gotAllRuns,madeJobConf,buildDialogueCrawlJob,crawlJobUpdate} from '../actions/redux/heritrix'
+import {addedNewCol, addedWarcs, gotAllCollections} from '../actions/redux/collections'
+import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate} from '../actions/redux/heritrix'
 import {notify} from '../actions/redux/notifications'
 
 export default createIpc({

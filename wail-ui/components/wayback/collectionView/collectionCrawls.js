@@ -1,15 +1,15 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import CollectionStore from '../../../stores/collectionStore'
 import CrawlStore from '../../../stores/crawlStore'
 import S from 'string'
 import shallowCompare from 'react-addons-shallow-compare'
-import { remote, ipcRenderer as ipc } from 'electron'
-import { List, ListItem } from 'material-ui/List'
+import {remote, ipcRenderer as ipc} from 'electron'
+import {List, ListItem} from 'material-ui/List'
 import Divider from 'material-ui/Divider'
-import { joinStrings } from 'joinable'
+import {joinStrings} from 'joinable'
 import Card from 'material-ui/Card/Card'
 import CardMedia from 'material-ui/Card/CardMedia'
-import CardTitle  from 'material-ui/Card/CardTitle'
+import CardTitle from 'material-ui/Card/CardTitle'
 // From https://github.com/oliviertassinari/react-swipeable-views
 
 

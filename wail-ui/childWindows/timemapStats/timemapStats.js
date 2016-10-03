@@ -1,8 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import injectTapEventPlugin from 'react-tap-event-plugin'
-import fs from 'fs-extra'
 import S from 'string'
 import tld from 'tldjs'
 import _ from 'lodash'

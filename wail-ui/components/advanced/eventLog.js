@@ -1,6 +1,5 @@
-import React, { PropTypes, Component } from 'react'
-import Inspector from 'react-json-inspector'
-import { Card, CardActions, CardHeader, CardText, CardMedia } from 'material-ui/Card'
+import React, {PropTypes, Component} from 'react'
+import {Card, CardActions, CardHeader, CardMedia} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import {List, ListItem} from 'material-ui/List'
 import moment from 'moment'

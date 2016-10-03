@@ -1,22 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { Row } from 'react-flexbox-grid'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
-import Drawer from 'material-ui/Drawer'
-import Avatar from 'material-ui/Avatar'
-import ServiceIcon from 'material-ui/svg-icons/action/timeline'
-import MenuItem from 'material-ui/MenuItem'
-import Divider from 'material-ui/Divider'
-import styles from '../styles/styles'
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
-import NavigationClose from 'material-ui/svg-icons/navigation/close'
-import { Link, IndexLink } from 'react-router'
-import IconButton from 'material-ui/IconButton'
-import IconMenu from 'material-ui/IconMenu'
 import AutoComplete from 'material-ui/AutoComplete'
 import CrawlStore from '../../stores/crawlStore'
-import SearchIcon from 'material-ui/svg-icons/action/search'
-import { Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle } from 'material-ui/Toolbar'
 
 export default class Header extends Component {
 

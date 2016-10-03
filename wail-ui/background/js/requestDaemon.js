@@ -1,11 +1,10 @@
 import 'babel-polyfill'
 import autobind from 'autobind-decorator'
-import { ipcRenderer, remote } from 'electron'
+import {ipcRenderer, remote} from 'electron'
 import rp from 'request-promise'
 import _ from 'lodash'
 import util from 'util'
 import Logger from '../../logger/logger'
-
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 

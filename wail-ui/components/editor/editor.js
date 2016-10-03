@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import CodeMirror from 'codemirror'
 import style from './style.css'
 import 'codemirror/lib/codemirror.css'

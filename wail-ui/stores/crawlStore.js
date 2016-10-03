@@ -1,28 +1,17 @@
 import EventEmitter from 'eventemitter3'
-import { ipcRenderer as ipc, remote } from 'electron'
+import {ipcRenderer as ipc, remote} from 'electron'
 import _ from 'lodash'
 import S from 'string'
-import { joinStrings } from 'joinable'
+import {joinStrings} from 'joinable'
 import os from 'os'
 import autobind from 'autobind-decorator'
 import UrlStore from '../stores/urlStore'
 import CrawlDispatcher from '../dispatchers/crawl-dispatcher'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
-import MementoDispatcher from '../dispatchers/memgatorDispatcher'
-import EditorDispatcher from '../dispatchers/editorDispatcher'
 import wailConstants from '../constants/wail-constants'
-import { readCode } from '../actions/editor-actions'
 import CrawlInfo from '../../wail-core/util/crawlInfo'
 import RunInfo from '../../wail-core/util/runInfo'
-import {
-  getHeritrixJobsState,
-  makeHeritrixJobConf,
-  buildHeritrixJob,
-  launchHeritrixJob,
-  teardownJob
-} from '../actions/heritrix-actions'
-
-
+import {makeHeritrixJobConf, buildHeritrixJob, launchHeritrixJob, teardownJob} from '../actions/heritrix-actions'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -264,6 +253,7 @@ class CrawlStore_ extends EventEmitter {
         switch (event.from) {
           case From.BASIC_ARCHIVE_NOW: {
             urls = UrlStore.getUrl()
+            event.forCol = UrlStore.urlMemento.forCol
             if (!urls.isEmpty()) {
               window.logger.debug(`Archiving ${urls} Now!`)
               // console.log('crawlstore archiving the url is ', urls

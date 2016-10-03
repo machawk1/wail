@@ -1,7 +1,7 @@
-import React, { Component, PropTypes } from 'react'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
-import { remote, ipcRenderer } from 'electron'
-import { ListItem } from 'material-ui/List'
+import {remote, ipcRenderer} from 'electron'
+import {ListItem} from 'material-ui/List'
 import SBackupRestore from 'material-ui/svg-icons/action/settings-backup-restore'
 import FlatButton from 'material-ui/RaisedButton'
 

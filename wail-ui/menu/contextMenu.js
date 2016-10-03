@@ -1,4 +1,4 @@
-import { Menu } from 'electron'
+import {Menu} from 'electron'
 
 export default class ContextMenu {
 

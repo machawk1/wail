@@ -1,10 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import {shell, remote} from 'electron'
-import {withRouter} from 'react-router'
 import S from 'string'
-import { decorate } from 'core-decorators'
-import { memoize } from 'lodash'
+import {decorate} from 'core-decorators'
+import {memoize} from 'lodash'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import Container from 'muicss/lib/react/container'
 import TextField from 'material-ui/TextField'
@@ -17,25 +16,6 @@ S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
-
-const levenshteinDistance = (searchText, key) => {
-  const current = [];
-  let prev;
-  let value;
-  for (let i = 0; i <= key.length; i++) {
-    for (let j = 0; j <= searchText.length; j++) {
-      if (i && j) {
-        if (searchText.charAt(j - 1) === key.charAt(i - 1)) value = prev
-        else value = Math.min(current[ j ], current[ j - 1 ], prev) + 1
-      } else {
-        value = i + j
-      }
-      prev = current[ j ]
-      current[ j ] = value
-    }
-  }
-  return current.pop()
-}
 
 const fuzzyFilter = (searchText, key) => {
   const compareString = key.toLowerCase()
@@ -51,38 +31,6 @@ const fuzzyFilter = (searchText, key) => {
   return searchTextIndex === searchText.length
 }
 
-// if (!this.removeWarcAdder) {
-//   console.log('attaching warc adder on live dom')
-//   this.removeWarcAdder = BeamMeUpScotty('#warcUpload', (files) => {
-//     console.log(`adding warcs maybe to col ${this.props.params.col}`, files)
-//     let addMe = []
-//     let badFiles = new Set()
-//
-//     files.forEach(f => {
-//       console.log(f)
-//       let ext = path.extname(f.path)
-//       if (ext === '.warc' || ext === '.arc') {
-//         addMe.push(f.path)
-//       } else {
-//         badFiles.add(ext)
-//       }
-//     })
-//
-//     if (badFiles.size > 0) {
-//       notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
-//     }
-//
-//     if (addMe.length > 0) {
-//       notify.notifyInfo(`Adding ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-//       ipc.send('add-warcs-to-col', {
-//         forCol: this.props.params.col,
-//         warcs: joinStrings(...addMe, { separator: ' ' })
-//       })
-//     }
-//   })
-// } else {
-//   console.log('we mounted but already have the warc upload listener attached')
-// }
 
 export default class CollectionSeedList extends Component {
   static contextTypes = {

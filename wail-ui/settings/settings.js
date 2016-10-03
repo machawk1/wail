@@ -4,7 +4,6 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
-import autobind from 'autobind-decorator'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'

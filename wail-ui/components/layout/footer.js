@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
-import {Grid, Row, Col} from 'react-flexbox-grid'
 import Notifications from '../informational/notifications'
 import StatusDialog from '../informational/statusDialog'
-import BottomNav from './bottomNav'
+import NewCollection from '../wayback/util/newCollection'
 
 export default class Footer extends Component {
   render () {
@@ -10,6 +9,7 @@ export default class Footer extends Component {
       <div>
         <Notifications />
         <StatusDialog />
+        <NewCollection />
       </div>
     )
   }

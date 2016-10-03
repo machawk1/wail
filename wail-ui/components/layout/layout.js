@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {RouteTransition} from 'react-router-transition/lib/react-router-transition'
-import {blueGrey50, darkBlack, lightBlue900, cyan500, cyan700,white} from 'material-ui/styles/colors'
+import {darkBlack, lightBlue900, cyan500, cyan700, white} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'

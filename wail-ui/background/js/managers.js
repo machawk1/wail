@@ -1,10 +1,6 @@
 import 'babel-polyfill'
 import {remote, ipcRenderer as ipc} from 'electron'
-import {
-  ArchiveManager,
-  CrawlManager,
-  constants
-} from '../../wail-core'
+import {ArchiveManager, CrawlManager, constants} from '../../wail-core'
 
 const crawlMan = window.cm = new CrawlManager()
 const archiveMan = window.am = new ArchiveManager()

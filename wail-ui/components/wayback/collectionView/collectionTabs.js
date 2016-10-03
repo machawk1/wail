@@ -1,35 +1,10 @@
 import React, {Component, PropTypes} from 'react'
-import CollectionStore from '../../../stores/collectionStore'
-import CrawlStore from '../../../stores/crawlStore'
 import autobind from 'autobind-decorator'
 import {Tabs, Tab} from 'material-ui/Tabs'
 import SwipeableViews from 'react-swipeable-views'
-import S from 'string'
 import shallowCompare from 'react-addons-shallow-compare'
 import {remote} from 'electron'
-import wailConstants from '../../../constants/wail-constants'
-import NumArchives from '../collectionHeader/numArchives'
-import CollectionSearch from './collectionSearch'
-import CollectionCrawls from './collectionCrawls'
 import CollectionInfo from './collectionInfo'
-// From https://github.com/oliviertassinari/react-swipeable-views
-
-const EventTypes = wailConstants.EventTypes
-
-S.TMPL_OPEN = '{'
-S.TMPL_CLOSE = '}'
-
-const metadataTransform = (mdata) => {
-  if (mdata) {
-    let tmdata = {}
-    mdata.forEach(md => {
-      tmdata[ md.k ] = md.v
-    })
-    return tmdata
-  } else {
-    return mdata
-  }
-}
 
 const styles = {
   headline: {
@@ -44,12 +19,6 @@ const styles = {
 }
 
 export default class CollectionTabs extends Component {
-
-  static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
-    viewingCol: PropTypes.object.isRequired,
-  }
-
 
   constructor (...args) {
     super(...args)

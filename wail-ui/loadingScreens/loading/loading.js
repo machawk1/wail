@@ -1,17 +1,10 @@
 import React, {Component, PropTypes} from 'react'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
-import {Grid, Row, Col} from 'react-flexbox-grid'
-import {
-  Step,
-  Stepper,
-  StepLabel
-} from 'material-ui/Stepper'
+import {Step, Stepper, StepLabel} from 'material-ui/Stepper'
 import ExpandTransition from 'material-ui/internal/ExpandTransition'
 import {remote, ipcRenderer} from 'electron'
 import CheckServices2 from '../shared/checkServices2'
-import LoadingDispatcher from '../shared/loadingDispatcher'
-import wc from '../../constants/wail-constants'
 import WailInternals from '../shared/wailInterals'
 import LoadingStore from '../shared/loadingStore'
 import CheckOS from '../firstTime/checkOS2'

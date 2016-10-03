@@ -1,34 +1,46 @@
-import React, { Component, PropTypes } from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import React, {Component, PropTypes} from 'react'
+import Paper from 'material-ui/Paper'
 import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
-import { ipcRenderer as ipc } from 'electron'
+import {Flex, Item} from 'react-flex'
+import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+import {Editor, EditorState} from 'draft-js'
+import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
 import wc from '../../../constants/wail-constants'
-import FloatingActionButton from 'material-ui/FloatingActionButton'
-import ContentAdd from 'material-ui/svg-icons/content/add'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
-class NCD extends Component {
+export default class NewCollection extends Component {
+
   constructor (...args) {
     super(...args)
     this.state = {
+      open: false,
+      canSubmit: false,
       col: '',
       description: '',
       title: ''
     }
+
+  }
+
+  componentWillMount () {
+    ViewWatcher.on('newCollection', ::this.handleOpen)
+  }
+
+  componentWillUnmount () {
+    ViewWatcher.removeListener('newCollection', ::this.handleOpen)
   }
 
   cancel () {
     this.setState({
       col: '',
       description: '',
-      title: ''
-    }, () => {
-      this.props.handleClose()
+      title: '',
+      open: false
     })
   }
 
@@ -65,9 +77,8 @@ class NCD extends Component {
       this.setState({
         col: '',
         description: '',
-        title: ''
-      }, () => {
-        this.props.handleClose()
+        title: '',
+        open: false
       })
     } else {
       let message
@@ -109,79 +120,60 @@ class NCD extends Component {
     })
   }
 
-  render () {
-    const actions = [
-      <FlatButton
-        label='Cancel'
-        onTouchTap={::this.cancel}
-      />,
-      <FlatButton
-        label='Create'
-        primary
-        onTouchTap={::this.handleClose}
-      />
-    ]
+  handleOpen () {
+    this.setState({ open: true })
+  }
 
+  render () {
     return (
       <Dialog
+        contentStyle={{
+          width: '100%',
+          maxWidth: 'none',
+        }}
+        autoScrollBodyContent
         title='New Collection'
-        actions={actions}
+        actions={[
+          <FlatButton
+            label='Cancel'
+            onTouchTap={::this.cancel}
+          />,
+          <FlatButton
+            label='Create'
+            primary
+            onTouchTap={::this.handleClose}
+          />
+        ]}
         modal
-        open={this.props.open}
+        open={this.state.open}
       >
+        <Flex row  alignContent='center' justifyContent='space-between'>
+          <TextField
+            ref="cName"
+            hintText='Collection Name'
+            floatingLabelText='Name'
+            value={this.state.col}
+            style={{ float: 'left',marginRight: '25px' }}
+            onChange={::this.nameChange}
+          />
+          <TextField
+            ref="cTitle"
+            hintText='Defaults to name'
+            floatingLabelText='Title'
+            value={this.state.title}
+            onChange={::this.titleChange}
+          />
+        </Flex>
         <TextField
-          ref="cName"
-          hintText='Collection Name'
-          floatingLabelText='Name'
-          value={this.state.col}
-          style={{marginRight: '25px'}}
-          onChange={::this.nameChange}
-        />
-        <TextField
+          fullWidth
+          multiLine
           ref="cDescription"
           hintText='Collection Description'
           floatingLabelText='Description'
           value={this.state.description}
           onChange={::this.descriptionChange}
         />
-        <TextField
-          ref="cTitle"
-          hintText='Optional defaults to name'
-          floatingLabelText='Title'
-          value={this.state.title}
-          onChange={::this.titleChange}
-        />
       </Dialog>
-    )
-  }
-}
-
-export default class NewCollection extends Component {
-
-  constructor (...args) {
-    super(...args)
-    this.state = {
-      open: false,
-      col: '',
-      description: '',
-      title: ''
-    }
-  }
-
-  handleOpen () {
-    this.setState({ open: true })
-  }
-
-  handleClose () {
-    this.setState({ open: false })
-  }
-
-  render () {
-    return (
-      <div>
-        <FlatButton primary label={'New Collection'} onTouchTap={::this.handleOpen}/>
-        <NCD open={this.state.open} handleClose={::this.handleClose}/>
-      </div>
 
     )
   }

@@ -1,13 +1,12 @@
 import childProcess from 'child_process'
 import rp from 'request-promise'
-import { remote, shell } from 'electron'
+import {remote, shell} from 'electron'
 import util from 'util'
 import UrlDispatcher from '../dispatchers/url-dispatcher'
 import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
-import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 import wailConstants from '../constants/wail-constants'
 import * as notify from './notification-actions'
-import cheerio from  'cheerio'
+import cheerio from 'cheerio'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes

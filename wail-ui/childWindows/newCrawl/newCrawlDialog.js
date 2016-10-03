@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import EnterCrawlUrls from './enterCrawlUrls'
 import CrawlDepth from './crawlDepth'
 import CrawlUrlList from './crawlUrlList'
 import SellectCollection from './selectCollection'
-import { Grid, Row, Col } from 'react-flexbox-grid'
+import {Grid, Row, Col} from 'react-flexbox-grid'
 
 export default class NewCrawlDialog extends Component {
   render () {

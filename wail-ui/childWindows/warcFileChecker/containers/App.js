@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
+import React, {Component, PropTypes} from 'react'
+import {connect} from 'react-redux'
+import {browserHistory} from 'react-router'
 import Explore from '../components/Explore'
-import { resetErrorMessage } from '../actions'
+import {resetErrorMessage} from '../actions'
 
 class App extends Component {
   static propTypes = {

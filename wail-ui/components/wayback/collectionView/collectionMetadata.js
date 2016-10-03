@@ -1,11 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {Grid, Row, Col} from 'react-flexbox-grid'
-import OpenButton from 'material-ui/FlatButton'
 import {Scrollbars} from 'react-custom-scrollbars'
-import FitText from 'react-fittext'
-import Dimensions from 'react-dimensions'
-import autobind from 'autobind-decorator'
-import TextField from 'material-ui/TextField'
 
 export default class CollectionMetadata extends Component {
   static propTypes = {

@@ -1,35 +1,23 @@
-import React, { Component, PropTypes } from 'react'
-import { shell, remote, ipcRender as ipc } from 'electron'
-import { ListItem } from 'material-ui/List'
-import { grey400 } from 'material-ui/styles/colors'
+import React, {Component, PropTypes} from 'react'
+import {shell, remote, ipcRender as ipc} from 'electron'
+import {grey400} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right'
-import fs from 'fs-extra'
 import cp from 'child_process'
 import path from 'path'
 import autobind from 'autobind-decorator'
 import wc from '../../constants/wail-constants'
 import CrawlStore from '../../stores/crawlStore'
 import CrawlDispatcher from '../../dispatchers/crawl-dispatcher'
-import {
-  forceCrawlFinish,
-  restartJob,
-  rescanJobDir
-} from '../../actions/heritrix-actions'
-import HeritrixJobInfo from './heritrixJobInfo'
-import HeritrixJobInfoRow from './heritrixJobInfoRow'
+import {forceCrawlFinish, restartJob, rescanJobDir} from '../../actions/heritrix-actions'
 import shallowCompare from 'react-addons-shallow-compare'
-import { TableRow, TableRowColumn } from 'material-ui/Table'
+import {TableRow, TableRowColumn} from 'material-ui/Table'
 import moment from 'moment'
-import { joinStrings } from 'joinable'
+import {joinStrings} from 'joinable'
 import styles from '../styles/styles'
-import {moveWarc} from '../../actions/heritrix-actions'
-import FitText from 'react-fittext'
-
 import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 
 const style = {
@@ -72,9 +60,6 @@ export default class HeritrixJobItem extends Component {
     CrawlStore.removeListener(`${this.props.jobId}-updated`, this.updateRuns)
   }
 
-  shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return shallowCompare(this,nextProps,nextState)
-  }
 
   @autobind
   updateRuns () {

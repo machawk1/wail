@@ -1,10 +1,9 @@
-import React, { Component, PropTypes } from 'react'
-import { Grid, Row, Col } from 'react-flexbox-grid'
-import { blueGrey50, darkBlack, lightBlue900 } from 'material-ui/styles/colors'
+import React, {Component, PropTypes} from 'react'
+import {blueGrey50, darkBlack, lightBlue900} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header2'
 import Footer from './footer2'
-import { remote } from 'electron'
+import {remote} from 'electron'
 
 const baseTheme = getMuiTheme({
   tabs: {

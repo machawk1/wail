@@ -1,4 +1,3 @@
-import bunyan from 'bunyan'
 import wc from '../constants/wail-constants'
 import GMessageDispatcher from '../dispatchers/globalMessageDispatcher'
 

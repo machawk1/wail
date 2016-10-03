@@ -1,5 +1,4 @@
-import React, { Component, PropTypes } from 'react'
-import { Row } from 'react-flexbox-grid'
+import React, {Component, PropTypes} from 'react'
 import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
@@ -7,8 +6,7 @@ import Avatar from 'material-ui/Avatar'
 import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-import styles from '../styles/styles'
-import { Link, IndexLink } from 'react-router'
+import {Link, IndexLink} from 'react-router'
 import CrawlStore from '../../stores/crawlStore'
 
 export default class Header extends Component {
