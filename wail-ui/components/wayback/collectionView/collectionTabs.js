@@ -15,7 +15,6 @@ import S from 'string'
 import shallowCompare from 'react-addons-shallow-compare'
 import {remote} from 'electron'
 import Menu from 'react-motion-menu'
-import CollectionTabs from './collectionTabs'
 import wailConstants from '../../../constants/wail-constants'
 import NumArchives from '../collectionHeader/numArchives'
 import ReactTooltip from 'react-tooltip'
@@ -59,15 +58,18 @@ const styles = {
   },
 }
 
-export default class CollectionView extends Component {
+export default class CollectionTabs extends Component {
 
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
   }
 
+  static propTypes = {
+    viewingCol: PropTypes.string.isRequired
+  }
+
   constructor (...args) {
     super(...args)
-    this.removeWarcAdder = null
     this.state = {
       slideIndex: 0,
     }
@@ -77,45 +79,6 @@ export default class CollectionView extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-  componentDidMount () {
-    if (!this.removeWarcAdder) {
-      console.log('attaching warc adder on live dom')
-      this.removeWarcAdder = BeamMeUpScotty('#warcUpload', (files) => {
-        console.log(`adding warcs maybe to col ${this.props.params.col}`, files)
-        let addMe = []
-        let badFiles = new Set()
-
-        files.forEach(f => {
-          console.log(f)
-          let ext = path.extname(f.path)
-          if (ext === '.warc' || ext === '.arc') {
-            addMe.push(f.path)
-          } else {
-            badFiles.add(ext)
-          }
-        })
-
-        if (badFiles.size > 0) {
-          notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
-        }
-
-        if (addMe.length > 0) {
-          notify.notifyInfo(`Adding ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-          ipc.send('add-warcs-to-col', {
-            forCol: this.props.params.col,
-            warcs: joinStrings(...addMe, { separator: ' ' })
-          })
-        }
-      })
-    } else {
-      console.log('we mounted but already have the warc upload listener attached')
-    }
-  }
-
-  componentWillUnmount () {
-    this.removeWarcAdder()
-    this.removeWarcAdder = null
-  }
 
   @autobind
   handleChange(value) {
@@ -125,11 +88,31 @@ export default class CollectionView extends Component {
   }
 
   render () {
-    let viewingCol = CollectionStore.getCollection(this.props.params.col)
     return (
-      <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
-        <CollectionTabs viewingCol={this.props.params.col}/>
-        <CollectionActions archive={viewingCol.archive} colName={this.props.params.col} indexes={viewingCol.indexes} />
+      <div style={{ width: '100%', height: '100%' }}>
+        <Tabs
+          onChange={this.handleChange}
+          value={this.state.slideIndex}
+        >
+          <Tab label="Tab One" value={0} />
+          <Tab label="Tab Two" value={1} />
+          <Tab label="Tab Three" value={2} />
+        </Tabs>
+        <SwipeableViews
+          index={this.state.slideIndex}
+          onChangeIndex={this.handleChange}
+        >
+          <div>
+            <h2 style={styles.headline}>Tabs with slide effect</h2>
+            Swipe to see the next slide.<br />
+          </div>
+          <div style={styles.slide}>
+            slide n°2
+          </div>
+          <div style={styles.slide}>
+            slide n°3
+          </div>
+        </SwipeableViews>
       </div>
     )
   }

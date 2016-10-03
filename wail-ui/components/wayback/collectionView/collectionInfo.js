@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Tabs, Tab } from 'material-ui/Tabs'
+import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import SwipeableViews from 'react-swipeable-views'
 import autobind from 'autobind-decorator'
 import Dimensions from 'react-dimensions'

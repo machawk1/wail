@@ -12,7 +12,7 @@ const baseTheme = getMuiTheme({
     primary2Color: cyan500,
   },
   tabs: {
-    backgroundColor: blueGrey50,
+    backgroundColor: cyan500,
     textColor: darkBlack,
     selectedTextColor: darkBlack
   },
