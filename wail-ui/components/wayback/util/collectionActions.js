@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import { Textfit } from 'react-textfit'
 import autobind from 'autobind-decorator'
 import cp from 'child_process'
 import S from 'string'
@@ -93,14 +94,9 @@ export default class CollectionActions extends Component {
           message: `There was an error in indexing ${col}!`,
           uid: `There was an error in force indexing ${col}!`,
           children: (
-            <span>
-                <p>
-                  {stderr}
-                </p>
-                <p>
-                  {stdout}
-                </p>
-              </span>
+            <Textfit mode='multi'>
+              {stdout}
+            </Textfit>
           )
         })
         console.error(error)
@@ -115,14 +111,9 @@ export default class CollectionActions extends Component {
           title: 'Success',
           level: 'success',
           children: (
-            <span>
-                <p>
-                  {stderr}
-                </p>
-                <p>
-                  {stdout}
-                </p>
-              </span>
+            <Textfit mode='multi'>
+              {stdout}
+            </Textfit>
           ),
           message: `Indexing of collection ${col} finished`,
           uid: `Indexing of collection ${col} finished`

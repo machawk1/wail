@@ -142,6 +142,7 @@
     "react-split-panel": "^2.0.1",
     "react-swipeable-views": "^0.7.9",
     "react-tap-event-plugin": "^1.0.0",
+    "react-textfit": "^0.1.8",
     "react-title-component": "^1.0.1",
     "react-toastr": "^2.8.1",
     "react-tooltip": "^3.2.1",
