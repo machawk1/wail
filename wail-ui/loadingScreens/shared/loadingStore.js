@@ -14,7 +14,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const settings = remote.getGlobal('settings')
 const logger = remote.getGlobal('logger')
-const serviceMan = window.servMan = remote.getGlobal('serviceMan')
+let serviceMan = window.servMan = remote.getGlobal('serviceMan')
 const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
 
 class _LoadingStore extends EventEmitter {

@@ -45,7 +45,7 @@ export default class WayBackTab extends Component {
     let { colNames } = CollectionStore
     this.state = {
       searchText: '',
-      colNames: colNames.concat(colNames)
+      colNames: colNames
     }
   }
 

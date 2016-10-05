@@ -1,20 +1,24 @@
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import util from 'util'
+import cp from 'child_process'
 import path from 'path'
 import os from 'os'
+import del from 'del'
+import _ from 'lodash'
 import webpack from 'webpack'
 import electronCfg from './webpackConfigs/ui/webpack.config.electron.js'
-import cfg from './webpackConfigs/ui/webpack.config.production.js'
+import cfgUI from './webpackConfigs/ui/webpack.config.production.js'
+import cfgCore from './webpackConfigs/core/webpack.config.production.js'
 import packager from 'electron-packager'
 import pkg from './package.json'
 import moveTo from './tools/moveJDKMemgator'
 Promise.promisifyAll(fs)
 
 
+
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = path.resolve('.')
-
+fs.emptyDirSync(path.join(cwd, 'dist'))
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
 
 const darwinBuild = {
@@ -34,6 +38,8 @@ const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
 const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
+
+
 // /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes/',
@@ -71,18 +77,10 @@ const ignore = [
   '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
-    deps.filter(name => {
-      console.log(name,!electronCfg.externals.includes(name),electronCfg.externals)
-      return !electronCfg.externals.includes(name)
-    } )
-      .filter(name => {
-        console.log(name,!cfg.externals.includes(name),electronCfg.externals)
-
-        return !cfg.externals.includes(name)
-      })
+    deps.filter(name => !electronCfg.externals.includes(name))
+      .filter(name => !cfgUI.externals.includes(name))
       .map(name => `/node_modules/${name}($|/)`)
   )
-console.log(ignore)
 
 const DEFAULT_OPTS = {
   'app-copyright': 'jberlin',
@@ -182,6 +180,8 @@ function pack (plat, arch, cb) {
 
   packager(opts, cb)
 }
+
+doBuild()
 
 function createDMG (appPath, cb) {
   let _createDMG = require('electron-installer-dmg')
@@ -377,17 +377,16 @@ function log (plat, arch) {
   }
 }
 
-fs.emptyDirSync(path.join(cwd, 'dist'))
-fs.emptyDirSync(path.join(cwd, 'release'))
-
-console.log('building webpack.config.electron')
-build(electronCfg)
-  .then((stats) => {
-    console.log('building webpack.config.production', stats)
-    return build(cfg)
-  })
-  .then((stats) => {
-    console.log(stats)
+async function doBuild () {
+  console.log('Building WAIL')
+  try {
+    console.log('Transpiling WAIL-Electron-Main')
+    await build(electronCfg)
+    console.log('Transpiling WAIL-UI')
+    await build(cfgUI)
+    console.log('Transpiling WAIL-Core')
+    await build(cfgCore)
+    const paths = await del('release')
     if (shouldBuildCurrent) {
       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
@@ -420,7 +419,56 @@ build(electronCfg)
         })
       })
     }
-  })
-  .catch(err => {
-    console.error(err)
-  })
+  }catch (error) {
+    console.error(error)
+  }
+  cp.exec(`open ${path.join(cwd,'release')}`)
+}
+
+// fs.emptyDirSync(path.join(cwd, 'dist'))
+// fs.emptyDirSync(path.join(cwd, 'release'))
+//
+// console.log('building webpack.config.electron')
+// build(electronCfg)
+//   .then((stats) => {
+//     console.log('building webpack.config.production', stats)
+//     return build(cfg)
+//   })
+//   .then((stats) => {
+//     console.log(stats)
+//     if (shouldBuildCurrent) {
+//       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+//       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+//     } else {
+//       let buildFor
+//       let archs
+//       let platforms
+//       if (shouldBuildAll) {
+//         buildFor = 'building for all platforms'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'linux', 'win32', 'darwin' ]
+//       } else if (shouldBuildLinux) {
+//         buildFor = 'building for linux'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'linux' ]
+//       } else if (shouldBuildOSX) {
+//         buildFor = 'building for OSX'
+//         archs = [ 'x64' ]
+//         platforms = [ 'darwin' ]
+//       } else {
+//         buildFor = 'building for Windows'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'win32' ]
+//       }
+//       console.log(buildFor)
+//       platforms.forEach(plat => {
+//         archs.forEach(arch => {
+//           console.log(`building the binary for ${plat}-${arch}`)
+//           pack(plat, arch, log(plat, arch))
+//         })
+//       })
+//     }
+//   })
+//   .catch(err => {
+//     console.error(err)
+//   })

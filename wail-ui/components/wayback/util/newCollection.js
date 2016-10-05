@@ -1,9 +1,8 @@
 import React, {Component, PropTypes} from 'react'
-import Paper from 'material-ui/Paper'
+import shallowCompare from 'react-addons-shallow-compare'
 import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
 import {Flex, Item} from 'react-flex'
 import ViewWatcher from '../../../../wail-core/util/viewWatcher'
-import {Editor, EditorState} from 'draft-js'
 import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
@@ -33,6 +32,10 @@ export default class NewCollection extends Component {
 
   componentWillUnmount () {
     ViewWatcher.removeListener('newCollection', ::this.handleOpen)
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   cancel () {

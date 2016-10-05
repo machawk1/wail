@@ -23,6 +23,29 @@ class ServiceStore_ extends EventEmitter {
 
     ipcRenderer.on('service-started', (event, update) => this.updateStatues(update))
     ipcRenderer.on('service-killed', (event, update) => this.updateStatues(update, true))
+    ipcRenderer.on( 'restarted-wayback',(e,update) => {
+      if(update.wasError) {
+        notify.notify({
+          autoDismiss: 0,
+          title: 'Error',
+            level: 'error',
+            message: 'There was error restarting Wayback',
+            uid: 'There was error restarting Wayback',
+        })
+        window.logger.error({
+          message: 'restarting wayback failed',
+          err: update.err
+        })
+      } else {
+        notify.notify({
+          autoDismiss: 0,
+          title: 'Success',
+          level: 'success',
+          message: 'Wayback was successfully restarted',
+          uid: 'Wayback was successfully restarted',
+        })
+      }
+    })
   }
 
   @autobind
@@ -92,6 +115,11 @@ class ServiceStore_ extends EventEmitter {
       case EventTypes.WAYBACK_STATUS_UPDATE:
         // console.log('Wayback status update serivice store', event, this.serviceStatus)
         this.serviceStatus.wayback = event.status
+        this.emit('wayback-status-update')
+        break
+      case EventTypes.WAYBACK_RESTART:
+        ipcRenderer.send('restart-wayback')
+        this.serviceStatus.wayback = false
         this.emit('wayback-status-update')
         break
     }

@@ -298,6 +298,12 @@ export default class WindowManager extends EventEmitter {
         })
     })
 
+    ipcMain.on('restart-wayback', () => {
+      control.serviceMan.restartWayback()
+        .then(() => this.send('mainWindow','restarted-wayback',{wasError: false}))
+        .catch((err) => this.send('mainWindow','restarted-wayback',{wasError: true,err}))
+    })
+
   }
 
   loadComplete (where) {
@@ -534,6 +540,7 @@ export default class WindowManager extends EventEmitter {
         console.log('loadingWindow is ready to show')
         this.windows[ 'loadingWindow' ].open = true
         this.windows[ 'loadingWindow' ].window.show()
+        this.windows[ 'loadingWindow' ].window.webContents.toggleDevTools()
         resolve()
       })
     })

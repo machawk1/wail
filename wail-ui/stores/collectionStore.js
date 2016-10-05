@@ -2,6 +2,8 @@ import autobind from 'autobind-decorator'
 import EventEmitter from 'eventemitter3'
 import { ipcRenderer as ipc, remote } from 'electron'
 import S from 'string'
+import ServiceDispatcher from '../dispatchers/service-dispatcher'
+import FlatButton from 'material-ui/FlatButton'
 import CrawlStore from './crawlStore'
 import CollectionDispatcher from '../dispatchers/collectionDispatcher'
 import wailConstants from '../constants/wail-constants'
@@ -15,7 +17,8 @@ const {
   CREATE_NEW_COLLECTION,
   ADD_METADATA_TO_COLLECTION,
   GET_COLLECTION_NAMES,
-  QUEUE_MESSAGE
+  QUEUE_MESSAGE,
+  WAYBACK_RESTART
 } = wailConstants.EventTypes
 
 const metadataTransform = (mdata) => {
@@ -115,12 +118,18 @@ class _CollectionStore extends EventEmitter {
       window.logger.debug(`added warcs to ${forCol} with count ${count} `)
       let message = `Added ${count} Warc/Arc Files To Collection ${forCol}`
       notify.notify({
+        autoDismiss: 0,
         title: 'Success',
         level: 'success',
         message,
         uid: message,
         children: (
-          <p>To view this capture please restart wayback</p>
+         <div>
+           <p>To view this capture please restart wayback</p>
+           <FlatButton label='Restart?' onTouchTap={() => ServiceDispatcher.dispatch({
+             type: WAYBACK_RESTART
+           })}/>
+         </div>
         )
       })
       notify.notifySuccess()

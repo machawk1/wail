@@ -47,6 +47,7 @@ export default {
     TEARDOWN_CRAWL: null,
     VIEW_ARCHIVED_URI: null,
     VIEW_HERITRIX_JOB: null,
+    WAYBACK_RESTART: null,
     WAYBACK_STATUS_UPDATE: null
   }),
   From: keyMirror({

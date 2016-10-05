@@ -1,13 +1,13 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
-import {AutoSizer} from 'react-virtualized'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
+import { AutoSizer } from 'react-virtualized'
 import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import AddCrawlIcon from 'material-ui/svg-icons/content/add'
 import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
-import {ipcRenderer, remote, shell} from 'electron'
+import { ipcRenderer, remote, shell } from 'electron'
 import HeritrixJobList from './heritrix-joblist'
-import {rescanJobDir} from '../../actions/heritrix-actions'
+import { rescanJobDir } from '../../actions/heritrix-actions'
 import ColStore from '../../stores/collectionStore'
 const styles = {
   button: {
@@ -16,7 +16,6 @@ const styles = {
 }
 
 const settings = remote.getGlobal('settings')
-
 
 export default class HeritrixTab extends Component {
 
@@ -29,20 +28,11 @@ export default class HeritrixTab extends Component {
     shell.openExternal(settings.get('heritrix.web_ui'))
   }
 
-  shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return false
-  }
 
   render () {
     return (
-      <div style={{ width: '100%', height: '100%'}}>
-        <AutoSizer>
-          {({ height, width }) => (
-            <div style={{ width, height }}>
-              <HeritrixJobList height={height} />
-            </div>
-          )}
-        </AutoSizer>
+      <div style={{ width: '100%' }}>
+        <HeritrixJobList />
         <Toolbar className='layoutFooter'>
           <ToolbarGroup firstChild>
             <RaisedButton

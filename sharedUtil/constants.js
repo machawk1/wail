@@ -33,7 +33,8 @@ export default {
     STORE_HERITRIX_JOB_CONFS: null,
     VIEW_ARCHIVED_URI: null,
     VIEW_HERITRIX_JOB: null,
-    WAYBACK_STATUS_UPDATE: null
+    WAYBACK_STATUS_UPDATE: null,
+    WAYBACK_RESTART: null
   }),
   From: keyMirror({
     BASIC_ARCHIVE_NOW: null,

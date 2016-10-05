@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import autobind from 'autobind-decorator'
 import CrawlStore from '../.././stores/crawlStore'
 import HeritrixJobItem from './heritrixJobItem'
@@ -16,13 +16,7 @@ const {
   actionS
 } = styles.heritrixTable
 
-
-
 export default class HeritrixJobList extends Component {
-
-  static propTypes = {
-    height: PropTypes.number.isRequired
-  }
 
   constructor (props, context) {
     super(props, context)
@@ -46,7 +40,7 @@ export default class HeritrixJobList extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return shallowCompare(this,nextProps,nextState)
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
@@ -82,47 +76,47 @@ export default class HeritrixJobList extends Component {
       )
     }
     return (
-      <Table
-        height={`${this.props.height / 1.2}px`}
-        style={{
-          minHeight: `${this.props.height / 1.2}px`
-        }}
-      >
-        <TableHeader
-          displaySelectAll={false}
-          adjustForCheckbox={false}
+      <div style={{ height: '80%' }}>
+        <Table
+          height={400}
         >
-          <TableRow >
-            <TableHeaderColumn style={crawlUrlS}>
-              Crawl Url(s)
-            </TableHeaderColumn>
-            <TableHeaderColumn style={statusS}>
-              Status
-            </TableHeaderColumn>
-            <TableHeaderColumn style={timestampS}>
-              Timestamp
-            </TableHeaderColumn>
-            <TableHeaderColumn style={discoveredS}>
-              Discovered
-            </TableHeaderColumn>
-            <TableHeaderColumn style={queuedS}>
-              Queued
-            </TableHeaderColumn>
-            <TableHeaderColumn style={downloadedS}>
-              Downloaded
-            </TableHeaderColumn>
-            <TableHeaderColumn style={actionS}>
-              Actions
-            </TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          displayRowCheckbox={false}
-          showRowHover
-        >
-          {JobItems}
-        </TableBody>
-      </Table>
+          <TableHeader
+            displaySelectAll={false}
+            adjustForCheckbox={false}
+          >
+            <TableRow >
+              <TableHeaderColumn style={crawlUrlS}>
+                Crawl Url(s)
+              </TableHeaderColumn>
+              <TableHeaderColumn style={statusS}>
+                Status
+              </TableHeaderColumn>
+              <TableHeaderColumn style={timestampS}>
+                Timestamp
+              </TableHeaderColumn>
+              <TableHeaderColumn style={discoveredS}>
+                Discovered
+              </TableHeaderColumn>
+              <TableHeaderColumn style={queuedS}>
+                Queued
+              </TableHeaderColumn>
+              <TableHeaderColumn style={downloadedS}>
+                Downloaded
+              </TableHeaderColumn>
+              <TableHeaderColumn style={actionS}>
+                Actions
+              </TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody
+            displayRowCheckbox={false}
+            showRowHover
+          >
+            {JobItems}
+          </TableBody>
+        </Table>
+      </div>
+
     )
   }
 

@@ -1,7 +1,8 @@
-import React, {PropTypes, Component} from 'react'
-import {Card, CardActions, CardHeader, CardMedia} from 'material-ui/Card'
+import React, { PropTypes, Component } from 'react'
+import shallowCompare from 'react-addons-shallow-compare'
+import { Card, CardActions, CardHeader, CardMedia } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
-import {List, ListItem} from 'material-ui/List'
+import { List, ListItem } from 'material-ui/List'
 import moment from 'moment'
 import Divider from 'material-ui/Divider'
 const input = React.DOM.input
@@ -49,22 +50,22 @@ const levelToHuman = {
 export default class EventLog extends Component {
   constructor (...args) {
     super(...args)
-    console.log( window.eventLog.records)
+    let events = []
     this.state = {
       events: window.eventLog.records,
       expanded: false
     }
   }
 
-  makeEventLogHuman() {
+  makeEventLogHuman () {
     let elog = this.state.events.map(e => {
       return {
-        lvl: levelToHuman[e.level],
+        lvl: levelToHuman[ e.level ],
         time: moment(e.time),
         msg: e.msg
       }
     })
-    elog.sort((e1,e2) => {
+    elog.sort((e1, e2) => {
       if (e1.time.isBefore(e2.time)) {
         return 1
       }
@@ -78,13 +79,11 @@ export default class EventLog extends Component {
     return elog
   }
 
-  handleExpandChange (expanded) {
-    this.setState({ expanded: expanded })
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
-  handleToggle (event, toggle) {
-    this.setState({ expanded: toggle })
-  }
+
 
   refresh () {
     if (this.state.events.length !== window.eventLog.records.length) {
@@ -94,21 +93,21 @@ export default class EventLog extends Component {
     }
   }
 
-  makeEventList() {
-    console.log( window.eventLog.records)
+  makeEventList () {
+    console.log(window.eventLog.records)
     let events = this.makeEventLogHuman()
     let len = events.length
     let renderMe = []
-    for(let i =0; i < len; ++i) {
-      let e = events[i]
+    for (let i = 0; i < len; ++i) {
+      let e = events[ i ]
       let time = e.time.format('h:mm:ss a')
       renderMe.push(<ListItem
-        key={`${e.lvl}${e.msg}${time}`}
+        key={`${e.lvl}${e.msg}${time}${i}`}
         primaryText={`${e.lvl}: ${e.msg}`}
         secondaryText={time}
       />)
-      if (i+1 < len) {
-        renderMe.push(<Divider key={`${i}${time}`}/>)
+      if (i + 1 < len) {
+        renderMe.push(<Divider key={`${e.lvl}${e.msg}${time}${i}-divider`}/>)
       }
     }
     return renderMe
@@ -116,30 +115,15 @@ export default class EventLog extends Component {
 
   render () {
     return (
-      <div style={{width: '100%'}}>
-        <Card
-        >
-          <CardHeader
-            title='Event Log'
-            subtitle='View Last 100 Events'
-          />
-          <CardMedia>
-           <List
-             style={{
-               minHeight: '250px',
-               maxHeight: '250px',
-               overflowY: 'scroll',
-               overflowX: 'hidden'
-             }}
-           >
-             {this.makeEventList()}
-           </List>
-          </CardMedia>
-          <CardActions>
-            <FlatButton label='Refresh' onTouchTap={::this.refresh}/>
-          </CardActions>
-        </Card>
+      <div>
+        <List>
+          {this.makeEventList()}
+        </List>
+        <CardActions>
+          <FlatButton label='Refresh' onTouchTap={::this.refresh}/>
+        </CardActions>
       </div>
+
     )
   }
 

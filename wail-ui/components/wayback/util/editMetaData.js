@@ -6,6 +6,7 @@ import ViewWatcher from '../../../../wail-core/util/viewWatcher'
 import { Editor, EditorState } from 'draft-js'
 import { ipcRenderer as ipc } from 'electron'
 import Dialog from 'material-ui/Dialog'
+import shallowCompare from 'react-addons-shallow-compare'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
@@ -34,6 +35,10 @@ export default class NewCollection extends Component {
 
   componentWillUnmount () {
     ViewWatcher.removeListener('editMetadata', ::this.handleOpen)
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   cancel () {
@@ -81,7 +86,6 @@ export default class NewCollection extends Component {
           GMessageDispatcher.dispatch({
             type: QUEUE_MESSAGE,
             message: {
-              autoDismiss: 0,
               title: 'Info',
               level: 'info',
               message: `Updating Title for ${forCol}`,
@@ -93,7 +97,6 @@ export default class NewCollection extends Component {
           GMessageDispatcher.dispatch({
             type: QUEUE_MESSAGE,
             message: {
-              autoDismiss: 0,
               title: 'Info',
               level: 'info',
               message: `Updating Description for ${forCol}`,
@@ -112,13 +115,14 @@ export default class NewCollection extends Component {
         open: false
       })
     } else {
-      this.setState({
-        forCol: '',
-        description: '',
-        title: '',
-        originalTitle: '',
-        originalDescription: '',
-        open: false
+      GMessageDispatcher.dispatch({
+        type: QUEUE_MESSAGE,
+        message: {
+          title: 'Warning',
+          level: 'warning',
+          message: `No changes to metadata for ${forCol}`,
+          uid: `No changes to metadata for ${forCol}`,
+        }
       })
     }
   }

@@ -47,41 +47,12 @@ export default class ServiceManager {
   }
 
   restartWayback () {
-    return new Promise((resolve, reject) => {
-      if (this.isServiceUp('wayback')) {
-        console.log('wayback was already up')
-        let pid = this._monitoring.get('wayback')
-        psTree(pid, (err, kids) => {
-          if (err) {
-            console.error('ps tree error', err)
-            process.kill(pid, 'SIGTERM')
-          } else {
-            let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
-              detached: true,
-              shell: true,
-              stdio: [ 'ignore', 'ignore', 'ignore' ]
-            })
-            dukeNukem.on('close', (code) => {
-              return this.startWayback()
-                .then(() => {
-                  resolve()
-                })
-                .catch((err) => {
-                  reject(err)
-                })
-            })
-          }
-        })
-      } else {
+    console.log('restarting wayback')
+    return this.killService('wayback')
+      .then(() => {
+        console.log('restarting wayback: it was killed')
         return this.startWayback()
-          .then(() => {
-            resolve()
-          })
-          .catch((err) => {
-            reject(err)
-          })
-      }
-    })
+      })
   }
 
   killService (which) {
