@@ -39,7 +39,6 @@ export default class BreadCrumbs extends Component {
         default:
           let {col} = nextContext.routeInfo.params
           let {primary2Color} = this.context.muiTheme.palette
-          console.log(primary2Color)
           path = <span><Link to='wayback' style={{color: 'white'}} >Wayback</Link> / {col}</span>
           break
       }

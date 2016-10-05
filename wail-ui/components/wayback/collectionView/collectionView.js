@@ -43,6 +43,14 @@ const styles = {
   },
 }
 
+const runsToMap = runs => {
+  let len = runs.length
+  let runMap = new Map()
+  for (let i = 0; i < len; ++i) {
+
+  }
+}
+
 export default class CollectionView extends Component {
 
   static contextTypes = {
@@ -50,18 +58,12 @@ export default class CollectionView extends Component {
   }
 
   static childContextTypes = {
-    viewingCol: PropTypes.object.isRequired,
-    viewingColRuns: PropTypes.arrayOf(PropTypes.object).isRequired,
-    uniqueSeeds:  PropTypes.object.isRequired,
-    totalCrawls:  PropTypes.number.isRequired
+    viewingCol: PropTypes.string.isRequired
   }
 
   constructor (...args) {
     super(...args)
     this.removeWarcAdder = null
-    this.state = {
-      slideIndex: 0,
-    }
   }
 
   // @decorate(memoize)
@@ -69,27 +71,35 @@ export default class CollectionView extends Component {
     let viewingCol =  CollectionStore.getCollection(col)
     let viewingColRuns =  CrawlStore.getCrawlsForCol(col)
     let uniqueSeeds = new Set()
+    let runMap = new Map()
     let len = viewingColRuns.length
     let totalCrawls = 0
     for(let i = 0; i < len; ++i) {
       if(Array.isArray(viewingColRuns[i].urls)){
-        viewingColRuns[i].urls.forEach(url => uniqueSeeds.add(url))
+        viewingColRuns[i].urls.forEach(url => {
+          if(!uniqueSeeds.has(url)){
+            uniqueSeeds.add(url)
+            runMap.set(url,viewingColRuns[i])
+          }
+        })
       } else {
-        uniqueSeeds.add(viewingColRuns[i].urls)
+        if(!uniqueSeeds.has(viewingColRuns[i].urls)){
+          uniqueSeeds.add(viewingColRuns[i].urls)
+          runMap.set(viewingColRuns[i].urls,viewingColRuns[i])
+        }
       }
       totalCrawls += viewingColRuns[i].runs.length
     }
     return {
-      viewingCol,
-      viewingColRuns,
-      uniqueSeeds,
-      totalCrawls
+      forCol: this.props.params.col
     }
   }
 
   getChildContext () {
     console.log('collectionView getChildContext')
-    return this.makeChildContext(this.props.params.col)
+    return {
+      viewingCol: this.props.params.col
+    }
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -137,6 +147,7 @@ export default class CollectionView extends Component {
   }
 
   render () {
+    console.log('colview')
     return (
       <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
         <CollectionTabs />

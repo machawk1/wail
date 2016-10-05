@@ -30,22 +30,9 @@ import _ from 'lodash'
 // logWatcher.on('add',path => console.log(`File ${path} has been added`))
 // logWatcher.on('change',path => console.log(`File ${path} has been changed`))
 
-const db = new Db({
-  filename: '/home/john/my-fork-wail/dev_coreData/archives2.db',
-  autoload: true
-})
-
-db.findOne({colName:'xyz'},{metadata: 1,_id: 0},(err,doc) => {
-  console.log(err,doc)
-  doc.metadata.forEach(md => {
-   if (md.k === 'title') {
-     md.v = 2
-   }
-  })
-  db.update({colName:'xyz'},{$set: { metadata: doc.metadata}},(err,numReplaces) => {
-    console.log(err,numReplaces)
-  })
-})
+let s1 = 'yay'
+let s2 = 'yay2'
+console.log(s1 === s2)
 // psTree(32516,(err, kids) => {
 //   if(err) {
 //     console.error(err)

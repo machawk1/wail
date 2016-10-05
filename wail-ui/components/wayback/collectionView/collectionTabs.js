@@ -1,10 +1,11 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
-import {Tabs, Tab} from 'material-ui/Tabs'
+import { Tabs, Tab } from 'material-ui/Tabs'
 import SwipeableViews from 'react-swipeable-views'
 import shallowCompare from 'react-addons-shallow-compare'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import CollectionInfo from './collectionInfo'
+import CollectionSeedList from './collectionSeedList'
 
 const styles = {
   headline: {
@@ -22,48 +23,32 @@ export default class CollectionTabs extends Component {
 
   constructor (...args) {
     super(...args)
-    this.state = {
-      slideIndex: 0,
-    }
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     return shallowCompare(this, nextProps, nextState)
   }
 
-
-  @autobind
-  handleChange(value) {
-    this.setState({
-      slideIndex: value,
-    })
-  }
-
   render () {
+    console.log('coltabs')
     return (
       <div style={{ width: '100%', height: '100%' }}>
-        <Tabs
-          onChange={this.handleChange}
-          value={this.state.slideIndex}
-        >
-          <Tab label='Overview' value={0} />
-          <Tab label='Seeds' value={1} />
-          <Tab label='Captures' value={2} />
+        <Tabs>
+          <Tab label='Overview'>
+            <div
+              style={{ width: '100%', height: 'inherit' }}
+            >
+              <CollectionInfo />
+            </div>
+          </Tab>
+          <Tab label='Seeds' >
+            <div
+              style={{ width: '100%', height: 'inherit' }}
+            >
+              <CollectionSeedList />
+            </div>
+          </Tab>
         </Tabs>
-        <SwipeableViews
-          index={this.state.slideIndex}
-          onChangeIndex={this.handleChange}
-        >
-          <div>
-           <CollectionInfo />
-          </div>
-          <div style={styles.slide}>
-            slide n°2
-          </div>
-          <div style={styles.slide}>
-            slide n°3
-          </div>
-        </SwipeableViews>
       </div>
     )
   }

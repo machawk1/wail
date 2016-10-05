@@ -8,8 +8,9 @@ import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
 import Breadcrumbs from './breadCrumbs'
 import {Link, IndexLink} from 'react-router'
-import CrawlStore from '../../stores/crawlStore'
+
 import wailConstants from '../../constants/wail-constants'
+import CrawlIndicator from './crawlingIndicator'
 const defaultCol = wailConstants.Default_Collection
 
 
@@ -26,24 +27,6 @@ export default class Header_ extends Component {
     this.setState({ open: !this.state.open })
   }
 
-  componentWillMount () {
-    CrawlStore.on('maybe-toggle-ci',this.maybeToggleCrawlIcon)
-  }
-
-  componentWillUnmount () {
-    CrawlStore.removeListener('maybe-toggle-ci',this.maybeToggleCrawlIcon)
-  }
-
-  @autobind
-  maybeToggleCrawlIcon(started = false){
-    if(started && this.state.crawlIconVisible === 'hidden') {
-      this.setState({crawlIconVisible: 'visible'})
-    } else {
-      if(this.state.crawlIconVisible === 'visible') {
-        this.setState({crawlIconVisible: 'hidden'})
-      }
-    }
-  }
 
   @autobind
   open (open) {
@@ -61,9 +44,7 @@ export default class Header_ extends Component {
         <AppBar
           title={<Breadcrumbs />}
           onLeftIconButtonTouchTap={this.handleToggle}
-          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png'  className="pulse" style={
-            {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
-          }
+          iconElementRight={<CrawlIndicator />}
         />
         <Drawer
           docked={false}

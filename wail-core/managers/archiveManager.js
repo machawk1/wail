@@ -95,38 +95,70 @@ export default class ArchiveManager {
     })
   }
 
-  updateMetadata (col, mdata) {
+  updateMetadata (update) {
+    console.log('updateMetaData',update)
+    let { forCol, mdata } = update
+    console.log('updateMetaData',forCol, mdata)
     let opts = {
       cwd: settings.get('warcs')
     }
     return new Promise((resolve, reject) => {
-      let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: `${mdata.k}="${mdata.v}"` }).s
+      let wasArray = false
+      let exec = ''
+      if (Array.isArray(mdata)) {
+        wasArray = true
+        exec = S(settings.get('pywb.addMetadata')).template({ col:forCol, metadata: update.mdataString}).s
+      } else {
+        exec = S(settings.get('pywb.addMetadata')).template({ col:forCol, metadata: `${mdata.k}="${mdata.v}"` }).s
+      }
+      console.log(exec)
       cp.exec(exec, opts, (error, stdout, stderr) => {
+        console.log(stdout,stderr)
         if (error) {
           console.error(stderr)
           return reject(error)
         }
-        this.db.findOne({ colName: col }, { metadata: 1, _id: 0 }, (errFind, doc) => {
+        this.db.findOne({ colName: forCol }, { metadata: 1, _id: 0 }, (errFind, doc) => {
           if (errFind) {
+            console.log('errorfind',errFind)
             return reject(errFind)
           }
-          let didFind = false
-          let len = doc.metadata.length
-          for (let i = 0; i < len; ++i) {
-            if (doc.metadata[ i ].k === mdata.k) {
-              doc.metadata[ i ].v = mdata.v
-              didFind = true
-              break
+          if (wasArray){
+            mdata.forEach(m => {
+              let didFind = false
+              let len = doc.metadata.length
+              for (let i = 0; i < len; ++i) {
+                if (doc.metadata[ i ].k === m.k) {
+                  doc.metadata[ i ].v = m.v
+                  didFind = true
+                  break
+                }
+              }
+              if (!didFind) {
+                doc.metadata.push(mdata)
+              }
+            })
+          } else {
+            let didFind = false
+            let len = doc.metadata.length
+            for (let i = 0; i < len; ++i) {
+              if (doc.metadata[ i ].k === mdata.k) {
+                doc.metadata[ i ].v = mdata.v
+                didFind = true
+                break
+              }
+            }
+            if (!didFind) {
+              doc.metadata.push(mdata)
             }
           }
-          if (!didFind) {
-            doc.metadata.push(mdata)
-          }
-          this.db.update({ colName: col }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
+
+          this.db.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
             if (errUpdate) {
+              console.log('errorUpdate',errFind)
               return reject(errUpdate)
             } else {
-              return resolve(numUpdated)
+              return resolve(doc.metadata)
             }
           })
         })

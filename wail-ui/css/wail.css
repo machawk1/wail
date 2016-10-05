@@ -95,6 +95,14 @@ html, body {
     padding: 10px;
 }
 
+.seedListWB {
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 80%;
+    padding: 10px;
+}
+
 .layoutChildDiv {
     position: absolute;
     overflow: auto;

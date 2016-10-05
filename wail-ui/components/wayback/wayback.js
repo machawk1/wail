@@ -1,15 +1,15 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import autobind from 'autobind-decorator'
-import {Flex,Item} from 'react-flex'
-import {shell, remote} from 'electron'
-import {withRouter} from 'react-router'
+import { Flex, Item } from 'react-flex'
+import { shell, remote } from 'electron'
+import { withRouter } from 'react-router'
 import S from 'string'
 import PageView from 'material-ui/svg-icons/action/pageview'
 import FlatButton from 'material-ui/FlatButton'
-import {decorate} from 'core-decorators'
-import {memoize} from 'lodash'
-import {TransitionMotion, spring, presets} from 'react-motion'
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
+import { decorate } from 'core-decorators'
+import { memoize } from 'lodash'
+import { TransitionMotion, spring, presets } from 'react-motion'
+import { Card, CardHeader, CardTitle, CardText } from 'material-ui/Card'
 import Search from 'material-ui/svg-icons/action/search'
 import Container from 'muicss/lib/react/container'
 import TextField from 'material-ui/TextField'
@@ -45,7 +45,7 @@ export default class WayBackTab extends Component {
     let { colNames } = CollectionStore
     this.state = {
       searchText: '',
-      colNames: colNames.concat(colNames).concat(colNames).concat(colNames).concat(colNames)
+      colNames: colNames.concat(colNames)
     }
   }
 
@@ -55,8 +55,6 @@ export default class WayBackTab extends Component {
 
   componentWillUnmount () {
     CollectionStore.removeListener('added-new-collection', this.updateColNames)
-    // this.removeWarcAdder()
-    // this.removeWarcAdder = null
   }
 
   @autobind
@@ -76,91 +74,30 @@ export default class WayBackTab extends Component {
     })
   }
 
-
-
   @decorate(memoize)
-  getDefaultStyles () {
-    console.log('wb get default styles')
-    return this.state.colNames.map((colName, i) => {
-      return {
-        key: `${i}${colName}`,
-        data: { colName },
-        style: { height: 0, opacity: 1 }
-      }
-    })
-  }
-
-  @decorate(memoize)
-  getStyles (searchText) {
+  getListItems (searchText) {
     console.log('wb get styles', searchText)
     let { colNames } = this.state
     return colNames.filter(cName => fuzzyFilter(searchText, cName))
-      .map((colName, i) => {
-        return {
-          key: `${i}${colName}`,
-          data: { colName },
-          style: {
-            height: spring(60, presets.gentle),
-            opacity: spring(1, presets.gentle),
-          }
+      .map((colName, i) => <ListItem
+        rightIcon={<PageView />}
+        innerDivStyle={{ padding: 0 }}
+        onTouchTap={() => this.props.router.push(`wayback/${colName}`)}
+        primaryText={
+          <Card
+            key={`card-${colName}${i}`}
+          >
+            <CardHeader
+              key={`cardheader-${colName}${i}`}
+              title={colName}
+            />
+          </Card>
         }
-      })
-  }
-
-  willEnter () {
-    return {
-      height: 0,
-      opacity: 1,
-    }
-  }
-
-  willLeave () {
-    return {
-      height: spring(0),
-      opacity: spring(0),
-    }
-  }
-
-  @autobind
-  renderLi (colName, i) {
-    return (
-      <Card
-        key={`card-${colName}${i}`}
-      >
-        <CardHeader
-          key={`cardheader-${colName}${i}`}
-          textStyle={{textAlign: 'center'}}
-          title={colName}
-        />
-      </Card>
-    )
-  }
-
-  buildList (styles) {
-    return styles.map(({ key, style, data: { colName } }, i) => {
-      return <div key={key} style={style}>
-        <ListItem
-          rightIcon={<PageView />}
-          innerDivStyle={{ padding: 0 }}
-          onTouchTap={() => this.props.router.push(`wayback/${colName}`)}
-          primaryText={
-            <Card
-              key={`card-${colName}${i}`}
-            >
-              <CardHeader
-                key={`cardheader-${colName}${i}`}
-                title={colName}
-              />
-            </Card>
-          }
-          key={`li-${colName}${i}`}
-        />
-      </div>
-    })
+        key={`li-${colName}${i}`}
+      />)
   }
 
   render () {
-    let { searchText } = this.state
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', overflowX: 'hidden', overflowY: 'scroll' }}>
         <Container>
@@ -187,18 +124,9 @@ export default class WayBackTab extends Component {
               </span>
               </CardText>
             </Card>
-            <TransitionMotion
-              defaultStyles={this.getDefaultStyles()}
-              styles={this.getStyles(searchText)}
-              willLeave={this.willLeave}
-              willEnter={this.willEnter}
-            >
-              { styles =>
-                <List >
-                  {this.buildList(styles)}
-                </List>
-              }
-            </TransitionMotion>
+            <List >
+              {this.getListItems(this.state.searchText)}
+            </List>
           </div>
         </Container>
       </div>

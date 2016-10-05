@@ -1,5 +1,5 @@
 import 'babel-polyfill'
-import {remote, ipcRenderer as ipc} from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 
 const archiveMan = window.am = new ArchiveManager()
@@ -131,10 +131,10 @@ ipc.on('create-collection', (event, nc) => {
 })
 
 ipc.on('update-metadata', (e, update) => {
-  let { forCol, mdata } = update
-  archiveMan.updateMetadata(forCol, mdata)
-    .then(update => ipc.send('updated-metadata', { wasError: false, forCol }))
-    .catch(error => ipc.send('updated-metadata', { wasError: true, error, forCol }))
+  console.log('archive man got update-metadata', update)
+  archiveMan.updateMetadata(update)
+    .then(updated => ipc.send('updated-metadata', { wasError: false, forCol: update.forCol, mdata: updated }))
+    .catch(error => ipc.send('updated-metadata', { wasError: true, error, forCol: update.forCol }))
 })
 
 archiveMan.initialLoad()

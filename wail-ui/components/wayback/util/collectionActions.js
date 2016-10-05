@@ -1,7 +1,9 @@
 import React, {Component, PropTypes} from 'react'
+import CollectionStore from '../../../stores/collectionStore'
 import { Textfit } from 'react-textfit'
 import autobind from 'autobind-decorator'
 import cp from 'child_process'
+import Apps from 'material-ui/svg-icons/navigation/apps'
 import S from 'string'
 import path from 'path'
 import {remote, ipcRenderer as ipc} from 'electron'
@@ -28,14 +30,19 @@ const closed = {}
 export default class CollectionActions extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-    viewingCol: PropTypes.object.isRequired
+    viewingCol: PropTypes.string.isRequired
   }
 
 
   constructor (...args) {
     super(...args)
+    let viewingCol = CollectionStore.getCollection(this.context.viewingCol)
+    this.menuRef = null
+    let {colName, colpath} = viewingCol
     this.state = {
-      opened: false
+      opened: false,
+      colName,
+      colpath
     }
   }
 
@@ -48,7 +55,7 @@ export default class CollectionActions extends Component {
     console.log('add Warcs')
     const { dialog } = remote
     let archiveChooserOpts = {
-      title: `Add Warc Files To ${this.context.viewingCol.colName}`,
+      title: `Add Warc Files To ${this.state.colName}`,
       defaultPath: remote.app.getPath('home'),
       properties: [ 'openFile', 'multiSelections' ],
       filters: [
@@ -69,20 +76,22 @@ export default class CollectionActions extends Component {
 
         console.log(addMe)
         ipc.send('add-warcs-to-col', {
-          forCol: this.context.viewingCol.colName,
+          forCol: this.state.colName,
           warcs: joinStrings(...addMe, { separator: ' ' })
         })
       }
     })
+    this.menuRef.close()
   }
 
   @autobind
   forceIndex () {
+    this.menuRef.close()
     let opts = {
       cwd: settings.get('warcs')
       // stdio: [ 'ignore', 'ignore', 'ignore' ]
     }
-    let col = this.context.viewingCol.colName
+    let col = this.state.colName
     // prevIndexingDone = false
     // generatePathIndex(generateCDX)
     cp.exec(S(settings.get('pywb.reindexCol')).template({ col }), opts, (error, stdout, stderr) => {
@@ -129,10 +138,24 @@ export default class CollectionActions extends Component {
     })
   }
 
+  openInBrowser() {
+    openUrlInBrowser(`${settings.get('pywb.url')}${this.state.colName}`)
+    this.menuRef.close()
+  }
+
+  openColLoc() {
+    openFSLocation(this.state.colpath)
+    this.menuRef.close()
+  }
+
+
+
   render () {
     let { primary1Color } = this.context.muiTheme.palette
     return (
-      <Menu direction="horizontal" distance={-80}
+      <Menu
+        ref={r => this.menuRef = r}
+        direction="horizontal" distance={-80}
             width={50} height={50} y={1} x={1}
             customClass='colActionMenu'
             customStyle={{
@@ -144,13 +167,18 @@ export default class CollectionActions extends Component {
               borderRadius: "50%"
             }}>
         <span>
-          <RotatingAction />
+          <IconButton
+            tooltipPosition='top-center'
+            tooltip='Actions'
+          >
+        <Apps/>
+      </IconButton>
         </span>
         <span>
           <IconButton
             tooltip='View In Wayback'
             tooltipPosition='top-center'
-            onTouchTap={() => openUrlInBrowser(`${settings.get('pywb.url')}${this.context.viewingCol.colName}`)}
+            onTouchTap={::this.openInBrowser}
           >
             <OpenInBrowser/>
           </IconButton>
@@ -159,7 +187,7 @@ export default class CollectionActions extends Component {
           <IconButton
             tooltip='Open Collection Location'
             tooltipPosition='top-center'
-            onTouchTap={() => openFSLocation(this.context.viewingCol.colpath)}
+            onTouchTap={::this.openColLoc}
           >
             <OpenCollection/>
           </IconButton>

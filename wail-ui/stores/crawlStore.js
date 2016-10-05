@@ -83,28 +83,6 @@ class CrawlStore_ extends EventEmitter {
       console.log('there was no runs in the db')
       logger.debug('there was no runs in the db')
     }
-
-    // console.log('initial load of crawl store')
-    // getHeritrixJobsState()
-    // .then(status => {
-    //   // console.log(status)
-    //   if (status.count > 0) {
-    //     EditorDispatcher.dispatch({
-    //       type: EventTypes.STORE_HERITRIX_JOB_CONFS,
-    //       confs: status.confs
-    //     })
-    //     this.jobIndex.clear()
-    //     status.jobs.forEach((jrb, idx) => {
-    //       this.jobIndex.set(jrb.jobId, idx)
-    //     })
-    //     // console.log(status.jobs)
-    //     this.crawlJobs = status.jobs
-    //     this.emit('jobs-updated')
-    //   }
-    // })
-    // .catch(error => {
-    //   console.log('There was an error in getting the configs', error)
-    // })
   }
 
   @autobind
@@ -116,6 +94,11 @@ class CrawlStore_ extends EventEmitter {
     this.jobIndex.set(conf.jobId, idx)
     this.crawlJobs[ idx ] = new CrawlInfo(conf)
     this.emit('jobs-updated')
+    let wbEventName = `${conf.forCol}-${conf.jobId}-created`
+    let wbListeners = this.listeners(wbEventName)
+    if (wbListeners > 0) {
+      this.emit(wbEventName,conf)
+    }
     buildHeritrixJob(conf.jobId)
     GMessageDispatcher.dispatch({
       type: EventTypes.QUEUE_MESSAGE,
@@ -128,19 +111,6 @@ class CrawlStore_ extends EventEmitter {
     })
   }
 
-  // @autobind
-  // createJob (id, pth, urls) {
-  //   this.crawlJobs.push({
-  //     jobId: id.toString(),
-  //     path: pth,
-  //     runs: [],
-  //     urls: urls,
-  //     crawlBean: readCode(`${settings.get('heritrixJob')}/${id.toString()}/crawler-beans.cxml`)
-  //   })
-  //   let idx = this.crawlJobs.length === 0 ? 0 : this.crawlJobs.length - 1
-  //   this.jobIndex.set(id.toString(), idx)
-  //   this.emit('jobs-updated')
-  // }
 
   @autobind
   crawlJobUpdate (crawlStatus) {
@@ -174,51 +144,8 @@ class CrawlStore_ extends EventEmitter {
     this.crawlJobs[ jobIdx ].runs = runs
 
     this.emit(`${jobId}-updated`, runs[ 0 ])
-    // })
-    // let updated = []
-    // jobs.jobs.forEach(job => {
-    //   let jobIdx = this.jobIndex.get(job.jobId)
-    //   // if the job has ended and our previous state says we have not
-    //   // teardown the job so that we the operations we provide can happen no worry
-    //   if (this.crawlJobs[ jobIdx ].runs.length > 0) {
-    //     if (!this.crawlJobs[ jobIdx ].runs[ 0 ].ended && job.runs[ 0 ].ended) {
-    //       teardownJob(job.jobId)
-    //     }
-    //   }
-    //   this.crawlJobs[ jobIdx ].runs = job.runs
-    //   this.crawlJobs[ jobIdx ].log = job.log
-    //   this.crawlJobs[ jobIdx ].launch = job.launch
-    //   this.crawlJobs[ jobIdx ].logPath = job.logPath
-    //   updated.push(job.jobId)
-    // })
-    // updated.forEach(updatedJob => {
-    //   this.emit(`${updatedJob}-updated`)
-    // })
   }
 
-  // @autobind
-  // crawlJobUpdate (jobs) {
-  //   console.log('building jobs from job monitor', jobs.jobs)
-  //   let updated = []
-  //   jobs.jobs.forEach(job => {
-  //     let jobIdx = this.jobIndex.get(job.jobId)
-  //     // if the job has ended and our previous state says we have not
-  //     // teardown the job so that we the operations we provide can happen no worry
-  //     if (this.crawlJobs[ jobIdx ].runs.length > 0) {
-  //       if (!this.crawlJobs[ jobIdx ].runs[ 0 ].ended && job.runs[ 0 ].ended) {
-  //         teardownJob(job.jobId)
-  //       }
-  //     }
-  //     this.crawlJobs[ jobIdx ].runs = job.runs
-  //     this.crawlJobs[ jobIdx ].log = job.log
-  //     this.crawlJobs[ jobIdx ].launch = job.launch
-  //     this.crawlJobs[ jobIdx ].logPath = job.logPath
-  //     updated.push(job.jobId)
-  //   })
-  //   updated.forEach(updatedJob => {
-  //     this.emit(`${updatedJob}-updated`)
-  //   })
-  // }
 
   getRuns (jobId) {
     let jobIdx = this.jobIndex.get(jobId)

@@ -1,9 +1,11 @@
 import RunInfo from './runInfo'
 import moment from 'moment'
+import _ from 'lodash'
 
 export default class CrawlInfo {
   constructor (crawlInfo) {
     this.jobId = crawlInfo.jobId
+    this.created = moment(crawlInfo.jobId)
     this.urls = crawlInfo.urls
     this.forCol = crawlInfo.forCol
     this.depth = crawlInfo.depth
@@ -12,6 +14,14 @@ export default class CrawlInfo {
     this.running = crawlInfo.running
     this.runs = (crawlInfo.runs || []).map(r => new RunInfo(r, this.jobId))
     this.sortRuns()
+  }
+
+  equals(other) {
+    if (!(other instanceof CrawlInfo)) {
+        return false
+    }
+
+    return _.isEqual(this,other)
   }
 
   sortRuns () {

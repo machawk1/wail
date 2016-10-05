@@ -1,7 +1,8 @@
 import autobind from 'autobind-decorator'
 import EventEmitter from 'eventemitter3'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import S from 'string'
+import CrawlStore from './crawlStore'
 import CollectionDispatcher from '../dispatchers/collectionDispatcher'
 import wailConstants from '../constants/wail-constants'
 import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
@@ -29,7 +30,6 @@ const metadataTransform = (mdata) => {
   }
 }
 
-
 let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
   defForCol = 'Wail'
@@ -43,6 +43,35 @@ class _CollectionStore extends EventEmitter {
     ipc.on('got-all-collections', ::this.loadCollections)
     ipc.on('created-collection', ::this.addNewCol)
     ipc.on('added-warcs-to-col', ::this.addedWarcs)
+    ipc.on('updated-metadata', ::this.updatedMetadata)
+  }
+
+  updatedMetadata (e, update) {
+    if (update.wasError) {
+      let message = `Unable to update Metadata for ${update.forCol}`
+      notify.notify({
+        title: 'Error',
+        level: 'Error',
+        autoDismiss: 0,
+        message,
+        uid: message,
+      })
+      window.logger.error({ message, err: update.error })
+    } else {
+      let col = this.collections.get(update.forCol)
+      col.metadata = metadataTransform(update.mdata)
+      let message = `Updated ${update.forCol} Metadata`
+      notify.notify({
+        title: 'Success',
+        level: 'success',
+        autoDismiss: 0,
+        message,
+        uid: message,
+      })
+      window.logger.info(`updated-${update.forCol}-metadata`)
+      this.emit(`updated-${update.forCol}-metadata`, col.metadata)
+    }
+
   }
 
   loadCollections (event, ac) {
@@ -54,7 +83,7 @@ class _CollectionStore extends EventEmitter {
     } = ac
     if (wasError) {
       console.error(wasError)
-      window.logger.error({err: ac.err, msg: 'got all collections error'})
+      window.logger.error({ err: ac.err, msg: 'got all collections error' })
       notify.notifyError('Error loading all collections this is fatal')
     } else {
       window.logger.debug('collection store got all collections')
@@ -76,7 +105,7 @@ class _CollectionStore extends EventEmitter {
   addedWarcs (event, update) {
     if (update.wasError) {
       notify.notifyError(`Error updating warc count for collection ${update.forCol}`)
-      window.logger.error({err: update.error, msg: `Error updating warc count for collection ${update.forCol}`})
+      window.logger.error({ err: update.error, msg: `Error updating warc count for collection ${update.forCol}` })
     } else {
       let {
         forCol,
@@ -84,7 +113,17 @@ class _CollectionStore extends EventEmitter {
       } = update
       let upDateMe = this.collections.get(forCol)
       window.logger.debug(`added warcs to ${forCol} with count ${count} `)
-      notify.notifySuccess(`Added ${count} Warc/Arc Files To Collection ${forCol}`)
+      let message = `Added ${count} Warc/Arc Files To Collection ${forCol}`
+      notify.notify({
+        title: 'Success',
+        level: 'success',
+        message,
+        uid: message,
+        children: (
+          <p>To view this capture please restart wayback</p>
+        )
+      })
+      notify.notifySuccess()
       upDateMe.numArchives += count
       this.collections.set(forCol, upDateMe)
       this.emit(`updated-${forCol}-warcs`, upDateMe.numArchives)
@@ -113,11 +152,50 @@ class _CollectionStore extends EventEmitter {
     return this.colNames
   }
 
-  getCollection(name) {
+  getCollection (name) {
     return this.collections.get(name)
   }
 
-  getNumberOfArchives(name) {
+  getUniqueSeeds (name) {
+    console.log('colstore get unique seeds', name)
+    let colCrawls = CrawlStore.getCrawlsForCol(name)
+    let uniqueSeeds = new Set()
+    let len = colCrawls.length
+    for (let i = 0; i < len; ++i) {
+      if (Array.isArray(colCrawls [ i ].urls)) {
+        colCrawls [ i ].urls.forEach(url => {
+          if (!uniqueSeeds.has(url)) {
+            uniqueSeeds.add(url)
+          }
+        })
+      } else {
+        if (!uniqueSeeds.has(colCrawls [ i ].urls)) {
+          uniqueSeeds.add(colCrawls [ i ].urls)
+        }
+      }
+    }
+    return Array.from(uniqueSeeds)
+  }
+
+  getCrawlInfoForCol (name) {
+    let runMap = new Map()
+    let colRuns = CrawlStore.getCrawlsForCol(name)
+    let rLen = colRuns.length
+    for (let i = 0; i < rLen; ++i) {
+      if (Array.isArray(colRuns[ i ].urls)) {
+        colRuns[ i ].urls.forEach(url => {
+          runMap.set(url, colRuns[ i ])
+        })
+      } else {
+        runMap.set(colRuns[ i ].urls, colRuns[ i ])
+      }
+
+    }
+    console.log('getCrawlInfoForCol', name)
+    return runMap
+  }
+
+  getNumberOfArchives (name) {
     return this.getCollection(name).numArchives
   }
 

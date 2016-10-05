@@ -13,6 +13,7 @@ export default {
     })
   },
   EventTypes: keyMirror({
+    EDIT_METADATA: null,
     ADD_METADATA_TO_COLLECTION: null,
     BUILD_CRAWL_JOB: null,
     BUILT_CRAWL_CONF: null,

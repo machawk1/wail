@@ -12,6 +12,10 @@ class _ViewWatcher extends EventEmitter {
   createCollection () {
     this.emit('newCollection')
   }
+
+  editMdata(editMe) {
+    this.emit('editMetadata',editMe)
+  }
 }
 
 const ViewWatcher = window.vw = new _ViewWatcher()

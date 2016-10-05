@@ -26,7 +26,6 @@ export default class RotatingAction extends Component {
         tooltip='Actions'
         onTouchTap={() => {
           console.log('clicked actions')
-          console.log(this.state.opened)
           this.setState({ opened: !this.state.opened })
         }}
         iconStyle={opened ? open : closed}

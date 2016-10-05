@@ -1,6 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {RouteTransition} from 'react-router-transition/lib/react-router-transition'
-import {darkBlack, lightBlue900, cyan500, cyan700, white} from 'material-ui/styles/colors'
+import {darkBlack, lightBlue900,blue500, cyan500, cyan700, white} from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import Header from './header'
 import Footer from './footer'
@@ -8,7 +8,7 @@ import Footer from './footer'
 const baseTheme = getMuiTheme({
   palette: {
     primary1Color: cyan700,
-    primary2Color: cyan500,
+    primary2Color: blue500,
   },
   tabs: {
     backgroundColor: white,
