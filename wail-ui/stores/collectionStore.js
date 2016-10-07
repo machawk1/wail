@@ -126,9 +126,7 @@ class _CollectionStore extends EventEmitter {
         children: (
          <div>
            <p>To view this capture please restart wayback</p>
-           <FlatButton label='Restart?' onTouchTap={() => ServiceDispatcher.dispatch({
-             type: WAYBACK_RESTART
-           })}/>
+           <FlatButton label='Restart?' onTouchTap={() => ServiceDispatcher.dispatch({ type: WAYBACK_RESTART })}/>
          </div>
         )
       })

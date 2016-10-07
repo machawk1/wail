@@ -248,6 +248,9 @@ export default class WindowManager extends EventEmitter {
 
     ipcMain.on('added-warcs-to-col', (e, update) => {
       this.send('mainWindow', 'added-warcs-to-col', update)
+      control.serviceMan.restartWayback()
+        .then(() => this.send('mainWindow','restarted-wayback',{wasError: false}))
+        .catch((err) => this.send('mainWindow','restarted-wayback',{wasError: true,err}))
     })
 
     /* Control */

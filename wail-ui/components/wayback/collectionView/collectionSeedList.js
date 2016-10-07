@@ -57,10 +57,10 @@ export default class CollectionSeedList extends Component {
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState, nextContext) {
-    console.log('colSeedList should component update')
-    return shallowCompare(this, nextProps, nextState)
-  }
+  // shouldComponentUpdate (nextProps, nextState, nextContext) {
+  //   console.log('colSeedList should component update')
+  //   return shallowCompare(this, nextProps, nextState)
+  // }
 
   componentWillMount () {
     CrawlStore.on('jobs-updated', this.checkShouldUpdate)
@@ -119,8 +119,8 @@ export default class CollectionSeedList extends Component {
 
   @decorate(memoize)
   getViewingSeeds (searchText) {
-    let { viewingSeeds } = this.state
-    return viewingSeeds.filter(seed => fuzzyFilter(searchText, seed.seed))
+    let { seeds } = this.state
+    return seeds.filter(seed => fuzzyFilter(searchText, seed))
   }
 
   buildList (searchText) {

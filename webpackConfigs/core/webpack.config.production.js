@@ -72,9 +72,9 @@ export default {
   plugins: [
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
-      __DEV__: true,
-      'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
+      __DEV__: false,
+      'process.env.NODE_ENV': JSON.stringify('production'),
+    })
   ],
   output: {
     path: './dist',

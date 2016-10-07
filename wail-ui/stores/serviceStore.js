@@ -26,7 +26,6 @@ class ServiceStore_ extends EventEmitter {
     ipcRenderer.on( 'restarted-wayback',(e,update) => {
       if(update.wasError) {
         notify.notify({
-          autoDismiss: 0,
           title: 'Error',
             level: 'error',
             message: 'There was error restarting Wayback',
@@ -37,13 +36,14 @@ class ServiceStore_ extends EventEmitter {
           err: update.err
         })
       } else {
+        this.serviceStatus.heritrix = true
         notify.notify({
-          autoDismiss: 0,
           title: 'Success',
           level: 'success',
           message: 'Wayback was successfully restarted',
           uid: 'Wayback was successfully restarted',
         })
+        this.emit('wayback-status-update')
       }
     })
   }

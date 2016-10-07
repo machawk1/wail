@@ -226,7 +226,7 @@ export default class HeritrixJobItem extends Component {
             {status}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Tstamp`} style={timestampS}>
-            {moment(job.timestamp).format('MM/DD/YYYY h:mm:ssa')}
+            {moment(job.timestamp).format('MMM DD YYYY h:mma')}
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Discov`} style={discoveredS}>
             {discovered}

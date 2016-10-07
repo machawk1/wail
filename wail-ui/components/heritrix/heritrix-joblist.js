@@ -20,15 +20,18 @@ export default class HeritrixJobList extends Component {
 
   constructor (props, context) {
     super(props, context)
+    let jobs = CrawlStore.jobs()
     this.state = {
-      jobs: CrawlStore.jobs()
+      jobs,
+      len: jobs.length
     }
   }
 
   @autobind
   getJobs () {
+    let jobs = CrawlStore.jobs()
     // console.log('Get jobs crawlstore')
-    this.setState({ jobs: CrawlStore.jobs() })
+    this.setState({ jobs, len: jobs.length })
   }
 
   componentWillMount () {
