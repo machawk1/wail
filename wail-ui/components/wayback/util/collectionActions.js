@@ -203,7 +203,7 @@ export default class CollectionActions extends Component {
         </span>
         <span>
           <IconButton
-            tooltip='Add (W)arcs'
+            tooltip='Add (W)ARCs'
             tooltipPosition='top-center'
             onTouchTap={this.addWarcs}
           >

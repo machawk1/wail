@@ -9,7 +9,7 @@ export default {
     archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
     crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
     // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
+    newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
     notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
     requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
     // settingsW: './wail-ui/childWindows/settings/settingsW',

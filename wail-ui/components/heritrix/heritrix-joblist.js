@@ -78,7 +78,7 @@ export default class HeritrixJobList extends Component {
     return (
       <div style={{ height: '80%' }}>
         <Table
-          height={400}
+          height='400px'
         >
           <TableHeader
             displaySelectAll={false}

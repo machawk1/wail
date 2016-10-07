@@ -156,8 +156,7 @@ export default class CollectionSeedList extends Component {
                 </TableRow>
                 <TableRow
                   style={{
-                    marginTop: '10px',
-                    backgroundColor: this.context.muiTheme.palette.primary2Color
+                    marginTop: '10px'
                   }}
                 >
                   <TableHeaderColumn

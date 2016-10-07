@@ -40,7 +40,7 @@ export default class NumArchives extends Component {
       <CardTitle
         data-tip='Drag drop archives to add' data-delay-show='100'
         data-class="wailToolTip"
-        subtitle={`(W)arcs in collection: ${this.state.numArchives}`}
+        subtitle={`(W)ARCs in collection: ${this.state.numArchives}`}
       >
       </CardTitle>
     )

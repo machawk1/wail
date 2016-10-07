@@ -37,8 +37,9 @@ export default class SelectCollection extends Component {
     render (){
       return (
         <AutoComplete
+          menuProps={{ desktop: true }}
           style={{paddingLeft: '20px'}}
-          searchText={wailConstants.Default_Collection}
+          searchText={ ncs.cols[0] || 'default'}
           openOnFocus
           maxSearchResults={5}
           hintText="For Collection"

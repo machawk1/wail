@@ -32,7 +32,10 @@ export default class UrlList extends Component {
 
   render () {
     return (
-      <List style={styles.newCrawlList} children={this.state.urls} />
+      <List style={{ height: 'calc(100% - 60px)',
+        maxHeight: 'calc(100% - 60px)',
+        overflow: 'hidden',
+        overflowY: 'scroll'}} children={this.state.urls} />
     )
   }
 }

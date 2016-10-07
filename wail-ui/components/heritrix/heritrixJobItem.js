@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import {shell, remote, ipcRender as ipc} from 'electron'
+import { Textfit } from 'react-textfit'
 import {grey400} from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
@@ -194,7 +195,7 @@ export default class HeritrixJobItem extends Component {
     let runs = this.props.runs
     var url
     if (Array.isArray(this.props.urls)) {
-      url = joinStrings(...this.props.urls, { separator: ',' })
+      url = joinStrings(...this.props.urls, { separator: ' ' })
     } else {
       url = this.props.urls
     }
@@ -217,7 +218,9 @@ export default class HeritrixJobItem extends Component {
       return (
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
-            <p>{url}</p>
+            <Textfit mode='multi'
+                     min={10}
+            >{url}</Textfit>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>
             {status}

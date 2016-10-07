@@ -65,7 +65,6 @@ class CrawlUrlsStore_ extends EventEmitter {
         console.log('wtf why are we here')
         break
     }
-    console.log(this.urls)
   }
 
   @autobind

@@ -1,4 +1,5 @@
 import React, {Component, PropTypes} from 'react'
+import { Textfit } from 'react-textfit'
 import autobind from 'autobind-decorator'
 import {ListItem} from 'material-ui/List'
 import {grey400} from 'material-ui/styles/colors'
@@ -45,7 +46,10 @@ export default class CrawlUrlItem extends Component {
     return (
       <ListItem
         key={this.props.num}
-        primaryText={this.props.url}
+        primaryText={<Textfit>
+          {this.props.url}
+          </Textfit>
+          }
         rightIconButton={rightIconMenu}
       />
     )
