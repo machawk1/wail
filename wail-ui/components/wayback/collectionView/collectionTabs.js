@@ -12,11 +12,11 @@ const styles = {
     fontSize: 24,
     paddingTop: 16,
     marginBottom: 12,
-    fontWeight: 400,
+    fontWeight: 400
   },
   slide: {
-    padding: 10,
-  },
+    padding: 10
+  }
 }
 
 export default class CollectionTabs extends Component {

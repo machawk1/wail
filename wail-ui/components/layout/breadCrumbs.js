@@ -5,7 +5,7 @@ import {Link} from 'react-router'
 export default class BreadCrumbs extends Component {
   static contextTypes = {
     routeInfo: PropTypes.object.isRequired,
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
   constructor (props, context) {
     super(props, context)
@@ -16,7 +16,7 @@ export default class BreadCrumbs extends Component {
   }
 
   componentWillReceiveProps (nextProps, nextContext) {
-    if(this.state.lastLoc !== nextContext.routeInfo.location.pathname) {
+    if (this.state.lastLoc !== nextContext.routeInfo.location.pathname) {
       console.log(nextContext.routeInfo)
       let path = <span>sds</span>
       let {location} = nextContext.routeInfo
@@ -47,11 +47,10 @@ export default class BreadCrumbs extends Component {
         lastLoc: location.pathname
       })
     }
-
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return shallowCompare(this,nextProps,nextState)
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {

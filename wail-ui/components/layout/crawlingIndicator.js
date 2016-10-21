@@ -5,7 +5,7 @@ import IconButton from 'material-ui/IconButton'
 import Notification from 'material-ui/svg-icons/action/info'
 
 export default class CrawlingIndicator extends Component {
-  constructor (...args){
+  constructor (...args) {
     super(...args)
     this.state = {
       crawlIconVisible: 'hidden'
@@ -13,19 +13,19 @@ export default class CrawlingIndicator extends Component {
   }
 
   componentWillMount () {
-    CrawlStore.on('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+    CrawlStore.on('maybe-toggle-ci', this.maybeToggleCrawlIcon)
   }
 
   componentWillUnmount () {
-    CrawlStore.removeListener('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+    CrawlStore.removeListener('maybe-toggle-ci', this.maybeToggleCrawlIcon)
   }
 
   @autobind
-  maybeToggleCrawlIcon(started = false){
-    if(started && this.state.crawlIconVisible === 'hidden') {
+  maybeToggleCrawlIcon (started = false) {
+    if (started && this.state.crawlIconVisible === 'hidden') {
       this.setState({crawlIconVisible: 'visible'})
     } else {
-      if(this.state.crawlIconVisible === 'visible') {
+      if (this.state.crawlIconVisible === 'visible') {
         this.setState({crawlIconVisible: 'hidden'})
       }
     }

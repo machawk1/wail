@@ -12,7 +12,6 @@ import CardMedia from 'material-ui/Card/CardMedia'
 import CardTitle from 'material-ui/Card/CardTitle'
 // From https://github.com/oliviertassinari/react-swipeable-views
 
-
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
@@ -20,7 +19,7 @@ const startNewCrawl = () => ipc.send('open-newCrawl-window', CollectionStore.col
 
 export default class CollectionCrawls extends Component {
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   static propTypes = {
@@ -35,7 +34,7 @@ export default class CollectionCrawls extends Component {
   renderCrawls () {
     let crawls = CrawlStore.getCrawlsForCol(this.props.viewingCol)
     if (crawls.length === 0) {
-      return <ListItem primaryText={'No Crawls For This Collection Start One?'} onTouchTap={startNewCrawl}/>
+      return <ListItem primaryText={'No Crawls For This Collection Start One?'} onTouchTap={startNewCrawl} />
     } else {
       let renderMe = []
       let len = crawls.length
@@ -45,18 +44,18 @@ export default class CollectionCrawls extends Component {
         if (Array.isArray(aCrawl.urls)) {
           let seeds = joinStrings(...aCrawl.urls, { separator: '\n' })
           let elem =
-            <span key={`spane-${seeds}${this.props.viewingCol}${i}`} data-tip={seeds} data-class="wailToolTip">
+            <span key={`spane-${seeds}${this.props.viewingCol}${i}`} data-tip={seeds} data-class='wailToolTip'>
               <ListItem key={`li-colCrawls-${seeds}${this.props.viewingCol}${i}`} primaryText={aCrawl.urls[ 0 ]}
-                        secondaryText={`Multi Seed: ${aCrawl.urls.length}`}/>
+                secondaryText={`Multi Seed: ${aCrawl.urls.length}`} />
             </span>
           renderMe.push(elem)
         } else {
           renderMe.push(<ListItem key={`li-colCrawls-${aCrawl.urls}${this.props.viewingCol}${i}`}
-                                  primaryText={aCrawl.urls}/>)
+            primaryText={aCrawl.urls} />)
         }
 
         if (i + 1 < len) {
-          renderMe.push(<Divider key={`liDividerFor-${this.props.viewingCol}${i}`}/>)
+          renderMe.push(<Divider key={`liDividerFor-${this.props.viewingCol}${i}`} />)
         }
       }
       return renderMe
@@ -72,13 +71,13 @@ export default class CollectionCrawls extends Component {
         <CardMedia>
           <List
             style={{
-              maxHeight: `${this.props.height -300}px`,
+              maxHeight: `${this.props.height - 300}px`,
               overflowY: 'auto',
               overflowX: 'hidden'
             }}
           >
             {this.renderCrawls()}
-            <ListItem primaryText={'end'}/>
+            <ListItem primaryText={'end'} />
           </List>
         </CardMedia>
       </Card>
@@ -86,6 +85,4 @@ export default class CollectionCrawls extends Component {
   }
 
 }
-
-
 

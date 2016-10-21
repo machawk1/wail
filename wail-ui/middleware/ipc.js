@@ -8,11 +8,11 @@ export default createIpc({
   'got-all-collections': gotAllCollections,
   'created-collection': addedNewCol,
   'added-warcs-to-col': addedWarcs,
-  /*crawl store*/
+  /* crawl store */
   'got-all-runs': gotAllRuns,
   'made-heritrix-jobconf': madeJobConf,
   'crawljob-status-update': crawlJobUpdate,
   'crawljob-configure-dialogue': buildDialogueCrawlJob,
-  /* global message store*/
+  /* global message store */
   'display-message': notify
 })

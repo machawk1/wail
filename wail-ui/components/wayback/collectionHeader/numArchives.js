@@ -7,7 +7,7 @@ import CollectionStore from '../../../stores/collectionStore'
 export default class NumArchives extends Component {
   static propTypes = {
     viewingCol: PropTypes.string.isRequired,
-    numArchives: PropTypes.number.isRequired,
+    numArchives: PropTypes.number.isRequired
   }
 
   constructor (...args) {
@@ -25,7 +25,6 @@ export default class NumArchives extends Component {
     CollectionStore.removeListener(`updated-${this.props.viewingCol}-warcs`, this.updateArchiveCount)
   }
 
-
   @autobind
   updateArchiveCount (numArchives) {
     this.setState({ numArchives })
@@ -39,10 +38,9 @@ export default class NumArchives extends Component {
     return (
       <CardTitle
         data-tip='Drag drop archives to add' data-delay-show='100'
-        data-class="wailToolTip"
+        data-class='wailToolTip'
         subtitle={`(W)ARCs in collection: ${this.state.numArchives}`}
-      >
-      </CardTitle>
+       />
     )
   }
 

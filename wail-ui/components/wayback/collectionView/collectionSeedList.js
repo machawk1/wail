@@ -26,7 +26,7 @@ const fuzzyFilter = (searchText, key) => {
   const compareString = key.toLowerCase()
   searchText = searchText.toLowerCase()
 
-  let searchTextIndex = 0;
+  let searchTextIndex = 0
   for (let index = 0; index < key.length; index++) {
     if (compareString[ index ] === searchText[ searchTextIndex ]) {
       searchTextIndex += 1
@@ -42,7 +42,7 @@ const openInWb = (seed, forCol) => shell.openExternal(`${wbUrl}${forCol}/*/${see
 export default class CollectionSeedList extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-    viewingCol: PropTypes.string.isRequired,
+    viewingCol: PropTypes.string.isRequired
   }
 
   constructor (...args) {
@@ -77,7 +77,7 @@ export default class CollectionSeedList extends Component {
     if (!_.isEqual(this.seeds, sl) || !_.isEqual(this.seedCrawls, seedCrawls)) {
       this.seedCrawls = seedCrawls
       this.setState({
-        seeds: sl.slice(0),
+        seeds: sl.slice(0)
       })
     }
   }
@@ -132,9 +132,9 @@ export default class CollectionSeedList extends Component {
     console.log('collSeedList')
     // window.lastWaybackPath = this.props.params.col
     return (
-      <div style={{ width: '100%', height: '100%', }}>
+      <div style={{ width: '100%', height: '100%' }}>
         <Container>
-          <div className="seedListWB">
+          <div className='seedListWB'>
             <Table
               headerStyle={{ paddingTop: '10px' }}
             >
@@ -143,7 +143,7 @@ export default class CollectionSeedList extends Component {
                 adjustForCheckbox={false}
               >
                 <TableRow>
-                  <TableHeaderColumn colSpan="3">
+                  <TableHeaderColumn colSpan='3'>
                     <TextField
                       style={{ paddingLeft: '10px', width: '90%' }}
                       id='collectionSearch'

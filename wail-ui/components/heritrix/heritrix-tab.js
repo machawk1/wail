@@ -28,7 +28,6 @@ export default class HeritrixTab extends Component {
     shell.openExternal(settings.get('heritrix.web_ui'))
   }
 
-
   render () {
     return (
       <div style={{ width: '100%' }}>

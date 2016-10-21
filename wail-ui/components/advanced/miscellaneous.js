@@ -17,7 +17,7 @@ export default class Misc extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      expanded: false,
+      expanded: false
     }
   }
 

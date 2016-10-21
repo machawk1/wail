@@ -30,7 +30,7 @@ export default class RotatingAction extends Component {
         }}
         iconStyle={opened ? open : closed}
       >
-        <Apps/>
+        <Apps />
       </IconButton>
     )
   }

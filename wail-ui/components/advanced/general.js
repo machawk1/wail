@@ -89,7 +89,7 @@ export default class General extends Component {
     const waybackStatus = this.state.wbGood ? 'Running' : 'X'
     const heritrixStatus = this.state.hGood ? 'Running' : 'X'
     return (
-      <div className="generalTab">
+      <div className='generalTab'>
         <Container>
           <Table
           >

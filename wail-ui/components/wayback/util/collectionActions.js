@@ -33,7 +33,6 @@ export default class CollectionActions extends Component {
     viewingCol: PropTypes.string.isRequired
   }
 
-
   constructor (...args) {
     super(...args)
     let viewingCol = CollectionStore.getCollection(this.context.viewingCol)
@@ -138,40 +137,38 @@ export default class CollectionActions extends Component {
     })
   }
 
-  openInBrowser() {
+  openInBrowser () {
     openUrlInBrowser(`${settings.get('pywb.url')}${this.state.colName}`)
     this.menuRef.close()
   }
 
-  openColLoc() {
+  openColLoc () {
     openFSLocation(this.state.colpath)
     this.menuRef.close()
   }
-
-
 
   render () {
     let { primary1Color } = this.context.muiTheme.palette
     return (
       <Menu
         ref={r => this.menuRef = r}
-        direction="horizontal" distance={-80}
-            width={50} height={50} y={1} x={1}
-            customClass='colActionMenu'
-            customStyle={{
-              color: primary1Color,
-              textAlign: "center",
-              lineHeight: "50px",
-              backgroundColor: primary1Color,
-              border: `solid 1px ${primary1Color}`,
-              borderRadius: "50%"
-            }}>
+        direction='horizontal' distance={-80}
+        width={50} height={50} y={1} x={1}
+        customClass='colActionMenu'
+        customStyle={{
+          color: primary1Color,
+          textAlign: 'center',
+          lineHeight: '50px',
+          backgroundColor: primary1Color,
+          border: `solid 1px ${primary1Color}`,
+          borderRadius: '50%'
+        }}>
         <span>
           <IconButton
             tooltipPosition='top-center'
             tooltip='Actions'
           >
-        <Apps/>
+        <Apps />
       </IconButton>
         </span>
         <span>
@@ -180,7 +177,7 @@ export default class CollectionActions extends Component {
             tooltipPosition='top-center'
             onTouchTap={::this.openInBrowser}
           >
-            <OpenInBrowser/>
+            <OpenInBrowser />
           </IconButton>
         </span>
         <span>
@@ -189,7 +186,7 @@ export default class CollectionActions extends Component {
             tooltipPosition='top-center'
             onTouchTap={::this.openColLoc}
           >
-            <OpenCollection/>
+            <OpenCollection />
           </IconButton>
         </span>
         <span>
@@ -198,7 +195,7 @@ export default class CollectionActions extends Component {
             tooltipPosition='top-center'
             onTouchTap={this.forceIndex}
           >
-            <Reindex/>
+            <Reindex />
           </IconButton>
         </span>
         <span>

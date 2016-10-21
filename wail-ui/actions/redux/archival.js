@@ -2,7 +2,7 @@ import wc from '../../constants/wail-constants'
 
 const {
   EMPTY_URL,
-  HAS_VAILD_URI,
+  HAS_VAILD_URI
 } = wc.EventTypes
 
 export const updateArchiveUrl = url => {

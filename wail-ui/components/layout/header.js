@@ -13,7 +13,6 @@ import wailConstants from '../../constants/wail-constants'
 import CrawlIndicator from './crawlingIndicator'
 const defaultCol = wailConstants.Default_Collection
 
-
 export default class Header_ extends Component {
 
   constructor (props, context) {
@@ -21,12 +20,10 @@ export default class Header_ extends Component {
     this.state = { open: false, location: 'WAIL', crawlIconVisible: 'hidden', search: '' }
   }
 
-
   @autobind
   handleToggle () {
     this.setState({ open: !this.state.open })
   }
-
 
   @autobind
   open (open) {

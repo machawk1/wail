@@ -10,11 +10,10 @@ class Test extends Component {
       <div>
         <Card style={{height: '180px'}}>
           <CardHeader
-            title="Things"
-            subtitle="With stuff"
+            title='Things'
+            subtitle='With stuff'
             avatar={
-              <Avatar src='icons/whale.ico' style={
-              {borderRadius: 0, width: '120px', height: '150px', float: 'left'}}
+              <Avatar src='icons/whale.ico' style={{borderRadius: 0, width: '120px', height: '150px', float: 'left'}}
               />
             }
           />
@@ -26,8 +25,7 @@ class Test extends Component {
           </CardText>
         </Card>
 
-        <div className="layoutChildDiv">
-
+        <div className='layoutChildDiv'>
 
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis sodales nisl tortor. In at risus in ipsum consectetur aliquam at sit amet ipsum. Maecenas tempor leo id finibus vehicula. Sed maximus sed dolor id lacinia. Vivamus sodales dui sit amet interdum vestibulum. Maecenas ac aliquam lacus. Etiam eu vestibulum felis. Maecenas facilisis vitae nunc a rutrum. Praesent tempor tempor dictum. Etiam ultrices lectus ut nisi sollicitudin, in mollis mi tincidunt. Nam malesuada odio felis. Phasellus et ipsum lorem.
 

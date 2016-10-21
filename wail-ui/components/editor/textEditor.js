@@ -4,13 +4,12 @@ import autobind from 'autobind-decorator'
 
 export default class TextEditor extends Component {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired
   }
 
   constructor (...args) {
     super(...args)
     this.state = { editorState: EditorState.createEmpty() }
-
   }
 
   @autobind
@@ -21,7 +20,7 @@ export default class TextEditor extends Component {
   @autobind
   onChange (editorState) {
     console.log(editorState.getCurrentContent())
-    this.setState({editorState},() => {
+    this.setState({editorState}, () => {
       this.props.onChange(editorState.toJS())
     })
   }

@@ -17,12 +17,12 @@ import Misc from './components/advanced/miscellaneous'
 export default (
   <Router history={hashHistory}>
     <Route path='/' component={Layout}>
-      <IndexRoute component={BasicTab} name='Wail'/>
-      <Route path='services' name='Services' component={General}/>
-      <Route path='wayback' name='Wayback' component={Wayback}/>
-      <Route path='wayback/:col' name=':col' component={CollectionView}/>
-      <Route path='heritrix' name='Heritrix' component={Heritrix}/>
-      <Route path='misc' name='Misc' component={Misc}/>
+      <IndexRoute component={BasicTab} name='Wail' />
+      <Route path='services' name='Services' component={General} />
+      <Route path='wayback' name='Wayback' component={Wayback} />
+      <Route path='wayback/:col' name=':col' component={CollectionView} />
+      <Route path='heritrix' name='Heritrix' component={Heritrix} />
+      <Route path='misc' name='Misc' component={Misc} />
     </Route>
   </Router>
 )

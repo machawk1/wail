@@ -83,8 +83,6 @@ export default class EventLog extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-
-
   refresh () {
     if (this.state.events.length !== window.eventLog.records.length) {
       this.setState({
@@ -107,7 +105,7 @@ export default class EventLog extends Component {
         secondaryText={time}
       />)
       if (i + 1 < len) {
-        renderMe.push(<Divider key={`${e.lvl}${e.msg}${time}${i}-divider`}/>)
+        renderMe.push(<Divider key={`${e.lvl}${e.msg}${time}${i}-divider`} />)
       }
     }
     return renderMe
@@ -120,7 +118,7 @@ export default class EventLog extends Component {
           {this.makeEventList()}
         </List>
         <CardActions>
-          <FlatButton label='Refresh' onTouchTap={::this.refresh}/>
+          <FlatButton label='Refresh' onTouchTap={::this.refresh} />
         </CardActions>
       </div>
 

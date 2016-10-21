@@ -8,9 +8,6 @@ import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-
-
-
 export default class RequestManager {
   constructor () {
     this.requestQ = []

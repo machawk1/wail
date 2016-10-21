@@ -54,7 +54,7 @@ export default class Header extends Component {
           <AutoComplete
             fullWidth
             hintText='🔎 Search... '
-            id="autocomplete"
+            id='autocomplete'
             dataSource={[ 'Test1', 'Test2', 'Test3', 'John', 'Ringo', 'Paul' ]}
             filter={AutoComplete.fuzzyFilter}
           />

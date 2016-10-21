@@ -38,7 +38,7 @@ const optsReplaceUrl = (jobId, settingsKey) => {
   return options
 }
 
-const optsReplaceUrlForm = (jobId,formVal,settingsKey) => {
+const optsReplaceUrlForm = (jobId, formVal, settingsKey) => {
   let options = _.cloneDeep(settings.get(settingsKey))
   options.url = `${options.url}${jobId}`
   options.form.action = formVal
@@ -48,12 +48,12 @@ const optsReplaceUrlForm = (jobId,formVal,settingsKey) => {
 export class BuildJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, BUILD_HERITIX_JOB, `buildHeritrixJob[${jobId}]`,
-      optsReplaceUrl(jobId, 'heritrix.buildOptions'),1)
+      optsReplaceUrl(jobId, 'heritrix.buildOptions'), 1)
   }
 
   completedSuccess () {
     console.log('BuildJobRequest completedSuccess')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: BUILT_CRAWL_JOB,
       rtype: REQUEST_SUCCESS,
       id: this.jobId
@@ -62,7 +62,7 @@ export class BuildJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('BuildJobRequest completedError')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: BUILT_CRAWL_JOB,
       rtype: REQUEST_FAILURE,
       id: this.jobId,
@@ -74,12 +74,12 @@ export class BuildJobRequest extends HeritrixRequest {
 export class LaunchJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, LAUNCH_HERITRIX_JOB, `launchHeritrixJob[${jobId}]`,
-      optsReplaceUrl(jobId, 'heritrix.launchJobOptions'),2)
+      optsReplaceUrl(jobId, 'heritrix.launchJobOptions'), 2)
   }
 
   completedSuccess () {
     console.log('LaunchJobRequest completedSuccess ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: LAUNCHED_CRAWL_JOB,
       rtype: REQUEST_SUCCESS,
       id: this.jobId
@@ -88,7 +88,7 @@ export class LaunchJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('LaunchJobRequest completedError ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: LAUNCHED_CRAWL_JOB,
       rtype: REQUEST_FAILURE,
       id: this.jobId,
@@ -100,12 +100,12 @@ export class LaunchJobRequest extends HeritrixRequest {
 export class TerminateJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, TERMINATE_CRAWL, `TerminateHeritrixJob[${jobId}]`,
-      optsReplaceUrlForm(jobId, 'terminate','heritrix.sendActionOptions'),3)
+      optsReplaceUrlForm(jobId, 'terminate', 'heritrix.sendActionOptions'), 3)
   }
 
   completedSuccess () {
     console.log('TerminateJobRequest completedSuccess ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: TERMINATE_CRAWL,
       rtype: REQUEST_SUCCESS,
       id: this.jobId
@@ -114,7 +114,7 @@ export class TerminateJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('TerminateJobRequest completedError ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: TERMINATE_CRAWL,
       rtype: REQUEST_FAILURE,
       id: this.jobId,
@@ -126,12 +126,12 @@ export class TerminateJobRequest extends HeritrixRequest {
 export class TeardownJobRequest extends HeritrixRequest {
   constructor (jobId) {
     super(jobId, TEARDOWN_CRAWL, `TerminateHeritrixJob[${jobId}]`,
-      optsReplaceUrlForm(jobId,  'teardown' ,'heritrix.sendActionOptions'),4)
+      optsReplaceUrlForm(jobId, 'teardown', 'heritrix.sendActionOptions'), 4)
   }
 
   completedSuccess () {
     console.log('TeardownJobRequest completedSuccess ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: TEARDOWN_CRAWL,
       rtype: REQUEST_SUCCESS,
       id: this.jobId
@@ -140,7 +140,7 @@ export class TeardownJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('TeardownJobRequest completedError ')
-    ipc.send('handled-request',{
+    ipc.send('handled-request', {
       type: TEARDOWN_CRAWL,
       rtype: REQUEST_FAILURE,
       id: this.jobId,
@@ -158,15 +158,15 @@ export class RescanJobDirRequest extends HeritrixRequest {
   completedSuccess () {
     console.log('RescanJobDirRequest completedSuccess ')
     ipc.send('handled-request', {
-      type:  RESCAN_JOB_DIR,
+      type: RESCAN_JOB_DIR,
       rtype: REQUEST_SUCCESS
     })
   }
 
   completedError () {
     console.log('RescanJobDirRequest completedError ')
-    ipc.send('handled-request',{
-      type:  RESCAN_JOB_DIR,
+    ipc.send('handled-request', {
+      type: RESCAN_JOB_DIR,
       rtype: REQUEST_FAILURE,
       err: this.finalError
     })
@@ -269,7 +269,7 @@ export class BuildLaunchJob {
           }
         })
         .catch(error => {
-          console.log(`Build Launch Job made request for jobId ${this.jobId} had error`,error)
+          console.log(`Build Launch Job made request for jobId ${this.jobId} had error`, error)
           request.handleError(error)
           if (request.doRetry) {
             console.log(`Build Launch Job made request for jobId ${this.jobId} had retrying`)
@@ -346,7 +346,7 @@ export class StopJob {
           }
         })
         .catch(error => {
-          console.log(`Stop Job made request for jobId ${this.jobId} had error`,error)
+          console.log(`Stop Job made request for jobId ${this.jobId} had error`, error)
           request.handleError(error)
           if (request.doRetry) {
             console.log(`Stop Job made request for jobId ${this.jobId} had retrying`)
@@ -395,9 +395,9 @@ export class JobLifeCycle {
   }
 
   goto (nextRWithPriority) {
-    console.log(`Heritrix Job Life Cycle going to next priority ${nextRWithPriority} before`,this.q)
+    console.log(`Heritrix Job Life Cycle going to next priority ${nextRWithPriority} before`, this.q)
     this.q = _.dropWhile(this.q, r => r.priority < nextRWithPriority)
-    console.log(`Heritrix Job Life Cycle going to next priority ${nextRWithPriority} after`,this.q)
+    console.log(`Heritrix Job Life Cycle going to next priority ${nextRWithPriority} after`, this.q)
   }
 
   maybeMore () {
@@ -428,7 +428,7 @@ export class JobLifeCycle {
           }
         })
         .catch(error => {
-          console.log(`Heritrix Job Life Cycle made request for jobId ${this.jobId} had error`,error)
+          console.log(`Heritrix Job Life Cycle made request for jobId ${this.jobId} had error`, error)
           request.handleError(error)
           if (request.doRetry) {
             console.log(`Heritrix Job Life Cycle made request for jobId ${this.jobId} had retrying`)

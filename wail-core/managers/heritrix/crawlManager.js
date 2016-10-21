@@ -218,7 +218,7 @@ export default class CrawlManager {
     })
   }
 
-  stopMonitoringJob(jobId) {
+  stopMonitoringJob (jobId) {
     this.csMonitor.stopMonitoring(jobId)
   }
 }

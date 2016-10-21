@@ -13,7 +13,7 @@ const EventTypes = wailConstants.EventTypes
 const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
-export function grabCaptures(uri,forCol) {
+export function grabCaptures (uri, forCol) {
   // notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
   // window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
   return rp({
@@ -56,7 +56,7 @@ export function checkUriIsInArchive (uri, forCol) {
     })
     .catch(err => {
       if (err.statusCode) {
-        if(err.statusCode === 404){
+        if (err.statusCode === 404) {
           notify.notifyWarning(`${uri} is not in the archive ${forCol}`)
         }
       } else {
@@ -64,7 +64,6 @@ export function checkUriIsInArchive (uri, forCol) {
         window.logger.error({ err: err, msg: 'error in querying wayback' })
         notify.notifyError(`An internal error occurred while seeing if ${uri} is in the archive ${forCol}`, true)
       }
-
     })
 }
 

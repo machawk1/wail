@@ -51,7 +51,7 @@ ipc.on('are-crawls-running', (event) => {
     })
 })
 
-ipc.on('stop-watching-job',(e,jobId) => {
+ipc.on('stop-watching-job', (e, jobId) => {
 
 })
 

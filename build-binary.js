@@ -39,7 +39,6 @@ const shouldBuildLinux = argv.linux || false
 const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
-
 // /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes/',
@@ -419,10 +418,10 @@ async function doBuild () {
         })
       })
     }
-  }catch (error) {
+  } catch (error) {
     console.error(error)
   }
-  cp.exec(`open ${path.join(cwd,'release')}`)
+  cp.exec(`open ${path.join(cwd, 'release')}`)
 }
 
 // fs.emptyDirSync(path.join(cwd, 'dist'))

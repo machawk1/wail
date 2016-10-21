@@ -25,7 +25,7 @@ export function madeJobConf (conf) {
   }
 }
 
-export function crawlJobUpdate (e,crawlStatus) {
+export function crawlJobUpdate (e, crawlStatus) {
   return {
     type: 'crawljob-status-update',
     crawlStatus

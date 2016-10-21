@@ -10,7 +10,7 @@ import BasicCollectionList from './localCollections'
 export default class BasicTab extends Component {
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -20,12 +20,12 @@ export default class BasicTab extends Component {
   render () {
     return (
       <Container fluid>
-        <div className="basicMiddle">
+        <div className='basicMiddle'>
           <Card>
             <CardTitle
               title='Archive Page'
               subtitle='To Collection'
-              children={ <BasicCollectionList />}
+              children={<BasicCollectionList />}
             />
 
             <CardText>

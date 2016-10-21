@@ -23,7 +23,7 @@ class App extends Component {
     browserHistory.push(`/${nextValue}`)
   }
 
-  renderErrorMessage() {
+  renderErrorMessage () {
     const { errorMessage } = this.props
     if (!errorMessage) {
       return null
@@ -33,20 +33,20 @@ class App extends Component {
       <p style={{ backgroundColor: '#e99', padding: 10 }}>
         <b>{errorMessage}</b>
         {' '}
-        (<a href="#"
-            onClick={this.handleDismissClick}>
+        (<a href='#'
+          onClick={this.handleDismissClick}>
           Dismiss
         </a>)
       </p>
     )
   }
 
-  render() {
+  render () {
     const { children, inputValue } = this.props
     return (
       <div>
         <Explore value={inputValue}
-                 onChange={this.handleChange} />
+          onChange={this.handleChange} />
         <hr />
         {this.renderErrorMessage()}
         {children}

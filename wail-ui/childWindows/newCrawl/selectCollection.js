@@ -8,16 +8,16 @@ import ncd from './crawlUrlsDispatcher'
 const {NEW_CRAWL_COL_SELECTED} = wailConstants.EventTypes
 
 export default class SelectCollection extends Component {
-    constructor (...args) {
-      super(...args)
-      this.state = {
-        cols: ncs.cols
-      }
+  constructor (...args) {
+    super(...args)
+    this.state = {
+      cols: ncs.cols
     }
+  }
 
   @autobind
-  handleChange (choice,index) {
-    console.log('new crawl select collection handle Change',choice,index)
+  handleChange (choice, index) {
+    console.log('new crawl select collection handle Change', choice, index)
     if (index === -1) {
       if (this.state.cols.includes(choice)) {
         ncd.dispatch({
@@ -31,23 +31,22 @@ export default class SelectCollection extends Component {
         forCol: this.state.cols[index]
       })
     }
-
   }
 
-    render (){
-      return (
+  render () {
+    return (
         <AutoComplete
           menuProps={{ desktop: true }}
           style={{paddingLeft: '20px'}}
-          searchText={ ncs.cols[0] || 'default'}
+          searchText={ncs.cols[0] || 'default'}
           openOnFocus
           maxSearchResults={5}
-          hintText="For Collection"
+          hintText='For Collection'
           floatingLabelText={'Archive To Collection'}
           filter={AutoComplete.fuzzyFilter}
           dataSource={this.state.cols}
           onNewRequest={this.handleChange}
         />
       )
-    }
+  }
 }

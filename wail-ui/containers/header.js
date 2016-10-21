@@ -22,19 +22,19 @@ export default class Header extends Component {
   }
 
   componentWillMount () {
-    CrawlStore.on('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+    CrawlStore.on('maybe-toggle-ci', this.maybeToggleCrawlIcon)
   }
 
   componentWillUnmount () {
-    CrawlStore.removeListener('maybe-toggle-ci',this.maybeToggleCrawlIcon)
+    CrawlStore.removeListener('maybe-toggle-ci', this.maybeToggleCrawlIcon)
   }
 
   @autobind
-  maybeToggleCrawlIcon(started = false){
-    if(started && this.state.crawlIconVisible === 'hidden') {
+  maybeToggleCrawlIcon (started = false) {
+    if (started && this.state.crawlIconVisible === 'hidden') {
       this.setState({crawlIconVisible: 'visible'})
     } else {
-      if(this.state.crawlIconVisible === 'visible') {
+      if (this.state.crawlIconVisible === 'visible') {
         this.setState({crawlIconVisible: 'hidden'})
       }
     }
@@ -57,8 +57,7 @@ export default class Header extends Component {
           title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
           zDepth={0}
-          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png'  className="pulse" style={
-            {paddingRight: 25,visibility: this.state.crawlIconVisible}}/>
+          iconElementRight={<Avatar backgroundColor={'transparent'} src='icons/crawling.png' className='pulse' style={{paddingRight: 25, visibility: this.state.crawlIconVisible}} />
           }
 
         />

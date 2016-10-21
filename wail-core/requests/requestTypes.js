@@ -38,7 +38,7 @@ export class Request {
     return this.doRetry
   }
 
-  resetFail() {
+  resetFail () {
     this.failedCount = 0
     this.hadToRetry = false
     this.completed = false
@@ -49,7 +49,7 @@ export class Request {
 }
 
 export class HeritrixRequest extends Request {
-  constructor (jobId, hRequestType,from,options,priority) {
+  constructor (jobId, hRequestType, from, options, priority) {
     super(REQUEST_HERITRIX, hRequestType, from, options)
     this.jobId = jobId
     this.finalError = null

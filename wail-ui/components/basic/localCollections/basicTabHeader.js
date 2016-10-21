@@ -9,7 +9,7 @@ export default class BasicTabHeader extends Component {
 
   render () {
     return (
-      <div></div>
+      <div />
     )
   }
 

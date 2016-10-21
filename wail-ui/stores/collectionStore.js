@@ -57,7 +57,7 @@ class _CollectionStore extends EventEmitter {
         level: 'Error',
         autoDismiss: 0,
         message,
-        uid: message,
+        uid: message
       })
       window.logger.error({ message, err: update.error })
     } else {
@@ -69,12 +69,11 @@ class _CollectionStore extends EventEmitter {
         level: 'success',
         autoDismiss: 0,
         message,
-        uid: message,
+        uid: message
       })
       window.logger.info(`updated-${update.forCol}-metadata`)
       this.emit(`updated-${update.forCol}-metadata`, col.metadata)
     }
-
   }
 
   loadCollections (event, ac) {
@@ -122,18 +121,12 @@ class _CollectionStore extends EventEmitter {
         title: 'Success',
         level: 'success',
         message,
-        uid: message,
-        children: (
-         <div>
-           <p>To view this capture please restart wayback</p>
-           <FlatButton label='Restart?' onTouchTap={() => ServiceDispatcher.dispatch({ type: WAYBACK_RESTART })}/>
-         </div>
-        )
+        uid: message
       })
-      notify.notifySuccess()
       upDateMe.numArchives += count
       this.collections.set(forCol, upDateMe)
       this.emit(`updated-${forCol}-warcs`, upDateMe.numArchives)
+      ServiceDispatcher.dispatch({ type: WAYBACK_RESTART })
     }
   }
 
@@ -169,15 +162,15 @@ class _CollectionStore extends EventEmitter {
     let uniqueSeeds = new Set()
     let len = colCrawls.length
     for (let i = 0; i < len; ++i) {
-      if (Array.isArray(colCrawls [ i ].urls)) {
-        colCrawls [ i ].urls.forEach(url => {
+      if (Array.isArray(colCrawls[ i ].urls)) {
+        colCrawls[ i ].urls.forEach(url => {
           if (!uniqueSeeds.has(url)) {
             uniqueSeeds.add(url)
           }
         })
       } else {
-        if (!uniqueSeeds.has(colCrawls [ i ].urls)) {
-          uniqueSeeds.add(colCrawls [ i ].urls)
+        if (!uniqueSeeds.has(colCrawls[ i ].urls)) {
+          uniqueSeeds.add(colCrawls[ i ].urls)
         }
       }
     }
@@ -196,7 +189,6 @@ class _CollectionStore extends EventEmitter {
       } else {
         runMap.set(colRuns[ i ].urls, colRuns[ i ])
       }
-
     }
     console.log('getCrawlInfoForCol', name)
     return runMap

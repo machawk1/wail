@@ -23,7 +23,6 @@ export default class NewCollection extends Component {
       description: '',
       title: ''
     }
-
   }
 
   componentWillMount () {
@@ -132,7 +131,7 @@ export default class NewCollection extends Component {
       <Dialog
         contentStyle={{
           width: '100%',
-          maxWidth: 'none',
+          maxWidth: 'none'
         }}
         autoScrollBodyContent
         title='New Collection'
@@ -150,17 +149,17 @@ export default class NewCollection extends Component {
         modal
         open={this.state.open}
       >
-        <Flex row  alignContent='center' justifyContent='space-between'>
+        <Flex row alignContent='center' justifyContent='space-between'>
           <TextField
-            ref="cName"
+            ref='cName'
             hintText='Collection Name'
             floatingLabelText='Name'
             value={this.state.col}
-            style={{ float: 'left',marginRight: '25px' }}
+            style={{ float: 'left', marginRight: '25px' }}
             onChange={::this.nameChange}
           />
           <TextField
-            ref="cTitle"
+            ref='cTitle'
             hintText='Defaults to name'
             floatingLabelText='Title'
             value={this.state.title}
@@ -170,7 +169,7 @@ export default class NewCollection extends Component {
         <TextField
           fullWidth
           multiLine
-          ref="cDescription"
+          ref='cDescription'
           hintText='Collection Description'
           floatingLabelText='Description'
           value={this.state.description}

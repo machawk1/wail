@@ -9,7 +9,7 @@ const defaultCol = wc.Default_Collection
 
 class CollectionListSearch extends Component {
   static propTypes = {
-    currCollection: PropTypes.string.isRequired,
+    currCollection: PropTypes.string.isRequired
   }
 
   constructor (...args) {
@@ -45,7 +45,6 @@ class CollectionListSearch extends Component {
     } else {
       this.props.router.push(`/wayback/${this.state.colNames[ index ]}`)
     }
-
   }
 
   render () {
@@ -56,7 +55,7 @@ class CollectionListSearch extends Component {
         openOnFocus
         maxSearchResults={4}
         searchText={this.props.currCollection}
-        hintText="Select Collection To View"
+        hintText='Select Collection To View'
         filter={AutoComplete.fuzzyFilter}
         dataSource={this.state.colNames}
         onNewRequest={this.handleChange}

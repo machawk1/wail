@@ -97,7 +97,7 @@ class CrawlStore_ extends EventEmitter {
     let wbEventName = `${conf.forCol}-${conf.jobId}-created`
     let wbListeners = this.listeners(wbEventName)
     if (wbListeners > 0) {
-      this.emit(wbEventName,conf)
+      this.emit(wbEventName, conf)
     }
     buildHeritrixJob(conf.jobId)
     GMessageDispatcher.dispatch({
@@ -111,7 +111,6 @@ class CrawlStore_ extends EventEmitter {
     })
   }
 
-
   @autobind
   crawlJobUpdate (crawlStatus) {
     console.log('crawl status update', crawlStatus)
@@ -123,7 +122,7 @@ class CrawlStore_ extends EventEmitter {
       window.logger.debug(`crawl status update for ${jobId} its ended tearing down`)
       teardownJob(jobId)
       this.runningJobs -= 1
-      if(this.runningJobs === 0) {
+      if (this.runningJobs === 0) {
         this.emit('maybe-toggle-ci')
       }
     } else {
@@ -146,14 +145,13 @@ class CrawlStore_ extends EventEmitter {
     this.emit(`${jobId}-updated`, runs[ 0 ])
   }
 
-
   getRuns (jobId) {
     let jobIdx = this.jobIndex.get(jobId)
     return this.crawlJobs[ jobIdx ].runs
   }
 
-  getCrawlsForCol(forCol) {
-    return _.filter(this.crawlJobs,c => c.forCol === forCol)
+  getCrawlsForCol (forCol) {
+    return _.filter(this.crawlJobs, c => c.forCol === forCol)
   }
 
   @autobind
@@ -300,7 +298,7 @@ class CrawlStore_ extends EventEmitter {
           }
         })
         window.logger.debug(`Heritrix Crawl Started: ${conf.urls}`)
-        this.emit('maybe-toggle-ci',true)
+        this.emit('maybe-toggle-ci', true)
         this.runningJobs += 1
         break
       }

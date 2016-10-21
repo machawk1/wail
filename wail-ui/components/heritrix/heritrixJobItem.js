@@ -61,7 +61,6 @@ export default class HeritrixJobItem extends Component {
     CrawlStore.removeListener(`${this.props.jobId}-updated`, this.updateRuns)
   }
 
-
   @autobind
   updateRuns () {
     console.log('updating runs')
@@ -108,9 +107,9 @@ export default class HeritrixJobItem extends Component {
   }
 
   @autobind
-  rmJob(jpath,stopWatching = false) {
+  rmJob (jpath, stopWatching = false) {
     if (stopWatching) {
-      ipc.send('stop-watching-job',this.props.jobId)
+      ipc.send('stop-watching-job', this.props.jobId)
     }
     if (process.platform === 'win32') {
       cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
@@ -122,7 +121,7 @@ export default class HeritrixJobItem extends Component {
         }
       })
     } else {
-      cp.exec(`rm -rf ${jpath}`,(error, stdout, stderr) => {
+      cp.exec(`rm -rf ${jpath}`, (error, stdout, stderr) => {
         if (error) {
           console.error(`exec error: ${error}`)
           return
@@ -147,15 +146,15 @@ export default class HeritrixJobItem extends Component {
       if (!runs[ 0 ].ended) {
         // console.log('We have runs and the running one has not ended')
         forceCrawlFinish(this.props.jobId, this.props.urls, () => {
-          this.rmJob(jPath,true)
+          this.rmJob(jPath, true)
         })
       } else {
         // console.log('We have runs and the run has ended')
-        this.rmJob(jPath )
+        this.rmJob(jPath)
       }
     } else {
       // console.log('We have no runs delete ok')
-      this.rmJob(jPath )
+      this.rmJob(jPath)
     }
   }
 
@@ -219,7 +218,7 @@ export default class HeritrixJobItem extends Component {
         <TableRow key={`${this.props.jobId}-TableRow`}>
           <TableRowColumn key={`${this.props.jobId}-TRCol-JID`} style={crawlUrlS}>
             <Textfit mode='multi'
-                     min={10}
+              min={10}
             >{url}</Textfit>
           </TableRowColumn>
           <TableRowColumn key={`${this.props.jobId}-TRCol-Stat`} style={statusS}>

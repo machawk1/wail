@@ -20,7 +20,7 @@ import NumArchives from '../collectionHeader/numArchives'
 export default class CollectionInfo extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired,
-    viewingCol: PropTypes.string.isRequired,
+    viewingCol: PropTypes.string.isRequired
   }
 
   constructor (...args) {
@@ -86,30 +86,30 @@ export default class CollectionInfo extends Component {
                 title: this.state.metadata[ 'title' ],
                 description: this.state.metadata[ 'description' ]
               })}
-                                    style={{ float: 'right', bottom: '40px' }}
+                style={{ float: 'right', bottom: '40px' }}
               >
-                <Edit/>
+                <Edit />
               </IconButton>}
             />
             <CardText>
               {this.state.metadata[ 'description' ]}
             </CardText>
-            <Divider/>
-            <CardHeader title='Collection Data'/>
+            <Divider />
+            <CardHeader title='Collection Data' />
             <CardText>
-              <Flex row alignItems="center">
-                <Item> <CardTitle subtitle={`Seeds: ${this.state.uniqueSeeds}`}/></Item>
-                <Item> <CardTitle subtitle={`Crawls: ${this.state.totalCrawls}`}/></Item>
-                <Item><NumArchives viewingCol={this.state.colName} numArchives={this.state.numArchives}/></Item>
+              <Flex row alignItems='center'>
+                <Item> <CardTitle subtitle={`Seeds: ${this.state.uniqueSeeds}`} /></Item>
+                <Item> <CardTitle subtitle={`Crawls: ${this.state.totalCrawls}`} /></Item>
+                <Item><NumArchives viewingCol={this.state.colName} numArchives={this.state.numArchives} /></Item>
               </Flex>
             </CardText>
             <CardActions>
-              <FlatButton primary label='Open (W)arc Location' onTouchTap={() => openFSLocation(this.state.archive)}/>
-              <FlatButton primary label='Open Index Location' onTouchTap={() => openFSLocation(this.state.indexes)}/>
+              <FlatButton primary label='Open (W)arc Location' onTouchTap={() => openFSLocation(this.state.archive)} />
+              <FlatButton primary label='Open Index Location' onTouchTap={() => openFSLocation(this.state.indexes)} />
             </CardActions>
           </Card>
         </div>
-        <ReactTooltip/>
+        <ReactTooltip />
       </Container>
     )
   }

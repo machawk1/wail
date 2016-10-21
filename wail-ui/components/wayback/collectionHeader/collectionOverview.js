@@ -22,7 +22,7 @@ export default class CollectionOverview extends Component {
             <p>{`Title: ${metadata[ 'title' ]}`}</p>
           </Col>
           <Col xs>
-            <NumArchives archiveCount={this.props.numArchives}/>
+            <NumArchives archiveCount={this.props.numArchives} />
           </Col>
         </Row>
       </Grid>

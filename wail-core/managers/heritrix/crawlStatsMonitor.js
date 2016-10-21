@@ -13,7 +13,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
     super()
     this.monitoring = new Map()
     this.launchId = /^[0-9]+$/
-    this.watcherConfig = { followSymlinks: true,  awaitWriteFinish: true }
+    this.watcherConfig = { followSymlinks: true, awaitWriteFinish: true }
     // console.log(this.watcherConfig)
     // this.watcher = chokidar.watch(path.join(settings.get('heritrixJob'),'**/progress-statistics.log'),{ followSymlinks: true,  awaitWriteFinish: true, ignoreInitial: true })
     // this.watcher.on('add',path => console.log(`File ${path} has been added`))
@@ -29,7 +29,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
     let logWatcher = chokidar.watch(logPath, this.watcherConfig)
     logWatcher.on('add', filePath => console.log(`File ${filePath} has been added`))
     logWatcher.on('change', (filePath) => {
-      console.log('changed ',filePath)
+      console.log('changed ', filePath)
       getCrawlStats(filePath)
         .then(stats => {
           console.log(`crawlJob-status-update ${jobId}`, stats)
@@ -84,9 +84,9 @@ export default class CrawlStatsMonitor extends EventEmitter {
       let watcherHolder = this.monitoring.get(jobId)
       watcherHolder.logWatcher.close()
       this.monitoring.delete(jobId)
-      this.emit('stopped-monitoring',{jobId, wasAllReadyMonitoring: true})
+      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: true})
     } else {
-      this.emit('stopped-monitoring',{jobId, wasAllReadyMonitoring: false})
+      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: false})
     }
   }
 }

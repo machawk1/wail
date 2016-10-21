@@ -93,7 +93,7 @@ export function addedNewCol (event, col) {
   }
 }
 
-export function addMetadata ( mdata, forCol) {
+export function addMetadata (mdata, forCol) {
   ipc.send('add-metadata-to-col', { mdata, forCol })
   return {
     type: ADD_METADATA_TO_COLLECTION,
@@ -101,8 +101,4 @@ export function addMetadata ( mdata, forCol) {
     forCol
   }
 }
-
-
-
-
 

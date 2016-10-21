@@ -63,7 +63,7 @@ export default {
     KILL_HERITRIX: null,
     LAUNCH_HERITRIX_JOB: null,
     SEND_HERITRIX_ACTION: null,
-    REQUEST_SUCCESS:null,
+    REQUEST_SUCCESS: null,
     REQUEST_FAILURE: null
   }),
   Loading: keyMirror({

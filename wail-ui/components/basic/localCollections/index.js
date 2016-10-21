@@ -19,7 +19,7 @@ export default class BasicCollectionList extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return shallowCompare(this,nextProps,nextState)
+    return shallowCompare(this, nextProps, nextState)
   }
 
   componentWillMount () {

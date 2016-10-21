@@ -29,12 +29,12 @@ export default class CollectionToolBar extends Component {
     let {
       colName,
       indexes,
-      archive,
+      archive
     } = CollectionStore.getCollection(this.props.viewingCol)
     this.state = {
       colName,
       indexes,
-      archive,
+      archive
     }
   }
 
@@ -47,7 +47,7 @@ export default class CollectionToolBar extends Component {
       let {
         colName,
         indexes,
-        archive,
+        archive
       } = CollectionStore.getCollection(nextProps.viewingCol)
       this.setState({ colName, indexes, archive })
     }
@@ -60,26 +60,26 @@ export default class CollectionToolBar extends Component {
     let archiveChooserOpts = {
       title: `Add Warc Files To ${this.props.viewingCol}`,
       defaultPath: remote.app.getPath('home'),
-      properties: ['openFile','openDirectory', 'multiSelections'],
+      properties: ['openFile', 'openDirectory', 'multiSelections'],
       filters: [
         {name: 'Archives', extensions: ['warc']}
       ]
     }
     console.log(archiveChooserOpts)
-    dialog.showOpenDialog(remote.getCurrentWindow(),archiveChooserOpts,(files) => {
+    dialog.showOpenDialog(remote.getCurrentWindow(), archiveChooserOpts, (files) => {
       if (files) {
         console.log(files)
         let addMe = []
         files.forEach(f => {
           if (S(path.extname(f)).isEmpty()) {
-            addMe.push(path.join(f,'*.warc'))
+            addMe.push(path.join(f, '*.warc'))
           } else {
             addMe.push(f)
           }
         })
 
         console.log(addMe)
-        ipc.send('add-warcs-to-col',{
+        ipc.send('add-warcs-to-col', {
           forCol: this.props.viewingCol,
           warcs: joinStrings(...addMe, {separator: ' '})
         })

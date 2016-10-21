@@ -75,7 +75,6 @@ export default class ArchiveUrl extends Component {
           type: EventTypes.HAS_VAILD_URI,
           url: val
         })
-
       }
     }, 600)
     this.setState({ url: e.target.value })

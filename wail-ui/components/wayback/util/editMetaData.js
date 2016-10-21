@@ -26,7 +26,6 @@ export default class NewCollection extends Component {
       originalTitle: '',
       originalDescription: ''
     }
-
   }
 
   componentWillMount () {
@@ -77,7 +76,7 @@ export default class NewCollection extends Component {
             title: 'Info',
             level: 'info',
             message: `Updating Title and Description for ${forCol}`,
-            uid: `Updating Title and Description for ${forCol}`,
+            uid: `Updating Title and Description for ${forCol}`
           }
         })
       } else {
@@ -89,7 +88,7 @@ export default class NewCollection extends Component {
               title: 'Info',
               level: 'info',
               message: `Updating Title for ${forCol}`,
-              uid: `Updating Title for ${forCol}`,
+              uid: `Updating Title for ${forCol}`
             }
           })
         } else if (newDescription) {
@@ -100,7 +99,7 @@ export default class NewCollection extends Component {
               title: 'Info',
               level: 'info',
               message: `Updating Description for ${forCol}`,
-              uid: `Updating Description for ${forCol}`,
+              uid: `Updating Description for ${forCol}`
             }
           })
         }
@@ -121,7 +120,7 @@ export default class NewCollection extends Component {
           title: 'Warning',
           level: 'warning',
           message: `No changes to metadata for ${forCol}`,
-          uid: `No changes to metadata for ${forCol}`,
+          uid: `No changes to metadata for ${forCol}`
         }
       })
     }
@@ -152,7 +151,7 @@ export default class NewCollection extends Component {
       <Dialog
         contentStyle={{
           width: '100%',
-          maxWidth: 'none',
+          maxWidth: 'none'
         }}
         autoScrollBodyContent
         title='Edit Metadata'
@@ -171,7 +170,7 @@ export default class NewCollection extends Component {
         open={this.state.open}
       >
         <TextField
-          ref="cTitle"
+          ref='cTitle'
           hintText='Defaults to name'
           floatingLabelText='Title'
           value={this.state.title}
@@ -180,7 +179,7 @@ export default class NewCollection extends Component {
         <TextField
           fullWidth
           multiLine
-          ref="cDescription"
+          ref='cDescription'
           hintText='Collection Description'
           floatingLabelText='Description'
           value={this.state.description}

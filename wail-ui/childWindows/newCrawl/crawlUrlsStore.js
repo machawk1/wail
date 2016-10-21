@@ -111,11 +111,11 @@ class CrawlUrlsStore_ extends EventEmitter {
             url={url.url}
           />)
         if (i + 1 !== len) {
-          items.push(<Divider key={`Divider${url.url}${url.idx}`}/>)
+          items.push(<Divider key={`Divider${url.url}${url.idx}`} />)
         }
       }
     } else {
-      items.push(<ListItem key='noSeeds' primaryText='No Seed Urls'/>)
+      items.push(<ListItem key='noSeeds' primaryText='No Seed Urls' />)
     }
 
     console.log('CrawlUrlStore getCrawlUrlItems', items)

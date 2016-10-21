@@ -124,6 +124,5 @@ app.on('before-quit', (e) => {
   console.log('killing all serivices')
   control.serviceMan.killService('all')
     .then(() => app.quit())
-
 })
 

@@ -16,7 +16,7 @@ export default class NewCrawlDialog extends Component {
             <CrawlUrlList />
           </Col>
           <Col xs>
-            <Row top="xs">
+            <Row top='xs'>
               <Col xs>
                 <CrawlDepth />
               </Col>
@@ -24,7 +24,7 @@ export default class NewCrawlDialog extends Component {
                 <SellectCollection />
               </Col>
             </Row>
-            <Row bottom="xs">
+            <Row bottom='xs'>
               <Col xs>
                 <EnterCrawlUrls />
               </Col>

@@ -23,7 +23,7 @@ const fuzzyFilter = (searchText, key) => {
   const compareString = key.toLowerCase()
   searchText = searchText.toLowerCase()
 
-  let searchTextIndex = 0;
+  let searchTextIndex = 0
   for (let index = 0; index < key.length; index++) {
     if (compareString[ index ] === searchText[ searchTextIndex ]) {
       searchTextIndex += 1
@@ -36,7 +36,7 @@ const fuzzyFilter = (searchText, key) => {
 @withRouter
 export default class WayBackTab extends Component {
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (...args) {
@@ -101,12 +101,12 @@ export default class WayBackTab extends Component {
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', overflowX: 'hidden', overflowY: 'scroll' }}>
         <Container>
-          <div className="waybackCLMiddle">
+          <div className='waybackCLMiddle'>
             <Flex row alignItems='center' justifyContent='space-between'>
               <CardTitle
                 title='Collections'
               />
-              <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
+              <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()} />
             </Flex>
             <Card style={{ height: '75px' }}>
               <CardText>

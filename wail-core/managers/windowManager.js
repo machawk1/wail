@@ -233,12 +233,12 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('update-metadata', (e, update) => {
-      console.log('update-metadata',  update)
+      console.log('update-metadata', update)
       this.send('archiveManWindow', 'update-metadata', update)
     })
 
     ipcMain.on('updated-metadata', (e, update) => {
-      console.log( 'updated-metadata', update)
+      console.log('updated-metadata', update)
       this.send('mainWindow', 'updated-metadata', update)
     })
 
@@ -249,8 +249,8 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('added-warcs-to-col', (e, update) => {
       this.send('mainWindow', 'added-warcs-to-col', update)
       control.serviceMan.restartWayback()
-        .then(() => this.send('mainWindow','restarted-wayback',{wasError: false}))
-        .catch((err) => this.send('mainWindow','restarted-wayback',{wasError: true,err}))
+        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
+        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
     })
 
     /* Control */
@@ -303,10 +303,9 @@ export default class WindowManager extends EventEmitter {
 
     ipcMain.on('restart-wayback', () => {
       control.serviceMan.restartWayback()
-        .then(() => this.send('mainWindow','restarted-wayback',{wasError: false}))
-        .catch((err) => this.send('mainWindow','restarted-wayback',{wasError: true,err}))
+        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
+        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
     })
-
   }
 
   loadComplete (where) {
@@ -787,7 +786,6 @@ export default class WindowManager extends EventEmitter {
 
   closeAllWindows () {
     for (let [winName, winHolder] of Object.entries(this.windows)) {
-
       if (winName !== 'mainWindow') {
         if (winHolder.open && winHolder.window) {
           console.log(winName)
@@ -795,7 +793,6 @@ export default class WindowManager extends EventEmitter {
         } else {
         }
       }
-
     }
   }
 

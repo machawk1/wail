@@ -14,7 +14,7 @@ const EventTypes = wailConstants.EventTypes
 class UrlStore_ extends EventEmitter {
   constructor () {
     super()
-    this.urlMemento = { url: S(''), mementos: -1,forCol:  wailConstants.Default_Collection, inArchive: false }
+    this.urlMemento = { url: S(''), mementos: -1, forCol: wailConstants.Default_Collection, inArchive: false }
     this.urls = new Map()
     ViewWatcher.on('basicColList-selected', forCol => this.urlMemento.forCol = forCol)
   }

@@ -10,7 +10,6 @@ const EventTypes = wailConstants.EventTypes
 
 const logString = 'service store %s'
 
-
 // const serviceDialogeTemplate = '%s %s down'
 
 class ServiceStore_ extends EventEmitter {
@@ -23,26 +22,20 @@ class ServiceStore_ extends EventEmitter {
 
     ipcRenderer.on('service-started', (event, update) => this.updateStatues(update))
     ipcRenderer.on('service-killed', (event, update) => this.updateStatues(update, true))
-    ipcRenderer.on( 'restarted-wayback',(e,update) => {
-      if(update.wasError) {
+    ipcRenderer.on('restarted-wayback', (e, update) => {
+      if (update.wasError) {
         notify.notify({
           title: 'Error',
-            level: 'error',
-            message: 'There was error restarting Wayback',
-            uid: 'There was error restarting Wayback',
+          level: 'error',
+          message: 'There was error restarting Wayback',
+          uid: 'There was error restarting Wayback'
         })
         window.logger.error({
           message: 'restarting wayback failed',
           err: update.err
         })
       } else {
-        this.serviceStatus.heritrix = true
-        notify.notify({
-          title: 'Success',
-          level: 'success',
-          message: 'Wayback was successfully restarted',
-          uid: 'Wayback was successfully restarted',
-        })
+        this.serviceStatus.wayback = true
         this.emit('wayback-status-update')
       }
     })
@@ -87,8 +80,6 @@ class ServiceStore_ extends EventEmitter {
       return this.serviceStatus.wayback
     }
   }
-
-
 
   serviceStatuses () {
     return this.serviceStatus

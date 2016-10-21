@@ -36,11 +36,11 @@ const styles = {
     fontSize: 24,
     paddingTop: 16,
     marginBottom: 12,
-    fontWeight: 400,
+    fontWeight: 400
   },
   slide: {
-    padding: 10,
-  },
+    padding: 10
+  }
 }
 
 const runsToMap = runs => {
@@ -67,25 +67,25 @@ export default class CollectionView extends Component {
   }
 
   // @decorate(memoize)
-  makeChildContext(col) {
-    let viewingCol =  CollectionStore.getCollection(col)
-    let viewingColRuns =  CrawlStore.getCrawlsForCol(col)
+  makeChildContext (col) {
+    let viewingCol = CollectionStore.getCollection(col)
+    let viewingColRuns = CrawlStore.getCrawlsForCol(col)
     let uniqueSeeds = new Set()
     let runMap = new Map()
     let len = viewingColRuns.length
     let totalCrawls = 0
-    for(let i = 0; i < len; ++i) {
-      if(Array.isArray(viewingColRuns[i].urls)){
+    for (let i = 0; i < len; ++i) {
+      if (Array.isArray(viewingColRuns[i].urls)) {
         viewingColRuns[i].urls.forEach(url => {
-          if(!uniqueSeeds.has(url)){
+          if (!uniqueSeeds.has(url)) {
             uniqueSeeds.add(url)
-            runMap.set(url,viewingColRuns[i])
+            runMap.set(url, viewingColRuns[i])
           }
         })
       } else {
-        if(!uniqueSeeds.has(viewingColRuns[i].urls)){
+        if (!uniqueSeeds.has(viewingColRuns[i].urls)) {
           uniqueSeeds.add(viewingColRuns[i].urls)
-          runMap.set(viewingColRuns[i].urls,viewingColRuns[i])
+          runMap.set(viewingColRuns[i].urls, viewingColRuns[i])
         }
       }
       totalCrawls += viewingColRuns[i].runs.length

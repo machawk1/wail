@@ -16,12 +16,12 @@ export default class CrawlInfo {
     this.sortRuns()
   }
 
-  equals(other) {
+  equals (other) {
     if (!(other instanceof CrawlInfo)) {
-        return false
+      return false
     }
 
-    return _.isEqual(this,other)
+    return _.isEqual(this, other)
   }
 
   sortRuns () {

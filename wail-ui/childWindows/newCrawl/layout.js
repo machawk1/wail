@@ -1,5 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {darkBlack, lightBlue900,blue500, cyan500, cyan700, white} from 'material-ui/styles/colors'
+import {darkBlack, lightBlue900, blue500, cyan500, cyan700, white} from 'material-ui/styles/colors'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
@@ -10,7 +10,7 @@ import NewCrawlD from './newCrawlDialog'
 const baseTheme = getMuiTheme({
   palette: {
     primary1Color: cyan700,
-    primary2Color: blue500,
+    primary2Color: blue500
   },
   tabs: {
     backgroundColor: white,
@@ -39,7 +39,7 @@ export default class Layout extends Component {
 
   render () {
     return (
-      <div style={{width: '100%',height: '100%'}}>
+      <div style={{width: '100%', height: '100%'}}>
         <Header />
         <NewCrawlD />
         <Footer />

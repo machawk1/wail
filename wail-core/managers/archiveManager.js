@@ -96,9 +96,9 @@ export default class ArchiveManager {
   }
 
   updateMetadata (update) {
-    console.log('updateMetaData',update)
+    console.log('updateMetaData', update)
     let { forCol, mdata } = update
-    console.log('updateMetaData',forCol, mdata)
+    console.log('updateMetaData', forCol, mdata)
     let opts = {
       cwd: settings.get('warcs')
     }
@@ -107,23 +107,23 @@ export default class ArchiveManager {
       let exec = ''
       if (Array.isArray(mdata)) {
         wasArray = true
-        exec = S(settings.get('pywb.addMetadata')).template({ col:forCol, metadata: update.mdataString}).s
+        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString}).s
       } else {
-        exec = S(settings.get('pywb.addMetadata')).template({ col:forCol, metadata: `${mdata.k}="${mdata.v}"` }).s
+        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: `${mdata.k}="${mdata.v}"` }).s
       }
       console.log(exec)
       cp.exec(exec, opts, (error, stdout, stderr) => {
-        console.log(stdout,stderr)
+        console.log(stdout, stderr)
         if (error) {
           console.error(stderr)
           return reject(error)
         }
         this.db.findOne({ colName: forCol }, { metadata: 1, _id: 0 }, (errFind, doc) => {
           if (errFind) {
-            console.log('errorfind',errFind)
+            console.log('errorfind', errFind)
             return reject(errFind)
           }
-          if (wasArray){
+          if (wasArray) {
             mdata.forEach(m => {
               let didFind = false
               let len = doc.metadata.length
@@ -155,7 +155,7 @@ export default class ArchiveManager {
 
           this.db.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
             if (errUpdate) {
-              console.log('errorUpdate',errFind)
+              console.log('errorUpdate', errFind)
               return reject(errUpdate)
             } else {
               return resolve(doc.metadata)

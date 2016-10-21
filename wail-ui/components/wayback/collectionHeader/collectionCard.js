@@ -6,11 +6,11 @@ import {Card, CardHeader, CardText} from 'material-ui/Card'
 
 export default class CollectionCard extends Component {
   static propTypes = {
-    viewingCol: PropTypes.string.isRequired,
+    viewingCol: PropTypes.string.isRequired
   }
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (...args) {
@@ -38,8 +38,8 @@ export default class CollectionCard extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    let shouldUpdate = shallowCompare(this,nextProps,nextState)
-    console.log(this.props, nextProps,shouldUpdate)
+    let shouldUpdate = shallowCompare(this, nextProps, nextState)
+    console.log(this.props, nextProps, shouldUpdate)
     return shouldUpdate
   }
 
@@ -58,11 +58,11 @@ export default class CollectionCard extends Component {
           style={this.state.headerStyle}
           title='Collections'
           subtitle={`Viewing ${this.props.viewingCol}`}
-          actAsExpander={true}
-          showExpandableButton={true}
+          actAsExpander
+          showExpandableButton
         />
         <CardText expandable style={this.state.expanderStyle}>
-          <CollectionList currCollection={this.props.viewingCol}/>
+          <CollectionList currCollection={this.props.viewingCol} />
         </CardText>
       </Card>
     )

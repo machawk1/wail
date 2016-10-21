@@ -4,7 +4,7 @@ import {Scrollbars} from 'react-custom-scrollbars'
 
 export default class CollectionMetadata extends Component {
   static propTypes = {
-    metadata: PropTypes.array.isRequired,
+    metadata: PropTypes.array.isRequired
   }
 
   constructor (...args) {

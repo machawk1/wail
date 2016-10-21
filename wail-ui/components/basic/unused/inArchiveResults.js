@@ -21,9 +21,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 const noCaptures = () => (
-  <List>
-
-  </List>
+  <List />
 )
 
 const loading = () => (
@@ -31,8 +29,8 @@ const loading = () => (
     size={50}
     left={70}
     top={0}
-    loadingColor={"#FF9800"}
-    status="loading"
+    loadingColor={'#FF9800'}
+    status='loading'
   />
 )
 
@@ -55,7 +53,6 @@ export default class InArchiveResults extends Component {
     console.log('archival buttons cwm')
     UrlStore.on('checking-in-archive', this.checking)
     UrlStore.on('checking-in-archive-done', this.checkingDone)
-
   }
 
   componentWillUnmount () {
@@ -73,7 +70,7 @@ export default class InArchiveResults extends Component {
     console.log(forWho)
     this.setState({
       loading: true,
-      view: <ListItem primaryText={'Checking Archive For Captures'}/>,
+      view: <ListItem primaryText={'Checking Archive For Captures'} />,
       visibility: 'visible',
       forWho
     })
@@ -94,8 +91,8 @@ export default class InArchiveResults extends Component {
           style={{ cursor: 'default' }}
           primaryText={moment(+maybeCapture[ 1 ]).format('dddd, MMMM Do YYYY, h:mm:ss a')}
           rightIconButton={
-            <IconButton onTouchTap={() => shell.openExternal(elem.attribs.href) }>
-              <OpenInBrowser/>
+            <IconButton onTouchTap={() => shell.openExternal(elem.attribs.href)}>
+              <OpenInBrowser />
             </IconButton>
           }
         />
@@ -111,7 +108,7 @@ export default class InArchiveResults extends Component {
     if (a.length === 0) {
       console.log('its empty')
       this.setState({
-        view: <ListItem primaryText={'No Captures Are Contained In The Archive'}/>
+        view: <ListItem primaryText={'No Captures Are Contained In The Archive'} />
       })
     } else {
       this.setState({

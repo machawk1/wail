@@ -111,7 +111,7 @@ export default class AppManager {
             show: false,
             icon: this.iconp,
             webPreferences: {
-              webSecurity:false
+              webSecurity: false
             }
           }
           this.winConfigs = [

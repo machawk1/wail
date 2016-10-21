@@ -24,14 +24,14 @@ export default function collectionReducer (state = Map({}), action) {
     case 'created-collection':
       let { col } = action
       return state.mergeDeep({
-        'collections': { [col.colName]: col },
-      }).set('colNames',state.get('colNames').push(col.colName))
+        'collections': { [col.colName]: col }
+      }).set('colNames', state.get('colNames').push(col.colName))
     case 'added-warcs-to-col':
       let {forCol, count} = action
-      return state.updateIn(['collections',forCol,'numArchives'],archiveCount => archiveCount + count)
+      return state.updateIn(['collections', forCol, 'numArchives'], archiveCount => archiveCount + count)
     case ADD_METADATA_TO_COLLECTION:
       let { mdata, forCol } = action
-      return state.updateIn(['collections',forCol,'metadata'], metadata => {
+      return state.updateIn(['collections', forCol, 'metadata'], metadata => {
         let meta = {}
         mdata.forEach(m => {
           let split = m.split('=')

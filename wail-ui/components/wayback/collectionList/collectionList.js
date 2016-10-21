@@ -25,23 +25,23 @@ import NewCollection from '../util/newCollection'
  */
 export default class CollectionList extends Component {
   static propTypes = {
-    currCollection: PropTypes.string.isRequired,
+    currCollection: PropTypes.string.isRequired
   }
 
   render () {
     return (
       <Grid fluid>
-        <Row between="xs">
+        <Row between='xs'>
           <Col xs>
-            <ColListSearch currCollection={this.props.currCollection}/>
-            <IconButton tooltip="Search For Collection To View">
-              <SearchIcon/>
+            <ColListSearch currCollection={this.props.currCollection} />
+            <IconButton tooltip='Search For Collection To View'>
+              <SearchIcon />
             </IconButton>
           </Col>
           <Col xs>
-            <Row end="xs">
+            <Row end='xs'>
               <Col xs>
-                <NewCollection/>
+                <NewCollection />
               </Col>
             </Row>
           </Col>

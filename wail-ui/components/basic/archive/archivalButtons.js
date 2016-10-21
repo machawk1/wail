@@ -20,7 +20,7 @@ if (process.env.NODE_ENV === 'development') {
 export default class ArchivalButtons extends Component {
 
   static contextTypes = {
-    muiTheme: PropTypes.object.isRequired,
+    muiTheme: PropTypes.object.isRequired
   }
 
   constructor (...args) {
@@ -31,12 +31,11 @@ export default class ArchivalButtons extends Component {
     return shallowCompare(this, nextProps, nextState)
   }
 
-
   @autobind
-  crawlNow() {
+  crawlNow () {
     CrawlDispatcher.dispatch({
       type: EventTypes.BUILD_CRAWL_JOB,
-      from: From.BASIC_ARCHIVE_NOW,
+      from: From.BASIC_ARCHIVE_NOW
     })
   }
 
