@@ -117,7 +117,6 @@ export default class CollectionSeedList extends Component {
     )
   }
 
-  @decorate(memoize)
   getViewingSeeds (searchText) {
     let { seeds } = this.state
     return seeds.filter(seed => fuzzyFilter(searchText, seed))

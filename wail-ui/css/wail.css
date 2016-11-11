@@ -169,6 +169,11 @@ html, body {
     background-color: #f2f2f2;
 }
 
+.sortIcon {
+    cursor: pointer; }
+.sortIcon path {
+    pointer-events: none; }
+
 .layoutBody {
     background-color: #f2f2f2;
     position: absolute;

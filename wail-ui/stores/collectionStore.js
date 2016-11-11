@@ -1,6 +1,6 @@
 import autobind from 'autobind-decorator'
 import EventEmitter from 'eventemitter3'
-import { ipcRenderer as ipc, remote } from 'electron'
+import {ipcRenderer as ipc, remote} from 'electron'
 import S from 'string'
 import ServiceDispatcher from '../dispatchers/service-dispatcher'
 import FlatButton from 'material-ui/FlatButton'
@@ -74,6 +74,10 @@ class _CollectionStore extends EventEmitter {
       window.logger.info(`updated-${update.forCol}-metadata`)
       this.emit(`updated-${update.forCol}-metadata`, col.metadata)
     }
+  }
+
+  getCols () {
+    return Array.from(this.collections.values())
   }
 
   loadCollections (event, ac) {

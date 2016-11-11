@@ -74,7 +74,6 @@ export default class WayBackTab extends Component {
     })
   }
 
-  @decorate(memoize)
   getListItems (searchText) {
     console.log('wb get styles', searchText)
     let { colNames } = this.state
