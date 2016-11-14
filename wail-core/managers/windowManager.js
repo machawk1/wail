@@ -9,6 +9,7 @@ async function dlExtensions (update = false) {
     const installExtension = require('electron-devtools-installer')
     try {
       await installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ], update)
+      await installExtension.default(installExtension[ 'REDUX_DEVTOOLS' ], update)
     } catch (e) {
       console.error(e)
     }
@@ -325,6 +326,7 @@ export default class WindowManager extends EventEmitter {
     }
     lwin.close()
     mwin.show()
+    mwin.webContents.openDevTools()
     mwin.focus()
   }
 
@@ -577,7 +579,7 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows[ 'reqDaemonWindow' ].window.show()
           }
-          this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
+          this.windows[ 'reqDaemonWindow' ].window.webContents.closeDevTools()
         }
         this.windows[ 'reqDaemonWindow' ].open = true
         this.windows[ 'reqDaemonWindow' ].loadComplete = true
@@ -618,7 +620,7 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows[ 'crawlManWindow' ].window.show()
           }
-          this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
+          this.windows[ 'crawlManWindow' ].window.webContents.closeDevTools()
         }
         resolve()
       })
@@ -659,7 +661,7 @@ export default class WindowManager extends EventEmitter {
             this.windows[ 'archiveManWindow' ].window.show()
           }
 
-          this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
+          this.windows[ 'archiveManWindow' ].window.webContents.closeDevTools()
         }
         resolve()
       })

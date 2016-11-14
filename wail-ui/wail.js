@@ -1,23 +1,23 @@
 import 'babel-polyfill'
-import 'muicss/dist/css/mui.css'
 import 'react-flex/index.css'
-import 'react-select/dist/react-select.css'
 import 'react-virtualized/styles.css'
-import 'react-virtualized-select/styles.css'
-import 'velocity-animate'
-import 'velocity-animate/velocity.ui'
 import './css/wail.css'
 import React from 'react'
-import { render } from 'react-dom'
+import {render} from 'react-dom'
+import {Provider} from 'react-redux'
+import routes from './routes'
+import {Router, hashHistory} from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import { ipcRenderer, remote } from 'electron'
-import Routes from './routes'
+import {ipcRenderer, remote} from 'electron'
 import RequestStore from './stores/requestStore'
 import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
+import Root from './containers/root'
+import configureStore from './stores/configureStore'
+
 Promise.promisifyAll(fs)
 
 //  ensure out RequestStore is alive and kicking
@@ -29,7 +29,7 @@ window.lastWaybackPath = wailConstants.Default_Collection
 
 injectTapEventPlugin()
 
-// ipcRenderer.send('get-all-collections')
+// ipcRenderer.send('get-all-collections')210
 // ipcRenderer.send('get-all-runs')
 
 const wail = document.getElementById('wail')
@@ -53,6 +53,10 @@ window.logger = bunyan.createLogger({
 process.on('uncaughtException', (err) => {
   window.logger.error(err)
 })
-
-render(Routes, wail)
+const store = configureStore()
+render(
+  <Provider store={store}>
+    <Router history={hashHistory} routes={routes}/>
+  </Provider>,
+  wail)
 

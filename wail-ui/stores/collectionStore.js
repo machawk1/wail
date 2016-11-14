@@ -43,10 +43,10 @@ class _CollectionStore extends EventEmitter {
     super()
     this.collections = new Map()
     this.colNames = []
-    ipc.on('got-all-collections', ::this.loadCollections)
-    ipc.on('created-collection', ::this.addNewCol)
-    ipc.on('added-warcs-to-col', ::this.addedWarcs)
-    ipc.on('updated-metadata', ::this.updatedMetadata)
+    // ipc.on('got-all-collections', ::this.loadCollections)
+    // ipc.on('created-collection', ::this.addNewCol)
+    // ipc.on('added-warcs-to-col', ::this.addedWarcs)
+    // ipc.on('updated-metadata', ::this.updatedMetadata)
   }
 
   updatedMetadata (e, update) {

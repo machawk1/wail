@@ -1,15 +1,18 @@
 import React, {Component, PropTypes} from 'react'
 import {Provider} from 'react-redux'
 import routes from '../routes'
-import {Router} from 'react-router'
+import {Router, hashHistory} from 'react-router'
+import {
+  syncHistoryWithStore
+} from 'react-router-redux'
 
-const Root = ({ store, history }) => (
-  <Provider store={store}>
-    <Router history={history} routes={routes} />
-  </Provider>
-)
-
+const Root = ({ store }) => {
+  return (
+    <Provider store={store}>
+        <Router history={hashHistory} routes={routes}/>
+    </Provider>
+  )
+}
 Root.propTypes = {
-  store: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired
 }

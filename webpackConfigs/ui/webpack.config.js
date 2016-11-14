@@ -17,14 +17,11 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'react', 'stage-0', 'node6', 'react-hmre' ],
+          presets: [ 'electron', 'react', 'react-hmre' ],
           plugins: [ 'transform-runtime', 'add-module-exports',
-            [ "transform-async-to-module-method", {
-              "module": "bluebird",
-              "method": "coroutine"
-            } ],
-            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
-            'react-html-attrs',
+            'babel-plugin-transform-decorators-legacy',
+            'transform-class-properties',
+            'react-html-attrs'
           ],
         },
       },

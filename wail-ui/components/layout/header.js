@@ -37,9 +37,9 @@ export default class Header_ extends Component {
 
   render () {
     return (
-      <div>
+      <div style={{top: 0, width: '100%', height: '64px'}}>
         <AppBar
-          title={<Breadcrumbs />}
+          title={this.state.location}
           onLeftIconButtonTouchTap={this.handleToggle}
           iconElementRight={<CrawlIndicator />}
         />

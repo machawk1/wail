@@ -15,5 +15,7 @@ export default store => next => action => {
       uid: `Built Crawl Conf for ${forCol} job: ${urls}`
     }))
     return next(action)
+  } else {
+    next(action)
   }
 }

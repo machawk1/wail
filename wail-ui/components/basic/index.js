@@ -52,9 +52,9 @@ export default class BasicTab extends Component {
     }
   }
 
-  // shouldComponentUpdate (nextProps, nextState, nextContext) {
-  //   return shallowCompare(this, nextProps, nextState)
-  // }
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
+  }
 
   componentDidMount () {
     CollectionStore.on('added-new-collection', ::this.updateColNames)

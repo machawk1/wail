@@ -1,412 +1,160 @@
-import 'babel-polyfill'
-import {Map,List} from 'immutable'
-import S from 'string'
-import   yaml  from 'node-yaml'
-import Db from 'nedb'
-import _ from 'lodash'
-// import CrawlStatsManager from '../wail-core/managers/crawlStatsMonitor'
+const DB = require('nedb')
+const _ = require('lodash')
+const util = require('util')
+const Promise = require('bluebird')
+const S = require('string')
+const cp = require('child_process')
+const fs = require('fs-extra')
+const through2 = require('through2')
+const prettyBytes = require('pretty-bytes')
+const moment = require('moment')
+Promise.promisifyAll(DB.prototype)
 
-
-
-
-
-// const base = path.join(path.resolve('.'),'bundledApps/heritrix/jobs/**/progress-statistics.log')
-// console.log(base)
-
-// const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
-// const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
-// const jobEndRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:(?:ING)|(?:ED)).+)/
-// const jobStatusRec = /(:<timestamp>[a-zA-Z0-9\-:]+)\s+(:<discovered>[0-9]+)\s+(:<queued>[0-9]+)\s+(:<downloaded>[0-9]+)\s.+/
-// const jobStatusRe = /([a-zA-Z0-9\-:]+)\s+([0-9]+)\s+([0-9]+)\s+([0-9]+)\s.+/
-// let jobStatus = named.named(jobStatusRec)
-
-// console.log(path.resolve('/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log','../../'))
-// console.log(path.normalize(`/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473386133521/20160913224309/logs/progress-statistics.log/../../warcs/*.warc`))
-
-// let logWatcher = chokidar.watch(base,{
-//   followSymlinks: true,
-// })
+// let sss = [ { url: 'http://cs.odu.edu', jobId: 1473098189935 },
+//   { url: 'http://matkelly.com', jobId: 1473828972667 },
+//   { url: 'http://matkelly.com', jobId: 1473828972667 },
+//   { url: 'http://matkelly.com', jobId: 1473828972667 },
+//   { url: 'http://matkelly.com', jobId: 1473828972667 },
+//   { url: 'http://matkelly.com', jobId: 1473828972667 },
+//   { url: 'cs.odu.edu/~jberlin', jobId: 1475010467129 },
+//   { url: 'cs.odu.edu/~jberlin', jobId: 1475012345753 },
+//   { url: 'cs.odu.edu/~jberlin', jobId: 1475014488646 },
+//   { url: 'cs.odu.edu/~jberlin', jobId: 1475014754339 },
+//   { url: 'cs.odu.edu', jobId: 1475473536070 } ]
 //
-// logWatcher.on('add',path => console.log(`File ${path} has been added`))
-// logWatcher.on('change',path => console.log(`File ${path} has been changed`))
-
-let s1 = 'yay'
-let s2 = 'yay2'
-console.log(s1 === s2)
-// psTree(32516,(err, kids) => {
-//   if(err) {
-//     console.error(err)
-//   } else {
-//     console.log(kids)
-//     if(kids.length > 0) {
-//       console.log('we have length')
-//     } else {
-//       console.log('we have no length')
-//       process.kill(32516, 'SIGTERM')
+// let trans = _.chain(sss)
+//   .groupBy(it => it.url)
+//   .mapValues(ar => {
+//     let it = ar.map(it => it.jobId)
+//     let jobIds = _.uniq(it)
+//     return {
+//       mementos: it.length,
+//       jobIds
 //     }
-//   }
-// })
-// let a = 'a'
-// let key = 'a'
-// let theMap = Map({aa: Map({a: Map({a1: 1,a2: 2}), b: Map({b1: 1,b2: 2})}),bb: List([1,2,3])})
-// theMap = theMap.mergeDeep({'aa':{ [a]: {a3: 3}}}).set('bb',theMap.get('bb').push(4))
-// console.log(theMap)
-// console.log(theMap.updateIn(['aa',key,'a1'],it => it + 3))
-//
-// const theMap2 = Map({})
-// console.log(theMap2.set('a',1).set('b',2))
-// let configDirPath = path.join('.','waillogs/wail-settings')
-// //
-// let settings = new Esettings({ configDirPath })
-// const makeOptsReplaceUrl = (jobId, settingsKey) => {
-//   let options = _.cloneDeep(settings.get(settingsKey))
-//   options.url = `${options.url}${jobId}`
-//   return options
-// }
-//
-// rp(makeOptsReplaceUrl(1473098189935,'heritrix.buildOptions'))
-//   .then(respone => {
-//     console.log('success!!')
-//     console.log(util.inspect(respone,{depth: null,colors: true}))
 //   })
-//   .catch(error => {
-//     console.log('err')
-//     if (error.error.code === 'ETIMEDOUT') {
-//       console.log('timeout')
-//     } else {
-//       console.log(error.statusCode)
+//   .toPairs()
+//   .flatMap(it => {
+//     return {
+//       url: it[ 0 ],
+//       jobIds: it[ 1 ].jobIds,
+//       mementos: it[ 1 ].mementos
 //     }
-//     console.log(util.inspect(error,{depth: null,colors: true}))
-//   })
+//   }).value()
+// console.log(util.inspect(trans, { colors: true, depth: null }))
 
+console.log('hi')
+const a = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+  autoload: true
+})
 
-// 1473098189935
+const c = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
+  autoload: true
+})
 
-// S.TMPL_CLOSE = '}'
-// S.TMPL_OPEN= '{'
-// //
-// // // // let hpidre = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
-// // // // let hpidre2 = named.named(/\(pid+\s(:<hpid>[0-9]+)\)/g)
-// // // let pather = new Pather(path.resolve('.'))
-// // // console.log(util.inspect(pather,{depth: null,colors: true}))
-
-//
-// cp.exec(settings.get('heritrixStart'),(err, stdout, stderr) => {
-//   if (err) {
-//     console.error(err)
-//     console.error(stderr)
-//     console.error(stdout)
-//   } else {
-//     console.log(stdout)
-//     console.log(stderr)
-//   }
-// })
-// let opts = {
-//   cwd: settings.get('warcs')
-// }
-// let tmplVal = { col: 'ghhhkjlhkj' ,warcs: '/Users/jberlin/WebstormProjects/wail/bundledApps/heritrix/jobs/1473573838942/20160911060401/warcs/*.warc'}
-// let tmplVal2 = {col: 'Wail'}
-// let command = S(settings.get('pywb.addWarcsToCol')).template(tmplVal).s
-// cp.exec(command, opts, (error, stdout, stderr) => {
-//   if (error) {
-//     console.error(error,stderr,stdout)
-//   } else {
-//     let c1 = ((stdout || ' ').match(/INFO/g) || []).length
-//     let c2 = ((stderr || ' ').match(/INFO/g) || []).length
-//     let count = c1 === 0 ? c2 : c1
-//
-//     console.log('added warcs to collection iy',count)
-//     console.log('stdout', stdout)
-//     console.log('stderr', stderr)
-//   }
-//
+// c.find({}, (err, runs) => {
+//   console.log(util.inspect(runs, { depth: null, colors: true }))
 // })
 
-//
-// let opts = {
-//   cwd: settings.get('warcs')
-// }
-//
-// cp.exec(command,opts,(error,stdout,stderr) => {
-//   if (error) {
-//     console.error(`exec error: ${error}`)
-//     console.log(`stdout: ${stdout}`)
-//     console.log(`stderr: ${stderr}`)
-//     return
-//   }
-//
-//   console.log(`stdout: ${stdout}`)
-//   console.log(`stderr: ${stderr}`)
-// })
+function *updateGen (col) {
+  for (let it of col)
+    yield it
+}
 
-// var hStart
-// if (process.platform === 'darwin') {
-//   hStart = settings.get('heritrixStartDarwin')
-// } else {
-//   hStart = settings.get('heritrixStart')
-// }
-// cp.exec(hStart, (err, stdout, stderr) => {
-//   if (err) {
-//     console.error('heritrix could not be started due to an error', err, stderr, stdout)
-//   } else {
-//     console.log(stdout, stderr)
-//   }
-// })
+const transformSeeds = seeds => _.chain(seeds)
+  .groupBy(it => it.url)
+  .mapValues(ar => {
+    let it = ar.map(it => it.jobId)
+    let jobIds = _.uniq(it)
+    return {
+      mementos: it.length,
+      jobIds
+    }
+  })
+  .toPairs()
+  .flatMap(it => {
+    return {
+      url: it[ 0 ],
+      jobIds: it[ 1 ].jobIds,
+      mementos: it[ 1 ].mementos
+    }
+  }).value()
 
-// let opts = {
-//   transform: (body) => cheerio.load(body),
-//   uri: `${settings.get('pywb.url')}Wail/*/http://cs.odu.edu`
-// }
-// rp(opts)
-//   .then(response => {
-//     // POST succeeded...
-//     console.log(response.html())
-//
-//   })
-//   .catch(err => {
-//     console.log('error in querying wayback', err)
-//   })
-// let opts = {
-//   cwd: settings.get('pywb.home'),
-//   shell: false,
-//   detached: true,
-//   stdio:  ['ignore', 'ignore', 'ignore']
-// }
-// let exec = settings.get('pywb.wayback')
-// let wayback = cp.spawn(exec, [ '-d', settings.get('warcs') ], opts)
-// console.log('wayback pid',wayback.pid)
-// wayback.unref()
+let newCols = []
+const update = (iter, collections, runs) => {
+  let { done, value: col } = iter.next()
+  if (!done) {
+    runs.find({ forCol: col.colName }, (err, colRuns) => {
+      if (colRuns.length > 0) {
+        let seeds = []
+        let rms = []
+        colRuns.forEach(cur => {
+          if (Array.isArray(cur.urls)) {
+            cur.urls.forEach(it => {
+              seeds.push({
+                url: it,
+                jobId: cur.jobId
+              })
+            })
+          } else {
+            seeds.push({
+              url: cur.urls,
+              jobId: cur.jobId
+            })
+          }
+          if (cur.runs.length > 0) {
+            rms = rms.concat(cur.runs.map(r => moment(r.timestamp)))
+          }
+        })
+        col.lastUpdated = rms.length > 0 ? moment.max(rms).format() : moment().format()
+        col.seeds = transformSeeds(seeds)
+      } else {
+        col.lastUpdated = moment().format()
+        col.seeds = []
+      }
+      col.created = moment().format()
+      let size = 0
+      fs.walk(col.archive)
+        .pipe(through2.obj(function (item, enc, next) {
+          if (!item.stats.isDirectory()) this.push(item)
+          next()
+        }))
+        .on('data', item => {
+          size += item.stats.size
+        })
+        .on('end', () => {
+          col.size = prettyBytes(size)
+          delete col.crawls
+          newCols.push(col)
+          update(iter, collections, runs)
+        })
+    })
+  } else {
+    console.log(util.inspect(newCols, { depth: null, colors: true }))
+    a.remove({}, { multi: true }, (x, y) => {
+      a.insert(newCols, (erri, newDocs) => {
+        console.log(newDocs)
+      })
+    })
+  }
+}
 
-// let hStart = settings.get('heritrixStart')
-// let ret = hpidre.exec('Thu Sep  1 00:19:14 EDT 2016 Heritrix starting (pid 24256)')
-// console.log(ret)
-// cp.exec(hStart, (err, stdout, stderr) => {
-//   // console.log(hStart)
-//   if (err) {
-//
-//   } else {
-//     let soutLines = S(stdout).lines()
-//     let pidLine = soutLines[ 0 ]
-//     let maybepid = hpidre.exec(pidLine)
-//     if (maybepid) {
-//       let pid = maybepid.capture('hpid')
-//       console.log(pidLine, pid)
-//       let mbp2 = hpidre2.exec(stdout)
-//       if(mbp2) {
-//         console.log('global found',mbp2)
-//       }
-//     } else {
-//       console.log('fail')
-//       console.log(pidLine)
-//       console.log(soutLines)
-//
-//     }
-//   }
-//
-//   // console.log('stdout',stdout)
-// })
-// let heritrixPath = settings.get('heritrix.path')
-// let opts = {
-//   env: {
-//     JAVA_HOME: settings.get('jdk'),
-//     JRE_HOME: settings.get('jre'),
-//     HERITRIX_HOME: heritrixPath
-//   },
-//   shell: true,
-//   stdio: [ 'ignore', 'ignore', 'ignore' ]
-// }
-// let heritrix = cp.spawn('/home/john/wail/bundledApps/heritrix/bin/heritrix',['-a', 'lorem:ipsum'],opts)
-//
-// heritrix.on('data', (data) => {
-//   console.log(`stdout: ${data}`)
-// })
-//
-// heritrix.on('data', (data) => {
-//   console.log(`stderr: ${data}`)
-// })
-//
-// heritrix.on('close', (code) => {
-//   console.log(`child process exited with code ${code}`)
-// })
-
-// const pathMan = new Pather(path.resolve('.'))
-//
-// // let here = path.resolve('.')
-// // console.log(pathMan.base,pathMan.normalizeJoin('it/aswell'))
-// let opts = {
-//   cwd: pathMan.join('bundledApps/pywb')
-//   // detached: true,
-//   // shell: true,
-//   // stdio: [ 'ignore', 'ignore', 'ignore' ]
-// }
-// //
-// let wayback = cp.spawn(pathMan.join('bundledApps/pywb/wayback'),['-d',pathMan.join('archives')], opts)
-// wayback.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`)
-// })
-//
-// wayback.stderr.on('data', (data) => {
-//   console.log(`stderr: ${data}`)
-// })
-
-// mongodb_prebuilt.start_server({
-//   version: "3.2.9",
-//   auto_shutdown: false,
-//   args: {
-//     logpath: path.join(path.resolve('.'),'waillogs/mongodb-prebuilt.log'),
-//     dbpath: path.join(path.resolve('.'),'database')
-//   }
-// }, function(err) {
-//   if (err) {
-//     console.log('mongod didnt start:', err);
-//   } else {
-//     console.log('mongod is started');
-//   }
-// })
-
-// let ret = shelljs.ls(`/Users/jberlin/WebstormProjects/wail/archives/*.warc`)
-// ret.forEach(warc => {
-//   console.log(warc)
-//   console.log('--------------')
-// })
-
-//
-// let managed = {
-//   port: '8080',
-//   url: 'http://localhost:{port}/',
-//   newCollection: 'bundledApps/pywb/wb-manager init {col}',
-//   addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
-//   addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
-//   reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
-//   convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
-//   autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
-//   autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
-//   sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
-//   sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
-//   cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
-//   cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
-//   wayback: 'bundledApps/pywb/wayback',
-//   waybackPort: 'bundledApps/pywb/wayback -p {port}',
-//   waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
-//   waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}'
-// }
-//
-// S.TMPL_OPEN = '{'
-// S.TMPL_CLOSE = '}'
-//
-// let pywb = _.mapValues(managed,(v,k) => {
-//   console.log(v,k)
-//   if(k !== 'port' && k !== 'url') {
-//     v = path.normalize(path.join('/home/john/my-fork-wail', v))
-//   }
-//   if(k === 'url') {
-//     v = S(v).template({port: managed.port}).s
-//   }
-//   return v
-// })
-//
-// console.log(pywb)
-
-// const socket = io('http://localhost:3030', { pingTimeout: 120000,timeout: 120000  })
-// const app = feathers()
-//   .configure(hooks())
-//   .configure(socketio(socket, { pingTimeout: 120000,timeout: 120000  }))
-//
-//
-// const memgator = app.service('/archivesManager')
-// memgator.update('xyz' , { existingWarcs: '/Users/jberlin/WebstormProjects/wail/archives/*.warc'}, { query: {action: 'addWarcs' } })
-//   .then(data => {
-//     console.log(data)
-//     process.exit(0)
-//   })
-//   .catch(error => {
-//     console.error(error)
-//     process.exit(0)
-//   })
-// memgator.find({}).then(data => {
-//   console.log(data)
-//   memgator.create({ name: 'xyz' })
-//     .then(created => {
-//       console.log(created)
-//       process.exit(0)
-//
-//     })
-//     .catch(err => {
-//       console.error(err)
-//       process.exit(0)
-//     })
-//
-// })
-//   .catch(error => {
-//     console.error(error)
-//     process.exit(0)
-//   })
-
-// console.log(path.join(path.resolve('.'),'database'))
-
-// let it = mongodb_prebuilt.start_server({
-//   version: "3.2.9",
-//   auto_shutdown: false,
-//   args: {
-//     logpath: path.join(path.resolve('.'),'waillogs/mongodb-prebuilt.log'),
-//     dbpath: path.join(path.resolve('.'),'database')
-//   }
-// },function (err) {
-//   if (err) {
-//     console.log('mongod didnt start:', err)
-//   } else {
-//     console.log('mongod is started')
-//   }
-// })
-//
-// console.log(it)
-//
-
-//
-//
-// memgator.update('xyz',{ metadata: ['title="Test"','description="Makeing sure this works"']},{query: {action: 'addMetadata'}})
-//   .then(data => {
-//     console.log(data)
-//     process.exit(0)
-//   })
-//   .catch(error => {
-//     console.error(error)
-//     process.exit(0)
-//   })
-
-//
-// let managed = {
-//   port: '8080',
-//   url: 'http://localhost:{port}/',
-//   newCollection: 'bundledApps/pywb/wb-manager init {col}',
-//   addWarcsToCol: 'bundledApps/pywb/wb-manager add {col} {warcs}',
-//   addMetadata: 'bundledApps/pywb/wb-manager metadata {col} --set {metadata}',
-//   reindexCol: 'bundledApps/pywb/wb-manager reindex {col}',
-//   convertCdx: 'bundledApps/pywb/wb-manager convert-cdx {cdx}',
-//   autoIndexCol: 'bundledApps/pywb/wb-manager autoindex {col}',
-//   autoIndexDir: 'bundledApps/pywb/wb-manager autoindex {dir}',
-//   sortedCombinedCdxj: 'bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}',
-//   sortedCombinedCdx: 'bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}',
-//   cdxjPerColWarc: 'bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}',
-//   cdxPerColWarc: 'bundledApps/pywb/cdx-indexer --sort {cdx} {warc}',
-//   wayback: 'bundledApps/pywb/wayback',
-//   waybackPort: 'bundledApps/pywb/wayback -p {port}',
-//   waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
-//   waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}'
-// }
-//
-// S.TMPL_OPEN = '{'
-// S.TMPL_CLOSE = '}'
-//
-// let pywb = _.mapValues(managed,(v,k) => {
-//   console.log(v,k)
-//   if(k !== 'port' && k !== 'url') {
-//     v = path.normalize(path.join('/home/john/my-fork-wail', v))
-//   }
-//   if(k === 'url') {
-//     v = S(v).template({port: managed.port}).s
-//   }
-//   return v
-// })
-//
-// console.log(pywb)
+a.find({}, (err, collections) => {
+  console.log(util.inspect(collections, { depth: null, colors: true }))
+  // update(updateGen(collections), a, c)
+  // collections.forEach(col => {
+  //   c.find({ forCol: col.colName }, (err, colRuns) => {
+  //     console.log(util.inspect(col, { depth: null, colors: true }))
+  //     console.log(util.inspect(colRuns, { depth: null, colors: true }))
+  //     if (colRuns.length > 0) {
+  //       let seeds = colRuns.map(r => r.urls)
+  //       console.log(seeds)
+  //     } else {
+  //       console.log('no seeds')
+  //       a.update({ _id: col._id },)
+  //     }
+  //     console.log('------------------------------')
+  //   })
+  // })
+})

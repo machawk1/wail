@@ -14,7 +14,7 @@ let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
   defForCol = 'Wail'
 }
-export const GOT_ALL_COLLECTIONS = Symbol('Call API')
+
 
 // ipc.on('got-all-collections', (event, ac) => {
 //   console.log('got all collections', ac)
@@ -38,7 +38,6 @@ export const GOT_ALL_COLLECTIONS = Symbol('Call API')
 // })
 
 export function gotAllCollections (event, ac) {
-  console.log('got all collections', ac)
   let {
     cols,
     wasError

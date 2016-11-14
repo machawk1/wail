@@ -61,9 +61,9 @@ app.on('ready', () => {
   let userData = null
 
   if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')({
-      showDevTools: true
-    })
+    // require('electron-debug')({
+    //   showDevTools: true
+    // })
   } else {
     base = app.getAppPath()
     loadFrom = `${base}/wail-ui`
