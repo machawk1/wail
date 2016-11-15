@@ -38,7 +38,6 @@ export default class CollectionViewHeader extends Component {
   }
 
   render () {
-    console.log(this.props)
     let col = this.props.collection
     let viewingCol = col.get('colName')
     let description = col.get('metadata').get('description')
@@ -47,24 +46,15 @@ export default class CollectionViewHeader extends Component {
                                  style={{
                                    color: primary1Color,
                                    textDecoration: 'none'
-                                 }}> Collections</IndexLink> > {viewingCol}</span>
+                                 }}>Collections</IndexLink> > {viewingCol}</span>
     return (
       <Card>
-        <Flex row alignItems='flex-start' justifyContent='space-between'>
-          <CardTitle
-            style={{ padding: 0, paddingLeft: 16 }}
-            title={title}
-          />
-          <Flex column  justifyContent='space-around'>
-            <Flex row justifyContent='flex-start'>
-              <CardTitle subtitle={`Last Updated: ${col.get('created').format('MMM DD YYYY')}`}/>
-              <CardTitle subtitle={`Created: ${col.get('created').format('MMM DD YYYY')}`}/>
-            </Flex>
-            <Flex row alignItems='baseline' justifyContent='space-around'>
-              <CardTitle subtitle={`Seeds: ${col.get('seeds').size}`}/>
-              <CardTitle subtitle={`Size: ${col.get('size')}`}/>
-            </Flex>
-          </Flex>
+        <Flex row alignItems='baseline' justifyContent='space-between'>
+          <CardTitle title={title}/>
+          <CardTitle subtitle={`Last Updated: ${col.get('lastUpdated').format('MMM DD YYYY')}`}/>
+          <CardTitle subtitle={`Created: ${col.get('created').format('MMM DD YYYY')}`}/>
+          <CardTitle subtitle={`Seeds: ${col.get('seeds').size}`}/>
+          <CardTitle subtitle={`Size: ${col.get('size')}`}/>
         </Flex>
         <CardText>
           {description}

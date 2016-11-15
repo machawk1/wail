@@ -2,7 +2,7 @@ import {
   combineReducers
 } from 'redux-immutable'
 import collections from './collectionReducer'
-import colNames from './collectionNames'
+import crawls from './crawls'
 
-const rootReducer = combineReducers({ collections })
+const rootReducer = combineReducers({ collections, crawls })
 export default rootReducer

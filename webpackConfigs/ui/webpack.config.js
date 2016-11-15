@@ -4,7 +4,7 @@ import path from 'path'
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 export default {
-  devtool: 'eval-source-map',
+  devtool: '#@inline-source-map',
   entry: {
     wail: ['babel-polyfill','./wail-ui/wail']
   },

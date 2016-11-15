@@ -38,14 +38,11 @@ export default {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'react', 'stage-0', 'node6'],
+          presets: [ 'electron', 'react'],
           plugins: [ 'transform-runtime', 'add-module-exports',
-            [ "transform-async-to-module-method", {
-              "module": "bluebird",
-              "method": "coroutine"
-            } ],
-            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
-            'react-html-attrs',
+            'babel-plugin-transform-decorators-legacy',
+            'transform-class-properties',
+            'react-html-attrs'
           ],
         },
       },

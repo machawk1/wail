@@ -10,6 +10,7 @@ import Misc from './components/advanced/miscellaneous'
 import hi from './components/combined/hi'
 import Combined from './components/combined/combined'
 import CollectionView from './components/combined/collectionView'
+import CollectionAddSeed from './components/combined/collAddSeed'
 // const Routes = (
 //   <Route path='/' component={Layout}>
 //     <IndexRoute component={Test}/>
@@ -32,4 +33,5 @@ import CollectionView from './components/combined/collectionView'
 export default  <Route path='/' component={Layout}>
   <IndexRoute component={Combined}/>
   <Route path='Collections/:col' component={CollectionView}/>
+  <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
 </Route>

@@ -16,6 +16,18 @@ export default class CrawlInfo {
     this.sortRuns()
   }
 
+  urlsToJobId () {
+    let uTj = []
+    if (Array.isArray(this.urls)) {
+      for (let url of new Set(this.urls)) {
+        uTj.push({ url, jobId: this.jobId })
+      }
+    } else {
+      uTj.push({ url: this.urls, jobId: this.jobId })
+    }
+    return uTj
+  }
+
   equals (other) {
     if (!(other instanceof CrawlInfo)) {
       return false

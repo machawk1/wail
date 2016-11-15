@@ -1,27 +1,41 @@
 import Immutable, {Map, List} from 'immutable'
 import S from 'string'
-import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
+import makeCrawlInfoRecord from '../records/crawlInfoRecord'
 import wailConstants from '../constants/wail-constants'
+const log = console.log.bind(console)
+const EventTypes = wailConstants.EventTypes
+const From = wailConstants.From
 
-const { ADD_METADATA_TO_COLLECTION } = wailConstants.EventTypes
-
-export default  (state = Map(), action) => {
-  console.log('in collections reducer', action)
+export default (state = Map(), action) => {
+  console.log('in crawls reducer', action)
   switch (action.type) {
     case 'got-all-runs':
       let { allRuns } = action
       if ((allRuns || []).length > 0) {
         window.logger.debug(`intial job state load ${allRuns.length} jobs`)
-        this.crawlJobs = allRuns.map((r, idx) => {
-          // console.log(r)
-          this.jobIndex.set(r.jobId, idx)
-          return new CrawlInfo(r)
+        let crawlJobs = {}
+        let crawlsToCol = {}
+        allRuns.forEach(r => {
+          let cinfo = makeCrawlInfoRecord(r)
+          crawlJobs[ cinfo.get('jobId') ] = cinfo
+          if (!crawlsToCol[ cinfo.get('forCol') ]) {
+            crawlsToCol[ cinfo.get('forCol') ] = []
+          }
+          crawlsToCol[ cinfo.get('forCol') ].push(cinfo.get('jobId'))
         })
-        this.emit('jobs-updated')
+        return state.merge(crawlJobs).set('runningJobs', 0).set('colCrawls', Immutable.fromJS(crawlsToCol))
       } else {
-        console.log('there was no runs in the db')
         logger.debug('there was no runs in the db')
+        return state.set('runningJobs', 0).set('colCrawls', Map())
       }
+    case 'crawljob-status-update': {
+      let { jobId, stats } = action.crawlStatus
+      if (stats.ended) {
+        return state.updateIn([ `${jobId}` ], crawlRecord => crawlRecord.updateLatestRun(stats)).update('runningJobs', val => val - 1)
+      } else {
+        return state.updateIn([ `${jobId}` ], crawlRecord => crawlRecord.updateLatestRun(stats))
+      }
+    }
     default:
       return state
   }

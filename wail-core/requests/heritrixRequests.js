@@ -221,7 +221,6 @@ const makeJobLifeCycle = (jobId, starting) => {
     return [
       new BuildJobRequest(jobId),
       new LaunchJobRequest(jobId),
-      new TerminateJobRequest(jobId),
       new TeardownJobRequest(jobId)
     ]
   } else {

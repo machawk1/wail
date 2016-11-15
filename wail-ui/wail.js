@@ -11,8 +11,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import {ipcRenderer, remote} from 'electron'
-import RequestStore from './stores/requestStore'
-import ColStore from './stores/collectionStore'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
 import Root from './containers/root'
@@ -22,8 +20,6 @@ Promise.promisifyAll(fs)
 
 //  ensure out RequestStore is alive and kicking
 window.React = React
-window.colStore = ColStore
-window.ReqStore = RequestStore
 
 window.lastWaybackPath = wailConstants.Default_Collection
 
@@ -58,5 +54,5 @@ render(
   <Provider store={store}>
     <Router history={hashHistory} routes={routes}/>
   </Provider>,
-  wail)
+  document.getElementById('wail'))
 

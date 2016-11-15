@@ -8,7 +8,12 @@ export default class SortHeader extends Component {
   static propTypes = {
     text: PropTypes.string.isRequired,
     sortDirection: PropTypes.string.isRequired,
-    onTouchTap: PropTypes.func.isRequired
+    onTouchTap: PropTypes.func.isRequired,
+    extraElem: PropTypes.element
+  }
+
+  static defaultProps = {
+    extraElem: null
   }
 
   constructor (...args) {
@@ -24,7 +29,7 @@ export default class SortHeader extends Component {
       : SortDirection.DESC
     const onTouchTap = () => {
       if (!this.state.headerClicked) {
-        this.setState({ headerClicked: true},
+        this.setState({ headerClicked: true },
           this.props.onTouchTap(this.props.key, newSortDirection)
         )
       } else {
@@ -38,6 +43,7 @@ export default class SortHeader extends Component {
         }}
         onTouchTap={onTouchTap}
       >
+        {this.props.extraElem !== null && this.props.extraElem}
         {this.props.text}
         {this.state.headerClicked && <SortIndicator key='SortIndicator' sortDirection={this.props.sortDirection}/>}
       </TableHeaderColumn>

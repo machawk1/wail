@@ -1,0 +1,62 @@
+.Table {
+    width: 100%;
+    margin-top: 15px;
+    background-color: rgb(255, 255, 255);
+    border-collapse: collapse;
+    border-spacing: 0px;
+    table-layout: fixed;
+    font-family: Roboto, sans-serif;
+}
+.headerRow,
+.evenRow,
+.oddRow {
+    border-bottom: 1px solid #e0e0e0;
+}
+.oddRow {
+    background-color: #fafafa;
+}
+.row [class*="ReactVirtualized__Table__row"] {
+    padding-left: 24px;
+    padding-right: 24px;
+    text-align: left;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: inherit;
+}
+.headerColumn {
+    font-family: Roboto, sans-serif;
+    text-transform: none;
+    font-weight: normal;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: rgb(158, 158, 158);
+    position: relative;
+    cursor: pointer;
+}
+.exampleColumn {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.checkboxLabel {
+    margin-left: .5rem;
+}
+.checkboxLabel:first-of-type {
+    margin-left: 0;
+}
+
+.noRows {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1em;
+    color: #bdbdbd;
+}

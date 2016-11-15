@@ -79,6 +79,7 @@ export default class Combined extends Component {
   }
 
   renTr () {
+
     let trs = []
     let cols
     if (this.state.sortDirection) {
@@ -109,6 +110,7 @@ export default class Combined extends Component {
         </TableRowColumn>
       </TableRow>)
     }
+
     return trs
   }
 
@@ -185,6 +187,7 @@ export default class Combined extends Component {
       </div>
     )
   }
+
 }
 
 /*
