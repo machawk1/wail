@@ -12,6 +12,27 @@ export default {
       CRAWLBEAN: null
     })
   },
+  CheckUrlEvents: keyMirror({
+    CHECK_URL: null,
+    CHECKING_ARCHIVE: null,
+    NOT_IN_ARCHIVE: null,
+    IN_ARCHIVE: null,
+    RESET_CHECK_MESSAGE: null,
+  }),
+  CrawlEvents: keyMirror({
+    GOT_ALL_RUNS: null,
+    CRAWLJOB_STATUS_UPDATE: null,
+    BUILD_CRAWL_JOB: null,
+    BUILT_CRAWL_CONF: null,
+    CREATE_JOB: null,
+    CRAWL_JOB_DELETED: null,
+  }),
+  CollectionEvents: keyMirror({
+    GOT_ALL_COLLECTIONS: null,
+    CREATED_COLLECTION: null,
+    ADD_METADATA_TO_COLLECTION: null,
+    ADDED_WARCS_TO_COLL: null,
+  }),
   EventTypes: keyMirror({
     EDIT_METADATA: null,
     ADD_METADATA_TO_COLLECTION: null,

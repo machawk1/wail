@@ -9,14 +9,14 @@ import {Map} from 'immutable'
 import * as actionCreators from '../actions/redux/index'
 
 const logger = createLogger()
-const configureStore = (intialState) => {
+const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       actionCreators
     }) || compose
   const store = createStore(
     rootReducer,
     composeEnhancers(
-      applyMiddleware(thunk, ipc, promiseMiddleware, requestHandler,logger)
+      applyMiddleware(thunk, ipc, promiseMiddleware, requestHandler)
     )
   )
 

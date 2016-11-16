@@ -13,7 +13,9 @@ import Promise from 'bluebird'
 import {ipcRenderer, remote} from 'electron'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
-import Root from './containers/root'
+import {
+  syncHistoryWithStore
+} from 'react-router-redux'
 import configureStore from './stores/configureStore'
 
 Promise.promisifyAll(fs)

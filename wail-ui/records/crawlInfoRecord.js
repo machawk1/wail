@@ -1,6 +1,5 @@
 import moment from 'moment'
 import Immutable from 'immutable'
-import _ from 'lodash'
 import  {makeRunInfoRecord, RunInfoRecord} from './runInfoRecord'
 
 const log = console.log.bind(console)

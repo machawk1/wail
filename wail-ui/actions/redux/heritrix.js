@@ -1,19 +1,28 @@
 import {ipcRenderer as ipc, remote} from 'electron'
 import {joinStrings} from 'joinable'
 import wc from '../../constants/wail-constants'
+import {CollectionEvents, CrawlEvents} from '../../constants/wail-constants'
 const EventTypes = wc.EventTypes
 const From = wc.From
+const {
+  GOT_ALL_RUNS,
+  CRAWLJOB_STATUS_UPDATE,
+  BUILD_CRAWL_JOB,
+  BUILT_CRAWL_CONF,
+  CREATE_JOB,
+  CRAWL_JOB_DELETED,
+} = CrawlEvents
 
 export function gotAllRuns (event, allRuns) {
   return {
-    type: 'got-all-runs',
+    type: GOT_ALL_RUNS,
     allRuns
   }
 }
 
 export function createJob (conf) {
   return {
-    type: EventTypes.CREATE_JOB,
+    type: CREATE_JOB,
     conf
   }
 }
@@ -27,7 +36,7 @@ export function madeJobConf (conf) {
 
 export function crawlJobUpdate (e, crawlStatus) {
   return {
-    type: 'crawljob-status-update',
+    type: CRAWLJOB_STATUS_UPDATE,
     crawlStatus
   }
 }

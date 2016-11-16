@@ -1,14 +1,19 @@
 import Immutable, {Map, List} from 'immutable'
 import S from 'string'
 import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
-import wailConstants from '../constants/wail-constants'
+import {CollectionEvents} from '../constants/wail-constants'
 import moment from 'moment'
-const { ADD_METADATA_TO_COLLECTION } = wailConstants.EventTypes
+const {
+  GOT_ALL_COLLECTIONS,
+  CREATED_COLLECTION,
+  ADD_METADATA_TO_COLLECTION,
+  ADDED_WARCS_TO_COLL
+} = CollectionEvents
 
 export default  (state = Map(), action) => {
   console.log('in collections reducer', action)
   switch (action.type) {
-    case 'got-all-collections':
+    case GOT_ALL_COLLECTIONS:
       window.logger.debug('collection store got all collections')
       let { cols } = action
       let collections = {}
@@ -18,14 +23,14 @@ export default  (state = Map(), action) => {
         collections[ col.colName ] = col
       })
       return state.merge(collections)
-    case 'created-collection':
+    case CREATED_COLLECTION:
       let { col } = action
       col.lastUpdated = moment(col.lastUpdated)
       col.created = moment(col.created)
       return state.merge({
         [col.colName]: col
       })
-    case 'added-warcs-to-col': {
+    case ADDED_WARCS_TO_COLL: {
       let { forCol, count } = action
       return state.updateIn([ forCol, 'numArchives' ], archiveCount => archiveCount + count)
     }

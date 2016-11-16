@@ -6,7 +6,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 export default {
   devtool: '#@inline-source-map',
   entry: {
-    wail: ['babel-polyfill','./wail-ui/wail']
+    wail: './wail-ui/wail'
   },
   module: {
     noParse: noParseRe,

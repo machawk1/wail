@@ -7,6 +7,8 @@ import MemgatorDispatcher from '../dispatchers/memgatorDispatcher'
 import wailConstants from '../constants/wail-constants'
 import * as notify from './notification-actions'
 import cheerio from 'cheerio'
+import S from 'string'
+import moment from 'moment'
 
 const settings = remote.getGlobal('settings')
 const EventTypes = wailConstants.EventTypes
@@ -17,8 +19,27 @@ export function grabCaptures (uri, forCol) {
   // notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
   // window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)
   return rp({
-    uri: `${settings.get('pywb.url')}${forCol}/*/${uri}`,
-    transform: body => cheerio.load(body)
+    method: 'GET',
+    uri: `${settings.get('pywb.url')}${forCol}-cdx?url=${uri}`,
+    resolveWithFullResponse: true
+  }).then(response => {
+    if (response.statusCode === 200) {
+      let captures = []
+      S(response.body).trim().lines()
+        .forEach(line => {
+          let [_,time,j] = line.split(' ')
+          let { url } = JSON.parse(j)
+          captures.push({
+            url,
+            time: moment(time, 'YYYYMMDDHHmmss').format('dddd, MMMM Do YYYY, h:mm:ss a'),
+            wburl: `${settings.get('pywb.url')}${forCol}/${time}/${uri}`
+          })
+        })
+      return captures
+    } else {
+      console.log('wtf why no 200', response)
+    }
+    return captures
   })
 }
 
