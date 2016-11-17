@@ -7,7 +7,7 @@ import EditMetadata from '../wayback/util/editMetaData'
 export default class Footer extends Component {
   render () {
     return (
-      <div style={{width: '0',height: '0', display: 'none'}}>
+      <div style={{width: '0',height: '0'}}>
         <Notifications />
         <StatusDialog />
         <NewCollection />

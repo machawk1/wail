@@ -28,12 +28,7 @@ const notificationOpts = {
   }
 }
 
-@connect(null, dispatch => ({
-  doCheck(url, forCol){
-    dispatch(checkUrl(url, forCol))
-  }
-}))
-export default class CheckSeed extends Component {
+class CheckSeed extends Component {
   static propTypes = {
     col: PropTypes.string.isRequired
   }
@@ -58,7 +53,7 @@ export default class CheckSeed extends Component {
   render () {
     console.log('checkSeed', this.props, this.context.store.getState())
     return (
-      <div style={{ position: 'relative', marginRight: 25, 'zIndex': 2 }}>
+      <div style={{ position: 'relative', marginRight: 25, 'zIndex': 0 }}>
         <div style={{ position: 'absolute', right: '75px', width: '350px' }}>
           <RaisedButton label='Check Seed' onTouchTap={::this.checkSeed}/>
           <CheckResults />
@@ -69,3 +64,8 @@ export default class CheckSeed extends Component {
 
 }
 
+export default connect(null, dispatch => ({
+  doCheck(url, forCol){
+    dispatch(checkUrl(url, forCol))
+  }
+}))(CheckSeed)
