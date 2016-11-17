@@ -1,8 +1,8 @@
 import moment from 'moment'
 import Immutable from 'immutable'
-import  {makeRunInfoRecord, RunInfoRecord} from './runInfoRecord'
+import {joinStrings} from 'joinable'
+import {makeRunInfoRecord, RunInfoRecord} from './runInfoRecord'
 
-const log = console.log.bind(console)
 function compare (a, b) {
   if (a.tsMoment.isBefore(b)) {
     return 1
@@ -20,6 +20,14 @@ class CrawlInfoRecord extends Immutable.Record({
   running: false, latestRun: new RunInfoRecord(),
   lastUpdated: null
 }) {
+
+  displayUrls () {
+    if (Array.isArray(this.get('urls'))) {
+      return joinStrings(...this.get('urls'), { separator: ' ' })
+    } else {
+      return this.get('urls')
+    }
+  }
 
   updateLatestRun (run) {
     if (run.ended) {

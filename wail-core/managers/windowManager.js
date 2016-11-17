@@ -250,8 +250,8 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('added-warcs-to-col', (e, update) => {
       this.send('mainWindow', 'added-warcs-to-col', update)
       control.serviceMan.restartWayback()
-        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
-        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
+        .then(() => this.send('mainWindow', 'restarted-wayback', { wasError: false }))
+        .catch((err) => this.send('mainWindow', 'restarted-wayback', { wasError: true, err }))
     })
 
     /* Control */
@@ -265,6 +265,7 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('send-to-requestDaemon', (event, request) => {
+      console.log('send-to-rquestDaemon', request)
       this.send('reqDaemonWindow', 'handle-request', request)
     })
 
@@ -304,8 +305,8 @@ export default class WindowManager extends EventEmitter {
 
     ipcMain.on('restart-wayback', () => {
       control.serviceMan.restartWayback()
-        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
-        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
+        .then(() => this.send('mainWindow', 'restarted-wayback', { wasError: false }))
+        .catch((err) => this.send('mainWindow', 'restarted-wayback', { wasError: true, err }))
     })
   }
 
@@ -573,14 +574,20 @@ export default class WindowManager extends EventEmitter {
           this.emit('all-windows-closed')
         }
       })
+      this.windows[ 'reqDaemonWindow' ].window.on('show', () => {
+        console.log('reqDaemonWindow is showing')
+      })
       this.windows[ 'reqDaemonWindow' ].window.on('ready-to-show', () => {
         console.log('reqDaemonWindow is ready to show')
         if (control.debug) {
           if (control.openBackGroundWindows) {
             this.windows[ 'reqDaemonWindow' ].window.show()
           }
-          this.windows[ 'reqDaemonWindow' ].window.webContents.closeDevTools()
+          this.windows[ 'reqDaemonWindow' ].window.show()
+          this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
         }
+        this.windows[ 'reqDaemonWindow' ].window.show()
+        this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
         this.windows[ 'reqDaemonWindow' ].open = true
         this.windows[ 'reqDaemonWindow' ].loadComplete = true
         resolve()
@@ -620,7 +627,7 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows[ 'crawlManWindow' ].window.show()
           }
-          this.windows[ 'crawlManWindow' ].window.webContents.closeDevTools()
+          this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
         }
         resolve()
       })
@@ -652,6 +659,7 @@ export default class WindowManager extends EventEmitter {
           this.emit('all-windows-closed')
         }
       })
+
       this.windows[ 'archiveManWindow' ].window.on('ready-to-show', () => {
         console.log('archiveManWindow is ready to show')
         this.windows[ 'archiveManWindow' ].open = true

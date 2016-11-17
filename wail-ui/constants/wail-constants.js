@@ -12,12 +12,29 @@ export default {
       CRAWLBEAN: null
     })
   },
+  HeritrixRequestTypes: keyMirror({
+    BUILD_LAUNCH_JOB: null,
+    STOP_JOB: null,
+    TERMINATE_RESTART_JOB: null,
+    TERMINATE_JOB: null
+  }),
   CheckUrlEvents: keyMirror({
     CHECK_URL: null,
     CHECKING_ARCHIVE: null,
     NOT_IN_ARCHIVE: null,
     IN_ARCHIVE: null,
     RESET_CHECK_MESSAGE: null,
+  }),
+  JobActionEvents: keyMirror({
+    START_JOB: null,
+    RESTART_JOB: null,
+    REMOVE_JOB: null,
+    DELETE_JOB: null,
+    TERMINATE_JOB: null,
+  }),
+  RequestActions: keyMirror({
+    MAKE_REQUEST: null,
+    HANDLED_REQUEST: null
   }),
   CrawlEvents: keyMirror({
     GOT_ALL_RUNS: null,
@@ -34,6 +51,8 @@ export default {
     ADDED_WARCS_TO_COLL: null,
   }),
   EventTypes: keyMirror({
+    RNS_SHOW_NOTIFICATION: null,
+    RNS_HIDE_NOTIFICATION: null,
     EDIT_METADATA: null,
     ADD_METADATA_TO_COLLECTION: null,
     BUILD_CRAWL_JOB: null,
@@ -77,6 +96,9 @@ export default {
     MEMENTO_MENU: null
   }),
   RequestTypes: keyMirror({
+    BUILD_CRAWL_JOB: null,
+    BUILT_CRAWL_CONF: null,
+    BUILT_CRAWL_JOB: null,
     ACCESSIBILITY: null,
     ADD_HERITRIX_JOB_DIRECTORY: null,
     BUILD_HERITIX_JOB: null,
@@ -88,6 +110,7 @@ export default {
     LAUNCH_HERITRIX_JOB: null,
     SEND_HERITRIX_ACTION: null,
     REQUEST_SUCCESS: null,
+    LAUNCHED_CRAWL_JOB: null,
     REQUEST_FAILURE: null
   }),
   Loading: keyMirror({

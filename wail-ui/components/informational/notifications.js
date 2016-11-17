@@ -27,6 +27,7 @@ export default class Notifications extends Component {
 
   @autobind
   receiveMessage () {
+    console.log('reciever message')
     let message = GMessageStore.getMessage()
     this.notifier.addNotification(message)
 
@@ -48,7 +49,7 @@ export default class Notifications extends Component {
 
   render () {
     return (
-      <Notification ref={(c) => { this.notifier = c }} />
+      <Notification ref={(c) => { this.notifier = c }}/>
     )
   }
 }

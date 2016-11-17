@@ -1,7 +1,5 @@
 import moment from 'moment'
 import Immutable from 'immutable'
-import _ from 'lodash'
-const log = console.log.bind(console)
 
 export class RunInfoRecord extends Immutable.Record({
   started: false, jobId: null, ending: false,
@@ -12,6 +10,10 @@ export class RunInfoRecord extends Immutable.Record({
     stats.tsMoment = moment(stats.timestamp)
     stats.jobId = this.get('jobId')
     return this.merge(stats)
+  }
+
+  status () {
+    return this.get('ended') ? 'Ended' : 'Running'
   }
 }
 

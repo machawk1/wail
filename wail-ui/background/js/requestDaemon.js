@@ -5,6 +5,7 @@ import rp from 'request-promise'
 import _ from 'lodash'
 import util from 'util'
 import Logger from '../../logger/logger'
+import HeritrixRequestMan from '../../../wail-core/managers/heritrix/heritrixRequestManager'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -105,7 +106,7 @@ class RequestDaemon {
   }
 }
 
-let requestDaemon = new RequestDaemon()
+let requestDaemon = new HeritrixRequestMan()
 
 ipcRenderer.on('handle-request', (event, request) => {
   console.log('RequestDaemon got handle-request', request)

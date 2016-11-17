@@ -7,10 +7,26 @@ import {
 import {connect} from 'react-redux'
 import isURL from 'validator/lib/isURL'
 import partialRight from 'lodash/partialRight'
+import {notify} from '../../actions/notification-actions'
 import {checkUrl} from '../../actions/redux/archival'
 import CheckResults from './checkResults'
+import {batchActions} from 'redux-batched-actions'
+import Notifications from 'react-notification-system-redux'
 
 const urlSelector = partialRight(formValueSelector('archiveUrl'), 'url')
+
+const notificationOpts = {
+  // uid: 'once-please', // you can specify your own uid if required
+  level: 'info',
+  title: 'Hey, it\'s good to see you!',
+  message: 'Now you can see how easy it is to use notifications in React!',
+  position: 'tr',
+  autoDismiss: 0,
+  action: {
+    label: 'Click me!!',
+    callback: () => alert('clicked!')
+  }
+}
 
 @connect(null, dispatch => ({
   doCheck(url, forCol){
@@ -28,6 +44,11 @@ export default class CheckSeed extends Component {
   checkSeed () {
     let url = urlSelector(this.context.store.getState())
     if (isURL(url)) {
+      try {
+        notify(notificationOpts)
+      } catch (e) {
+        console.error(e)
+      }
       this.props.doCheck(url, this.props.col)
     } else {
       console.log('its not a valid url')

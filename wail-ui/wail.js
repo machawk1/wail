@@ -1,6 +1,5 @@
 import 'babel-polyfill'
 import 'react-flex/index.css'
-import 'react-virtualized/styles.css'
 import './css/wail.css'
 import React from 'react'
 import {render} from 'react-dom'
@@ -13,9 +12,6 @@ import Promise from 'bluebird'
 import {ipcRenderer, remote} from 'electron'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
-import {
-  syncHistoryWithStore
-} from 'react-router-redux'
 import configureStore from './stores/configureStore'
 
 Promise.promisifyAll(fs)

@@ -1,10 +1,10 @@
 import wc from '../../constants/wail-constants'
-const EventTypes = wc.EventTypes
+const {RNS_SHOW_NOTIFICATION,RNS_HIDE_NOTIFICATION} = wc.EventTypes
 
 export function notify (message) {
   return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message
+    type: RNS_SHOW_NOTIFICATION,
+    ...message
   }
 }
 
@@ -13,13 +13,11 @@ export function notifyInfo (message, log = false) {
     window.logger.info(message)
   }
   return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Info',
-      level: 'info',
-      message,
-      uid: message
-    }
+    type: RNS_SHOW_NOTIFICATION,
+    title: 'Info',
+    level: 'info',
+    message,
+    uid: message
   }
 }
 
@@ -28,13 +26,11 @@ export function notifySuccess (message, log = false) {
     window.logger.info(message)
   }
   return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Success',
-      level: 'success',
-      message,
-      uid: message
-    }
+    type: RNS_SHOW_NOTIFICATION,
+    title: 'Success',
+    level: 'success',
+    message,
+    uid: message
   }
 }
 
@@ -43,13 +39,11 @@ export function notifyWarning (message, log = false) {
     window.logger.warn(message)
   }
   return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Warning',
-      level: 'warning',
-      message,
-      uid: message
-    }
+    type: RNS_SHOW_NOTIFICATION,
+    title: 'Warning',
+    level: 'warning',
+    message,
+    uid: message
   }
 }
 
@@ -58,12 +52,18 @@ export function notifyError (message, log = false) {
     window.logger.error(message)
   }
   return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Error',
-      level: 'error',
-      message,
-      uid: message
-    }
+    type: RNS_SHOW_NOTIFICATION,
+    title: 'Error',
+    level: 'error',
+    message,
+    uid: message
+  }
+}
+
+
+export function hide(uid) {
+  return {
+    type: RNS_HIDE_NOTIFICATION,
+    uid
   }
 }

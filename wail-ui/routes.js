@@ -6,6 +6,7 @@ import General from './components/advanced/general'
 import Wayback from './components/wayback/wayback'
 // import CollectionView from './components/wayback/collectionView/collectionView'
 import Heritrix from './components/heritrix/heritrix-tab'
+import HeritrixView from './components/heritrix/heritrixView'
 import Misc from './components/advanced/miscellaneous'
 import hi from './components/combined/hi'
 import Combined from './components/combined/combined'
@@ -34,4 +35,5 @@ export default  <Route path='/' component={Layout}>
   <IndexRoute component={Combined}/>
   <Route path='Collections/:col' component={CollectionView}/>
   <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
+  <Route path='heritrix' name='Heritrix' component={HeritrixView}/>
 </Route>

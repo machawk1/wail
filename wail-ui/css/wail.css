@@ -12,34 +12,6 @@
 .divider-color         { border-color: #BDBDBD; }
 */
 
-/*.colActionButton {*/
-/*top: 40%;*/
-/*left: 50%;*/
-/*position: absolute;*/
-/*width: 50px;*/
-/*height: 50px;*/
-/*border-radius: 100%;*/
-/*cursor: pointer;*/
-/*display: flex;*/
-/*justify-content : center;*/
-/*align-items: center;*/
-/*font-weight: lighter;*/
-/*border: 1px solid rgba(0, 0, 0, 0.1);*/
-/*}*/
-
-/*.colActionChild {*/
-/*cursor: pointer;*/
-/*display: flex;*/
-/*justify-content: center;*/
-/*align-items: center;*/
-/*width: 50px;*/
-/*height: 50px;*/
-/*border-radius: 100%;*/
-/*background-color: white;*/
-/*box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 3px;*/
-/*color: #8898A5;*/
-/*}*/
-
 .sortHeader {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 24px;
@@ -48,6 +20,7 @@
     width: 1em;
     fill: currentColor;
 }
+
 
 .flipText {
     display: block;

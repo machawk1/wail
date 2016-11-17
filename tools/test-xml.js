@@ -12,43 +12,43 @@ Promise.promisifyAll(DB.prototype)
 const keyMirror = require('keymirror')
 const Immutable = require('immutable')
 const Benchmark = require('benchmark')
-const { CollectionEvents } = {
-  CollectionEvents: keyMirror({
-    GOT_ALL_COLLECTIONS: null,
-    CREATED_COLLECTION: null,
-    ADD_METADATA_TO_COLLECTION: null,
-    ADDED_WARCS_TO_COLL: null,
-  })
-}
-
-const vals = Object.values(CollectionEvents)
-const colActions = new Set(vals)
-var suite = new Benchmark.Suite()
-
-// add tests
-suite.add('Array#indexOf#found', function () {
-  vals.indexOf('ADDED_WARCS_TO_COLL')
-}).add('Array#indexOf#notfound', function () {
-  vals.indexOf('xyz')
-}).add('Array#includes#found', function () {
-  vals.includes('ADDED_WARCS_TO_COLL')
-}).add('Array#includes#notfound', function () {
-  vals.includes('xyz')
-})
-  .add('Set#has#found', function () {
-    colActions.has('ADDED_WARCS_TO_COLL')
-  }).add('Set#has#notFound', function () {
-  colActions.has('xyz')
-})
-// add listeners
-  .on('cycle', function (event) {
-    console.log(String(event.target));
-  })
-  .on('complete', function () {
-    console.log('Fastest is ' + this.filter('fastest').map('name'));
-  })
-  // run async
-  .run({ 'async': true })
+// const { CollectionEvents } = {
+//   CollectionEvents: keyMirror({
+//     GOT_ALL_COLLECTIONS: null,
+//     CREATED_COLLECTION: null,
+//     ADD_METADATA_TO_COLLECTION: null,
+//     ADDED_WARCS_TO_COLL: null,
+//   })
+// }
+//
+// const vals = Object.values(CollectionEvents)
+// const colActions = new Set(vals)
+// var suite = new Benchmark.Suite()
+//
+// // add tests
+// suite.add('Array#indexOf#found', function () {
+//   vals.indexOf('ADDED_WARCS_TO_COLL')
+// }).add('Array#indexOf#notfound', function () {
+//   vals.indexOf('xyz')
+// }).add('Array#includes#found', function () {
+//   vals.includes('ADDED_WARCS_TO_COLL')
+// }).add('Array#includes#notfound', function () {
+//   vals.includes('xyz')
+// })
+//   .add('Set#has#found', function () {
+//     colActions.has('ADDED_WARCS_TO_COLL')
+//   }).add('Set#has#notFound', function () {
+//   colActions.has('xyz')
+// })
+// // add listeners
+//   .on('cycle', function (event) {
+//     console.log(String(event.target));
+//   })
+//   .on('complete', function () {
+//     console.log('Fastest is ' + this.filter('fastest').map('name'));
+//   })
+//   // run async
+//   .run({ 'async': true })
 // console.log(...colActions)
 
 // let sss = [ { url: 'http://cs.odu.edu', jobId: 1473098189935 },

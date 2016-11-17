@@ -18,6 +18,7 @@ class GlobalMessageStore_ extends EventEmitter {
 
   @autobind
   handleEvent (event) {
+    console.log('gloabal message store handle event')
     switch (event.type) {
       case EventTypes.QUEUE_MESSAGE:
         let lenBefore = this.messageQ.length

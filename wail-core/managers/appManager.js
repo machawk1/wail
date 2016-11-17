@@ -24,8 +24,8 @@ export default class AppManager {
     this.tray = null
     this.base = null
     this.notDebugUI = false
-    this.debug = false
-    this.openBackGroundWindows = false
+    this.debug = true
+    this.openBackGroundWindows = true
     this.didClose = false
     this.crawlsRunning = false
     this.didLoad = false

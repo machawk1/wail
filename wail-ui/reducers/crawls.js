@@ -23,19 +23,26 @@ export default (state = Map(), action) => {
       if ((allRuns || []).length > 0) {
         window.logger.debug(`intial job state load ${allRuns.length} jobs`)
         let crawlJobs = {}
+        let jobIds = []
         let crawlsToCol = {}
         allRuns.forEach(r => {
           let cinfo = makeCrawlInfoRecord(r)
+          jobIds.push(cinfo.get('jobId'))
           crawlJobs[ cinfo.get('jobId') ] = cinfo
           if (!crawlsToCol[ cinfo.get('forCol') ]) {
             crawlsToCol[ cinfo.get('forCol') ] = []
           }
           crawlsToCol[ cinfo.get('forCol') ].push(cinfo.get('jobId'))
         })
-        return state.merge(crawlJobs).set('runningJobs', 0).set('colCrawls', Immutable.fromJS(crawlsToCol))
+        return state.merge(crawlJobs)
+          .withMutations(map => map.set('runningJobs', 0)
+            .set('colCrawls', Immutable.fromJS(crawlsToCol))
+            .set('jobIds', List(jobIds))
+          )
       } else {
-        logger.debug('there was no runs in the db')
-        return state.set('runningJobs', 0).set('colCrawls', Map())
+        window.logger.debug('there was no runs in the db')
+        return state.withMutations(map => map
+          .set('runningJobs', 0).set('colCrawls', Map()).set('jobIds', List()))
       }
     case CRAWLJOB_STATUS_UPDATE: {
       let { jobId, stats } = action.crawlStatus

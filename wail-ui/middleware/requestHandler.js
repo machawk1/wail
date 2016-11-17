@@ -14,17 +14,8 @@ const {
 // curried the living daylights out of this
 export default store => next => action => {
   switch (action.type) {
-    case EventTypes.CREATE_JOB:
-      let forCol = action.conf.forCol
-      let urls = action.conf.urls
-      next(notify({
-        title: 'Info',
-        level: 'info',
-        message: `Built Crawl Conf for ${forCol} job: ${urls}`,
-        uid: `Built Crawl Conf for ${forCol} job: ${urls}`
-      }))
-      return next(action)
     case CHECK_URL:
+      console.log(action)
       next(checkingArchive(`Checking if ${action.url} is in ${action.forCol}`))
       return grabCaptures(action.url, action.forCol)
         .then(captures => {
@@ -36,3 +27,4 @@ export default store => next => action => {
       return next(action)
   }
 }
+

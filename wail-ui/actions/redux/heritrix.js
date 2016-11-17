@@ -1,7 +1,7 @@
 import {ipcRenderer as ipc, remote} from 'electron'
 import {joinStrings} from 'joinable'
 import wc from '../../constants/wail-constants'
-import {CollectionEvents, CrawlEvents} from '../../constants/wail-constants'
+import {CollectionEvents, CrawlEvents, JobActionEvents, RequestActions} from '../../constants/wail-constants'
 const EventTypes = wc.EventTypes
 const From = wc.From
 const {
@@ -12,6 +12,21 @@ const {
   CREATE_JOB,
   CRAWL_JOB_DELETED,
 } = CrawlEvents
+
+const {
+  START_JOB,
+  RESTART_JOB,
+  REMOVE_JOB,
+  DELETE_JOB,
+  TERMINATE_JOB
+} = JobActionEvents
+
+const {
+  MAKE_REQUEST,
+  HANDLED_REQUEST
+} = RequestActions
+
+const settings = remote.getGlobal('settings')
 
 export function gotAllRuns (event, allRuns) {
   return {
@@ -97,8 +112,72 @@ export function builtHeritrixJob (event, jobId) {
     message: {
       title: 'Info',
       level: 'info',
-      message: `Heritrix Crawl Built for job: ${conf.urls}`,
-      uid: `Heritrix Crawl Built for job: ${conf.urls}`
+      message: `Heritrix Crawl Built for job: `,
+      uid: `Heritrix Crawl Built for job: `
     }
   }
 }
+
+export function startJob (jobId) {
+  console.log('starting job for', jobId)
+  return {
+    type: MAKE_REQUEST,
+    request: {
+      type: START_JOB,
+      jobId
+    }
+  }
+}
+
+export function restartJob (jobId) {
+  console.log('restartJob', jobId)
+  return {
+    type: MAKE_REQUEST,
+    request: {
+      type: RESTART_JOB,
+      jobId
+    }
+  }
+}
+
+export function removeJob (jobId) {
+  console.log('removeJob', jobId)
+  return {
+    type: MAKE_REQUEST,
+    request: {
+      type: REMOVE_JOB,
+      jobId
+    }
+  }
+}
+
+export function deleteJob (jobId) {
+  console.log('deleteJob', jobId)
+  return {
+    type: MAKE_REQUEST,
+    request: {
+      type: DELETE_JOB,
+      jobId
+    }
+  }
+}
+
+export function terminateJob (jobId) {
+  console.log('terminateJob', jobId)
+  return {
+    type: MAKE_REQUEST,
+    request: {
+      type: TERMINATE_JOB,
+      jobId
+    }
+  }
+}
+
+export function handledRequest (e, request) {
+  console.log('handled request', request)
+  return {
+    type: HANDLED_REQUEST,
+    request
+  }
+}
+

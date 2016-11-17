@@ -1,6 +1,6 @@
 import createIpc from 'redux-electron-ipc'
 import {addedNewCol, addedWarcs, gotAllCollections} from '../actions/redux/collections'
-import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate} from '../actions/redux/heritrix'
+import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate, handledRequest} from '../actions/redux/heritrix'
 import {notify} from '../actions/redux/notifications'
 
 export default createIpc({
@@ -14,5 +14,6 @@ export default createIpc({
   'crawljob-status-update': crawlJobUpdate,
   'crawljob-configure-dialogue': buildDialogueCrawlJob,
   /* global message store */
-  'display-message': notify
+  'display-message': notify,
+  'handled-request': handledRequest
 })
