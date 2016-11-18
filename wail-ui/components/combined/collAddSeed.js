@@ -31,7 +31,7 @@ export default class CollectionAddSeed extends Component {
     return (
       <div style={{ width: '100%', height: '100%' }}>
         <CollAddSeedHeader col={this.props.params.col} />
-        <Card style={{ margin: '0 25px 25px 25px', height: '75%' }} id='addSeedCard'>
+        <Card style={{ margin: '0 25px 25px 25px', height: '70%' }} id='addSeedCard'>
           <Flex row alignItems='baseline' justifyContent='space-between'>
             <ArchiveForm />
             <CheckSeed col={this.props.params.col} />

@@ -1,6 +1,7 @@
 import React from 'react'
 import {Field, reduxForm} from 'redux-form/immutable'
 import Promise from 'bluebird'
+import MyAutoSizer from './myAutoSizer'
 // import TextField from 'material-ui/TextField'
 // import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
 import {Card, CardHeader, CardTitle, CardText, CardMedia, CardActions} from 'material-ui/Card'
@@ -95,42 +96,45 @@ const MaterialUiForm = props => {
   console.log('in form', props)
   const { handleSubmit, pristine, reset, submitting, invalid } = props
   return (
-    <div style={{ width: '95%' }}>
-      <form onSubmit={handleSubmit(submit)}>
+    <div style={{ width: '95%', height: 'inherit' }}>
+      <form onSubmit={handleSubmit(submit)} style={{height: '100%'}}>
         <div>
           <Field name='url' component={TextField}
-            floatingLabelText='Seed to add:'
-            hintText='Url'
-            fullWidth
-            style={{ marginLeft: 25, marginRight: 25 }}
+                 floatingLabelText='Seed to add:'
+                 hintText='Url'
+                 fullWidth
+                 style={{ marginLeft: 25, marginRight: 25 }}
           />
         </div>
-        <div style={{ width: '50%' }}>
+        <div style={{ width: '50%', verticalAlign: 'middle' }}>
           <Field name='config' component={RadioButtonGroup}
-            props={{ defaultSelected: 'single-page' }}
-            style={{ marginLeft: 25, marginTop: 20, marginBottom: 20 }}
+                 props={{ defaultSelected: 'single-page' }}
+                 style={{ marginLeft: 25, marginTop: 20, marginBottom: 20 }}
           >
             <RadioButton
+              style={{ marginTop: 10, marginBottom: 10 }}
               value='single-page'
               label='Page Only'
             />
             <RadioButton
+              style={{ marginTop: 10, marginBottom: 10 }}
               value='page-same-domain'
               label='Page and internal (same domain) links'
             />
             <RadioButton
+              style={{ marginTop: 10, marginBottom: 10 }}
               value='page-same-domain-external'
               label='Page and all (internal and external) links'
             />
           </Field>
         </div>
         <div>
-          <FlatButton label='Add and Archive Now' type='submit' disabled={invalid || pristine || submitting} primary />
-          <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
+          <FlatButton label='Add and Archive Now' type='submit' disabled={invalid || pristine || submitting}
+                      primary/>
+          <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
         </div>
       </form>
     </div>
-
   )
 }
 
