@@ -35,17 +35,17 @@ export default class SelectCollection extends Component {
 
   render () {
     return (
-        <AutoComplete
-          menuProps={{ desktop: true }}
-          style={{paddingLeft: '20px'}}
-          searchText={ncs.cols[0] || 'default'}
-          openOnFocus
-          maxSearchResults={5}
-          hintText='For Collection'
-          floatingLabelText={'Archive To Collection'}
-          filter={AutoComplete.fuzzyFilter}
-          dataSource={this.state.cols}
-          onNewRequest={this.handleChange}
+      <AutoComplete
+        menuProps={{ desktop: true }}
+        style={{paddingLeft: '20px'}}
+        searchText={ncs.cols[0] || 'default'}
+        openOnFocus
+        maxSearchResults={5}
+        hintText='For Collection'
+        floatingLabelText={'Archive To Collection'}
+        filter={AutoComplete.fuzzyFilter}
+        dataSource={this.state.cols}
+        onNewRequest={this.handleChange}
         />
       )
   }

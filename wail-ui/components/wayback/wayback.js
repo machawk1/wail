@@ -110,17 +110,17 @@ export default class WayBackTab extends Component {
             <Card style={{ height: '75px' }}>
               <CardText>
                 <span>
-                   <Search />
+                  <Search />
                 </span>
                 <span>
-                 <TextField
-                   style={{ width: '90%', paddingLeft: '10px' }}
-                   id='collectionSearch'
-                   hintText='Search'
-                   value={this.state.searchText}
-                   onChange={this.handleChange}
+                  <TextField
+                    style={{ width: '90%', paddingLeft: '10px' }}
+                    id='collectionSearch'
+                    hintText='Search'
+                    value={this.state.searchText}
+                    onChange={this.handleChange}
                  />
-              </span>
+                </span>
               </CardText>
             </Card>
             <List >

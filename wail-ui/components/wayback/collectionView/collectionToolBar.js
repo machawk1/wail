@@ -175,9 +175,9 @@ export default class CollectionToolBar extends Component {
             />
           </ToolbarGroup>
           <ToolbarGroup lastChild>
-          <ActionButton
-            label='Add Warcs'
-            onTouchTap={() => this.addWarcs()}
+            <ActionButton
+              label='Add Warcs'
+              onTouchTap={() => this.addWarcs()}
             />
           </ToolbarGroup>
         </Toolbar>

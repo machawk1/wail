@@ -11,18 +11,18 @@ export default class ArchiveOrCheckCol extends Component {
 
   render () {
     return (
-        <div>
-          <Row>
-            <Col xs>
-              <ArchiveUrl />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs>
-              <ArchivalButtons />
-            </Col>
-          </Row>
-        </div>
+      <div>
+        <Row>
+          <Col xs>
+            <ArchiveUrl />
+          </Col>
+        </Row>
+        <Row>
+          <Col xs>
+            <ArchivalButtons />
+          </Col>
+        </Row>
+      </div>
     )
   }
 

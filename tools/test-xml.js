@@ -12,6 +12,8 @@ Promise.promisifyAll(DB.prototype)
 const keyMirror = require('keymirror')
 const Immutable = require('immutable')
 const Benchmark = require('benchmark')
+
+console.log(moment().format())
 // const { CollectionEvents } = {
 //   CollectionEvents: keyMirror({
 //     GOT_ALL_COLLECTIONS: null,
@@ -84,10 +86,10 @@ const Benchmark = require('benchmark')
 // console.log(util.inspect(trans, { colors: true, depth: null }))
 
 // console.log('hi')
-// const a = new DB({
-//   filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
-//   autoload: true
-// })
+const a = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+  autoload: true
+})
 //
 // const c = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
@@ -103,6 +105,33 @@ const Benchmark = require('benchmark')
 //     yield it
 // }
 //
+
+// {"_id":"sdas2","name":"sdas2","colpath":"/home/john/my-fork-wail/archives2/collections/sdas","archive":"/home/john/my-fork-wail/archives2/collections/sdas/archive","indexes":"/home/john/my-fork-wail/archives2/collections/sdas/indexes","colName":"sdas2","numArchives":0,"metadata":{"title":"klajsdlk;asjdk","description":"jkhdsakjlh"},"hasRunningCrawl":false,"lastUpdated":"2016-11-13T18:52:11-05:00","seeds":[{"booo":{"url":"cs.odu.edu","jobIds":[1475473841435],"mementos":1}}],"created":"2016-11-13T18:52:11-05:00","size":"0 B"}
+
+let booo = { "url": "cs.odu.edu", "jobIds": [ 1475473841435 ], "mementos": 1 }
+
+a.findOne({ colName: 'sdas2' }, (err, doc) => {
+  if (!_.find(doc.seeds, { url: booo.url })) {
+    console.log('its not in')
+    a.update({ colName: 'sdas2' }, { $push: { seeds: booo } }, { returnUpdatedDocs: true }, (err, numUpdated, updated) => {
+      console.log(err, numUpdated, updated)
+    })
+  } else {
+    console.log('its in')
+    console.log(doc.seeds)
+    let updatedSeeds = doc.seeds.map(seed => {
+      if (seed.url === booo.url) {
+        seed.jobIds.push(booo.jobIds[ 0 ])
+        seed.mementos += 1
+      }
+      return seed
+    })
+    console.log(updatedSeeds)
+    a.update({ colName: 'sdas2' }, { $set: { seeds: updatedSeeds } }, { returnUpdatedDocs: true }, (err, ...rest) => {
+      console.log(err, ...rest)
+    })
+  }
+})
 // const transformSeeds = seeds => _.chain(seeds)
 //   .groupBy(it => it.url)
 //   .mapValues(ar => {

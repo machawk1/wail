@@ -43,26 +43,26 @@ export default class CollectionViewHeader extends Component {
     let description = col.get('metadata').get('description')
     let { primary1Color } = this.context.muiTheme.baseTheme.palette
     let title = <span><IndexLink to='/'
-                                 style={{
-                                   color: primary1Color,
-                                   textDecoration: 'none'
-                                 }}>Collections</IndexLink> > {viewingCol}</span>
+      style={{
+        color: primary1Color,
+        textDecoration: 'none'
+      }}>Collections</IndexLink> > {viewingCol}</span>
     return (
-      <Card>
+      <div>
         <Flex row alignItems='baseline' justifyContent='space-between'>
-          <CardTitle title={title}/>
-          <CardTitle subtitle={`Last Updated: ${col.get('lastUpdated').format('MMM DD YYYY')}`}/>
-          <CardTitle subtitle={`Created: ${col.get('created').format('MMM DD YYYY')}`}/>
-          <CardTitle subtitle={`Seeds: ${col.get('seeds').size}`}/>
-          <CardTitle subtitle={`Size: ${col.get('size')}`}/>
+          <CardTitle title={title} />
+          <CardTitle subtitle={`Last Updated: ${col.get('lastUpdated').format('MMM DD YYYY')}`} />
+          <CardTitle subtitle={`Created: ${col.get('created').format('MMM DD YYYY')}`} />
+          <CardTitle subtitle={`Seeds: ${col.get('seeds').size}`} />
+          <CardTitle subtitle={`Size: ${col.get('size')}`} />
         </Flex>
-        <CardText>
-          {description}
-        </CardText>
-      </Card>
+        <Card>
+          <CardText>
+            {description}
+          </CardText>
+        </Card>
+      </div>
     )
   }
-
 }
-
 

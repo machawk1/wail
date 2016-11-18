@@ -151,7 +151,7 @@ export default class HeritrixRequestManager {
   }
 
   buildTerminateLaunch (jobId) {
-    let jbl = new BuildLaunchJob(jobId)
+    let jbl = new TerminateAndRestartJob(jobId)
     this.requestForJob.set(jobId, jbl)
     console.log(`heritrix request manager creating build launch job for job ${jobId}`)
     this.jobRequestQ.push(jobId)

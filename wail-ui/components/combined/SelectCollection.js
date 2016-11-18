@@ -10,9 +10,8 @@ export default () => {
       <CardTitle
         title='Collections'
       />
-      <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
+      <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()} />
     </Flex>
   )
 }
-
 

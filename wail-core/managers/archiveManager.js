@@ -6,6 +6,10 @@ import join from 'joinable'
 import S from 'string'
 import {remote} from 'electron'
 import fs from 'fs-extra'
+import moment from 'moment'
+import through2 from 'through2'
+import prettyBytes from 'pretty-bytes'
+import _ from 'lodash'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -35,6 +39,7 @@ export default class ArchiveManager {
             let colpath = path.join(settings.get('warcs'), 'collections', 'default')
             // description: Default Collection
             // title: Default
+            let created = moment().format()
             let toCreate = {
               _id: 'default',
               name: 'default',
@@ -43,8 +48,12 @@ export default class ArchiveManager {
               indexes: path.join(colpath, 'indexes'),
               colName: 'default',
               numArchives: 0,
-              metadata: [ { k: 'title', v: 'Default' }, { k: 'description', v: 'Default Collection' } ],
+              metadata: { title: 'Default', description: 'Default Collection' },
               crawls: [],
+              seeds: [],
+              size: '0 B',
+              created,
+              lastUpdated: created,
               hasRunningCrawl: false
             }
             this.db.insert(toCreate, (err, doc) => {
@@ -107,7 +116,7 @@ export default class ArchiveManager {
       let exec = ''
       if (Array.isArray(mdata)) {
         wasArray = true
-        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString}).s
+        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString }).s
       } else {
         exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: `${mdata.k}="${mdata.v}"` }).s
       }
@@ -200,7 +209,48 @@ export default class ArchiveManager {
     })
   }
 
-  addWarcsToCol (col, warcs) {
+  getColSize (col) {
+    return new Promise((resolve, reject) => {
+      let size = 0
+      fs.walk(S(settings.get('colWarcs')).template({ col }))
+        .pipe(through2.obj(function (item, enc, next) {
+          if (!item.stats.isDirectory()) this.push(item)
+          next()
+        }))
+        .on('data', item => {
+          size += item.stats.size
+        })
+        .on('end', () => {
+          resolve(prettyBytes(size))
+        })
+    })
+  }
+
+  findOne (whichOne) {
+    return new Promise((resolve, reject) => {
+      this.db.findOne(whichOne, (err, doc) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve(doc)
+        }
+      })
+    })
+  }
+
+  update (...args) {
+    return new Promise((resolve, reject) => {
+      this.db.update(...args, (err, ...rest) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({ ...rest })
+        }
+      })
+    })
+  }
+
+  addWarcsToCol ({ forCol: col, warcs, lastUpdated, seed }) {
     let opts = {
       cwd: settings.get('warcs')
     }
@@ -223,18 +273,74 @@ export default class ArchiveManager {
         console.log('added warcs to collection', col, count)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
-        this.db.update({ colName: col }, { $inc: { numArchives: count } }, { returnUpdatedDocs: true }, (err, numUpdated, affectedDocuments) => {
-          if (err) {
-            return reject(err)
-          } else {
-            console.log(numUpdated, affectedDocuments)
-            return resolve({
-              forCol: col,
-              count,
-              wasError: false
+
+        return this.getColSize(col)
+          .then(size => {
+            this.findOne({ colName: col })
+              .then(doc => {
+                let updateWho = { colName: col }
+                if (!_.find(doc.seeds, { url: seed.url })) {
+                  console.log('its not in')
+                  seed.mementos = 1
+                  let theUpdate = {
+                    $push: { seeds: seed }, $inc: { numArchives: count }, $set: { size, lastUpdated }
+                  }
+                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true })
+                    .then(({ numUpdated, updated }) => {
+                      console.log(numUpdated, updated)
+                      return resolve({
+                        ...updated,
+                        wasError: false
+                      })
+                    })
+                    .catch(updateErr => {
+                      return reject(updateErr)
+                    })
+                } else {
+                  console.log('its in')
+                  console.log(doc.seeds)
+                  let updatedSeeds = doc.seeds.map(aSeed => {
+                    if (aSeed.url === seed.url) {
+                      aSeed.jobIds.push(seed.jobIds)
+                      aSeed.mementos += 1
+                    }
+                    return aSeed
+                  })
+                  let theUpdate = {
+                    $set: { seeds: updatedSeeds, size, lastUpdated }, $inc: { numArchives: count },
+                  }
+                  console.log(updatedSeeds)
+                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true })
+                    .then(({ numUpdated, updated }) => {
+                      return resolve({
+                        ...updated,
+                        wasError: false
+                      })
+                    })
+                    .catch(updateErr => {
+                      return reject(updateErr)
+                    })
+                }
+              })
+              .catch(errFind => {
+                return reject(errFind)
+              })
+            this.db.update({ colName: col }, {
+              $inc: { numArchives: count },
+              $set: { size, lastUpdated }
+            }, { returnUpdatedDocs: true }, (err, numUpdated, affectedDocuments) => {
+              if (err) {
+                return reject(err)
+              } else {
+                console.log(numUpdated, affectedDocuments)
+                return resolve({
+                  forCol: forCol,
+                  count,
+                  wasError: false
+                })
+              }
             })
-          }
-        })
+          })
       })
     })
   }

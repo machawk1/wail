@@ -9,7 +9,7 @@ const logStringError = 'heritirx-actions error where[ %s ] stack [ %s ]'
 
 const {
   MAKE_REQUEST,
-  HANDLED_REQUEST,
+  HANDLED_REQUEST
 } = RequestActions
 
 const buildJob = (jobId) => {
@@ -63,7 +63,7 @@ const teardownJob = jobId => {
       opts: teardown,
       from: `tearDownJob[${jobId}]`,
       jId: jobId,
-      timeReceived: null,
+      timeReceived: null
     }
   }
 }

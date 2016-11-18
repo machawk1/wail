@@ -1,5 +1,5 @@
 import wc from '../../constants/wail-constants'
-const {RNS_SHOW_NOTIFICATION,RNS_HIDE_NOTIFICATION} = wc.EventTypes
+const {RNS_SHOW_NOTIFICATION, RNS_HIDE_NOTIFICATION} = wc.EventTypes
 
 export function notify (message) {
   return {
@@ -60,8 +60,7 @@ export function notifyError (message, log = false) {
   }
 }
 
-
-export function hide(uid) {
+export function hide (uid) {
   return {
     type: RNS_HIDE_NOTIFICATION,
     uid

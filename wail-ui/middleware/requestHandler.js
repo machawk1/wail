@@ -1,8 +1,9 @@
-import {notify} from '../actions/redux/notifications'
 import wc from '../constants/wail-constants'
+import {notifyError} from '../actions/notification-actions'
 import {grabCaptures} from '../actions/archive-url-actions'
-import {inArchive, notInArchive, checkingArchive} from  '../actions/redux/archival'
+import {inArchive, notInArchive, checkingArchive} from '../actions/redux/archival'
 import {CheckUrlEvents, EventTypes} from '../constants/wail-constants'
+import heritrixRequestHandler from './heritrixRequestHandler'
 const {
   CHECKING_ARCHIVE,
   NOT_IN_ARCHIVE,
@@ -22,9 +23,11 @@ export default store => next => action => {
           console.log(captures)
           return next(inArchive(captures))
         })
-        .catch(error => next(notInArchive(`${action.url} is not in ${action.forCol}`)))
+        .catch(error => {
+          return next(notInArchive(`${action.url} is not in ${action.forCol}`))
+        })
     default:
-      return next(action)
+      return heritrixRequestHandler(store, next, action)
   }
 }
 

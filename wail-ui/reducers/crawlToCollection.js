@@ -1,6 +1,6 @@
 import {List} from 'immutable'
 
-export default  (state = List(), action) => {
+export default (state = List(), action) => {
   console.log('in collection names reducer', action)
   switch (action.type) {
     case 'got-all-collections':

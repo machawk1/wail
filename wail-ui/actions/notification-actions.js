@@ -55,7 +55,7 @@ export function notifyWarning (message, log = false) {
   })
 }
 
-export function notifyError (message, log = false) {
+export function notifyError (message, log = true) {
   if (log) {
     window.logger.error(message)
   }

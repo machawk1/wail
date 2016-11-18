@@ -265,7 +265,7 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('send-to-requestDaemon', (event, request) => {
-      console.log('send-to-rquestDaemon', request)
+      console.log('send-to-requestDaemon', request)
       this.send('reqDaemonWindow', 'handle-request', request)
     })
 

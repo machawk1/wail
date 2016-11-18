@@ -236,7 +236,7 @@ export default class MigratePywb extends Component {
       var check_or_done
       if (this.state.done) {
         check_or_done = (
-            <SvgIcon />
+          <SvgIcon />
         )
       } else {
         check_or_done = (

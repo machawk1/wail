@@ -2,7 +2,7 @@ import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
 import createLogger from 'redux-logger'
-import {ipc, requestHandler, heritrixRequestHandler} from '../middleware'
+import {ipc, requestHandler} from '../middleware'
 import rootReducer from '../reducers'
 import DevTools from '../containers/devTools'
 import {Map} from 'immutable'
@@ -16,7 +16,7 @@ const configureStore = () => {
   const store = createStore(
     rootReducer,
     composeEnhancers(
-      applyMiddleware(thunk, ipc, promiseMiddleware, requestHandler, heritrixRequestHandler)
+      applyMiddleware(thunk, promiseMiddleware, requestHandler, ipc)
     )
   )
 

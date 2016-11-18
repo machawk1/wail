@@ -16,7 +16,7 @@ const CInfo = new Immutable.Record({
   lastUpdated: null
 })
 
-function compare (a,b) {
+function compare (a, b) {
   if (a.tsMoment.isBefore(b)) {
     return 1
   }
@@ -64,11 +64,11 @@ export default class CrawlRunInfo {
     this.jobId = null
     this.ending = null
     this.ended = null
-    this.timestamp= null
+    this.timestamp = null
     this.tsMoment = null
     this.discovered = null
     this.queued = null
-    this.downloaded= null
+    this.downloaded = null
     let runs = (crawlInfo.runs || []).map(r => new RunInfo(r, this.jobId))
     this.populateRunInfo(runs)
   }

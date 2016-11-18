@@ -4,7 +4,7 @@ import moment from 'moment'
 
 const {
   MAKE_REQUEST,
-  HANDLED_REQUEST,
+  HANDLED_REQUEST
 } = RequestActions
 
 const defState = {
@@ -58,7 +58,6 @@ const requests = (state = defState, action) => {
           state.duplicateRequests.delete(action.handledRequest.from)
         }
       } else {
-
         // console.log('Request store handledRequest before removing pending', statependingRequests)
         state.pendingRequests.delete(action.handledRequest.from)
       }
@@ -67,6 +66,5 @@ const requests = (state = defState, action) => {
     default:
       return state
   }
-
 }
 export default requests

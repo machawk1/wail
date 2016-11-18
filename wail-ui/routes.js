@@ -31,9 +31,9 @@ import CollectionAddSeed from './components/combined/collAddSeed'
 //     </Route>
 //   </Router>
 // )
-export default  <Route path='/' component={Layout}>
-  <IndexRoute component={Combined}/>
-  <Route path='Collections/:col' component={CollectionView}/>
-  <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
-  <Route path='heritrix' name='Heritrix' component={HeritrixView}/>
+export default <Route path='/' component={Layout}>
+  <IndexRoute component={Combined} />
+  <Route path='Collections/:col' component={CollectionView} />
+  <Route path='Collections/:col/addSeed' component={CollectionAddSeed} />
+  <Route path='heritrix' name='Heritrix' component={HeritrixView} />
 </Route>

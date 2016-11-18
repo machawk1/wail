@@ -12,12 +12,12 @@ const ImmutableValues = ({ form }) => {
     return (
       <div>
         <h2>Values</h2>
-        <Code source={JSON.stringify(values ? values.toJS() : {}, null, 2)}/>
+        <Code source={JSON.stringify(values ? values.toJS() : {}, null, 2)} />
       </div>
     )
   }
   const Decorated = decorator(component)
-  return <Decorated/>
+  return <Decorated />
 }
 
 export default ImmutableValues

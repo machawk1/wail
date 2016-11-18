@@ -87,9 +87,9 @@ export default class BasicTab extends Component {
     })
   }
 
-  doSort(){
-    console.log('doing sort',_.sortBy(this.state.collections,['name']))
-    this.setState({collections: _.sortBy(this.state.collections,[o => o.name.toLowerCase()])})
+  doSort () {
+    console.log('doing sort', _.sortBy(this.state.collections, ['name']))
+    this.setState({collections: _.sortBy(this.state.collections, [o => o.name.toLowerCase()])})
   }
 
   render () {
@@ -100,7 +100,7 @@ export default class BasicTab extends Component {
           <CardTitle
             title='Collections'
           />
-          <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
+          <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()} />
         </Flex>
         <div style={{ width: 'inherit', height: 'inherit' }}>
           <AutoSizer>
@@ -140,10 +140,8 @@ export default class BasicTab extends Component {
                       <TableRowColumn>
                         {col.name}
                       </TableRowColumn>
-                      <TableRowColumn>
-                      </TableRowColumn>
-                      <TableRowColumn>
-                      </TableRowColumn>
+                      <TableRowColumn />
+                      <TableRowColumn />
                     </TableRow>
                   )}
                 </TableBody>

@@ -7,7 +7,6 @@ import {
 import {connect} from 'react-redux'
 import isURL from 'validator/lib/isURL'
 import partialRight from 'lodash/partialRight'
-import {notify} from '../../actions/notification-actions'
 import {checkUrl} from '../../actions/redux/archival'
 import CheckResults from './checkResults'
 import {batchActions} from 'redux-batched-actions'
@@ -39,11 +38,6 @@ class CheckSeed extends Component {
   checkSeed () {
     let url = urlSelector(this.context.store.getState())
     if (isURL(url)) {
-      try {
-        notify(notificationOpts)
-      } catch (e) {
-        console.error(e)
-      }
       this.props.doCheck(url, this.props.col)
     } else {
       console.log('its not a valid url')
@@ -55,7 +49,7 @@ class CheckSeed extends Component {
     return (
       <div style={{ position: 'relative', marginRight: 25, 'zIndex': 0 }}>
         <div style={{ position: 'absolute', right: '75px', width: '350px' }}>
-          <RaisedButton label='Check Seed' onTouchTap={::this.checkSeed}/>
+          <RaisedButton label='Check Seed' onTouchTap={::this.checkSeed} />
           <CheckResults />
         </div>
       </div>
@@ -65,7 +59,7 @@ class CheckSeed extends Component {
 }
 
 export default connect(null, dispatch => ({
-  doCheck(url, forCol){
+  doCheck (url, forCol) {
     dispatch(checkUrl(url, forCol))
   }
 }))(CheckSeed)

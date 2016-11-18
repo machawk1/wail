@@ -71,7 +71,7 @@ export default class EditOrCreateCollection extends Component {
               />
             </Col>
             <Col xs>
-             <p>alskjdlsak</p>
+              <p>alskjdlsak</p>
             </Col>
           </Row>
         </Grid>

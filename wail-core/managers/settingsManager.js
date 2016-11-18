@@ -30,10 +30,8 @@ export const templates = {
   notIndexCDX: '!{cdx}{notIndex}'
 }
 
-
 var mngd
 var dbgOSX
-
 
 if (process.env.NODE_ENV === 'development') {
   console.log('dev settings')

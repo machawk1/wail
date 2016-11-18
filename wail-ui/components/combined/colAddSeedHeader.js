@@ -15,7 +15,7 @@ const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
     onClick={nukeCheckUrl}
     to={`Collections/${col}`}>{col}</Link> > Add Seed</span>
   return (
-    <CardTitle style={{ marginLeft: 10 }} title={title}/>
+    <CardTitle title={title} />
   )
 }
 CollAddSeedHeader.propTypes = {
@@ -26,9 +26,8 @@ CollAddSeedHeader.contextTypes = {
 }
 
 export default connect(null, dispatch => ({
-  nukeCheckUrl(){
+  nukeCheckUrl () {
     dispatch(resetCheckMessage())
   }
 }))(CollAddSeedHeader)
-
 

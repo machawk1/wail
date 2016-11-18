@@ -125,7 +125,7 @@ export default class CollectionSearch extends Component {
             style={{ marginTop: '25px', marginLeft: '15px' }}
             label={'Search'}
             onTouchTap={this.check} />
-          </CardActions>
+        </CardActions>
         <CardMedia>
           <List
             style={{

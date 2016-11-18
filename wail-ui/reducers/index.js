@@ -3,10 +3,12 @@ import collections from './collectionReducer'
 import crawls from './crawls'
 import {reducer as form, actionTypes} from 'redux-form/immutable'
 import {filterActions} from 'redux-ignore'
-import {CollectionEvents, CrawlEvents, CheckUrlEvents,} from '../constants/wail-constants'
+import {CollectionEvents, CrawlEvents, CheckUrlEvents } from '../constants/wail-constants'
 import checkUrl from './checkUrl'
-import {reducer as notifications} from 'react-notification-system-redux'
 import {batchActions, enableBatching} from 'redux-batched-actions'
+
+const RNS_SHOW_NOTIFICATION = 'RNS_SHOW_NOTIFICATION'
+const RNS_HIDE_NOTIFICATION = 'RNS_HIDE_NOTIFICATION'
 
 // const rootReducer = combineReducers({ collections, crawls, form })
 const rootReducer = enableBatching(combineReducers({

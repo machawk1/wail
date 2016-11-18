@@ -1,26 +1,15 @@
 import React, {Component, PropTypes} from 'react'
 import Immutable from 'immutable'
-import autobind from 'autobind-decorator'
-import shallowCompare from 'react-addons-shallow-compare'
-import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
-import {Flex, Item} from 'react-flex'
 import Add from 'material-ui/svg-icons/content/add'
-import {AutoSizer} from 'react-virtualized'
+import MyAutoSizer from './myAutoSizer'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
-import Search from 'material-ui/svg-icons/action/search'
-import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import SortDirection from './sortDirection'
 import SortHeader from './sortHeader'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import Divider from 'material-ui/Divider'
-import IconButton from 'material-ui/IconButton'
-import {
-  Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
-} from 'material-ui/Table'
+import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import {connect} from 'react-redux'
-import {Link, IndexLink} from 'react-router'
-import {openUrlInBrowser} from '../../actions/util-actions'
+import {Link} from 'react-router'
 import CollectionViewHeader from './collectionViewHeader'
 import {shell, remote} from 'electron'
 import './table.css'
@@ -130,55 +119,46 @@ export default class CollectionView extends Component {
     return trs
   }
 
+  setSortDirection (sortKey, sortDirection) {
+    this.setState({ sortDirection, sortKey })
+  }
+
   render () {
     let sdirection = this.state.sortDirection || SortDirection.ASC
+    let trs = this.renTr()
     return (
-      <div style={{ width: '100%', height: '100%', }}>
+      <div style={{ width: '100%', height: '100%' }} id='collViewDiv'>
         <CollectionViewHeader collection={this.props.collection}/>
-        <Divider/>
+        <Divider />
         <div style={{ height: 'inherit' }}>
-          <AutoSizer
-            disableWidth>
-            {({ height }) => {
-              return (
-                <Table
-                  height={`${height - 130}px`}
+          <MyAutoSizer findElement='collViewDiv'>
+            {({ height }) => (
+              <Table height={`${height - 130}px`}>
+                <TableHeader
+                  displaySelectAll={false}
+                  adjustForCheckbox={false}
                 >
-                  <TableHeader
-                    displaySelectAll={false}
-                    adjustForCheckbox={false}
-                  >
-                    <TableRow >
-                      <SortHeader key='SortHeader-name' text='Seed Url' sortDirection={sdirection}
-                                  onTouchTap={(sortKey, sortDirection) => {
-                                    this.setState({
-                                      sortDirection,
-                                      sortKey
-                                    })
-                                  }}/>
-                      <TableHeaderColumn>
-                        Added
-                      </TableHeaderColumn>
-                      <TableHeaderColumn>
-                        Last Archived
-                      </TableHeaderColumn>
-                      <TableHeaderColumn >
-                        Mementos
-                      </TableHeaderColumn>
-                      <TableHeaderColumn >
-                      </TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody
-                    displayRowCheckbox={false}
-                    showRowHover
-                  >
-                    {this.renTr()}
-                  </TableBody>
-                </Table>
-              )
-            }}
-          </AutoSizer>
+                  <TableRow >
+                    <SortHeader
+                      key='SortHeader-name' text='Seed Url'
+                      sortDirection={sdirection}
+                      onTouchTap={::this.setSortDirection}
+                    />
+                    <TableHeaderColumn>Added</TableHeaderColumn>
+                    <TableHeaderColumn>Last Archived</TableHeaderColumn>
+                    <TableHeaderColumn>Mementos</TableHeaderColumn>
+                    <TableHeaderColumn />
+                  </TableRow>
+                </TableHeader>
+                <TableBody
+                  displayRowCheckbox={false}
+                  showRowHover
+                >
+                  {trs}
+                </TableBody>
+              </Table>
+            )}
+          </MyAutoSizer>
         </div>
         <Link to={`/Collections/${this.props.viewingCol}/addSeed`}>
           <FloatingActionButton
@@ -195,6 +175,4 @@ export default class CollectionView extends Component {
     )
   }
 }
-
-
 

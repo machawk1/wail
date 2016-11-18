@@ -25,7 +25,7 @@ export default class TRCToolTip extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      tooltipShown: false,
+      tooltipShown: false
     }
   }
 
@@ -71,7 +71,7 @@ export default class TRCToolTip extends Component {
     const tooltipElement = <Tooltip
       touch={false}
       key={`tooltip-${ttkey}`}
-      ref="tooltip"
+      ref='tooltip'
       label={displayMe}
       show={this.state.tooltipShown}
       style={Object.assign(tooltips, trcstyle)}

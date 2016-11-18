@@ -30,9 +30,9 @@ export default class CollectionMetadata extends Component {
     })
 
     return (
-        <Scrollbars style={{width: '100%', height: '250px'}}>
-          {renderMe}
-        </Scrollbars>
+      <Scrollbars style={{width: '100%', height: '250px'}}>
+        {renderMe}
+      </Scrollbars>
     )
   }
 

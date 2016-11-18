@@ -3,11 +3,11 @@ import autobind from 'autobind-decorator'
 import shallowCompare from 'react-addons-shallow-compare'
 
 export default (props) => (
-  <div style={{ width: '100%', height: '100%', }}>
+  <div style={{ width: '100%', height: '100%' }}>
     <div>
       {props.main}
     </div>
-    <Divider/>
+    <Divider />
     <div style={{ height: 'inherit' }}>
       {props.header}
     </div>

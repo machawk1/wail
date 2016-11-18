@@ -10,7 +10,6 @@ const {
   discoveredS, queuedS, downloadedS, actionS
 } = styles.heritrixTable
 
-
 @connect((state, ownProps) => ({
   jobRecord: state.get('crawls').get(`${ownProps.jobId}`)
 }))

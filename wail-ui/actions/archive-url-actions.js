@@ -27,7 +27,7 @@ export function grabCaptures (uri, forCol) {
       let captures = []
       S(response.body).trim().lines()
         .forEach(line => {
-          let [_,time,j] = line.split(' ')
+          let [_, time, j] = line.split(' ')
           let { url } = JSON.parse(j)
           captures.push({
             url,

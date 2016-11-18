@@ -20,22 +20,22 @@ import {
 } from 'redux-form-material-ui'
 const styles = {
   block: {
-    maxWidth: 250,
+    maxWidth: 250
   },
   radioButton: {
-    marginBottom: 16,
+    marginBottom: 16
   },
   paperStyle: {
     width: 300,
     margin: 'auto',
-    padding: 20,
+    padding: 20
   },
   switchStyle: {
-    marginBottom: 16,
+    marginBottom: 16
   },
   submitStyle: {
-    marginTop: 32,
-  },
+    marginTop: 32
+  }
 
 }
 
@@ -99,16 +99,16 @@ const MaterialUiForm = props => {
       <form onSubmit={handleSubmit(submit)}>
         <div>
           <Field name='url' component={TextField}
-                 floatingLabelText='Seed to add:'
-                 hintText='Url'
-                 fullWidth
-                 style={{ marginLeft: 25, marginRight: 25, }}
+            floatingLabelText='Seed to add:'
+            hintText='Url'
+            fullWidth
+            style={{ marginLeft: 25, marginRight: 25 }}
           />
         </div>
         <div style={{ width: '50%' }}>
           <Field name='config' component={RadioButtonGroup}
-                 props={{ defaultSelected: 'single-page' }}
-                 style={{ marginLeft: 25, marginTop: 20, marginBottom: 20 }}
+            props={{ defaultSelected: 'single-page' }}
+            style={{ marginLeft: 25, marginTop: 20, marginBottom: 20 }}
           >
             <RadioButton
               value='single-page'
@@ -125,8 +125,8 @@ const MaterialUiForm = props => {
           </Field>
         </div>
         <div>
-          <FlatButton label='Add and Archive Now' type='submit' disabled={invalid || pristine || submitting} primary/>
-          <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+          <FlatButton label='Add and Archive Now' type='submit' disabled={invalid || pristine || submitting} primary />
+          <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
         </div>
       </form>
     </div>

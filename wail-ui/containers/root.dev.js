@@ -11,7 +11,7 @@ const Root = ({ store }) => {
   console.log('in Root dev')
   return (
     <Provider store={store}>
-      <Router history={hashHistory} routes={routes}/>
+      <Router history={hashHistory} routes={routes} />
     </Provider>
   )
 }

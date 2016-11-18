@@ -9,22 +9,21 @@ import {Router, hashHistory} from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import {ipcRenderer, remote} from 'electron'
+import {remote} from 'electron'
 import bunyan from 'bunyan'
 import wailConstants from './constants/wail-constants'
 import configureStore from './stores/configureStore'
+import createDetectElementResize from './vendor/detectElementResize'
 
 Promise.promisifyAll(fs)
 
-//  ensure out RequestStore is alive and kicking
+global.resizer = createDetectElementResize()
+
 window.React = React
 
 window.lastWaybackPath = wailConstants.Default_Collection
 
 injectTapEventPlugin()
-
-// ipcRenderer.send('get-all-collections')210
-// ipcRenderer.send('get-all-runs')
 
 const wail = document.getElementById('wail')
 window.eventLog = new bunyan.RingBuffer({ limit: 100 })
@@ -45,12 +44,14 @@ window.logger = bunyan.createLogger({
 })
 
 process.on('uncaughtException', (err) => {
+  console.error(err)
   window.logger.error(err)
 })
+
 const store = configureStore()
 render(
   <Provider store={store}>
-    <Router history={hashHistory} routes={routes}/>
+    <Router history={hashHistory} routes={routes} />
   </Provider>,
   document.getElementById('wail'))
 

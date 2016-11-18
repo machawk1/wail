@@ -6,7 +6,6 @@ import ServiceManager from './serviceManager'
 import S from 'string'
 import bunyan from 'bunyan'
 
-
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 

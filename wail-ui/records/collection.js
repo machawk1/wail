@@ -1,14 +1,15 @@
-import {Record, Map, List} from 'immutable'
+import Immutable from 'immutable'
+import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
 
-const CRecord = Record({
+const CRecord = Immutable.Record({
   indexes: '',
   archive: '',
   hasRunningCrawl: false,
   colpath: '',
   colName: '',
   numArchives: 0,
-  metadata: Map(),
-  crawls: List()
+  metadata: Immutable.Map(),
+  crawls: Immutable.List()
 })
 
 export default class Collection extends CRecord {
@@ -16,7 +17,7 @@ export default class Collection extends CRecord {
     let { crawls } = col
     crawls = crawls.map(r => new ColCrawlInfo(r))
     crawls.sort((r1, r2) => r1.compare(r2))
-    col.crawls = List(crawls)
+    col.crawls = Immutable.List(crawls)
     col.metadata = Immutable.fromJS(col.metadata)
   }
 }

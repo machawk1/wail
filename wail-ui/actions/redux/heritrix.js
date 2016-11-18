@@ -1,7 +1,9 @@
 import {ipcRenderer as ipc, remote} from 'electron'
+import {notify, notifyInfo} from '../../actions/notification-actions'
 import {joinStrings} from 'joinable'
 import wc from '../../constants/wail-constants'
 import {CollectionEvents, CrawlEvents, JobActionEvents, RequestActions} from '../../constants/wail-constants'
+import {send} from 'redux-electron-ipc'
 const EventTypes = wc.EventTypes
 const From = wc.From
 const {
@@ -10,7 +12,7 @@ const {
   BUILD_CRAWL_JOB,
   BUILT_CRAWL_CONF,
   CREATE_JOB,
-  CRAWL_JOB_DELETED,
+  CRAWL_JOB_DELETED
 } = CrawlEvents
 
 const {
@@ -60,20 +62,11 @@ export function crawlJobUpdate (e, crawlStatus) {
 //   from: From.BASIC_ARCHIVE_NOW,
 //   forCol: this.state.forCol
 
-export function buildCrawlJob (url, forCol = wc.Default_Collection) {
-  let depth = 1
+export function buildCrawlJob (url, forCol = wc.Default_Collection, depth = 1) {
   let jobId = new Date().getTime()
-  ipc.send('makeHeritrixJobConf', { url, depth, jobId, forCol })
   window.logger.debug(`Building Heritrix crawl for ${forCol} seed(s): ${url}`)
-  return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Info',
-      level: 'info',
-      message: `Archiving ${url} For ${forCol} Now!`,
-      uid: `Archiving ${url} ${forCol} Now!`
-    }
-  }
+  notifyInfo(`Archiving ${url} For ${forCol} Now!`)
+  return send('makeHeritrixJobConf', { url, depth, jobId, forCol })
 }
 
 export function buildDialogueCrawlJob (event, newCrawl) {
@@ -88,34 +81,14 @@ export function buildDialogueCrawlJob (event, newCrawl) {
     urls = `${newCrawl.urls} with depth of ${newCrawl.depth}`
   }
   let jId = new Date().getTime()
-  ipc.send('makeHeritrixJobConf', {
+  window.logger.debug(`Building Heritrix crawl for ${newCrawl.forCol} ${urls}`)
+  notifyInfo(`Building Heritrix crawl for ${newCrawl.forCol} with seeds: ${urls}`)
+  return send('makeHeritrixJobConf', {
     urls: newCrawl.urls,
     depth: newCrawl.depth,
     jobId: jId,
     forCol: newCrawl.forCol
   })
-  window.logger.debug(`Building Heritrix crawl for ${newCrawl.forCol} ${urls}`)
-  return {
-    type: EventTypes.QUEUE_MESSAGE,
-    message: {
-      title: 'Info',
-      level: 'info',
-      message: `Building Heritrix crawl for ${newCrawl.forCol} with seeds:  ${urls}`,
-      uid: `Building Heritrix crawl for ${urls}`
-    }
-  }
-}
-
-export function builtHeritrixJob (event, jobId) {
-  return {
-    type: EventTypes.BUILT_CRAWL_JOB,
-    message: {
-      title: 'Info',
-      level: 'info',
-      message: `Heritrix Crawl Built for job: `,
-      uid: `Heritrix Crawl Built for job: `
-    }
-  }
 }
 
 export function startJob (jobId) {
@@ -181,3 +154,10 @@ export function handledRequest (e, request) {
   }
 }
 
+export function crawlStarted (jobId) {
+  console.log('crawl started', jobId)
+  return {
+    type: '',
+
+  }
+}

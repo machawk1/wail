@@ -39,13 +39,13 @@ export default class SortHeader extends Component {
     return (
       <TableHeaderColumn
         style={{
-          cursor: 'pointer',
+          cursor: 'pointer'
         }}
         onTouchTap={onTouchTap}
       >
         {this.props.extraElem !== null && this.props.extraElem}
         {this.props.text}
-        {this.state.headerClicked && <SortIndicator key='SortIndicator' sortDirection={this.props.sortDirection}/>}
+        {this.state.headerClicked && <SortIndicator key='SortIndicator' sortDirection={this.props.sortDirection} />}
       </TableHeaderColumn>
     )
   }

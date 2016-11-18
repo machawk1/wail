@@ -5,7 +5,7 @@ import Immutable from 'immutable'
 import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 import {Flex} from 'react-flex'
-import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
+import MyAutoSizer from './myAutoSizer'
 import Search from 'material-ui/svg-icons/action/search'
 import {Card, CardTitle, CardText} from 'material-ui/Card'
 import SortDirection from './sortDirection'
@@ -79,7 +79,6 @@ export default class Combined extends Component {
   }
 
   renTr () {
-
     let trs = []
     let cols
     if (this.state.sortDirection) {
@@ -117,34 +116,33 @@ export default class Combined extends Component {
   render () {
     let sdirection = this.state.sortDirection || SortDirection.ASC
     return (
-      <div style={{ width: '100%', height: '100%', }}>
+      <div style={{ width: '100%', height: '100%' }} id='cViewContainer'>
+        <Flex row alignItems='center' justifyContent='space-between'>
+          <CardTitle
+            title='Collections'
+          />
+          <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()} />
+        </Flex>
         <Card>
-          <Flex row alignItems='center' justifyContent='space-between'>
-            <CardTitle
-              title='Collections'
-            />
-            <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
-          </Flex>
           <CardText
             style={{ padding: 0, paddingLeft: 64 }}>
             <span>
-                 <TextField
-                   style={{ width: '90%', paddingLeft: '10px' }}
-                   id='collectionSearch'
-                   hintText='Search'
-                   value={this.state.searchText}
-                   onChange={this.handleChange}
+              <TextField
+                style={{ width: '90%', paddingLeft: '10px' }}
+                id='collectionSearch'
+                hintText='Search'
+                value={this.state.searchText}
+                onChange={this.handleChange}
                  />
-              </span>
+            </span>
             <span>
               <Search />
             </span>
           </CardText>
         </Card>
-        <Divider/>
+        <Divider />
         <div style={{ height: 'inherit' }}>
-          <AutoSizer
-            disableWidth>
+          <MyAutoSizer findElement='cViewContainer'>
             {({ height }) => {
               return (
                 <Table
@@ -156,12 +154,12 @@ export default class Combined extends Component {
                   >
                     <TableRow >
                       <SortHeader key='SortHeader-name' text='Name' sortDirection={sdirection}
-                                  onTouchTap={(sortKey, sortDirection) => {
-                                    this.setState({
-                                      sortDirection,
-                                      sortKey
-                                    })
-                                  }}/>
+                        onTouchTap={(sortKey, sortDirection) => {
+                          this.setState({
+                            sortDirection,
+                            sortKey
+                          })
+                        }} />
                       <TableHeaderColumn>
                         Seeds
                       </TableHeaderColumn>
@@ -182,7 +180,7 @@ export default class Combined extends Component {
                 </Table>
               )
             }}
-          </AutoSizer>
+          </MyAutoSizer>
         </div>
       </div>
     )

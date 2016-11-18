@@ -115,24 +115,24 @@ export default class General extends Component {
                 <TableRowColumn style={style.servicesSS}>{waybackStatus}</TableRowColumn>
                 <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
                 <TableRowColumn style={style.servicesActions}>
-                 <span style={{ marginLeft: '50px' }}>
-                <RaisedButton
-                  disabled={this.state.wbGood}
-                  style={style.serviceActionButton}
-                  labelPosition='before'
-                  label='Start'
-                  onMouseDown={this.wayBackFix}
-                  icon={<FixIcon />}
+                  <span style={{ marginLeft: '50px' }}>
+                    <RaisedButton
+                      disabled={this.state.wbGood}
+                      style={style.serviceActionButton}
+                      labelPosition='before'
+                      label='Start'
+                      onMouseDown={this.wayBackFix}
+                      icon={<FixIcon />}
                 />
-                <RaisedButton
-                  disabled={!this.state.wbGood}
-                  style={style.serviceActionButton}
-                  labelPosition='before'
-                  label='Stop'
-                  onMouseDown={this.wayBackKill}
-                  icon={<KillIcon />}
+                    <RaisedButton
+                      disabled={!this.state.wbGood}
+                      style={style.serviceActionButton}
+                      labelPosition='before'
+                      label='Stop'
+                      onMouseDown={this.wayBackKill}
+                      icon={<KillIcon />}
                 />
-                   </span>
+                  </span>
                 </TableRowColumn>
               </TableRow>
               <TableRow
@@ -142,23 +142,23 @@ export default class General extends Component {
                 <TableRowColumn style={style.servicesSS}>{heritrixStatus}</TableRowColumn>
                 <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
                 <TableRowColumn style={style.servicesActions}>
-                <span style={{ marginLeft: '50px' }}>
-                  <RaisedButton
-                    disabled={this.state.hGood}
-                    style={style.serviceActionButton}
-                    labelPosition='before'
-                    label='Start'
-                    onMouseDown={this.heritrixFix}
-                    icon={<FixIcon />}
+                  <span style={{ marginLeft: '50px' }}>
+                    <RaisedButton
+                      disabled={this.state.hGood}
+                      style={style.serviceActionButton}
+                      labelPosition='before'
+                      label='Start'
+                      onMouseDown={this.heritrixFix}
+                      icon={<FixIcon />}
                   />
-                <RaisedButton
-                  disabled={!this.state.hGood}
-                  style={style.serviceActionButton}
-                  labelPosition='before' label='Stop'
-                  onMouseDown={this.heritrixKill}
-                  icon={<KillIcon />}
+                    <RaisedButton
+                      disabled={!this.state.hGood}
+                      style={style.serviceActionButton}
+                      labelPosition='before' label='Stop'
+                      onMouseDown={this.heritrixKill}
+                      icon={<KillIcon />}
                 />
-                </span>
+                  </span>
                 </TableRowColumn>
               </TableRow>
             </TableBody>

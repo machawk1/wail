@@ -168,8 +168,8 @@ export default class CollectionActions extends Component {
             tooltipPosition='top-center'
             tooltip='Actions'
           >
-        <Apps />
-      </IconButton>
+            <Apps />
+          </IconButton>
         </span>
         <span>
           <IconButton

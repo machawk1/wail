@@ -4,7 +4,7 @@ import Immutable from 'immutable'
 export class RunInfoRecord extends Immutable.Record({
   started: false, jobId: null, ending: false,
   ended: true, timestamp: null, tsMoment: null,
-  discovered: 0, queued: 0, downloaded: 0,
+  discovered: 0, queued: 0, downloaded: 0
 }) {
   updateStats (stats) {
     stats.tsMoment = moment(stats.timestamp)

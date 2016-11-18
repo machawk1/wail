@@ -23,14 +23,14 @@ export default {
     CHECKING_ARCHIVE: null,
     NOT_IN_ARCHIVE: null,
     IN_ARCHIVE: null,
-    RESET_CHECK_MESSAGE: null,
+    RESET_CHECK_MESSAGE: null
   }),
   JobActionEvents: keyMirror({
     START_JOB: null,
     RESTART_JOB: null,
     REMOVE_JOB: null,
     DELETE_JOB: null,
-    TERMINATE_JOB: null,
+    TERMINATE_JOB: null
   }),
   RequestActions: keyMirror({
     MAKE_REQUEST: null,
@@ -42,13 +42,13 @@ export default {
     BUILD_CRAWL_JOB: null,
     BUILT_CRAWL_CONF: null,
     CREATE_JOB: null,
-    CRAWL_JOB_DELETED: null,
+    CRAWL_JOB_DELETED: null
   }),
   CollectionEvents: keyMirror({
     GOT_ALL_COLLECTIONS: null,
     CREATED_COLLECTION: null,
     ADD_METADATA_TO_COLLECTION: null,
-    ADDED_WARCS_TO_COLL: null,
+    ADDED_WARCS_TO_COLL: null
   }),
   EventTypes: keyMirror({
     RNS_SHOW_NOTIFICATION: null,

@@ -21,7 +21,6 @@ if (process.env.NODE_ENV === 'development') {
   defForCol = 'Wail'
 }
 
-
 // ipc.on('got-all-collections', (event, ac) => {
 //   console.log('got all collections', ac)
 //   let {

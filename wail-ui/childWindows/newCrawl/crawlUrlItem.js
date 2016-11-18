@@ -48,7 +48,7 @@ export default class CrawlUrlItem extends Component {
         key={this.props.num}
         primaryText={<Textfit>
           {this.props.url}
-          </Textfit>
+        </Textfit>
           }
         rightIconButton={rightIconMenu}
       />

@@ -12,7 +12,7 @@ const {
   BUILD_CRAWL_JOB,
   BUILT_CRAWL_CONF,
   CREATE_JOB,
-  CRAWL_JOB_DELETED,
+  CRAWL_JOB_DELETED
 } = CrawlEvents
 
 export default (state = Map(), action) => {

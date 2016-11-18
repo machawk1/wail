@@ -12,7 +12,7 @@ export default function (state = [], action = {}) {
       ]
     case RNS_HIDE_NOTIFICATION:
       return state.filter(notification => {
-        return notification.uid !== action.uid;
+        return notification.uid !== action.uid
       })
     default:
       return state

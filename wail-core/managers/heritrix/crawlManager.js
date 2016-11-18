@@ -1,10 +1,10 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
 import Db from 'nedb'
-import { default as wc } from '../../constants'
+import {default as wc} from '../../constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
-import { ipcRenderer as ipc, remote } from 'electron'
+import {ipcRenderer as ipc, remote} from 'electron'
 import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
@@ -13,7 +13,7 @@ import Promise from 'bluebird'
 import S from 'string'
 import util from 'util'
 import CrawlStatsMonitor from './crawlStatsMonitor'
-import { CrawlInfo } from '../../util'
+import {CrawlInfo} from '../../util'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -123,7 +123,12 @@ export default class CrawlManager {
         })
       } else {
         console.log('updated document', numUpdated, updated)
-        ipc.send('add-warcs-to-col', { forCol: updated.forCol, warcs: update.stats.warcs })
+        ipc.send('add-warcs-to-col', {
+          forCol: updated.forCol,
+          warcs: update.stats.warcs,
+          lastUpdated: update.stats.timestamp,
+          seed: { url: updated.urls, jobId: update.jobId }
+        })
       }
     })
   }

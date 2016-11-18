@@ -4,7 +4,7 @@ const {
   CHECKING_ARCHIVE,
   NOT_IN_ARCHIVE,
   IN_ARCHIVE,
-  RESET_CHECK_MESSAGE,
+  RESET_CHECK_MESSAGE
 } = CheckUrlEvents
 
 export default (state = Map({ message: '', haveCaptures: false, captures: [] }), action) => {

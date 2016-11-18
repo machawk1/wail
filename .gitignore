@@ -30,6 +30,7 @@ src/public/*
 
 .idea
 
+creds.json
 
 build
 

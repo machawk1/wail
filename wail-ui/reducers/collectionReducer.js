@@ -10,7 +10,7 @@ const {
   ADDED_WARCS_TO_COLL
 } = CollectionEvents
 
-export default  (state = Map(), action) => {
+export default (state = Map(), action) => {
   console.log('in collections reducer', action)
   switch (action.type) {
     case GOT_ALL_COLLECTIONS:
