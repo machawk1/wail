@@ -212,7 +212,7 @@ export default class ArchiveManager {
   getColSize (col) {
     return new Promise((resolve, reject) => {
       let size = 0
-      fs.walk(S(settings.get('colWarcs')).template({ col }))
+      fs.walk(S(settings.get('collections.colWarcs')).template({ col }).s)
         .pipe(through2.obj(function (item, enc, next) {
           if (!item.stats.isDirectory()) this.push(item)
           next()
@@ -250,11 +250,11 @@ export default class ArchiveManager {
     })
   }
 
-  addWarcsToCol ({ forCol: col, warcs, lastUpdated, seed }) {
+  addWarcsToCol ({ col, warcs, lastUpdated, seed }) {
+    console.log('add warcs to col', col)
     let opts = {
       cwd: settings.get('warcs')
     }
-
     return new Promise((resolve, reject) => {
       // `/home/john/my-fork-wail/bundledApps/pywb/wb-manager add ${id} ${data.existingWarcs}`
       let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
@@ -274,7 +274,7 @@ export default class ArchiveManager {
         console.log('stdout', stdout)
         console.log('stderr', stderr)
 
-        return this.getColSize(col)
+        this.getColSize(col)
           .then(size => {
             this.findOne({ colName: col })
               .then(doc => {
@@ -285,23 +285,23 @@ export default class ArchiveManager {
                   let theUpdate = {
                     $push: { seeds: seed }, $inc: { numArchives: count }, $set: { size, lastUpdated }
                   }
-                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true })
-                    .then(({ numUpdated, updated }) => {
-                      console.log(numUpdated, updated)
-                      return resolve({
-                        ...updated,
+                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true, multi: false })
+                    .then(({ numUpdated, affectedDocuments }) => {
+                      console.log(numUpdated, affectedDocuments)
+                      resolve({
+                        ...affectedDocuments,
                         wasError: false
                       })
                     })
-                    .catch(updateErr => {
-                      return reject(updateErr)
-                    })
+                    .catch(updateErr => reject(updateErr))
                 } else {
                   console.log('its in')
                   console.log(doc.seeds)
                   let updatedSeeds = doc.seeds.map(aSeed => {
                     if (aSeed.url === seed.url) {
-                      aSeed.jobIds.push(seed.jobIds)
+                      if (!aSeed.jobIds.has(seed.jobId)) {
+                        aSeed.jobIds.push(seed.jobId)
+                      }
                       aSeed.mementos += 1
                     }
                     return aSeed
@@ -310,36 +310,15 @@ export default class ArchiveManager {
                     $set: { seeds: updatedSeeds, size, lastUpdated }, $inc: { numArchives: count },
                   }
                   console.log(updatedSeeds)
-                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true })
-                    .then(({ numUpdated, updated }) => {
-                      return resolve({
-                        ...updated,
-                        wasError: false
-                      })
+                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true, multi: false })
+                    .then(({ numUpdated, affectedDocuments }) => {
+                      console.log(numUpdated, affectedDocuments)
+                      resolve({ ...affectedDocuments, wasError: false })
                     })
-                    .catch(updateErr => {
-                      return reject(updateErr)
-                    })
+                    .catch(updateErr => reject(updateErr))
                 }
               })
-              .catch(errFind => {
-                return reject(errFind)
-              })
-            this.db.update({ colName: col }, {
-              $inc: { numArchives: count },
-              $set: { size, lastUpdated }
-            }, { returnUpdatedDocs: true }, (err, numUpdated, affectedDocuments) => {
-              if (err) {
-                return reject(err)
-              } else {
-                console.log(numUpdated, affectedDocuments)
-                return resolve({
-                  forCol: forCol,
-                  count,
-                  wasError: false
-                })
-              }
-            })
+              .catch(errFind => reject(errFind))
           })
       })
     })

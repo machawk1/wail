@@ -1,0 +1,1 @@
+export CollectionViewHeader from './collectionViewHeader'

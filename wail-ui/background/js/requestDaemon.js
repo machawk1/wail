@@ -106,7 +106,8 @@ class RequestDaemon {
   }
 }
 
-let requestDaemon = new HeritrixRequestMan()
+let requestDaemon = window.rd = new HeritrixRequestMan()
+
 
 ipcRenderer.on('handle-request', (event, request) => {
   console.log('RequestDaemon got handle-request', request)

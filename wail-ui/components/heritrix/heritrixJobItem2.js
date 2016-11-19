@@ -1,5 +1,6 @@
 import React, {Component, PropTypes} from 'react'
 import Immutable from 'immutable'
+import shallowCompare from 'react-addons-shallow-compare'
 import {TableRow, TableRowColumn} from 'material-ui/Table'
 import {connect} from 'react-redux'
 import styles from '../styles/styles'
@@ -10,14 +11,17 @@ const {
   discoveredS, queuedS, downloadedS, actionS
 } = styles.heritrixTable
 
-@connect((state, ownProps) => ({
-  jobRecord: state.get('crawls').get(`${ownProps.jobId}`)
-}))
-export default class HeritrixJobItem extends Component {
+const stateToProps = (state, ownProps) => ({ jobRecord: state.get('crawls').get(`${ownProps.jobId}`) })
+
+class HeritrixJobItem extends Component {
   static propTypes = {
     jobId: PropTypes.number.isRequired,
     jobRecord: PropTypes.instanceOf(Immutable.Record).isRequired,
     actionMenu: PropTypes.element.isRequired
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
@@ -77,3 +81,5 @@ export default class HeritrixJobItem extends Component {
     }
   }
 }
+
+export default connect(stateToProps)(HeritrixJobItem)

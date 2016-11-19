@@ -629,6 +629,8 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
         }
+        this.windows[ 'crawlManWindow' ].window.show()
+        this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })
@@ -668,9 +670,10 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows[ 'archiveManWindow' ].window.show()
           }
-
           this.windows[ 'archiveManWindow' ].window.webContents.closeDevTools()
         }
+        this.windows[ 'archiveManWindow' ].window.show()
+        this.windows[ 'archiveManWindow' ].window.webContents.closeDevTools()
         resolve()
       })
     })

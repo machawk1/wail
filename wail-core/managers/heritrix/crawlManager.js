@@ -124,7 +124,7 @@ export default class CrawlManager {
       } else {
         console.log('updated document', numUpdated, updated)
         ipc.send('add-warcs-to-col', {
-          forCol: updated.forCol,
+          col: updated.forCol,
           warcs: update.stats.warcs,
           lastUpdated: update.stats.timestamp,
           seed: { url: updated.urls, jobId: update.jobId }
@@ -156,12 +156,7 @@ export default class CrawlManager {
    */
   makeCrawlConf (options) {
     return new Promise((resolve, reject) => {
-      let {
-        urls,
-        forCol,
-        jobId,
-        depth
-      } = options
+      let { urls, forCol, jobId, depth } = options
       fs.readFile(settings.get('heritrix.jobConf'), 'utf8', (err, data) => {
         if (err) {
           reject(err)

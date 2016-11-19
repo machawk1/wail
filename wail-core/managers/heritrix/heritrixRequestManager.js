@@ -56,10 +56,7 @@ export default class HeritrixRequestManager {
 
   queueRequest (request) {
     console.log('heritrix request manager queuing request', request)
-    let {
-      jobId,
-      type
-    } = request
+    let { jobId, type } = request
     switch (type) {
       case BUILD_LAUNCH_JOB: {
         let haveRequestFor = this.requestForJob.has(jobId)
@@ -107,12 +104,10 @@ export default class HeritrixRequestManager {
     console.log('heritrix request manager making for request for job', jobId)
     jr.makeRequest()
       .then(maybeDone => {
-        let {
-          done,
-          doRetry
-        } = maybeDone
+        let { done, doRetry } = maybeDone
         if (done) {
           console.log(`heritrix request manager job ${jobId} is done`)
+          this.requestForJob.delete(jobId)
           this.maybeMore()
         } else {
           if (doRetry) {

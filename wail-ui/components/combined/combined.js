@@ -5,11 +5,11 @@ import Immutable from 'immutable'
 import TextField from 'material-ui/TextField'
 import FlatButton from 'material-ui/FlatButton'
 import {Flex} from 'react-flex'
-import MyAutoSizer from './myAutoSizer'
+import MyAutoSizer from '../utilComponents/myAutoSizer'
 import Search from 'material-ui/svg-icons/action/search'
 import {Card, CardTitle, CardText} from 'material-ui/Card'
-import SortDirection from './sortDirection'
-import SortHeader from './sortHeader'
+import SortDirection from '../sortDirection/sortDirection'
+import SortHeader from '../sortDirection/sortHeader'
 import Divider from 'material-ui/Divider'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import {
@@ -17,30 +17,9 @@ import {
 } from 'material-ui/Table'
 import {connect} from 'react-redux'
 import {Link} from 'react-router'
+import fuzzyFilter from '../../util/fuzzyFilter'
 
-const fuzzyFilter = (searchText, key) => {
-  const compareString = key.toLowerCase()
-  searchText = searchText.toLowerCase()
 
-  let searchTextIndex = 0
-  for (let index = 0; index < key.length; index++) {
-    if (compareString[ index ] === searchText[ searchTextIndex ]) {
-      searchTextIndex += 1
-    }
-  }
-
-  return searchTextIndex === searchText.length
-}
-
-const momentSort = (a, b) => {
-  if (a.isBefore(b)) {
-    return -1
-  } else if (a.isSame(b)) {
-    return 0
-  } else {
-    return 1
-  }
-}
 
 @connect(state => ({
   collections: state.get('collections')
@@ -57,8 +36,8 @@ export default class Combined extends Component {
     super(...args)
     this.state = {
       searchText: '',
-      sortDirection: null,
-      sortKey: 'null'
+      sortDirection: SortDirection.ASC,
+      sortKey: ''
     }
   }
 
@@ -75,7 +54,11 @@ export default class Combined extends Component {
   }
 
   componentDidUpdate (prevProps, prevState, prevContext) {
-    console.log('component did update')
+    console.log('Combined component did update')
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   renTr () {
@@ -114,14 +97,14 @@ export default class Combined extends Component {
   }
 
   render () {
-    let sdirection = this.state.sortDirection || SortDirection.ASC
+    let trs = this.renTr()
     return (
       <div style={{ width: '100%', height: '100%' }} id='cViewContainer'>
         <Flex row alignItems='center' justifyContent='space-between'>
           <CardTitle
             title='Collections'
           />
-          <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()} />
+          <FlatButton primary label='New Collection' onTouchTap={() => ViewWatcher.createCollection()}/>
         </Flex>
         <Card>
           <CardText
@@ -133,7 +116,7 @@ export default class Combined extends Component {
                 hintText='Search'
                 value={this.state.searchText}
                 onChange={this.handleChange}
-                 />
+              />
             </span>
             <span>
               <Search />
@@ -153,13 +136,13 @@ export default class Combined extends Component {
                     adjustForCheckbox={false}
                   >
                     <TableRow >
-                      <SortHeader key='SortHeader-name' text='Name' sortDirection={sdirection}
-                        onTouchTap={(sortKey, sortDirection) => {
-                          this.setState({
-                            sortDirection,
-                            sortKey
-                          })
-                        }} />
+                      <SortHeader key='SortHeader-name' text='Name' sortDirection={this.state.sortDirection}
+                                  onTouchTap={(sortKey, sortDirection) => {
+                                    this.setState({
+                                      sortDirection,
+                                      sortKey
+                                    })
+                                  }}/>
                       <TableHeaderColumn>
                         Seeds
                       </TableHeaderColumn>
@@ -175,7 +158,7 @@ export default class Combined extends Component {
                     displayRowCheckbox={false}
                     showRowHover
                   >
-                    {this.renTr()}
+                    {trs}
                   </TableBody>
                 </Table>
               )

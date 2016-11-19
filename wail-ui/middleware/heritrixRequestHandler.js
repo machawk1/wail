@@ -115,7 +115,7 @@ const handledRequest = (store, next, action, handledRequest) => {
     case LAUNCHED_CRAWL_JOB:
       if (rtype === REQUEST_SUCCESS) {
         notify.notifySuccess(`Heritrix Crawl started for ${job.displayUrls()}`)
-        return next(batchActions([ send('crawl-started', jobId) ]))
+        return next(send('crawl-started', jobId))
       } else {
         notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} did not start`)
         return next(action)

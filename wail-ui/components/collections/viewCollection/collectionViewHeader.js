@@ -9,9 +9,9 @@ import moment from 'moment'
 import AutoSizer from 'react-virtualized/dist/commonjs/AutoSizer'
 import Search from 'material-ui/svg-icons/action/search'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
-import SortDirection from './sortDirection'
-import SortHeader from './sortHeader'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import SortDirection from '../../sortDirection/sortDirection'
+import SortHeader from '../../sortDirection/sortHeader'
+import ViewWatcher from '../../../../wail-core/util/viewWatcher'
 import {
   Table, TableBody, TableFooter, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
 } from 'material-ui/Table'

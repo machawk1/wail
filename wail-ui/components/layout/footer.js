@@ -9,7 +9,6 @@ export default class Footer extends Component {
     return (
       <div style={{width: '0', height: '0'}}>
         <Notifications />
-        <StatusDialog />
         <NewCollection />
         <EditMetadata />
       </div>

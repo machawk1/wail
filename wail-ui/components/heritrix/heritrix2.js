@@ -3,7 +3,7 @@ import {connect} from 'react-redux'
 import Immutable from 'immutable'
 import shallowCompare from 'react-addons-shallow-compare'
 import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow} from 'material-ui/Table'
-import MyAutoSizer from '../combined/myAutoSizer'
+import MyAutoSizer from '../utilComponents/myAutoSizer'
 import HJobItemContainer from './hJobItemContainer'
 import styles from '../styles/styles'
 const {
@@ -11,10 +11,9 @@ const {
   discoveredS, queuedS, downloadedS, actionS
 } = styles.heritrixTable
 
-@connect(state => ({
-  jobIds: state.get('crawls').get('jobIds')
-}))
-export default class Heritrix2 extends Component {
+const stateToProps = state => ({ jobIds: state.get('crawls').get('jobIds') })
+
+class Heritrix2 extends Component {
   static propTypes = {
     jobIds: PropTypes.instanceOf(Immutable.List).isRequired
   }
@@ -27,10 +26,18 @@ export default class Heritrix2 extends Component {
     let len = this.props.jobIds.size
     for (let i = 0; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
-      trs.push(< HJobItemContainer key={`${i}-${jobId}`} jobId={jobId} />)
+      trs.push(< HJobItemContainer key={`${i}-${jobId}`} jobId={jobId}/>)
     }
 
     return trs
+  }
+
+  componentDidUpdate (prevProps, prevState, prevContext) {
+    console.log('h2 did update')
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return shallowCompare(this, nextProps, nextState)
   }
 
   render () {
@@ -81,6 +88,6 @@ export default class Heritrix2 extends Component {
       </MyAutoSizer>
     )
   }
-
 }
 
+export default connect(stateToProps)(Heritrix2)

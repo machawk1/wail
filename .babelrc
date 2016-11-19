@@ -1,5 +1,5 @@
 {
-  "presets": [ "latest", "react",  "stage-0","node6" ],
+  "presets": [ "latest", "react",  "stage-0" ],
   "plugins": [
     "transform-runtime",
     "add-module-exports",

@@ -55,7 +55,6 @@ class CheckSeed extends Component {
       </div>
     )
   }
-
 }
 
 export default connect(null, dispatch => ({

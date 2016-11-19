@@ -1,12 +1,8 @@
 import React from 'react'
 import {Field, reduxForm} from 'redux-form/immutable'
 import Promise from 'bluebird'
-import MyAutoSizer from './myAutoSizer'
-// import TextField from 'material-ui/TextField'
-// import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton'
+import MyAutoSizer from '../utilComponents/myAutoSizer'
 import {Card, CardHeader, CardTitle, CardText, CardMedia, CardActions} from 'material-ui/Card'
-// import Checkbox from 'material-ui/Checkbox'
-// import SelectField from 'material-ui/SelectField'
 import {SubmissionError} from 'redux-form'
 import isURL from 'validator/lib/isURL'
 import MenuItem from 'material-ui/MenuItem'
@@ -63,21 +59,6 @@ const warn = values => {
   return warnings
 }
 
-// const renderTextField = ({ input, label, meta: { touched, error }, ...custom }) => (
-//   <TextField hintText={label}
-//              floatingLabelText='Seed to add:'
-//              errorText={touched && error}
-//              {...input}
-//              {...custom}
-//   />
-// )
-//
-// const renderRadioGroup = ({ input, ...rest }) => (
-//   <RadioButtonGroup {...input} {...rest}
-//                     valueSelected={input.value}
-//                     onChange={(event, value) => input.onChange(value)}/>
-// )
-
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 function submit (values) {
@@ -92,7 +73,7 @@ function submit (values) {
     })
 }
 
-const MaterialUiForm = props => {
+const ArchiveUrlForm = props => {
   console.log('in form', props)
   const { handleSubmit, pristine, reset, submitting, invalid } = props
   return (
@@ -142,5 +123,4 @@ export default reduxForm({
   form: 'archiveUrl',  // a unique identifier for this form
   validate,
   warn
-
-})(MaterialUiForm)
+})(ArchiveUrlForm)

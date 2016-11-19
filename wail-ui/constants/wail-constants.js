@@ -12,6 +12,11 @@ export default {
       CRAWLBEAN: null
     })
   },
+  Header: keyMirror({
+    HEADER_OPEN_CLOSE: null,
+    HEADER_TOGGLE: null,
+    HEADER_LOCATION: null,
+  }),
   HeritrixRequestTypes: keyMirror({
     BUILD_LAUNCH_JOB: null,
     STOP_JOB: null,
