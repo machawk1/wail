@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import 'react-flex/index.css'
 import './css/wail.css'
 import React from 'react'
@@ -10,6 +9,7 @@ import fs from 'fs-extra'
 import Promise from 'bluebird'
 import {remote} from 'electron'
 import bunyan from 'bunyan'
+import Perf from 'react-addons-perf'
 import Wail from './containers/wail'
 import wailConstants from './constants/wail-constants'
 import configureStore from './stores/configureStore'
@@ -20,6 +20,7 @@ Promise.promisifyAll(fs)
 global.resizer = createDetectElementResize()
 
 window.React = React
+window.Perf = Perf
 
 window.lastWaybackPath = wailConstants.Default_Collection
 

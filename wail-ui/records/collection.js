@@ -9,8 +9,13 @@ const CRecord = Immutable.Record({
   colName: '',
   numArchives: 0,
   metadata: Immutable.Map(),
-  crawls: Immutable.List()
+  seeds: Immutable.List()
 })
+
+const makeCollectionRecord = col => {
+  let { crawls } = col
+  col.metadata = Immutable.fromJS(col.metadata)
+}
 
 export default class Collection extends CRecord {
   static fromJS (col) {

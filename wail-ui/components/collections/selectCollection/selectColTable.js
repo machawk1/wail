@@ -37,13 +37,13 @@ class SelectColTable extends Component {
     this.filterSubscription = this.props.filterText.subscribe({
       next: (searchText) => {
         this.setState({ searchText })
-      },
-      complete: () => console.log('we are complete')
+      }
     })
   }
 
   componentWillUnmount () {
     this.filterSubscription.unsubscribe()
+    this.filterSubscription = null
   }
 
   renTr () {
@@ -117,7 +117,6 @@ class SelectColTable extends Component {
               </TableHeader>
               <TableBody
                 displayRowCheckbox={false}
-                showRowHover
               >
                 {trs}
               </TableBody>

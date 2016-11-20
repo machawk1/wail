@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import autobind from 'autobind-decorator'
 import CrawlStore from '../../stores/crawlStore'
 import IconButton from 'material-ui/IconButton'
-import Notification from 'material-ui/svg-icons/action/info'
+import Info from 'material-ui/svg-icons/action/info'
 
 export default class CrawlingIndicator extends Component {
   constructor (...args) {
@@ -38,7 +38,7 @@ export default class CrawlingIndicator extends Component {
         tooltip='Crawl Running'
         tooltipPosition='bottom-left'
       >
-        <Notification />
+        <Info />
       </IconButton>
     )
   }

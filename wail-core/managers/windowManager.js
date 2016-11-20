@@ -1,8 +1,13 @@
 import {app, BrowserWindow, ipcMain, shell, dialog} from 'electron'
+import util from 'util'
+import partialRight from 'lodash/partialRight'
 import EventEmitter from 'eventemitter3'
 import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
 import S from 'string'
+import OauthTwitter from 'electron-oauth-twitter'
+
+const inpect = partialRight(util.inspect, { depth: 1, colors: true })
 
 async function dlExtensions (update = false) {
   if (process.env.NODE_ENV === 'development') {
@@ -10,6 +15,7 @@ async function dlExtensions (update = false) {
     try {
       await installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ], update)
       await installExtension.default(installExtension[ 'REDUX_DEVTOOLS' ], update)
+      await installExtension.default(installExtension[ 'REACT_PERF' ], update)
     } catch (e) {
       console.error(e)
     }
@@ -19,6 +25,12 @@ async function dlExtensions (update = false) {
 export default class WindowManager extends EventEmitter {
   constructor () {
     super()
+    this.twitterSignin = new OauthTwitter({
+      key: '',
+      secret: ''
+    })
+    //got token
+    //got secret
     this.windows = {
       accessibilityWindow: { window: null, url: null, open: false, conf: null },
       indexWindow: { window: null, url: null, open: false, conf: null },
@@ -307,6 +319,18 @@ export default class WindowManager extends EventEmitter {
       control.serviceMan.restartWayback()
         .then(() => this.send('mainWindow', 'restarted-wayback', { wasError: false }))
         .catch((err) => this.send('mainWindow', 'restarted-wayback', { wasError: true, err }))
+    })
+
+    /* Twitter */
+    ipcMain.on('sign-in-twitter', () => {
+      console.log('got sign in with twitter')
+      this.twitterSignin.startRequest().then((result) => {
+        const accessToken = result.oauth_access_token
+        const accessTokenSecret = result.oauth_access_token_secret
+        dialog.showErrorBox('Status', `Token: ${accessToken} \nSecret: ${accessTokenSecret}`)
+      }).catch((error) => {
+        console.error(error, error.stack)
+      })
     })
   }
 
@@ -772,7 +796,7 @@ export default class WindowManager extends EventEmitter {
   }
 
   send (who, channel, what) {
-    console.log('window manager send', who, channel, what)
+    console.log('window manager send', who, channel, inpect(what))
     if (this.windows[ who ].window) {
       this.windows[ who ].window.webContents.send(channel, what)
     } else {

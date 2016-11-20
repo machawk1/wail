@@ -1,11 +1,13 @@
 import moment from 'moment'
 import Immutable from 'immutable'
 
-export class RunInfoRecord extends Immutable.Record({
-  started: false, jobId: null, ending: false,
-  ended: true, timestamp: null, tsMoment: null,
+const RunRecord = Immutable.Record({
+  started: false, jobId: 0, ending: false,
+  ended: true, timestamp: 0, tsMoment: moment(),
   discovered: 0, queued: 0, downloaded: 0
-}) {
+})
+
+export default class RunInfoRecord extends RunRecord {
   updateStats (stats) {
     stats.tsMoment = moment(stats.timestamp)
     stats.jobId = this.get('jobId')
@@ -15,12 +17,4 @@ export class RunInfoRecord extends Immutable.Record({
   status () {
     return this.get('ended') ? 'Ended' : 'Running'
   }
-}
-
-export function makeRunInfoRecord (run, jobId) {
-  if (!run.tsMoment) {
-    run.tsMoment = moment(run.timestamp)
-  }
-  run.jobId = jobId
-  return new RunInfoRecord(run)
 }

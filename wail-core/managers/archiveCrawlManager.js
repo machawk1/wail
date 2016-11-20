@@ -1,7 +1,7 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
+import cp from 'child_process'
 import Db from 'nedb'
-import {default as wc} from '../../constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
 import {ipcRenderer as ipc, remote} from 'electron'
@@ -9,61 +9,52 @@ import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
 import path from 'path'
+import prettyBytes from 'pretty-bytes'
 import Promise from 'bluebird'
+import {remote} from 'electron'
 import S from 'string'
-import util from 'util'
-import CrawlStatsMonitor from './crawlStatsMonitor'
-import {CrawlInfo} from '../../util'
+import through2 from 'through2'
+import CrawlStatsMonitor from './heritrix/crawlStatsMonitor'
+import {CrawlInfo} from '../util'
+import {update, insert, findOne, find} from '../util/nedb'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')
-const EventTypes = wc.EventTypes
-const RequestTypes = wc.RequestTypes
 
-export default class CrawlManager {
+const crawlDbOpts = {
+  filename: pathMan.join(settings.get('wailCore.db'), 'crawls.db'),
+  autoload: true
+}
+const archiveDbOpts = {
+  filename: path.join(settings.get('wailCore.db'), 'archives.db'),
+  autoload: true
+}
 
+export default class ArchiveCrawlManager {
   constructor () {
-    this.db = new Db({
-      filename: pathMan.join(settings.get('wailCore.db'), 'crawls.db'),
-      autoload: true
-    })
+    this.crawls = new Db(crawlDbOpts)
+    this.archives = new Db(archiveDbOpts)
     this.csMonitor = new CrawlStatsMonitor()
-    this.csMonitor.on('crawljob-status-update', update => {
-      console.log('crawljob-status-update', update)
-      ipc.send('crawljob-status-update', update)
+    this.csMonitor.on('crawljob-status-update', stats => {
+      console.log('crawljob-status-update', stats)
+      ipc.send('crawljob-status-update', stats)
     })
-    this.csMonitor.on('crawljob-status-ended', update => {
-      console.log('crawljob-status-ended', update)
-      let newUpdate = _.cloneDeep(update)
+    this.csMonitor.on('crawljob-status-ended', stats => {
+      console.log('crawljob-status-ended', stats)
+      let newUpdate = _.cloneDeep(stats)
       delete newUpdate.warcs
-      ipc.send('crawljob-status-update', newUpdate)
-      this.crawlEnded(update)
+      ipc.send('crawljob-status-update', stats)
+      this.crawlEnded(stats)
     })
     this.launchId = /^[0-9]+$/
   }
 
-  initialLoad () {
-    return this.getAllRuns()
-  }
-
-  moveWarc (forCol, jobPath) {
-    fs.readdir(jobPath, (err, files) => {
-      // really abuse js evaluation of integers as strings
-      // heritrix launch ids are dates in YYYYMMDD... basically an integer
-      // so babel will make this Math.max.apply(Math,array)
-      let latestLaunch = Math.max(...files.filter(item => this.launchId.test(item)))
-      let warcPath = path.join(jobPath, `${latestLaunch}`, 'warcs', '*.warc')
-      ipc.send('add-warcs-to-col', { forCol, warcs: warcPath })
-    })
-  }
-
-  @autobind
   getAllRuns () {
     return new Promise((resolve, reject) => {
-      this.db.find({}, (err, docs) => {
+      this.crawls.find({}, (err, docs) => {
         if (err) {
           reject(err)
         } else {
@@ -78,9 +69,52 @@ export default class CrawlManager {
     })
   }
 
+  getAllCollections () {
+    return new Promise((resolve, reject) => {
+      this.archives.find({}, (err, docs) => {
+        if (err) {
+          reject(err)
+        } else {
+          if (docs.length === 0) {
+            // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+            let colpath = path.join(settings.get('warcs'), 'collections', 'default')
+            // description: Default Collection
+            // title: Default
+            let created = moment().format()
+            let toCreate = {
+              _id: 'default',
+              name: 'default',
+              colpath,
+              archive: path.join(colpath, 'archive'),
+              indexes: path.join(colpath, 'indexes'),
+              colName: 'default',
+              numArchives: 0,
+              metadata: { title: 'Default', description: 'Default Collection' },
+              crawls: [],
+              seeds: [],
+              size: '0 B',
+              created,
+              lastUpdated: created,
+              hasRunningCrawl: false
+            }
+            this.archives.insert(toCreate, (err, doc) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve([ doc ])
+              }
+            })
+          } else {
+            resolve(docs)
+          }
+        }
+      })
+    })
+  }
+
   @autobind
   crawlStarted (jobId) {
-    this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.crawls.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error inserting document', error)
         ipc.send('managers-error', {
@@ -101,10 +135,9 @@ export default class CrawlManager {
   crawlEnded (update) {
     console.log(update)
     let theUpdate = {
-      $set: {
-        hasRuns: true,
-        running: false,
-        latestRun: {
+      $set: { running: false },
+      $push: {
+        runs: {
           started: update.stats.started,
           ended: update.stats.ended,
           timestamp: update.stats.timestamp,
@@ -112,9 +145,9 @@ export default class CrawlManager {
           queued: update.stats.queued,
           downloaded: update.stats.downloaded
         }
-      },
+      }
     }
-    this.db.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.crawls.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
         ipc.send('managers-error', {
@@ -140,7 +173,7 @@ export default class CrawlManager {
   areCrawlsRunning () {
     console.log('checking if crawls are running')
     return new Promise((resolve, reject) => {
-      this.db.count({ running: true }, (err, runningCount) => {
+      this.crawls.count({ running: true }, (err, runningCount) => {
         if (err) {
           console.error('error finding if crawls are running')
           reject(err)
@@ -194,23 +227,17 @@ export default class CrawlManager {
                 } else {
                   console.log('done writting file')
                   let crawlInfo = {
-                    depth, jobId,
+                    depth,
+                    jobId,
                     path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
-                    confP: cfp, urls: urls, running: false, forCol
+                    confP: cfp,
+                    urls: urls,
+                    running: false,
+                    forCol
                   }
-                  let wRuns = Object.assign({}, {
-                    _id: `${jobId}`,
-                    latestRun: {
-                      started: false,
-                      ended: true,
-                      timestamp: jobId,
-                      discovered: 0,
-                      queued: 0,
-                      downloaded: 0
-                    }
-                  }, crawlInfo)
+                  let wRuns = Object.assign({}, { _id: `${jobId}`, runs: [] }, crawlInfo)
                   ipc.send('made-heritrix-jobconf', wRuns)
-                  this.db.insert(wRuns, (iError, doc) => {
+                  this.crawls.insert(wRuns, (iError, doc) => {
                     if (iError) {
                       console.error(iError)
                       reject(iError)

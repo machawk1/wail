@@ -20,6 +20,11 @@ export default (state = Map(), action) => {
       cols.forEach(col => {
         col.lastUpdated = moment(col.lastUpdated)
         col.created = moment(col.created)
+        col.seeds = col.seeds.map(s => {
+          s.added = moment(s.added)
+          s.lastUpdated = moment(s.lastUpdated)
+          return s
+        })
         collections[ col.colName ] = col
       })
       return state.merge(collections)

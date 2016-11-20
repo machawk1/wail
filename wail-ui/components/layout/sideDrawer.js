@@ -50,10 +50,6 @@ class SideDrawer extends Component {
           onTouchTap={(e) => this.props.handleClose('WAIL', '/')}/>
         <Divider />
         <MenuItem
-          primaryText={'Wayback'}
-          rightIcon={<Avatar backgroundColor={'transparent'} src='icons/openWB.png'/>}
-          onTouchTap={(e) => this.props.handleClose('Wayback', '/wayback')}/>
-        <MenuItem
           primaryText={'Heritrix'}
           rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
           onTouchTap={(e) => this.props.handleClose('Heritrix', '/heritrix')}/>

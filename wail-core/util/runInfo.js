@@ -4,7 +4,7 @@ export default class RunInfo {
   constructor (run, jobId) {
     this.started = run.started
     this.jobId = jobId
-    this.ending = run.ending
+    this.ending = run.ending || false
     this.ended = run.ended
     this.timestamp = run.timestamp
     this.tsMoment = moment(run.timestamp)
@@ -33,5 +33,16 @@ export default class RunInfo {
     }
 
     return 0
+  }
+
+  toJSON () {
+    return {
+      ended: this.ended,
+      ending: this.ending,
+      timestamp: this.timestamp,
+      discovered: this.discovered,
+      queued: this.queued,
+      downloaded: this.downloaded,
+    }
   }
 }

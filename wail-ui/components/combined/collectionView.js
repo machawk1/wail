@@ -44,16 +44,10 @@ const runsForCol = (state, col) => {
   }
 }
 
-const stateToProps = (state, ownProps) => {
-  let collection = state.get('collections').get(ownProps.params.col)
-  let crawlInfo = runsForCol(state, collection)
-  return {
-    collection,
-    viewingCol: ownProps.params.col,
-    crawlInfo
-  }
-}
-
+const stateToProps = (state, ownProps) => ({
+  collection: state.get('collections').get(ownProps.params.col),
+  viewingCol: ownProps.params.col,
+})
 const wbUrl = remote.getGlobal('settings').get('pywb.url')
 const openInWb = (seed, forCol) => shell.openExternal(`${wbUrl}${forCol}/*/${seed}`)
 
@@ -64,7 +58,6 @@ export default class CollectionView extends Component {
   }
   static propTypes = {
     collection: PropTypes.instanceOf(Immutable.Map).isRequired,
-    crawlInfo: PropTypes.instanceOf(Immutable.Map).isRequired,
     viewingCol: PropTypes.string.isRequired
   }
 
@@ -97,16 +90,15 @@ export default class CollectionView extends Component {
     for (let i = 0; i < len; ++i) {
       let seed = seeds.get(i)
       let url = seed.get('url')
-      let runInfo = this.props.crawlInfo.get(url)
       trs.push(<TableRow key={`${i}-${url}`}>
         <TableRowColumn key={`${i}-${url}-seed-url`}>
           {url}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-added`}>
-          {runInfo.get('created').format('MMM DD YYYY h:mma')}
+          {seed.get('added').format('MMM DD YYYY h:mma')}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-lastArchived`}>
-          {runInfo.get('lastUpdated').format('MMM DD YYYY h:mma')}
+          {seed.get('lastUpdated').format('MMM DD YYYY h:mma')}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-size`}>
           {seed.get('mementos')}

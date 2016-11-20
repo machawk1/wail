@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 
 const Layout = ({ children }) => (
-  { children }
+  children
 )
 
 export default Layout

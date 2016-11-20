@@ -1,7 +1,7 @@
 import moment from 'moment'
 import Immutable from 'immutable'
 import {joinStrings} from 'joinable'
-import {makeRunInfoRecord, RunInfoRecord} from './runInfoRecord'
+import RunInfoRecord from './runInfoRecord'
 
 function compare (a, b) {
   if (a.tsMoment.isBefore(b)) {
@@ -13,13 +13,14 @@ function compare (a, b) {
   return 0
 }
 
-class CrawlInfoRecord extends Immutable.Record({
-  jobId: 0, created: '', urls: '',
+const CrawlRecord = Immutable.Record({
+  lastUpdated: null,
+  jobId: 0, created: 0, urls: '',
   forCol: '', depth: 0, path: '',
-  confP: null, runs: Immutable.List(),
-  running: false, latestRun: new RunInfoRecord(),
-  lastUpdated: null
-}) {
+  confP: null, running: false, latestRun: new RunInfoRecord()
+})
+
+export class CrawlInfoRecord extends CrawlRecord {
 
   displayUrls () {
     if (Array.isArray(this.get('urls'))) {
@@ -40,19 +41,14 @@ class CrawlInfoRecord extends Immutable.Record({
 
 const makeCrawlInfoRecord = crawlInfo => {
   crawlInfo.created = moment(crawlInfo.jobId)
-  let runs = (crawlInfo.runs || [])
-  runs.forEach(r => {
-    r.tsMoment = moment(r.timestamp)
-  })
-  runs.sort(compare)
-  if (runs.length > 0) {
-    crawlInfo.latestRun = makeRunInfoRecord(runs[ 0 ], crawlInfo.jobId)
-    crawlInfo.lastUpdated = crawlInfo.latestRun.tsMoment
-  } else {
-    crawlInfo.latestRun = new RunInfoRecord({ jobId: crawlInfo.jobId })
-  }
-  crawlInfo.runs = Immutable.List(runs)
-  return new CrawlInfoRecord(crawlInfo)
+  crawlInfo.latestRun.tsMoment = moment(crawlInfo.latestRun.timestamp)
+  crawlInfo.latestRun.jobId = crawlInfo.jobId
+  crawlInfo.lastUpdated = moment(crawlInfo.latestRun.timestamp)
+  crawlInfo.latestRun = new RunInfoRecord(crawlInfo.latestRun)
+  let crec = new CrawlInfoRecord(crawlInfo)
+  console.log(crec.lastUpdated.format('MMM DD YYYY h:mma'))
+  console.log(crec.latestRun.tsMoment.format('MMM DD YYYY h:mma'))
+  return crec
 }
 
 export default makeCrawlInfoRecord

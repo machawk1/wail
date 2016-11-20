@@ -34,11 +34,12 @@ export default (state = Map(), action) => {
           }
           crawlsToCol[ cinfo.get('forCol') ].push(cinfo.get('jobId'))
         })
-        return state.merge(crawlJobs)
-          .withMutations(map => map.set('runningJobs', 0)
+        return state.withMutations(map =>
+          map.set('runningJobs', 0)
+            .merge(crawlJobs)
             .set('colCrawls', Immutable.fromJS(crawlsToCol))
             .set('jobIds', List(jobIds))
-          )
+        )
       } else {
         window.logger.debug('there was no runs in the db')
         return state.withMutations(map => map

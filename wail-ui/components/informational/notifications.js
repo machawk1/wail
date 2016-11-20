@@ -1,6 +1,4 @@
 import React, {Component, PropTypes} from 'react'
-import autobind from 'autobind-decorator'
-import {shell} from 'electron'
 import GMessageStore from '../../stores/globalMessageStore'
 import Notification from 'react-notification-system'
 
@@ -18,33 +16,17 @@ export default class Notifications extends Component {
   }
 
   componentWillMount () {
-    GMessageStore.on('new-message', this.receiveMessage)
+    GMessageStore.on('new-message', ::this.receiveMessage)
   }
 
   componentWillUnmount () {
-    GMessageStore.removeListener('new-message', this.receiveMessage)
+    GMessageStore.removeListener('new-message', ::this.receiveMessage)
   }
 
-  @autobind
   receiveMessage () {
     console.log('reciever message')
     let message = GMessageStore.getMessage()
     this.notifier.addNotification(message)
-
-    // if (!this.state.open) {
-    //   this.setState({ message: , open: true })
-    // }
-  }
-
-  @autobind
-  closeNotification () {
-    if (GMessageStore.hasQueuedMessages()) {
-      this.setState({ message: GMessageStore.getMessage() })
-    } else {
-      this.setState({
-        open: false
-      })
-    }
   }
 
   render () {
@@ -53,11 +35,3 @@ export default class Notifications extends Component {
     )
   }
 }
-/*
- <Snackbar
- open={this.state.open}
- message={this.state.message}
- autoHideDuration={2000}
- onRequestClose={this.closeNotification}
- />
- */

@@ -6,14 +6,14 @@ export default class CrawlInfo {
   constructor (crawlInfo) {
     this.jobId = crawlInfo.jobId
     this.created = moment(crawlInfo.jobId)
+    this.createdts = crawlInfo.jobId
     this.urls = crawlInfo.urls
     this.forCol = crawlInfo.forCol
     this.depth = crawlInfo.depth
     this.path = crawlInfo.path
     this.confP = crawlInfo.confP
     this.running = crawlInfo.running
-    this.runs = (crawlInfo.runs || []).map(r => new RunInfo(r, this.jobId))
-    this.sortRuns()
+    this.latestRun = new RunInfo(crawlInfo.latestRun)
   }
 
   urlsToJobId () {
@@ -42,6 +42,20 @@ export default class CrawlInfo {
 
   toString () {
     return `CrawlInfo[forCol: ${this.forCol}, urls: ${this.urls}, running: ${this.running}, #runs:${this.runs.length}]`
+  }
+
+  toJSON () {
+    return {
+      jobId: this.jobId,
+      created: this.createdts,
+      urls: this.urls,
+      forCol: this.forCol,
+      depth: this.depth,
+      path: this.path,
+      confP: this.confP,
+      running: this.running,
+      latestRun: this.latestRun,
+    }
   }
 
 }

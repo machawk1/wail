@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import Container from 'muicss/lib/react/container'
 import shallowCompare from 'react-addons-shallow-compare'
 import RaisedButton from 'material-ui/FlatButton'
 import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
@@ -7,7 +6,7 @@ import { Card, CardActions, CardHeader, CardMedia } from 'material-ui/Card'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
 import CheckUpdateIcon from 'material-ui/svg-icons/action/open-in-browser'
 import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
-import { remote, ipcRenderer } from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import EventLog from './eventLog'
 import { openUrlInBrowser, openFSLocation } from '../../actions/util-actions'
 
@@ -36,7 +35,6 @@ export default class Misc extends Component {
   render () {
     return (
       <div style={{ width: '100%', height: 'calc(100% - 60px)', overflowX: 'hidden', overflowY: 'scroll' }}>
-        <Container>
           <div className='generalTab'>
             <Card>
               <CardHeader
@@ -69,6 +67,15 @@ export default class Misc extends Component {
                     }}
                   />
                 </ToolbarGroup>
+                <ToolbarGroup>
+                  <RaisedButton
+                    label='Twitter'
+                    labelPosition='before'
+                    onMouseDown={() => {
+                      ipc.send('sign-in-twitter')
+                    }}
+                  />
+                </ToolbarGroup>
                 <ToolbarGroup lastChild>
                   <RaisedButton
                     icon={<CheckUpdateIcon />}
@@ -80,7 +87,6 @@ export default class Misc extends Component {
               </Toolbar>
             </Card>
           </div>
-        </Container>
       </div>
     )
   }

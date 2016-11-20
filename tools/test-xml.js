@@ -1,6 +1,7 @@
 const DB = require('nedb')
 const _ = require('lodash')
 const util = require('util')
+const Immutable = require('immutable')
 const Promise = require('bluebird')
 const S = require('string')
 const cp = require('child_process')
@@ -8,13 +9,7 @@ const fs = require('fs-extra')
 const through2 = require('through2')
 const prettyBytes = require('pretty-bytes')
 const moment = require('moment')
-const keyMirror = require('keymirror')
-const Immutable = require('immutable')
-const Benchmark = require('benchmark')
 Promise.promisifyAll(DB.prototype)
-const {CALL_HISTORY_METHOD} = require('react-router-redux')
-// console.log(util.inspect(rrr, { depth: null, colors: true }))
-console.log(CALL_HISTORY_METHOD)
 // const { CollectionEvents } = {
 //   CollectionEvents: keyMirror({
 //     GOT_ALL_COLLECTIONS: null,
@@ -87,25 +82,77 @@ console.log(CALL_HISTORY_METHOD)
 // console.log(util.inspect(trans, { colors: true, depth: null }))
 
 // console.log('hi')
-// const a = new DB({
-//   filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
-//   autoload: true
-// })
-//
-// const c = new DB({
-//   filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
-//   autoload: true
-// })
 
-//
-// // c.find({}, (err, runs) => {
-// //   console.log(util.inspect(runs, { depth: null, colors: true }))
-// // })
-//
-// function *updateGen (col) {
-//   for (let it of col)
-//     yield it
-// }
+const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
+const a = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+  autoload: true
+})
+
+const c = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
+  autoload: true
+})
+
+function *updateGen (iterate) {
+  for (let it of iterate)
+    yield it
+}
+
+function update (iter, updateFun) {
+  let { done, value } = iter.next()
+  if (!done) {
+    updateFun(value)
+      .then(() => {
+        update(iter, updateFun)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+}
+
+const runsToLatest = (db, run) => new Promise((resolve, reject) => {
+  run.hasRuns = true
+  db.insert(run, (err) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve()
+    }
+  })
+})
+
+// const updater = _.partial(runsToLatest, c)
+c.find({}, (err, crawls) => {
+  // c.remove({}, { multi: true }, function (err, numRemoved) {
+  //   update(updateGen(crawls), updater)
+  // })
+  let cs = _.keyBy(crawls, crawl => crawl.jobId)
+  let newA = []
+  a.find({}, (erra, archives) => {
+    console.log(inpect(archives))
+    // archives.forEach(ar => {
+    //   // console.log(inpect(ar))
+    //   if (ar.seeds.length > 0) {
+    //     ar.seeds = ar.seeds.map(s => {
+    //       s.added = moment(cs[ Math.min(...s.jobIds) ].jobId).format()
+    //       s.lastUpdated = moment(cs[ Math.max(...s.jobIds) ].latestRun.timestamp).format()
+    //       return s
+    //     })
+    //   }
+    //   newA.push(ar)
+    // })
+    // console.log(inpect(newA))
+    // a.remove({}, { multi: true }, function (err, numRemoved) {
+    //   a.insert(newA, (err) => {
+    //     console.log(err)
+    //   })
+    // })
+  })
+
+})
+
 //
 
 // {"_id":"sdas2","name":"sdas2","colpath":"/home/john/my-fork-wail/archives2/collections/sdas","archive":"/home/john/my-fork-wail/archives2/collections/sdas/archive","indexes":"/home/john/my-fork-wail/archives2/collections/sdas/indexes","colName":"sdas2","numArchives":0,"metadata":{"title":"klajsdlk;asjdk","description":"jkhdsakjlh"},"hasRunningCrawl":false,"lastUpdated":"2016-11-13T18:52:11-05:00","seeds":[{"booo":{"url":"cs.odu.edu","jobIds":[1475473841435],"mementos":1}}],"created":"2016-11-13T18:52:11-05:00","size":"0 B"}
@@ -231,18 +278,4 @@ console.log(CALL_HISTORY_METHOD)
 //   // })
 // })
 
-// class ItRec extends Immutable.Record({ a: 1, b: 2 }) {
-//   updateMe (k, v) {
-//     return this.set(k, v)
-//   }
-// }
-//
-// let it = new ItRec()
-// console.log(it.a, it.b)
-// let it2 = it.updateMe('b', 5)
-// let it3 = it2.updateMe('a', 5)
-// console.log(it2.a, it2.b)
-// console.log(it3.a, it3.b)
-// console.log(it === it2)
-// console.log(it === it3)
-// console.log(it2 === it3)
+
