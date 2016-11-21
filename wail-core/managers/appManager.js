@@ -45,7 +45,7 @@ export default class AppManager {
     }
   }
 
-  init (base, userData, version, loadFrom, debug = false, notDebugUI = false, openBackGroundWindows = false) {
+  init (base, userData, version, loadFrom, debug = true, notDebugUI = false, openBackGroundWindows = false) {
     console.log('appManager init')
     return new Promise((resolve) => {
       this.notDebugUI = notDebugUI
@@ -59,7 +59,7 @@ export default class AppManager {
       let settingsPath = userData
       if (process.env.NODE_ENV === 'development') {
         logPath = this.pathMan.joinWBase('waillogs')// path.join(control.base, 'waillogs')
-        v = '1.0.0-rc.2.7'
+        v = '1.0.0-rc.2.9.1'
         settingsPath = logPath
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')

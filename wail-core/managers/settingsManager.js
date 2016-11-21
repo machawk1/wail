@@ -250,6 +250,13 @@ if (process.env.NODE_ENV === 'development') {
       url: 'http://{host}:{port}',
       db: 'dev_coreData/database',
       timemaps: 'dev_coreData/timemaps'
+    },
+    twitter: {
+      wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
+      wailSecret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY',
+      userToken: '4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3',
+      userSecret: '46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f',
+      userSignedIn: true
     }
 
   }
@@ -469,6 +476,13 @@ if (process.env.NODE_ENV === 'development') {
       url: 'http://{host}:{port}',
       db: 'coreData/database',
       timemaps: 'coreData/timemaps'
+    },
+    twitter: {
+      wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
+      wailSecret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY',
+      userToken: '',
+      userSecret: '',
+      userSignedIn: false
     }
 
   }
@@ -680,6 +694,8 @@ export default class SettingsManager {
           break
       }
     })
+
+    this._settings.set('twitter', managed.twitter)
   }
 
   @autobind

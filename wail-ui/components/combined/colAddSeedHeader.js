@@ -4,6 +4,12 @@ import {Link, IndexLink} from 'react-router'
 import {resetCheckMessage} from '../../actions/redux/archival'
 import {connect} from 'react-redux'
 
+const dispatchToProp = dispatch => ({
+  nukeCheckUrl () {
+    dispatch(resetCheckMessage())
+  }
+})
+
 const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
   let { primary1Color } = context.muiTheme.baseTheme.palette
   let linkStyle = {
@@ -15,7 +21,7 @@ const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
     onClick={nukeCheckUrl}
     to={`Collections/${col}`}>{col}</Link> > Add Seed</span>
   return (
-    <CardTitle title={title} />
+    <CardTitle title={title}/>
   )
 }
 CollAddSeedHeader.propTypes = {
@@ -25,9 +31,4 @@ CollAddSeedHeader.contextTypes = {
   muiTheme: PropTypes.object.isRequired
 }
 
-export default connect(null, dispatch => ({
-  nukeCheckUrl () {
-    dispatch(resetCheckMessage())
-  }
-}))(CollAddSeedHeader)
-
+export default connect(null, dispatchToProp)(CollAddSeedHeader)

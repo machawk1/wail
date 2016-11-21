@@ -7,12 +7,16 @@ import CollectionView from './containers/collectionView'
 import CollectionAddSeed from './components/combined/collAddSeed'
 import General from './components/advanced/general'
 import Misc from './components/advanced/miscellaneous'
+import TwitterView from './containers/twitterView'
+import SignIn from './components/twitter/signIn'
 
 export default <Route path='/' component={Layout}>
-  <IndexRoute component={SelectColContainer} />
-  <Route path='Collections/:col' component={CollectionView} />
-  <Route path='Collections/:col/addSeed' component={CollectionAddSeed} />
-  <Route path='heritrix' name='Heritrix' component={HeritrixView} />
-  <Route path='misc' name='Misc' component={Misc}/>
-  <Route path='services' name='Services' component={General}/>
+  <IndexRoute component={SelectColContainer}/>
+  <Route path='Collections/:col' component={CollectionView}/>
+  <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
+  <Route path='heritrix' component={HeritrixView}/>
+  <Route path='misc' component={Misc}/>
+  <Route path='services' component={General}/>
+  <Route path='twitter' component={TwitterView}/>
+  <Route path='twitter-signin' component={SignIn}/>
 </Route>

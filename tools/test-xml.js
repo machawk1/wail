@@ -9,7 +9,38 @@ const fs = require('fs-extra')
 const through2 = require('through2')
 const prettyBytes = require('pretty-bytes')
 const moment = require('moment')
-Promise.promisifyAll(DB.prototype)
+const path = require('path')
+const rp = require('request-promise')
+const ElectronWorkers = require('electron-workers')
+require('debug')('electron-workers')
+
+let it = { yes: true }
+const checkIt = what => it[ what ] || false
+if (!checkIt('yes')) {
+  console.log('words')
+} else {
+  console.log('words to my nine')
+}
+
+// const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
+// const tp = path.resolve('.', 'tweets.json')
+// console.log(tp)
+//
+// Promise.promisifyAll(fs)
+// fs.readJSONAsync(tp)
+//   .then(tweets => {
+//     // 'https://twitter.com/Galsondor/status/800512053156974596'
+//     _.take(tweets,100).forEach(tweet => {
+//       // console.log(inpect(tweet))
+//       console.log(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+//       console.log('------------------------------------------')
+//     })
+//
+//   })
+//   .catch(error => {
+//     console.error(error)
+//   })
+
 // const { CollectionEvents } = {
 //   CollectionEvents: keyMirror({
 //     GOT_ALL_COLLECTIONS: null,
@@ -83,75 +114,75 @@ Promise.promisifyAll(DB.prototype)
 
 // console.log('hi')
 
-const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
-const a = new DB({
-  filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
-  autoload: true
-})
-
-const c = new DB({
-  filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
-  autoload: true
-})
-
-function *updateGen (iterate) {
-  for (let it of iterate)
-    yield it
-}
-
-function update (iter, updateFun) {
-  let { done, value } = iter.next()
-  if (!done) {
-    updateFun(value)
-      .then(() => {
-        update(iter, updateFun)
-      })
-      .catch(error => {
-        console.error(error)
-      })
-  }
-}
-
-const runsToLatest = (db, run) => new Promise((resolve, reject) => {
-  run.hasRuns = true
-  db.insert(run, (err) => {
-    if (err) {
-      reject(err)
-    } else {
-      resolve()
-    }
-  })
-})
-
-// const updater = _.partial(runsToLatest, c)
-c.find({}, (err, crawls) => {
-  // c.remove({}, { multi: true }, function (err, numRemoved) {
-  //   update(updateGen(crawls), updater)
-  // })
-  let cs = _.keyBy(crawls, crawl => crawl.jobId)
-  let newA = []
-  a.find({}, (erra, archives) => {
-    console.log(inpect(archives))
-    // archives.forEach(ar => {
-    //   // console.log(inpect(ar))
-    //   if (ar.seeds.length > 0) {
-    //     ar.seeds = ar.seeds.map(s => {
-    //       s.added = moment(cs[ Math.min(...s.jobIds) ].jobId).format()
-    //       s.lastUpdated = moment(cs[ Math.max(...s.jobIds) ].latestRun.timestamp).format()
-    //       return s
-    //     })
-    //   }
-    //   newA.push(ar)
-    // })
-    // console.log(inpect(newA))
-    // a.remove({}, { multi: true }, function (err, numRemoved) {
-    //   a.insert(newA, (err) => {
-    //     console.log(err)
-    //   })
-    // })
-  })
-
-})
+//
+// const a = new DB({
+//   filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+//   autoload: true
+// })
+//
+// const c = new DB({
+//   filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
+//   autoload: true
+// })
+//
+// function *updateGen (iterate) {
+//   for (let it of iterate)
+//     yield it
+// }
+//
+// function update (iter, updateFun) {
+//   let { done, value } = iter.next()
+//   if (!done) {
+//     updateFun(value)
+//       .then(() => {
+//         update(iter, updateFun)
+//       })
+//       .catch(error => {
+//         console.error(error)
+//       })
+//   }
+// }
+//
+// const runsToLatest = (db, run) => new Promise((resolve, reject) => {
+//   run.hasRuns = true
+//   db.insert(run, (err) => {
+//     if (err) {
+//       reject(err)
+//     } else {
+//       resolve()
+//     }
+//   })
+// })
+//
+// // const updater = _.partial(runsToLatest, c)
+// c.find({}, (err, crawls) => {
+//   // c.remove({}, { multi: true }, function (err, numRemoved) {
+//   //   update(updateGen(crawls), updater)
+//   // })
+//   let cs = _.keyBy(crawls, crawl => crawl.jobId)
+//   let newA = []
+//   a.find({}, (erra, archives) => {
+//     console.log(inpect(archives))
+//     // archives.forEach(ar => {
+//     //   // console.log(inpect(ar))
+//     //   if (ar.seeds.length > 0) {
+//     //     ar.seeds = ar.seeds.map(s => {
+//     //       s.added = moment(cs[ Math.min(...s.jobIds) ].jobId).format()
+//     //       s.lastUpdated = moment(cs[ Math.max(...s.jobIds) ].latestRun.timestamp).format()
+//     //       return s
+//     //     })
+//     //   }
+//     //   newA.push(ar)
+//     // })
+//     // console.log(inpect(newA))
+//     // a.remove({}, { multi: true }, function (err, numRemoved) {
+//     //   a.insert(newA, (err) => {
+//     //     console.log(err)
+//     //   })
+//     // })
+//   })
+//
+// })
 
 //
 

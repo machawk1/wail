@@ -1,8 +1,10 @@
+import {push} from 'react-router-redux'
 import wc from '../constants/wail-constants'
 import {notifyError} from '../actions/notification-actions'
+import {hashHistory} from 'react-router'
 import {grabCaptures} from '../actions/archive-url-actions'
 import {inArchive, notInArchive, checkingArchive} from '../actions/redux/archival'
-import {CheckUrlEvents, EventTypes} from '../constants/wail-constants'
+import {CheckUrlEvents, EventTypes, LocationChange} from '../constants/wail-constants'
 import heritrixRequestHandler from './heritrixRequestHandler'
 const {
   CHECKING_ARCHIVE,
@@ -26,6 +28,13 @@ export default store => next => action => {
         .catch(error => {
           return next(notInArchive(`${action.url} is not in ${action.forCol}`))
         })
+    case LocationChange.CHECK_TWITTER:
+      if (store.getState().get('twitter').get('userSignedIn')) {
+        hashHistory.push('/twitter')
+      } else {
+        hashHistory.push('/twitter-signin')
+      }
+      break
     default:
       return heritrixRequestHandler(store, next, action)
   }

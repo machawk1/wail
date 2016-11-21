@@ -106,7 +106,7 @@ const handledRequest = (store, next, action, handledRequest) => {
   switch (type) {
     case BUILT_CRAWL_JOB:
       if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Heritrix Crawl started for ${job.displayUrls()} was built`)
+        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} was built`)
         return next(action)
       } else {
         notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was not built`)

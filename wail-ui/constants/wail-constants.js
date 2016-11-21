@@ -12,6 +12,12 @@ export default {
       CRAWLBEAN: null
     })
   },
+  LocationChange: keyMirror({
+    CHECK_TWITTER: null,
+  }),
+  Twitter: keyMirror({
+    SIGNED_IN: null
+  }),
   Header: keyMirror({
     HEADER_OPEN_CLOSE: null,
     HEADER_TOGGLE: null,

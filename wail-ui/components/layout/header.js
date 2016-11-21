@@ -1,14 +1,12 @@
 import React, {Component, PropTypes} from 'react'
-import autobind from 'autobind-decorator'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
 import Avatar from 'material-ui/Avatar'
 import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-import {push} from 'react-router-redux'
-import {Link, IndexLink} from 'react-router'
 import CrawlIndicator from './crawlingIndicator'
+import changeLocation from '../../actions/redux/changeLocation'
 
 export default class Header extends Component {
   static contextTypes = {
@@ -29,7 +27,7 @@ export default class Header extends Component {
   }
 
   handleClose (location, to) {
-    this.context.store.dispatch(push(to))
+    this.context.store.dispatch(changeLocation(to))
     this.setState({ open: false, location })
   }
 
@@ -64,6 +62,10 @@ export default class Header extends Component {
           <MenuItem
             primaryText={'Miscellaneous'}
             onTouchTap={(e) => this.handleClose('Miscellaneous', '/misc')}/>
+          <Divider />
+          <MenuItem
+            primaryText={'Twitter Archive'}
+            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')}/>
         </Drawer>
       </div>
     )

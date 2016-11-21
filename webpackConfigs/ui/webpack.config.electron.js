@@ -14,10 +14,12 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'latest', 'stage-0', 'node6' ],
-          plugins: [ 'transform-runtime', 'add-module-exports',
-            'babel-plugin-transform-decorators-legacy', 'transform-class-properties',
-            'react-html-attrs',
+          presets: [ 'electron' ],
+          plugins: [
+            'add-module-exports',
+            'babel-plugin-transform-decorators-legacy',
+            'transform-runtime',
+            'transform-class-properties'
           ],
         }
       },
@@ -35,7 +37,7 @@ export default {
   },
   devtool: 'source-map',
 
-  entry: [ 'babel-polyfill', './wail-ui/ui-main.js' ],
+  entry: './wail-ui/ui-main.js' ,
   output: {
     filename: 'ui-main.js',
     path: './dist',

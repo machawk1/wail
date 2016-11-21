@@ -1,5 +1,5 @@
 {
-  "presets": [ "latest", "react",  "stage-0"],
+  "presets": [ "electron", "react" ],
   "plugins": [
     "transform-runtime",
     "add-module-exports",

@@ -9,28 +9,37 @@ import OauthTwitter from 'electron-oauth-twitter'
 
 const inpect = partialRight(util.inspect, { depth: 1, colors: true })
 
-async function dlExtensions (update = false) {
-  if (process.env.NODE_ENV === 'development') {
-    const installExtension = require('electron-devtools-installer')
-    try {
-      await installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ], update)
-      await installExtension.default(installExtension[ 'REDUX_DEVTOOLS' ], update)
-      await installExtension.default(installExtension[ 'REACT_PERF' ], update)
-    } catch (e) {
-      console.error(e)
+function dlExtensions (update = false) {
+  return new Promise((resolve, reject) => {
+    if (process.env.NODE_ENV === 'development') {
+      const installExtension = require('electron-devtools-installer')
+      Promise.all([ installExtension.default(installExtension[ 'REACT_DEVELOPER_TOOLS' ], update),
+        installExtension.default(installExtension[ 'REDUX_DEVTOOLS' ], update),
+        installExtension.default(installExtension[ 'REACT_PERF' ], update) ])
+        .then(() => {
+          resolve()
+        })
+        .catch((error) => {
+          console.error(error)
+          resolve()
+        })
+
+    } else {
+      resolve()
     }
-  }
+  })
+
 }
 
 export default class WindowManager extends EventEmitter {
   constructor () {
     super()
     this.twitterSignin = new OauthTwitter({
-      key: '',
-      secret: ''
+      key: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
+      secret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY'
     })
-    //got token
-    //got secret
+    //got token 4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3
+    //got secret 46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f
     this.windows = {
       accessibilityWindow: { window: null, url: null, open: false, conf: null },
       indexWindow: { window: null, url: null, open: false, conf: null },
@@ -324,13 +333,21 @@ export default class WindowManager extends EventEmitter {
     /* Twitter */
     ipcMain.on('sign-in-twitter', () => {
       console.log('got sign in with twitter')
-      this.twitterSignin.startRequest().then((result) => {
-        const accessToken = result.oauth_access_token
-        const accessTokenSecret = result.oauth_access_token_secret
-        dialog.showErrorBox('Status', `Token: ${accessToken} \nSecret: ${accessTokenSecret}`)
-      }).catch((error) => {
-        console.error(error, error.stack)
-      })
+      this.send('mainWindow', 'signed-into-twitter', { wasError: false })
+      // this.twitterSignin.startRequest().then((result) => {
+      //   const accessToken = result.oauth_access_token
+      //   const accessTokenSecret = result.oauth_access_token_secret
+      //   dialog.showErrorBox('Status', `Token: ${accessToken} \nSecret: ${accessTokenSecret}`)
+      //   let twitter = global.settings.get('twitter')
+      //   twitter.userSignedIn = true
+      //   twitter.userToken = accessToken
+      //   twitter.userSecret = accessTokenSecret
+      //   global.settings.set('twitter', twitter)
+      //   this.send('mainWindow', 'signed-into-twitter', { wasError: false, accessToken, accessTokenSecret })
+      // }).catch((error) => {
+      //   console.error(error, error.stack)
+      //   this.send('mainWindow', 'signed-into-twitter', { wasError: true, error })
+      // })
     })
   }
 
@@ -707,91 +724,90 @@ export default class WindowManager extends EventEmitter {
     return new Promise((resolve) => {
       console.log('creating wail window')
       control.didClose = false
-      if (process.env.NODE_ENV === 'development') {
-        dlExtensions()
-      }
+      dlExtensions()
+        .then(() => {
+          let { conf, url } = this.windows[ 'mainWindow' ]
 
-      let { conf, url } = this.windows[ 'mainWindow' ]
+          this.windows[ 'mainWindow' ].window = new BrowserWindow(conf)
+          this.windows[ 'mainWindow' ].window.loadURL(url)
+          this.windows[ 'mainWindow' ].window.webContents.on('context-menu', (e, props) => {
+            e.preventDefault()
+            control.contextMenu.maybeShow(props, this.windows[ 'mainWindow' ].window)
+          })
 
-      this.windows[ 'mainWindow' ].window = new BrowserWindow(conf)
-      this.windows[ 'mainWindow' ].window.loadURL(url)
-      this.windows[ 'mainWindow' ].window.webContents.on('context-menu', (e, props) => {
-        e.preventDefault()
-        control.contextMenu.maybeShow(props, this.windows[ 'mainWindow' ].window)
-      })
+          this.windows[ 'mainWindow' ].window.webContents.on('unresponsive', () => {
+            this.emit('window-unresponsive', 'mainWindow')
+          })
 
-      this.windows[ 'mainWindow' ].window.webContents.on('unresponsive', () => {
-        this.emit('window-unresponsive', 'mainWindow')
-      })
+          // this.windows[ 'mainWindow' ].window.webContents.on('new-window', (event, url) => {
+          //   event.preventDefault()
+          //   shell.openExternal(url)
+          // })
 
-      // this.windows[ 'mainWindow' ].window.webContents.on('new-window', (event, url) => {
-      //   event.preventDefault()
-      //   shell.openExternal(url)
-      // })
+          this.windows[ 'mainWindow' ].window.webContents.on('crashed', () => {
+            this.emit('window-crashed', 'mainWindow')
+          })
 
-      this.windows[ 'mainWindow' ].window.webContents.on('crashed', () => {
-        this.emit('window-crashed', 'mainWindow')
-      })
+          this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event, url) => {
+            if (!S(url).contains('wail.html')) {
+              event.preventDefault()
+            }
+            console.log('mainWindow will navigate to', url)
+          })
 
-      this.windows[ 'mainWindow' ].window.webContents.on('will-navigate', (event, url) => {
-        if (!S(url).contains('wail.html')) {
-          event.preventDefault()
-        }
-        console.log('mainWindow will navigate to', url)
-      })
+          this.windows[ 'mainWindow' ].window.on('close', (e) => {
+            console.log('window man mainWindow close')
+            control.resetLoadinState()
+            if (this.windows[ 'reqDaemonWindow' ].open) {
+              this.windows[ 'reqDaemonWindow' ].window.webContents.send('stop')
+            }
+            this.windows[ 'crawlManWindow' ].window.webContents.send('are-crawls-running')
+          })
 
-      this.windows[ 'mainWindow' ].window.on('close', (e) => {
-        console.log('window man mainWindow close')
-        control.resetLoadinState()
-        if (this.windows[ 'reqDaemonWindow' ].open) {
-          this.windows[ 'reqDaemonWindow' ].window.webContents.send('stop')
-        }
-        this.windows[ 'crawlManWindow' ].window.webContents.send('are-crawls-running')
-      })
+          this.windows[ 'mainWindow' ].window.on('closed', () => {
+            console.log('mainWindow is closed')
+            control.didClose = true
+            this.windows[ 'mainWindow' ].window = null
+            this.windows[ 'mainWindow' ].loadComplete = false
+            this.windows[ 'mainWindow' ].open = false
+          })
 
-      this.windows[ 'mainWindow' ].window.on('closed', () => {
-        console.log('mainWindow is closed')
-        control.didClose = true
-        this.windows[ 'mainWindow' ].window = null
-        this.windows[ 'mainWindow' ].loadComplete = false
-        this.windows[ 'mainWindow' ].open = false
-      })
+          this.windows[ 'mainWindow' ].window.on('show', () => {
+            console.log('mainWindow is showing')
+            this.windows[ 'mainWindow' ].open = true
+          })
+          this.windows[ 'mainWindow' ].window.on('ready-to-show', () => {
+            this.windows[ 'mainWindow' ].loadComplete = true
+            // this.windows[ 'mainWindow' ].window.focus()
+            console.log('mainWindow is ready to show')
+            if (this.windows[ 'loadingWindow' ].window) {
+              this.windows[ 'loadingWindow' ].window.webContents.send('ui-ready')
+            }
 
-      this.windows[ 'mainWindow' ].window.on('show', () => {
-        console.log('mainWindow is showing')
-        this.windows[ 'mainWindow' ].open = true
-      })
-      this.windows[ 'mainWindow' ].window.on('ready-to-show', () => {
-        this.windows[ 'mainWindow' ].loadComplete = true
-        // this.windows[ 'mainWindow' ].window.focus()
-        console.log('mainWindow is ready to show')
-        if (this.windows[ 'loadingWindow' ].window) {
-          this.windows[ 'loadingWindow' ].window.webContents.send('ui-ready')
-        }
+            if (control.bothLoadingStatesGotten()) {
+              console.log('mainWindow loaded and we have gotten both the loading states')
+              let { archiveManWindow, crawlManWindow } = control.loadingState
+              control.uiLoadedFast()
+              this.send('mainWindow', 'got-all-collections', archiveManWindow)
+              this.send('mainWindow', 'got-all-runs', crawlManWindow)
+              this.loadComplete('@mainWindow-ready-to-show')
+            } else {
+              let { archiveManWindow, crawlManWindow } = control.loadingState
+              if (crawlManWindow) {
+                console.log('mainWindow loaded and we have crawlMan state')
+                control.wailHasLoadState('crawlManWindow')
+                this.send('mainWindow', 'got-all-runs', crawlManWindow)
+              }
+              if (archiveManWindow) {
+                console.log('mainWindow loaded and we have archiveMan state')
+                control.wailHasLoadState('archiveManWindow')
+                this.send('mainWindow', 'got-all-collections', archiveManWindow)
+              }
+            }
 
-        if (control.bothLoadingStatesGotten()) {
-          console.log('mainWindow loaded and we have gotten both the loading states')
-          let { archiveManWindow, crawlManWindow } = control.loadingState
-          control.uiLoadedFast()
-          this.send('mainWindow', 'got-all-collections', archiveManWindow)
-          this.send('mainWindow', 'got-all-runs', crawlManWindow)
-          this.loadComplete('@mainWindow-ready-to-show')
-        } else {
-          let { archiveManWindow, crawlManWindow } = control.loadingState
-          if (crawlManWindow) {
-            console.log('mainWindow loaded and we have crawlMan state')
-            control.wailHasLoadState('crawlManWindow')
-            this.send('mainWindow', 'got-all-runs', crawlManWindow)
-          }
-          if (archiveManWindow) {
-            console.log('mainWindow loaded and we have archiveMan state')
-            control.wailHasLoadState('archiveManWindow')
-            this.send('mainWindow', 'got-all-collections', archiveManWindow)
-          }
-        }
-
-        resolve()
-      })
+            resolve()
+          })
+        })
     })
   }
 

@@ -9,17 +9,17 @@ export default {
 
   entry: {
     // accessibility: './wail-ui/background/accessibility',
-    archiveMan: ['babel-polyfill','./wail-ui/background/js/archives'],
-    crawlMan: ['babel-polyfill','./wail-ui/background/js/crawls'],
+    archiveMan: './wail-ui/background/js/archives',
+    crawlMan: './wail-ui/background/js/crawls',
     firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     // indexer: './wail-ui/background/indexer',
     // jobs: './wail-ui/background/jobs',
     // managers: ['babel-polyfill','./wail-ui/background/js/managers'],
-    newCrawl: ['babel-polyfill','./wail-ui/childWindows/newCrawl/newCrawl'],
-    notFirstLoad: ['babel-polyfill','./wail-ui/loadingScreens/loading/entry'],
-    requestD: ['babel-polyfill', './wail-ui/background/js/requestDaemon'],
-    settingsW: ['babel-polyfill','./wail-ui/childWindows/settings/settingsW'],
-    wail: ['babel-polyfill','./wail-ui/wail']
+    newCrawl: [ 'babel-polyfill', './wail-ui/childWindows/newCrawl/newCrawl' ],
+    notFirstLoad: [ 'babel-polyfill', './wail-ui/loadingScreens/loading/entry' ],
+    requestD: [ 'babel-polyfill', './wail-ui/background/js/requestDaemon' ],
+    settingsW: [ 'babel-polyfill', './wail-ui/childWindows/settings/settingsW' ],
+    wail: './wail-ui/wail'
   },
 
   output: {
@@ -38,8 +38,11 @@ export default {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          presets: [ 'electron', 'react'],
-          plugins: [ 'transform-runtime', 'add-module-exports',
+          presets: [ 'react', 'electron' ],
+          plugins: [
+            'transform-react-inline-elements',
+            'transform-react-constant-elements',
+            'add-module-exports',
             'babel-plugin-transform-decorators-legacy',
             'transform-class-properties',
             'react-html-attrs'
@@ -72,7 +75,7 @@ export default {
       }
     ]
   },
-  externals: ['fsevents'],
+  externals: [ 'fsevents' ],
   resolve: {
     alias: {
       'dtrace-provider': './wail-ui/bunyanshim.js'

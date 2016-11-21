@@ -2,25 +2,27 @@ import 'react-flex/index.css'
 import './css/wail.css'
 import React from 'react'
 import {render} from 'react-dom'
-import {syncHistoryWithStore} from 'react-router-redux'
 import {hashHistory} from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import {remote} from 'electron'
 import bunyan from 'bunyan'
-import Perf from 'react-addons-perf'
 import Wail from './containers/wail'
 import wailConstants from './constants/wail-constants'
 import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
 
+window.React = React
+if(process.env.NODE_ENV === 'development') {
+  window.Perf = require('react-addons-perf')
+}
+
 Promise.promisifyAll(fs)
 
 global.resizer = createDetectElementResize()
 
-window.React = React
-window.Perf = Perf
+
 
 window.lastWaybackPath = wailConstants.Default_Collection
 
