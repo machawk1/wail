@@ -370,6 +370,7 @@ export default class WindowManager extends EventEmitter {
     mwin.show()
     mwin.webContents.openDevTools()
     mwin.focus()
+
   }
 
   initWail (control) {
