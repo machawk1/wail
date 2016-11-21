@@ -35,11 +35,11 @@ export default class WindowManager extends EventEmitter {
   constructor () {
     super()
     this.twitterSignin = new OauthTwitter({
-      key: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
-      secret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY'
+      key: '',
+      secret: ''
     })
-    //got token 4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3
-    //got secret 46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f
+    //got token
+    //got secret
     this.windows = {
       accessibilityWindow: { window: null, url: null, open: false, conf: null },
       indexWindow: { window: null, url: null, open: false, conf: null },
