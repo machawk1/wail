@@ -4,8 +4,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import {TableRow, TableRowColumn} from 'material-ui/Table'
 import {connect} from 'react-redux'
 import styles from '../styles/styles'
-import stringWidth from 'string-width'
-import TRCToolTip from './trcToolTip'
+
 const {
   crawlUrlS, statusS, timestampS,
   discoveredS, queuedS, downloadedS, actionS

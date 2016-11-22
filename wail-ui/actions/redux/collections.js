@@ -1,7 +1,7 @@
 import {ipcRenderer as ipc, remote} from 'electron'
 import wailConstants from '../../constants/wail-constants'
 import {CollectionEvents} from '../../constants/wail-constants'
-import * as notify from './notifications'
+import * as notify from '../notification-actions'
 const {
   GET_COLLECTIONS,
   CREATE_NEW_COLLECTION,
@@ -52,7 +52,10 @@ export function gotAllCollections (event, ac) {
     console.error(wasError)
     window.logger.error({ err: ac.err, msg: 'got all collections error' })
     // notify.notifyError('Error loading all collections this is fatal')
-    return notify.notifyError('Error loading all collections this is fatal')
+    return {
+      type: GOT_ALL_COLLECTIONS,
+      cols: []
+    }
   } else {
     window.logger.debug('collection store got all collections')
     return {
@@ -63,34 +66,14 @@ export function gotAllCollections (event, ac) {
 }
 
 export function addedWarcs (event, update) {
-  if (update.wasError) {
-    window.logger.error({ err: update.error, msg: `Error updating warc count for collection ${update.forCol}` })
-    return {
-      action: 'notifyError',
-      message: `Error updating warc count for collection ${update.forCol}`
-    }
-  } else {
-    window.logger.debug('collection store got all collections')
-    let {
-      forCol,
-      count
-    } = update
-    return {
-      type: ADDED_WARCS_TO_COLL,
-      forCol,
-      count
-    }
+  window.logger.debug('collection store got all collections')
+  return {
+    type: ADDED_WARCS_TO_COLL,
+    ...update
   }
 }
 
 export function addedNewCol (event, col) {
-  dispatch(notify.notify({
-    title: 'Success',
-    level: 'success',
-    autoDismiss: 0,
-    message: `Created new collection ${col.viewingCol}`,
-    uid: `Created new collection ${col.viewingCol}`
-  }))
   return {
     type: 'added-new-collection',
     col

@@ -1,0 +1,38 @@
+{
+  "presets": [ "react",
+    ["env", {
+      "targets": {
+        "node": 6.5
+      },
+      "whitelist": [
+        "transform-class-properties",
+        "transform-es2015-object-super",
+        "transform-es2015-destructuring",
+        "transform-object-rest-spread"
+        ]
+    }]
+  ],
+  "plugins": [
+    "transform-decorators-legacy",
+    "transform-class-properties",
+    "transform-es2015-object-super",
+    "transform-es2015-destructuring",
+    "transform-async-to-generator",
+    "transform-exponentiation-operator",
+    "transform-object-rest-spread",
+    "syntax-trailing-function-commas",
+    "transform-export-extensions",
+    "transform-do-expressions",
+    "transform-function-bind",
+    "add-module-exports"
+  ],
+  "env": {
+    "development": {
+      "presets": ["react-hmre"],
+      "plugins": [
+        "transform-es2015-classes",
+        "transform-class-constructor-call"
+      ]
+    }
+  }
+}

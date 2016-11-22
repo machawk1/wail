@@ -11,9 +11,20 @@ class GlobalMessageStore_ extends EventEmitter {
     super()
     this.messageQ = []
     ipc.on('display-message', (e, m) => {
-      this.messageQ.push(m)
+      if (Reflect.has(m, 'wasError')) {
+        window.logger.error(m.err, m.message.message)
+        this.messageQ.push(m.message)
+      } else {
+        this.messageQ.push(m)
+      }
+
       this.emit('new-message')
     })
+  }
+
+  addNotifaction (message) {
+    this.messageQ.push(message)
+    this.emit('new-message')
   }
 
   @autobind

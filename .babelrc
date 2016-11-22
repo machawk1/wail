@@ -1,15 +1,6 @@
 {
-  "presets": [ "latest", "react",  "stage-0"],
   "plugins": [
-    "transform-runtime",
-    "add-module-exports",
-    "babel-plugin-transform-decorators-legacy",
-    "react-html-attrs",
-    "transform-class-properties"
-  ],
-  "env": {
-    "development": {
-      "presets": ["react-hmre"]
-    }
-  }
+    "transform-es2015-modules-commonjs",
+    "transform-decorators-legacy"
+  ]
 }

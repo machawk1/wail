@@ -22,10 +22,7 @@ ipc.on('made-heritrix-jobconf', (event, confDetails) => {
       })
       .catch(error => {
         console.log('update archiveMan failed', error)
-        ipc.send('crawl-to-collection', {
-          wasError: true,
-          error
-        })
+        ipc.send('display-message', error)
       })
   }
 })
@@ -74,11 +71,7 @@ ipc.on('add-warcs-to-col', (event, addMe) => {
       ipc.send('added-warcs-to-col', update)
     })
     .catch(error => {
-      ipc.send('added-warcs-to-col', {
-        wasError: true,
-        forCol: addMe.forCol,
-        error
-      })
+      ipc.send('display-message', error)
     })
 })
 

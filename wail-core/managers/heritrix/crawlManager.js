@@ -1,7 +1,7 @@
 import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
 import Db from 'nedb'
-import {default as wc} from '../../constants'
+import wc from '../../../wail-ui/constants/wail-constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
 import {ipcRenderer as ipc, remote} from 'electron'
@@ -35,14 +35,21 @@ export default class CrawlManager {
       console.log('crawljob-status-update', update)
       ipc.send('crawljob-status-update', update)
     })
-    this.csMonitor.on('crawljob-status-ended', update => {
-      console.log('crawljob-status-ended', update)
-      let newUpdate = _.cloneDeep(update)
-      delete newUpdate.warcs
-      ipc.send('crawljob-status-update', newUpdate)
-      this.crawlEnded(update)
-    })
+    this.csMonitor.on('crawljob-status-ended', ::this.onCrawlEnd)
     this.launchId = /^[0-9]+$/
+  }
+
+  onCrawlEnd (update) {
+    console.log('crawljob-status-ended', update)
+    let newUpdate = _.cloneDeep(update)
+    delete newUpdate.warcs
+
+    ipc.send('send-to-requestDaemon', {
+      type: wc.HeritrixRequestTypes.TERMINATE_JOB,
+      jobId: update.jobId
+    })
+    ipc.send('crawljob-status-update', newUpdate)
+    this.crawlEnded(update)
   }
 
   initialLoad () {
@@ -60,7 +67,6 @@ export default class CrawlManager {
     })
   }
 
-  @autobind
   getAllRuns () {
     return new Promise((resolve, reject) => {
       this.db.find({}, (err, docs) => {
@@ -78,7 +84,6 @@ export default class CrawlManager {
     })
   }
 
-  @autobind
   crawlStarted (jobId) {
     this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
@@ -97,7 +102,6 @@ export default class CrawlManager {
     })
   }
 
-  @autobind
   crawlEnded (update) {
     console.log(update)
     let theUpdate = {
@@ -136,7 +140,6 @@ export default class CrawlManager {
     })
   }
 
-  @autobind
   areCrawlsRunning () {
     console.log('checking if crawls are running')
     return new Promise((resolve, reject) => {

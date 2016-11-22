@@ -14,13 +14,50 @@ const rp = require('request-promise')
 const ElectronWorkers = require('electron-workers')
 require('debug')('electron-workers')
 
-let it = { yes: true }
-const checkIt = what => it[ what ] || false
-if (!checkIt('yes')) {
-  console.log('words')
-} else {
-  console.log('words to my nine')
-}
+require('core-js-builder')({
+  modules: [
+  'es7.symbol.async-iterator',
+  'es7.observable',
+  'es7.symbol.observable',
+  'es7.object.get-own-property-descriptors',
+  'es7.object.values',
+  'es7.object.entries',
+  'es7.object.define-getter',
+  'es7.object.define-setter',
+  'es7.object.lookup-getter',
+  'es7.object.lookup-setter',
+  'es7.map.to-json',
+  'es7.set.to-json',
+  'es7.error.is-error',
+  'es7.reflect.define-metadata',
+  'es7.reflect.delete-metadata',
+  'es7.reflect.get-metadata',
+  'es7.reflect.get-metadata-keys',
+  'es7.reflect.get-own-metadata',
+  'es7.reflect.get-own-metadata-keys',
+  'es7.reflect.has-metadata',
+  'es7.reflect.has-own-metadata',
+  'es7.reflect.metadata',
+  'es7.asap',
+  'es7.math.iaddh',
+  'es7.math.imulh',
+  'es7.math.isubh',
+  'es7.math.umulh',
+  'web.dom.iterable',
+  'core.object.classof',
+  'core.regexp.escape',
+  ], // modules / namespaces
+  blacklist: [ 'es6', 'es5' ],
+  library: true,                // flag for build without global namespace pollution, by default - false
+  umd: true                   // use UMD wrapper for export `core` object, by default - true
+}).then(code => {
+  console.log('code', code)
+  fs.writeFile('wailPollyfil2.js', code, (err) => {
+    console.log(err)
+  })
+}).catch(error => {
+  console.error(error)
+})
 
 // const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
 // const tp = path.resolve('.', 'tweets.json')

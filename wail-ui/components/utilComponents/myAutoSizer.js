@@ -22,6 +22,7 @@ export default class MyAutoSizer extends Component {
   }
 
   componentWillUnmount () {
+    console.log('myAutoSizer will unmount')
     if (global.resizer) {
       global.resizer.removeResizeListener(document.getElementById(this.props.findElement), this.updateDimensions)
     }
@@ -36,6 +37,7 @@ export default class MyAutoSizer extends Component {
   }
 
   componentDidMount () {
+    console.log('myAutoSizer did mount')
     global.resizer.addResizeListener(document.getElementById(this.props.findElement), this.updateDimensions)
     this.updateDimensions()
   }

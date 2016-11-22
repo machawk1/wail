@@ -1,3 +1,4 @@
+import '../wailPollyfil'
 import 'react-flex/index.css'
 import './css/wail.css'
 import React from 'react'
@@ -14,15 +15,13 @@ import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
 
 window.React = React
-if(process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
 }
 
 Promise.promisifyAll(fs)
 
 global.resizer = createDetectElementResize()
-
-
 
 window.lastWaybackPath = wailConstants.Default_Collection
 
@@ -39,7 +38,7 @@ window.logger = bunyan.createLogger({
       path: remote.getGlobal('wailUILogp')
     },
     {
-      level: 'trace',
+      level: 'debug',
       type: 'raw',    // use 'raw' to get raw log record objects
       stream: window.eventLog
     }

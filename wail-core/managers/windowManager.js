@@ -34,10 +34,7 @@ function dlExtensions (update = false) {
 export default class WindowManager extends EventEmitter {
   constructor () {
     super()
-    this.twitterSignin = new OauthTwitter({
-      key: '',
-      secret: ''
-    })
+    this.twitterSignin = null
     //got token
     //got secret
     this.windows = {
@@ -332,6 +329,12 @@ export default class WindowManager extends EventEmitter {
 
     /* Twitter */
     ipcMain.on('sign-in-twitter', () => {
+      if (!this.twitterSignin) {
+        this.twitterSignin = new OauthTwitter({
+          key: global.settings.get('twitter.wailKey'),
+          secret: global.settings.get('twitter.wailSecret')
+        })
+      }
       console.log('got sign in with twitter')
       this.send('mainWindow', 'signed-into-twitter', { wasError: false })
       // this.twitterSignin.startRequest().then((result) => {

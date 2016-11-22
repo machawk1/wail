@@ -17,6 +17,8 @@ const style = {
 }
 const settings = remote.getGlobal('settings')
 
+const dispatchBind = dispatch => bindActionCreators(heritrixActions, dispatch)
+
 const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   viewInHeritrix () {
     openUrlInBrowser(`${settings.get('heritrix.web_ui')}/engine/job/${ownProps.jobId}`)
@@ -39,9 +41,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   jobId: ownProps.jobId
 })
 
-@connect(null, dispatch => bindActionCreators(heritrixActions, dispatch), mergeProps)
-export default class HJobItemContainer extends Component {
-
+class HJobItemContainer extends Component {
   static propTypes = {
     jobId: PropTypes.number.isRequired,
     startJob: PropTypes.func.isRequired,
@@ -58,7 +58,7 @@ export default class HJobItemContainer extends Component {
         key={`HJIR-${this.props.jobId}-actionButton`}
         touch
       >
-        <MoreVertIcon color={grey400} />
+        <MoreVertIcon color={grey400}/>
       </IconButton>
     )
 
@@ -69,18 +69,20 @@ export default class HJobItemContainer extends Component {
         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config' />
-        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix' />
+        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config'/>
+        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix'/>
         <Divider />
-        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start' />
-        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart' />
-        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl' />
-        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete' />
+        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start'/>
+        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart'/>
+        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl'/>
+        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete'/>
       </IconMenu>
     )
 
     return (
-      <HertrixJobItem2 jobId={this.props.jobId} actionMenu={rightIconMenu} />
+      <HertrixJobItem2 jobId={this.props.jobId} actionMenu={rightIconMenu}/>
     )
   }
 }
+
+export default connect(null, dispatchBind, mergeProps)(HJobItemContainer)

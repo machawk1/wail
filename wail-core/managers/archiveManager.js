@@ -10,11 +10,29 @@ import moment from 'moment'
 import through2 from 'through2'
 import prettyBytes from 'pretty-bytes'
 import _ from 'lodash'
+import {execute} from '../util/childProcHelpers'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
+
+const errorReport = (error, m) => ({
+  wasError: true,
+  err: error,
+  message: {
+    title: 'Error',
+    level: 'error',
+    autoDismiss: 0,
+    message: m,
+    uid: m
+  }
+})
+
+const updateSingleOpts = {
+  returnUpdatedDocs: true,
+  multi: false
+}
 
 export default class ArchiveManager {
   constructor () {
@@ -77,7 +95,7 @@ export default class ArchiveManager {
       this.db.update({ colName }, { $push: { crawls: crawlInfo } }, {}, (error, updated) => {
         if (error) {
           console.error('addCrawlInfo error', error)
-          return reject(error)
+          return reject(errorReport(error, `Unable to associate crawl to collection ${colName}`))
         } else {
           return resolve(updated)
         }
@@ -250,78 +268,96 @@ export default class ArchiveManager {
     })
   }
 
+  updateSingle (updateWho, theUpdate) {
+    console.log('update single', updateWho, theUpdate)
+    return new Promise((resolve, reject) => {
+      this.db.update(updateWho, theUpdate, updateSingleOpts, (updateErr, numAffected, affectedDocuments) => {
+        if (updateErr) {
+          reject(updateErr)
+        } else {
+          console.log('update single completed', affectedDocuments)
+          resolve(affectedDocuments)
+        }
+      })
+    })
+  }
+
   addWarcsToCol ({ col, warcs, lastUpdated, seed }) {
-    console.log('add warcs to col', col)
+    console.log('add warcs to col', col, warcs, lastUpdated, seed)
     let opts = {
       cwd: settings.get('warcs')
     }
-    return new Promise((resolve, reject) => {
-      // `/home/john/my-fork-wail/bundledApps/pywb/wb-manager add ${id} ${data.existingWarcs}`
-      let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
-      cp.exec(exec, opts, (error, stdout, stderr) => {
-        if (error) {
-          console.error(error)
-          console.error(stderr)
-          console.error(stdout)
-          return reject(error)
-        }
-
-        let c1 = ((stdout || ' ').match(/INFO/g) || []).length
-        let c2 = ((stderr || ' ').match(/INFO/g) || []).length
-        let count = c1 === 0 ? c2 : c1
-
-        console.log('added warcs to collection', col, count)
-        console.log('stdout', stdout)
-        console.log('stderr', stderr)
-
-        this.getColSize(col)
-          .then(size => {
-            this.findOne({ colName: col })
-              .then(doc => {
-                let updateWho = { colName: col }
-                if (!_.find(doc.seeds, { url: seed.url })) {
-                  console.log('its not in')
-                  seed.mementos = 1
-                  let theUpdate = {
-                    $push: { seeds: seed }, $inc: { numArchives: count }, $set: { size, lastUpdated }
-                  }
-                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true, multi: false })
-                    .then(({ numUpdated, affectedDocuments }) => {
-                      console.log(numUpdated, affectedDocuments)
-                      resolve({
-                        ...affectedDocuments,
-                        wasError: false
-                      })
-                    })
-                    .catch(updateErr => reject(updateErr))
-                } else {
-                  console.log('its in')
-                  console.log(doc.seeds)
-                  let updatedSeeds = doc.seeds.map(aSeed => {
-                    if (aSeed.url === seed.url) {
-                      if (!aSeed.jobIds.has(seed.jobId)) {
-                        aSeed.jobIds.push(seed.jobId)
-                      }
-                      aSeed.mementos += 1
+    let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
+    let updateWho = { colName: col }
+    const countAdded = (stdout, stderr) => {
+      let c1 = ((stdout || ' ').match(/INFO/g) || []).length
+      let c2 = ((stderr || ' ').match(/INFO/g) || []).length
+      let count = c1 === 0 ? c2 : c1
+      console.log('added warcs to collection', col, count)
+      console.log('stdout', stdout)
+      console.log('stderr', stderr)
+      return count
+    }
+    return new Promise((resolve, reject) =>
+      execute(exec, opts, countAdded)
+        .then(count =>
+          this.getColSize(col)
+            .then(size =>
+              this.findOne(updateWho)
+                .then(doc => {
+                  if (!_.find(doc.seeds, { url: seed.url })) {
+                    console.log('its not in')
+                    seed.mementos = 1
+                    let theUpdate = {
+                      $push: { seeds: seed }, $inc: { numArchives: count }, $set: { size, lastUpdated }
                     }
-                    return aSeed
-                  })
-                  let theUpdate = {
-                    $set: { seeds: updatedSeeds, size, lastUpdated }, $inc: { numArchives: count },
-                  }
-                  console.log(updatedSeeds)
-                  this.update(updateWho, theUpdate, { returnUpdatedDocs: true, multi: false })
-                    .then(({ numUpdated, affectedDocuments }) => {
-                      console.log(numUpdated, affectedDocuments)
-                      resolve({ ...affectedDocuments, wasError: false })
+                    return this.updateSingle(updateWho, theUpdate)
+                      .then(affectedDocuments => {
+                        console.log(affectedDocuments)
+                        resolve(affectedDocuments)
+                      })
+                      .catch(updateErr => {
+                        console.error('Error update new addWarcsToCol', updateErr)
+                        reject(errorReport(updateErr, `Unable to update ${col} because ${updateErr}`))
+                      })
+                  } else {
+                    console.log('its in')
+                    console.log(doc.seeds)
+                    let updatedSeeds = doc.seeds.map(aSeed => {
+                      if (aSeed.url === seed.url) {
+                        if (!aSeed.jobIds.includes(seed.jobId)) {
+                          aSeed.jobIds.push(seed.jobId)
+                        }
+                        aSeed.mementos += 1
+                      }
+                      return aSeed
                     })
-                    .catch(updateErr => reject(updateErr))
-                }
-              })
-              .catch(errFind => reject(errFind))
-          })
-      })
-    })
+                    let theUpdate = {
+                      $set: { seeds: updatedSeeds, size, lastUpdated }, $inc: { numArchives: count },
+                    }
+                    console.log(updatedSeeds)
+                    return this.updateSingle(updateWho, theUpdate)
+                      .then(affectedDocuments => {
+                        console.log(affectedDocuments)
+                        resolve(affectedDocuments)
+                      })
+                      .catch(updateErr => {
+                        console.error('Error update existing addWarcsToCol', updateErr)
+                        reject(errorReport(updateErr, `Unable to update ${col} because ${updateErr}`))
+                      })
+                  }
+                })
+                .catch(errFind => {
+                  // this should not happen at all but if it does something went very very wrong
+                  console.error('Error finding addWarcsToCol', errFind)
+                  reject(errorReport(errFind, `Unable to add warcs to non-existent collection ${col}`))
+                })
+            )
+        )
+        .catch(errorExecute => {
+          reject(errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`))
+        })
+    )
   }
 
   movePywbStuffForNewCol (col) {

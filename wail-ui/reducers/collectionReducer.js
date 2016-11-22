@@ -1,5 +1,7 @@
 import Immutable, {Map, List} from 'immutable'
 import S from 'string'
+import util from 'util'
+import partialRight from 'lodash/partialRight'
 import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
 import {CollectionEvents} from '../constants/wail-constants'
 import moment from 'moment'
@@ -9,6 +11,8 @@ const {
   ADD_METADATA_TO_COLLECTION,
   ADDED_WARCS_TO_COLL
 } = CollectionEvents
+
+const inspect = partialRight(util.inspect, { depth: null })
 
 export default (state = Map(), action) => {
   console.log('in collections reducer', action)
@@ -36,10 +40,10 @@ export default (state = Map(), action) => {
         [col.colName]: col
       })
     case ADDED_WARCS_TO_COLL: {
-      let { forCol, count } = action
-      return state.updateIn([ forCol, 'numArchives' ], archiveCount => archiveCount + count)
+      console.log(action)
+      return state
     }
-    case ADD_METADATA_TO_COLLECTION:
+    case ADD_METADATA_TO_COLLECTION: {
       let { mdata, forCol } = action
       return state.updateIn([ forCol, 'metadata' ], metadata => {
         let meta = {}
@@ -49,6 +53,7 @@ export default (state = Map(), action) => {
         })
         return metadata.merge(meta)
       })
+    }
     default:
       return state
   }

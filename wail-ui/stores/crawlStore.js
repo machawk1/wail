@@ -321,10 +321,10 @@ class CrawlStore_ extends EventEmitter {
   }
 }
 
-const CrawlStore = new CrawlStore_()
+const CrawlStore = {}
 
 // noinspection JSAnnotator
 window.CrawlStore = CrawlStore
-CrawlDispatcher.register(CrawlStore.handleEvent)
+// CrawlDispatcher.register(CrawlStore.handleEvent)
 
 export default CrawlStore

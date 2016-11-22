@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../wailPollyfil'
 import {app, BrowserWindow, Menu, shell, ipcMain, dialog} from 'electron'
 import path from 'path'
 import menuTemplate from './menu/mainMenu'
@@ -61,9 +61,9 @@ app.on('ready', () => {
   let userData = null
 
   if (process.env.NODE_ENV === 'development') {
-    // require('electron-debug')({
-    //   showDevTools: true
-    // })
+    require('electron-debug')({
+      showDevTools: true
+    })
   } else {
     base = app.getAppPath()
     loadFrom = `${base}/wail-ui`

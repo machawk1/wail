@@ -9,6 +9,9 @@ const RunRecord = Immutable.Record({
 
 export default class RunInfoRecord extends RunRecord {
   updateStats (stats) {
+    if (stats.warcs) {
+      delete stats.warcs
+    }
     stats.tsMoment = moment(stats.timestamp)
     stats.jobId = this.get('jobId')
     return this.merge(stats)

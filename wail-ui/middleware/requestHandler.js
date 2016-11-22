@@ -1,6 +1,3 @@
-import {push} from 'react-router-redux'
-import wc from '../constants/wail-constants'
-import {notifyError} from '../actions/notification-actions'
 import {hashHistory} from 'react-router'
 import {grabCaptures} from '../actions/archive-url-actions'
 import {inArchive, notInArchive, checkingArchive} from '../actions/redux/archival'

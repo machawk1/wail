@@ -18,61 +18,41 @@ const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
   let { jobId } = request
   let job = store.getState().get('crawls').get(`${jobId}`)
+  let latestRun = job.get('latestRun')
   console.log(job)
   switch (request.type) {
     case START_JOB:
       console.log('start job')
       console.log('start or restart heritrix job', jobId)
-      if (job.get('runs').size > 0) {
-        let latestRun = job.get('latestRun')
-        if (latestRun.get('ended')) {
-          console.log('start or restart heritrix job it had jobs but not running', jobId)
-          notify.notifyInfo(`Starting Heritrix Crawl for ${job.displayUrls()}`)
-          return next(send('send-to-requestDaemon', {
-            type: HeritrixRequestTypes.BUILD_LAUNCH_JOB,
-            jobId
-          }))
-        } else {
-          console.log('start or restart heritrix job it had jobs but running', jobId)
-          notify.notifyInfo(`Terminating and Restarting Heritrix Crawl for ${job.displayUrls()}`)
-          return next(send('send-to-requestDaemon', {
-            type: HeritrixRequestTypes.TERMINATE_RESTART_JOB,
-            jobId
-          }))
-        }
-      } else {
-        console.log('start or restart heritrix job it had not jobs', jobId)
+      if (latestRun.get('ended')) {
+        console.log('start or restart heritrix job it had jobs but not running', jobId)
         notify.notifyInfo(`Starting Heritrix Crawl for ${job.displayUrls()}`)
         return next(send('send-to-requestDaemon', {
           type: HeritrixRequestTypes.BUILD_LAUNCH_JOB,
           jobId
         }))
+      } else {
+        console.log('start or restart heritrix job it had jobs but running', jobId)
+        notify.notifyInfo(`Terminating and Restarting Heritrix Crawl for ${job.displayUrls()}`)
+        return next(send('send-to-requestDaemon', {
+          type: HeritrixRequestTypes.TERMINATE_RESTART_JOB,
+          jobId
+        }))
       }
-      return next(action)
     case RESTART_JOB:
       console.log('start or restart heritrix job', jobId)
-      if (job.get('runs').size > 0) {
-        let latestRun = job.get('latestRun')
-        if (latestRun.get('ended')) {
-          console.log('start or restart heritrix job it had jobs but not running', jobId)
-          notify.notifyInfo(`Restarting Heritrix Crawl for ${job.displayUrls()}`)
-          return next(send('send-to-requestDaemon', {
-            type: HeritrixRequestTypes.BUILD_LAUNCH_JOB,
-            jobId
-          }))
-        } else {
-          console.log('start or restart heritrix job it had jobs but running', jobId)
-          notify.notifyInfo(`Terminating and Restarting Heritrix Crawl for ${job.displayUrls()}`)
-          return next(send('send-to-requestDaemon', {
-            type: HeritrixRequestTypes.TERMINATE_RESTART_JOB,
-            jobId
-          }))
-        }
-      } else {
-        console.log('start or restart heritrix job it had not jobs', jobId)
+      if (latestRun.get('ended')) {
+        console.log('start or restart heritrix job it had jobs but not running', jobId)
         notify.notifyInfo(`Restarting Heritrix Crawl for ${job.displayUrls()}`)
         return next(send('send-to-requestDaemon', {
           type: HeritrixRequestTypes.BUILD_LAUNCH_JOB,
+          jobId
+        }))
+      } else {
+        console.log('start or restart heritrix job it had jobs but running', jobId)
+        notify.notifyInfo(`Terminating and Restarting Heritrix Crawl for ${job.displayUrls()}`)
+        return next(send('send-to-requestDaemon', {
+          type: HeritrixRequestTypes.TERMINATE_RESTART_JOB,
           jobId
         }))
       }

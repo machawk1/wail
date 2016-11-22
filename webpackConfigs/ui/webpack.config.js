@@ -1,9 +1,9 @@
-import webpack from 'webpack'
-import path from 'path'
+const webpack = require('webpack')
+const path = require('path')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
-export default {
+module.exports = {
   devtool: '#@inline-source-map',
   entry: {
     wail: './wail-ui/wail'
@@ -17,11 +17,33 @@ export default {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'electron', 'react', 'react-hmre' ],
-          plugins: [ 'transform-runtime', 'add-module-exports',
-            'babel-plugin-transform-decorators-legacy',
-            'transform-class-properties',
-            'react-html-attrs'
+          presets: [ 'react-hmre',  "react",
+            ["env", {
+              "targets": {
+                "node": 6.5
+              },
+              "whitelist": [
+                "transform-class-properties",
+                "transform-es2015-classes",
+                "transform-es2015-object-super",
+                "transform-es2015-destructuring",
+                "transform-object-rest-spread"
+              ]
+            }]
+          ],
+          plugins: [
+            "transform-decorators-legacy",
+            "transform-class-properties",
+            "transform-es2015-object-super",
+            "transform-es2015-destructuring",
+            "transform-async-to-generator",
+            "transform-exponentiation-operator",
+            "transform-object-rest-spread",
+            "syntax-trailing-function-commas",
+            "transform-export-extensions",
+            "transform-do-expressions",
+            "transform-function-bind",
+            "add-module-exports"
           ],
         },
       },
