@@ -2,9 +2,9 @@ import wc from '../../constants/wail-constants'
 import {CheckUrlEvents} from '../../constants/wail-constants'
 const {
   CHECK_URL,
-  CHECKING_ARCHIVE,
-  NOT_IN_ARCHIVE,
-  IN_ARCHIVE,
+  CHECKING_URL,
+  CHECKING_DONE,
+  CHECKING_DONE_ERROR,
   RESET_CHECK_MESSAGE
 } = CheckUrlEvents
 const {
@@ -12,25 +12,25 @@ const {
   HAS_VAILD_URI
 } = wc.EventTypes
 
-export const inArchive = (captures) => ({
-  type: IN_ARCHIVE,
-  captures
+export const checkDone = (result) => ({
+  type: CHECKING_DONE,
+  result
 })
 
-export const notInArchive = (message) => ({
-  type: NOT_IN_ARCHIVE,
+export const checkDoneError = (result) => ({
+  type: CHECKING_DONE_ERROR,
+  result
+})
+
+
+export const checkingUrl = (message) => ({
+  type: CHECKING_URL,
   message
 })
 
-export const checkingArchive = (message) => ({
-  type: CHECKING_ARCHIVE,
-  message
-})
-
-export const checkUrl = (url, forCol) => ({
+export const checkUrl = url => ({
   type: CHECK_URL,
-  url,
-  forCol
+  url
 })
 
 export const resetCheckMessage = () => ({

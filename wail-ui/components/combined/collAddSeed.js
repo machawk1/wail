@@ -4,9 +4,9 @@ import {Card, CardHeader, CardTitle, CardText, CardMedia, CardActions} from 'mat
 import {shell, remote} from 'electron'
 import Promise from 'bluebird'
 import {withRouter} from 'react-router'
-import CollAddSeedHeader from './colAddSeedHeader'
-import ArchiveForm from './archiveUrlForm'
-import CheckSeed from './checkSeed'
+import CollAddSeedHeader from '../collections/addToCollection/colAddSeedHeader'
+import ArchiveForm from '../collections/addToCollection/archiveUrlForm'
+import CheckSeed from '../collections/addToCollection/checkSeed'
 
 const showResults = values =>
   new Promise(resolve => {

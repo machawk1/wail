@@ -10,55 +10,262 @@ const through2 = require('through2')
 const prettyBytes = require('pretty-bytes')
 const moment = require('moment')
 const path = require('path')
-const rp = require('request-promise')
-const ElectronWorkers = require('electron-workers')
-require('debug')('electron-workers')
 
-require('core-js-builder')({
-  modules: [
-  'es7.symbol.async-iterator',
-  'es7.observable',
-  'es7.symbol.observable',
-  'es7.object.get-own-property-descriptors',
-  'es7.object.values',
-  'es7.object.entries',
-  'es7.object.define-getter',
-  'es7.object.define-setter',
-  'es7.object.lookup-getter',
-  'es7.object.lookup-setter',
-  'es7.map.to-json',
-  'es7.set.to-json',
-  'es7.error.is-error',
-  'es7.reflect.define-metadata',
-  'es7.reflect.delete-metadata',
-  'es7.reflect.get-metadata',
-  'es7.reflect.get-metadata-keys',
-  'es7.reflect.get-own-metadata',
-  'es7.reflect.get-own-metadata-keys',
-  'es7.reflect.has-metadata',
-  'es7.reflect.has-own-metadata',
-  'es7.reflect.metadata',
-  'es7.asap',
-  'es7.math.iaddh',
-  'es7.math.imulh',
-  'es7.math.isubh',
-  'es7.math.umulh',
-  'web.dom.iterable',
-  'core.object.classof',
-  'core.regexp.escape',
-  ], // modules / namespaces
-  blacklist: [ 'es6', 'es5' ],
-  library: true,                // flag for build without global namespace pollution, by default - false
-  umd: true                   // use UMD wrapper for export `core` object, by default - true
-}).then(code => {
-  console.log('code', code)
-  fs.writeFile('wailPollyfil2.js', code, (err) => {
-    console.log(err)
+const zlib = require('zlib')
+const rp = require('request-promise')
+const cheerio = require('cheerio')
+const urlType = require('url-type')
+const url = require('url')
+const { STATUS_CODES } = require('http')
+const { StatusCodeError, RequestError, TransformError } = require('request-promise/errors')
+const normalizeUrl = require('normalize-url')
+
+const inpect = _.partialRight(util.inspect, { depth: 2, colors: true })
+
+const linkStat = (outlink, stats, seedHost) => {
+  if (outlink && outlink.indexOf('mailto:') < 0) {
+    let relTo = urlType.relativeTo(outlink)
+    if (relTo) {
+      if (relTo === 'directory') {
+        stats.iLinks++
+      } else if (relTo === 'origin') {
+        stats.sDomain++
+      } else {
+        if (url.parse(outlink).hostname === seedHost) {
+          stats.sDomain++
+        } else {
+          stats.eLinks++
+        }
+      }
+    } else {
+      if (url.parse(outlink).hostname === seedHost) {
+        stats.sDomain++
+      } else {
+        stats.eLinks++
+      }
+    }
+  }
+}
+
+const determinLinkType = (link, stats, seedHost) => {
+  if (link && link.rel) {
+    let rel = link.rel.toLowerCase()
+    if (rel.indexOf('stylesheet') >= 0) {
+      stats.style++
+      linkStat(link.href, stats, seedHost)
+    } else if (rel.indexOf('icon') >= 0) {
+      stats.Images++
+      linkStat(link.href, stats, seedHost)
+    }
+  }
+}
+
+const statBody = (seedUrl, theDom) => {
+  let stats = {
+    Images: 0, style: 0, iframes: 0,
+    embed: 0, scripts: 0, object: 0,
+    applet: 0, audio: 0, video: 0,
+    iLinks: 0, sDomain: 0, eLinks: 0
+  }
+  let seedHost = url.parse(seedUrl).hostname
+  let $ = cheerio.load(theDom)
+
+  $('a').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.href, stats, seedHost)
+    }
   })
-}).catch(error => {
-  console.error(error)
+
+  $('link').each(function (i, elem) {
+    determinLinkType(elem.attribs, stats, seedHost)
+  })
+
+  $('script[src]').each(function (i, elem) {
+    linkStat(elem.attribs.src, stats, seedHost)
+    stats.scripts++
+  })
+
+  $('img').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.Images++
+  })
+
+  $('embed').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.embed++
+  })
+
+  $('object').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.data, stats, seedHost)
+    }
+    stats.object++
+  })
+
+  $('applet').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.applet++
+  })
+
+  $('video').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.video++
+  })
+
+  $('audio').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.audio++
+  })
+
+  $('bgsound').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.audio++
+  })
+
+  $('iframe').each(function (i, elem) {
+    if (elem.attribs) {
+      linkStat(elem.attribs.src, stats, seedHost)
+    }
+    stats.iframes++
+  })
+  return stats
+}
+
+const uriSanity = _.partialRight(normalizeUrl, { stripWWW: false, removeTrailingSlash: false })
+
+const unGZ = gzipped => new Promise((resolve, reject) => {
+  zlib.gunzip(gzipped, (err, dezipped) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve(dezipped.toString('utf-8'))
+    }
+  })
 })
 
+function makeRequest (config) {
+  return new Promise((resolve, reject) =>
+    rp(config)
+      .then(res => {
+        let cType = res.headers[ 'content-type' ]
+        if (cType) {
+          if (cType.toLowerCase().indexOf('html') > 0) {
+            let encoding = res.headers[ 'content-encoding' ]
+            if (encoding && encoding.indexOf('gzip') >= 0) {
+              return unGZ(res.body)
+                .then(body => {
+                  resolve(body)
+                })
+                .catch(error => {
+                  reject({
+                    wasError: true,
+                    m: 'HTTP 200 ok. The html page was gziped and and error happened while un-gzipping it.'
+                  })
+                })
+            } else {
+              resolve(res.body)
+            }
+          } else {
+            reject({ wasError: true, m: `HTTP 200 ok. The URI did not have content type html. It was ${cType}` })
+          }
+        } else {
+          reject({ wasError: true, m: 'HTTP 200 ok. No content type was specified in the response.' })
+        }
+      })
+      .catch(StatusCodeError, (reason) => {
+        // not 2xx
+        let humanized = STATUS_CODES[ reason.statusCode ]
+        let c = `${reason.statusCode}`[ 0 ]
+        let { headers } = reason.response
+        if (c === '3') {
+          let toWhere
+          if (headers[ 'location' ]) {
+            toWhere = `The location pointed to is ${headers[ 'location' ]}`
+          } else {
+            toWhere = 'No location was given in the response headers'
+          }
+          reject({
+            wasError: true,
+            m: `HTTP ${reason.statusCode} ${humanized}. ${toWhere}`
+          })
+        } else {
+          // just report
+          reject({
+            wasError: true,
+            m: `HTTP ${reason.statusCode} ${humanized}`
+          })
+        }
+      })
+      .catch(RequestError, (reason) => {
+        console.log(reason.error)
+        if (reason.error.code === 'ENOTFOUND') {
+          reject({ wasError: true, m: 'The URI was not found on DNS lookup' })
+        } else {
+          reject({ wasError: true, m: 'Severe error happened. Are you connected to the internet?' })
+        }
+      }))
+}
+
+function checkSeed (seed) {
+  let uri = uriSanity(seed)
+  let config = {
+    method: 'GET', followRedirect: false, uri,
+    resolveWithFullResponse: true
+  }
+  return new Promise((resolve, reject) =>
+    makeRequest(config)
+      .then(body => {
+        let stats = statBody(seed, body)
+        resolve({
+          wasError: false,
+          stats
+        })
+      })
+      .catch(error => {
+        reject(error)
+      })
+  )
+}
+
+// ///csoduedu
+console.log(_.omitBy({
+    Images: 163,
+    style: 9,
+    iframes: 5,
+    embed: 0,
+    scripts: 8,
+    object: 0,
+    applet: 0,
+    audio: 0,
+    video: 1,
+    iLinks: 2,
+    sDomain: 254,
+    eLinks: 201
+  }
+  , v => v === 0))
+
+// fs.readFile('cshtml.html', 'utf8', (err, data) => {
+//   console.log()
+//   statBody('http://odu.edu/compsci', data)
+//
+// })
+
+// fs.readFile('yt.html', 'utf8', (err, data) => {
+//   console.log()
+//   statBody('https://www.youtube.com/watch?v=lEVY8ZRsxvI', data)
+// })
 // const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
 // const tp = path.resolve('.', 'tweets.json')
 // console.log(tp)

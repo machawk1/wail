@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react'
 import CardTitle from 'material-ui/Card/CardTitle'
 import {Link, IndexLink} from 'react-router'
-import {resetCheckMessage} from '../../actions/redux/archival'
+import {resetCheckMessage} from '../../../actions/redux/archival'
 import {connect} from 'react-redux'
 
 const dispatchToProp = dispatch => ({

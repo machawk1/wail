@@ -15,6 +15,14 @@ const EventTypes = wailConstants.EventTypes
 const logString = 'archive-url-actions %s'
 const logStringError = 'archive-url-actions error where[ %s ], stack[ %s ]'
 
+export function check_uri (uri) {
+  return rp({
+    method: 'GET',
+    uri,
+    resolveWithFullResponse: true
+  }).then()
+}
+
 export function grabCaptures (uri, forCol) {
   // notify.notifyInfo(`Checking if ${uri} is in the archive ${forCol}`)
   // window.logger.debug(`Checking if ${uri} is in the archive ${forCol}`)

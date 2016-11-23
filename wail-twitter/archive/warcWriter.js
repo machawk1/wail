@@ -6,7 +6,7 @@ const EventEmitter = require('eventemitter3')
 const S = require('string')
 const url = require('url')
 const urlType = require('url-type')
-const uuid = require('node-uuid')
+const uuid = require('./node-uuid')
 const {
   warcHeader,
   warcHeaderContent,

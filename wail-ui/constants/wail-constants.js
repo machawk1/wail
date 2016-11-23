@@ -31,9 +31,9 @@ export default {
   }),
   CheckUrlEvents: keyMirror({
     CHECK_URL: null,
-    CHECKING_ARCHIVE: null,
-    NOT_IN_ARCHIVE: null,
-    IN_ARCHIVE: null,
+    CHECKING_URL: null,
+    CHECKING_DONE: null,
+    CHECKING_DONE_ERROR: null,
     RESET_CHECK_MESSAGE: null
   }),
   JobActionEvents: keyMirror({
