@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../../../wailPollyfil'
 import {remote, ipcRenderer as ipc} from 'electron'
 import CrawlManager from '../../../wail-core/managers/heritrix/crawlManager'
 

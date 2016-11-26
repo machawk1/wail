@@ -94,7 +94,7 @@ class ArchiveUrlForm extends Component {
                    style={{ marginLeft: 25, marginRight: 25 }}
             />
           </div>
-          <div style={{ width: '400px',height: '200px' }}>
+          <div style={{ width: '400px', height: '200px' }}>
             <Field name='config' component={RadioButtonGroup}
                    props={{ defaultSelected: 'single-page' }}
                    style={{ marginLeft: 25, marginTop: 10, marginBottom: 20 }}
@@ -117,8 +117,12 @@ class ArchiveUrlForm extends Component {
             </Field>
           </div>
           <div>
-            <FlatButton label='Add and Archive Now' type='submit' disabled={invalid || pristine || submitting}
-                        primary/>
+            <FlatButton
+              label='Add and Archive Now'
+              type='submit'
+              disabled={invalid || pristine || submitting}
+              primary
+            />
             <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
           </div>
         </form>

@@ -1,6 +1,8 @@
 import '../wailPollyfil'
 import 'react-flex/index.css'
 import './css/wail.css'
+import m from 'moment'
+import 'moment-timer'
 import React from 'react'
 import {render} from 'react-dom'
 import {hashHistory} from 'react-router'
@@ -13,6 +15,7 @@ import Wail from './containers/wail'
 import wailConstants from './constants/wail-constants'
 import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
+import TwitterClient from '../wail-twitter/twitterClient'
 
 window.React = React
 if (process.env.NODE_ENV === 'development') {
@@ -22,6 +25,7 @@ if (process.env.NODE_ENV === 'development') {
 Promise.promisifyAll(fs)
 
 global.resizer = createDetectElementResize()
+global.twitterClient = new TwitterClient()
 
 window.lastWaybackPath = wailConstants.Default_Collection
 

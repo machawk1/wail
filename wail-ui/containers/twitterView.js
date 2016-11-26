@@ -1,26 +1,23 @@
 import React, {Component, PropTypes} from 'react'
 import Immutable from 'immutable'
-import {connect} from 'react-redux'
-import SignIn from '../components/twitter/signIn'
-import ArchiveTwitter from '../components/twitter/archiveTwitter'
+import ATwitterUser from '../components/twitter/archiveConfig/aTwitterUser'
 
-const stateToProp = state => ({
-  twitter: state.get('twitter')
-})
+export default class TwitterView extends Component {
 
-class TwitterView extends Component {
-  static propTypes = {
-    twitter: PropTypes.instanceOf(Immutable.Map).isRequired,
+  constructor (...args) {
+    super(...args)
+    this.moments = {
+      f: null,
+      t: null
+    }
   }
 
   render () {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
-        <ArchiveTwitter twitter={this.props.twitter}/>
+      <div style={{ width: '100%', height: '100%' }} id='twitterArchive'>
+        <ATwitterUser/>
       </div>
     )
   }
-
 }
 
-export default connect(stateToProp)(TwitterView)

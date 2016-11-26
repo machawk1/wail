@@ -158,7 +158,7 @@ const makeRequest = (config) => new Promise((resolve, reject) =>
               .catch(error => {
                 reject({
                   wasError: true,
-                  m: 'HTTP 200 OK<br>The html page was gziped <br> and an error happened while un-gzipping it.'
+                  m: 'HTTP 200 OK<br>The html page was gziped<br>and an error happened while un-gzipping it.'
                 })
               })
           } else {
@@ -167,11 +167,11 @@ const makeRequest = (config) => new Promise((resolve, reject) =>
         } else {
           reject({
             wasError: true,
-            m: 'HTTP 200 OK <br>' + 'The URI did not have content type html<br>' + `It was ${cType}`
+            m: `HTTP 200 OK<br>The URI did not have content type html<br>It was ${cType}`
           })
         }
       } else {
-        reject({ wasError: true, m: 'HTTP 200 OK<br> No content type was specified in the response.' })
+        reject({ wasError: true, m: 'HTTP 200 OK<br>No content type was specified in the response.' })
       }
     })
     .catch(StatusCodeError, (reason) => {

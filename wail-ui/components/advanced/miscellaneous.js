@@ -9,7 +9,6 @@ import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
 import {remote, ipcRenderer as ipc} from 'electron'
 import EventLog from './eventLog'
 import {openUrlInBrowser, openFSLocation} from '../../actions/util-actions'
-import Monitor from '../../../wail-twitter/monitor/monitor'
 
 const settings = remote.getGlobal('settings')
 
@@ -19,13 +18,6 @@ export default class Misc extends Component {
     this.state = {
       expanded: false
     }
-    Monitor.on('started', () => {
-      console.log('monitor started')
-    })
-    Monitor.on('start-error', startError => {
-      console.log('monitor start error')
-      console.error(startError)
-    })
   }
 
   handleExpandChange (expanded) {
@@ -62,7 +54,7 @@ export default class Misc extends Component {
                   icon={<SettingIcon />}
                   label='Settings'
                   labelPosition='before'
-                  onMouseDown={() => ipcRenderer.send('open-settings-window', 'hi')}
+                  onMouseDown={() => ipc.send('open-settings-window', 'hi')}
                 />
               </ToolbarGroup>
               <ToolbarGroup>
@@ -95,34 +87,6 @@ export default class Misc extends Component {
             </Toolbar>
           </Card>
         </div>
-        <Toolbar>
-          <ToolbarGroup firstChild>
-            <RaisedButton
-              label='Start Monitor'
-              labelPosition='before'
-              onMouseDown={() => {
-                Monitor.start()
-              }}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup>
-            <RaisedButton
-              label='Ping'
-              labelPosition='before'
-              onMouseDown={() => {
-                Monitor.doPing()
-              }}
-            />
-          </ToolbarGroup>
-          <ToolbarGroup lastChild>
-            <RaisedButton
-              icon={<CheckUpdateIcon />}
-              label='Stop'
-              labelPosition='before'
-              onMouseDown={() => Monitor.stop()}
-            />
-          </ToolbarGroup>
-        </Toolbar>
       </div>
     )
   }

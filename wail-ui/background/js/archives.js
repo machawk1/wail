@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../../../wailPollyfil'
 import {remote, ipcRenderer as ipc} from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 

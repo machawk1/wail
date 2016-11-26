@@ -90,11 +90,11 @@ export default class AppManager {
             // console.log('windows')
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.ico')
             this.w = 1000
-            this.h = 500
+            this.h = 600
           } else {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/linux/whale_64.png')
             this.w = 1000
-            this.h = 500
+            this.h = 600
           }
 
           this.serviceMan = new ServiceManager(this.settingsMan)
@@ -154,6 +154,11 @@ export default class AppManager {
               conf: { show: false },
               url: `file://${loadFrom}/background/accessibility.html`,
               name: 'accessibilityWindow'
+            },
+            {
+              conf: { show: false },
+              url: `file://${loadFrom}/background/twitterMonitor.html`,
+              name: 'twitterMonitor'
             },
             {
               conf: { show: false },

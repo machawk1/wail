@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../../../wailPollyfil'
 import autobind from 'autobind-decorator'
 import {ipcRenderer, remote} from 'electron'
 import named from 'named-regexp'

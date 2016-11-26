@@ -1,3 +1,5 @@
+const moment = require('../wail-core/util/momentWplugins')
+// require('moment-precise-range-plugin')
 const DB = require('nedb')
 const _ = require('lodash')
 const util = require('util')
@@ -8,253 +10,172 @@ const cp = require('child_process')
 const fs = require('fs-extra')
 const through2 = require('through2')
 const prettyBytes = require('pretty-bytes')
-const moment = require('moment')
 const path = require('path')
+const schedule = require('node-schedule')
+// */5 * * * *
+const Twit = require('twit')
 
-const zlib = require('zlib')
-const rp = require('request-promise')
-const cheerio = require('cheerio')
-const urlType = require('url-type')
-const url = require('url')
-const { STATUS_CODES } = require('http')
-const { StatusCodeError, RequestError, TransformError } = require('request-promise/errors')
-const normalizeUrl = require('normalize-url')
+const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
+let theDur = { val: 5, what: 'minutes' }
 
-const inpect = _.partialRight(util.inspect, { depth: 2, colors: true })
+let times = [ { val: 5, what: 'minutes' },
+  { val: 10, what: 'minutes' },
+  { val: 15, what: 'minutes' },
+  { val: 20, what: 'minutes' },
+  { val: 25, what: 'minutes' },
+  { val: 30, what: 'minutes' },
+  { val: 35, what: 'minutes' },
+  { val: 40, what: 'minutes' },
+  { val: 45, what: 'minutes' },
+  { val: 50, what: 'minutes' },
+  { val: 55, what: 'minutes' },
+  { val: 1, what: 'hours' },
+  { val: 2, what: 'hours' },
+  { val: 3, what: 'hours' },
+  { val: 4, what: 'hours' },
+  { val: 5, what: 'hours' },
+  { val: 6, what: 'hours' },
+  { val: 7, what: 'hours' },
+  { val: 8, what: 'hours' },
+  { val: 9, what: 'hours' },
+  { val: 10, what: 'hours' } ]
 
-const linkStat = (outlink, stats, seedHost) => {
-  if (outlink && outlink.indexOf('mailto:') < 0) {
-    let relTo = urlType.relativeTo(outlink)
-    if (relTo) {
-      if (relTo === 'directory') {
-        stats.iLinks++
-      } else if (relTo === 'origin') {
-        stats.sDomain++
-      } else {
-        if (url.parse(outlink).hostname === seedHost) {
-          stats.sDomain++
-        } else {
-          stats.eLinks++
-        }
-      }
-    } else {
-      if (url.parse(outlink).hostname === seedHost) {
-        stats.sDomain++
-      } else {
-        stats.eLinks++
-      }
+const buildRecurrenceRule = (dur) => {
+  let now = moment()
+  let rule = new schedule.RecurrenceRule()
+  let increase = moment().add(dur.val, dur.what).add(2, 'minutes')
+
+  if (increase.day() > now.day()) {
+    console.log('we have moved to the next day')
+    console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
+    console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
+  } else {
+    if (increase.hour() > now.hour()) {
+      console.log('we have moved to next hour')
+      console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
+      console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
     }
   }
 }
 
-const determinLinkType = (link, stats, seedHost) => {
-  if (link && link.rel) {
-    let rel = link.rel.toLowerCase()
-    if (rel.indexOf('stylesheet') >= 0) {
-      stats.style++
-      linkStat(link.href, stats, seedHost)
-    } else if (rel.indexOf('icon') >= 0) {
-      stats.Images++
-      linkStat(link.href, stats, seedHost)
-    }
+const buildRecurrenceRule2 = (dur) => {
+  let start = new Date(Date.now())
+  return {
+    start,
+    stop: new Date(start.getTime() + moment.duration(dur.val, dur.what).asMilliseconds()),
+    rule: '*/2 * * * *'
   }
 }
+// const parser = require('cron-parser')
 
-const statBody = (seedUrl, theDom) => {
-  let stats = {
-    Images: 0, style: 0, iframes: 0,
-    embed: 0, scripts: 0, object: 0,
-    applet: 0, audio: 0, video: 0,
-    iLinks: 0, sDomain: 0, eLinks: 0
-  }
-  let seedHost = url.parse(seedUrl).hostname
-  let $ = cheerio.load(theDom)
-
-  $('a').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.href, stats, seedHost)
-    }
-  })
-
-  $('link').each(function (i, elem) {
-    determinLinkType(elem.attribs, stats, seedHost)
-  })
-
-  $('script[src]').each(function (i, elem) {
-    linkStat(elem.attribs.src, stats, seedHost)
-    stats.scripts++
-  })
-
-  $('img').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.Images++
-  })
-
-  $('embed').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.embed++
-  })
-
-  $('object').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.data, stats, seedHost)
-    }
-    stats.object++
-  })
-
-  $('applet').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.applet++
-  })
-
-  $('video').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.video++
-  })
-
-  $('audio').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.audio++
-  })
-
-  $('bgsound').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.audio++
-  })
-
-  $('iframe').each(function (i, elem) {
-    if (elem.attribs) {
-      linkStat(elem.attribs.src, stats, seedHost)
-    }
-    stats.iframes++
-  })
-  return stats
-}
-
-const uriSanity = _.partialRight(normalizeUrl, { stripWWW: false, removeTrailingSlash: false })
-
-const unGZ = gzipped => new Promise((resolve, reject) => {
-  zlib.gunzip(gzipped, (err, dezipped) => {
-    if (err) {
-      reject(err)
-    } else {
-      resolve(dezipped.toString('utf-8'))
-    }
-  })
-})
-
-function makeRequest (config) {
-  return new Promise((resolve, reject) =>
-    rp(config)
-      .then(res => {
-        let cType = res.headers[ 'content-type' ]
-        if (cType) {
-          if (cType.toLowerCase().indexOf('html') > 0) {
-            let encoding = res.headers[ 'content-encoding' ]
-            if (encoding && encoding.indexOf('gzip') >= 0) {
-              return unGZ(res.body)
-                .then(body => {
-                  resolve(body)
-                })
-                .catch(error => {
-                  reject({
-                    wasError: true,
-                    m: 'HTTP 200 ok. The html page was gziped and and error happened while un-gzipping it.'
-                  })
-                })
-            } else {
-              resolve(res.body)
-            }
-          } else {
-            reject({ wasError: true, m: `HTTP 200 ok. The URI did not have content type html. It was ${cType}` })
-          }
-        } else {
-          reject({ wasError: true, m: 'HTTP 200 ok. No content type was specified in the response.' })
+class Job {
+  constructor (dur, execute, onStop) {
+    this.stopWhen = moment().add(dur.val, dur.what).startOf('minute')
+    this.timer = moment.duration(1, 'm')
+      .timer({ loop: true }, () => {
+        execute()
+        if (moment().isSameOrAfter(this.stopWhen)) {
+          this.timer.stop()
+          onStop()
         }
       })
-      .catch(StatusCodeError, (reason) => {
-        // not 2xx
-        let humanized = STATUS_CODES[ reason.statusCode ]
-        let c = `${reason.statusCode}`[ 0 ]
-        let { headers } = reason.response
-        if (c === '3') {
-          let toWhere
-          if (headers[ 'location' ]) {
-            toWhere = `The location pointed to is ${headers[ 'location' ]}`
-          } else {
-            toWhere = 'No location was given in the response headers'
-          }
-          reject({
-            wasError: true,
-            m: `HTTP ${reason.statusCode} ${humanized}. ${toWhere}`
-          })
-        } else {
-          // just report
-          reject({
-            wasError: true,
-            m: `HTTP ${reason.statusCode} ${humanized}`
-          })
-        }
-      })
-      .catch(RequestError, (reason) => {
-        console.log(reason.error)
-        if (reason.error.code === 'ENOTFOUND') {
-          reject({ wasError: true, m: 'The URI was not found on DNS lookup' })
-        } else {
-          reject({ wasError: true, m: 'Severe error happened. Are you connected to the internet?' })
-        }
-      }))
+  }
+
+  start () {
+    this.timer.start()
+  }
+
+  stop () {
+    this.timer.stop()
+  }
+
+  isStoped () {
+    return this.timer.isStoped()
+  }
+
 }
 
-function checkSeed (seed) {
-  let uri = uriSanity(seed)
-  let config = {
-    method: 'GET', followRedirect: false, uri,
-    resolveWithFullResponse: true
-  }
-  return new Promise((resolve, reject) =>
-    makeRequest(config)
-      .then(body => {
-        let stats = statBody(seed, body)
-        resolve({
-          wasError: false,
-          stats
-        })
-      })
-      .catch(error => {
-        reject(error)
-      })
-  )
+// let count = 0
+const execute = () => {
+  count += 1
+  console.log('1 miniutes has happened', count)
+  console.log(moment().format('MMM DD YYYY h:mm:sa'))
 }
+//
+// const onStop = () => {
+//   console.log('Stopping', moment().format('MMM DD YYYY h:mm:sa'))
+// }
+// let j = new Job(theDur, execute, onStop)
+// j.start()
 
-// ///csoduedu
-console.log(_.omitBy({
-    Images: 163,
-    style: 9,
-    iframes: 5,
-    embed: 0,
-    scripts: 8,
-    object: 0,
-    applet: 0,
-    audio: 0,
-    video: 1,
-    iLinks: 2,
-    sDomain: 254,
-    eLinks: 201
-  }
-  , v => v === 0))
+// let rule = new schedule.RecurrenceRule()
+// rule.minute = [ 0, new schedule.Range(5, 55, 5) ]
+// console.log(rule)
+// let rule = buildRecurrenceRule(theDur)
+// let start = new Date(Date.now())
+// let interval = parser.parseExpression('0 */2 * * * *', {
+//   currentDate: start,
+//   endDate: new Date(start.getTime() + moment.duration(5, theDur.what).asMilliseconds()),
+//   iterator: true
+// })
+//
+// let next = interval.next()
+// while (!next.done) {
+//   console.log(next.value.toString())
+//   next = interval.next()
+// }
+//
+// let rule = buildRecurrenceRule(theDur)
+console.log(moment().round(5, 'seconds'))
+console.log(inspect(moment))
+
+// console.log(rule.start.toLocaleString())
+// console.log(rule.stop.toLocaleString())
+//
+
+// process.on('SIGTERM',() => {
+//   console.log('by')
+//   job.cancel()
+// })
+//
+// process.on('SIGINT',() => {
+//   console.log('by')
+//   job.cancel()
+// })
+
+// const makeRequest = () => {
+//   const signIn = {
+//     consumer_key: "K1y1GmSdDfUmBNMJeX1lf8Ono",
+//     consumer_secret: "Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY",
+//     access_token: "4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3",
+//     access_token_secret: "46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f",
+//     timeout_ms: 60 * 1000,
+//   }
+// //
+//   const twit = new Twit(signIn)
+// //
+//   twit.get('user_timeline', { count: 200 })
+//     .then(result => {
+//       let { data } = result
+//       fs.writeJson('mytl.json', data, er => console.log(er))
+//     })
+//     .catch(error => {
+//       console.log('error')
+//       console.error(error)
+//     })
+// }
+//
+// const selectFriendDets = user => ({
+//   name: user.name,
+//   screen_name: user.screen_name,
+//   link: `https://twitter.com/${user.screen_name}`,
+//   user_id: user.id_str,
+//   profile_image: user.profile_image_url
+// })
+//
+// const urlToTweet = tweet => `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+//
+//
 
 // fs.readFile('cshtml.html', 'utf8', (err, data) => {
 //   console.log()
@@ -267,19 +188,77 @@ console.log(_.omitBy({
 //   statBody('https://www.youtube.com/watch?v=lEVY8ZRsxvI', data)
 // })
 // const inpect = _.partialRight(util.inspect, { depth: null, colors: true })
-// const tp = path.resolve('.', 'tweets.json')
-// console.log(tp)
-//
+
 // Promise.promisifyAll(fs)
-// fs.readJSONAsync(tp)
-//   .then(tweets => {
-//     // 'https://twitter.com/Galsondor/status/800512053156974596'
-//     _.take(tweets,100).forEach(tweet => {
-//       // console.log(inpect(tweet))
-//       console.log(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
-//       console.log('------------------------------------------')
-//     })
+// const lunr = require('lunr')
+// const buildIdx = () => {
+//   const tp = path.resolve('.', 'tweets.json')
+//   fs.readJSONAsync(tp)
+//     .then(tweets => {
+//       // 'https://twitter.com/Galsondor/status/800512053156974596'
+//       let myIdx = lunr(function () {
+//         this.ref('id_str')
+//         this.field('hashtags')
+//         this.field('text')
+//       })
+//       let snameToTweet = {}
+//       tweets.forEach(tweet => {
+//         snameToTweet[ tweet.id_str ] = {
+//            tweet.user.screen_name,
+//            tweet.id_str,
+//           text: tweet.text,
+//           hashtags: tweet.entities.hashtags.map(ht => ht.text)
+//         }
+//         let doc = {
+//            snameToTweet[ tweet.id_str ].id_str,
+//           text: snameToTweet[ tweet.id_str ].text,
+//           hashtags: snameToTweet[ tweet.id_str ].hashtags
+//         }
 //
+//         myIdx.add(doc)
+//         // console.log(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+//         // if (tweet.entities.hashtags.length > 0) {
+//         //   console.log(inspect(tweet))
+//         // }
+//         console.log('------------------------------------------')
+//       })
+//       fs.writeJson('idx.json', { idTt: snameToTweet, idx: myIdx })
+//     })
+//     .catch(error => {
+//       console.error(error)
+//     })
+// }
+//
+// const tp = path.resolve('.', 'idx.json')
+// fs.readJSONAsync(tp)
+//   .then(midx => {
+//     // 'https://twitter.com/Galsondor/status/800512053156974596'
+//     let { idTt, idx } = midx
+//     // console.log(idTt)
+//     let myIdx = lunr.Index.load(idx)
+//     _.orderBy(myIdx.search('Trump'), [ 'score' ], [ 'desc' ])
+//       .forEach(ret => {
+//         console.log(ret)
+//         console.log(idTt[ ret.ref ].text)
+//       })
+//     // console.log(inspect())
+//     // let snameToTweet = {}
+//     // tweets.forEach(tweet => {
+//     //   snameToTweet[ tweet.id_str ] = tweet.user.screen_name
+//     //   let doc = {
+//     //      tweet.id_str,
+//     //     text: tweet.text,
+//     //     hashtags: tweet.entities.hashtags.map(ht => ht.text)
+//     //   }
+//     //
+//     //   myIdx.add(doc)
+//     //   // console.log(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+//     //   // if (tweet.entities.hashtags.length > 0) {
+//     //   //   console.log(inspect(tweet))
+//     //   // }
+//     //   console.log('------------------------------------------')
+//     // })
+//     // fs.writeJson('idx.json', { nTt: snameToTweet, idx: myIdx })
 //   })
 //   .catch(error => {
 //     console.error(error)
@@ -321,7 +300,7 @@ console.log(_.omitBy({
 //     console.log('Fastest is ' + this.filter('fastest').map('name'));
 //   })
 //   // run async
-//   .run({ 'async': true })
+//   .run({  true })
 // console.log(...colActions)
 
 // let sss = [ { url: 'http://cs.odu.edu', jobId: 1473098189935 },

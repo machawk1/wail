@@ -13,6 +13,7 @@ module.exports = {
     newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     notFirstLoad: './wail-ui/loadingScreens/loading/entry',
     requestD: './wail-ui/background/js/requestDaemon',
+    twitterM: './wail-ui/background/js/twitterM',
     // settingsW: './wail-ui/childWindows/settings/settingsW',
   },
   module: {

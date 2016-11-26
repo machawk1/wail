@@ -46,6 +46,7 @@ export default class WindowManager extends EventEmitter {
 
       mainWindow: { window: null, url: null, open: false, conf: null, loadComplete: false },
 
+      twitterMonitor: { window: null, url: null, conf: null, open: false, loadComplete: false },
       managersWindow: { window: null, url: null, conf: null, open: false, loadComplete: false },
       reqDaemonWindow: { window: null, url: null, conf: null, open: false, loadComplete: false },
       crawlManWindow: { window: null, url: null, conf: null, open: false, loadComplete: false },
@@ -53,7 +54,6 @@ export default class WindowManager extends EventEmitter {
       loadingWindow: { window: null, urls: false, open: false, conf: null }
     }
     this.coreWindows = [
-      // 'managersWindow',
       'reqDaemonWindow',
       'crawlManWindow',
       'archiveManWindow'
@@ -352,6 +352,10 @@ export default class WindowManager extends EventEmitter {
       //   this.send('mainWindow', 'signed-into-twitter', { wasError: true, error })
       // })
     })
+
+    ipcMain.on('monitor-twitter-account', (e, config) => {
+      this.send('twitterMonitor', 'monitor-twitter-account', config)
+    })
   }
 
   loadComplete (where) {
@@ -403,7 +407,10 @@ export default class WindowManager extends EventEmitter {
                   .then(() => {
                     this.createWail(control)
                       .then(() => {
-                        console.log('all windows loaded')
+                        this.createTwitterM(control)
+                          .then(() => {
+                            console.log('all windows loaded')
+                          })
                       })
                   })
               })
@@ -590,6 +597,48 @@ export default class WindowManager extends EventEmitter {
         console.log('loadingWindow is ready to show')
         this.windows[ 'loadingWindow' ].open = true
         this.windows[ 'loadingWindow' ].window.show()
+        resolve()
+      })
+    })
+  }
+
+  createTwitterM (control) {
+    return new Promise((resolve) => {
+      console.log('creating twitterMonitor')
+      let { conf, url } = this.windows[ 'twitterMonitor' ]
+      this.windows[ 'twitterMonitor' ].window = new BrowserWindow(conf)
+      this.windows[ 'twitterMonitor' ].window.loadURL(url)
+      this.windows[ 'twitterMonitor' ].window.webContents.on('unresponsive', () => {
+        this.emit('window-unresponsive', 'twitterMonitor')
+      })
+
+      this.windows[ 'twitterMonitor' ].window.webContents.on('crashed', () => {
+        this.emit('window-crashed', 'twitterMonitor')
+      })
+      this.windows[ 'twitterMonitor' ].window.on('closed', () => {
+        console.log('settings window is closed')
+        this.windows[ 'twitterMonitor' ].window = null
+        this.windows[ 'twitterMonitor' ].open = false
+        if (this.allWindowsClosed()) {
+          this.emit('all-windows-closed')
+        }
+      })
+      this.windows[ 'twitterMonitor' ].window.on('show', () => {
+        console.log('twitterMonitor is showing')
+      })
+      this.windows[ 'twitterMonitor' ].window.on('ready-to-show', () => {
+        console.log('twitterMonitor is ready to show')
+        if (control.debug) {
+          if (control.openBackGroundWindows) {
+            this.windows[ 'twitterMonitor' ].window.show()
+          }
+          this.windows[ 'twitterMonitor' ].window.show()
+          this.windows[ 'twitterMonitor' ].window.webContents.openDevTools()
+        }
+        this.windows[ 'twitterMonitor' ].window.show()
+        this.windows[ 'twitterMonitor' ].window.webContents.openDevTools()
+        this.windows[ 'twitterMonitor' ].open = true
+        this.windows[ 'twitterMonitor' ].loadComplete = true
         resolve()
       })
     })
