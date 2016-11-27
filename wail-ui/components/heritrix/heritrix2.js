@@ -36,6 +36,8 @@ class Heritrix2 extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
+    console.log(this.props.jobIds === nextProps.jobIds)
+    console.log(this.props.jobIds.toJS() === nextProps.jobIds.toJS())
     return shallowCompare(this, nextProps, nextState)
   }
 

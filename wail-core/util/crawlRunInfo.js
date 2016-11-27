@@ -1,52 +1,6 @@
 import RunInfo from './runInfo'
 import moment from 'moment'
-import Immutable from 'immutable'
 import _ from 'lodash'
-
-const CInfo = new Immutable.Record({
-  jobId: '',
-  created: '',
-  urls: '',
-  forCol: '',
-  depth: '',
-  path: '',
-  confP: null,
-  running: false,
-  latestRun: null,
-  lastUpdated: null
-})
-
-function compare (a, b) {
-  if (a.tsMoment.isBefore(b)) {
-    return 1
-  }
-  if (a.tsMoment.isAfter(b.tsMoment)) {
-    return -1
-  }
-  return 0
-}
-
-const makeCrawlInfo = crawlInfo => {
-  let jobId = crawlInfo.jobId
-  let created = moment(crawlInfo.jobId)
-  let urls = crawlInfo.urls
-  let forCol = crawlInfo.forCol
-  let depth = crawlInfo.depth
-  let path = crawlInfo.path
-  let confP = crawlInfo.confP
-  let running = crawlInfo.running
-  let runs = (crawlInfo.runs || [])
-  runs.forEach(r => {
-    r.tsMoment = moment(r.timestamp)
-  })
-  runs.sort(compare)
-  let latestRun = null
-  let lastUpdated = null
-  if (runs.length > 0) {
-    latestRun = runs[ 0 ]
-    lastUpdated = latestRun.tsMoment
-  }
-}
 
 export default class CrawlRunInfo {
   constructor (crawlInfo) {

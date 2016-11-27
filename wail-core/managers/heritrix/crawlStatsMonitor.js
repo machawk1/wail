@@ -1,10 +1,10 @@
-import autobind from 'autobind-decorator'
 import chokidar from 'chokidar'
 import EventEmitter from 'eventemitter3'
 import fs from 'fs-extra'
 import getCrawlStats from '../../util/getCrawStats'
 import path from 'path'
-import { remote } from 'electron'
+import {remote} from 'electron'
+import ACrawlMonitor from './aCrawlMonitor'
 
 const settings = remote.getGlobal('settings')
 
@@ -13,15 +13,33 @@ export default class CrawlStatsMonitor extends EventEmitter {
     super()
     this.monitoring = new Map()
     this.launchId = /^[0-9]+$/
-    this.watcherConfig = { followSymlinks: true, awaitWriteFinish: true }
+    this.watcherConfig = { followSymlinks: false }
     // console.log(this.watcherConfig)
     // this.watcher = chokidar.watch(path.join(settings.get('heritrixJob'),'**/progress-statistics.log'),{ followSymlinks: true,  awaitWriteFinish: true, ignoreInitial: true })
     // this.watcher.on('add',path => console.log(`File ${path} has been added`))
     // this.watcher.on('change',path => console.log(`File ${path} has been changed`))
   }
 
-  @autobind
   startMonitoring (jobPath, jobId) {
+    console.log('start monitoring heritrix job')
+    this.monitoring.set(jobId, new ACrawlMonitor(jobPath, jobId, ::this.childMOnUpdate,
+      ::this.childMOnEnd, ::this.childMOnExceedECount, this.watcherConfig))
+  }
+
+  childMOnUpdate (stats) {
+    this.emit('crawljob-status-update', stats)
+  }
+
+  childMOnEnd (jobId, stats) {
+    this.emit('crawljob-status-ended', stats)
+    this.monitoring.delete(jobId)
+  }
+
+  childMOnExceedECount (jobId) {
+    this.monitoring.delete(jobId)
+  }
+
+  _startMonitoring (jobPath, jobId) {
     console.log('start monitoring heritrix job')
     let started = new Date().getTime()
     let logPath = path.join(jobPath, '**/progress-statistics.log')
@@ -34,8 +52,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
         .then(stats => {
           console.log(`crawlJob-status-update ${jobId}`, stats)
           if (stats.ended) {
-            logWatcher.close()
-            this.monitoring.delete(jobId)
+            this.stopMonitoring(jobId)
             this.emit('crawljob-status-ended', {
               jobId,
               stats: Object.assign({}, { started, warcs: path.normalize(`${filePath}/../../warcs/*.warc`) }, stats)
@@ -63,30 +80,42 @@ export default class CrawlStatsMonitor extends EventEmitter {
           }
         })
     })
-    logWatcher.on('error', error => console.log(`Watcher error: ${error}`))
+    logWatcher.on('error', error => {
+      console.log(`Watcher error: ${error}`)
+      console.error(error)
+      let mo = this.monitoring.get(jobId)
+      let { errorCount, logWatcher } = mo
+      errorCount = errorCount + 1
+      if (errorCount >= 10) {
+        logWatcher.close()
+        this.monitoring.delete(jobId)
+        console.log('crawlstat-monitoring-endedExecption', jobId)
+        this.emit('crawlJob-monitoring-endedExecption', jobId)
+      } else {
+        mo.errorCount = errorCount
+        this.monitoring.set(jobId, mo)
+      }
+    })
     this.monitoring.set(jobId, {
       logWatcher,
       errorCount: 0
     })
   }
 
-  @autobind
   fullStopMonitoring () {
-    for (let { logWatcher, errorCount } of this.monitoring.values()) {
-      logWatcher.close()
+    for (let logWatcher of this.monitoring.values()) {
+      logWatcher.stopWatching()
     }
     this.emit('crawlStats-monitoring-stoped')
   }
 
-  @autobind
   stopMonitoring (jobId) {
     if (this.monitoring.has(jobId)) {
-      let watcherHolder = this.monitoring.get(jobId)
-      watcherHolder.logWatcher.close()
+      this.monitoring.get(jobId).stopWatching()
       this.monitoring.delete(jobId)
-      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: true})
+      this.emit('stopped-monitoring', { jobId, wasAllReadyMonitoring: true })
     } else {
-      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: false})
+      this.emit('stopped-monitoring', { jobId, wasAllReadyMonitoring: false })
     }
   }
 }

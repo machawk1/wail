@@ -44,7 +44,7 @@ export function createJob (conf) {
   }
 }
 
-export function madeJobConf (conf) {
+export function madeJobConf (e, conf) {
   return {
     type: EventTypes.CREATE_JOB,
     conf

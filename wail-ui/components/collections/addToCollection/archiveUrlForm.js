@@ -1,39 +1,22 @@
 import React, {Component, PropTypes} from 'react'
 import {Field, reduxForm} from 'redux-form/immutable'
 import Promise from 'bluebird'
-import MyAutoSizer from '../../utilComponents/myAutoSizer'
-import {Card, CardHeader, CardTitle, CardText, CardMedia, CardActions} from 'material-ui/Card'
-import {SubmissionError} from 'redux-form'
+import {ipcRenderer as ipc} from 'electron'
+import {SubmissionError, reset as resetForm} from 'redux-form'
+import {batchActions} from 'redux-batched-actions'
 import isURL from 'validator/lib/isURL'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
-import {RadioButton} from 'material-ui/RadioButton'
-import {
-  Checkbox,
-  RadioButtonGroup,
-  SelectField,
-  TextField,
-  Toggle
-} from 'redux-form-material-ui'
-const styles = {
-  block: {
-    maxWidth: 250
-  },
-  radioButton: {
-    marginBottom: 16
-  },
-  paperStyle: {
-    width: 300,
-    margin: 'auto',
-    padding: 20
-  },
-  switchStyle: {
-    marginBottom: 16
-  },
-  submitStyle: {
-    marginTop: 32
-  }
+import {TextField, SelectField} from 'redux-form-material-ui'
+import * as notify from '../../../actions/notification-actions'
+import {resetCheckMessage} from '../../../actions/redux/archival'
 
+const archive = (forCol, config) => {
+  let message = `Archiving ${config.get('url')} for ${forCol} Now!`
+  let jId = new Date().getTime()
+  notify.notifyInfo(message)
+  ipc.send('makeHeritrixJobConf', { urls: config.get('url'), depth: config.get('config'), jobId: jId, forCol })
+  window.logger.debug(message)
 }
 
 const validate = values => {
@@ -51,6 +34,7 @@ const validate = values => {
   }
   return errors
 }
+
 const warn = values => {
   const warnings = {}
   if (!values.get('config')) {
@@ -59,64 +43,57 @@ const warn = values => {
   return warnings
 }
 
-const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
-
-function submit (values) {
-  return sleep(1000) // simulate server latency
-    .then(() => {
-      console.log('in submit', values)
-      if (!values.config) {
-        throw new SubmissionError({ config: 'Config Not Present', _error: 'Cant Archive' })
-      } else {
-        window.alert(`You submitted:\n\n${JSON.stringify(values, null, 2)}`)
-      }
-    })
-}
-
 const formConfig = {
-  form: 'archiveUrl',  // a unique identifier for this form
+  form: 'archiveUrl',
   validate,
   warn
 }
 
 class ArchiveUrlForm extends Component {
+  static propTypes = {
+    col: PropTypes.string.isRequired
+  }
+
+  submit (values) {
+    console.log('in submit', values)
+    if (!values.get('config')) {
+      throw new SubmissionError({ config: 'Config Not Present', _error: 'Cant Archive' })
+    } else {
+      archive(this.props.col, values)
+      this.props.dispatch(batchActions([ resetForm(formConfig.form), resetCheckMessage() ]))
+    }
+  }
+
   render () {
     console.log('in form', this.props)
     const { handleSubmit, pristine, reset, submitting, invalid } = this.props
     return (
       <div style={{ width: '90%', height: 'inherit' }}>
-        <form onSubmit={handleSubmit(submit)} style={{ height: '300px' }}>
-          <div>
-            <Field name='url' component={TextField}
-                   floatingLabelText='Seed to add:'
-                   hintText='Url'
-                   fullWidth
-                   style={{ marginLeft: 25, marginRight: 25 }}
+        <form onSubmit={handleSubmit(::this.submit)} style={{ height: '300px' }}>
+          <div style={{ height: '75px' }}>
+            <Field
+              name='url'
+              component={TextField}
+              floatingLabelText='Seed to add:'
+              hintText='Url'
+              fullWidth
+              style={{ marginLeft: 25, marginRight: 25 }}
             />
           </div>
-          <div style={{ width: '400px', height: '200px' }}>
-            <Field name='config' component={RadioButtonGroup}
-                   props={{ defaultSelected: 'single-page' }}
-                   style={{ marginLeft: 25, marginTop: 10, marginBottom: 20 }}
+          <div style={{ height: '175px', width: '310px' }}>
+            <Field
+              name='config'
+              component={SelectField}
+              hintText='Archive Configuration'
+              floatingLabelText='Archive Configuration'
+              style={{ marginLeft: 25, width: '310px' }}
             >
-              <RadioButton
-                style={{ marginTop: 10, marginBottom: 10 }}
-                value='single-page'
-                label='Page Only'
-              />
-              <RadioButton
-                style={{ marginTop: 10, marginBottom: 10 }}
-                value='page-same-domain'
-                label='Page and internal (same domain) links'
-              />
-              <RadioButton
-                style={{ marginTop: 10, marginBottom: 10 }}
-                value='page-same-domain-external'
-                label='Page and all (internal and external) links'
-              />
+              <MenuItem value={1} primaryText='Page Only'/>
+              <MenuItem value={2} primaryText='Page + Same domain links'/>
+              <MenuItem value={3} primaryText='Page + All internal and external links'/>
             </Field>
           </div>
-          <div>
+          <div style={{ height: '40px', transform: 'translateY(20px)' }}>
             <FlatButton
               label='Add and Archive Now'
               type='submit'

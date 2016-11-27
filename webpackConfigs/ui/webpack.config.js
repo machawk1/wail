@@ -17,33 +17,39 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
-          presets: [ 'react-hmre',  "react",
-            ["env", {
-              "targets": {
-                "node": 6.5
+          presets: [ 'react-hmre',  'react',
+            ['env', {
+              'targets': {
+                'node': 6.5
               },
-              "whitelist": [
-                "transform-class-properties",
-                "transform-es2015-classes",
-                "transform-es2015-object-super",
-                "transform-es2015-destructuring",
-                "transform-object-rest-spread"
+              'whitelist': [
+                'transform-class-properties',
+                'transform-es2015-classes',
+                'transform-es2015-object-super',
+                'transform-es2015-destructuring',
+                'transform-object-rest-spread'
               ]
             }]
           ],
           plugins: [
-            "transform-decorators-legacy",
-            "transform-class-properties",
-            "transform-es2015-object-super",
-            "transform-es2015-destructuring",
-            "transform-async-to-generator",
-            "transform-exponentiation-operator",
-            "transform-object-rest-spread",
-            "syntax-trailing-function-commas",
-            "transform-export-extensions",
-            "transform-do-expressions",
-            "transform-function-bind",
-            "add-module-exports"
+            'transform-decorators-legacy',
+            'transform-class-properties',
+            'transform-es2015-object-super',
+            'transform-es2015-destructuring',
+            'transform-async-to-generator',
+            'transform-exponentiation-operator',
+            'transform-object-rest-spread',
+            'syntax-trailing-function-commas',
+            'transform-export-extensions',
+            'transform-do-expressions',
+            'transform-function-bind',
+            'add-module-exports',
+            ['transform-runtime', {
+              'helpers': true, // defaults to true
+              'polyfill': false, // defaults to true
+              'regenerator': false, // defaults to true
+              'moduleName': 'babel-runtime' // defaults to 'babel-runtime'
+            }]
           ],
         },
       },

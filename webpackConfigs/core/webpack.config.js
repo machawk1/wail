@@ -52,7 +52,13 @@ module.exports = {
             'transform-export-extensions',
             'transform-do-expressions',
             'transform-function-bind',
-            'add-module-exports'
+            'add-module-exports',
+            ['transform-runtime', {
+              'helpers': true, // defaults to true
+              'polyfill': false, // defaults to true
+              'regenerator': false, // defaults to true
+              'moduleName': 'babel-runtime' // defaults to 'babel-runtime'
+            }]
           ],
         },
       },

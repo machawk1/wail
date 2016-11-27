@@ -1,4 +1,6 @@
-import moment from '../../wail-core/util/momentWplugins'
+import moment from 'moment'
+
+const fromTwitterDate = (date) => moment(date, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en')
 
 export default class Extractor {
   constructor () {
@@ -10,7 +12,7 @@ export default class Extractor {
   }
 
   tweetIsAfterStart (tweet) {
-    return this.now.isSameOrAfter(moment.fromTwitterDate(tweet.created_at))
+    return this.now.isSameOrAfter(fromTwitterDate(tweet.created_at))
   }
 
   extract (tweet) {

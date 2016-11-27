@@ -1,8 +1,7 @@
 import '../wailPollyfil'
 import 'react-flex/index.css'
 import './css/wail.css'
-import m from 'moment'
-import 'moment-timer'
+import Rx from 'rxjs/Rx'
 import React from 'react'
 import {render} from 'react-dom'
 import {hashHistory} from 'react-router'
@@ -24,6 +23,7 @@ if (process.env.NODE_ENV === 'development') {
 
 Promise.promisifyAll(fs)
 
+global.notifications$ = new Rx.BehaviorSubject({ type: 'initial' })
 global.resizer = createDetectElementResize()
 global.twitterClient = new TwitterClient()
 

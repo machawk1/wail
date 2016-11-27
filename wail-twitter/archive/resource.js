@@ -92,20 +92,6 @@ class Resource {
     }
   }
 
-  canUseMatchedNinfo () {
-    if (this.matchedNinfo) {
-      console.log(this.url, 'has matchedNifo')
-      let { response } = this.matchedNinfo
-      if (response) {
-        console.log(this.url, 'has matchedNifo response')
-      } else {
-        console.log(this.url, 'no has matchedNifo response')
-      }
-    } else {
-      return false
-    }
-  }
-
   seedUrlHeaderMap (v, k) {
     let lowerKey = k.toLowerCase()
     if (lowerKey === 'content-length') {
@@ -213,49 +199,6 @@ class Resource {
     }
   }
 
-  /*
-   makeWarcResponseHeaderWith(rh, now, warcConcurrentTo,
-   responseHeaders[rh] + CRLF, hexValueInt8Ary.length + (CRLF + CRLF).length) + CRLF
-
-   makeWarcResponseHeaderWith(requestHeader, now, warcConcurrentTo, respHeader + respContent) + CRLF
-
-   makeWarcResponseHeaderWith(initURI, now, warcConcurrentTo, warcResponse, 0) // htmlLengthCorrection)
-   */
-  writeToWarcFile2 (warcStream, body, opts) {
-    let { seedUrl, concurrentTo, now } = opts
-    if (this.method === 'GET') {
-      let res = this._response()
-      let reqHeaderString
-      let resHeaderString
-      console.log('badd', this.request)
-      if (res) {
-        reqHeaderString = makeHeaderString(this.request, 'requestHeaders', requestHttpString)
-        resHeaderString = makeHeaderString(res, 'responseHeaders', responseHttpString)
-      } else {
-        reqHeaderString = makeHeaderString(this.request, 'requestHeaders', requestHttpString)
-      }
-      let swapper = S(warcRequestHeader)
-      let reqHeadContentBuffer = Buffer.from('\r\n' + reqHeaderString, 'utf8')
-      let reqWHeader = swapper.template({
-        targetURI: this.url, concurrentTo,
-        now, rid: uuid.v1(), len: reqHeadContentBuffer.length
-      }).s
-      console.log('should stop if false?', warcStream.write(reqWHeader, 'utf8'))
-      console.log('should stop if false?', warcStream.write(reqHeadContentBuffer, 'utf8'))
-      console.log('should stop if false?', warcStream.write(recordSeparator, 'utf8'))
-
-      if (res) {
-        let resHeaderContentBuffer = Buffer.from(resHeaderString)
-        let respWHeader = swapper.setValue(warcResponseHeader).template({
-          targetURI: this.url,
-          now, rid: uuid.v1(), len: resHeaderContentBuffer.length + this.rdata.length
-        }).s
-      }
-    } else {
-      //something not get
-    }
-  }
-
   dl () {
     return new Promise((resolve, reject) => {
       if (this.method !== 'POST' && !this.isSeed) {
@@ -305,40 +248,3 @@ class Resource {
 }
 
 module.exports = Resource
-
-/*
- if (this.matchedNinfo) {
- // console.log('has matchedNifo')
- let { response } = this.matchedNinfo
- if (response) {
- // console.log('has matchedNifo response')
- let { headersText, requestHeadersText } = response
- if (headersText && requestHeadersText) {
- console.log(this.matchedNinfo)
- console.log(this.request, this.response)
- } else {
- // console.log(headersText, requestHeadersText)
- if (headersText && !requestHeadersText) {
- console.log('has only response headers')
- // console.log(response)
- // console.log(this.request, this.response)
- } else if (!headersText && requestHeadersText) {
- // console.log('has only request headers')
- // console.log(this.matchedNinfo)
- // console.log(this.request, this.response)
- } else {
- console.log('has no matchedNifo header text')
- let { reqHeaderString, resHeaderString } = this.makeHeaderStrings(seedUrl)
- console.log(this.request, this.response)
- }
- }
- } else {
- console.log('no has matchedNifo response', this.matchedNinfo)
- let { reqHeaderString, resHeaderString } = this.makeHeaderStrings(seedUrl)
-
- }
- } else {
- let { reqHeaderString, resHeaderString } = this.makeHeaderStrings(seedUrl)
- console.log('has no matchedNifo')
- }
- */

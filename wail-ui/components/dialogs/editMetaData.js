@@ -1,8 +1,6 @@
 import React, { Component, PropTypes } from 'react'
-import Paper from 'material-ui/Paper'
-import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
 import { Flex, Item } from 'react-flex'
-import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import { Editor, EditorState } from 'draft-js'
 import { ipcRenderer as ipc } from 'electron'
 import Dialog from 'material-ui/Dialog'
@@ -10,7 +8,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
-import wc from '../../../constants/wail-constants'
+import wc from '../../constants/wail-constants'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
@@ -70,7 +68,7 @@ export default class NewCollection extends Component {
           mdataString: `title="${title}" description="${description}"`,
           mdata: [ { k: 'title', v: title }, { k: 'description', v: description } ]
         })
-        GMessageDispatcher.dispatch({
+        global.notifications$.next({
           type: QUEUE_MESSAGE,
           message: {
             title: 'Info',
@@ -82,7 +80,7 @@ export default class NewCollection extends Component {
       } else {
         if (newTitle) {
           ipc.send('update-metadata', { forCol, mdata: { k: 'title', v: title } })
-          GMessageDispatcher.dispatch({
+          global.notifications$.next({
             type: QUEUE_MESSAGE,
             message: {
               title: 'Info',
@@ -93,7 +91,7 @@ export default class NewCollection extends Component {
           })
         } else if (newDescription) {
           ipc.send('update-metadata', { forCol, mdata: { k: 'description', v: description } })
-          GMessageDispatcher.dispatch({
+          global.notifications$.next({
             type: QUEUE_MESSAGE,
             message: {
               title: 'Info',
@@ -114,7 +112,7 @@ export default class NewCollection extends Component {
         open: false
       })
     } else {
-      GMessageDispatcher.dispatch({
+      global.notifications$.next({
         type: QUEUE_MESSAGE,
         message: {
           title: 'Warning',

@@ -1,14 +1,14 @@
 import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import GMessageDispatcher from '../../../dispatchers/globalMessageDispatcher'
+import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
 import {Flex, Item} from 'react-flex'
-import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
 import S from 'string'
-import wc from '../../../constants/wail-constants'
+import wc from '../../constants/wail-constants'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
@@ -47,11 +47,7 @@ export default class NewCollection extends Component {
   }
 
   handleClose () {
-    let {
-      col,
-      description,
-      title
-    } = this.state
+    let { col, description, title } = this.state
     let swapper = S('')
     let colEmpty = swapper.setValue(col).isEmpty()
     let descriptEmpty = swapper.setValue(description).isEmpty()
@@ -61,12 +57,12 @@ export default class NewCollection extends Component {
         col,
         mdata: [ `title=${rt}`, `description=${description}` ],
         metadata: [
-          { 'k': 'title', 'v': rt },
-          { 'k': 'description', 'v': description }
+          { title: rt },
+          { 'description': description }
         ]
       }
       ipc.send('create-collection', newCol)
-      GMessageDispatcher.dispatch({
+      global.notifications$.next({
         type: QUEUE_MESSAGE,
         message: {
           autoDismiss: 0,
@@ -91,7 +87,7 @@ export default class NewCollection extends Component {
       } else {
         message = 'Both the collection name and description can not be empty when creating a new collection'
       }
-      GMessageDispatcher.dispatch({
+      global.notifications$.next({
         type: QUEUE_MESSAGE,
         message: {
           autoDismiss: 0,

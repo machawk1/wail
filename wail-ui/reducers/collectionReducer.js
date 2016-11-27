@@ -1,20 +1,16 @@
-import Immutable, {Map, List} from 'immutable'
+import Immutable from 'immutable'
 import S from 'string'
-import util from 'util'
-import partialRight from 'lodash/partialRight'
-import ColCrawlInfo from '../../wail-core/util/colCrawlInfo'
 import {CollectionEvents} from '../constants/wail-constants'
 import moment from 'moment'
 const {
   GOT_ALL_COLLECTIONS,
   CREATED_COLLECTION,
   ADD_METADATA_TO_COLLECTION,
-  ADDED_WARCS_TO_COLL
+  ADDED_WARCS_TO_COLL,
+  CRAWL_TO_COLLECTION
 } = CollectionEvents
 
-const inspect = partialRight(util.inspect, { depth: null })
-
-export default (state = Map(), action) => {
+export default (state = Immutable.Map(), action) => {
   console.log('in collections reducer', action)
   switch (action.type) {
     case GOT_ALL_COLLECTIONS:
@@ -41,7 +37,25 @@ export default (state = Map(), action) => {
       })
     case ADDED_WARCS_TO_COLL: {
       console.log(action)
-      return state
+      let { col } = action
+      col.lastUpdated = moment(col.lastUpdated)
+      col.seeds = col.seeds.map(s => {
+        s.added = moment(s.added)
+        s.lastUpdated = moment(s.lastUpdated)
+        return s
+      })
+      return state.mergeDeepIn([ col.colName ], col)
+    }
+    case CRAWL_TO_COLLECTION: {
+      console.log(action)
+      let { col } = action
+      col.lastUpdated = moment(col.lastUpdated)
+      col.seeds = col.seeds.map(s => {
+        s.added = moment(s.added)
+        s.lastUpdated = moment(s.lastUpdated)
+        return s
+      })
+      return state.mergeDeepIn([ col.colName ], col)
     }
     case ADD_METADATA_TO_COLLECTION: {
       let { mdata, forCol } = action

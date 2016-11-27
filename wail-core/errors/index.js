@@ -1,9 +1,12 @@
 export class NullStatsError extends Error {
   constructor (message) {
     super()
-    Error.captureStackTrace(this, NullStatsError)
-    this.name = 'NullStatsError'
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
     this.message = message
+    Error.captureStackTrace(this, NullStatsError)
   }
 }
+
 

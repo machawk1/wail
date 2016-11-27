@@ -12,7 +12,8 @@ const {
   GOT_ALL_COLLECTIONS,
   CREATED_COLLECTION,
   ADD_METADATA_TO_COLLECTION,
-  ADDED_WARCS_TO_COLL
+  ADDED_WARCS_TO_COLL,
+  CRAWL_TO_COLLECTION
 } = CollectionEvents
 
 const settings = remote.getGlobal('settings')
@@ -65,11 +66,11 @@ export function gotAllCollections (event, ac) {
   }
 }
 
-export function addedWarcs (event, update) {
+export function addedWarcs (event, col) {
   window.logger.debug('collection store got all collections')
   return {
     type: ADDED_WARCS_TO_COLL,
-    ...update
+    col
   }
 }
 
@@ -86,6 +87,13 @@ export function addMetadata (mdata, forCol) {
     type: ADD_METADATA_TO_COLLECTION,
     mdata,
     forCol
+  }
+}
+
+export function crawlToCol (e, col) {
+  return {
+    type: CRAWL_TO_COLLECTION,
+    col
   }
 }
 

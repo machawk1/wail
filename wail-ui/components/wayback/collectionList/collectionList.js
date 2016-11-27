@@ -3,7 +3,7 @@ import IconButton from 'material-ui/IconButton'
 import SearchIcon from 'material-ui/svg-icons/action/search'
 import {Grid, Row, Col} from 'react-flexbox-grid'
 import ColListSearch from './collectionListSearch'
-import NewCollection from '../util/newCollection'
+import NewCollection from '../../dialogs/newCollection'
 /*
  <Grid fluid>
  <Row

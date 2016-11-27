@@ -13,94 +13,94 @@ const prettyBytes = require('pretty-bytes')
 const path = require('path')
 const schedule = require('node-schedule')
 // */5 * * * *
-const Twit = require('twit')
-
+// const Twit = require('twit')
+//
 const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
-let theDur = { val: 5, what: 'minutes' }
-
-let times = [ { val: 5, what: 'minutes' },
-  { val: 10, what: 'minutes' },
-  { val: 15, what: 'minutes' },
-  { val: 20, what: 'minutes' },
-  { val: 25, what: 'minutes' },
-  { val: 30, what: 'minutes' },
-  { val: 35, what: 'minutes' },
-  { val: 40, what: 'minutes' },
-  { val: 45, what: 'minutes' },
-  { val: 50, what: 'minutes' },
-  { val: 55, what: 'minutes' },
-  { val: 1, what: 'hours' },
-  { val: 2, what: 'hours' },
-  { val: 3, what: 'hours' },
-  { val: 4, what: 'hours' },
-  { val: 5, what: 'hours' },
-  { val: 6, what: 'hours' },
-  { val: 7, what: 'hours' },
-  { val: 8, what: 'hours' },
-  { val: 9, what: 'hours' },
-  { val: 10, what: 'hours' } ]
-
-const buildRecurrenceRule = (dur) => {
-  let now = moment()
-  let rule = new schedule.RecurrenceRule()
-  let increase = moment().add(dur.val, dur.what).add(2, 'minutes')
-
-  if (increase.day() > now.day()) {
-    console.log('we have moved to the next day')
-    console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
-    console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
-  } else {
-    if (increase.hour() > now.hour()) {
-      console.log('we have moved to next hour')
-      console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
-      console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
-    }
-  }
-}
-
-const buildRecurrenceRule2 = (dur) => {
-  let start = new Date(Date.now())
-  return {
-    start,
-    stop: new Date(start.getTime() + moment.duration(dur.val, dur.what).asMilliseconds()),
-    rule: '*/2 * * * *'
-  }
-}
-// const parser = require('cron-parser')
-
-class Job {
-  constructor (dur, execute, onStop) {
-    this.stopWhen = moment().add(dur.val, dur.what).startOf('minute')
-    this.timer = moment.duration(1, 'm')
-      .timer({ loop: true }, () => {
-        execute()
-        if (moment().isSameOrAfter(this.stopWhen)) {
-          this.timer.stop()
-          onStop()
-        }
-      })
-  }
-
-  start () {
-    this.timer.start()
-  }
-
-  stop () {
-    this.timer.stop()
-  }
-
-  isStoped () {
-    return this.timer.isStoped()
-  }
-
-}
-
-// let count = 0
-const execute = () => {
-  count += 1
-  console.log('1 miniutes has happened', count)
-  console.log(moment().format('MMM DD YYYY h:mm:sa'))
-}
+// let theDur = { val: 5, what: 'minutes' }
+//
+// let times = [ { val: 5, what: 'minutes' },
+//   { val: 10, what: 'minutes' },
+//   { val: 15, what: 'minutes' },
+//   { val: 20, what: 'minutes' },
+//   { val: 25, what: 'minutes' },
+//   { val: 30, what: 'minutes' },
+//   { val: 35, what: 'minutes' },
+//   { val: 40, what: 'minutes' },
+//   { val: 45, what: 'minutes' },
+//   { val: 50, what: 'minutes' },
+//   { val: 55, what: 'minutes' },
+//   { val: 1, what: 'hours' },
+//   { val: 2, what: 'hours' },
+//   { val: 3, what: 'hours' },
+//   { val: 4, what: 'hours' },
+//   { val: 5, what: 'hours' },
+//   { val: 6, what: 'hours' },
+//   { val: 7, what: 'hours' },
+//   { val: 8, what: 'hours' },
+//   { val: 9, what: 'hours' },
+//   { val: 10, what: 'hours' } ]
+//
+// const buildRecurrenceRule = (dur) => {
+//   let now = moment()
+//   let rule = new schedule.RecurrenceRule()
+//   let increase = moment().add(dur.val, dur.what).add(2, 'minutes')
+//
+//   if (increase.day() > now.day()) {
+//     console.log('we have moved to the next day')
+//     console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
+//     console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
+//   } else {
+//     if (increase.hour() > now.hour()) {
+//       console.log('we have moved to next hour')
+//       console.log(now.format('MMM DD YYYY h:mm:s:SSa'))
+//       console.log(increase.format('MMM DD YYYY h:mm:s:SSa'))
+//     }
+//   }
+// }
+//
+// const buildRecurrenceRule2 = (dur) => {
+//   let start = new Date(Date.now())
+//   return {
+//     start,
+//     stop: new Date(start.getTime() + moment.duration(dur.val, dur.what).asMilliseconds()),
+//     rule: '*/2 * * * *'
+//   }
+// }
+// // const parser = require('cron-parser')
+//
+// class Job {
+//   constructor (dur, execute, onStop) {
+//     this.stopWhen = moment().add(dur.val, dur.what).startOf('minute')
+//     this.timer = moment.duration(1, 'm')
+//       .timer({ loop: true }, () => {
+//         execute()
+//         if (moment().isSameOrAfter(this.stopWhen)) {
+//           this.timer.stop()
+//           onStop()
+//         }
+//       })
+//   }
+//
+//   start () {
+//     this.timer.start()
+//   }
+//
+//   stop () {
+//     this.timer.stop()
+//   }
+//
+//   isStoped () {
+//     return this.timer.isStoped()
+//   }
+//
+// }
+//
+// // let count = 0
+// const execute = () => {
+//   count += 1
+//   console.log('1 miniutes has happened', count)
+//   console.log(moment().format('MMM DD YYYY h:mm:sa'))
+// }
 //
 // const onStop = () => {
 //   console.log('Stopping', moment().format('MMM DD YYYY h:mm:sa'))
@@ -126,8 +126,6 @@ const execute = () => {
 // }
 //
 // let rule = buildRecurrenceRule(theDur)
-console.log(moment().round(5, 'seconds'))
-console.log(inspect(moment))
 
 // console.log(rule.start.toLocaleString())
 // console.log(rule.stop.toLocaleString())
@@ -337,11 +335,56 @@ console.log(inspect(moment))
 
 // console.log('hi')
 
-//
-// const a = new DB({
-//   filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
-//   autoload: true
-// })
+const archives = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archives2.db',
+  autoload: true
+})
+
+const seeds = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archiveSeeds.db',
+  autoload: true
+})
+
+const cleanSeeds = seeds =>
+  seeds.map(seed => {
+    delete seed._id
+    delete seed.forCol
+    return seed
+  })
+
+const transformSeeds = seedDocs =>
+  _.chain(seedDocs)
+    .groupBy(seed => seed.forCol)
+    .mapValues(cleanSeeds)
+    .value()
+
+const joinArchiveToSeeds = (archives, aSeeds) => {
+  let archiveSeeds = transformSeeds(aSeeds)
+  return archives.map(archive => {
+    if (archiveSeeds[ archive.colName ]) {
+      archive.seeds = archiveSeeds[ archive.colName ]
+    } else {
+      archive.seeds = []
+    }
+    return archive
+  })
+}
+
+const forColWhereQ = (col) => {
+  return {
+    $where() {
+      return this.forCol === col
+    }
+  }
+}
+
+archives.find({}, (err, docs) => {
+  let forCol = 'Wail'
+  seeds.find(forColWhereQ(forCol), (errs, docs2) => {
+    console.log(docs2)
+
+  })
+})
 //
 // const c = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',

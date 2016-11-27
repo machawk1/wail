@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3'
-import moment from '../../../wail-core/util/momentWplugins'
+import moment from 'moment'
 
 export default class MonitorTask extends EventEmitter {
   constructor (dur) {

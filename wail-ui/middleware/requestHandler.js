@@ -11,7 +11,7 @@ export default store => next => action => {
   switch (action.type) {
     case CHECK_URL:
       console.log(action)
-      next(checkingUrl(`Checking ${action.url}`))
+      next(checkingUrl('Checking...'))
       return checkSeed(action.url)
         .then(results => {
           console.log(results)

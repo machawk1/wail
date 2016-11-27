@@ -44,7 +44,7 @@ export default class Loading extends Component {
     })
   }
 
-  componentWillUnMount () {
+  componentWillUnmount () {
     LoadingStore.removeListener('progress', this.updateProgress)
   }
 

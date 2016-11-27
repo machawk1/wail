@@ -7,22 +7,14 @@ const archiveMan = window.am = new ArchiveManager()
 ipc.on('made-heritrix-jobconf', (event, confDetails) => {
   console.log('archive man makeHeritrixJobConf', confDetails)
   if (!confDetails.wasError) {
-    let {
-      forCol,
-      conf
-    } = confDetails
-    archiveMan.addCrawlInfo(forCol, conf)
+    archiveMan.addCrawlInfo(confDetails)
       .then(updated => {
         console.log(`archive man updated`, updated)
-        ipc.send('crawl-to-collection', {
-          wasError: false,
-          forCol,
-          conf
-        })
+        ipc.send('crawl-to-collection', updated)
       })
       .catch(error => {
         console.log('update archiveMan failed', error)
-        ipc.send('display-message', error)
+        ipc.send('display-message', error.m)
       })
   }
 })
@@ -71,14 +63,12 @@ ipc.on('add-warcs-to-col', (event, addMe) => {
       ipc.send('added-warcs-to-col', update)
     })
     .catch(error => {
-      ipc.send('display-message', error)
+      ipc.send('display-message', error.m)
     })
 })
 
 ipc.on('create-collection', (event, nc) => {
-  let {
-    mdata
-  } = nc
+  let { mdata } = nc
   archiveMan.createCollection(nc)
     .then((newCol) => {
       console.log('archiveman really did create the new collection', newCol)

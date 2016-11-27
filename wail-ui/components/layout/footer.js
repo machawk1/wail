@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
 import Notifications from '../informational/notifications'
-import StatusDialog from '../informational/statusDialog'
-import NewCollection from '../wayback/util/newCollection'
-import EditMetadata from '../wayback/util/editMetaData'
+import StatusDialog from '../dialogs/statusDialog'
+import NewCollection from '../dialogs/newCollection'
+import EditMetadata from '../dialogs/editMetaData'
 
 export default class Footer extends Component {
   render () {

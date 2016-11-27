@@ -8,19 +8,25 @@ import IconButton from 'material-ui/IconButton'
 import {openUrlInBrowser} from '../../../actions/util-actions'
 import _ from 'lodash'
 
+const pStyle = {
+  fontStyle: 'inherit',
+  fontWeight: 'inherit',
+  fontFamily: 'inherit'
+}
+
 class CheckResults extends Component {
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     return shallowCompare(this, nextProps, nextState)
   }
 
   renderMessage () {
-    return <p>{this.props.check.get('message')}</p>
+    return <p style={pStyle}>{this.props.check.get('message')}</p>
   }
 
   renderResult () {
     let result = this.props.check.get('result')
     if (result.wasError) {
-      return <p dangerouslySetInnerHTML={{ __html: result.m }}/>
+      return <p style={pStyle} dangerouslySetInnerHTML={{ __html: result.m }}/>
     }
     let render = [ 'HTTP 200 OK', '<br />' ]
     _.toPairs(result.stats).forEach(([k,v]) => {
@@ -29,7 +35,7 @@ class CheckResults extends Component {
         render.push('<br/>')
       }
     })
-    return <p dangerouslySetInnerHTML={{ __html: render.join('') }}/>
+    return <p style={pStyle} dangerouslySetInnerHTML={{ __html: render.join('') }}/>
   }
 
   render () {

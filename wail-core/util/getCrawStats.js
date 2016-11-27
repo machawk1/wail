@@ -1,9 +1,9 @@
 import fs from 'fs-extra'
 import moment from 'moment'
-import {NullStatsError} from '../errors'
 import Promise from 'bluebird'
 import S from 'string'
 import split2 from 'split2'
+import {NullStatsError} from '../errors'
 
 const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
 const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
@@ -44,10 +44,10 @@ export default function getCrawlStats (logPath) {
         }
       })
       .on('end', () => {
+        rstream.destroy()
         if (latestStats === null) {
           reject(new NullStatsError(`Latests stats was null for ${logPath}`))
         } else {
-          rstream.destroy()
           let fields = S(latestStats).collapseWhitespace().s.split(' ')
           resolve({
             ending: jobEnding,

@@ -59,7 +59,8 @@ export default {
     GOT_ALL_COLLECTIONS: null,
     CREATED_COLLECTION: null,
     ADD_METADATA_TO_COLLECTION: null,
-    ADDED_WARCS_TO_COLL: null
+    ADDED_WARCS_TO_COLL: null,
+    CRAWL_TO_COLLECTION: null
   }),
   EventTypes: keyMirror({
     RNS_SHOW_NOTIFICATION: null,

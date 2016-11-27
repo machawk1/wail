@@ -14,6 +14,7 @@ import S from 'string'
 import util from 'util'
 import CrawlStatsMonitor from './crawlStatsMonitor'
 import {CrawlInfo} from '../../util'
+import {readFile, ensureDirAndWrite} from '../../util/fsHelpers'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -36,6 +37,9 @@ export default class CrawlManager {
       ipc.send('crawljob-status-update', update)
     })
     this.csMonitor.on('crawljob-status-ended', ::this.onCrawlEnd)
+    this.csMonitor.on('stopped-monitoring', (stopped) => {
+      console.log(stopped)
+    })
     this.launchId = /^[0-9]+$/
   }
 
@@ -161,12 +165,10 @@ export default class CrawlManager {
    * @returns {Promise|Promise<Object>}
    */
   makeCrawlConf (options) {
-    return new Promise((resolve, reject) => {
-      let { urls, forCol, jobId, depth } = options
-      fs.readFile(settings.get('heritrix.jobConf'), 'utf8', (err, data) => {
-        if (err) {
-          reject(err)
-        } else {
+    let { urls, forCol, jobId, depth } = options
+    return new Promise((resolve, reject) =>
+      readFile(settings.get('heritrix.jobConf'))
+        .then(data => {
           let doc = cheerio.load(data, {
             xmlMode: true
           })
@@ -185,49 +187,49 @@ export default class CrawlManager {
           let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
           maxHops.attr('value', `${depth}`)
           let confPath = pathMan.join(settings.get('heritrixJob'), `${jobId}`)
-          fs.ensureDir(confPath, er => {
-            if (er) {
-              reject(er)
-            } else {
-              let cfp = pathMan.join(confPath, 'crawler-beans.cxml')
-              fs.writeFile(cfp, doc.xml(), 'utf8', error => {
-                if (error) {
-                  console.log('done writting file with error', error)
-                  reject(error)
+          let cfp = pathMan.join(confPath, 'crawler-beans.cxml')
+          return ensureDirAndWrite(confPath, cfp, doc.xml())
+            .then(() => {
+              console.log('done writting file')
+              let crawlInfo = {
+                depth, jobId,
+                _id: `${jobId}`,
+                latestRun: {
+                  ending: false,
+                  started: false,
+                  ended: true,
+                  timestamp: jobId,
+                  discovered: 0,
+                  queued: 0,
+                  downloaded: 0
+                },
+                path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
+                confP: cfp, urls: urls, running: false, forCol
+              }
+              //{"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
+              let lastUpdated = moment(jobId).format()
+              ipc.send('made-heritrix-jobconf', {
+                forCol, lastUpdated,
+                seed: { url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
+              })
+              this.db.insert(crawlInfo, (iError, doc) => {
+                if (iError) {
+                  console.error(iError)
+                  reject(iError)
                 } else {
-                  console.log('done writting file')
-                  let crawlInfo = {
-                    depth, jobId,
-                    path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
-                    confP: cfp, urls: urls, running: false, forCol
-                  }
-                  let wRuns = Object.assign({}, {
-                    _id: `${jobId}`,
-                    latestRun: {
-                      started: false,
-                      ended: true,
-                      timestamp: jobId,
-                      discovered: 0,
-                      queued: 0,
-                      downloaded: 0
-                    }
-                  }, crawlInfo)
-                  ipc.send('made-heritrix-jobconf', wRuns)
-                  this.db.insert(wRuns, (iError, doc) => {
-                    if (iError) {
-                      console.error(iError)
-                      reject(iError)
-                    } else {
-                      resolve(crawlInfo)
-                    }
-                  })
+                  resolve(crawlInfo)
                 }
               })
-            }
-          })
-        }
-      })
-    })
+            })
+            .catch(error => {
+              console.error(`Error ${error.where}`, error.err)
+              reject(error.err)
+            })
+        })
+        .catch(errorRead => {
+          reject(errorRead)
+        })
+    )
   }
 
   stopMonitoringJob (jobId) {

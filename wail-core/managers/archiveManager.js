@@ -11,6 +11,11 @@ import through2 from 'through2'
 import prettyBytes from 'pretty-bytes'
 import _ from 'lodash'
 import {execute} from '../util/childProcHelpers'
+import {
+  find, findOne, findOneFromBoth,
+  inserAndFindAll, updateSingle,
+  updateAndFindAll, CompoundNedbError
+} from '../util/nedb'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -29,6 +34,39 @@ const errorReport = (error, m) => ({
   }
 })
 
+const cleanSeeds = seeds =>
+  seeds.map(seed => {
+    delete seed._id
+    delete seed.forCol
+    return seed
+  })
+
+const transformSeeds = seedDocs =>
+  _.chain(seedDocs)
+    .groupBy(seed => seed.forCol)
+    .mapValues(cleanSeeds)
+    .value()
+
+const joinColsSeeds = (cols, cSeeds) => {
+  let colSeeds = transformSeeds(cSeeds)
+  return cols.map(col => {
+    if (colSeeds [ col.colName ]) {
+      col.seeds = colSeeds[ col.colName ]
+    } else {
+      col.seeds = []
+    }
+    return col
+  })
+}
+
+const forColWhereQ = (col) => {
+  return {
+    $where() {
+      return this.forCol === col
+    }
+  }
+}
+
 const updateSingleOpts = {
   returnUpdatedDocs: true,
   multi: false
@@ -36,8 +74,13 @@ const updateSingleOpts = {
 
 export default class ArchiveManager {
   constructor () {
-    this.db = new Db({
+    this.collections = new Db({
       filename: path.join(settings.get('wailCore.db'), 'archives.db'),
+      autoload: true
+    })
+
+    this.colSeeds = new Db({
+      filename: path.join(settings.get('wailCore.db'), 'archiveSeeds.db'),
       autoload: true
     })
   }
@@ -46,80 +89,186 @@ export default class ArchiveManager {
     return this.getAllCollections()
   }
 
-  getAllCollections () {
+  createDefaultCol () {
     return new Promise((resolve, reject) => {
-      this.db.find({}, (err, docs) => {
+      // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+      let colpath = path.join(settings.get('warcs'), 'collections', 'default')
+      // description: Default Collection
+      // title: Default
+      let created = moment().format()
+      let toCreate = {
+        _id: 'default',
+        name: 'default',
+        colpath,
+        archive: path.join(colpath, 'archive'),
+        indexes: path.join(colpath, 'indexes'),
+        colName: 'default',
+        numArchives: 0,
+        metadata: { title: 'Default', description: 'Default Collection' },
+        size: '0 B',
+        created,
+        lastUpdated: created,
+        hasRunningCrawl: false
+      }
+      this.collections.insert(toCreate, (err, doc) => {
         if (err) {
           reject(err)
         } else {
-          if (docs.length === 0) {
-            // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
-            let colpath = path.join(settings.get('warcs'), 'collections', 'default')
-            // description: Default Collection
-            // title: Default
-            let created = moment().format()
-            let toCreate = {
-              _id: 'default',
-              name: 'default',
-              colpath,
-              archive: path.join(colpath, 'archive'),
-              indexes: path.join(colpath, 'indexes'),
-              colName: 'default',
-              numArchives: 0,
-              metadata: { title: 'Default', description: 'Default Collection' },
-              crawls: [],
-              seeds: [],
-              size: '0 B',
-              created,
-              lastUpdated: created,
-              hasRunningCrawl: false
-            }
-            this.db.insert(toCreate, (err, doc) => {
-              if (err) {
-                reject(err)
-              } else {
-                resolve([ doc ])
-              }
-            })
-          } else {
-            resolve(docs)
-          }
+          resolve([ doc ])
         }
       })
     })
   }
 
-  addCrawlInfo (colName, crawlInfo) {
-    console.log('addCrawlInfo ArchiveManager ', colName, crawlInfo)
-    return new Promise((resolve, reject) => {
-      this.db.update({ colName }, { $push: { crawls: crawlInfo } }, {}, (error, updated) => {
-        if (error) {
-          console.error('addCrawlInfo error', error)
-          return reject(errorReport(error, `Unable to associate crawl to collection ${colName}`))
-        } else {
-          return resolve(updated)
-        }
+  getAllCollections () {
+    return new Promise((resolve, reject) =>
+      find(this.collections, {})
+        .then(cols =>
+          find(this.colSeeds, {})
+            .then(seeds => {
+              let docs = joinColsSeeds(cols, seeds)
+              if (docs.length === 0) {
+                return this.createDefaultCol()
+                  .then(defaultCol => {
+                    resolve(defaultCol)
+                  })
+                  .catch(errCreateD => {
+                    reject(errCreateD)
+                  })
+              } else {
+                resolve(docs)
+              }
+            })
+            .catch(errSeeds => {
+              console.error(`Error in getAllCollections getting seeds`, errSeeds)
+              return reject(errSeeds)
+            })
+        )
+        .catch(errCol => {
+          console.error(`Error in getAllCollections getting cols`, errCol)
+          return reject(errCol)
+        })
+    )
+  }
+
+  /*
+   this.db.update({ colName: forCol }, theUpdate, {}, (error, updated) => {
+   if (error) {
+   console.error('addCrawlInfo error', error)
+   return reject(errorReport(error, `Unable to associate crawl to collection ${forCol}`))
+   } else {
+   return resolve(updated)
+   }
+   })
+   */
+
+  addCrawlInfo (confDetails) {
+    let { forCol, lastUpdated, seed } = confDetails
+    let colSeedIdQ = { _id: `${forCol}-${seed.url}` }
+    let updateWho = { colName: forCol }
+    console.log('addCrawlInfo ArchiveManager ', confDetails)
+    let theUpdateCol = { $set: { lastUpdated } }
+    return new Promise((resolve, reject) =>
+      updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts).then((updatedCol) =>
+        findOne(this.colSeeds, colSeedIdQ)
+          .then((colSeed) => {
+            let findA = {
+              $where() {
+                return this.forCol === forCol
+              }
+            }
+            let theUpdateColSeed
+            if (colSeed) {
+              theUpdateColSeed = {
+                $set: { lastUpdated },
+              }
+              if (!colSeed.jobIds.includes(seed.jobId)) {
+                theUpdateColSeed.$push = { jobIds: seed.jobId }
+              }
+              return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+                .then((colSeeds) => {
+                  console.log(colSeeds)
+                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
+                  console.log(updatedCol)
+                  resolve({
+                    colName: updatedCol.colName,
+                    numArchives: updatedCol.numArchives,
+                    size: updatedCol.size,
+                    seeds: updatedCol.seeds,
+                    lastUpdated: updatedCol.lastUpdated
+                  })
+                })
+                .catch(CompoundNedbError, erUFA => {
+                  console.error(`Error updateAndFindAll for ${forCol} seed ${seed.url}`, erUFA, erUFA.where)
+                  erUFA.m = errorReport(erUFA.oError, `Error updating ${forCol}'s seed ${seed.url}`)
+                  reject(erUFA)
+                })
+                .catch(erUFA => {
+                  console.error(`Error updateAndFindAll for ${forCol} seed ${seed.url}`, erUFA)
+                  erUFA.m = errorReport(erUFA, `Error updating ${forCol}'s seed ${seed.url}`)
+                  reject(erUFA)
+                })
+            } else {
+              theUpdateColSeed = {
+                _id: colSeedIdQ._id,
+                ...seed
+              }
+              return inserAndFindAll(this.colSeeds, theUpdateColSeed, findA)
+                .then((colSeeds) => {
+                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
+                  console.log(updatedCol)
+                  resolve({
+                    colName: updatedCol.colName,
+                    numArchives: updatedCol.numArchives,
+                    size: updatedCol.size,
+                    seeds: updatedCol.seeds,
+                    lastUpdated: updatedCol.lastUpdated
+                  })
+                })
+                .catch(CompoundNedbError, erUFA => {
+                  console.error(`Error updateAndFindAll for ${forCol} seed ${seed.url}`, erUFA, erUFA.where)
+                  erUFA.m = errorReport(erUFA.oError, `Error updating ${forCol}'s seed ${seed.url}`)
+                  reject(erUFA)
+                })
+
+                .catch(erUFA => {
+                  console.error(`Error updateAndFindAll for ${forCol} seed ${seed.url}`, erUFA)
+                  erUFA.m = errorReport(erUFA, `Error updating ${forCol}'s seed ${seed.url}`)
+                  reject(erUFA)
+                })
+            }
+          })
+          .catch(errFindCs => {
+            console.error(`Error findOne for ${forCol} seed ${seed.url}`, errFindCs)
+            errFindCs.m = errorReport(errFindCs, `Error updating ${forCol}'s seed ${seed.url}. It was not found for the collection`)
+            reject(errFindCs)
+          })
+      ).catch(errUC => {
+        console.error(`Error updateSingle for ${forCol} seed ${seed.url}`, errUC)
+        errUC.m = errorReport(errUC.err, `Error updating ${forCol}'s seed ${seed.url}. It was not found for the collection`)
+        reject(errUC)
       })
-    })
+    )
   }
 
   addInitialMData (col, mdata) {
     let opts = {
       cwd: settings.get('warcs')
     }
-    return new Promise((resolve, reject) => {
-      let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: join(...mdata) }).s
-      cp.exec(exec, opts, (error, stdout, stderr) => {
-        if (error) {
+    let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: join(...mdata) }).s
+    return new Promise((resolve, reject) =>
+      execute(exec, opts)
+        .then(({ stdout, stderr }) => {
+          console.log('added metadata to collection', col)
+          console.log('stdout', stdout)
+          console.log('stderr', stderr)
+          return resolve()
+        })
+        .catch(({ error, stdout, stderr }) => {
           console.error(stderr)
           return reject(error)
-        }
-        console.log('added metadata to collection', col)
-        console.log('stdout', stdout)
-        console.log('stderr', stderr)
-        return resolve()
-      })
-    })
+        })
+    )
   }
 
   updateMetadata (update) {
@@ -145,7 +294,7 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        this.db.findOne({ colName: forCol }, { metadata: 1, _id: 0 }, (errFind, doc) => {
+        this.collections.findOne({ colName: forCol }, { metadata: 1, _id: 0 }, (errFind, doc) => {
           if (errFind) {
             console.log('errorfind', errFind)
             return reject(errFind)
@@ -180,7 +329,7 @@ export default class ArchiveManager {
             }
           }
 
-          this.db.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
+          this.collections.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
             if (errUpdate) {
               console.log('errorUpdate', errFind)
               return reject(errUpdate)
@@ -216,7 +365,7 @@ export default class ArchiveManager {
         console.log('stdout', stdout)
         console.log('stderr', stderr)
         // { $push: { metadata: { $each: mdata } } }
-        this.db.update({ colName: col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
+        this.collections.update({ colName: col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
           } else {
@@ -244,44 +393,6 @@ export default class ArchiveManager {
     })
   }
 
-  findOne (whichOne) {
-    return new Promise((resolve, reject) => {
-      this.db.findOne(whichOne, (err, doc) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(doc)
-        }
-      })
-    })
-  }
-
-  update (...args) {
-    return new Promise((resolve, reject) => {
-      this.db.update(...args, (err, ...rest) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve({ ...rest })
-        }
-      })
-    })
-  }
-
-  updateSingle (updateWho, theUpdate) {
-    console.log('update single', updateWho, theUpdate)
-    return new Promise((resolve, reject) => {
-      this.db.update(updateWho, theUpdate, updateSingleOpts, (updateErr, numAffected, affectedDocuments) => {
-        if (updateErr) {
-          reject(updateErr)
-        } else {
-          console.log('update single completed', affectedDocuments)
-          resolve(affectedDocuments)
-        }
-      })
-    })
-  }
-
   addWarcsToCol ({ col, warcs, lastUpdated, seed }) {
     console.log('add warcs to col', col, warcs, lastUpdated, seed)
     let opts = {
@@ -298,64 +409,77 @@ export default class ArchiveManager {
       console.log('stderr', stderr)
       return count
     }
+    let colSeedIdQ = { _id: `${col}-${seed.url}` }
     return new Promise((resolve, reject) =>
       execute(exec, opts, countAdded)
         .then(count =>
-          this.getColSize(col)
-            .then(size =>
-              this.findOne(updateWho)
-                .then(doc => {
-                  if (!_.find(doc.seeds, { url: seed.url })) {
-                    console.log('its not in')
-                    seed.mementos = 1
-                    let theUpdate = {
-                      $push: { seeds: seed }, $inc: { numArchives: count }, $set: { size, lastUpdated }
-                    }
-                    return this.updateSingle(updateWho, theUpdate)
-                      .then(affectedDocuments => {
-                        console.log(affectedDocuments)
-                        resolve(affectedDocuments)
-                      })
-                      .catch(updateErr => {
-                        console.error('Error update new addWarcsToCol', updateErr)
-                        reject(errorReport(updateErr, `Unable to update ${col} because ${updateErr}`))
-                      })
-                  } else {
-                    console.log('its in')
-                    console.log(doc.seeds)
-                    let updatedSeeds = doc.seeds.map(aSeed => {
-                      if (aSeed.url === seed.url) {
-                        if (!aSeed.jobIds.includes(seed.jobId)) {
-                          aSeed.jobIds.push(seed.jobId)
-                        }
-                        aSeed.mementos += 1
+          this.getColSize(col).then(size => {
+            let theUpdateCol = { $inc: { numArchives: count }, $set: { size, lastUpdated } }
+            return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
+              .then((updatedCol) =>
+                findOne(this.colSeeds, colSeedIdQ)
+                  .then(colSeed => {
+                    let findA = {
+                      $where() {
+                        return this.forCol === col
                       }
-                      return aSeed
-                    })
-                    let theUpdate = {
-                      $set: { seeds: updatedSeeds, size, lastUpdated }, $inc: { numArchives: count },
                     }
-                    console.log(updatedSeeds)
-                    return this.updateSingle(updateWho, theUpdate)
-                      .then(affectedDocuments => {
-                        console.log(affectedDocuments)
-                        resolve(affectedDocuments)
-                      })
-                      .catch(updateErr => {
-                        console.error('Error update existing addWarcsToCol', updateErr)
-                        reject(errorReport(updateErr, `Unable to update ${col} because ${updateErr}`))
-                      })
-                  }
-                })
-                .catch(errFind => {
-                  // this should not happen at all but if it does something went very very wrong
-                  console.error('Error finding addWarcsToCol', errFind)
-                  reject(errorReport(errFind, `Unable to add warcs to non-existent collection ${col}`))
-                })
-            )
+                    let theUpdateColSeed
+                    if (colSeed) {
+                      theUpdateColSeed = {
+                        $set: { lastUpdated },
+                        $inc: { mementos: 1 }
+                      }
+                      if (!colSeed.jobIds.includes(seed.jobId)) {
+                        theUpdateColSeed.$push = { jobIds: seed.jobId }
+                      }
+                      return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+                        .then((colSeeds) => {
+                          console.log(colSeeds)
+                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
+                          console.log(updatedCol)
+                          resolve({
+                            colName: updatedCol.colName,
+                            numArchives: updatedCol.numArchives,
+                            size: updatedCol.size,
+                            seeds: updatedCol.seeds,
+                            lastUpdated: updatedCol.lastUpdated
+                          })
+                        })
+                        .catch(CompoundNedbError, erUFA => {
+                          console.error(`Error updateAndFindAll for ${col} seed ${seed.url}`, erUFA, erUFA.where)
+                          erUFA.m = errorReport(erUFA.oError, `Error updating ${col}'s seed ${seed.url}`)
+                          reject(erUFA)
+                        })
+                        .catch(erUFA => {
+                          console.error(`Error updateAndFindAll for ${col} seed ${seed.url}`, erUFA)
+                          erUFA.m = errorReport(erUFA, `Error updating ${col}'s seed ${seed.url}`)
+                          reject(erUFA)
+                        })
+
+                    } else {
+                      console.error(`Error finding seed ${seed.url} for ${col} it should have been in there`)
+                      let e = new Error()
+                      e.m = errorReport(new Error(`Error finding seed ${seed.url} for ${col} it should have been in there`), 'Severe')
+                      reject(e)
+                    }
+                  })
+                  .catch(errFindCs => {
+                    console.error(`Error findOne for ${col} seed ${seed.url}`, errFindCs)
+                    errFindCs.m = errorReport(errFindCs, `Error updating ${col}'s seed ${seed.url}. It was not found for the collection`)
+                    reject(errFindCs)
+                  })
+              )
+              .catch(errorUpdateCol => {
+                console.error(`Error updating ${col}`, errorUpdateCol)
+                errorUpdateCol.m = errorReport(errorUpdateCol, `Unable to add warcs to non-existent collection ${col}`)
+                reject(errorUpdateCol)
+              })
+          })
         )
         .catch(errorExecute => {
-          reject(errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`))
+          errorExecute.m = errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`)
+          reject(errorExecute)
         })
     )
   }
@@ -398,89 +522,40 @@ export default class ArchiveManager {
     let opts = {
       cwd: settings.get('warcs')
     }
-    let {
-      col,
-      metadata
-    } = ncol
+    let { col, metadata } = ncol
     let exec = S(settings.get('pywb.newCollection')).template({ col }).s
-    return new Promise((resolve, reject) => {
-      cp.exec(exec, opts, (error, stdout, stderr) => {
-        if (error) {
-          console.error(stderr)
-          reject(error)
-        }
-        console.log('created collection', stderr, stdout)
-        // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
-        let colpath = path.join(settings.get('warcs'), 'collections', col)
-        let toCreate = {
-          _id: col,
-          name: col,
-          colpath,
-          archive: path.join(colpath, 'archive'),
-          indexes: path.join(colpath, 'indexes'),
-          colName: col,
-          numArchives: 0,
-          metadata,
-          crawls: [],
-          hasRunningCrawl: false
-        }
-        this.db.insert(toCreate, (err, doc) => {
-          if (err) {
-            reject(err)
-          } else {
-            resolve(doc)
+
+    return new Promise((resolve, reject) =>
+      execute(exec, opts)
+        .then(({ stdout, stderr }) => {
+          console.log('created collection', stderr, stdout)
+          // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+          let colpath = path.join(settings.get('warcs'), 'collections', col)
+          let created = moment().format()
+          let toCreate = {
+            _id: col, name: col, colpath, created,
+            size: '0 B', lastUpdated: created,
+            archive: path.join(colpath, 'archive'),
+            indexes: path.join(colpath, 'indexes'),
+            colName: col, numArchives: 0, metadata,
+            hasRunningCrawl: false
           }
+          this.collections.insert(toCreate, (err, doc) => {
+            if (err) {
+              reject(err)
+            } else {
+              resolve({
+                seeds: [],
+                ...doc
+              })
+            }
+          })
         })
-      })
-    })
-  }
-
-  find (query) {
-    return new Promise((resolve, reject) => {
-      this.db.find(query, (err, docs) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(docs)
-        }
-      })
-    })
-  }
-
-  findSelect (query, select) {
-    return new Promise((resolve, reject) => {
-      this.db.find(query, select, (err, docs) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(docs)
-        }
-      })
-    })
-  }
-
-  get (col) {
-    return new Promise((resolve, reject) => {
-      this.db.findOne(col, (err, doc) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(doc)
-        }
-      })
-    })
-  }
-
-  getSelect (col, select) {
-    return new Promise((resolve, reject) => {
-      this.db.findOne(col, select, (err, docs) => {
-        if (err) {
-          reject(err)
-        } else {
-          resolve(docs)
-        }
-      })
-    })
+        .catch(({ error, stdout, stderr }) => {
+          console.error(stderr, error, stdout)
+          reject(error)
+        })
+    )
   }
 
   checkWarcsAndReport (forCol) {

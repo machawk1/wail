@@ -81,7 +81,6 @@ export default class TwitterClient {
 
   getUserTimeline (opts = {}, cb) {
     // user_timeline
-    console.log(opts)
     this._checkTwit()
     if (cb) {
       this.twit.get('statuses/user_timeline', opts, cb)
