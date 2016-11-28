@@ -47,6 +47,7 @@ export default class UserTimeLineTask extends MonitorTask {
           tweets.push(this.extractor.extract(tweet))
         }
       })
+      this.firstTime = false
     } else {
       data.forEach(tweet => {
         if (this.extractor.shouldExtract(tweet) && this.isRecent(tweet)) {
