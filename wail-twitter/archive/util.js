@@ -1,4 +1,4 @@
-const _ = require('lodash')
+import _ from 'lodash'
 
 const mapper = it => {
   if (_.isObject(it)) {
@@ -25,10 +25,5 @@ const wcMapper = (it, key) => {
   }
 }
 
-const clonner = it => _.mapValues(_.omitBy(it, _.isFunction), mapper)
-const cloneWC = it => _.mapValues(_.omitBy(it, _.isFunction), wcMapper)
-
-module.exports = {
-  clonner,
-  cloneWC
-}
+export const clonner = it => _.mapValues(_.omitBy(it, _.isFunction), mapper)
+export const cloneWC = it => _.mapValues(_.omitBy(it, _.isFunction), wcMapper)

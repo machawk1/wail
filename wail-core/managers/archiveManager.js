@@ -59,11 +59,15 @@ const joinColsSeeds = (cols, cSeeds) => {
   })
 }
 
-const forColWhereQ = (col) => {
-  return {
-    $where() {
-      return this.forCol === col
+const foundSeedChecker = (colSeeds) => {
+  if (colSeeds) {
+    if (Array.isArray(colSeeds)) {
+      return colSeeds.length > 0
+    } else {
+      return true
     }
+  } else {
+    return false
   }
 }
 
@@ -151,17 +155,6 @@ export default class ArchiveManager {
     )
   }
 
-  /*
-   this.db.update({ colName: forCol }, theUpdate, {}, (error, updated) => {
-   if (error) {
-   console.error('addCrawlInfo error', error)
-   return reject(errorReport(error, `Unable to associate crawl to collection ${forCol}`))
-   } else {
-   return resolve(updated)
-   }
-   })
-   */
-
   addCrawlInfo (confDetails) {
     let { forCol, lastUpdated, seed } = confDetails
     let colSeedIdQ = { _id: `${forCol}-${seed.url}` }
@@ -178,7 +171,8 @@ export default class ArchiveManager {
               }
             }
             let theUpdateColSeed
-            if (colSeed) {
+            if (foundSeedChecker(colSeed)) {
+              console.log('the seed was present')
               theUpdateColSeed = {
                 $set: { lastUpdated },
               }
@@ -209,12 +203,11 @@ export default class ArchiveManager {
                   reject(erUFA)
                 })
             } else {
-              theUpdateColSeed = {
-                _id: colSeedIdQ._id,
-                ...seed
-              }
-              return inserAndFindAll(this.colSeeds, theUpdateColSeed, findA)
+              console.log('the seed was not present')
+              seed._id = colSeedIdQ._id
+              return inserAndFindAll(this.colSeeds, seed, findA)
                 .then((colSeeds) => {
+                  console.log(`the new seeds for col ${forCol}`, colSeeds)
                   updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                   console.log(updatedCol)
                   resolve({
@@ -230,7 +223,6 @@ export default class ArchiveManager {
                   erUFA.m = errorReport(erUFA.oError, `Error updating ${forCol}'s seed ${seed.url}`)
                   reject(erUFA)
                 })
-
                 .catch(erUFA => {
                   console.error(`Error updateAndFindAll for ${forCol} seed ${seed.url}`, erUFA)
                   erUFA.m = errorReport(erUFA, `Error updating ${forCol}'s seed ${seed.url}`)
@@ -357,8 +349,7 @@ export default class ArchiveManager {
         mdata.forEach(m => {
           let split = m.split('=')
           metadata.push({
-            k: split[ 0 ],
-            v: S(split[ 1 ]).replaceAll('"', '').s
+            [split[ 0 ]]: S(split[ 1 ]).replaceAll('"', '').s
           })
         })
         console.log('added metadata to collection', col)
@@ -425,7 +416,7 @@ export default class ArchiveManager {
                       }
                     }
                     let theUpdateColSeed
-                    if (colSeed) {
+                    if (foundSeedChecker(colSeed)) {
                       theUpdateColSeed = {
                         $set: { lastUpdated },
                         $inc: { mementos: 1 }

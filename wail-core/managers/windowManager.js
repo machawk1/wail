@@ -197,7 +197,8 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('made-heritrix-jobconf', (event, confDetails) => {
-      this.send('mainWindow', 'made-heritrix-jobconf', confDetails)
+      this.send('mainWindow', 'made-heritrix-jobconf', confDetails.forMain)
+      this.send('archiveManWindow', 'made-heritrix-jobconf', confDetails.forArchives)
     })
 
     ipcMain.on('crawl-started', (event, jobId) => {

@@ -12,10 +12,65 @@ const through2 = require('through2')
 const prettyBytes = require('pretty-bytes')
 const path = require('path')
 const schedule = require('node-schedule')
+
 // */5 * * * *
 // const Twit = require('twit')
 //
 const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
+let toMove = '/home/john/my-fork-wail/archives2/*'
+let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
+
+Promise.promisifyAll(DB.prototype)
+console.log(S("https://twitter.com/wikileaks/status/803113754066096128").strip('twitter.com','status','https:/','/','.').s)
+
+const changeColLocs = () => {
+  const archives = new DB({
+    filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+    autoload: true
+  })
+
+  const seeds = new DB({
+    filename: '/home/john/my-fork-wail/dev_coreData/database/archiveSeeds.db',
+    autoload: true
+  })
+
+  let changeKeys = [
+    'colpath',
+    'archive',
+    'indexes',
+  ]
+
+  let from = '/home/john/my-fork-wail/archives2/'
+
+  archives.findAsync({})
+    .then(docs => {
+      let nDocs = docs.map(doc =>
+        _.mapValues(doc, (v, k) => {
+          if (changeKeys.includes(k)) {
+            return S(v).replaceAll(from, moveWhere).s
+          } else {
+            return v
+          }
+        })
+      )
+      console.log(inspect(nDocs))
+      return archives.removeAsync({}, { multi: true })
+        .then(() => archives.insertAsync(nDocs)
+          .then(() => {
+            console.log('done')
+          })
+          .catch(error => {
+            console.error('inserting failed', error)
+          })
+        ).catch(error => {
+          console.error('removing faild', error)
+        })
+    })
+    .catch(error => {
+      console.error(error)
+    })
+}
+
 // let theDur = { val: 5, what: 'minutes' }
 //
 // let times = [ { val: 5, what: 'minutes' },
@@ -335,56 +390,47 @@ const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
 
 // console.log('hi')
 
-const archives = new DB({
-  filename: '/home/john/my-fork-wail/dev_coreData/database/archives2.db',
-  autoload: true
-})
-
-const seeds = new DB({
-  filename: '/home/john/my-fork-wail/dev_coreData/database/archiveSeeds.db',
-  autoload: true
-})
-
-const cleanSeeds = seeds =>
-  seeds.map(seed => {
-    delete seed._id
-    delete seed.forCol
-    return seed
-  })
-
-const transformSeeds = seedDocs =>
-  _.chain(seedDocs)
-    .groupBy(seed => seed.forCol)
-    .mapValues(cleanSeeds)
-    .value()
-
-const joinArchiveToSeeds = (archives, aSeeds) => {
-  let archiveSeeds = transformSeeds(aSeeds)
-  return archives.map(archive => {
-    if (archiveSeeds[ archive.colName ]) {
-      archive.seeds = archiveSeeds[ archive.colName ]
-    } else {
-      archive.seeds = []
-    }
-    return archive
-  })
-}
-
-const forColWhereQ = (col) => {
-  return {
-    $where() {
-      return this.forCol === col
-    }
-  }
-}
-
-archives.find({}, (err, docs) => {
-  let forCol = 'Wail'
-  seeds.find(forColWhereQ(forCol), (errs, docs2) => {
-    console.log(docs2)
-
-  })
-})
+//
+// const cleanSeeds = seeds =>
+//   seeds.map(seed => {
+//     delete seed._id
+//     delete seed.forCol
+//     return seed
+//   })
+//
+// const transformSeeds = seedDocs =>
+//   _.chain(seedDocs)
+//     .groupBy(seed => seed.forCol)
+//     .mapValues(cleanSeeds)
+//     .value()
+//
+// const joinArchiveToSeeds = (archives, aSeeds) => {
+//   let archiveSeeds = transformSeeds(aSeeds)
+//   return archives.map(archive => {
+//     if (archiveSeeds[ archive.colName ]) {
+//       archive.seeds = archiveSeeds[ archive.colName ]
+//     } else {
+//       archive.seeds = []
+//     }
+//     return archive
+//   })
+// }
+//
+// const forColWhereQ = (col) => {
+//   return {
+//     $where() {
+//       return this.forCol === col
+//     }
+//   }
+// }
+//
+// archives.find({}, (err, docs) => {
+//   let forCol = 'Wail'
+//   seeds.find(forColWhereQ(forCol), (errs, docs2) => {
+//     console.log(docs2)
+//
+//   })
+// })
 //
 // const c = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',

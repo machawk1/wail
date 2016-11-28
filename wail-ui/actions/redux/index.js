@@ -1,11 +1,4 @@
-import * as archiveActions from './archival'
-import * as collectionActions from './collections'
-import * as crawlActions from './heritrix'
-import * as header from './header'
-
-export default {
-  crawlActions,
-  collectionActions,
-  archiveActions,
-  header
-}
+export  * as archiveActions from './archival'
+export  * as collectionActions from './collections'
+export  * as crawlActions from './heritrix'
+export  changeLocation from './changeLocation'

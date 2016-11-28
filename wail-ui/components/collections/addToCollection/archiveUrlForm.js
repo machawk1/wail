@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react'
 import {Field, reduxForm} from 'redux-form/immutable'
-import Promise from 'bluebird'
 import {ipcRenderer as ipc} from 'electron'
 import {SubmissionError, reset as resetForm} from 'redux-form'
 import {batchActions} from 'redux-batched-actions'
@@ -20,7 +19,6 @@ const archive = (forCol, config) => {
 }
 
 const validate = values => {
-  console.log('validate', values)
   const errors = {}
   if (!values.get('url')) {
     errors.url = 'Required'
@@ -35,18 +33,10 @@ const validate = values => {
   return errors
 }
 
-const warn = values => {
-  const warnings = {}
-  if (!values.get('config')) {
-    warnings.config = 'Required'
-  }
-  return warnings
-}
 
 const formConfig = {
   form: 'archiveUrl',
   validate,
-  warn
 }
 
 class ArchiveUrlForm extends Component {
@@ -55,7 +45,6 @@ class ArchiveUrlForm extends Component {
   }
 
   submit (values) {
-    console.log('in submit', values)
     if (!values.get('config')) {
       throw new SubmissionError({ config: 'Config Not Present', _error: 'Cant Archive' })
     } else {
@@ -65,7 +54,6 @@ class ArchiveUrlForm extends Component {
   }
 
   render () {
-    console.log('in form', this.props)
     const { handleSubmit, pristine, reset, submitting, invalid } = this.props
     return (
       <div style={{ width: '90%', height: 'inherit' }}>

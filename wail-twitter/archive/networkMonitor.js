@@ -1,17 +1,10 @@
-const wcRequestMonitor = require('./wcRequestMonitor')
-const { clonner } = require('./util')
+import WcRequestMonitor from './wcRequestMonitor'
+import {clonner} from './util'
+import '../../wail-core/util/setMethods'
 
-Set.prototype.difference = function (setB) {
-  let difference = new Set(this)
-  for (let elem of setB) {
-    difference.delete(elem)
-  }
-  return difference
-}
-
-class NetworkMonitor {
+export default class NetworkMonitor {
   constructor () {
-    this.wcRequests = new wcRequestMonitor()
+    this.wcRequests = new WcRequestMonitor()
     this.networkRequests = new Map()
   }
 
@@ -66,6 +59,7 @@ class NetworkMonitor {
 
   detach (webContents) {
     webContents.debugger.detach()
+    this.wcRequests.detach(webContents)
   }
 
   * reqWriteIterator (opts) {
@@ -92,5 +86,3 @@ class NetworkMonitor {
   }
 
 }
-
-module.exports = NetworkMonitor

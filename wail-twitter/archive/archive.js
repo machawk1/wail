@@ -1,27 +1,37 @@
-const { ipcRenderer, remote } = require('electron')
-const util = require('util')
-const cheerio = require('cheerio')
-const WarcWriter = require('./warcWriter')
-const NetworkMonitor = require('./networkMonitor')
-const Promise = require('bluebird')
-const url = require('url')
+import {ipcRenderer, remote} from 'electron'
+import util from 'util'
+import cheerio from 'cheerio'
+import WarcWriter from './warcWriter'
+import NetworkMonitor from './networkMonitor'
+import Promise from 'bluebird'
+import url from 'url'
+import EventEmitter from 'eventemitter3'
 
-const savePath = '/home/john/WebstormProjects/testWarcreateElectron/something/page.html'
-
-class Archive {
-  constructor (webview) {
+export default class Archive extends EventEmitter {
+  constructor () {
+    super()
     console.log('creating archive')
-    this.webview = webview
+    this.webview = document.getElementById('awv')
     this.wbReady = false
+    this.saveTo = null
     this.networkMonitor = new NetworkMonitor()
     this.warcWritter = new WarcWriter()
+    this.warcWritter.on('error', (error) => {
+      this.emit('error', {
+        error,
+        config: this.arConfig
+      })
+    })
+    this.warcWritter.on('finished', () => {
+      this.emit('finished', this.arConfig)
+    })
     this.uri_r = ''
     this.webview.addEventListener('did-stop-loading', (e) => {
       console.log('it finished loading')
       if (!this.wbReady) {
         console.log('we are loaded')
-        ipcRenderer.send('archive-ready')
         this.wbReady = true
+        this.emit('ready')
       }
     })
 
@@ -31,19 +41,20 @@ class Archive {
 
     this.ipcMessage = this.ipcMessage.bind(this)
     this.webview.addEventListener('ipc-message', this.ipcMessage)
-    ipcRenderer.on('archive', (e, uri_r) => {
-      this.uri_r = uri_r
-      console.log(uri_r)
-      let webContents = this.webview.getWebContents()
-      this.freshSession(webContents)
-        .then(() => {
-          this.networkMonitor.attach(webContents)
-          this.webview.loadURL(uri_r)
+  }
 
-        })
-
-      // this.webview.openDevTools()
-    })
+  archiveUriR (arConfig) {
+    let { uri_r, saveTo } = arConfig
+    this.uri_r = uri_r
+    this.saveTo = saveTo
+    this.arConfig = arConfig
+    console.log(uri_r)
+    let webContents = this.webview.getWebContents()
+    this.freshSession(webContents)
+      .then(() => {
+        this.networkMonitor.attach(webContents)
+        this.webview.loadURL(uri_r)
+      })
   }
 
   freshSession (webContents) {
@@ -86,7 +97,9 @@ class Archive {
             let opts = {
               seedUrl: this.uri_r, networkMonitor: this.networkMonitor,
               ua: this.webview.getUserAgent(),
-              dtDom: ret, preserveA: false
+              dtDom: ret, preserveA: false,
+              toPath: this.saveTo,
+              header: this.arConfig
             }
             this.warcWritter.writeWarc(opts)
           })
@@ -96,5 +109,3 @@ class Archive {
     }
   }
 }
-
-module.exports = Archive

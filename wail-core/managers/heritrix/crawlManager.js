@@ -193,7 +193,6 @@ export default class CrawlManager {
               console.log('done writting file')
               let crawlInfo = {
                 depth, jobId,
-                _id: `${jobId}`,
                 latestRun: {
                   ending: false,
                   started: false,
@@ -209,10 +208,17 @@ export default class CrawlManager {
               //{"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
               let lastUpdated = moment(jobId).format()
               ipc.send('made-heritrix-jobconf', {
-                forCol, lastUpdated,
-                seed: { url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
+                forMain: {
+                  crawlInfo,
+                  jobId
+                },
+                forArchives: {
+                  forCol, lastUpdated,
+                  seed: { forCol, url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
+                }
               })
-              this.db.insert(crawlInfo, (iError, doc) => {
+
+              this.db.insert({ _id: `${jobId}`, ...crawlInfo }, (iError, doc) => {
                 if (iError) {
                   console.error(iError)
                   reject(iError)

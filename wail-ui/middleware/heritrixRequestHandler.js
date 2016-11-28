@@ -1,15 +1,14 @@
 import * as notify from '../actions/notification-actions'
 import {send} from 'redux-electron-ipc'
-import {batchActions} from 'redux-batched-actions'
+import {crawlStarted, crawlEnded} from '../actions/redux/heritrix'
 import {HeritrixRequestTypes, JobActionEvents, RequestTypes, RequestActions} from '../constants/wail-constants'
 
 const { START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB } = JobActionEvents
 
 const {
-  BUILD_CRAWL_JOB, BUILT_CRAWL_CONF, BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
-  ACCESSIBILITY, ADD_HERITRIX_JOB_DIRECTORY, BUILD_HERITIX_JOB, FORCE_CRAWL_FINISH,
-  TERMINATE_CRAWL, TEARDOWN_CRAWL, RESCAN_JOB_DIR, KILL_HERITRIX,
-  LAUNCH_HERITRIX_JOB, SEND_HERITRIX_ACTION, REQUEST_SUCCESS, REQUEST_FAILURE
+  BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
+  TERMINATE_CRAWL, TEARDOWN_CRAWL, RESCAN_JOB_DIR,
+  REQUEST_SUCCESS,
 } = RequestTypes
 
 const { MAKE_REQUEST, HANDLED_REQUEST } = RequestActions
@@ -17,7 +16,7 @@ const { MAKE_REQUEST, HANDLED_REQUEST } = RequestActions
 const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
   let { jobId } = request
-  let job = store.getState().get('crawls').get(`${jobId}`)
+  let job = store.getState().get('runs').get(`${jobId}`)
   let latestRun = job.get('latestRun')
   console.log(job)
   switch (request.type) {
@@ -82,48 +81,45 @@ const makeRequest = (store, next, action, request) => {
 
 const handledRequest = (store, next, action, handledRequest) => {
   let { type, rtype, jobId } = handledRequest
-  let job = store.getState().get('crawls').get(`${jobId}`)
+  let job = store.getState().get('runs').get(`${jobId}`)
   switch (type) {
     case BUILT_CRAWL_JOB:
       if (rtype === REQUEST_SUCCESS) {
         notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} was built`)
-        return next(action)
       } else {
         notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was not built`)
-        return next(action)
       }
+      break
     case LAUNCHED_CRAWL_JOB:
       if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Heritrix Crawl started for ${job.displayUrls()}`)
-        return next(send('crawl-started', jobId))
+        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} has started`)
+        store.dispatch(crawlStarted(jobId))
       } else {
         notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} did not start`)
-        return next(action)
       }
-    case TERMINATE_CRAWL:
-      if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Heritrix Crawl started for ${job.displayUrls()} is ending`)
-        return next(action)
-      } else {
-        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was to to start ending but it did not`)
-        return next(action)
-      }
+      break
     case TEARDOWN_CRAWL:
       if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Heritrix Crawl started for ${job.displayUrls()} ended`)
-        return next(action)
+        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} is ending`)
       } else {
-        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} could not be ended`)
-        return next(action)
+        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was asked to start ending but it did not`)
       }
+      break
+    case TERMINATE_CRAWL:
+      if (rtype === REQUEST_SUCCESS) {
+        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} has ended`)
+      } else {
+        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was asked to end but it did not`)
+      }
+      store.dispatch(crawlEnded())
+      break
     case RESCAN_JOB_DIR:
       if (rtype === REQUEST_SUCCESS) {
         notify.notifySuccess(`Rescanned Heritrix Crawl Directory for ${job.displayUrls()}`)
-        return next(action)
       } else {
         notify.notifyError(`Rescanning Heritrix Crawl Directory for ${job.displayUrls()} failed`)
-        return next(action)
       }
+      break
     default:
       return next(action)
   }

@@ -2,13 +2,11 @@ import {hashHistory} from 'react-router'
 import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-import createLogger from 'redux-logger'
 import {routerMiddleware} from 'react-router-redux'
 import {ipc, requestHandler} from '../middleware'
 import rootReducer from '../reducers'
 import * as actionCreators from '../actions/redux/index'
 
-// const logger = createLogger()
 const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       actionCreators

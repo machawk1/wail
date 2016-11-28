@@ -11,7 +11,8 @@ const {
   discoveredS, queuedS, downloadedS, actionS
 } = styles.heritrixTable
 
-const stateToProps = state => ({ jobIds: state.get('crawls').get('jobIds') })
+const log = console.log.bind(console)
+const stateToProps = state => ({ jobIds: state.get('jobIds') })
 
 class Heritrix2 extends Component {
   static propTypes = {
@@ -32,12 +33,15 @@ class Heritrix2 extends Component {
   }
 
   componentDidUpdate (prevProps, prevState, prevContext) {
-    console.log('h2 did update')
+    log(`Heritrix2 did update ${this.props.jobIds.toJS()}`)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    console.log(this.props.jobIds === nextProps.jobIds)
-    console.log(this.props.jobIds.toJS() === nextProps.jobIds.toJS())
+    log(`Heritrix2 should update?`)
+    log(this.props.jobIds.toJS())
+    log(nextProps.jobIds.toJS())
+    log(this.props.jobIds === nextProps.jobIds)
+    log(this.props.jobIds.toJS() === nextProps.jobIds.toJS())
     return shallowCompare(this, nextProps, nextState)
   }
 

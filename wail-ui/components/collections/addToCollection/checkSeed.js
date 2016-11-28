@@ -1,16 +1,11 @@
 import React, {Component, PropTypes} from 'react'
-import Immutable from 'immutable'
 import RaisedButton from 'material-ui/FlatButton'
-import {
-  formValueSelector
-} from 'redux-form/immutable'
+import {formValueSelector} from 'redux-form/immutable'
 import {connect} from 'react-redux'
 import isURL from 'validator/lib/isURL'
 import partialRight from 'lodash/partialRight'
 import {checkUrl} from '../../../actions/redux/archival'
 import CheckResults from './checkResults'
-import {batchActions} from 'redux-batched-actions'
-import Notifications from 'react-notification-system-redux'
 
 const urlSelector = partialRight(formValueSelector('archiveUrl'), 'url')
 
@@ -38,7 +33,6 @@ class CheckSeed extends Component {
   }
 
   render () {
-    console.log('checkSeed', this.props, this.context.store.getState())
     return (
       <div style={{ position: 'relative', marginRight: 25,}}>
         <div style={{ position: 'absolute',  right: 50, top: -225 }}>

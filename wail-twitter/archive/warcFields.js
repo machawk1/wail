@@ -8,7 +8,7 @@ const warcHeader =
   'Content-Length: {{len}}\r\n'
 
 const warcHeaderContent =
-  'software: WAIL/{{version}} http://warcreate.com\r\n' +
+  'software: WAIL/{{version}}\r\n' +
   'format: WARC File Format 1.0\r\n' +
   'conformsTo: http://bibnum.bnf.fr/WARC/WARC_ISO_28500_version1_latestdraft.pdf\r\n' +
   'isPartOf: {{isPartOfV}}\r\n' +

@@ -45,7 +45,7 @@ export default class AppManager {
     }
   }
 
-  init (base, userData, version, loadFrom, debug = true, notDebugUI = false, openBackGroundWindows = false) {
+  init (base, userData, version, loadFrom, docsPath, debug = true, notDebugUI = false, openBackGroundWindows = false) {
     console.log('appManager init')
     return new Promise((resolve) => {
       this.notDebugUI = notDebugUI
@@ -75,7 +75,7 @@ export default class AppManager {
         ]
       })
       this.logPath = logPath
-      this.settingsMan = new SettingsManager(base, settingsPath, v)
+      this.settingsMan = new SettingsManager(base, docsPath, settingsPath, v)
       return this.settingsMan.configure()
         .then(() => {
           if (!this.settingsMan.get('didFirstLoad')) {

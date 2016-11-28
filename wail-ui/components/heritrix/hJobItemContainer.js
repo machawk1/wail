@@ -41,6 +41,8 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   jobId: ownProps.jobId
 })
 
+const log = console.log.bind(console)
+
 class HJobItemContainer extends Component {
   static propTypes = {
     jobId: PropTypes.number.isRequired,
@@ -50,6 +52,10 @@ class HJobItemContainer extends Component {
     deleteJob: PropTypes.func.isRequired,
     viewInHeritrix: PropTypes.func.isRequired,
     viewConf: PropTypes.func.isRequired
+  }
+
+  componentDidUpdate (prevProps, prevState, prevContext) {
+    log(`HJobItemContainer ${this.props.jobId} did update`)
   }
 
   render () {

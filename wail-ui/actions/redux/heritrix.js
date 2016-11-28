@@ -1,11 +1,13 @@
-import {ipcRenderer as ipc, remote} from 'electron'
-import {notify, notifyInfo} from '../../actions/notification-actions'
+import {remote} from 'electron'
+import {notifyInfo} from '../../actions/notification-actions'
 import {joinStrings} from 'joinable'
-import wc from '../../constants/wail-constants'
-import {CollectionEvents, CrawlEvents, JobActionEvents, RequestActions} from '../../constants/wail-constants'
+import {batchActions} from 'redux-batched-actions'
+import {
+  CollectionEvents, CrawlEvents,
+  JobActionEvents, RequestActions,
+  RunningCrawlCounter, JobIdActions
+} from '../../constants/wail-constants'
 import {send} from 'redux-electron-ipc'
-const EventTypes = wc.EventTypes
-const From = wc.From
 const {
   GOT_ALL_RUNS,
   CRAWLJOB_STATUS_UPDATE,
@@ -37,17 +39,19 @@ export function gotAllRuns (event, allRuns) {
   }
 }
 
-export function createJob (conf) {
-  return {
-    type: CREATE_JOB,
-    conf
-  }
-}
 
 export function madeJobConf (e, conf) {
-  return {
-    type: EventTypes.CREATE_JOB,
-    conf
+  let updateRuns = {
+    type: BUILT_CRAWL_CONF,
+    crawlInfo: conf.crawlInfo
+  }
+  let updateJobIds = {
+    type: JobIdActions.ADD_ID,
+    jobId: conf.jobId
+  }
+  return dispatch => {
+    dispatch(batchActions([ updateRuns, updateJobIds ]))
+    dispatch(startJob(conf.jobId))
   }
 }
 
@@ -56,17 +60,6 @@ export function crawlJobUpdate (e, crawlStatus) {
     type: CRAWLJOB_STATUS_UPDATE,
     crawlStatus
   }
-}
-
-// type: EventTypes.BUILD_CRAWL_JOB,
-//   from: From.BASIC_ARCHIVE_NOW,
-//   forCol: this.state.forCol
-
-export function buildCrawlJob (url, forCol = wc.Default_Collection, depth = 1) {
-  let jobId = new Date().getTime()
-  window.logger.debug(`Building Heritrix crawl for ${forCol} seed(s): ${url}`)
-  notifyInfo(`Archiving ${url} For ${forCol} Now!`)
-  return send('makeHeritrixJobConf', { url, depth, jobId, forCol })
 }
 
 export function buildDialogueCrawlJob (event, newCrawl) {
@@ -155,9 +148,16 @@ export function handledRequest (e, request) {
 }
 
 export function crawlStarted (jobId) {
-  console.log('crawl started', jobId)
-  return {
-    type: '',
+  return dispatch => {
+    dispatch(send('crawl-started', jobId))
+    dispatch({
+      type: RunningCrawlCounter.INCREMENT
+    })
+  }
+}
 
+export function crawlEnded () {
+  return {
+    type: RunningCrawlCounter.DECREMENT
   }
 }

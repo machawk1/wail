@@ -1,12 +1,12 @@
-const Resource = require('./resource')
-const _ = require('lodash')
-const Promise = require('bluebird')
+import Resource from './resource'
+import _ from 'lodash'
+import Promise from 'bluebird'
 
 const filter = {
   urls: [ 'http://*/*', 'https://*/*' ]
 }
 
-class wcRequestMonitor {
+export default class WcRequestMonitor {
   constructor () {
     this.wcRequests = new Map()
   }
@@ -30,6 +30,14 @@ class wcRequestMonitor {
       // this.add('complete', dets)
       console.log('WEBREQUEST MONITOR ERROR DANGER!!!', dets)
     })
+  }
+
+  detach(webContents) {
+    webContents.session.webRequest.onSendHeaders(filter, null)
+    webContents.session.webRequest.onHeadersReceived(filter, null)
+    webContents.session.webRequest.onBeforeRedirect(filter, null)
+    webContents.session.webRequest.onCompleted(filter, null)
+    webContents.session.webRequest.onErrorOccurred(filter, null)
   }
 
   add (event, dets) {
@@ -103,5 +111,3 @@ class wcRequestMonitor {
   }
 
 }
-
-module.exports = wcRequestMonitor

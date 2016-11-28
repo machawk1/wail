@@ -19,6 +19,7 @@ if (!window.__archive) {
             this.stopLoadingTimer = setTimeout(() => {
               this.ipc.sendToHost('injected-archive', 'did-finish-load')
               this.count += 1
+              wc.removeAllListeners('did-stop-loading')
             }, 3000)
           }
         })

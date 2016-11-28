@@ -55,8 +55,8 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'jre', path: 'bundledApps/openjdk' },
       { name: 'memgator', path: 'bundledApps/memgator' },
       { name: 'tomcat', path: 'bundledApps/tomcat' },
-      { name: 'warcs', path: '/archives2' }
     ],
+    warcs: '/WAIL_ManagedCollections',
     heritrix: {
       uri_heritrix: 'https://127.0.0.1:8443',
       uri_engine: 'https://localhost:8443/engine/',
@@ -228,15 +228,26 @@ if (process.env.NODE_ENV === 'development') {
       checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
     },
     collections: {
-      defaultCol: 'archives2/collections/Wail',
-      dir: 'archives2/collections',
-      aCollPath: 'archives2/collections/{col}',
-      colTemplate: 'archives2/collections/{col}/static',
-      colStatic: 'archives2/collections/{col}/templates',
-      colWarcs: 'archives2/collections/{col}/archive',
-      colIndexs: 'archives2/collections/{col}/indexes',
-      templateDir: 'archives2/templates',
-      staticsDir: 'archives2/static'
+      defaultCol: 'WAIL_ManagedCollections/collections/Wail',
+      dir: 'WAIL_ManagedCollections/collections',
+      aCollPath: 'WAIL_ManagedCollections/collections/{col}',
+      colTemplate: 'WAIL_ManagedCollections/collections/{col}/static',
+      colStatic: 'WAIL_ManagedCollections/collections/{col}/templates',
+      colWarcs: 'WAIL_ManagedCollections/collections/{col}/archive',
+      colIndexs: 'WAIL_ManagedCollections/collections/{col}/indexes',
+      templateDir: 'WAIL_ManagedCollections/templates',
+      staticsDir: 'WAIL_ManagedCollections/static'
+    },
+    icollections: {
+      defaultCol: 'archives/collections/default',
+      dir: 'archives/collections',
+      aCollPath: 'archives/collections/{col}',
+      colTemplate: 'archives/collections/{col}/static',
+      colStatic: 'archives/collections/{col}/templates',
+      colWarcs: 'archives/collections/{col}/archive',
+      colIndexs: 'archives/collections/{col}/indexes',
+      templateDir: 'archives/templates',
+      staticsDir: 'archives/static'
     },
     code: {
       crawlerBean: 'crawler-beans.cxml',
@@ -281,8 +292,8 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'jre', path: 'bundledApps/openjdk' },
       { name: 'memgator', path: 'bundledApps/memgator' },
       { name: 'tomcat', path: 'bundledApps/tomcat' },
-      { name: 'warcs', path: '/archives' }
     ],
+    warcs: '/WAIL_ManagedCollections',
     heritrix: {
       uri_heritrix: 'https://127.0.0.1:8443',
       uri_engine: 'https://localhost:8443/engine/',
@@ -454,6 +465,17 @@ if (process.env.NODE_ENV === 'development') {
       checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
     },
     collections: {
+      defaultCol: 'WAIL_ManagedCollections/collections/default',
+      dir: 'WAIL_ManagedCollections/collections',
+      aCollPath: 'WAIL_ManagedCollections/collections/{col}',
+      colTemplate: 'WAIL_ManagedCollections/collections/{col}/static',
+      colStatic: 'WAIL_ManagedCollections/collections/{col}/templates',
+      colWarcs: 'WAIL_ManagedCollections/collections/{col}/archive',
+      colIndexs: 'WAIL_ManagedCollections/collections/{col}/indexes',
+      templateDir: 'WAIL_ManagedCollections/templates',
+      staticsDir: 'WAIL_ManagedCollections/static'
+    },
+    icollections: {
       defaultCol: 'archives/collections/default',
       dir: 'archives/collections',
       aCollPath: 'archives/collections/{col}',
@@ -492,14 +514,14 @@ const managed = mngd
 const debugOSX = dbgOSX
 
 export default class SettingsManager {
-  constructor (base, settingsDir, version) {
+  constructor (base, docsPath, settingsDir, version) {
     this._version = version
     this._settings = null
     this._settingsDir = settingsDir
     this._base = base
+    this._docsPath = docsPath
   }
 
-  @autobind
   configure () {
     let { pathMan } = global
     this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
@@ -564,13 +586,11 @@ export default class SettingsManager {
     })
   }
 
-  @autobind
   writeSettings () {
     let { pathMan } = global
     this._writeSettings(pathMan, this._settings.get('didFirstLoad'))
   }
 
-  @autobind
   _writeSettings (pathMan, didFirstLoad) {
     this._settings.clear()
     this._settings.set('version', this._version)
@@ -640,10 +660,18 @@ export default class SettingsManager {
     })
 
     let collections = _.mapValues(managed.collections, (v, k) => {
+      return pathMan.normalizeJoin(this._docsPath, v)
+    })
+
+    let icollections = _.mapValues(managed.icollections, (v, k) => {
       return pathMan.normalizeJoinWBase(v)
     })
 
+    this._settings.set('documentsPath', this._docsPath)
+    this._settings.set('warcs', pathMan.normalizeJoin(this._docsPath, managed.warcs))
+    this._settings.set('iwarcs', pathMan.normalizeJoinWBase('/archives'))
     this._settings.set('collections', collections)
+    this._settings.set('icollections', icollections)
 
     this._settings.set('pywb', pywb)
     this._settings.set('migrate', false)
@@ -698,12 +726,10 @@ export default class SettingsManager {
     this._settings.set('twitter', managed.twitter)
   }
 
-  @autobind
   resetToDefault () {
     this.writeSettings()
   }
 
-  @autobind
   rewriteHeritrixPort (was, is) {
     let mutate = S(' ')
     let nh = _.mapValues(this._settings.get('heritrix'), (v, k) => {
@@ -732,7 +758,6 @@ export default class SettingsManager {
     this._settings.set('heritrix', nh)
   }
 
-  @autobind
   rewriteHeritrixAuth (usr, pwd) {
     if (usr && pwd) {
       let heritrix = this._settings.get('heritrix')
@@ -757,12 +782,10 @@ export default class SettingsManager {
     }
   }
 
-  @autobind
   get (what) {
     return this._settings.get(what)
   }
 
-  @autobind
   set (what, replacement) {
     this._settings.set(what, replacement)
   }

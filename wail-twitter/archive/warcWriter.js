@@ -1,25 +1,24 @@
-const cheerio = require('cheerio')
-const Promise = require('bluebird')
-const fs = require('fs-extra')
-const moment = require('moment')
-const EventEmitter = require('eventemitter3')
-const S = require('string')
-const url = require('url')
-const urlType = require('url-type')
-const uuid = require('./node-uuid')
+import cheerio from 'cheerio'
+import Promise from 'bluebird'
+import fs from 'fs-extra'
+import moment from 'moment'
+import EventEmitter from 'eventemitter3'
+import S from 'string'
+import url from 'url'
+import urlType from 'url-type'
+import uuid from './node-uuid'
+import warcFields from './warcFields'
 const {
   warcHeader,
   warcHeaderContent,
   warcMetadataHeader,
   recordSeparator
-} = require('./warcFields')
+} = warcFields
 
 Promise.promisifyAll(fs)
 window.fse = fs
 
-const toPath = '/home/john/WebstormProjects/testWarcreateElectron/test6.warc'
-
-class WarcWriter extends EventEmitter {
+export default class WarcWriter extends EventEmitter {
   constructor () {
     super()
   }
@@ -100,8 +99,7 @@ class WarcWriter extends EventEmitter {
   }
 
   writeWarc (config) {
-    console.time('writting warc')
-    let { seedUrl, networkMonitor, dtDom, ua, preserveA } = config
+    let { seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header } = config
     console.log(ua)
     let { doctype, dom }  = dtDom
     let { outlinks }  =  this.extractOutlinks(seedUrl, dom, preserveA)
@@ -115,14 +113,14 @@ class WarcWriter extends EventEmitter {
         let rid = uuid.v1()
         let swapper = S(warcHeaderContent)
         let whc = Buffer.from('\r\n' + swapper.template({
-            version: '156',
-            isPartOfV: 'sads',
-            warcInfoDescription: 'dsadsaas',
+            version: '0.1',
+            isPartOfV: header.isPartOfV,
+            warcInfoDescription: header.description,
             ua
           }).s + '\r\n', 'utf8')
 
         let wh = Buffer.from(swapper.setValue(warcHeader).template({
-          fileName: 'test.warc',
+          fileName: toPath,
           now,
           len: whc.length,
           rid
@@ -140,11 +138,13 @@ class WarcWriter extends EventEmitter {
         let warcOut = fs.createWriteStream(toPath)
         warcOut.on('error', err => {
           console.error('error happened while writting to the warc', err)
+          warcOut.end()
+          this.emit('error', err)
         })
         warcOut.on('finish', () => {
           console.log('All writes are now complete.')
+          this.emit('finished')
           warcOut.destroy()
-          console.timeEnd('writting warc')
         })
         warcOut.write(wh, 'utf8')
         warcOut.write(whc, 'utf8')
@@ -154,7 +154,7 @@ class WarcWriter extends EventEmitter {
         warcOut.write(recordSeparator, 'utf8')
         let writeIter = networkMonitor.reqWriteIterator(opts)
         const doWrite = () => {
-          console.log('doing write', new moment().format())
+          console.log('doing write', moment().format())
           let next = writeIter.next()
           if (!next.done) {
             warcOut.write(next.value, 'utf8', doWrite)
@@ -165,90 +165,8 @@ class WarcWriter extends EventEmitter {
 
         doWrite()
       })
-    //
-    // let it = {}
-
-    //
-    // for (let [url,winfo] of networkMonitor.wcRequests) {
-    //   console.log(url)
-    //   // winfo.writeToWarcFile2(warcOut, '', opts)
-    //   console.log('----------------\n\n')
-    // }
-    // warcOut.end()
-
-    // this.extractOutlinks(aUrl, theDom, preserveA)
-
-    // networkInfo.wcRequests.retrieve(aUrl)
-    //   .then(() => {
-    //     // let warcOut = fs.createWriteStream(toPath)
-    //     // warcOut.on('end', () => {
-    //     //   console.log('it endded')
-    //     // })
-    //     // warcOut.on('finish', () => {
-    //     //   console.error('All writes are now complete.')
-    //     //   warcOut.destroy()
-    //     // })
-    //     // for (let it of networkInfo.wcRequests.resources()) {
-    //     //   if (it.rdata) {
-    //     //     console.log(it)
-    //     //     try {
-    //     //       warcOut.write(it.rdata.body,'utf8')
-    //     //     } catch (e) {
-    //     //       console.error(e)
-    //     //     }
-    //     //   }
-    //     //   warcOut.write('\r\n')
-    //     // }
-    //     // warcOut.end()
-    //
-    //   })
-    // for (let [url,winfo] of networkInfo.wcRequests) {
-    //   let ninfo = networkInfo.networkRequests.get(url)
-    //   if (winfo.response.method !== 'POST') {
-    //     if (aUrl === url) {
-    //       console.log('we found net info for initial request', winfo, ninfo)
-    //     } else {
-    //       if (ninfo) {
-    //         console.log(url)
-    //         console.log('wcinfo', winfo.request, winfo.response)
-    //         console.log('ninfo', ninfo.request, ninfo.response)
-    //         console.log('---------------------\n\n')
-    //       }
-    //     }
-    //   }
-    // }
+      .catch(error => {
+        this.emit('error', error)
+      })
   }
 }
-
-module.exports = WarcWriter
-
-/*
- let ninfo = networkInfo.networkRequests.get(url)
- if (winfo.response.method !== 'POST') {
- if (aUrl === url) {
- console.log('we found net info for initial request')
- if (ninfo.response.headersText && ninfo.response.requestHeadersText) {
- let { headersText, requestHeadersText } = ninfo.response
- console.log(headersText, requestHeadersText)
- } else {
- let { requestHeaders } = winfo.request
- let { responseHeaders } = winfo.response
- console.log(requestHeaders, responseHeaders)
- }
- } else {
- if (ninfo) {
-
- if (ninfo.response.headersText && ninfo.response.requestHeadersText) {
- let { headersText, requestHeadersText } = ninfo.response
- console.log(headersText, requestHeadersText)
- } else {
- console.log('baddd', url)
- console.log(winfo.request, winfo.response)
- }
- }
- }
- }
- it[ url ] = {
- winfo, ninfo
- }
- */

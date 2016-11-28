@@ -138,6 +138,7 @@
     "react-tooltip": "^3.2.2",
     "react-virtualized": "^8.5.3",
     "recompose": "^0.20.2",
+    "reduce-reducers": "^0.1.2",
     "redux": "^3.6.0",
     "redux-actions": "^1.1.0",
     "redux-batched-actions": "^0.1.4",

@@ -3,9 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>TwitterMonitor</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Roboto, sans-serif;
+        }
+
+        .archiveWV {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
 </head>
 <body>
 <h1>TwitterMonitor</h1>
+<webview class='archiveWV' id="awv" src="about:blank"
+         preload="/home/john/my-fork-wail/wail-twitter/archive/inject.js"
+         partition="archive"
+         plugins
+>
+
+</webview>
 <script>
   {
     const script = document.createElement('script')

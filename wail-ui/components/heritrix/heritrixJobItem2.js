@@ -10,13 +10,19 @@ const {
   discoveredS, queuedS, downloadedS, actionS
 } = styles.heritrixTable
 
-const stateToProps = (state, ownProps) => ({ jobRecord: state.get('crawls').get(`${ownProps.jobId}`) })
+const stateToProps = (state, ownProps) => ({ jobRecord: state.get('runs').get(`${ownProps.jobId}`) })
+
+const log = console.log.bind(console)
 
 class HeritrixJobItem extends Component {
   static propTypes = {
     jobId: PropTypes.number.isRequired,
     jobRecord: PropTypes.instanceOf(Immutable.Record).isRequired,
     actionMenu: PropTypes.element.isRequired
+  }
+
+  componentDidUpdate (prevProps, prevState, prevContext) {
+    log(`HeritrixJobItem ${this.props.jobId} did update`)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {

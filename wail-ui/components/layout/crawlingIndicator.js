@@ -1,36 +1,17 @@
 import React, {Component} from 'react'
 import IconButton from 'material-ui/IconButton'
 import Info from 'material-ui/svg-icons/action/info'
+import {connect} from 'react-redux'
 
-export default class CrawlingIndicator extends Component {
-  constructor (...args) {
-    super(...args)
-    this.state = {
-      crawlIconVisible: 'hidden'
-    }
-  }
+const stateToProps = state => ({
+  crawlIconVisible: state.get('runningCrawls') > 0 ? 'visible' : 'hidden'
+})
 
-  componentWillMount () {
-  }
-
-  componentWillUnmount () {
-
-  }
-
-  maybeToggleCrawlIcon (started = false) {
-    if (started && this.state.crawlIconVisible === 'hidden') {
-      this.setState({crawlIconVisible: 'visible'})
-    } else {
-      if (this.state.crawlIconVisible === 'visible') {
-        this.setState({crawlIconVisible: 'hidden'})
-      }
-    }
-  }
-
+class CrawlingIndicator extends Component {
   render () {
     return (
       <IconButton
-        style={{visibility: this.state.crawlIconVisible}}
+        style={{visibility: this.props.crawlIconVisible}}
         tooltip='Crawl Running'
         tooltipPosition='bottom-left'
       >
@@ -41,3 +22,4 @@ export default class CrawlingIndicator extends Component {
 
 }
 
+export default connect(stateToProps)(CrawlingIndicator)

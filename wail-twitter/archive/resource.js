@@ -1,17 +1,18 @@
-const rp = require('request-promise')
+import rp from 'request-promise'
 const { STATUS_CODES }= require('http')
-const Promise = require('bluebird')
-const _ = require('lodash')
-const zlib = require('zlib')
-const S = require('string')
-const url = require("url")
-const { cloneWC } = require('./util')
-const uuid = require('./node-uuid')
+import Promise from 'bluebird'
+import _ from 'lodash'
+import zlib from 'zlib'
+import S from 'string'
+import url from "url"
+import {cloneWC} from './util'
+import uuid from './node-uuid'
+import warcFields from './warcFields'
 const {
   warcRequestHeader,
   warcResponseHeader,
   recordSeparator
-} = require('./warcFields')
+} = warcFields
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -55,7 +56,7 @@ const stringifyHeaders = (r, accessor) => _
 const makeHeaderString = (r, accessor, func) =>
 func(r) + stringifyHeaders(r, accessor)
 
-class Resource {
+export default class Resource {
   constructor (url, type, method) {
     this.request = null
     this.response = null
@@ -173,29 +174,6 @@ class Resource {
         yield '\r\n'
         yield recordSeparator
       }
-    } else {
-      // //something not get
-      // console.log('not get')
-      // console.log(this.request)
-      // console.log(this.response)
-      // let res = this._response()
-      // let reqHeaderString
-      // let resHeaderString
-      // if (res) {
-      //   reqHeaderString = makeHeaderString(this.request, 'requestHeaders', requestHttpString)
-      //   resHeaderString = makeHeaderString(res, 'responseHeaders', responseHttpString)
-      // } else {
-      //   reqHeaderString = makeHeaderString(this.request, 'requestHeaders', requestHttpString)
-      // }
-      // let swapper = S(warcRequestHeader)
-      // let reqHeadContentBuffer = Buffer.from('\r\n' + reqHeaderString, 'utf8')
-      // let reqWHeader = swapper.template({
-      //   targetURI: this.url, concurrentTo,
-      //   now, rid: uuid.v1(), len: reqHeadContentBuffer.length
-      // }).s
-      // yield reqWHeader
-      // yield reqHeadContentBuffer
-      // yield recordSeparator
     }
   }
 
@@ -246,5 +224,3 @@ class Resource {
   }
 
 }
-
-module.exports = Resource

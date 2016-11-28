@@ -12,6 +12,10 @@ export default {
       CRAWLBEAN: null
     })
   },
+  RunningCrawlCounter: keyMirror({
+    INCREMENT: null,
+    DECREMENT: null
+  }),
   LocationChange: keyMirror({
     CHECK_TWITTER: null,
   }),
@@ -46,6 +50,10 @@ export default {
   RequestActions: keyMirror({
     MAKE_REQUEST: null,
     HANDLED_REQUEST: null
+  }),
+  JobIdActions: keyMirror({
+    ADD_ID: null,
+    REMOVE_ID: null
   }),
   CrawlEvents: keyMirror({
     GOT_ALL_RUNS: null,

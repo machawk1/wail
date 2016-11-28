@@ -1,5 +1,5 @@
 import '../wailPollyfil'
-import {app, BrowserWindow, Menu, shell, ipcMain, dialog} from 'electron'
+import {app, Menu, dialog} from 'electron'
 import path from 'path'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
@@ -70,7 +70,7 @@ app.on('ready', () => {
     userData = app.getPath('userData')
   }
 
-  control.init(base, userData, app.getVersion(), loadFrom, debug, notDebugUI, openBackGroundWindows)
+  control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
     .then(() => {
       global.wailVersion = control.version
       global.wailLogp = control.logPath

@@ -1,11 +1,7 @@
 import Immutable, {Map, List} from 'immutable'
 import S from 'string'
 import makeCrawlInfoRecord from '../records/crawlInfoRecord'
-import wailConstants from '../constants/wail-constants'
-import {CrawlEvents} from '../constants/wail-constants'
-const log = console.log.bind(console)
-const EventTypes = wailConstants.EventTypes
-const From = wailConstants.From
+import {CrawlEvents, JobIdActions} from '../constants/wail-constants'
 const {
   GOT_ALL_RUNS,
   CRAWLJOB_STATUS_UPDATE,
@@ -15,7 +11,67 @@ const {
   CRAWL_JOB_DELETED
 } = CrawlEvents
 
-export default (state = Map(), action) => {
+const { ADD_ID, REMOVE_ID } = JobIdActions
+
+const runsReducer = (state = Map(), action) => {
+  console.log('runs reducer', action)
+  switch (action.type) {
+    case GOT_ALL_RUNS:
+      let { allRuns } = action
+      if ((allRuns || []).length > 0) {
+        let runs = {}
+        window.logger.debug(`intial job state load ${allRuns.length} jobs`)
+        allRuns.forEach(r => {
+          runs[ r.jobId ] = makeCrawlInfoRecord(r)
+        })
+        return state.merge(runs)
+      } else {
+        window.logger.debug('there was no runs in the db')
+        return state
+      }
+    case BUILT_CRAWL_CONF: {
+      let { crawlInfo } = action
+      return state.set(crawlInfo.jobId, makeCrawlInfoRecord(crawlInfo))
+    }
+    case CRAWLJOB_STATUS_UPDATE: {
+      let { jobId, stats } = action.crawlStatus
+      if (stats.ended) {
+        return state.updateIn([ `${jobId}` ], crawlRecord => crawlRecord.updateLatestRun(stats))
+      } else {
+        return state.updateIn([ `${jobId}` ], crawlRecord => crawlRecord.updateLatestRun(stats))
+      }
+    }
+    default:
+      return state
+  }
+}
+
+const jobIds = (state = List(), action) => {
+  switch (action.type) {
+    case GOT_ALL_RUNS: {
+      let { allRuns } = action
+      if ((allRuns || []).length > 0) {
+        return state.merge(allRuns.map(r => r.jobId))
+      } else {
+        return state
+      }
+    }
+    case ADD_ID:
+      return state.unshift(action.jobId)
+    case REMOVE_ID:
+      let idx = state.indexOf(action.jobId)
+      if (idx > 0) {
+        return state.remove(idx)
+      } else {
+        return state
+      }
+    default:
+      return state
+  }
+
+}
+
+const original = (state = Map(), action) => {
   console.log('in crawls reducer', action)
   switch (action.type) {
     case GOT_ALL_RUNS:
@@ -58,3 +114,7 @@ export default (state = Map(), action) => {
   }
 }
 
+export {
+  runsReducer,
+  jobIds
+}
