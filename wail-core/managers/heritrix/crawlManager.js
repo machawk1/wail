@@ -1,17 +1,14 @@
-import autobind from 'autobind-decorator'
 import cheerio from 'cheerio'
 import Db from 'nedb'
 import wc from '../../../wail-ui/constants/wail-constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
 import {ipcRenderer as ipc, remote} from 'electron'
-import join from 'joinable'
 import moment from 'moment'
 import os from 'os'
 import path from 'path'
 import Promise from 'bluebird'
 import S from 'string'
-import util from 'util'
 import CrawlStatsMonitor from './crawlStatsMonitor'
 import {CrawlInfo} from '../../util'
 import {readFile, ensureDirAndWrite} from '../../util/fsHelpers'
@@ -21,8 +18,7 @@ S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')
-const EventTypes = wc.EventTypes
-const RequestTypes = wc.RequestTypes
+
 
 export default class CrawlManager {
 

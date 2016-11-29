@@ -162,6 +162,11 @@ export default class AppManager {
             },
             {
               conf: { show: false },
+              url: `file://${loadFrom}/background/archiver.html`,
+              name: 'archiverWindow'
+            },
+            {
+              conf: { show: false },
               url: `file://${loadFrom}/background/indexer.html`,
               name: 'indexWindow'
             },

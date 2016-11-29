@@ -55,11 +55,11 @@ export default class NewCollection extends Component {
       let rt = swapper.setValue(title).isEmpty() ? col : title
       let newCol = {
         col,
-        mdata: [ `title=${rt}`, `description=${description}` ],
-        metadata: [
-          { title: rt },
-          { 'description': description }
-        ]
+        mdata: [ `title="${rt}"`, `description="${description}"` ],
+        metadata: {
+          title: rt,
+          description
+        }
       }
       ipc.send('create-collection', newCol)
       global.notifications$.next({

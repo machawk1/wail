@@ -23,7 +23,7 @@ app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
 app.commandLine.appendSwitch('allow-http-screen-capture')
 
 const winMan = new WindowManager()
-const control = new AppManager()
+const control = global.__wailControl = new AppManager()
 const debug = false, notDebugUI = true, openBackGroundWindows = false
 
 export function showSettingsWindow (parent) {
@@ -88,11 +88,6 @@ app.on('ready', () => {
 
       winMan.init(control.winConfigs)
     })
-
-  // setUp()
-  // createBackGroundWindows(control.notDebugUI)
-  // createWindow()
-  // createLoadingWindow()
 })
 
 app.on('window-all-closed', () => {

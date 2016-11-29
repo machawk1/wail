@@ -1,47 +1,33 @@
 import React, {Component, PropTypes} from 'react'
-import {Card, CardTitle, CardText, CardActions} from 'material-ui/Card'
-import FlatButton from 'material-ui/FlatButton'
+import {Card, CardTitle} from 'material-ui/Card'
 import {Field, reduxForm} from 'redux-form/immutable'
-import {send} from 'redux-electron-ipc'
-import {SubmissionError} from 'redux-form'
-import {TextField, AutoComplete} from 'redux-form-material-ui'
-import fuzzyFilter from '../../../util/fuzzyFilter'
+import {SubmissionError, reset as resetForm} from 'redux-form'
+import {ipcRenderer as ipc} from 'electron'
 import timeVales from './timeValues'
+import UserBasic from './twitterUser/userBasic'
+import MaybeHashtags from './twitterUser/maybeHashTags'
+import {notifyError, notifyInfo} from '../../../actions/notification-actions'
 
-const log = ::console.log
-
-function validate (values) {
-  log('validate', values.toJS())
-  let errors = {}
-  let length = values.get('length')
-  if (!length) {
-    console.log('no length')
-    errors.length = 'Must Choose Time Unit'
-  } else {
-    if (!timeVales.values[ length ]) {
-      errors.length = 'Must Choose Time Unit'
-      log('empty')
-    }
-  }
-
-  if (!values.get('screenName')) {
-    errors.screenName = 'Screen Name Required'
-  }
-
-  if (!values.get('forCol')) {
-    errors.forCol = 'Collection Required'
-  }
-  return errors
-}
-
-const formConfig = {
-  form: 'aTwitterUser',  // a unique identifier for this form
-  validate
+const monitor = (config) => {
+  let message = `Monitoring ${config.account} for ${config.forCol} Now!`
+  notifyInfo(message)
+  ipc.send('monitor-twitter-account', config)
+  window.logger.debug(message)
 }
 
 class ATwitterUser extends Component {
   static contextTypes = {
     store: PropTypes.object
+  }
+
+  constructor (...args) {
+    super(...args)
+    this.state = {
+      page: 1
+    }
+
+    this.cols = Array.from(this.context.store.getState().get('collections').values())
+      .map((col, i) => col.get('colName'))
   }
 
   submit (values) {
@@ -56,70 +42,65 @@ class ATwitterUser extends Component {
             _error: 'Invalid Screen Name'
           })
         }
-        let config = {
-          account: values.get('screenName'),
-          dur: timeVales.values[ values.get('length') ],
-          forCol: values.get('forCol')
+        if (!this.cols.includes(values.get('forCol'))) {
+          let message = `The Collection ${values.get('forCol')} does not exist`
+          notifyError(message)
+          throw new SubmissionError({
+            forCol: message,
+            _error: message
+          })
         }
+        let config
+        let hts = values.get('hashtags')
+        if (hts && hts.size > 0) {
+          config = {
+            account: values.get('screenName'),
+            dur: timeVales.values[ values.get('length') ],
+            forCol: values.get('forCol'),
+            extractor: {
+              type: 'HashTags',
+              hts: hts.toArray()
+            },
+            taskType: 'UserTimeLine'
+          }
+        } else {
+          config = {
+            account: values.get('screenName'),
+            dur: timeVales.values[ values.get('length') ],
+            forCol: values.get('forCol'),
+            extractor: {
+              type: 'TimeLine'
+            },
+            taskType: 'UserTimeLine'
+          }
+        }
+
         console.log(config)
-        this.context.store.dispatch(send('monitor-twitter-account', config))
+        monitor(config)
+        this.context.store.dispatch(resetForm('aTwitterUser'))
       })
   }
 
-  collectionNames () {
-    return Array.from(this.context.store.getState().get('collections').values())
-      .map((col, i) => col.get('colName'))
+  nextPage () {
+    this.setState({ page: this.state.page + 1 })
+  }
+
+  previousPage () {
+    this.setState({ page: this.state.page - 1 })
   }
 
   render () {
-    const { handleSubmit, pristine, reset, submitting, invalid } = this.props
-    let cols = this.collectionNames()
+    const { page } = this.state
     return (
-      <div style={{ width: '100%', height: '100%' }} id='twitterArchive'>
-        <Card>
-          <CardTitle title={'User Your Are Following'}/>
-          <form onSubmit={handleSubmit(::this.submit)} style={{ marginLeft: 16 }}>
-            <div>
-              <Field
-                floatingLabelText='How Long To Monitor'
-                name='length'
-                component={AutoComplete}
-                dataSource={timeVales.times}
-                menuProps={{ desktop: true }}
-                openOnFocus
-                maxSearchResults={10}
-                filter={fuzzyFilter}
-              />
-            </div>
-            <div>
-              <Field
-                floatingLabelText='ScreenName'
-                hintText='WebSciDl'
-                name='screenName'
-                component={TextField}
-              />
-            </div>
-            <div>
-              <Field
-                floatingLabelText='For Collection'
-                name='forCol'
-                component={AutoComplete}
-                dataSource={cols}
-                menuProps={{ desktop: true }}
-                openOnFocus
-                maxSearchResults={10}
-                filter={fuzzyFilter}
-              />
-            </div>
-            <CardActions>
-              <FlatButton label='Start' type='submit' disabled={ pristine || submitting} primary/>
-              <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
-            </CardActions>
-          </form>
+      <div style={{ width: '30%', height: '100%' }} id='twitterArchive'>
+        <Card style={{ height: '100%' }}>
+          <CardTitle title={"A User's Timeline"}/>
+          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage}/>}
+          {page === 2 && <MaybeHashtags previousPage={::this.previousPage} onSubmit={::this.submit}/>}
         </Card>
       </div>
     )
   }
 }
 
-export default reduxForm(formConfig)(ATwitterUser)
+export default ATwitterUser

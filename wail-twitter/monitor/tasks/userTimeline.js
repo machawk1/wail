@@ -1,14 +1,13 @@
 // import {remote, ipcRenderer as ipc} from 'electron'
 import MonitorTask from './monitorTask'
-import Extractor from '../../extractors/extractor'
 
 export default class UserTimeLineTask extends MonitorTask {
-  constructor ({ twitterClient, account, dur, ExtractorType = Extractor }) {
+  constructor ({ twitterClient, account, dur, extractor }) {
     super(dur)
     this.twitterClient = twitterClient
     this.mostRecentTweet = null
     this.account = account
-    this.extractor = new ExtractorType()
+    this.extractor = extractor
     this.firstTime = true
   }
 

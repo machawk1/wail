@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react'
 import {ipcRenderer as ipc} from 'electron'
-import GMessageStore from '../../stores/globalMessageStore'
 import Notification from 'react-notification-system'
 import wailConstants from '../../constants/wail-constants'
 // https://github.com/igorprado/react-notification-system
@@ -20,6 +19,10 @@ export default class Notifications extends Component {
 
   componentDidMount () {
     ipc.on('display-message', ::this.ipcNotif)
+    ipc.on('log-error-display-message', (e, em) => {
+      this.ipcNotif(e, em.m)
+      window.logger.error(new Error(em.err))
+    })
     this.$notificationSub = global.notifications$.subscribe({
       next: (notif) => {
         this.receiveMessage(notif)

@@ -11,12 +11,10 @@ import Promise from 'bluebird'
 import {remote} from 'electron'
 import bunyan from 'bunyan'
 import Wail from './containers/wail'
-import wailConstants from './constants/wail-constants'
 import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
 
-window.React = React
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
 }
@@ -26,8 +24,6 @@ Promise.promisifyAll(fs)
 global.notifications$ = new Rx.BehaviorSubject({ type: 'initial' })
 global.resizer = createDetectElementResize()
 global.twitterClient = new TwitterClient()
-
-window.lastWaybackPath = wailConstants.Default_Collection
 
 injectTapEventPlugin()
 
@@ -55,11 +51,6 @@ window.logger = bunyan.createLogger({
 // })
 
 const store = configureStore()
-// const history = syncHistoryWithStore(hashHistory, store, {
-//   selectLocationState (state) {
-//     console.log('select location state', state.get('routing'))
-//     return  state.get('routing') ? state.get('routing').toJS() : {}
-//   }
-// })
+
 render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
 

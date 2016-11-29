@@ -1,8 +1,8 @@
-import React, { Component, PropTypes } from 'react'
-import { Flex, Item } from 'react-flex'
+import React, {Component, PropTypes} from 'react'
+import {Flex, Item} from 'react-flex'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
-import { Editor, EditorState } from 'draft-js'
-import { ipcRenderer as ipc } from 'electron'
+import {Editor, EditorState} from 'draft-js'
+import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
 import shallowCompare from 'react-addons-shallow-compare'
 import FlatButton from 'material-ui/FlatButton'
@@ -66,7 +66,7 @@ export default class NewCollection extends Component {
         ipc.send('update-metadata', {
           forCol,
           mdataString: `title="${title}" description="${description}"`,
-          mdata: [ { k: 'title', v: title }, { k: 'description', v: description } ]
+          mdata: { 'title': title, description }
         })
         global.notifications$.next({
           type: QUEUE_MESSAGE,
@@ -79,7 +79,11 @@ export default class NewCollection extends Component {
         })
       } else {
         if (newTitle) {
-          ipc.send('update-metadata', { forCol, mdata: { k: 'title', v: title } })
+          ipc.send('update-metadata', {
+            forCol,
+            mdataString: `title="${title}"`,
+            mdata: { title }
+          })
           global.notifications$.next({
             type: QUEUE_MESSAGE,
             message: {
@@ -90,7 +94,11 @@ export default class NewCollection extends Component {
             }
           })
         } else if (newDescription) {
-          ipc.send('update-metadata', { forCol, mdata: { k: 'description', v: description } })
+          ipc.send('update-metadata', {
+            forCol,
+            mdataString: `description="${description}"`,
+            mdata: { description }
+          })
           global.notifications$.next({
             type: QUEUE_MESSAGE,
             message: {

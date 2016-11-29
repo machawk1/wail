@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import EventEmitter from 'eventemitter3'
 import autobind from 'autobind-decorator'
 import fs from 'fs-extra'
@@ -88,12 +87,10 @@ class _LoadingStore extends EventEmitter {
     }
   }
 
-  @autobind
   serviceMessage () {
     return { progMessage: this.pMessage }
   }
 
-  @autobind
   downloadJDK (response) {
     // console.log(response)
     settings.set('didFirstLoad', false)
@@ -136,7 +133,6 @@ class _LoadingStore extends EventEmitter {
     }
   }
 
-  @autobind
   wb () {
     if (serviceMan.isServiceUp('wayback')) {
       let message
@@ -180,7 +176,6 @@ class _LoadingStore extends EventEmitter {
     }
   }
 
-  @autobind
   checkServices () {
     console.log('checking services')
     if (serviceMan.isServiceUp('heritrix')) {
@@ -209,7 +204,6 @@ class _LoadingStore extends EventEmitter {
     }
   }
 
-  @autobind
   progressMessage () {
     return this.pMessage
   }

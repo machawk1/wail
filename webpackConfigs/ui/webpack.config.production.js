@@ -1,7 +1,7 @@
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
-
+const BabiliPlugin = require("babili-webpack-plugin")
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 module.exports = {
@@ -25,32 +25,30 @@ module.exports = {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          presets: [ "react",
-            [ "env", {
-              "targets": {
-                "node": 6.5
+          presets: [ 'react',
+            [ 'env', {
+              'targets': {
+                'node': 6.5
               },
-              "whitelist": [
-                "transform-class-properties",
-                "transform-es2015-object-super",
-                "transform-es2015-destructuring",
-                "transform-object-rest-spread"
+              'whitelist': [
+                'transform-class-properties',
+                'transform-es2015-destructuring',
+                'transform-object-rest-spread'
               ]
             } ]
           ],
           plugins: [
-            "transform-decorators-legacy",
-            "transform-class-properties",
-            "transform-es2015-object-super",
-            "transform-es2015-destructuring",
-            "transform-async-to-generator",
-            "transform-exponentiation-operator",
-            "transform-object-rest-spread",
-            "syntax-trailing-function-commas",
-            "transform-export-extensions",
-            "transform-do-expressions",
-            "transform-function-bind",
-            "add-module-exports"
+            'transform-decorators-legacy',
+            'transform-class-properties',
+            'transform-es2015-destructuring',
+            'transform-async-to-generator',
+            'transform-exponentiation-operator',
+            'transform-object-rest-spread',
+            'syntax-trailing-function-commas',
+            'transform-export-extensions',
+            'transform-do-expressions',
+            'transform-function-bind',
+            'add-module-exports',
           ],
         },
       },
@@ -87,13 +85,16 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.ProvidePlugin({
+      'Promise': 'bluebird'
+    }),
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: false,
       'process.env.NODE_ENV': JSON.stringify('production'),
     }),
-    new ExtractTextPlugin('style.css', { allChunks: true }),
+    new ExtractTextPlugin('style.css', { allChunks: true })
   ],
   target: 'electron-renderer'
 }

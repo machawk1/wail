@@ -1,35 +1,91 @@
+import React, {Component, PropTypes} from 'react'
+import {remote, ipcRenderer as ipc} from 'electron'
+import Promise from 'bluebird'
 import WarcWriter from './warcWriter'
 import NetworkMonitor from './networkMonitor'
-import Promise from 'bluebird'
-import EventEmitter from 'eventemitter3'
+import moment from 'moment'
 
-export default class Archive extends EventEmitter {
-  constructor () {
-    super()
-    console.log('creating archive')
-    this.archiveQ = []
-    this.webview = document.getElementById('awv')
+///home/john/my-fork-wail/wail-twitter/archive/inject.js
+
+const addWarcToCol = config => {
+  ipc.send('add-warcs-to-col', {
+    col: config.forCol,
+    warcs: config.saveTo,
+    lastUpdated: moment().format(),
+    seed: { url: config.uri_r, jobId: `${config.forCol}_TWM` }
+  })
+}
+
+const failUseHeritrix = (config, error) => {
+  let jId = new Date().getTime()
+  ipc.send('makeHeritrixJobConf', {
+    urls: config.uri_r,
+    depth: 1,
+    jobId: jId,
+    forCol: config.forCol
+  })
+
+  let message = `There was an error while using Wail-WarCreate. Resorting to using Heritrix`
+
+  ipc.send('log-error-display-message', {
+    m: {
+      title: 'Wail WarCreate Error',
+      level: 'error',
+      message,
+      uid: message,
+      autoDismiss: 0
+    },
+    err: `${error} ${error.stack}`
+  })
+
+}
+
+export default class ArchiveComponent extends Component {
+  constructor (props) {
+    super(props)
+    console.log('creating ArchiveComponent')
+    this.loaded = false
     this.wbReady = false
-    this.saveTo = null
+    this.webview = null
+    this.archiveQ = []
     this.networkMonitor = new NetworkMonitor()
     this.warcWritter = new WarcWriter()
+
     this.warcWritter.on('error', (error) => {
-      this.emit('error', {
-        error,
-        config: this.archiveQ[ 0 ]
-      })
+      console.error('there was an error in the warc writter', error)
+      let config = this.archiveQ[ 0 ]
+      console.error(config)
+      failUseHeritrix(config, error)
+      this.archiveQ.shift()
       this.maybeMore()
     })
+
     this.warcWritter.on('finished', () => {
-      this.emit('finished', this.archiveQ[ 0 ])
+      let config = this.archiveQ[ 0 ]
+      console.log('finished', config)
+      addWarcToCol(config)
+      this.archiveQ.shift()
       this.maybeMore()
     })
+
+    ipc.on('archive-uri-r', (e, config) => {
+      this.archiveUriR(config)
+    })
+    this.ipcMessage = this.ipcMessage.bind(this)
+  }
+
+  componentDidMount () {
+    // Set up listeners.
+    console.log('we did mount')
+    this.loaded = true
+    this.webview = document.getElementById('awv')
+    console.log(this.webview)
     this.webview.addEventListener('did-stop-loading', (e) => {
       console.log('it finished loading')
       if (!this.wbReady) {
         console.log('we are loaded')
         this.wbReady = true
-        this.emit('ready')
+        this.maybeMore()
       }
     })
 
@@ -37,15 +93,25 @@ export default class Archive extends EventEmitter {
       console.log('Guest page logged a message:', e.message)
     })
 
-    this.ipcMessage = this.ipcMessage.bind(this)
     this.webview.addEventListener('ipc-message', this.ipcMessage)
+  }
+
+  componentWillUpdate (nextProps, nextState, nextContext) {
+    console.log('archive component will update', this.wbReady)
+    // if (this.wbReady) {
+    //   let webContents = this.webview.getWebContents()
+    //   this.networkMonitor.detach(webContents)
+    // }
   }
 
   archiveUriR (arConfig) {
     if (this.archiveQ.length > 0) {
       this.archiveQ.push(arConfig)
     } else {
-      this.startArchiving()
+      this.archiveQ.push(arConfig)
+      if (this.wbReady) {
+        this.startArchiving()
+      }
     }
   }
 
@@ -106,9 +172,11 @@ export default class Archive extends EventEmitter {
           .then(ret => {
             let arConfig = this.archiveQ[ 0 ]
             let opts = {
-              seedUrl: arConfig.uri_r, networkMonitor: this.networkMonitor,
+              seedUrl: arConfig.uri_r,
+              networkMonitor: this.networkMonitor,
               ua: this.webview.getUserAgent(),
-              dtDom: ret, preserveA: false,
+              dtDom: ret,
+              preserveA: false,
               toPath: arConfig.saveTo,
               header: arConfig
             }
@@ -118,5 +186,13 @@ export default class Archive extends EventEmitter {
         console.log(msg)
       }
     }
+  }
+
+  render () {
+    let wb = { __html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} partition="archive" plugins> </webview>` }
+    console.log(wb)
+    return (
+      <div dangerouslySetInnerHTML={wb}/>
+    )
   }
 }

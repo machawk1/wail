@@ -13,7 +13,7 @@ export default class MonitorTask extends EventEmitter {
   }
 
   wasError (error) {
-    this.stop()
+    this.task.cancel()
     this.emit('error', error)
   }
 

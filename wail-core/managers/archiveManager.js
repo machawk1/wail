@@ -271,14 +271,7 @@ export default class ArchiveManager {
       cwd: settings.get('warcs')
     }
     return new Promise((resolve, reject) => {
-      let wasArray = false
-      let exec = ''
-      if (Array.isArray(mdata)) {
-        wasArray = true
-        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString }).s
-      } else {
-        exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: `${mdata.k}="${mdata.v}"` }).s
-      }
+      let exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString }).s
       console.log(exec)
       cp.exec(exec, opts, (error, stdout, stderr) => {
         console.log(stdout, stderr)
@@ -291,36 +284,9 @@ export default class ArchiveManager {
             console.log('errorfind', errFind)
             return reject(errFind)
           }
-          if (wasArray) {
-            mdata.forEach(m => {
-              let didFind = false
-              let len = doc.metadata.length
-              for (let i = 0; i < len; ++i) {
-                if (doc.metadata[ i ].k === m.k) {
-                  doc.metadata[ i ].v = m.v
-                  didFind = true
-                  break
-                }
-              }
-              if (!didFind) {
-                doc.metadata.push(mdata)
-              }
-            })
-          } else {
-            let didFind = false
-            let len = doc.metadata.length
-            for (let i = 0; i < len; ++i) {
-              if (doc.metadata[ i ].k === mdata.k) {
-                doc.metadata[ i ].v = mdata.v
-                didFind = true
-                break
-              }
-            }
-            if (!didFind) {
-              doc.metadata.push(mdata)
-            }
-          }
-
+          _.toPairs(update.mdata).forEach(([mk,mv]) => {
+            doc.metadata[ mk ] = mv
+          })
           this.collections.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
             if (errUpdate) {
               console.log('errorUpdate', errFind)
@@ -345,18 +311,17 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        let metadata = []
+        let metadata = {}
+        let swapper = S('')
         mdata.forEach(m => {
-          let split = m.split('=')
-          metadata.push({
-            [split[ 0 ]]: S(split[ 1 ]).replaceAll('"', '').s
-          })
+          let [mk,mv] = m.split('=')
+          metadata[ mk ] = swapper.setValue(mv).replaceAll('"', '').s
         })
         console.log('added metadata to collection', col)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
         // { $push: { metadata: { $each: mdata } } }
-        this.collections.update({ colName: col }, { $push: { metadata: { $each: mdata } } }, {}, (err, numUpdated) => {
+        this.collections.update({ colName: col }, { $set: { metadata: { ...metadata } } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
           } else {

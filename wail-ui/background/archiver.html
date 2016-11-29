@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archiver</title>
+    <style>
+        html, body {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .archiveWV {
+            width: 100%;
+            height: 100%;
+        }
+        .mounter {
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="mounter" id='archiverMount'>
+
+</div>
+<script>
+  {
+    const script = document.createElement('script')
+    script.src = (process.env.HOT)
+      ? 'http://localhost:9001/dist/archiver.bundle.js'
+      : '../../dist/archiver.bundle.js'
+    document.write(script.outerHTML)
+  }
+</script>
+</body>
+</html>

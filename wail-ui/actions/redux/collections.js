@@ -1,13 +1,6 @@
 import {ipcRenderer as ipc, remote} from 'electron'
-import wailConstants from '../../constants/wail-constants'
 import {CollectionEvents} from '../../constants/wail-constants'
 import * as notify from '../notification-actions'
-const {
-  GET_COLLECTIONS,
-  CREATE_NEW_COLLECTION,
-  GET_COLLECTION_NAMES,
-  QUEUE_MESSAGE
-} = wailConstants.EventTypes
 const {
   GOT_ALL_COLLECTIONS,
   CREATED_COLLECTION,
@@ -21,27 +14,6 @@ let defForCol = 'default'
 if (process.env.NODE_ENV === 'development') {
   defForCol = 'Wail'
 }
-
-// ipc.on('got-all-collections', (event, ac) => {
-//   console.log('got all collections', ac)
-//   let {
-//     cols,
-//     wasError
-//   } = ac
-//
-//   if (wasError) {
-//     console.error(wasError)
-//     window.logger.error({ err: ac.err, msg: 'got all collections error' })
-//     // notify.notifyError('Error loading all collections this is fatal')
-//     dispatch(notify.notifyError('Error loading all collections this is fatal'))
-//   } else {
-//     window.logger.debug('collection store got all collections')
-//     dispatch({
-//       type: 'got-all-collections',
-//       cols
-//     })
-//   }
-// })
 
 export function gotAllCollections (event, ac) {
   let {
@@ -76,7 +48,7 @@ export function addedWarcs (event, col) {
 
 export function addedNewCol (event, col) {
   return {
-    type: 'added-new-collection',
+    type: CREATED_COLLECTION,
     col
   }
 }

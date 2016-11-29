@@ -21,7 +21,7 @@ let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
 Promise.promisifyAll(DB.prototype)
-console.log(S("https://twitter.com/wikileaks/status/803113754066096128").strip('twitter.com','status','https:/','/','.').s)
+console.log(S("https://twitter.com/wikileaks/status/803113754066096128").strip('twitter.com', 'status', 'https:/', '/', '.').s)
 
 const changeColLocs = () => {
   const archives = new DB({
@@ -70,6 +70,16 @@ const changeColLocs = () => {
       console.error(error)
     })
 }
+
+let it = [ 'title="yes"', 'description="no"' ]
+let metadata = {}
+let swapper = S('')
+it.forEach(m => {
+  let [mk,mv] = m.split('=')
+  metadata[ mk ] = swapper.setValue(mv).replaceAll('"', '').s
+})
+
+console.log(inspect(metadata))
 
 // let theDur = { val: 5, what: 'minutes' }
 //
