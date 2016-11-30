@@ -395,12 +395,12 @@ export default class ArchiveManager {
       }
     }
     return new Promise((resolve, reject) =>
-      Promise.map(addMulti, ws, { concurrency: 1 })
+      Promise.map(ws, addMulti, { concurrency: 1 })
         .then(allAdded => this.getColSize(col)
           .then(size => {
             let theUpdateCol = { $inc: { numArchives: ws.length }, $set: { size, lastUpdated } }
             return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
-              .then((updatedCol) => Promise.map(updateSeedMulti, seeds)
+              .then((updatedCol) => Promise.map(seeds, updateSeedMulti, { concurrency: 1 })
                 .then(allSeedUpdated => find(this.collections, findA)
                   .then(allColSeeds => {
                     updatedCol.seeds = cleanSeeds(Array.isArray(allColSeeds) ? allColSeeds : [ allColSeeds ])

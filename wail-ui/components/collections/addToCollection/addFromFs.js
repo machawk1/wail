@@ -23,6 +23,9 @@ const timeStampFinder = (target, seeds) => {
       break
     }
   }
+  if (!jobId) {
+    jobId = new Date().getTime()
+  }
   return jobId
 }
 
@@ -123,16 +126,19 @@ export default class AddFromFs extends Component {
       }
       warcSeeds.forEach(ws => {
         let realSeed = readSeeds[ seedName(ws.name) ]
-        let jobId = timeStampFinder(realSeed, ws.seeds)
-        addToCol.seedWarcs.push({
-          warcs: ws.filep,
-          seed: {
-            url: realSeed,
-            forCol: this.props.col,
-            jobId,
-            lastUpdated: moment(jobId, 'YYYYMMDDHHmmss').format(), added: addToCol.lastUpdated, mementos: 1
-          }
-        })
+        if (realSeed) {
+          let jobId = timeStampFinder(realSeed, ws.seeds)
+          addToCol.seedWarcs.push({
+            warcs: ws.filep,
+            seed: {
+              url: realSeed,
+              forCol: this.props.col,
+              jobId,
+              lastUpdated: moment(jobId, 'YYYYMMDDHHmmss').format(),
+              added: addToCol.lastUpdated, mementos: 1
+            }
+          })
+        }
       })
     } else {
       let realSeed = readSeeds[ seedName(warcSeeds[ 0 ].name) ]
