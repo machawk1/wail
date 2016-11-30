@@ -36,6 +36,16 @@ ipc.on('get-all-collections', (event) => {
     })
 })
 
+ipc.on('add-multi-warcs-to-col', (event, multi) => {
+  archiveMan.addMultiWarcToCol(multi)
+    .then(update => {
+      ipc.send('added-warcs-to-col', update)
+    })
+    .catch(error => {
+      ipc.send('display-message', error.m)
+    })
+})
+
 ipc.on('add-metadata-to-col', (event, addMe) => {
   let {
     forCol,

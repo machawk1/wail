@@ -1,6 +1,8 @@
 import React, {Component, PropTypes} from 'react'
 import CardTitle from 'material-ui/Card/CardTitle'
 import {Link, IndexLink} from 'react-router'
+import FlatButton from 'material-ui/FlatButton'
+import {Flex} from 'react-flex'
 import {resetCheckMessage} from '../../../actions/redux/archival'
 import {connect} from 'react-redux'
 
@@ -21,7 +23,12 @@ const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
     onClick={nukeCheckUrl}
     to={`Collections/${col}`}>{col}</Link> > Add Seed</span>
   return (
-    <CardTitle title={title}/>
+    <Flex row alignItems='center' justifyContent='space-between'>
+      <CardTitle
+        title={title}
+      />
+      <Link to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem'/></Link>
+    </Flex>
   )
 }
 CollAddSeedHeader.propTypes = {

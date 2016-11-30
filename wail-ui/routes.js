@@ -5,6 +5,7 @@ import HeritrixView from './containers/heritrixView'
 import SelectColContainer from './containers/selectColContainer'
 import CollectionView from './containers/collectionView'
 import CollectionAddSeed from './containers/collectionAddSeed'
+import CollectionAddSeedFs from './containers/collectionAddSeedFs'
 import General from './components/advanced/general'
 import Misc from './components/advanced/miscellaneous'
 import TwitterView from './containers/twitterView'
@@ -15,6 +16,7 @@ export default (
     <IndexRoute component={SelectColContainer}/>
     <Route path='Collections/:col' component={CollectionView}/>
     <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
+    <Route path='Collections/:col/addSeed/fs' component={CollectionAddSeedFs}/>
     <Route path='heritrix' component={HeritrixView}/>
     <Route path='misc' component={Misc}/>
     <Route path='services' component={General}/>

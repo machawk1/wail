@@ -268,6 +268,14 @@ if (process.env.NODE_ENV === 'development') {
       userToken: '4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3',
       userSecret: '46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f',
       userSignedIn: true
+    },
+    warcChecker: {
+      dir: 'bundledApps/warcChecker/warcChecker -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker -f {path}',
+    },
+    extractSeed: {
+      dir: 'bundledApps/listUris/listUris -d {path}',
+      file: 'bundledApps/listUris/listUris -f {path}',
     }
 
   }
@@ -505,8 +513,15 @@ if (process.env.NODE_ENV === 'development') {
       userToken: '',
       userSecret: '',
       userSignedIn: false
+    },
+    warcChecker: {
+      dir: 'bundledApps/warcChecker/warcChecker -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker -f {path}',
+    },
+    extractSeed: {
+      dir: 'bundledApps/listUris/listUris -d {path}',
+      file: 'bundledApps/listUris/listUris -f {path}',
     }
-
   }
 }
 
@@ -724,6 +739,12 @@ export default class SettingsManager {
     })
 
     this._settings.set('twitter', managed.twitter)
+
+    let wcChecker = _.mapValues(managed.warcChecker, v => pathMan.normalizeJoinWBase(v))
+    this._settings.set('warcChecker', wcChecker)
+
+    let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
+    this._settings.set('extractSeed', extractSeed)
   }
 
   resetToDefault () {

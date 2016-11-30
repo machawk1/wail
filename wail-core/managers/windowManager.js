@@ -271,8 +271,12 @@ export default class WindowManager extends EventEmitter {
         .catch((err) => this.send('mainWindow', 'restarted-wayback', { wasError: true, err }))
     })
 
+    ipcMain.on('add-multi-warcs-to-col', (e, multi) => {
+      this.send('archiveManWindow', 'add-multi-warcs-to-col', multi)
+    })
+
     /* Control */
-    ipcMain.on('log-error-display-message',(event, em) => {
+    ipcMain.on('log-error-display-message', (event, em) => {
       console.log('log-error-display-message', em)
       this.send('mainWindow', 'log-error-display-message', em)
     })
@@ -340,21 +344,19 @@ export default class WindowManager extends EventEmitter {
         })
       }
       console.log('got sign in with twitter')
-      this.send('mainWindow', 'signed-into-twitter', { wasError: false })
-      // this.twitterSignin.startRequest().then((result) => {
-      //   const accessToken = result.oauth_access_token
-      //   const accessTokenSecret = result.oauth_access_token_secret
-      //   dialog.showErrorBox('Status', `Token: ${accessToken} \nSecret: ${accessTokenSecret}`)
-      //   let twitter = global.settings.get('twitter')
-      //   twitter.userSignedIn = true
-      //   twitter.userToken = accessToken
-      //   twitter.userSecret = accessTokenSecret
-      //   global.settings.set('twitter', twitter)
-      //   this.send('mainWindow', 'signed-into-twitter', { wasError: false, accessToken, accessTokenSecret })
-      // }).catch((error) => {
-      //   console.error(error, error.stack)
-      //   this.send('mainWindow', 'signed-into-twitter', { wasError: true, error })
-      // })
+      this.twitterSignin.startRequest().then((result) => {
+        const accessToken = result.oauth_access_token
+        const accessTokenSecret = result.oauth_access_token_secret
+        let twitter = global.settings.get('twitter')
+        twitter.userSignedIn = true
+        twitter.userToken = accessToken
+        twitter.userSecret = accessTokenSecret
+        global.settings.set('twitter', twitter)
+        this.send('mainWindow', 'signed-into-twitter', { wasError: false, accessToken, accessTokenSecret })
+      }).catch((error) => {
+        console.error(error, error.stack)
+        this.send('mainWindow', 'signed-into-twitter', { wasError: true, error })
+      })
     })
 
     ipcMain.on('monitor-twitter-account', (e, config) => {
@@ -767,9 +769,9 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows[ 'archiveManWindow' ].window.show()
           }
-          this.windows[ 'archiveManWindow' ].window.webContents.toggleDevTools()
+          this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         }
-        this.windows[ 'archiveManWindow' ].window.webContents.toggleDevTools()
+        this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })

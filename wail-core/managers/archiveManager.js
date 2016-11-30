@@ -13,6 +13,7 @@ import _ from 'lodash'
 import {execute} from '../util/childProcHelpers'
 import {
   find, findOne, findOneFromBoth,
+  update, insert,
   inserAndFindAll, updateSingle,
   updateAndFindAll, CompoundNedbError
 } from '../util/nedb'
@@ -349,6 +350,99 @@ export default class ArchiveManager {
     })
   }
 
+  addMultiWarcToCol (multi) {
+    console.log('adding multi seeds to col', multi)
+    let { lastUpdated, col, seedWarcs } = multi
+    let opts = { cwd: settings.get('warcs') }
+    let updateWho = { colName: col }
+    let seeds = []
+    let ws = []
+    seedWarcs.forEach(sw => {
+      seeds.push(sw.seed)
+      ws.push(sw.warcs)
+    })
+    const addMulti = wpath => {
+      let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs: wpath }).s
+      console.log('adding the warc at path to col', wpath)
+      return execute(exec, opts)
+    }
+    const updateSeedMulti = seed => {
+      console.log('updating seed', seed)
+      let colSeedIdQ = { _id: `${col}-${seed.url}` }
+      return findOne(this.colSeeds, colSeedIdQ)
+        .then(colSeed => {
+          let theUpdateColSeed
+          if (foundSeedChecker(colSeed)) {
+            console.log('it existed')
+            theUpdateColSeed = {
+              $set: { lastUpdated },
+              $inc: { mementos: 1 }
+            }
+            if (!colSeed.jobIds.includes(seed.jobId)) {
+              theUpdateColSeed.$push = { jobIds: seed.jobId }
+            }
+            return updateSingle(this.collections, colSeedIdQ, theUpdateColSeed, updateSingleOpts)
+          } else {
+            console.log('it did not exist')
+            seed._id = colSeedIdQ._id
+            return insert(this.collections, seed)
+          }
+        })
+    }
+    let findA = {
+      $where() {
+        return this.forCol === col
+      }
+    }
+    return new Promise((resolve, reject) =>
+      Promise.map(addMulti, ws, { concurrency: 1 })
+        .then(allAdded => this.getColSize(col)
+          .then(size => {
+            let theUpdateCol = { $inc: { numArchives: ws.length }, $set: { size, lastUpdated } }
+            return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
+              .then((updatedCol) => Promise.map(updateSeedMulti, seeds)
+                .then(allSeedUpdated => find(this.collections, findA)
+                  .then(allColSeeds => {
+                    updatedCol.seeds = cleanSeeds(Array.isArray(allColSeeds) ? allColSeeds : [ allColSeeds ])
+                    console.log(updatedCol)
+                    resolve({
+                      colName: updatedCol.colName,
+                      numArchives: updatedCol.numArchives,
+                      size: updatedCol.size,
+                      seeds: updatedCol.seeds,
+                      lastUpdated: updatedCol.lastUpdated
+                    })
+                  })
+                  .catch(errorfa => {
+                    console.error(errorfa)
+                    console.log('finding all cols seeds')
+                    errorfa.m = 'Update multi failed at finding all cols seeds'
+                    reject(errorfa)
+                  })
+                )
+                .catch(errorusm => {
+                  console.error(errorusm)
+                  console.log('error updating multi seeds')
+                  errorusm.m = 'Update multi failed at updating multi seeds'
+                  reject(errorusm)
+                })
+              )
+              .catch(errorUC => {
+                console.error(errorUC)
+                console.log('error updating the col', col)
+                errorUC.m = 'Update multi failed at updating the col'
+                reject(errorUC)
+              })
+          })
+        )
+        .catch(error => {
+          error.m = 'Adding multi failed'
+          reject(error)
+        })
+    )
+
+  }
+
   addWarcsToCol ({ col, warcs, lastUpdated, seed }) {
     console.log('add warcs to col', col, warcs, lastUpdated, seed)
     let opts = {
@@ -414,10 +508,54 @@ export default class ArchiveManager {
                         })
 
                     } else {
-                      console.error(`Error finding seed ${seed.url} for ${col} it should have been in there`)
-                      let e = new Error()
-                      e.m = errorReport(new Error(`Error finding seed ${seed.url} for ${col} it should have been in there`), 'Severe')
-                      reject(e)
+                      seed._id = `${col}-${seed.url}`
+                      if (!seed.jobIds) {
+                        if (!seed.jobId) {
+                          seed.jobIds = [ new Date().getTime() ]
+                        } else {
+                          seed.jobIds = [ seed.jobId ]
+                        }
+                      } else {
+                        if (!Array.isArray(seed.jobIds)) {
+                          if (!seed.jobId) {
+                            seed.jobIds = [ new Date().getTime() ]
+                          } else {
+                            seed.jobIds = [ seed.jobId ]
+                          }
+                        } else {
+                          if (!seed.jobId) {
+                            seed.jobIds.push(new Date().getTime())
+                          } else {
+                            seed.jobIds.push(seed.jobId)
+                            delete seed.jobId
+                          }
+                        }
+                      }
+                      delete seed.jobId
+
+                      return inserAndFindAll(this.colSeeds, seed, findA).then((colSeeds) => {
+                        console.log(colSeeds)
+                        updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
+                        console.log(updatedCol)
+                        resolve({
+                          colName: updatedCol.colName,
+                          numArchives: updatedCol.numArchives,
+                          size: updatedCol.size,
+                          seeds: updatedCol.seeds,
+                          lastUpdated: updatedCol.lastUpdated
+                        })
+                      })
+                        .catch(CompoundNedbError, erUFA => {
+                          console.error(`Error updateAndFindAll for ${col} seed ${seed.url}`, erUFA, erUFA.where)
+                          erUFA.m = errorReport(erUFA.oError, `Error updating ${col}'s seed ${seed.url}`)
+                          reject(erUFA)
+                        })
+                        .catch(erUFA => {
+                          console.error(`Error updateAndFindAll for ${col} seed ${seed.url}`, erUFA)
+                          erUFA.m = errorReport(erUFA, `Error updating ${col}'s seed ${seed.url}`)
+                          reject(erUFA)
+                        })
+
                     }
                   })
                   .catch(errFindCs => {

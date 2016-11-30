@@ -126,7 +126,6 @@ const handledRequest = (store, next, action, handledRequest) => {
 }
 
 export default (store, next, action) => {
-  console.log('heritrix request handler middleware', action)
   if (action.type === MAKE_REQUEST) {
     return makeRequest(store, next, action, action.request)
   } else if (action.type === HANDLED_REQUEST) {

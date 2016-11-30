@@ -29,13 +29,17 @@
 <div id="wail" class="entryContainer">
 
 </div>
-<script src='http://localhost:9000/dist/wail.bundle.js'></script>
-<!--<script>-->
-    <!--(function () {-->
-        <!--const script = document.createElement('script');-->
-        <!--script.src = (process.env.HOT) ? 'http://localhost:9000/dist/wail.bundle.js' : '../dist/wail.bundle.js';-->
-        <!--document.write(script.outerHTML);-->
-    <!--}());-->
-<!--</script>-->
+<!--<script src='http://localhost:9000/dist/wail.bundle.js'></script>-->
+<script>
+  {
+    if(process.env.HOT) {
+      const script = document.createElement('script')
+      script.src = 'http://localhost:9000/dist/wail.bundle.js'
+      document.write(script.outerHTML)
+    } else {
+      require('../dist/wail.bundle.js')
+    }
+  }
+</script>
 </body>
 </html>

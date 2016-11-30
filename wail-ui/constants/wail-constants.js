@@ -33,6 +33,14 @@ export default {
     TERMINATE_RESTART_JOB: null,
     TERMINATE_JOB: null
   }),
+  AddSeedFromFsEvents: keyMirror({
+    SEED_CHECKED: null,
+    ADD_SEED: null,
+    ADDING_SEED: null,
+    ADDING_SEED_DONE: null,
+    ADDING_SEED_DONE_ERROR: null,
+    RESET_ADD_SEED_MESSAGE: null
+  }),
   CheckUrlEvents: keyMirror({
     CHECK_URL: null,
     CHECKING_URL: null,

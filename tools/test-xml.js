@@ -21,7 +21,6 @@ let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
 Promise.promisifyAll(DB.prototype)
-console.log(S("https://twitter.com/wikileaks/status/803113754066096128").strip('twitter.com', 'status', 'https:/', '/', '.').s)
 
 const changeColLocs = () => {
   const archives = new DB({
@@ -71,15 +70,104 @@ const changeColLocs = () => {
     })
 }
 
-let it = [ 'title="yes"', 'description="no"' ]
-let metadata = {}
-let swapper = S('')
-it.forEach(m => {
-  let [mk,mv] = m.split('=')
-  metadata[ mk ] = swapper.setValue(mv).replaceAll('"', '').s
-})
+let p2 = '/home/john/my-fork-wail/bundledApps/warcChecker/warcChecker -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
+let p = '/home/john/my-fork-wail/bundledApps/listUris/listUris -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
 
-console.log(inspect(metadata))
+class WarcUtilError extends Error {
+  constructor (oError, where) {
+    super()
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
+    this.oError = oError
+    this.where = where
+    Error.captureStackTrace(this, WarcUtilError)
+  }
+}
+
+const extractSeed = exePath =>
+  new Promise((resolve, reject) => {
+    cp.exec(exePath, (error, stdout, stderr) => {
+      if (error) {
+        console.error(error)
+        console.log(stdout, stderr)
+        return reject(new WarcUtilError(error, 'executing'))
+      } else {
+        let extractedSeeds
+        try {
+          extractedSeeds = JSON.parse(stdout)
+        } catch (e) {
+          return reject(new WarcUtilError(e, 'parsing json'))
+        }
+        console.log(inspect(extractedSeeds))
+        resolve(extractedSeeds)
+      }
+    })
+  })
+
+const warcRenamer = badWarc =>
+  new Promise((resolve, reject) => {
+    let newName = `${badWarc.filep}.invalid`
+    fs.rename(badWarc.filep, newName, err => {
+      if (err) {
+        return reject(err)
+      }
+      badWarc.filep = newName
+      resolve(badWarc)
+    })
+  })
+
+const renameBadWarc = hadErrors => Promise.map(hadErrors, warcRenamer, { concurrency: 1 })
+
+//-d /home/john/my-fork-wail/archives2/collections/Wail/archive
+const isWarcValid = checkPath =>
+  new Promise((resolve, reject) => {
+    cp.exec(checkPath, (error, stdout, stderr) => {
+      if (error) {
+        console.error(error)
+        console.log(stdout, stderr)
+        return reject(new WarcUtilError(error, 'executing'))
+      } else {
+        let extractedSeeds
+        try {
+          extractedSeeds = JSON.parse(stdout)
+        } catch (e) {
+          return reject(new WarcUtilError(e, 'parsing json'))
+        }
+        console.log(inspect(extractedSeeds))
+        resolve(extractedSeeds)
+      }
+    })
+  })
+
+extractSeed(p)
+  .catch(validity => {
+    console.log(inspect(validity))
+  })
+  .catch(error => {
+    console.error(error)
+  })
+
+// extractSeed(p)
+//   .then(seeds => {
+//     if (seeds.hadErrors.length > 0) {
+//       console.log(inspect(seeds.hadErrors))
+//       Promise.map(seeds.hadErrors, renameBadWarc, { concurrency: 1 })
+//         .each(reNamedWarc => {
+//           console.log(reNamedWarc)
+//         })
+//         .catch(error => {
+//           console.error('error while renmaing warcs')
+//           console.error(error)
+//         })
+//     }
+//   })
+//   .catch(ExtractSeedError, ese => {
+//     console.log(ese)
+//   })
+//   .catch(error => {
+//     console.log('error normal', error)
+//   })
 
 // let theDur = { val: 5, what: 'minutes' }
 //

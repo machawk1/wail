@@ -11,7 +11,7 @@ const settings = remote.getGlobal('settings')
 
 const makeArchiveConfig = (config, tweet) => {
   let name = S(tweet).strip('twitter.com', 'status', 'https:', '/', '.').s
-  let saveThisOne = `${config.forCol}_${config.account}_${name}.warc`
+  let saveThisOne = `${config.forCol}_${config.account}_twitter_${name}.warc`
   let cpath = path.join(settings.get('collections.dir'), `${config.forCol}`, 'archive')
   return {
     forCol: config.forCol,
