@@ -154,7 +154,12 @@ export default class AddFromFs extends Component {
     }
     console.log('add these seeds ', addToCol, channel)
     ipc.send(channel, addToCol)
-    this.context.store.dispatch(resetAddFSSeedMessage())
+    this.setState({
+      message: defaultM,
+      checkingDone: false,
+      warcSeeds: [],
+      hadErrors: [],
+    }, () => this.context.store.dispatch(resetAddFSSeedMessage()))
   }
 
   render () {
