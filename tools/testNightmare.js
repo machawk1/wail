@@ -1,205 +1,186 @@
-import 'babel-polyfill'
-import Promise from 'bluebird'
-import cp from 'child_process'
-import fs from 'fs-extra'
-import named from 'named-regexp'
-import S from 'string'
-import util from 'util'
-import got from 'got'
-import request from 'request'
-import rp from 'request-promise'
-import FormData from 'form-data'
-import crypto from 'crypto'
-import through2 from 'through2'
-import shelljs from 'shelljs'
-Promise.promisifyAll(fs)
-import ipc from 'node-ipc'
+const DB = require('nedb')
+const _ = require('lodash')
+const util = require('util')
+const Immutable = require('immutable')
+const Promise = require('bluebird')
+const S = require('string')
+const cp = require('child_process')
+const fs = require('fs-extra')
+const through2 = require('through2')
+const prettyBytes = require('pretty-bytes')
+const moment = require('moment')
+const path = require('path')
+const schedule = require('node-schedule')
+// */5 * * * *
+const Twit = require('twit')
 
+const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
 
-const ipcDaemon = new ipc.IPC()
-
-// process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
-//
-// let options = {
-//   method: "POST",
-//   url: "https://localhost:8443/engine/job/1468042466879",
-//   form: {
-//     action: "launch"
-//   },
-//   auth: {
-//     username: "lorem",
-//     password: "ipsum",
-//     sendImmediately: false
-//   },
-//   rejectUnauthorized: false,
-//   resolveWithFullResponse: true,
-// }
-// rp(options)
-//   .then(response => {
-//     // POST succeeded...
-//     console.log("sucess in launching job", response)
-//   })
-//   .catch(err => {
-//     if (err.statusCode == 303) {
-//       console.log("303 sucess in launch job", err)
-//     } else {
-//       // POST failed...
-//       console.log("failur in launching job", err)
-//     }
-//   })
-
-//
-// var spawn = require('child_process').spawn('java', ['-version']);
-// spawn.on('error', function(err){
-//   return callback(err, null);
-// })
-// spawn.stderr.on('data', function(data) {
-//   data = data.toString().split('\n')[0];
-//   var javaVersion = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
-//   if (javaVersion != false) {
-//     // TODO: We have Java installed
-//     console.log(javaVersion)
-//   } else {
-//     // TODO: No Java installed
-//     console.log('no java')
-//
-//   }
-// })
-
-// let good_jdk = ['/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk','/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk']
-
-
-// let havaJava = null// shelljs.which('java')
-//
-// if(havaJava) {
-//   console.log(`which java ${havaJava}`)
-// } else {
-//   console.log('its nul')
-// }
-
-// // (:<jvm>*.jre|jdk)
-// let jvmRegex = named.named(/\/[a-zA-z/]+(:<jvm>.+)/)
-// let jvRegex = named.named(/java version "(:<jv>[0-9._]+)"/g)
-// // let jvms = shelljs.ls('-d','/Library/Java/JavaVirtualMachines/*.jdk')
-//
-// let it = ' '
-// console.log(it)
-// let jvTest = jvRegex.exec(it)
-// if(jvTest) {
-//   console.log(jvTest.capture('jv'))
-// } else {
-//   console.log('fail')
-// }
-// const osx_java7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
-// ///Users/jberlin/WebstormProjects/wail/support
-// request.get(osx_java7DMG)
-//   .on('response', res => {
-//   console.log(res.statusCode) // 200
-//   console.log(res.headers['content-type'])
-// }).on('error', err => {
-//   console.error(err)
-// }).pipe(fs.createWriteStream('/Users/jberlin/WebstormProjects/wail/support/java7.dmg'))
-//   .on('close',() => {
-//     console.log('done')
-//
-//   })
-
-// cp.exec('hdiutil attach /Users/jberlin/WebstormProjects/wail/support/java7.dmg', (err, stdout, stderr) => {
-//   if(err) {
-//     console.error(err)
-//   } else {
-//     console.log(stderr,stdout)
-//     cp.exec('open JDK 7 Update 79.pkg',{cwd: '/Volumes/JDK 7 Update 79/'})
-//   }
-// })
-
-cp.exec('open /Volumes/JDK\\ 7\\ Update\\ 79/JDK\\ 7\\ Update\\ 79.pkg', (err, stdout, stderr) => {
-  if(err) {
-    console.error(err)
-  } else {
-    console.log(stderr,stdout)
-    // cp.exec('open JDK 7 Update 79.pkg',{cwd: '/Volumes/JDK 7 Update 79/'})
-  }
+const a = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+  autoload: true
 })
-//
-// let open = cp.spawn('open',['JDK\\ 7\\ Update\\ 79.pkg'],{cwd: '/Volumes/JDK\\ 7\\ Update\\ 79'})
-//
-// open.stdout.on('data', (data) => {
-//   console.log(data)
-// });
-//
-// open.stderr.on('data', (data) => {
-//   console.error(`ps stderr: ${data}`);
-// });
-//
-// open.on('close', (code) => {
-//   if (code !== 0) {
-//     console.log(`ps process exited with code ${code}`);
-//   }
-//   open.stdin.end();
-// });
-// console.log(jvms.length)
-//
-// jvms.forEach(jvm => {
-//   console.error(jvm)
-//   let jvmTest = jvmRegex.exec(jvm)
-//   if(jvmTest) {
-//     console.log(jvmTest.capture('jvm'))
-//   }
-//
-// })
-//
-// console.log(shelljs.which('mvn'))
+
+const c = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database/crawls.db',
+  autoload: true
+})
+
+function *updateGen (iterate) {
+  for (let it of iterate)
+    yield it
+}
+
+function update (iter, updateFun) {
+  let { done, value } = iter.next()
+  if (!done) {
+    updateFun(value)
+      .then(() => {
+        update(iter, updateFun)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+}
+
+const runsToLatest = (db, run) => new Promise((resolve, reject) => {
+  run.hasRuns = true
+  db.insert(run, (err) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve()
+    }
+  })
+})
+
+const updater = _.partial(runsToLatest, c)
+c.find({}, (err, crawls) => {
+  // c.remove({}, { multi: true }, function (err, numRemoved) {
+  //   update(updateGen(crawls), updater)
+  // })
+  let cs = _.keyBy(crawls, crawl => crawl.jobId)
+  let newA = []
+  a.find({}, (erra, archives) => {
+    console.log(inpect(archives))
+    // archives.forEach(ar => {
+    //   // console.log(inpect(ar))
+    //   if (ar.seeds.length > 0) {
+    //     ar.seeds = ar.seeds.map(s => {
+    //       s.added = moment(cs[ Math.min(...s.jobIds) ].jobId).format()
+    //       s.lastUpdated = moment(cs[ Math.max(...s.jobIds) ].latestRun.timestamp).format()
+    //       return s
+    //     })
+    //   }
+    //   newA.push(ar)
+    // })
+    // console.log(inpect(newA))
+    // a.remove({}, { multi: true }, function (err, numRemoved) {
+    //   a.insert(newA, (err) => {
+    //     console.log(err)
+    //   })
+    // })
+  })
+
+})
 
 
-// try {
-//   fs.statSync('/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk')
-// } catch(doesNotExist) {
-//   console.log(doesNotExist)
-// }
-
-// fs.stat('/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk',(err,stat) => {
-//   if(err) {
-//     fs.stat('/Library/Java/JavaVirtualMachines/jdk1.7.0_80.jdk',(err2,stat2) => {
-//       if(err2) {
-//         console.log('java 7 not installed')
-//       } else {
-//         console.log('java 7u80 is installed')
-//       }
-//     })
-//   } else {
-//     console.log('java 7u79 is installed')
-//   }
-// })
 
 
-// fs.stat('/Library/Java/JavaVirtualMachines/jdk1.8.0_72.jdk',(err,stat) => {
-//   if(err) {
-//     console.log('it does not exists')
-//   } else {
-//     console.log('it does',util.inspect(stat,{colors: true, depth: null}))
-//   }
-// })
+const transformSeeds = seeds => _.chain(seeds)
+  .groupBy(it => it.url)
+  .mapValues(ar => {
+    let it = ar.map(it => it.jobId)
+    let jobIds = _.uniq(it)
+    return {
+      mementos: it.length,
+      jobIds
+    }
+  })
+  .toPairs()
+  .flatMap(it => {
+    return {
+      url: it[ 0 ],
+      jobIds: it[ 1 ].jobIds,
+      mementos: it[ 1 ].mementos
+    }
+  }).value()
 
-// let count = 0
-// cp.exec('java -version',(err,stdout,stderr) => {
-//   let javaVersion = /java version/.test(stderr) ? stderr.split(' ')[2].replace(/"/g, '') : false
-//   count += 1
-//   if (javaVersion != false) {
-//     // TODO: We have Java installed
-//     console.log(javaVersion)
-//     let jv = S(javaVersion)
-//     if(jv.contains('1.7')) {
-//       console.log('you have 1.7')
-//     } else {
-//       console.log('not 1.7ß')
-//     }
-//   } else {
-//     console.log('no java')
-//
-//   }
-//
-//   console.log(count)
-// })
-//
-// console.log(util.inspect(process.env,{colors: true, depth: null}))
+let newCols = []
+const update = (iter, collections, runs) => {
+  let { done, value: col } = iter.next()
+  if (!done) {
+    runs.find({ forCol: col.colName }, (err, colRuns) => {
+      if (colRuns.length > 0) {
+        let seeds = []
+        let rms = []
+        colRuns.forEach(cur => {
+          if (Array.isArray(cur.urls)) {
+            cur.urls.forEach(it => {
+              seeds.push({
+                url: it,
+                jobId: cur.jobId
+              })
+            })
+          } else {
+            seeds.push({
+              url: cur.urls,
+              jobId: cur.jobId
+            })
+          }
+          if (cur.runs.length > 0) {
+            rms = rms.concat(cur.runs.map(r => moment(r.timestamp)))
+          }
+        })
+        col.lastUpdated = rms.length > 0 ? moment.max(rms).format() : moment().format()
+        col.seeds = transformSeeds(seeds)
+      } else {
+        col.lastUpdated = moment().format()
+        col.seeds = []
+      }
+      col.created = moment().format()
+      let size = 0
+      fs.walk(col.archive)
+        .pipe(through2.obj(function (item, enc, next) {
+          if (!item.stats.isDirectory()) this.push(item)
+          next()
+        }))
+        .on('data', item => {
+          size += item.stats.size
+        })
+        .on('end', () => {
+          col.size = prettyBytes(size)
+          delete col.crawls
+          newCols.push(col)
+          update(iter, collections, runs)
+        })
+    })
+  } else {
+    console.log(util.inspect(newCols, { depth: null, colors: true }))
+    a.remove({}, { multi: true }, (x, y) => {
+      a.insert(newCols, (erri, newDocs) => {
+        console.log(newDocs)
+      })
+    })
+  }
+}
+
+a.find({}, (err, collections) => {
+  // console.log(util.inspect(collections, { depth: null, colors: true }))
+  update(updateGen(collections), a, c)
+  // collections.forEach(col => {
+  //   c.find({ forCol: col.colName }, (err, colRuns) => {
+  //     console.log(util.inspect(col, { depth: null, colors: true }))
+  //     console.log(util.inspect(colRuns, { depth: null, colors: true }))
+  //     if (colRuns.length > 0) {
+  //       let seeds = colRuns.map(r => r.urls)
+  //       console.log(seeds)
+  //     } else {
+  //       console.log('no seeds')
+  //       a.update({ _id: col._id },)
+  //     }
+  //     console.log('------------------------------')
+  //   })
+  // })
+})

@@ -31,7 +31,8 @@
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-osx": "npm run package -- --osx",
     "standard-fix": "standard --fix",
-    "profile": "./node_modules/.bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --content-base . --profile --json > stats.json"
+    "profile": "./node_modules/.bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --content-base . --profile --json > stats.json",
+    "transformOldDb": "node --harmony ./tools/transformOldDb.js"
   },
   "main": "./dist/ui-main.js",
   "bin": {

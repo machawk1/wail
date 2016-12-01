@@ -46,6 +46,10 @@ ipc.on('add-multi-warcs-to-col', (event, multi) => {
     })
 })
 
+ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
+  archiveMan.addWarcsFromFSToCol(fsAdd)
+})
+
 ipc.on('add-metadata-to-col', (event, addMe) => {
   let {
     forCol,

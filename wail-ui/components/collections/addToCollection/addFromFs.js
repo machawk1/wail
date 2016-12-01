@@ -115,7 +115,7 @@ export default class AddFromFs extends Component {
   addWarcWTrueSeeds (values) {
     let readSeeds = values.toJS()
     let addToCol
-    let channel = 'add-warcs-to-col'
+    let channel = 'addfs-warcs-to-col'
     let { warcSeeds } = this.state
     if (warcSeeds.length > 1) {
       channel = 'add-multi-warcs-to-col'
@@ -128,6 +128,11 @@ export default class AddFromFs extends Component {
         let realSeed = readSeeds[ seedName(ws.name) ]
         if (realSeed) {
           let jobId = timeStampFinder(realSeed, ws.seeds)
+          let lastUpdated
+          if(!jobId) {
+            jobId = new Date().getTime()
+            lastUpdated = moment(jobId).format()
+          }
           addToCol.seedWarcs.push({
             warcs: ws.filep,
             seed: {

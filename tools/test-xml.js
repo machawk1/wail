@@ -22,131 +22,133 @@ let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
 Promise.promisifyAll(DB.prototype)
 
-const changeColLocs = () => {
-  const archives = new DB({
-    filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
-    autoload: true
+const archives = new DB({
+  filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
+  autoload: true
+})
+
+archives.findAsync({})
+  .then(all => {
+    console.log(all)
   })
 
-  const seeds = new DB({
-    filename: '/home/john/my-fork-wail/dev_coreData/database/archiveSeeds.db',
-    autoload: true
-  })
-
-  let changeKeys = [
-    'colpath',
-    'archive',
-    'indexes',
-  ]
-
-  let from = '/home/john/my-fork-wail/archives2/'
-
-  archives.findAsync({})
-    .then(docs => {
-      let nDocs = docs.map(doc =>
-        _.mapValues(doc, (v, k) => {
-          if (changeKeys.includes(k)) {
-            return S(v).replaceAll(from, moveWhere).s
-          } else {
-            return v
-          }
-        })
-      )
-      console.log(inspect(nDocs))
-      return archives.removeAsync({}, { multi: true })
-        .then(() => archives.insertAsync(nDocs)
-          .then(() => {
-            console.log('done')
-          })
-          .catch(error => {
-            console.error('inserting failed', error)
-          })
-        ).catch(error => {
-          console.error('removing faild', error)
-        })
-    })
-    .catch(error => {
-      console.error(error)
-    })
-}
-
-let p2 = '/home/john/my-fork-wail/bundledApps/warcChecker/warcChecker -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
-let p = '/home/john/my-fork-wail/bundledApps/listUris/listUris -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
-
-class WarcUtilError extends Error {
-  constructor (oError, where) {
-    super()
-    Object.defineProperty(this, 'name', {
-      value: this.constructor.name
-    })
-    this.oError = oError
-    this.where = where
-    Error.captureStackTrace(this, WarcUtilError)
-  }
-}
-
-const extractSeed = exePath =>
-  new Promise((resolve, reject) => {
-    cp.exec(exePath, (error, stdout, stderr) => {
-      if (error) {
-        console.error(error)
-        console.log(stdout, stderr)
-        return reject(new WarcUtilError(error, 'executing'))
-      } else {
-        let extractedSeeds
-        try {
-          extractedSeeds = JSON.parse(stdout)
-        } catch (e) {
-          return reject(new WarcUtilError(e, 'parsing json'))
-        }
-        console.log(inspect(extractedSeeds))
-        resolve(extractedSeeds)
-      }
-    })
-  })
-
-const warcRenamer = badWarc =>
-  new Promise((resolve, reject) => {
-    let newName = `${badWarc.filep}.invalid`
-    fs.rename(badWarc.filep, newName, err => {
-      if (err) {
-        return reject(err)
-      }
-      badWarc.filep = newName
-      resolve(badWarc)
-    })
-  })
-
-const renameBadWarc = hadErrors => Promise.map(hadErrors, warcRenamer, { concurrency: 1 })
-
-//-d /home/john/my-fork-wail/archives2/collections/Wail/archive
-const isWarcValid = checkPath =>
-  new Promise((resolve, reject) => {
-    cp.exec(checkPath, (error, stdout, stderr) => {
-      if (error) {
-        console.error(error)
-        console.log(stdout, stderr)
-        return reject(new WarcUtilError(error, 'executing'))
-      } else {
-        let extractedSeeds
-        try {
-          extractedSeeds = JSON.parse(stdout)
-        } catch (e) {
-          return reject(new WarcUtilError(e, 'parsing json'))
-        }
-        console.log(inspect(extractedSeeds))
-        resolve(extractedSeeds)
-      }
-    })
-  })
-
-extractSeed(p)
-  .catch(validity => {
-    console.log(inspect(validity))
-  })
-  .catch(error => {
-    console.error(error)
-  })
+// const changeColLocs = () => {
+//   const archives = new DB({
+//     filename: '/home/john/my-fork-wail/dev_coreData/database/archives.db',
+//     autoload: true
+//   })
+//
+//   const seeds = new DB({
+//     filename: '/home/john/my-fork-wail/dev_coreData/database/archiveSeeds.db',
+//     autoload: true
+//   })
+//
+//   let changeKeys = [
+//     'colpath',
+//     'archive',
+//     'indexes',
+//   ]
+//
+//   let from = '/home/john/my-fork-wail/archives2/'
+//
+//   archives.findAsync({})
+//     .then(docs => {
+//       let nDocs = docs.map(doc =>
+//         _.mapValues(doc, (v, k) => {
+//           if (changeKeys.includes(k)) {
+//             return S(v).replaceAll(from, moveWhere).s
+//           } else {
+//             return v
+//           }
+//         })
+//       )
+//       console.log(inspect(nDocs))
+//       return archives.removeAsync({}, { multi: true })
+//         .then(() => archives.insertAsync(nDocs)
+//           .then(() => {
+//             console.log('done')
+//           })
+//           .catch(error => {
+//             console.error('inserting failed', error)
+//           })
+//         ).catch(error => {
+//           console.error('removing faild', error)
+//         })
+//     })
+//     .catch(error => {
+//       console.error(error)
+//     })
+// }
+//
+// let p2 = '/home/john/my-fork-wail/bundledApps/warcChecker/warcChecker -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
+// let p = '/home/john/my-fork-wail/bundledApps/listUris/listUris -d /home/john/Documents/WAIL_ManagedCollections/collections/Wail'
+//
+// class WarcUtilError extends Error {
+//   constructor (oError, where) {
+//     super()
+//     Object.defineProperty(this, 'name', {
+//       value: this.constructor.name
+//     })
+//     this.oError = oError
+//     this.where = where
+//     Error.captureStackTrace(this, WarcUtilError)
+//   }
+// }
+//
+// const extractSeed = exePath =>
+//   new Promise((resolve, reject) => {
+//     cp.exec(exePath, (error, stdout, stderr) => {
+//       if (error) {
+//         console.error(error)
+//         console.log(stdout, stderr)
+//         return reject(new WarcUtilError(error, 'executing'))
+//       } else {
+//         let extractedSeeds
+//         try {
+//           extractedSeeds = JSON.parse(stdout)
+//         } catch (e) {
+//           return reject(new WarcUtilError(e, 'parsing json'))
+//         }
+//         console.log(inspect(extractedSeeds))
+//         resolve(extractedSeeds)
+//       }
+//     })
+//   })
+//
+// const warcRenamer = badWarc =>
+//   new Promise((resolve, reject) => {
+//     let newName = `${badWarc.filep}.invalid`
+//     fs.rename(badWarc.filep, newName, err => {
+//       if (err) {
+//         return reject(err)
+//       }
+//       badWarc.filep = newName
+//       resolve(badWarc)
+//     })
+//   })
+//
+// const renameBadWarc = hadErrors => Promise.map(hadErrors, warcRenamer, { concurrency: 1 })
+//
+// //-d /home/john/my-fork-wail/archives2/collections/Wail/archive
+// const isWarcValid = checkPath =>
+//   new Promise((resolve, reject) => {
+//     cp.exec(checkPath, (error, stdout, stderr) => {
+//       if (error) {
+//         console.error(error)
+//         console.log(stdout, stderr)
+//         return reject(new WarcUtilError(error, 'executing'))
+//       } else {
+//         let extractedSeeds
+//         try {
+//           extractedSeeds = JSON.parse(stdout)
+//         } catch (e) {
+//           return reject(new WarcUtilError(e, 'parsing json'))
+//         }
+//         console.log(inspect(extractedSeeds))
+//         resolve(extractedSeeds)
+//       }
+//     })
+//   })
 
 // extractSeed(p)
 //   .then(seeds => {
@@ -465,25 +467,25 @@ extractSeed(p)
 //   { url: 'cs.odu.edu/~jberlin', jobId: 1475014488646 },
 //   { url: 'cs.odu.edu/~jberlin', jobId: 1475014754339 },
 //   { url: 'cs.odu.edu', jobId: 1475473536070 } ]
-//
-// let trans = _.chain(sss)
-//   .groupBy(it => it.url)
-//   .mapValues(ar => {
-//     let it = ar.map(it => it.jobId)
-//     let jobIds = _.uniq(it)
-//     return {
-//       mementos: it.length,
-//       jobIds
-//     }
-//   })
-//   .toPairs()
-//   .flatMap(it => {
-//     return {
-//       url: it[ 0 ],
-//       jobIds: it[ 1 ].jobIds,
-//       mementos: it[ 1 ].mementos
-//     }
-//   }).value()
+
+let trans = _.chain(sss)
+  .groupBy(it => it.url)
+  .mapValues(ar => {
+    let it = ar.map(it => it.jobId)
+    let jobIds = _.uniq(it)
+    return {
+      mementos: it.length,
+      jobIds
+    }
+  })
+  .toPairs()
+  .flatMap(it => {
+    return {
+      url: it[ 0 ],
+      jobIds: it[ 1 ].jobIds,
+      mementos: it[ 1 ].mementos
+    }
+  }).value()
 // console.log(util.inspect(trans, { colors: true, depth: null }))
 
 // console.log('hi')
@@ -535,34 +537,34 @@ extractSeed(p)
 //   autoload: true
 // })
 //
-// function *updateGen (iterate) {
-//   for (let it of iterate)
-//     yield it
-// }
+function *updateGen (iterate) {
+  for (let it of iterate)
+    yield it
+}
+
+function update (iter, updateFun) {
+  let { done, value } = iter.next()
+  if (!done) {
+    updateFun(value)
+      .then(() => {
+        update(iter, updateFun)
+      })
+      .catch(error => {
+        console.error(error)
+      })
+  }
+}
 //
-// function update (iter, updateFun) {
-//   let { done, value } = iter.next()
-//   if (!done) {
-//     updateFun(value)
-//       .then(() => {
-//         update(iter, updateFun)
-//       })
-//       .catch(error => {
-//         console.error(error)
-//       })
-//   }
-// }
-//
-// const runsToLatest = (db, run) => new Promise((resolve, reject) => {
-//   run.hasRuns = true
-//   db.insert(run, (err) => {
-//     if (err) {
-//       reject(err)
-//     } else {
-//       resolve()
-//     }
-//   })
-// })
+const runsToLatest = (db, run) => new Promise((resolve, reject) => {
+  run.hasRuns = true
+  db.insert(run, (err) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve()
+    }
+  })
+})
 //
 // // const updater = _.partial(runsToLatest, c)
 // c.find({}, (err, crawls) => {
@@ -622,101 +624,6 @@ extractSeed(p)
 //     })
 //   }
 // })
-// const transformSeeds = seeds => _.chain(seeds)
-//   .groupBy(it => it.url)
-//   .mapValues(ar => {
-//     let it = ar.map(it => it.jobId)
-//     let jobIds = _.uniq(it)
-//     return {
-//       mementos: it.length,
-//       jobIds
-//     }
-//   })
-//   .toPairs()
-//   .flatMap(it => {
-//     return {
-//       url: it[ 0 ],
-//       jobIds: it[ 1 ].jobIds,
-//       mementos: it[ 1 ].mementos
-//     }
-//   }).value()
-//
-// let newCols = []
-// const update = (iter, collections, runs) => {
-//   let { done, value: col } = iter.next()
-//   if (!done) {
-//     runs.find({ forCol: col.colName }, (err, colRuns) => {
-//       if (colRuns.length > 0) {
-//         let seeds = []
-//         let rms = []
-//         colRuns.forEach(cur => {
-//           if (Array.isArray(cur.urls)) {
-//             cur.urls.forEach(it => {
-//               seeds.push({
-//                 url: it,
-//                 jobId: cur.jobId
-//               })
-//             })
-//           } else {
-//             seeds.push({
-//               url: cur.urls,
-//               jobId: cur.jobId
-//             })
-//           }
-//           if (cur.runs.length > 0) {
-//             rms = rms.concat(cur.runs.map(r => moment(r.timestamp)))
-//           }
-//         })
-//         col.lastUpdated = rms.length > 0 ? moment.max(rms).format() : moment().format()
-//         col.seeds = transformSeeds(seeds)
-//       } else {
-//         col.lastUpdated = moment().format()
-//         col.seeds = []
-//       }
-//       col.created = moment().format()
-//       let size = 0
-//       fs.walk(col.archive)
-//         .pipe(through2.obj(function (item, enc, next) {
-//           if (!item.stats.isDirectory()) this.push(item)
-//           next()
-//         }))
-//         .on('data', item => {
-//           size += item.stats.size
-//         })
-//         .on('end', () => {
-//           col.size = prettyBytes(size)
-//           delete col.crawls
-//           newCols.push(col)
-//           update(iter, collections, runs)
-//         })
-//     })
-//   } else {
-//     console.log(util.inspect(newCols, { depth: null, colors: true }))
-//     a.remove({}, { multi: true }, (x, y) => {
-//       a.insert(newCols, (erri, newDocs) => {
-//         console.log(newDocs)
-//       })
-//     })
-//   }
-// }
-//
-// a.find({}, (err, collections) => {
-//   console.log(util.inspect(collections, { depth: null, colors: true }))
-//   // update(updateGen(collections), a, c)
-//   // collections.forEach(col => {
-//   //   c.find({ forCol: col.colName }, (err, colRuns) => {
-//   //     console.log(util.inspect(col, { depth: null, colors: true }))
-//   //     console.log(util.inspect(colRuns, { depth: null, colors: true }))
-//   //     if (colRuns.length > 0) {
-//   //       let seeds = colRuns.map(r => r.urls)
-//   //       console.log(seeds)
-//   //     } else {
-//   //       console.log('no seeds')
-//   //       a.update({ _id: col._id },)
-//   //     }
-//   //     console.log('------------------------------')
-//   //   })
-//   // })
-// })
+
 
 

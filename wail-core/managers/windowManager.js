@@ -275,6 +275,10 @@ export default class WindowManager extends EventEmitter {
       this.send('archiveManWindow', 'add-multi-warcs-to-col', multi)
     })
 
+    ipcMain.on('addfs-warcs-to-col', (e, addMe) => {
+      this.send('archiveManWindow', 'addfs-warcs-to-col', addMe)
+    })
+
     /* Control */
     ipcMain.on('log-error-display-message', (event, em) => {
       console.log('log-error-display-message', em)
