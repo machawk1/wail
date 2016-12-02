@@ -16,19 +16,20 @@ export default class SignIn extends Component {
       disabled: false
     }
 
-    ipc.once('signed-into-twitter', (e, whatHappened) => {
+    ipc.on('signed-into-twitter', (e, whatHappened) => {
       if (!whatHappened.wasError) {
         this.context.store.dispatch(signedIntoTwitter())
       } else {
         console.log('dang error case :(')
-        window.logger.error(whatHappened.error)
-        global.notifications$.next(notify({
-          title: 'Twitter Sign In Not Completed',
-          level: 'warning',
-          message: 'An error occurred during sign in. If you closed the window cary on.',
-          autoDismiss: 10
-        }))
-        this.setState({ disabled: false })
+        this.setState({ disabled: false }, () => {
+          window.logger.error(whatHappened.error)
+          global.notifications$.next(notify({
+            title: 'Twitter Sign In Not Completed',
+            level: 'warning',
+            message: 'An error occurred during sign in. If you closed the window cary on.',
+            autoDismiss: 10
+          }))
+        })
       }
     })
   }

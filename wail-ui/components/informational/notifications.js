@@ -9,10 +9,6 @@ const EventTypes = wailConstants.EventTypes
 export default class Notifications extends Component {
   constructor (props) {
     super(props)
-    this.state = {
-      message: 'Status Number 1',
-      open: false
-    }
     this.$notificationSub = null
     this.notifier = null
   }
@@ -38,23 +34,29 @@ export default class Notifications extends Component {
   }
 
   ipcNotif (e, notif) {
-    if (Reflect.has(notif, 'wasError')) {
-      window.logger.error(notif.err, notif.message.message)
-      this.notifier.addNotification(notif.message)
-    } else {
-      this.notifier.addNotification(notif)
+    if (notif) {
+      if (Reflect.has(notif, 'wasError')) {
+        window.logger.error(notif.err, notif.message.message)
+        this.notifier.addNotification(notif.message)
+      } else {
+        this.notifier.addNotification(notif)
+      }
     }
   }
 
   receiveMessage (notif) {
+    console.log(notif)
     // console.log('reciever message')
     // let message = GMessageStore.getMessage()
     // this.notifier.addNotification(message)
-    if (notif.type === EventTypes.QUEUE_MESSAGE) {
-      this.notifier.addNotification(notif.message)
-    } else {
-      console.log('unreconized notfication', notif)
+    if (notif) {
+      if (notif.type === EventTypes.QUEUE_MESSAGE) {
+        this.notifier.addNotification(notif.message)
+      } else {
+        console.log('unreconized notfication', notif)
+      }
     }
+
   }
 
   render () {
