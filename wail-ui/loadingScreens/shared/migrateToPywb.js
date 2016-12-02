@@ -159,7 +159,7 @@ export default class MigratePywb extends Component {
         buttons: [ 'Yes', 'No' ],
         title: 'Add Warcs',
         message: 'Do you have any (w)arc files that you wish to add?',
-        detail: 'This adds those (w)arc files to the default collection Wail',
+        detail: 'This adds those (w)arc files to the default collection',
         cancelId: 666
       }
       dialog.showMessageBox(messageOpts, (response) => {

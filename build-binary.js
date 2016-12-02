@@ -71,6 +71,13 @@ const ignore = [
   '^/tools($|/)',
   '^/waillogs($|/)',
   '^/webpack.config.*$',
+  '^/webpackConfigs($|/)$',
+  '^/buildResources($|/)$',
+  '^/sharedUtil($|/)$',
+  '^/wail-core_old($|/)$',
+  '^/bundledApps/pywb_old($|/)$',
+  '^/support($|/)$',
+  '^/temp($|/)$',
   '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
@@ -89,7 +96,7 @@ const DEFAULT_OPTS = {
   ignore,
   overwrite: true,
   out: path.normalize(path.join(cwd, 'release')),
-  version: require('electron-prebuilt/package.json').version
+  version: require('electron/package.json').version
 }
 
 // OSX
@@ -177,8 +184,6 @@ function pack (plat, arch, cb) {
 
   packager(opts, cb)
 }
-
-doBuild()
 
 function createDMG (appPath, cb) {
   let _createDMG = require('electron-installer-dmg')
@@ -374,53 +379,129 @@ function log (plat, arch) {
   }
 }
 
-async function doBuild () {
+// async function doBuild () {
+//   console.log('Building WAIL')
+//   try {
+//     console.log('Transpiling WAIL-Electron-Main')
+//     await build(electronCfg)
+//     console.log('Transpiling WAIL-UI')
+//     await build(cfgUI)
+//     console.log('Transpiling WAIL-Core')
+//     await build(cfgCore)
+//     const paths = await del('release')
+//     if (shouldBuildCurrent) {
+//       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+//       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+//     } else {
+//       let buildFor
+//       let archs
+//       let platforms
+//       if (shouldBuildAll) {
+//         buildFor = 'building for all platforms'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'linux', 'win32', 'darwin' ]
+//       } else if (shouldBuildLinux) {
+//         buildFor = 'building for linux'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'linux' ]
+//       } else if (shouldBuildOSX) {
+//         buildFor = 'building for OSX'
+//         archs = [ 'x64' ]
+//         platforms = [ 'darwin' ]
+//       } else {
+//         buildFor = 'building for Windows'
+//         archs = [ 'ia32', 'x64' ]
+//         platforms = [ 'win32' ]
+//       }
+//       console.log(buildFor)
+//       platforms.forEach(plat => {
+//         archs.forEach(arch => {
+//           console.log(`building the binary for ${plat}-${arch}`)
+//           pack(plat, arch, log(plat, arch))
+//         })
+//       })
+//     }
+//   } catch (error) {
+//     console.error(error)
+//   }
+//   cp.exec(`open ${path.join(cwd, 'release')}`)
+// }
+
+const doBuild = () => {
   console.log('Building WAIL')
-  try {
+  return new Promise((resolve, reject) => {
     console.log('Transpiling WAIL-Electron-Main')
-    await build(electronCfg)
-    console.log('Transpiling WAIL-UI')
-    await build(cfgUI)
-    console.log('Transpiling WAIL-Core')
-    await build(cfgCore)
-    const paths = await del('release')
-    if (shouldBuildCurrent) {
-      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-    } else {
-      let buildFor
-      let archs
-      let platforms
-      if (shouldBuildAll) {
-        buildFor = 'building for all platforms'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux', 'win32', 'darwin' ]
-      } else if (shouldBuildLinux) {
-        buildFor = 'building for linux'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux' ]
-      } else if (shouldBuildOSX) {
-        buildFor = 'building for OSX'
-        archs = [ 'x64' ]
-        platforms = [ 'darwin' ]
-      } else {
-        buildFor = 'building for Windows'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'win32' ]
-      }
-      console.log(buildFor)
-      platforms.forEach(plat => {
-        archs.forEach(arch => {
-          console.log(`building the binary for ${plat}-${arch}`)
-          pack(plat, arch, log(plat, arch))
-        })
-      })
-    }
-  } catch (error) {
-    console.error(error)
-  }
-  cp.exec(`open ${path.join(cwd, 'release')}`)
+    build(electronCfg)
+      .then((stats) => {
+        console.log('Transpiling WAIL-UI')
+        return build(cfgUI)
+          .then((nstats) => {
+            console.log('Transpiling WAIL-Core')
+            return build(cfgCore)
+              .then((nnstats) => {
+                return del('release')
+                  .then((paths) => {
+                    if (shouldBuildCurrent) {
+                      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+                      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+                    } else {
+                      let buildFor
+                      let archs
+                      let platforms
+                      if (shouldBuildAll) {
+                        buildFor = 'building for all platforms'
+                        archs = [ 'ia32', 'x64' ]
+                        platforms = [ 'linux', 'win32', 'darwin' ]
+                      } else if (shouldBuildLinux) {
+                        buildFor = 'building for linux'
+                        archs = [ 'ia32', 'x64' ]
+                        platforms = [ 'linux' ]
+                      } else if (shouldBuildOSX) {
+                        buildFor = 'building for OSX'
+                        archs = [ 'x64' ]
+                        platforms = [ 'darwin' ]
+                      } else {
+                        buildFor = 'building for Windows'
+                        archs = [ 'ia32', 'x64' ]
+                        platforms = [ 'win32' ]
+                      }
+                      console.log(buildFor)
+                      platforms.forEach(plat => {
+                        archs.forEach(arch => {
+                          console.log(`building the binary for ${plat}-${arch}`)
+                          pack(plat, arch, log(plat, arch))
+                        })
+                      })
+                    }
+                    resolve()
+                  })
+                  .catch(error => {
+                    console.error('del', error)
+                    reject(error)
+                  })
+              }).catch(error => {
+                console.error('building core', error)
+                reject(error)
+              })
+
+          }).catch(error => {
+            console.error('building ui', error)
+            reject(error)
+          })
+      }).catch(error => {
+      console.error('building electron main', error)
+      reject(error)
+    })
+  })
 }
+
+doBuild()
+  .then(() => {
+
+  })
+  .catch(error => {
+    console.error('failed', error)
+  })
 
 // fs.emptyDirSync(path.join(cwd, 'dist'))
 // fs.emptyDirSync(path.join(cwd, 'release'))

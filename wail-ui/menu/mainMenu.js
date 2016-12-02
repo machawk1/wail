@@ -2,7 +2,6 @@ import {dialog, app, shell} from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
-import {showSettingsWindow} from '../ui-main'
 const name = app.getName()
 
 export function screenShotPDF (window) {
@@ -318,21 +317,6 @@ const menus = {
               label: `Version: ${app.getVersion()}`
             }
           ]
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Preferences',
-          accelerator: 'Cmd+,',
-          click (item, focusedWindow) {
-            console.log('clicked settings menu')
-            if (focusedWindow) {
-              showSettingsWindow(focusedWindow)
-            } else {
-              console.log('window for settings click is a no go')
-            }
-          }
         },
         {
           type: 'separator'

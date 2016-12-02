@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
 
-
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 module.exports = {

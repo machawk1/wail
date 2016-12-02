@@ -85,7 +85,7 @@ export default class AppManager {
           if (process.platform === 'darwin') {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
             this.w = 1100
-            this.h = 600
+            this.h = 700
           } else if (process.platform === 'win32') {
             // console.log('windows')
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.ico')

@@ -7,7 +7,6 @@ import runningCrawls from './runningCrawls'
 import checkUrl from './checkUrl'
 import twitter from './twitter'
 import {runsReducer, jobIds} from './crawls'
-import fsSeeds from './fsSeeds'
 import {
   CollectionEvents, CrawlEvents, CheckUrlEvents,
   Twitter, RunningCrawlCounter, JobIdActions, AddSeedFromFsEvents

@@ -1,4 +1,4 @@
-const moment = require('../wail-core/util/momentWplugins')
+const moment = require('moment')
 // require('moment-precise-range-plugin')
 const DB = require('nedb')
 const _ = require('lodash')
@@ -72,7 +72,7 @@ const transformRuns = runs =>
       }
     }).value()
 
-const changeColLocs = (adb, from) => {
+const changeColLocs = (adb, from,mw) => {
 
   let changeKeys = [
     'colpath',
@@ -85,7 +85,7 @@ const changeColLocs = (adb, from) => {
       let nDocs = docs.map(doc =>
         _.mapValues(doc, (v, k) => {
           if (changeKeys.includes(k)) {
-            return S(v).replaceAll(from, moveWhere).s
+            return S(v).replaceAll(from, mw).s
           } else {
             return v
           }
@@ -121,13 +121,13 @@ const mdataThenMap = aa =>
 const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
 // const updater = _.partial(runsToLatest, c)
 
-const aPath = path.join('.', 'dev_coreData/database(copy)/archives.db')
-const asPath = path.join('.', 'dev_coreData/database(copy)/archiveSeeds.db')
+const aPath = path.join('.', 'dev_coreData/database/archives.db')
+const asPath = path.join('.', 'dev_coreData/database/archiveSeeds.db')
 
-const rPath = path.join('.', 'dev_coreData/database(copy)/crawls.db')
+const rPath = path.join('.', 'dev_coreData/database/crawls.db')
 
-let toMove = '/home/john/my-fork-wail/archives2/*'
-let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
+let toMove = '/Users/jberlin/WebstormProjects/wail/archives2/*'
+let moveWhere = '/Users/jberlin/Documents/WAIL_ManagedCollections/'
 
 const archives = new DB({
   filename: aPath,
@@ -300,17 +300,51 @@ function archiveSeedsToDb () {
   })
 }
 
-updateColSize()
-  .then(() =>
-    crawlStepUnkown()
-      .then(() =>
-        archiveUpdate()
-          .then(() =>
-            archiveSeedsToDb()
-              .then(() => {
-                console.log('done')
-              })
-          )
-      )
-  )
+// updateColSize()
+//   .then(() =>
+//     crawlStepUnkown()
+//       .then(() =>
+//         archiveUpdate()
+//           .then(() =>
+//             archiveSeedsToDb()
+//               .then(() => {
+//                 console.log('done')
+//               })
+//           )
+//       )
+//   )
 
+function moveStartingCol (moveMe, moveTo) {
+  return new Promise((resolve, reject) => {
+    fs.stat(moveTo, (errC, stats) => {
+      if (errC) {
+        if (errC.code === 'ENOENT') {
+          fs.ensureDir(moveTo, errEn => {
+            if (errEn) {
+              errEn.where = 1
+              return reject(errEn)
+            } else {
+              cp.exec(`cp -r ${moveMe} ${moveTo}`, (error, stdout, stderr) => {
+                if (error) {
+                  error.where = 2
+                  console.log(`stderr: ${stderr}`)
+                  return reject(error)
+                }
+                console.log(`stdout: ${stdout}`)
+                console.log(`stderr: ${stderr}`)
+                return resolve()
+              })
+            }
+          })
+        }
+      } else {
+        let alreadyThere = new Error('It was already there')
+        alreadyThere.where = 0
+        reject(alreadyThere)
+      }
+    })
+  })
+}
+
+
+moveStartingCol(toMove,moveWhere)

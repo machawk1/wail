@@ -22,15 +22,19 @@ let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
 Promise.promisifyAll(DB.prototype)
 
-const archives = new DB({
-  filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
-  autoload: true
-})
+// const archives = new DB({
+//   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
+//   autoload: true
+// })
+let p = path.join('.', 'wail-ui')
+fs.readdir(p, (err, dir) => {
+  console.log(dir.map(s => {
+    if( !S(s).contains('.html') || !S(s).contains('background')) {
+      return `^/${path.join('wail-ui', s)}($|/)`
+    }
+  }))
 
-archives.findAsync({})
-  .then(all => {
-    console.log(all)
-  })
+})
 
 // const changeColLocs = () => {
 //   const archives = new DB({
@@ -468,24 +472,24 @@ archives.findAsync({})
 //   { url: 'cs.odu.edu/~jberlin', jobId: 1475014754339 },
 //   { url: 'cs.odu.edu', jobId: 1475473536070 } ]
 
-let trans = _.chain(sss)
-  .groupBy(it => it.url)
-  .mapValues(ar => {
-    let it = ar.map(it => it.jobId)
-    let jobIds = _.uniq(it)
-    return {
-      mementos: it.length,
-      jobIds
-    }
-  })
-  .toPairs()
-  .flatMap(it => {
-    return {
-      url: it[ 0 ],
-      jobIds: it[ 1 ].jobIds,
-      mementos: it[ 1 ].mementos
-    }
-  }).value()
+// let trans = _.chain(sss)
+//   .groupBy(it => it.url)
+//   .mapValues(ar => {
+//     let it = ar.map(it => it.jobId)
+//     let jobIds = _.uniq(it)
+//     return {
+//       mementos: it.length,
+//       jobIds
+//     }
+//   })
+//   .toPairs()
+//   .flatMap(it => {
+//     return {
+//       url: it[ 0 ],
+//       jobIds: it[ 1 ].jobIds,
+//       mementos: it[ 1 ].mementos
+//     }
+//   }).value()
 // console.log(util.inspect(trans, { colors: true, depth: null }))
 
 // console.log('hi')

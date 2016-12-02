@@ -93,7 +93,8 @@ class SelectColTable extends Component {
         {({ height }) => {
           return (
             <Table
-              height={`${height - 130}px`}
+              height={`${height - 260}px`}
+              style={{maxHeight: `${height - 260}px`}}
             >
               <TableHeader
                 displaySelectAll={false}

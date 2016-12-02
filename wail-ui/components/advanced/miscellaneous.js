@@ -67,15 +67,6 @@ export default class Misc extends Component {
                   }}
                 />
               </ToolbarGroup>
-              <ToolbarGroup>
-                <RaisedButton
-                  label='Twitter'
-                  labelPosition='before'
-                  onMouseDown={() => {
-                    ipc.send('sign-in-twitter')
-                  }}
-                />
-              </ToolbarGroup>
               <ToolbarGroup lastChild>
                 <RaisedButton
                   icon={<CheckUpdateIcon />}

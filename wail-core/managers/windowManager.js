@@ -615,7 +615,7 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows[ 'twitterMonitor' ].window.webContents.openDevTools()
         }
-        this.windows[ 'twitterMonitor' ].window.webContents.openDevTools()
+        // this.windows[ 'twitterMonitor' ].window.webContents.openDevTools()
         this.windows[ 'twitterMonitor' ].open = true
         this.windows[ 'twitterMonitor' ].loadComplete = true
         resolve()
@@ -697,7 +697,7 @@ export default class WindowManager extends EventEmitter {
           this.windows[ 'reqDaemonWindow' ].window.show()
           this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
         }
-        this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
+        // this.windows[ 'reqDaemonWindow' ].window.webContents.openDevTools()
         this.windows[ 'reqDaemonWindow' ].open = true
         this.windows[ 'reqDaemonWindow' ].loadComplete = true
         resolve()
@@ -736,7 +736,7 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
         }
-        this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
+        // this.windows[ 'crawlManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })
@@ -775,7 +775,7 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         }
-        this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
+        // this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })

@@ -1,7 +1,7 @@
 {
   "name": "WAIL",
   "license": "LGPL-3.0",
-  "version": "1.0.0-rc.2.9.1",
+  "version": "1.0.0-rc.2.9.25",
   "contributors": [
     {
       "name": "John Berlin",
@@ -107,6 +107,7 @@
     "react-addons-css-transition-group": "^15.4.1",
     "react-addons-shallow-compare": "^15.4.1",
     "react-addons-update": "^15.4.1",
+    "react-cellblock": "^2.0.0",
     "react-contextmenu": "^2.0.0-alpha.2",
     "react-dom": "15.4.1",
     "react-drag-drop": "^1.0.12",

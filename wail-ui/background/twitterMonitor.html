@@ -8,11 +8,13 @@
 <h1>TwitterMonitor</h1>
 <script>
   {
-    const script = document.createElement('script')
-    script.src = (process.env.HOT)
-      ? 'http://localhost:9001/dist/twitterM.bundle.js'
-      : '../../dist/twitterM.bundle.js'
-    document.write(script.outerHTML)
+    if(process.env.HOT) {
+      const script = document.createElement('script')
+      script.src = 'http://localhost:9001/dist/twitterM.bundle.js'
+      document.write(script.outerHTML)
+    } else {
+      require('../../dist/twitterM.bundle.js')
+    }
   }
 </script>
 </body>

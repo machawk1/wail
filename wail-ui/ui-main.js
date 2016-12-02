@@ -22,6 +22,7 @@ app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
 app.commandLine.appendSwitch('allow-http-screen-capture')
 
+
 const winMan = new WindowManager()
 const control = global.__wailControl = new AppManager()
 const debug = false, notDebugUI = true, openBackGroundWindows = false

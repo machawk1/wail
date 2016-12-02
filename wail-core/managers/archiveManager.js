@@ -4,19 +4,20 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import fs from 'fs-extra'
 import moment from 'moment'
 import through2 from 'through2'
 import prettyBytes from 'pretty-bytes'
 import _ from 'lodash'
-import {execute} from '../util/childProcHelpers'
+import { execute } from '../util/childProcHelpers'
 import {
   find, findOne, findOneFromBoth,
   update, insert,
   inserAndFindAll, updateSingle,
   updateAndFindAll, CompoundNedbError
 } from '../util/nedb'
+import moveStartingCol from '../util/moveStartingCol'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -119,6 +120,7 @@ export default class ArchiveManager {
         if (err) {
           reject(err)
         } else {
+          doc.seeds = []
           resolve([ doc ])
         }
       })
@@ -134,9 +136,22 @@ export default class ArchiveManager {
               let docs = joinColsSeeds(cols, seeds)
               if (docs.length === 0) {
                 return this.createDefaultCol()
-                  .then(defaultCol => {
-                    resolve(defaultCol)
-                  })
+                  .then(defaultCol =>
+                    moveStartingCol(`${settings.get('iwarcs')}/*`, settings.get('warcs'))
+                      .then(() => {
+                        resolve(defaultCol)
+                      })
+                      .catch(errMove => {
+                        if (errMove.where === 1) {
+                          console.error('big fail', errMove)
+                          reject(errMove)
+                        } else if (errMove.where === 2) {
+                          console.error('even bigger fail', errMove)
+                          reject(errMove)
+                        } else {
+                          resolve(defaultCol)
+                        }
+                      }))
                   .catch(errCreateD => {
                     reject(errCreateD)
                   })

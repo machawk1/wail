@@ -100,18 +100,18 @@ const handledRequest = (store, next, action, handledRequest) => {
       break
     case TEARDOWN_CRAWL:
       if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} is ending`)
-      } else {
-        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was asked to start ending but it did not`)
-      }
-      break
-    case TERMINATE_CRAWL:
-      if (rtype === REQUEST_SUCCESS) {
         notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} has ended`)
       } else {
         notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was asked to end but it did not`)
       }
       store.dispatch(crawlEnded())
+      break
+    case TERMINATE_CRAWL:
+      if (rtype === REQUEST_SUCCESS) {
+        notify.notifySuccess(`Heritrix Crawl for ${job.displayUrls()} is ending`)
+      } else {
+        notify.notifyError(`Heritrix Crawl for ${job.displayUrls()} was asked to start ending but it did not`)
+      }
       break
     case RESCAN_JOB_DIR:
       if (rtype === REQUEST_SUCCESS) {

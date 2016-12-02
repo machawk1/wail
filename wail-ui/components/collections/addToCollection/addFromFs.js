@@ -72,7 +72,7 @@ export default class AddFromFs extends Component {
       }
     })
 
-    if (badFiles.size > 0) {
+    if (badFiles.size > 0 && addMe.length <= 1) {
       notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
     }
 
@@ -81,12 +81,22 @@ export default class AddFromFs extends Component {
       let wpath = addMe[ 0 ]
       let mode = 'f'
       if (addMe.length > 1) {
-        wpath = path.dirname(addMe[ 0 ])
-        mode = 'd'
+        // wpath = path.dirname(addMe[ 0 ])
+        // mode = 'd'
+        let message = 'Please add the (W)arcs one by one. This is to ensure they are added correctly'
+        notify.notify({
+          title: 'Warning',
+          level: 'warning',
+          autoDismiss: 0,
+          message,
+          uid: message
+        })
+      } else {
+        this.setState({ message: 'Determining seed from added (W)arc' }, () => {
+          this.extractSeeds(wpath, mode)
+        })
       }
-      this.setState({ message: 'Determining seed(s) from added (W)arcs' }, () => {
-        this.extractSeeds(wpath, mode)
-      })
+
     }
   }
 
@@ -132,6 +142,8 @@ export default class AddFromFs extends Component {
           if(!jobId) {
             jobId = new Date().getTime()
             lastUpdated = moment(jobId).format()
+          } else {
+            lastUpdated = moment(jobId, 'YYYYMMDDHHmmss').format()
           }
           addToCol.seedWarcs.push({
             warcs: ws.filep,
@@ -139,7 +151,7 @@ export default class AddFromFs extends Component {
               url: realSeed,
               forCol: this.props.col,
               jobId,
-              lastUpdated: moment(jobId, 'YYYYMMDDHHmmss').format(),
+              lastUpdated,
               added: addToCol.lastUpdated, mementos: 1
             }
           })
@@ -148,7 +160,13 @@ export default class AddFromFs extends Component {
     } else {
       let realSeed = readSeeds[ seedName(warcSeeds[ 0 ].name) ]
       let jobId = timeStampFinder(realSeed, warcSeeds[ 0 ].seeds)
-      let lastUpdated = moment().format()
+      let lastUpdated
+      if(!jobId) {
+        jobId = new Date().getTime()
+        lastUpdated = moment(jobId).format()
+      } else {
+        lastUpdated = moment(jobId, 'YYYYMMDDHHmmss').format()
+      }
       addToCol = {
         lastUpdated,
         col: this.props.col,

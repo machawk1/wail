@@ -262,6 +262,15 @@ if (process.env.NODE_ENV === 'development') {
       db: 'dev_coreData/database',
       timemaps: 'dev_coreData/timemaps'
     },
+    iwailCore: {
+      dport: '3030',
+      port: '3030',
+      dhost: 'localhost',
+      host: 'localhost',
+      url: 'http://{host}:{port}',
+      db: 'dev_coreData/database',
+      timemaps: 'dev_coreData/timemaps'
+    },
     twitter: {
       wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
       wailSecret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY',
@@ -507,6 +516,15 @@ if (process.env.NODE_ENV === 'development') {
       db: 'coreData/database',
       timemaps: 'coreData/timemaps'
     },
+    iwailCore: {
+      dport: '3030',
+      port: '3030',
+      dhost: 'localhost',
+      host: 'localhost',
+      url: 'http://{host}:{port}',
+      db: 'coreData/database',
+      timemaps: 'coreData/timemaps'
+    },
     twitter: {
       wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
       wailSecret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY',
@@ -641,7 +659,7 @@ export default class SettingsManager {
     heritrix.jobConf = jobConfPath
     this._settings.set('heritrix', heritrix)
     let checkArray = [ 'port', 'url', 'dport', 'dhost', 'host' ]
-    let wc = _.mapValues(managed.wailCore, (v, k) => {
+    let wci = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
         v = pathMan.normalizeJoinWBase(v)
@@ -653,6 +671,19 @@ export default class SettingsManager {
       return v
     })
 
+    let wc = _.mapValues(managed.wailCore, (v, k) => {
+      if (!checkArray.includes(k)) {
+        console.log(k)
+        v = pathMan.normalizeJoin(this._settingsDir,v)
+      }
+
+      if (k === 'url') {
+        v = S(v).template({ port: managed.wailCore.dport, host: managed.wailCore.dhost }).s
+      }
+      return v
+    })
+
+    this._settings.set('iwailCore', wci)
     this._settings.set('wailCore', wc)
 
     let wb = managed.wayback
@@ -745,6 +776,7 @@ export default class SettingsManager {
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
+    fs.ensureDirSync(pathMan.normalizeJoin(this._settingsDir,managed.wailCore.db))
   }
 
   resetToDefault () {

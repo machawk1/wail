@@ -37,7 +37,7 @@ export default class TwitterClient {
           timeout_ms: 60 * 1000,
         })
       } else {
-        throw new Error('User Not Signed In')
+        // throw new Error('User Not Signed In')
       }
     }
   }

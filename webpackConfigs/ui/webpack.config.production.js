@@ -15,7 +15,13 @@ module.exports = {
     publicPath: './dist/',
     libraryTarget: 'commonjs2'
   },
-
+  node: {
+    __dirname: false,
+    __filename: false,
+    global: false,
+    process: false,
+    Buffer: false,
+  },
   module: {
     noParse: noParseRe,
     loaders: [
@@ -25,7 +31,7 @@ module.exports = {
         loader: 'babel',
         query: {
           cacheDirectory: true,
-          presets: [ 'react',
+          presets: [
             [ 'env', {
               'targets': {
                 'node': 6.5
@@ -35,7 +41,8 @@ module.exports = {
                 'transform-es2015-destructuring',
                 'transform-object-rest-spread'
               ]
-            } ]
+            } ],
+            'react',
           ],
           plugins: [
             'transform-decorators-legacy',
