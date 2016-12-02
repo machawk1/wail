@@ -11,12 +11,11 @@ const settings = remote.getGlobal('settings')
 
 const makeArchiveConfig = (config, tweet) => {
   let name = S(tweet).strip('twitter.com', 'status', 'https:', '/', '.').s
-  let saveThisOne = `${config.forCol}_${config.account}_twitter_${name}.warc`
-  let cpath = path.join(settings.get('collections.dir'), `${config.forCol}`, 'archive')
+  let saveThisOne = `${config.forCol}_${config.account}_twitter_${name}_${new Date().getTime()}.warc`
   return {
     forCol: config.forCol,
     uri_r: tweet,
-    saveTo: path.normalize(path.join(cpath, saveThisOne)),
+    saveTo: path.join(settings.get('dumpTwitterWarcs'), saveThisOne),
     header: {
       isPartOfV: config.forCol,
       description: `Archived by WAIL for ${config.forCol}`
@@ -67,11 +66,20 @@ export default class TwitterMonitor extends EventEmitter {
 
     task.on('tweets', (tweets) => {
       console.log('tweets here for', config.account)
-      ipc.send('archive-uri-r', makeArchiveConfig(config, tweets[ 0 ]))
+      let configs = []
+      tweets.forEach(t => {
+        configs.push(makeArchiveConfig(config, t))
+
+      })
+      ipc.send('archive-uri-r', configs)
     })
 
-    this.monitorJobs[ config.account ] = task
-    this.monitorJobs[ config.account ].start(schedule, '*/5 * * * *')
+    if (config.oneOff) {
+      task.poll()
+    } else {
+      this.monitorJobs[ config.account ] = task
+      this.monitorJobs[ config.account ].start(schedule, '*/5 * * * *')
+    }
   }
 
 }

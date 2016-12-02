@@ -30,7 +30,9 @@ export default class MonitorTask extends EventEmitter {
   }
 
   stop () {
-    this.task.cancel()
+    if (this.task) {
+      this.task.cancel()
+    }
     this.emit('done')
   }
 }

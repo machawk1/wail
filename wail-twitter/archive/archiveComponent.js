@@ -8,11 +8,12 @@ import moment from 'moment'
 ///home/john/my-fork-wail/wail-twitter/archive/inject.js
 
 const addWarcToCol = config => {
-  ipc.send('add-warcs-to-col', {
+  let lastUpdated = moment().format()
+  ipc.send('add-warcs-to-col-wcreate', {
     col: config.forCol,
     warcs: config.saveTo,
-    lastUpdated: moment().format(),
-    seed: { url: config.uri_r, jobId: `${config.forCol}_TWM` }
+    lastUpdated,
+    seed: { forCol: config.forCol, url: config.uri_r, jobId: `${config.forCol}_TWM`, lastUpdated, added: lastUpdated }
   })
 }
 
@@ -104,11 +105,21 @@ export default class ArchiveComponent extends Component {
     // }
   }
 
-  archiveUriR (arConfig) {
-    if (this.archiveQ.length > 0) {
-      this.archiveQ.push(arConfig)
+  addArcConfig (arConfig) {
+    if (Array.isArray(arConfig)) {
+      arConfig.forEach(ac => {
+        this.archiveQ.push(ac)
+      })
     } else {
       this.archiveQ.push(arConfig)
+    }
+  }
+
+  archiveUriR (arConfig) {
+    if (this.archiveQ.length > 0) {
+      this.addArcConfig(arConfig)
+    } else {
+      this.addArcConfig(arConfig)
       if (this.wbReady) {
         this.startArchiving()
       }

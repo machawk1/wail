@@ -1,4 +1,5 @@
 import UserTimeLine from './userTimeline'
+import TextSearch from './textSearch'
 import TimeLineExtractor from '../../extractors/timelineExtractor'
 import HashTagExtractor from '../../extractors/hashTagExtractor'
 
@@ -21,6 +22,11 @@ const makeTask = (config, twitterClient) => {
     case 'UserTimeLine':
       return new UserTimeLine({
         extractor: makeExtractor(config.extractor),
+        twitterClient,
+        ...config
+      })
+    case 'TextSearch':
+      return new TextSearch({
         twitterClient,
         ...config
       })

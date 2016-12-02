@@ -48,6 +48,12 @@ ipc.on('add-multi-warcs-to-col', (event, multi) => {
 
 ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
   archiveMan.addWarcsFromFSToCol(fsAdd)
+    .then(update => {
+      ipc.send('added-warcs-to-col', update)
+    })
+    .catch(error => {
+      ipc.send('display-message', error.m)
+    })
 })
 
 ipc.on('add-metadata-to-col', (event, addMe) => {
@@ -73,6 +79,17 @@ ipc.on('add-metadata-to-col', (event, addMe) => {
 ipc.on('add-warcs-to-col', (event, addMe) => {
   console.log('archive man got add warcs to col', addMe)
   archiveMan.addWarcsToCol(addMe)
+    .then(update => {
+      ipc.send('added-warcs-to-col', update)
+    })
+    .catch(error => {
+      ipc.send('display-message', error.m)
+    })
+})
+
+ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
+  console.log('archive man got add warcs to col', addMe)
+  archiveMan.addWarcsFromWCreate(addMe)
     .then(update => {
       ipc.send('added-warcs-to-col', update)
     })

@@ -285,7 +285,9 @@ if (process.env.NODE_ENV === 'development') {
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
-    }
+    },
+    archivePreload: 'wail-twitter/archive/inject.js',
+    dumpTwitterWarcs: 'twitterDump'
 
   }
 } else {
@@ -539,7 +541,9 @@ if (process.env.NODE_ENV === 'development') {
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
-    }
+    },
+    archivePreload: 'wail-twitter/archive/inject.js',
+    dumpTwitterWarcs: 'twitterDump'
   }
 }
 
@@ -773,6 +777,8 @@ export default class SettingsManager {
 
     let wcChecker = _.mapValues(managed.warcChecker, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('warcChecker', wcChecker)
+    this._settings.set('dumpTwitterWarcs', pathMan.normalizeJoinWBase(managed.dumpTwitterWarcs))
+    this._settings.set('archivePreload', pathMan.normalizeJoinWBase(managed.archivePreload))
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)

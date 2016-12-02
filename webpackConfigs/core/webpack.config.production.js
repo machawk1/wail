@@ -1,5 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
@@ -93,6 +94,9 @@ module.exports = {
     __filename: false
   },
   plugins: [
+    new CopyWebpackPlugin([{
+      from: './wail-twitter/archive/inject.js'
+    }]),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: false,

@@ -1,14 +1,17 @@
 import React, {Component, PropTypes} from 'react'
 import Immutable from 'immutable'
+import {Flex, Item} from 'react-flex'
 import ATwitterUser from '../components/twitter/archiveConfig/aTwitterUser'
+import TwitterUserTextSearch from '../components/twitter/archiveConfig/twitterUserTextSearch'
 
-export default class TwitterView extends Component {
-  render () {
-    return (
-      <div style={{ width: '100%', height: '100%' }} id='twitterArchive'>
-        <ATwitterUser/>
-      </div>
-    )
-  }
-}
+const TwitterView = () => (
+  <div style={{ width: '100%', height: '100%' }}>
+    <Flex row justifyContent='space-between'>
+      <ATwitterUser/>
+      <TwitterUserTextSearch/>
+    </Flex>
+  </div>
+)
+
+export default TwitterView
 
