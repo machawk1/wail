@@ -3,11 +3,6 @@ import TextSearch from './textSearch'
 import TimeLineExtractor from '../../extractors/timelineExtractor'
 import HashTagExtractor from '../../extractors/hashTagExtractor'
 
-const typeMap = {
-  TimeLine: TimeLineExtractor,
-  HashTag: HashTagExtractor
-}
-
 const makeExtractor = extractor => {
   switch (extractor.type) {
     case 'TimeLine':

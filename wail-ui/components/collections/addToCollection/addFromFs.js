@@ -1,16 +1,16 @@
-import React, {Component, PropTypes} from 'react'
-import {ipcRenderer as ipc, remote} from 'electron'
+import React, { Component, PropTypes } from 'react'
+import { ipcRenderer as ipc, remote } from 'electron'
 import path from 'path'
-import {Card, CardHeader} from 'material-ui/Card'
-import {joinStrings} from 'joinable'
+import { Card, CardHeader } from 'material-ui/Card'
+import { joinStrings } from 'joinable'
 import BeamMeUpScotty from 'drag-drop'
 import moment from 'moment'
 import * as notify from '../../../actions/notification-actions'
-import {doSeedExtraction} from '../../../actions/redux/addSeedFromFs'
+import { doSeedExtraction } from '../../../actions/redux/addSeedFromFs'
 import SeedList from './seedList'
 import ErrorList from './errorList'
 import seedName from './seedName'
-import {resetAddFSSeedMessage} from '../../../actions/redux/addSeedFromFs'
+import { resetAddFSSeedMessage } from '../../../actions/redux/addSeedFromFs'
 
 const defaultM = 'File Name with seeds will be displayed below'
 
@@ -23,10 +23,39 @@ const timeStampFinder = (target, seeds) => {
       break
     }
   }
+  return jobId
+}
+
+const makeLastUpdated = (jobId, fromUtil = false) => {
+  let tempM
+  if (fromUtil) {
+    tempM = moment(jobId, 'YYYYMMDDHHmmss')
+    if (!tempM.isValid()) {
+      tempM = moment(new Date().getTime())
+    }
+  } else {
+    tempM = moment(jobId)
+  }
+  return tempM.format()
+}
+
+const makeAddConfig = (col, warcSeed, realSeed) => {
+  let jobId = timeStampFinder(realSeed, warcSeed)
+  let lastUpdated
   if (!jobId) {
     jobId = new Date().getTime()
+    lastUpdated = makeLastUpdated(jobId)
+  } else {
+    lastUpdated = makeLastUpdated(jobId, true)
   }
-  return jobId
+  return {
+    url: realSeed,
+    jobId,
+    forCol: col,
+    lastUpdated,
+    added: lastUpdated,
+    mementos: 1
+  }
 }
 
 export default class AddFromFs extends Component {
@@ -123,62 +152,33 @@ export default class AddFromFs extends Component {
   }
 
   addWarcWTrueSeeds (values) {
-    let readSeeds = values.toJS()
-    let addToCol
+    let realSeeds = values.toJS()
+    console.log('real seeds', values)
+    let addToCol =  {
+      lastUpdated: moment().format(),
+      col: this.props.col,
+      seedWarcs: []
+    }
     let channel = 'addfs-warcs-to-col'
     let { warcSeeds } = this.state
     if (warcSeeds.length > 1) {
       channel = 'add-multi-warcs-to-col'
-      addToCol = {
-        lastUpdated: moment().format(),
-        col: this.props.col,
-        seedWarcs: []
-      }
       warcSeeds.forEach(ws => {
-        let realSeed = readSeeds[ seedName(ws.name) ]
+        let realSeed = realSeeds[ seedName(ws.name) ]
         if (realSeed) {
-          let jobId = timeStampFinder(realSeed, ws.seeds)
-          let lastUpdated
-          if(!jobId) {
-            jobId = new Date().getTime()
-            lastUpdated = moment(jobId).format()
-          } else {
-            lastUpdated = moment(jobId, 'YYYYMMDDHHmmss').format()
-          }
-          addToCol.seedWarcs.push({
-            warcs: ws.filep,
-            seed: {
-              url: realSeed,
-              forCol: this.props.col,
-              jobId,
-              lastUpdated,
-              added: addToCol.lastUpdated, mementos: 1
-            }
-          })
+          let addConfig = makeAddConfig(this.props.col,ws.seeds,realSeed)
+          addToCol.seedWarcs.push(addConfig)
+        } else {
+          throw new Error(`${seedName(ws.name)} had no real seed`)
         }
       })
     } else {
-      let realSeed = readSeeds[ seedName(warcSeeds[ 0 ].name) ]
-      let jobId = timeStampFinder(realSeed, warcSeeds[ 0 ].seeds)
-      let lastUpdated
-      if(!jobId) {
-        jobId = new Date().getTime()
-        lastUpdated = moment(jobId).format()
+      let realSeed = realSeeds[ seedName(warcSeeds[ 0 ].name) ]
+      if (realSeed) {
+        addToCol.seed = makeAddConfig(this.props.col, warcSeeds[ 0 ].seeds, realSeed)
+        addToCol.warcs = warcSeeds[0].filep
       } else {
-        lastUpdated = moment(jobId, 'YYYYMMDDHHmmss').format()
-      }
-      addToCol = {
-        lastUpdated,
-        col: this.props.col,
-        warcs: warcSeeds[ 0 ].filep,
-        seed: {
-          url: realSeed,
-          jobId,
-          forCol: this.props.col,
-          lastUpdated: moment(jobId, 'YYYYMMDDHHmmss').format(),
-          added: lastUpdated,
-          mementos: 1
-        }
+        throw new Error(`${seedName(warcSeeds[ 0 ].name)} had no real seed`)
       }
     }
     console.log('add these seeds ', addToCol, channel)

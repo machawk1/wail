@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {remote, ipcRenderer as ipc} from 'electron'
+import React, { Component, PropTypes } from 'react'
+import { remote, ipcRenderer as ipc } from 'electron'
 import Promise from 'bluebird'
 import WarcWriter from './warcWriter'
 import NetworkMonitor from './networkMonitor'
@@ -203,7 +203,9 @@ export default class ArchiveComponent extends Component {
     let wb = { __html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} partition="archive" plugins> </webview>` }
     console.log(wb)
     return (
-      <div dangerouslySetInnerHTML={wb}/>
+      <div style={{ width: 'inherit', height: 'inherit' }}>
+        <div dangerouslySetInnerHTML={wb}/>
+      </div>
     )
   }
 }

@@ -45,7 +45,7 @@ export default class AppManager {
     }
   }
 
-  init (base, userData, version, loadFrom, docsPath, debug = true, notDebugUI = false, openBackGroundWindows = false) {
+  init (base, userData, version, loadFrom, docsPath, debug = false, notDebugUI = false, openBackGroundWindows = false) {
     console.log('appManager init')
     return new Promise((resolve) => {
       this.notDebugUI = notDebugUI

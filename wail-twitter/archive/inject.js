@@ -39,6 +39,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (reason, p) => {
   console.log(reason, p)
 })
+
 process.on('warning', (warning) => {
   console.warn(warning.name);    // Print the warning name
   console.warn(warning.message); // Print the warning message

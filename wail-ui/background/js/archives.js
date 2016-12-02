@@ -1,5 +1,5 @@
 import '../../../wailPollyfil'
-import {remote, ipcRenderer as ipc} from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 
 const archiveMan = window.am = new ArchiveManager()
@@ -47,9 +47,17 @@ ipc.on('add-multi-warcs-to-col', (event, multi) => {
 })
 
 ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
+  console.log('archives got addfs warcs', fsAdd)
   archiveMan.addWarcsFromFSToCol(fsAdd)
     .then(update => {
       ipc.send('added-warcs-to-col', update)
+      ipc.send('display-message', {
+        title: 'Added (W)arc file from the file system',
+        level: 'success',
+        autoDismiss: 10,
+        message: `Add to the collection ${fsAdd.col}`,
+        uid: `Add to the collection ${fsAdd.col}`
+      })
     })
     .catch(error => {
       ipc.send('display-message', error.m)
@@ -57,10 +65,7 @@ ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
 })
 
 ipc.on('add-metadata-to-col', (event, addMe) => {
-  let {
-    forCol,
-    mdata
-  } = addMe
+  let { forCol, mdata } = addMe
   archiveMan.addMetadata(forCol, mdata)
     .then(numUpdate => {
       ipc.send('added-metadata-to-col', {
@@ -92,6 +97,13 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
   archiveMan.addWarcsFromWCreate(addMe)
     .then(update => {
       ipc.send('added-warcs-to-col', update)
+      ipc.send('display-message', {
+        title: 'Tweet Successfully Saved',
+        level: 'success',
+        autoDismiss: 10,
+        message: `Saved one tweet for the collection ${addMe.col}`,
+        uid: `Saved one tweet for the collection ${addMe.col}`
+      })
     })
     .catch(error => {
       ipc.send('display-message', error.m)

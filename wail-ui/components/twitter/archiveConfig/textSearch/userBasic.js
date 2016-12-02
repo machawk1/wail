@@ -55,7 +55,6 @@ class UserBasic extends Component {
           />
         </div>
         <CardActions>
-          <FlatButton label='Previous' onTouchTap={previousPage}/>
           <FlatButton label='Next' type='submit' primary/>
         </CardActions>
       </form>

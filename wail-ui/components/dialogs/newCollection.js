@@ -50,54 +50,68 @@ export default class NewCollection extends Component {
     let { col, description, title } = this.state
     let swapper = S('')
     let colEmpty = swapper.setValue(col).isEmpty()
-    let descriptEmpty = swapper.setValue(description).isEmpty()
-    if (!colEmpty && !descriptEmpty) {
-      let rt = swapper.setValue(title).isEmpty() ? col : title
-      let newCol = {
-        col,
-        mdata: [ `title="${rt}"`, `description="${description}"` ],
-        metadata: {
-          title: rt,
-          description
-        }
-      }
-      ipc.send('create-collection', newCol)
-      global.notifications$.next({
-        type: QUEUE_MESSAGE,
-        message: {
-          autoDismiss: 0,
-          title: 'Info',
-          level: 'info',
-          message: `Creating new collection ${col}`,
-          uid: `Creating new collection ${col}`
-        }
-      })
-      this.setState({
-        col: '',
-        description: '',
-        title: '',
-        open: false
-      })
-    } else {
-      let message
-      if (colEmpty && !descriptEmpty) {
-        message = 'The description can not be empty when creating a new collection!'
-      } else if (colEmpty && !descriptEmpty) {
-        message = 'The collection name can not be empty when creating a new collection!'
-      } else {
-        message = 'Both the collection name and description can not be empty when creating a new collection'
-      }
+    if(swapper.contains(' ')) {
       global.notifications$.next({
         type: QUEUE_MESSAGE,
         message: {
           autoDismiss: 0,
           title: 'Warning',
           level: 'warning',
-          message,
-          uid: message
+          message: 'Pywb does not allow collection names with spaces in the name. We apologize for the inconvenience',
+          uid: 'Pywb does not allow collection names with spaces in the name. We apologize for the inconvenience'
         }
       })
+    } else {
+      let descriptEmpty = swapper.setValue(description).isEmpty()
+      if (!colEmpty && !descriptEmpty) {
+        let rt = swapper.setValue(title).isEmpty() ? col : title
+        let newCol = {
+          col,
+          mdata: [ `title="${rt}"`, `description="${description}"` ],
+          metadata: {
+            title: rt,
+            description
+          }
+        }
+        ipc.send('create-collection', newCol)
+        global.notifications$.next({
+          type: QUEUE_MESSAGE,
+          message: {
+            autoDismiss: 0,
+            title: 'Info',
+            level: 'info',
+            message: `Creating new collection ${col}`,
+            uid: `Creating new collection ${col}`
+          }
+        })
+        this.setState({
+          col: '',
+          description: '',
+          title: '',
+          open: false
+        })
+      } else {
+        let message
+        if (colEmpty && !descriptEmpty) {
+          message = 'The description can not be empty when creating a new collection!'
+        } else if (colEmpty && !descriptEmpty) {
+          message = 'The collection name can not be empty when creating a new collection!'
+        } else {
+          message = 'Both the collection name and description can not be empty when creating a new collection'
+        }
+        global.notifications$.next({
+          type: QUEUE_MESSAGE,
+          message: {
+            autoDismiss: 0,
+            title: 'Warning',
+            level: 'warning',
+            message,
+            uid: message
+          }
+        })
+      }
     }
+
   }
 
   nameChange (event) {

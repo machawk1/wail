@@ -31,7 +31,7 @@ const runsReducer = (state = Map(), action) => {
       }
     case BUILT_CRAWL_CONF: {
       let { crawlInfo } = action
-      return state.set(crawlInfo.jobId, makeCrawlInfoRecord(crawlInfo))
+      return state.set(`${crawlInfo.jobId}`, makeCrawlInfoRecord(crawlInfo))
     }
     case CRAWLJOB_STATUS_UPDATE: {
       let { jobId, stats } = action.crawlStatus

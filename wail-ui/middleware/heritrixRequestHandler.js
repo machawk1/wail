@@ -17,6 +17,9 @@ const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
   let { jobId } = request
   let job = store.getState().get('runs').get(`${jobId}`)
+  if(!job) {
+    job = store.getState().get('runs').get(jobId)
+  }
   let latestRun = job.get('latestRun')
   console.log(job)
   switch (request.type) {
@@ -82,6 +85,9 @@ const makeRequest = (store, next, action, request) => {
 const handledRequest = (store, next, action, handledRequest) => {
   let { type, rtype, jobId } = handledRequest
   let job = store.getState().get('runs').get(`${jobId}`)
+  if(!job) {
+    job = store.getState().get('runs').get(jobId)
+  }
   switch (type) {
     case BUILT_CRAWL_JOB:
       if (rtype === REQUEST_SUCCESS) {
