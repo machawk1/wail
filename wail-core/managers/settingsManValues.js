@@ -257,7 +257,7 @@ if(process.env.NODE_ENV === 'development') {
   }
 } else {
   module.exports = {
-    dbgOSX: true,
+    dbgOSX: false,
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
       { name: 'logs', path: 'waillogs/wail.log' },
