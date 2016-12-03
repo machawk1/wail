@@ -1,27 +1,26 @@
 import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import GMessageDispatcher from '../../dispatchers/globalMessageDispatcher'
-import {Flex, Item} from 'react-flex'
-import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import {reset as resetForm} from 'redux-form'
+import {connect} from 'react-redux'
 import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
-import FlatButton from 'material-ui/FlatButton'
-import TextField from 'material-ui/TextField'
-import S from 'string'
 import wc from '../../constants/wail-constants'
+import ViewWatcher from '../../../wail-core/util/viewWatcher'
+import NewCollectionForm from './newCollectionForm'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
-export default class NewCollection extends Component {
+const dispatchToProps = dispatch => ({
+  reset(){
+    dispatch(resetForm('newCollection'))
+  }
+})
 
-  constructor (...args) {
-    super(...args)
+class NewCollection extends Component {
+  constructor (props) {
+    super(props)
     this.state = {
-      open: false,
-      canSubmit: false,
-      col: '',
-      description: '',
-      title: ''
+      open: false
     }
   }
 
@@ -38,98 +37,34 @@ export default class NewCollection extends Component {
   }
 
   cancel () {
-    this.setState({
-      col: '',
-      description: '',
-      title: '',
-      open: false
-    })
+    this.setState({ open: false }, ::this.props.reset)
   }
 
-  handleClose () {
-    let { col, description, title } = this.state
-    let swapper = S('')
-    let colEmpty = swapper.setValue(col).isEmpty()
-    if(swapper.contains(' ')) {
-      global.notifications$.next({
-        type: QUEUE_MESSAGE,
-        message: {
-          autoDismiss: 0,
-          title: 'Warning',
-          level: 'warning',
-          message: 'Pywb does not allow collection names with spaces in the name. We apologize for the inconvenience',
-          uid: 'Pywb does not allow collection names with spaces in the name. We apologize for the inconvenience'
-        }
-      })
-    } else {
-      let descriptEmpty = swapper.setValue(description).isEmpty()
-      if (!colEmpty && !descriptEmpty) {
-        let rt = swapper.setValue(title).isEmpty() ? col : title
-        let newCol = {
-          col,
-          mdata: [ `title="${rt}"`, `description="${description}"` ],
-          metadata: {
-            title: rt,
-            description
-          }
-        }
-        ipc.send('create-collection', newCol)
-        global.notifications$.next({
-          type: QUEUE_MESSAGE,
-          message: {
-            autoDismiss: 0,
-            title: 'Info',
-            level: 'info',
-            message: `Creating new collection ${col}`,
-            uid: `Creating new collection ${col}`
-          }
-        })
-        this.setState({
-          col: '',
-          description: '',
-          title: '',
-          open: false
-        })
-      } else {
-        let message
-        if (colEmpty && !descriptEmpty) {
-          message = 'The description can not be empty when creating a new collection!'
-        } else if (colEmpty && !descriptEmpty) {
-          message = 'The collection name can not be empty when creating a new collection!'
-        } else {
-          message = 'Both the collection name and description can not be empty when creating a new collection'
-        }
-        global.notifications$.next({
-          type: QUEUE_MESSAGE,
-          message: {
-            autoDismiss: 0,
-            title: 'Warning',
-            level: 'warning',
-            message,
-            uid: message
-          }
-        })
+  submit (values) {
+    let col = values.get('name')
+    let title = values.get('title')
+    let description = values.get('description')
+    let newCol = {
+      col,
+      mdata: [ `title="${title}"`, `description="${description}"` ],
+      metadata: {
+        title,
+        description
       }
     }
-
-  }
-
-  nameChange (event) {
-    this.setState({
-      col: event.target.value
+    console.log('the new collection', newCol)
+    ipc.send('create-collection', newCol)
+    global.notifications$.next({
+      type: QUEUE_MESSAGE,
+      message: {
+        autoDismiss: 0,
+        title: 'Info',
+        level: 'info',
+        message: `Creating new collection ${col}`,
+        uid: `Creating new collection ${col}`
+      }
     })
-  }
-
-  descriptionChange (event) {
-    this.setState({
-      description: event.target.value
-    })
-  }
-
-  titleChange (event) {
-    this.setState({
-      title: event.target.value
-    })
+    this.setState({ open: false }, ::this.props.reset)
   }
 
   handleOpen () {
@@ -145,48 +80,14 @@ export default class NewCollection extends Component {
         }}
         autoScrollBodyContent
         title='New Collection'
-        actions={[
-          <FlatButton
-            label='Cancel'
-            onTouchTap={::this.cancel}
-          />,
-          <FlatButton
-            label='Create'
-            primary
-            onTouchTap={::this.handleClose}
-          />
-        ]}
         modal
         open={this.state.open}
       >
-        <Flex row alignContent='center' justifyContent='space-between'>
-          <TextField
-            ref='cName'
-            hintText='Collection Name'
-            floatingLabelText='Name'
-            value={this.state.col}
-            style={{ float: 'left', marginRight: '25px' }}
-            onChange={::this.nameChange}
-          />
-          <TextField
-            ref='cTitle'
-            hintText='Defaults to name'
-            floatingLabelText='Title'
-            value={this.state.title}
-            onChange={::this.titleChange}
-          />
-        </Flex>
-        <TextField
-          fullWidth
-          multiLine
-          ref='cDescription'
-          hintText='Collection Description'
-          floatingLabelText='Description'
-          value={this.state.description}
-          onChange={::this.descriptionChange}
-        />
+        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit}/>
       </Dialog>
 
     )
   }
 }
+
+export default connect(null, dispatchToProps)(NewCollection)
