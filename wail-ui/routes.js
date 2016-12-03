@@ -1,13 +1,13 @@
 import React from 'react'
 import {Route, IndexRoute} from 'react-router'
-import Layout from './components/layout/layout'
+import Layout from './containers/layout'
 import HeritrixView from './containers/heritrixView'
 import SelectColContainer from './containers/selectColContainer'
 import CollectionView from './containers/collectionView'
 import CollectionAddSeed from './containers/collectionAddSeed'
 import CollectionAddSeedFs from './containers/collectionAddSeedFs'
-import General from './components/advanced/general'
-import Misc from './components/advanced/miscellaneous'
+import ServiceStats from './containers/serviceStats'
+import Misc from './containers/miscellaneous'
 import TwitterView from './containers/twitterView'
 import SignIn from './components/twitter/signIn'
 
@@ -19,7 +19,7 @@ export default (
     <Route path='Collections/:col/addSeed/fs' component={CollectionAddSeedFs}/>
     <Route path='heritrix' component={HeritrixView}/>
     <Route path='misc' component={Misc}/>
-    <Route path='services' component={General}/>
+    <Route path='services' component={ServiceStats}/>
     <Route path='twitter' component={TwitterView}/>
     <Route path='twitter-signin' component={SignIn}/>
   </Route>

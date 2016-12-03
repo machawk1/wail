@@ -7,8 +7,9 @@ import runningCrawls from './runningCrawls'
 import checkUrl from './checkUrl'
 import twitter from './twitter'
 import {runsReducer, jobIds} from './crawls'
+import serviceStatuses from './serviceStatuses'
 import {
-  CollectionEvents, CrawlEvents, CheckUrlEvents,
+  CollectionEvents, CrawlEvents, CheckUrlEvents, ServiceEvents,
   Twitter, RunningCrawlCounter, JobIdActions, AddSeedFromFsEvents
 } from '../constants/wail-constants'
 
@@ -21,6 +22,7 @@ const rootReducer = enableBatching(combineReducers({
   jobIds: filterActions(jobIds, jobIdFilter),
   runningCrawls: filterActions(runningCrawls, Object.values(RunningCrawlCounter)),
   runs: filterActions(runsReducer, Object.values(CrawlEvents)),
+  serviceStatuses: filterActions(serviceStatuses, Object.values(ServiceEvents)),
   twitter: filterActions(twitter, Object.values(Twitter))
 }))
 

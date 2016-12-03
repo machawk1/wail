@@ -1,4 +1,5 @@
-export  * as archiveActions from './archival'
+export  * as archiveActions    from './archival'
 export  * as collectionActions from './collections'
-export  * as crawlActions from './heritrix'
+export  * as crawlActions      from './heritrix'
+export  * as serviceActions    from './services'
 export  changeLocation from './changeLocation'

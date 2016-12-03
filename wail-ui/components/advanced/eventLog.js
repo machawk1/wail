@@ -1,6 +1,6 @@
 import React, { PropTypes, Component } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import { Card, CardActions, CardHeader, CardMedia } from 'material-ui/Card'
+import {CardActions} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import { List, ListItem } from 'material-ui/List'
 import moment from 'moment'

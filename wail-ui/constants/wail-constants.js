@@ -1,10 +1,5 @@
 import keyMirror from 'keymirror'
 
-let defForCol = 'default'
-if (process.env.NODE_ENV === 'development') {
-  defForCol = 'Wail'
-}
-
 export default {
   Code: {
     which: keyMirror({
@@ -77,6 +72,11 @@ export default {
     ADD_METADATA_TO_COLLECTION: null,
     ADDED_WARCS_TO_COLL: null,
     CRAWL_TO_COLLECTION: null
+  }),
+  ServiceEvents: keyMirror({
+    HERITRIX_STATUS_UPDATE: null,
+    WAYBACK_STATUS_UPDATE: null,
+    WAYBACK_RESTART: null
   }),
   EventTypes: keyMirror({
     RNS_SHOW_NOTIFICATION: null,
@@ -151,5 +151,5 @@ export default {
     SERVICE_CHECK_DONE: null,
     MIGRATION_DONE: null
   }),
-  Default_Collection: defForCol
+  Default_Collection: process.env.NODE_ENV === 'development' ? 'Wail' : 'default'
 }

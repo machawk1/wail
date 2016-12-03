@@ -6,10 +6,6 @@ export function notify (message) {
     type: EventTypes.QUEUE_MESSAGE,
     message
   })
-  // GMessageDispatcher.dispatch({
-  //   type: EventTypes.QUEUE_MESSAGE,
-  //   message
-  // })
 }
 
 export function notifyInfo (message, log = false) {
@@ -25,15 +21,6 @@ export function notifyInfo (message, log = false) {
       uid: message
     }
   })
-  // GMessageDispatcher.dispatch({
-  //   type: EventTypes.QUEUE_MESSAGE,
-  //   message: {
-  //     title: 'Info',
-  //     level: 'info',
-  //     message,
-  //     uid: message
-  //   }
-  // })
 }
 
 export function notifySuccess (message, log = false) {
@@ -49,15 +36,6 @@ export function notifySuccess (message, log = false) {
       uid: message
     }
   })
-  // GMessageDispatcher.dispatch({
-  //   type: EventTypes.QUEUE_MESSAGE,
-  //   message: {
-  //     title: 'Success',
-  //     level: 'success',
-  //     message,
-  //     uid: message
-  //   }
-  // })
 }
 
 export function notifyWarning (message, log = false) {
@@ -73,15 +51,6 @@ export function notifyWarning (message, log = false) {
       uid: message
     }
   })
-  // GMessageDispatcher.dispatch({
-  //   type: EventTypes.QUEUE_MESSAGE,
-  //   message: {
-  //     title: 'Warning',
-  //     level: 'warning',
-  //     message,
-  //     uid: message
-  //   }
-  // })
 }
 
 export function notifyError (message, log = true) {
@@ -97,13 +66,4 @@ export function notifyError (message, log = true) {
       uid: message
     }
   })
-  // GMessageDispatcher.dispatch({
-  //   type: EventTypes.QUEUE_MESSAGE,
-  //   message: {
-  //     title: 'Error',
-  //     level: 'error',
-  //     message,
-  //     uid: message
-  //   }
-  // })
 }

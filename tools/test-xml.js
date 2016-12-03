@@ -1,5 +1,6 @@
 const moment = require('moment')
 // require('moment-precise-range-plugin')
+const EventEmitter = require('eventemitter3')
 const DB = require('nedb')
 const _ = require('lodash')
 const util = require('util')
@@ -22,110 +23,125 @@ let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
 Promise.promisifyAll(DB.prototype)
+class RingBuffer extends EventEmitter {
+  it () {
+    if (this.listeners('new-record').length > 0) {
+      this.emit('new-record')
+    }
+  }
+
+  lcount (event) {
+    return this.listeners(event)
+  }
+}
+
+const rb = new RingBuffer()
+
+console.log(rb.lcount('new-record'))
 
 // const archives = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
 //   autoload: true
 // })
-const makeRequest = () => {
-  const signIn = {
-    consumer_key: "K1y1GmSdDfUmBNMJeX1lf8Ono",
-    consumer_secret: "Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY",
-    access_token: "4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3",
-    access_token_secret: "46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f",
-    timeout_ms: 60 * 1000,
-  }
+// const makeRequest = () => {
+//   const signIn = {
+//     consumer_key: "K1y1GmSdDfUmBNMJeX1lf8Ono",
+//     consumer_secret: "Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY",
+//     access_token: "4844579470-y1a1kQePvEohKDp8RDfESX1whNRhlTm856JHWn3",
+//     access_token_secret: "46R2ynfMC8CmHzsd76UReneRGcPbuOaPAIhZVeMLKZD2f",
+//     timeout_ms: 60 * 1000,
+//   }
+// //
+//   const twit = new Twit(signIn)
+// //
+//   twit.get('statuses/user_timeline', { screen_name: 'machawk1', count: 200 })
+//     .then(result => {
+//       let { data } = result
+//       console.log(inspect(data))
+//       fs.writeJson('mytl.json', data, er => console.log(er))
+//     })
+//     .catch(error => {
+//       console.log('error')
+//       console.error(error)
+//     })
+// }
+// let text = 'Any text editor that can edit WARCs w/o corrupting them? @emacs @sublimehq &amp; @atomeditor md5s don\'t match w/ 1 char swap, save, revert, save'
 //
-  const twit = new Twit(signIn)
+// const fuzzy = require('fuzzy')
+// const Fuze = require('fuse.js')
+// const JsSearch = require('js-search')
 //
-  twit.get('statuses/user_timeline', { screen_name: 'machawk1', count: 200 })
-    .then(result => {
-      let { data } = result
-      console.log(inspect(data))
-      fs.writeJson('mytl.json', data, er => console.log(er))
-    })
-    .catch(error => {
-      console.log('error')
-      console.error(error)
-    })
-}
-let text = 'Any text editor that can edit WARCs w/o corrupting them? @emacs @sublimehq &amp; @atomeditor md5s don\'t match w/ 1 char swap, save, revert, save'
-
-const fuzzy = require('fuzzy')
-const Fuze = require('fuse.js')
-const JsSearch = require('js-search')
-
-class TextSearch {
-  constructor (lookFor) {
-    this._search = new JsSearch.Search('id_str')
-    this._search.addIndex('text')
-    this._lookFor = lookFor
-  }
-
-  arrayStrategy () {
-    let found = []
-    let fIds = new Set()
-    this._lookFor.forEach(lf => {
-      this._search.search(lf).forEach(tweet => {
-        if (!fIds.has(tweet.id_str)) {
-          found.push(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
-          fIds.add(tweet.id_str)
-        }
-      })
-    })
-    return found
-  }
-
-  termStrategy () {
-    let found = []
-    let fIds = new Set()
-    this._search.search(this._lookFor).forEach(tweet => {
-      if (!fIds.has(tweet.id_str)) {
-        found.push(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
-        fIds.add(tweet.id_str)
-      }
-    })
-    return found
-  }
-
-  searchTweets (tweets) {
-    this._search.documents_ = []
-    this._search.addDocuments(tweets)
-    if (Array.isArray(this._lookFor)) {
-      return this.arrayStrategy()
-    } else {
-      return this.termStrategy()
-    }
-
-  }
-}
-
-fs.readJSON('mytl.json', (err, json) => {
-
-
-  // json.map((tweets, i) => {
-  //
-  // })
-  // let tweets = _.map(json, tweet => {
-  //   // keys[ tweet.id_str ] = {
-  //   //   url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
-  //   // }
-  //   console.log(fuzzy.match('emacs', tweet.text))
-  //   return {
-  //     id: tweet.id_str,
-  //     url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
-  //     text: tweet.text
-  //   }
-  // })
-  // let fuze = new Fuze(tweets, {
-  //   keys: [ 'text' ],  shouldSort: true,
-  //   tokenize: true,
-  //   threshold: 0.6,
-  // })
-  let search = new TextSearch('emacs')
-  console.log(search.searchTweets(json))
-
-})
+// class TextSearch {
+//   constructor (lookFor) {
+//     this._search = new JsSearch.Search('id_str')
+//     this._search.addIndex('text')
+//     this._lookFor = lookFor
+//   }
+//
+//   arrayStrategy () {
+//     let found = []
+//     let fIds = new Set()
+//     this._lookFor.forEach(lf => {
+//       this._search.search(lf).forEach(tweet => {
+//         if (!fIds.has(tweet.id_str)) {
+//           found.push(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+//           fIds.add(tweet.id_str)
+//         }
+//       })
+//     })
+//     return found
+//   }
+//
+//   termStrategy () {
+//     let found = []
+//     let fIds = new Set()
+//     this._search.search(this._lookFor).forEach(tweet => {
+//       if (!fIds.has(tweet.id_str)) {
+//         found.push(`https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`)
+//         fIds.add(tweet.id_str)
+//       }
+//     })
+//     return found
+//   }
+//
+//   searchTweets (tweets) {
+//     this._search.documents_ = []
+//     this._search.addDocuments(tweets)
+//     if (Array.isArray(this._lookFor)) {
+//       return this.arrayStrategy()
+//     } else {
+//       return this.termStrategy()
+//     }
+//
+//   }
+// }
+//
+// fs.readJSON('mytl.json', (err, json) => {
+//
+//
+//   // json.map((tweets, i) => {
+//   //
+//   // })
+//   // let tweets = _.map(json, tweet => {
+//   //   // keys[ tweet.id_str ] = {
+//   //   //   url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`
+//   //   // }
+//   //   console.log(fuzzy.match('emacs', tweet.text))
+//   //   return {
+//   //     id: tweet.id_str,
+//   //     url: `https://twitter.com/${tweet.user.screen_name}/status/${tweet.id_str}`,
+//   //     text: tweet.text
+//   //   }
+//   // })
+//   // let fuze = new Fuze(tweets, {
+//   //   keys: [ 'text' ],  shouldSort: true,
+//   //   tokenize: true,
+//   //   threshold: 0.6,
+//   // })
+//   let search = new TextSearch('emacs')
+//   console.log(search.searchTweets(json))
+//
+// })
 // const fuzzyFilter = (searchText, key) => {
 //   const compareString = key.toLowerCase()
 //   searchText = searchText.toLowerCase()

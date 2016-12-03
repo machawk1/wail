@@ -14,6 +14,7 @@ import Wail from './containers/wail'
 import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
+import RingBuffer from './util/ringBuffer'
 
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
@@ -28,7 +29,7 @@ global.twitterClient = new TwitterClient()
 injectTapEventPlugin()
 
 const wail = document.getElementById('wail')
-window.eventLog = new bunyan.RingBuffer({ limit: 100 })
+window.eventLog = new RingBuffer()
 
 window.logger = bunyan.createLogger({
   name: 'wail-ui',

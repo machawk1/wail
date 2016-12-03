@@ -12,6 +12,62 @@
 .divider-color         { border-color: #BDBDBD; }
 */
 
+.wail-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.wail-container:before, .wail-container:after {
+    content: " ";
+    display: table;
+}
+
+.wail-container:after {
+    clear: both;
+}
+
+@media (min-width: 544px) {
+    .wail-container {
+        max-width: 570px;
+    }
+}
+
+@media (min-width: 768px) {
+    .wail-container {
+        max-width: 740px;
+    }
+}
+
+@media (min-width: 992px) {
+    .wail-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .wail-container {
+        max-width: 1170px;
+    }
+}
+
+.wail-container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.wail-container-fluid:before, .wail-container-fluid:after {
+    content: " ";
+    display: table;
+}
+
+.wail-container-fluid:after {
+    clear: both;
+}
+
 .sortHeader {
     -webkit-box-flex: 0;
     -ms-flex: 0 0 24px;
