@@ -12,7 +12,7 @@ export default {
     DECREMENT: null
   }),
   LocationChange: keyMirror({
-    CHECK_TWITTER: null,
+    CHECK_TWITTER: null
   }),
   Twitter: keyMirror({
     SIGNED_IN: null
@@ -20,7 +20,7 @@ export default {
   Header: keyMirror({
     HEADER_OPEN_CLOSE: null,
     HEADER_TOGGLE: null,
-    HEADER_LOCATION: null,
+    HEADER_LOCATION: null
   }),
   HeritrixRequestTypes: keyMirror({
     BUILD_LAUNCH_JOB: null,

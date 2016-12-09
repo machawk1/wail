@@ -1,11 +1,9 @@
 import path from 'path'
-import autobind from 'autobind-decorator'
 
 export default class Pather {
   constructor (base) {
     this.base = base
   }
-
 
   joinWBase () {
     if (arguments.length === 0) {

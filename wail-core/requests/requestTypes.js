@@ -1,5 +1,4 @@
-import { nonconfigurable, readonly } from 'core-decorators'
-import {default as wc} from '../constants'
+import wc from '../../wail-ui/constants/wail-constants'
 
 const {
   REQUEST_HERITRIX

@@ -39,7 +39,6 @@ export function gotAllRuns (event, allRuns) {
   }
 }
 
-
 export function madeJobConf (e, conf) {
   let updateRuns = {
     type: BUILT_CRAWL_CONF,

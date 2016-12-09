@@ -17,7 +17,7 @@ const capturers = resourceManager => ({
       resourceManager.add('beforeRedirect', dets)
     }
   },
-  onComplete(dets){
+  onComplete (dets) {
     if (dets.resourceType !== 'mainFrame' || dets.resourceType !== 'subframe') {
       resourceManager.add('complete', dets)
     }

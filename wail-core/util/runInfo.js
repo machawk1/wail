@@ -42,7 +42,7 @@ export default class RunInfo {
       timestamp: this.timestamp,
       discovered: this.discovered,
       queued: this.queued,
-      downloaded: this.downloaded,
+      downloaded: this.downloaded
     }
   }
 }

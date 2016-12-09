@@ -56,12 +56,11 @@ export default class Notifications extends Component {
         console.log('unreconized notfication', notif)
       }
     }
-
   }
 
   render () {
     return (
-      <Notification ref={(c) => { this.notifier = c }}/>
+      <Notification ref={(c) => { this.notifier = c }} />
     )
   }
 }

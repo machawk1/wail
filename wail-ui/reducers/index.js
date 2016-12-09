@@ -10,7 +10,7 @@ import {runsReducer, jobIds} from './crawls'
 import serviceStatuses from './serviceStatuses'
 import {
   CollectionEvents, CrawlEvents, CheckUrlEvents, ServiceEvents,
-  Twitter, RunningCrawlCounter, JobIdActions, AddSeedFromFsEvents
+  Twitter, RunningCrawlCounter, JobIdActions
 } from '../constants/wail-constants'
 
 const jobIdFilter = [ CrawlEvents.GOT_ALL_RUNS, JobIdActions.ADD_ID, JobIdActions.REMOVE_ID ]

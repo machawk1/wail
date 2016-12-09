@@ -1,9 +1,9 @@
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import Promise from 'bluebird'
 import rp from 'request-promise'
 import _ from 'lodash'
 import wc from '../../wail-ui/constants/wail-constants'
-import {HeritrixRequest} from './requestTypes'
+import { HeritrixRequest } from './requestTypes'
 
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')

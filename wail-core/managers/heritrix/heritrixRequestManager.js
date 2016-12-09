@@ -1,10 +1,5 @@
-import autobind from 'autobind-decorator'
 import wc from '../../../wail-ui/constants/wail-constants'
 import {
-  BuildJobRequest,
-  LaunchJobRequest,
-  TerminateJobRequest,
-  TeardownJobRequest,
   TerminateAndRestartJob,
   BuildLaunchJob,
   StopJob,
@@ -15,18 +10,11 @@ import {
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
 const {
-  ACCESSIBILITY,
-  ADD_HERITRIX_JOB_DIRECTORY,
   BUILD_HERITIX_JOB,
-  FORCE_CRAWL_FINISH,
   RESCAN_JOB_DIR,
-  KILL_HERITRIX,
   LAUNCH_HERITRIX_JOB,
   TERMINATE_CRAWL,
   TEARDOWN_CRAWL,
-  SEND_HERITRIX_ACTION,
-  REQUEST_SUCCESS,
-  REQUEST_FAILURE
 } = wc.RequestTypes
 
 const {
@@ -56,7 +44,7 @@ export default class HeritrixRequestManager {
 
   queueRequest (request) {
     console.log('heritrix request manager queuing request', request)
-    let { jobId, type } = request
+    let {jobId, type} = request
     switch (type) {
       case BUILD_LAUNCH_JOB: {
         let haveRequestFor = this.requestForJob.has(jobId)
@@ -97,14 +85,13 @@ export default class HeritrixRequestManager {
     }
   }
 
-  @autobind
   handleRequest () {
     let jobId = this.jobRequestQ.shift()
     let jr = this.requestForJob.get(jobId)
     console.log('heritrix request manager making for request for job', jobId)
     jr.makeRequest()
       .then(maybeDone => {
-        let { done, doRetry } = maybeDone
+        let {done, doRetry} = maybeDone
         if (done) {
           console.log(`heritrix request manager job ${jobId} is done`)
           this.requestForJob.delete(jobId)
@@ -171,7 +158,7 @@ export default class HeritrixRequestManager {
 
   jobLifeCyle (jobId, starting) {
     let jlc = new JobLifeCycle(jobId, starting)
-    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[ starting ]}`)
+    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[starting]}`)
     this.requestForJob.set(jobId, jlc)
     this.jobRequestQ.push(jobId)
     if (!this.working) {

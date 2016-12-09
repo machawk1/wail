@@ -3,7 +3,7 @@ import moment from 'moment'
 import Promise from 'bluebird'
 import S from 'string'
 import split2 from 'split2'
-import {NullStatsError} from '../errors'
+import { NullStatsError } from '../errors'
 
 const jobRunningRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\s((?:RUNNING)|(?:EMPTY))\s-\s)(?:(?:Running)|(?:Preparing))/
 const jobEndingRe = /[a-zA-Z0-9\-:]+\s(?:CRAWL\sEND(?:ING).+)/
@@ -52,10 +52,10 @@ export default function getCrawlStats (logPath) {
           resolve({
             ending: jobEnding,
             ended: jobEnded,
-            timestamp: moment(fields[ 0 ]).format(),
-            discovered: fields[ 1 ],
-            queued: fields[ 2 ],
-            downloaded: fields[ 3 ]
+            timestamp: moment(fields[0]).format(),
+            discovered: fields[1],
+            queued: fields[2],
+            downloaded: fields[3]
           })
         }
       })

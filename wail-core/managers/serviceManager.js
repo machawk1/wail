@@ -71,10 +71,10 @@ export default class ServiceManager {
                   process.kill(pid, 'SIGTERM')
                 } else {
                   if (kids.length > 0) {
-                    let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                    let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
                       detached: true,
                       shell: true,
-                      stdio: [ 'ignore', 'ignore', 'ignore' ]
+                      stdio: ['ignore', 'ignore', 'ignore']
                     })
                     dukeNukem.unref()
                   } else {
@@ -92,7 +92,7 @@ export default class ServiceManager {
           }
           forgetMe.push(who)
         }
-        this._pidStore.remove({}, { multi: true }, (err) => {
+        this._pidStore.remove({}, {multi: true}, (err) => {
           if (err) {
             console.error('there was an error removing all services', err)
           } else {
@@ -115,10 +115,10 @@ export default class ServiceManager {
                 process.kill(pid, 'SIGTERM')
               } else {
                 if (kids.length > 0) {
-                  let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
+                  let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
                     detached: true,
                     shell: true,
-                    stdio: [ 'ignore', 'ignore', 'ignore' ]
+                    stdio: ['ignore', 'ignore', 'ignore']
                   })
                   dukeNukem.unref()
                 } else {
@@ -135,7 +135,7 @@ export default class ServiceManager {
           }
         }
         this._monitoring.delete(which)
-        this._pidStore.remove({ _id: which, who: which }, (error) => {
+        this._pidStore.remove({_id: which, who: which}, (error) => {
           if (error) {
             console.error(`ServiceManager error removing from pidstore ${which}`)
           } else {
@@ -149,7 +149,7 @@ export default class ServiceManager {
   }
 
   startHeritrix () {
-    let { logger } = global
+    let {logger} = global
     console.log('service man starting heritrix')
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('heritrix')) {
@@ -172,19 +172,19 @@ export default class ServiceManager {
             },
             detached: true,
             shell: true,
-            stdio: [ 'ignore', 'ignore', 'ignore' ]
+            stdio: ['ignore', 'ignore', 'ignore']
           }
           let usrpwrd = `${this._settings.get('heritrix.username')}:${this._settings.get('heritrix.password')}`
           let pid = -1
           try {
-            let heritrix = cp.spawn('bin\\heritrix.cmd', [ '-a', `${usrpwrd}` ], opts)
+            let heritrix = cp.spawn('bin\\heritrix.cmd', ['-a', `${usrpwrd}`], opts)
             pid = heritrix.pid
             this._monitoring.set('heritrix', pid)
             heritrix.unref()
             this._pidStore.update({
               _id: 'heritrix',
               who: 'heritrix'
-            }, { $set: { pid } }, { upsert: true }, insertError => {
+            }, {$set: {pid}}, {upsert: true}, insertError => {
               if (insertError) {
                 console.error('service manager inserting pid error', insertError)
                 reject(insertError)
@@ -207,12 +207,12 @@ export default class ServiceManager {
             if (err) {
               console.error('heritrix could not be started due to an error', err, stderr, stdout)
               if (logger) {
-                logger.fatal({ err, msg: `heritrix could not be started ${stderr}` })
+                logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
               }
               reject(err)
             } else {
               console.log(stdout, stderr)
-              let pidLine = S(stdout).lines()[ 0 ]
+              let pidLine = S(stdout).lines()[0]
               let maybepid = hpidGetter.exec(pidLine)
               if (maybepid) {
                 let pid = S(maybepid.capture('hpid')).toInt()
@@ -224,10 +224,10 @@ export default class ServiceManager {
                 this._pidStore.update({
                   who: 'heritrix',
                   _id: 'heritrix'
-                }, { $set: { pid } }, { upsert: true }, insertError => {
+                }, {$set: {pid}}, {upsert: true}, insertError => {
                   if (insertError) {
                     if (logger) {
-                      logger.fatal({ err: insertError, msg: 'service manager inserting heritrix pid error' })
+                      logger.fatal({err: insertError, msg: 'service manager inserting heritrix pid error'})
                     }
                     console.error('service manager inserting pid error', insertError)
                     reject(insertError)
@@ -251,7 +251,7 @@ export default class ServiceManager {
 
   startWayback () {
     console.log('service man starting wayback')
-    let { logger } = global
+    let {logger} = global
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
@@ -266,10 +266,10 @@ export default class ServiceManager {
           cwd: this._settings.get('pywb.home'),
           detached: true,
           shell: true,
-          stdio: [ 'ignore', 'ignore', 'ignore' ]
+          stdio: ['ignore', 'ignore', 'ignore']
         }
         try {
-          let wayback = cp.spawn(exec, [ '-d', this._settings.get('warcs') ], opts)
+          let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
           let pid = wayback.pid
           this._monitoring.set('wayback', pid)
           console.log('wayback was started', pid)
@@ -277,11 +277,11 @@ export default class ServiceManager {
           this._pidStore.update({
             who: 'wayback',
             _id: 'wayback'
-          }, { $set: { pid } }, { upsert: true }, insertError => {
+          }, {$set: {pid}}, {upsert: true}, insertError => {
             if (insertError) {
               console.error('service manager inserting pid for wayback error', insertError)
               if (logger) {
-                logger.fatal({ msg: 'service manager inserting pid for wayback error', err: insertError })
+                logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
               }
               reject(insertError)
             } else {
@@ -293,7 +293,7 @@ export default class ServiceManager {
           })
         } catch (err) {
           if (logger) {
-            logger.fatal({ err, msg: 'wayback could not be started' })
+            logger.fatal({err, msg: 'wayback could not be started'})
           }
           console.error('wayback could not be started', err)
           reject(err)

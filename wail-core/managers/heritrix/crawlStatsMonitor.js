@@ -1,9 +1,8 @@
 import chokidar from 'chokidar'
 import EventEmitter from 'eventemitter3'
-import fs from 'fs-extra'
-import getCrawlStats from '../../util/getCrawStats'
 import path from 'path'
-import {remote} from 'electron'
+import { remote } from 'electron'
+import getCrawlStats from '../../util/getCrawStats'
 import ACrawlMonitor from './aCrawlMonitor'
 
 const settings = remote.getGlobal('settings')
@@ -13,11 +12,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
     super()
     this.monitoring = new Map()
     this.launchId = /^[0-9]+$/
-    this.watcherConfig = { followSymlinks: false }
-    // console.log(this.watcherConfig)
-    // this.watcher = chokidar.watch(path.join(settings.get('heritrixJob'),'**/progress-statistics.log'),{ followSymlinks: true,  awaitWriteFinish: true, ignoreInitial: true })
-    // this.watcher.on('add',path => console.log(`File ${path} has been added`))
-    // this.watcher.on('change',path => console.log(`File ${path} has been changed`))
+    this.watcherConfig = {followSymlinks: false}
   }
 
   startMonitoring (jobPath, jobId) {
@@ -55,19 +50,19 @@ export default class CrawlStatsMonitor extends EventEmitter {
             this.stopMonitoring(jobId)
             this.emit('crawljob-status-ended', {
               jobId,
-              stats: Object.assign({}, { started, warcs: path.normalize(`${filePath}/../../warcs/*.warc`) }, stats)
+              stats: Object.assign({}, {started, warcs: path.normalize(`${filePath}/../../warcs/*.warc`)}, stats)
             })
           } else {
             this.emit('crawljob-status-update', {
               jobId,
-              stats: Object.assign({}, { started }, stats)
+              stats: Object.assign({}, {started}, stats)
             })
           }
         })
         .catch(error => {
           console.error(error)
           let mo = this.monitoring.get(jobId)
-          let { errorCount, logWatcher } = mo
+          let {errorCount, logWatcher} = mo
           errorCount = errorCount + 1
           if (errorCount >= 10) {
             logWatcher.close()
@@ -84,7 +79,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
       console.log(`Watcher error: ${error}`)
       console.error(error)
       let mo = this.monitoring.get(jobId)
-      let { errorCount, logWatcher } = mo
+      let {errorCount, logWatcher} = mo
       errorCount = errorCount + 1
       if (errorCount >= 10) {
         logWatcher.close()
@@ -105,6 +100,7 @@ export default class CrawlStatsMonitor extends EventEmitter {
   fullStopMonitoring () {
     for (let logWatcher of this.monitoring.values()) {
       logWatcher.stopWatching()
+      this.monitoring.delete(logWatcher.jobId)
     }
     this.emit('crawlStats-monitoring-stoped')
   }
@@ -113,9 +109,9 @@ export default class CrawlStatsMonitor extends EventEmitter {
     if (this.monitoring.has(jobId)) {
       this.monitoring.get(jobId).stopWatching()
       this.monitoring.delete(jobId)
-      this.emit('stopped-monitoring', { jobId, wasAllReadyMonitoring: true })
+      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: true})
     } else {
-      this.emit('stopped-monitoring', { jobId, wasAllReadyMonitoring: false })
+      this.emit('stopped-monitoring', {jobId, wasAllReadyMonitoring: false})
     }
   }
 }

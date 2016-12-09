@@ -32,7 +32,7 @@ export default class WcRequestMonitor {
     })
   }
 
-  detach(webContents) {
+  detach (webContents) {
     webContents.session.webRequest.onSendHeaders(filter, null)
     webContents.session.webRequest.onHeadersReceived(filter, null)
     webContents.session.webRequest.onBeforeRedirect(filter, null)
@@ -96,7 +96,7 @@ export default class WcRequestMonitor {
   }
 
   match (networkInfo) {
-    for (let [url,winfo] of this.wcRequests) {
+    for (let [url, winfo] of this.wcRequests) {
       let ninfo = networkInfo.get(url)
       if (ninfo) {
         winfo.addNetwork(ninfo)

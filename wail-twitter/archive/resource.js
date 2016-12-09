@@ -1,10 +1,10 @@
 import rp from 'request-promise'
-const { STATUS_CODES }= require('http')
+const { STATUS_CODES } = require('http')
 import Promise from 'bluebird'
 import _ from 'lodash'
 import zlib from 'zlib'
 import S from 'string'
-import url from "url"
+import url from 'url'
 import {cloneWC} from './util'
 import uuid from './node-uuid'
 import warcFields from './warcFields'
@@ -184,7 +184,7 @@ export default class Resource {
         rp({
           headers: this.getHeaders,
           method: 'GET',
-          encoding: null, //always get buffer
+          encoding: null, // always get buffer
           url: this.url,
           strictSSL: false,
           rejectUnauthorized: false,

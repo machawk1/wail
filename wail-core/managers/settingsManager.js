@@ -4,9 +4,7 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
-import autobind from 'autobind-decorator'
 import Promise from 'bluebird'
-import fileExists from 'file-exists'
 import managed from './settingsManValues'
 
 S.TMPL_OPEN = '{'
@@ -159,7 +157,7 @@ export default class SettingsManager {
     let wc = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
-        v = pathMan.normalizeJoin(this._settingsDir,v)
+        v = pathMan.normalizeJoin(this._settingsDir, v)
       }
 
       if (k === 'url') {
@@ -263,7 +261,7 @@ export default class SettingsManager {
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
-    fs.ensureDirSync(pathMan.normalizeJoin(this._settingsDir,managed.wailCore.db))
+    fs.ensureDirSync(pathMan.normalizeJoin(this._settingsDir, managed.wailCore.db))
   }
 
   resetToDefault () {

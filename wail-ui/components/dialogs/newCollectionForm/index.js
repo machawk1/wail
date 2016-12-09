@@ -37,7 +37,7 @@ const validate = values => {
 
 const formConfig = {
   form: 'newCollection',
-  validate,
+  validate
 }
 
 const NewCollectionForm = ({ handleSubmit, pristine, reset, submitting, invalid, onSubmit, onCancel }) => (

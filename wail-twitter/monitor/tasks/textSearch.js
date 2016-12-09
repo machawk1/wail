@@ -74,6 +74,5 @@ export default class TextSearch extends MonitorTask {
     } else {
       return this.termStrategy()
     }
-
   }
 }

@@ -20,7 +20,7 @@ const hashtagRender = ({ fields, meta: { touched, error } }) => {
   return (
     <div>
       <Flex row alignItems='center'>
-        <CardTitle subtitle='Look For Hashtags? (optional)'/>
+        <CardTitle subtitle='Look For Hashtags? (optional)' />
         <RaisedButton
           onTouchTap={() => fields.push('')}
           primary label={'#Add'}
@@ -35,7 +35,7 @@ const hashtagRender = ({ fields, meta: { touched, error } }) => {
                 key={index}
                 rightIconButton={
                   <IconButton onTouchTap={() => fields.remove(index)}>
-                    <Remove/>
+                    <Remove />
                   </IconButton>
                 }
                 primaryText={
@@ -59,11 +59,11 @@ class HashTags extends Component {
     return (
       <form onSubmit={handleSubmit} style={{ width: 'inherit', height: 'inherit' }}>
         <div style={{ maxHeight: 'calc(100% - 300px)' }}>
-          <FieldArray name="hashtags" component={hashtagRender}/>
+          <FieldArray name='hashtags' component={hashtagRender} />
         </div>
         <CardActions>
-          <FlatButton label='Previous' onTouchTap={previousPage}/>
-          <FlatButton label='Start' type='submit' disabled={ invalid || pristine || submitting} primary/>
+          <FlatButton label='Previous' onTouchTap={previousPage} />
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         </CardActions>
       </form>
     )

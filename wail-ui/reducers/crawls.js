@@ -68,7 +68,6 @@ const jobIds = (state = List(), action) => {
     default:
       return state
   }
-
 }
 
 const original = (state = Map(), action) => {

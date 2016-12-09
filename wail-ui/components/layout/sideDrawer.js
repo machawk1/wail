@@ -22,14 +22,14 @@ const dispatchToProps = dispatch => ({
   handleClose (location, to) {
     dispatch(push(to))
     dispatch(locationChange(location))
-  },
+  }
 })
 
 class SideDrawer extends Component {
   static propTypes = {
     open: PropTypes.bool.isRequired,
     handleClose: PropTypes.func.isRequired,
-    requestChange: PropTypes.func.isRequired,
+    requestChange: PropTypes.func.isRequired
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -46,21 +46,21 @@ class SideDrawer extends Component {
       >
         <MenuItem
           primaryText={'WAIL'}
-          rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'}/>}
-          onTouchTap={(e) => this.props.handleClose('WAIL', '/')}/>
+          rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'} />}
+          onTouchTap={(e) => this.props.handleClose('WAIL', '/')} />
         <Divider />
         <MenuItem
           primaryText={'Heritrix'}
-          rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
-          onTouchTap={(e) => this.props.handleClose('Heritrix', '/heritrix')}/>
+          rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
+          onTouchTap={(e) => this.props.handleClose('Heritrix', '/heritrix')} />
         <Divider />
         <MenuItem
           primaryText={'Service Statuses'}
           rightIcon={<ServiceIcon />}
-          onTouchTap={(e) => this.props.handleClose('Services', '/services')}/>
+          onTouchTap={(e) => this.props.handleClose('Services', '/services')} />
         <MenuItem
           primaryText={'Miscellaneous'}
-          onTouchTap={(e) => this.props.handleClose('Miscellaneous', '/misc')}/>
+          onTouchTap={(e) => this.props.handleClose('Miscellaneous', '/misc')} />
       </Drawer>
     )
   }

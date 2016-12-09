@@ -20,7 +20,7 @@ export default class TwitterClient {
         consumer_secret: settingsVals.wailSecret,
         access_token: settingsVals.userToken,
         access_token_secret: settingsVals.userSecret,
-        timeout_ms: 60 * 1000,
+        timeout_ms: 60 * 1000
       })
     }
   }
@@ -34,7 +34,7 @@ export default class TwitterClient {
           consumer_secret: twitter.wailSecret,
           access_token: twitter.userToken,
           access_token_secret: twitter.userSecret,
-          timeout_ms: 60 * 1000,
+          timeout_ms: 60 * 1000
         })
       } else {
         console.log('twitter user not signed in')

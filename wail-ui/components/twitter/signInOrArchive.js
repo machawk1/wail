@@ -10,14 +10,14 @@ const stateToProp = state => ({
 
 class SignInOrArchive extends Component {
   static propTypes = {
-    twitter: PropTypes.instanceOf(Immutable.Map).isRequired,
+    twitter: PropTypes.instanceOf(Immutable.Map).isRequired
   }
 
   render () {
     return (
       <div style={{ width: '100%', height: '100%' }}>
         {!this.props.twitter.get('userSignedIn') && <SignIn />}
-        {this.props.twitter.get('userSignedIn') && <ArchiveTwitter twitter={this.props.twitter}/>}
+        {this.props.twitter.get('userSignedIn') && <ArchiveTwitter twitter={this.props.twitter} />}
       </div>
     )
   }

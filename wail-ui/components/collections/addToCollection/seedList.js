@@ -28,15 +28,13 @@ export default class SeedList extends Component {
   moreThanOne (wsLen, page, warcSeeds, onSubmit, formConfig) {
     let FormPage = reduxForm(formConfig)(SeedListItem)
     if (page < wsLen - 1 && page > 0) {
-      return (<FormPage onSubmit={::this.nextPage} canGoBack={true} previousPage={::this.previousPage} submitter={false}
-                        seed={warcSeeds[ page ]}/>)
+      return (<FormPage onSubmit={::this.nextPage} canGoBack previousPage={::this.previousPage} submitter={false}
+        seed={warcSeeds[ page ]} />)
     } else if (page === wsLen - 1) {
-
-      return (<FormPage onSubmit={onSubmit} canGoBack={true} previousPage={::this.previousPage} submitter={true}
-                        seed={warcSeeds[ page ]}/>)
+      return (<FormPage onSubmit={onSubmit} canGoBack previousPage={::this.previousPage} submitter
+        seed={warcSeeds[ page ]} />)
     } else {
-
-      return (<FormPage onSubmit={::this.nextPage} canGoBack={false} submitter={false} seed={warcSeeds[ page ]}/>)
+      return (<FormPage onSubmit={::this.nextPage} canGoBack={false} submitter={false} seed={warcSeeds[ page ]} />)
     }
   }
 
@@ -46,7 +44,7 @@ export default class SeedList extends Component {
     let formConfig = {
       form: 'fsSeedDiscovery',  // a unique identifier for this form,
       destroyOnUnmount: false,
-      validate(values) {
+      validate (values) {
         const errors = {}
         let name = seedName(warcSeeds[ page ].name)
         let realSeed = values.get(name)
@@ -68,8 +66,8 @@ export default class SeedList extends Component {
         configuredFormPage = this.moreThanOne(wsLen, page, warcSeeds, onSubmit, formConfig)
       } else {
         let FormPage = reduxForm(formConfig)(SeedListItem)
-        configuredFormPage = <FormPage onSubmit={onSubmit} canGoBack={false} submitter={true}
-                                       seed={warcSeeds[ page ]}/>
+        configuredFormPage = <FormPage onSubmit={onSubmit} canGoBack={false} submitter
+          seed={warcSeeds[ page ]} />
       }
     } else {
       configuredFormPage = <p>No Seeds To Add</p>

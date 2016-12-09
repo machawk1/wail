@@ -14,7 +14,7 @@ const makeEventList = events => {
       secondaryText={time}
     />)
     if (i + 1 < len) {
-      renderMe.push(<Divider key={`${e.lvl}${e.msg}${time}${i}-divider`}/>)
+      renderMe.push(<Divider key={`${e.lvl}${e.msg}${time}${i}-divider`} />)
     }
   }
   return renderMe

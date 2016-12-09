@@ -14,7 +14,7 @@ export default class FilterCollection extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      searchText: '',
+      searchText: ''
     }
   }
 
@@ -32,18 +32,18 @@ export default class FilterCollection extends Component {
       <Card>
         <CardText
           style={{ padding: 0, paddingLeft: 64 }}>
-            <span>
-              <TextField
-                style={{ width: '90%', paddingLeft: '10px' }}
-                id='collectionSearch'
-                hintText='Search'
-                value={this.state.searchText}
-                onChange={::this.handleChange}
-              />
-            </span>
           <span>
-              <Search />
-            </span>
+            <TextField
+              style={{ width: '90%', paddingLeft: '10px' }}
+              id='collectionSearch'
+              hintText='Search'
+              value={this.state.searchText}
+              onChange={::this.handleChange}
+              />
+          </span>
+          <span>
+            <Search />
+          </span>
         </CardText>
       </Card>
     )

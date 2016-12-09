@@ -7,8 +7,8 @@ import TwitterUserTextSearch from '../components/twitter/archiveConfig/twitterUs
 const TwitterView = () => (
   <div style={{ width: '100%', height: '100%' }}>
     <Flex row justifyContent='space-between'>
-      <ATwitterUser/>
-      <TwitterUserTextSearch/>
+      <ATwitterUser />
+      <TwitterUserTextSearch />
     </Flex>
   </div>
 )

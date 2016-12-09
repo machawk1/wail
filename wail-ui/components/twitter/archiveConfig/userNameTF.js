@@ -3,7 +3,7 @@ import TextField from 'material-ui/TextField'
 
 export default class UserNameTF extends Component {
   static propTypes = {
-    onBlur: PropTypes.func.isRequired,
+    onBlur: PropTypes.func.isRequired
   }
 
   constructor (props) {
@@ -15,7 +15,7 @@ export default class UserNameTF extends Component {
 
   onChange (event) {
     this.setState({
-      uname: event.target.value,
+      uname: event.target.value
     })
   }
 

@@ -8,8 +8,6 @@ const {
   SEED_CHECKED, ADDING_SEED_DONE_ERROR, RESET_ADD_SEED_MESSAGE
 } = AddSeedFromFsEvents
 
-
-
 export default (state = Map({ message: defaultM, checkingDone: false, warcSeeds: [], hadErrors: [] }), action) => {
   console.log('checkUrl Reducer', action)
   switch (action.type) {

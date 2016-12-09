@@ -11,7 +11,7 @@ import NewCollectionForm from './newCollectionForm'
 const { QUEUE_MESSAGE } = wc.EventTypes
 
 const dispatchToProps = dispatch => ({
-  reset(){
+  reset () {
     dispatch(resetForm('newCollection'))
   }
 })
@@ -83,7 +83,7 @@ class NewCollection extends Component {
         modal
         open={this.state.open}
       >
-        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit}/>
+        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit} />
       </Dialog>
 
     )

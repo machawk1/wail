@@ -25,7 +25,6 @@ class ArchiveFromFriends extends Component {
 
   componentWillUnmount () {
     console.log('component will unmount archive from friends')
-
   }
 
   componentWillMount () {
@@ -38,9 +37,7 @@ class ArchiveFromFriends extends Component {
 
   render () {
     return (
-      <div style={{ height: 'inherit', width: '100%' }}>
-
-      </div>
+      <div style={{ height: 'inherit', width: '100%' }} />
     )
   }
 

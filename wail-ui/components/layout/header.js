@@ -47,25 +47,25 @@ export default class Header extends Component {
         >
           <MenuItem
             primaryText={'WAIL'}
-            rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'}/>}
-            onTouchTap={(e) => this.handleClose('WAIL', '/')}/>
+            rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'} />}
+            onTouchTap={(e) => this.handleClose('WAIL', '/')} />
           <Divider />
           <MenuItem
             primaryText={'Heritrix'}
-            rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
-            onTouchTap={(e) => this.handleClose('Heritrix', '/heritrix')}/>
+            rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
+            onTouchTap={(e) => this.handleClose('Heritrix', '/heritrix')} />
           <Divider />
           <MenuItem
             primaryText={'Service Statuses'}
             rightIcon={<ServiceIcon />}
-            onTouchTap={(e) => this.handleClose('Services', '/services')}/>
+            onTouchTap={(e) => this.handleClose('Services', '/services')} />
           <MenuItem
             primaryText={'Miscellaneous'}
-            onTouchTap={(e) => this.handleClose('Miscellaneous', '/misc')}/>
+            onTouchTap={(e) => this.handleClose('Miscellaneous', '/misc')} />
           <Divider />
           <MenuItem
             primaryText={'Twitter Archive'}
-            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')}/>
+            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')} />
         </Drawer>
       </div>
     )

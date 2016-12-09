@@ -53,8 +53,9 @@ export default class RingBuffer extends EventEmitter {
   }
 
   end () {
-    if (arguments.length > 0)
+    if (arguments.length > 0) {
       this.write.apply(this, Array.prototype.slice.call(arguments))
+    }
     this.writable = false
   }
 

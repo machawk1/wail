@@ -2,7 +2,7 @@ import Promise from 'bluebird'
 
 export class CompoundNedbError extends Error {
   constructor (oError, where) {
-    super()
+    super(`CompoundNedbError[${where}]`)
     Object.defineProperty(this, 'name', {
       value: this.constructor.name
     })
@@ -18,7 +18,7 @@ export function update (db, updateWho, theUpdate, opts = {}) {
       if (err) {
         reject(err)
       } else {
-        resolve({ numAffected, affectedDocuments, upsert })
+        resolve({numAffected, affectedDocuments, upsert})
       }
     })
   })

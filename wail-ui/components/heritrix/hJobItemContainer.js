@@ -64,7 +64,7 @@ class HJobItemContainer extends Component {
         key={`HJIR-${this.props.jobId}-actionButton`}
         touch
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     )
 
@@ -75,18 +75,18 @@ class HJobItemContainer extends Component {
         anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
         targetOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
-        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config'/>
-        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix'/>
+        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config' />
+        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix' />
         <Divider />
-        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start'/>
-        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart'/>
-        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl'/>
-        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete'/>
+        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start' />
+        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart' />
+        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl' />
+        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete' />
       </IconMenu>
     )
 
     return (
-      <HertrixJobItem2 jobId={this.props.jobId} actionMenu={rightIconMenu}/>
+      <HertrixJobItem2 jobId={this.props.jobId} actionMenu={rightIconMenu} />
     )
   }
 }

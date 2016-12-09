@@ -47,6 +47,6 @@ export default class SelectCollection extends Component {
         dataSource={this.state.cols}
         onNewRequest={this.handleChange}
         />
-      )
+    )
   }
 }

@@ -8,7 +8,7 @@ const { START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB } = JobAct
 const {
   BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
   TERMINATE_CRAWL, TEARDOWN_CRAWL, RESCAN_JOB_DIR,
-  REQUEST_SUCCESS,
+  REQUEST_SUCCESS
 } = RequestTypes
 
 const { MAKE_REQUEST, HANDLED_REQUEST } = RequestActions
@@ -17,7 +17,7 @@ const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
   let { jobId } = request
   let job = store.getState().get('runs').get(`${jobId}`)
-  if(!job) {
+  if (!job) {
     job = store.getState().get('runs').get(jobId)
   }
   let latestRun = job.get('latestRun')
@@ -85,7 +85,7 @@ const makeRequest = (store, next, action, request) => {
 const handledRequest = (store, next, action, handledRequest) => {
   let { type, rtype, jobId } = handledRequest
   let job = store.getState().get('runs').get(`${jobId}`)
-  if(!job) {
+  if (!job) {
     job = store.getState().get('runs').get(jobId)
   }
   switch (type) {

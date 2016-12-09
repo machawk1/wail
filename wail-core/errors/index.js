@@ -1,6 +1,6 @@
 export class NullStatsError extends Error {
   constructor (message) {
-    super()
+    super(message)
     Object.defineProperty(this, 'name', {
       value: this.constructor.name
     })
@@ -8,5 +8,4 @@ export class NullStatsError extends Error {
     Error.captureStackTrace(this, NullStatsError)
   }
 }
-
 

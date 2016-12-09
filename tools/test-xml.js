@@ -22,22 +22,30 @@ const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
 let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
-Promise.promisifyAll(DB.prototype)
-class RingBuffer extends EventEmitter {
-  it () {
-    if (this.listeners('new-record').length > 0) {
-      this.emit('new-record')
-    }
-  }
-
-  lcount (event) {
-    return this.listeners(event)
-  }
+const iterb = function* () {
+  yield 6
+  yield 7
+  yield 8
+  yield 9
+  yield 10
 }
 
-const rb = new RingBuffer()
+const iterBIter = iterb()
 
-console.log(rb.lcount('new-record'))
+const iter = function * () {
+  yield 1
+  yield 2
+  yield 3
+  yield 4
+  yield 5
+  yield * iterBIter
+}()
+
+let n = iter.next()
+while (!n.done) {
+  console.log(n.value)
+  n = iter.next()
+}
 
 // const archives = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',

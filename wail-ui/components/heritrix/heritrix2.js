@@ -27,7 +27,7 @@ class Heritrix2 extends Component {
     let len = this.props.jobIds.size
     for (let i = 0; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
-      trs.push(<HJobItemContainer key={`${i}-${jobId}`} jobId={jobId}/>)
+      trs.push(<HJobItemContainer key={`${i}-${jobId}`} jobId={jobId} />)
     }
     return trs
   }

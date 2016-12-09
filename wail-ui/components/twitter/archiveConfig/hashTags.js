@@ -6,7 +6,7 @@ import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import IconButton from 'material-ui/IconButton'
 import {List, ListItem} from 'material-ui/List'
-import AddIcon from  'material-ui/svg-icons/content/add'
+import AddIcon from 'material-ui/svg-icons/content/add'
 import {Field, FieldArray, reduxForm} from 'redux-form/immutable'
 import {Flex, Item} from 'react-flex'
 import {
@@ -59,7 +59,7 @@ const formConfig = {
 const hashtagRender = ({ fields, meta: { touched, error } }) => {
   return (
     <div>
-      <RaisedButton onTouchTap={() => fields.push('')} primary label={'#Add'} labelPosition={'before'}/>
+      <RaisedButton onTouchTap={() => fields.push('')} primary label={'#Add'} labelPosition={'before'} />
       <List style={{ height: 300, maxHeight: 300, overFlowY: 'auto' }}>
         {
           fields.map((ht, index) =>
@@ -94,12 +94,12 @@ class HashTags extends Component {
               defaultTime={null}
             />
             <div style={{ maxHeight: 'calc(100% - 300px)', overflowY: 'auto' }}>
-              <FieldArray name="hashtags" component={hashtagRender}/>
+              <FieldArray name='hashtags' component={hashtagRender} />
             </div>
             <div>
-              <FlatButton label='Add and Archive Now' type='submit' disabled={ pristine || submitting}
-                          primary/>
-              <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+              <FlatButton label='Add and Archive Now' type='submit' disabled={pristine || submitting}
+                primary />
+              <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
             </div>
           </form>
         </Card>

@@ -12,7 +12,7 @@ const dispatchToProp = dispatch => ({
   },
   nukeAddFsSeed () {
     dispatch(resetAddFSSeedMessage())
-  },
+  }
 })
 
 const AddFromFSHeader = ({ col, nukeCheckUrl, nukeAddFsSeed }, context) => {

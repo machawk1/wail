@@ -10,5 +10,4 @@ export default (state = Map({ userSignedIn: settings.get('twitter.userSignedIn')
     default:
       return state
   }
-
 }

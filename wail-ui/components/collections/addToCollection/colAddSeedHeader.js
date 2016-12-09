@@ -27,7 +27,7 @@ const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
       <CardTitle
         title={title}
       />
-      <Link to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem'/></Link>
+      <Link to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem' /></Link>
     </Flex>
   )
 }

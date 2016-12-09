@@ -26,16 +26,16 @@ class CheckResults extends Component {
   renderResult () {
     let result = this.props.check.get('result')
     if (result.wasError) {
-      return <p style={pStyle} dangerouslySetInnerHTML={{ __html: result.m }}/>
+      return <p style={pStyle} dangerouslySetInnerHTML={{ __html: result.m }} />
     }
     let render = [ 'HTTP 200 OK', '<br />' ]
-    _.toPairs(result.stats).forEach(([k,v]) => {
+    _.toPairs(result.stats).forEach(([k, v]) => {
       if (v !== 0) {
         render.push(`${k}: ${v}`)
         render.push('<br/>')
       }
     })
-    return <p style={pStyle} dangerouslySetInnerHTML={{ __html: render.join('') }}/>
+    return <p style={pStyle} dangerouslySetInnerHTML={{ __html: render.join('') }} />
   }
 
   render () {

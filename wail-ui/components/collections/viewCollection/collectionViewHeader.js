@@ -10,7 +10,7 @@ export default class CollectionViewHeader extends Component {
     muiTheme: PropTypes.object.isRequired
   }
   static propTypes = {
-    collection: PropTypes.instanceOf(Immutable.Map).isRequired,
+    collection: PropTypes.instanceOf(Immutable.Map).isRequired
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -26,11 +26,11 @@ export default class CollectionViewHeader extends Component {
     return (
       <div>
         <Flex row alignItems='baseline' justifyContent='space-between'>
-          <CardTitle title={title}/>
-          <CardTitle subtitle={`Last Updated: ${this.props.collection.get('lastUpdated').format('MMM DD YYYY')}`}/>
-          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD YYYY')}`}/>
-          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`}/>
-          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`}/>
+          <CardTitle title={title} />
+          <CardTitle subtitle={`Last Updated: ${this.props.collection.get('lastUpdated').format('MMM DD YYYY')}`} />
+          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD YYYY')}`} />
+          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`} />
+          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`} />
         </Flex>
         <Card>
           <CardText>

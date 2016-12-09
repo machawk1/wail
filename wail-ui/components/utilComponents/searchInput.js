@@ -4,7 +4,6 @@ import shallowCompare from 'react-addons-shallow-compare'
 import Rx from 'rxjs/Rx'
 import TextField from 'material-ui/TextField'
 
-
 export default class SearchInput extends Component {
   static propTypes = {
     searchSubject: PropTypes.instanceOf(Rx.BehaviorSubject).isRequired,
@@ -17,7 +16,7 @@ export default class SearchInput extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      searchText: '',
+      searchText: ''
     }
   }
 

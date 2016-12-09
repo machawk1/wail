@@ -101,8 +101,8 @@ export default class WarcWriter extends EventEmitter {
   writeWarc (config) {
     let { seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header } = config
     console.log(ua)
-    let { doctype, dom }  = dtDom
-    let { outlinks }  =  this.extractOutlinks(seedUrl, dom, preserveA)
+    let { doctype, dom } = dtDom
+    let { outlinks } = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
     networkMonitor.matchNetworkToWC(seedUrl)
     networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
@@ -146,13 +146,17 @@ export default class WarcWriter extends EventEmitter {
           this.emit('finished')
           warcOut.destroy()
         })
-        warcOut.write(wh, 'utf8')
-        warcOut.write(whc, 'utf8')
-        warcOut.write(recordSeparator, 'utf8')
-        warcOut.write(wmh, 'utf8')
-        warcOut.write(wmhc, 'utf8')
-        warcOut.write(recordSeparator, 'utf8')
-        let writeIter = networkMonitor.reqWriteIterator(opts)
+
+        const writeIter = function* () {
+          yield wh
+          yield wc
+          yield recordSeparator
+          yield wmh
+          yield wmhc
+          yield recordSeparator
+          yield * networkMonitor.reqWriteIterator(opts)
+        }()
+
         const doWrite = () => {
           console.log('doing write', moment().format())
           let next = writeIter.next()
@@ -162,8 +166,7 @@ export default class WarcWriter extends EventEmitter {
             warcOut.end()
           }
         }
-
-        doWrite()
+        process.nextTick(doWrite)
       })
       .catch(error => {
         this.emit('error', error)

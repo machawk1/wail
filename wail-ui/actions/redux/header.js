@@ -10,5 +10,4 @@ export const locationChange = location => ({
   location
 })
 
-
 export const toggle = () => ({ type: Header.HEADER_TOGGLE })

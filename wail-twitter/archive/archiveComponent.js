@@ -5,7 +5,7 @@ import WarcWriter from './warcWriter'
 import NetworkMonitor from './networkMonitor'
 import moment from 'moment'
 
-///home/john/my-fork-wail/wail-twitter/archive/inject.js
+// /home/john/my-fork-wail/wail-twitter/archive/inject.js
 
 const addWarcToCol = config => {
   let lastUpdated = moment().format()
@@ -38,7 +38,6 @@ const failUseHeritrix = (config, error) => {
     },
     err: `${error} ${error.stack}`
   })
-
 }
 
 export default class ArchiveComponent extends Component {
@@ -204,7 +203,7 @@ export default class ArchiveComponent extends Component {
     console.log(wb)
     return (
       <div style={{ width: 'inherit', height: 'inherit' }}>
-        <div dangerouslySetInnerHTML={wb}/>
+        <div dangerouslySetInnerHTML={wb} />
       </div>
     )
   }

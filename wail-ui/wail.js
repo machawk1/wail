@@ -53,5 +53,5 @@ window.logger = bunyan.createLogger({
 
 const store = configureStore()
 
-render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
+render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))
 

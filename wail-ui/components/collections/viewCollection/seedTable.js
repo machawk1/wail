@@ -6,13 +6,14 @@ import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColu
 import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import SortDirection from '../../sortDirection/sortDirection'
 import SortHeader from '../../sortDirection/sortHeader'
+import { momentSortRev} from '../../../util/momentSort'
 
 const wbUrl = remote.getGlobal('settings').get('pywb.url')
 const openInWb = (seed, forCol) => shell.openExternal(`${wbUrl}${forCol}/*/${seed}`)
 
 export default class SeedTable extends Component {
   static propTypes = {
-    collection: PropTypes.instanceOf(Immutable.Map).isRequired,
+    collection: PropTypes.instanceOf(Immutable.Map).isRequired
   }
 
   constructor (...args) {
@@ -32,14 +33,7 @@ export default class SeedTable extends Component {
   renTr () {
     let viewingCol = this.props.collection.get('colName')
     let trs = []
-    let seeds
-    if (this.state.sortDirection) {
-      seeds = this.props.collection.get('seeds')
-        .sortBy(aSeed => aSeed.get('url').toLowerCase())
-        .update(list => this.state.sortDirection === SortDirection.DESC ? list.reverse() : list)
-    } else {
-      seeds = this.props.collection.get('seeds')
-    }
+    let seeds = this.props.collection.get('seeds').sort((s1,s2) => momentSortRev(s1.get('added'),s2.get('added')))
     let len = seeds.size
     for (let i = 0; i < len; ++i) {
       let seed = seeds.get(i)
@@ -58,7 +52,7 @@ export default class SeedTable extends Component {
           {seed.get('mementos')}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-viewInWB`}>
-          <FlatButton label={'View'} onTouchTap={() => openInWb(url, viewingCol)}/>
+          <FlatButton label={'View'} onTouchTap={() => openInWb(url, viewingCol)} />
         </TableRowColumn>
       </TableRow>)
     }

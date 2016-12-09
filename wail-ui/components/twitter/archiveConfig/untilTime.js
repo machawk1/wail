@@ -18,7 +18,7 @@ export default class UntilTime extends Component {
   }
 
   checkChange (e, time) {
-    console.log('time change',time)
+    console.log('time change', time)
     let message = ''
     let wasError = false
     if (time) {

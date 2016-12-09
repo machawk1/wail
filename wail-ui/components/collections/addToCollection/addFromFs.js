@@ -60,7 +60,7 @@ const makeAddConfig = (col, warcSeed, realSeed) => {
 
 export default class AddFromFs extends Component {
   static propTypes = {
-    col: PropTypes.string.isRequired,
+    col: PropTypes.string.isRequired
   }
 
   static contextTypes = {
@@ -74,7 +74,7 @@ export default class AddFromFs extends Component {
       message: defaultM,
       checkingDone: false,
       warcSeeds: [],
-      hadErrors: [],
+      hadErrors: []
     }
   }
 
@@ -125,7 +125,6 @@ export default class AddFromFs extends Component {
           this.extractSeeds(wpath, mode)
         })
       }
-
     }
   }
 
@@ -154,7 +153,7 @@ export default class AddFromFs extends Component {
   addWarcWTrueSeeds (values) {
     let realSeeds = values.toJS()
     console.log('real seeds', values)
-    let addToCol =  {
+    let addToCol = {
       lastUpdated: moment().format(),
       col: this.props.col,
       seedWarcs: []
@@ -166,7 +165,7 @@ export default class AddFromFs extends Component {
       warcSeeds.forEach(ws => {
         let realSeed = realSeeds[ seedName(ws.name) ]
         if (realSeed) {
-          let addConfig = makeAddConfig(this.props.col,ws.seeds,realSeed)
+          let addConfig = makeAddConfig(this.props.col, ws.seeds, realSeed)
           addToCol.seedWarcs.push(addConfig)
         } else {
           throw new Error(`${seedName(ws.name)} had no real seed`)
@@ -187,7 +186,7 @@ export default class AddFromFs extends Component {
       message: defaultM,
       checkingDone: false,
       warcSeeds: [],
-      hadErrors: [],
+      hadErrors: []
     }, () => this.context.store.dispatch(resetAddFSSeedMessage()))
   }
 
@@ -196,9 +195,9 @@ export default class AddFromFs extends Component {
     return (
       <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
         <Card style={{ width: 'inherit', height: 'inherit', overflowY: 'auto' }}>
-          {!checkingDone && <CardHeader title={message}/>}
-          {checkingDone && <SeedList onSubmit={::this.addWarcWTrueSeeds} warcSeeds={warcSeeds}/>}
-          <ErrorList done={checkingDone} hadErrors={hadErrors}/>
+          {!checkingDone && <CardHeader title={message} />}
+          {checkingDone && <SeedList onSubmit={::this.addWarcWTrueSeeds} warcSeeds={warcSeeds} />}
+          <ErrorList done={checkingDone} hadErrors={hadErrors} />
         </Card>
       </div>
     )

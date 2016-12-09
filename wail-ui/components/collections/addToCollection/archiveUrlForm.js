@@ -33,10 +33,9 @@ const validate = values => {
   return errors
 }
 
-
 const formConfig = {
   form: 'archiveUrl',
-  validate,
+  validate
 }
 
 class ArchiveUrlForm extends Component {
@@ -76,9 +75,9 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{ marginLeft: 25, width: '310px' }}
             >
-              <MenuItem value={1} primaryText='Page Only'/>
-              <MenuItem value={2} primaryText='Page + Same domain links'/>
-              <MenuItem value={3} primaryText='Page + All internal and external links'/>
+              <MenuItem value={1} primaryText='Page Only' />
+              <MenuItem value={2} primaryText='Page + Same domain links' />
+              <MenuItem value={3} primaryText='Page + All internal and external links' />
             </Field>
           </div>
           <div style={{ height: '40px', transform: 'translateY(20px)' }}>
@@ -88,7 +87,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
           </div>
         </form>
       </div>

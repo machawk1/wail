@@ -29,9 +29,9 @@ const Wail = ({ store, history }) => {
     <Provider store={store}>
       <MuiThemeProvider muiTheme={wailTheme}>
         <div style={{ width: '100%', height: '100%' }}>
-          <Header/>
+          <Header />
           <div className='layoutBody'>
-            <Router history={history} routes={routes}/>
+            <Router history={history} routes={routes} />
           </div>
           <Footer />
         </div>

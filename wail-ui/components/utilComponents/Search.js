@@ -10,7 +10,7 @@ const Search = ({ searchSubject, cardStyle, cardTextStyle, inputStyle }) => (
   <Card style={cardStyle}>
     <CardText style={cardTextStyle}>
       <span>
-        <SearchInput searchSubject={searchSubject}  />
+        <SearchInput searchSubject={searchSubject} />
       </span>
       <span>
         <SearchI />

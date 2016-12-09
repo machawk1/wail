@@ -3,22 +3,21 @@ import Db from 'nedb'
 import wc from '../../../wail-ui/constants/wail-constants'
 import _ from 'lodash'
 import fs from 'fs-extra'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import moment from 'moment'
 import os from 'os'
 import path from 'path'
 import Promise from 'bluebird'
 import S from 'string'
 import CrawlStatsMonitor from './crawlStatsMonitor'
-import {CrawlInfo} from '../../util'
-import {readFile, ensureDirAndWrite} from '../../util/fsHelpers'
+import { CrawlInfo } from '../../util'
+import { readFile, ensureDirAndWrite } from '../../util/fsHelpers'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')
-
 
 export default class CrawlManager {
 
@@ -63,7 +62,7 @@ export default class CrawlManager {
       // so babel will make this Math.max.apply(Math,array)
       let latestLaunch = Math.max(...files.filter(item => this.launchId.test(item)))
       let warcPath = path.join(jobPath, `${latestLaunch}`, 'warcs', '*.warc')
-      ipc.send('add-warcs-to-col', { forCol, warcs: warcPath })
+      ipc.send('add-warcs-to-col', {forCol, warcs: warcPath})
     })
   }
 
@@ -76,7 +75,7 @@ export default class CrawlManager {
           console.log(docs)
           let pDocs = docs
           if (pDocs.length > 0) {
-            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), [ 'jobId' ], [ 'desc' ])
+            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), ['jobId'], ['desc'])
           }
           resolve(pDocs)
         }
@@ -85,7 +84,7 @@ export default class CrawlManager {
   }
 
   crawlStarted (jobId) {
-    this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.db.update({jobId}, {$set: {running: true}}, {returnUpdatedDocs: true}, (error, numUpdated, updated) => {
       if (error) {
         console.error('error inserting document', error)
         ipc.send('managers-error', {
@@ -116,9 +115,9 @@ export default class CrawlManager {
           queued: update.stats.queued,
           downloaded: update.stats.downloaded
         }
-      },
+      }
     }
-    this.db.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
+    this.db.update({jobId: update.jobId}, theUpdate, {returnUpdatedDocs: true}, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
         ipc.send('managers-error', {
@@ -134,7 +133,7 @@ export default class CrawlManager {
           col: updated.forCol,
           warcs: update.stats.warcs,
           lastUpdated: update.stats.timestamp,
-          seed: { url: updated.urls, jobId: update.jobId }
+          seed: {url: updated.urls, jobId: update.jobId}
         })
       }
     })
@@ -143,7 +142,7 @@ export default class CrawlManager {
   areCrawlsRunning () {
     console.log('checking if crawls are running')
     return new Promise((resolve, reject) => {
-      this.db.count({ running: true }, (err, runningCount) => {
+      this.db.count({running: true}, (err, runningCount) => {
         if (err) {
           console.error('error finding if crawls are running')
           reject(err)
@@ -161,7 +160,7 @@ export default class CrawlManager {
    * @returns {Promise|Promise<Object>}
    */
   makeCrawlConf (options) {
-    let { urls, forCol, jobId, depth } = options
+    let {urls, forCol, jobId, depth} = options
     return new Promise((resolve, reject) =>
       readFile(settings.get('heritrix.jobConf'))
         .then(data => {
@@ -201,7 +200,7 @@ export default class CrawlManager {
                 path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
                 confP: cfp, urls: urls, running: false, forCol
               }
-              //{"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
+              // {"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
               let lastUpdated = moment(jobId).format()
               ipc.send('made-heritrix-jobconf', {
                 forMain: {
@@ -210,11 +209,11 @@ export default class CrawlManager {
                 },
                 forArchives: {
                   forCol, lastUpdated,
-                  seed: { forCol, url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
+                  seed: {forCol, url: urls, jobIds: [jobId], lastUpdated, added: lastUpdated, mementos: 0}
                 }
               })
 
-              this.db.insert({ _id: `${jobId}`, ...crawlInfo }, (iError, doc) => {
+              this.db.insert({_id: `${jobId}`, ...crawlInfo}, (iError, doc) => {
                 if (iError) {
                   console.error(iError)
                   reject(iError)

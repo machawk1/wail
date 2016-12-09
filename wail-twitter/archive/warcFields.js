@@ -47,7 +47,7 @@ const warcResponseHeader =
 
 const recordSeparator = '\r\n\r\n'
 
-module.exports = {
+export {
   warcHeader,
   warcHeaderContent,
   warcRequestHeader,

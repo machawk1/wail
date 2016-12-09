@@ -6,8 +6,8 @@ import AddFromFs from '../components/collections/addToCollection/addFromFs'
 
 const CollectionAddSeedFs = ({ params }) => (
   <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
-    <AddFromFsHeader col={params.col}/>
-    <AddFromFs col={params.col}/>
+    <AddFromFsHeader col={params.col} />
+    <AddFromFs col={params.col} />
   </div>
 )
 

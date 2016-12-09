@@ -11,5 +11,4 @@ const seedName = name => {
   return theSwapper.setValue(name).strip('.').s
 }
 
-
 export default seedName

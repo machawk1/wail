@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, shell, dialog} from 'electron'
+import {BrowserWindow, ipcMain} from 'electron'
 import util from 'util'
 import partialRight from 'lodash/partialRight'
 import EventEmitter from 'eventemitter3'
@@ -282,8 +282,6 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('add-warcs-to-col-wcreate', (e, addMe) => {
       this.send('archiveManWindow', 'add-warcs-to-col-wcreate', addMe)
     })
-
-
 
     /* Control */
     ipcMain.on('log-error-display-message', (event, em) => {

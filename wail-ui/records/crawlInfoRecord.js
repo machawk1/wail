@@ -3,15 +3,6 @@ import Immutable from 'immutable'
 import {joinStrings} from 'joinable'
 import RunInfoRecord from './runInfoRecord'
 
-function compare (a, b) {
-  if (a.tsMoment.isBefore(b)) {
-    return 1
-  }
-  if (a.tsMoment.isAfter(b.tsMoment)) {
-    return -1
-  }
-  return 0
-}
 
 const CrawlRecord = Immutable.Record({
   lastUpdated: null,

@@ -94,9 +94,9 @@ class ATwitterUser extends Component {
     return (
       <div style={{ width: '30%', height: '100%' }} id='twitterArchive'>
         <Card style={{ height: '100%' }}>
-          <CardTitle title={"A User's Timeline"}/>
-          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage}/>}
-          {page === 2 && <MaybeHashtags previousPage={::this.previousPage} onSubmit={::this.submit}/>}
+          <CardTitle title={"A User's Timeline"} />
+          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage} />}
+          {page === 2 && <MaybeHashtags previousPage={::this.previousPage} onSubmit={::this.submit} />}
         </Card>
       </div>
     )

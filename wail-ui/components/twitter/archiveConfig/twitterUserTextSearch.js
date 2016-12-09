@@ -84,9 +84,9 @@ class TwitterUserTextSearch extends Component {
     return (
       <div style={{ width: '30%', height: '100%' }}>
         <Card style={{ height: '100%' }}>
-          <CardTitle title={"Terms In A Users Tweets"}/>
-          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage}/>}
-          {page === 2 && <SearchTerms previousPage={::this.previousPage} onSubmit={::this.submit}/>}
+          <CardTitle title={'Terms In A Users Tweets'} />
+          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage} />}
+          {page === 2 && <SearchTerms previousPage={::this.previousPage} onSubmit={::this.submit} />}
         </Card>
       </div>
     )

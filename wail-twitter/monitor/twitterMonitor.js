@@ -69,7 +69,6 @@ export default class TwitterMonitor extends EventEmitter {
       let configs = []
       tweets.forEach(t => {
         configs.push(makeArchiveConfig(config, t))
-
       })
       ipc.send('archive-uri-r', configs)
     })

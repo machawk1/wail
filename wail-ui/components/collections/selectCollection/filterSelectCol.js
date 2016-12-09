@@ -18,10 +18,10 @@ export default class FilterSelectCol extends Component {
   render () {
     return (
       <div>
-        <Search searchSubject={this.filterText}/>
+        <Search searchSubject={this.filterText} />
         <Divider />
         <div style={{ height: 'inherit' }}>
-          <SelectColTable filterText={this.filterText}/>
+          <SelectColTable filterText={this.filterText} />
         </div>
       </div>
     )

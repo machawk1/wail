@@ -1,4 +1,3 @@
-// import {remote, ipcRenderer as ipc} from 'electron'
 import MonitorTask from './monitorTask'
 
 export default class UserTimeLineTask extends MonitorTask {

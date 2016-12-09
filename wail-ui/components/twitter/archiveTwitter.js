@@ -10,12 +10,12 @@ import TimePicker from 'material-ui/TimePicker'
 
 const style = {
   container: {
-    position: 'relative',
+    position: 'relative'
   },
   refresh: {
     display: 'inline-block',
-    position: 'relative',
-  },
+    position: 'relative'
+  }
 }
 
 export default class ArchiveTwitter extends Component {
@@ -52,7 +52,7 @@ export default class ArchiveTwitter extends Component {
           key={`${i}${friends[ i ].name}`}
           primaryText={friends[ i ].name}
           secondaryText={`@${friends[ i ].screen_name}`}
-          leftAvatar={<Avatar key={`proImage-${friends[ i ].name}${i}`} src={friends[ i ].profile_image}/>}
+          leftAvatar={<Avatar key={`proImage-${friends[ i ].name}${i}`} src={friends[ i ].profile_image} />}
         />
       )
     }
@@ -69,7 +69,7 @@ export default class ArchiveTwitter extends Component {
           size={40}
           left={10}
           top={0}
-          status="loading"
+          status='loading'
         />}
         {!this.state.loading &&
         <List style={{ maxHeight: '50%', overflowY: 'auto', overflowX: 'hidden' }}>

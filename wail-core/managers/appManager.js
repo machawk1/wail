@@ -10,7 +10,7 @@ S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const isDev = process.env.NODE_ENV === 'development'
-const loadingSequence = [ 'lsDone' ]
+const loadingSequence = ['lsDone']
 
 export default class AppManager {
   constructor () {
@@ -151,47 +151,47 @@ export default class AppManager {
               name: 'settingsWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/accessibility.html`,
               name: 'accessibilityWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/twitterMonitor.html`,
               name: 'twitterMonitor'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/archiver.html`,
               name: 'archiverWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/indexer.html`,
               name: 'indexWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/jobs.html`,
               name: 'jobWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/requestDaemon.html`,
               name: 'reqDaemonWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/managers.html`,
               name: 'managersWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/crawls.html`,
               name: 'crawlManWindow'
             },
             {
-              conf: { show: false },
+              conf: {show: false},
               url: `file://${loadFrom}/background/archives.html`,
               name: 'archiveManWindow'
             }
@@ -202,8 +202,8 @@ export default class AppManager {
   }
 
   addLoadingState (who, state) {
-    this.loadingState[ who ] = state
-    let { archiveManWindow, crawlManWindow } = this.loadingState
+    this.loadingState[who] = state
+    let {archiveManWindow, crawlManWindow} = this.loadingState
     if (archiveManWindow && crawlManWindow) {
       this.loadingState.haveBothStates = true
     }
@@ -211,8 +211,8 @@ export default class AppManager {
   }
 
   wailHasLoadState (has) {
-    this.loadingState[ has ] = true
-    let { wailHasArchives, wailHasCrawls } = this.loadingState
+    this.loadingState[has] = true
+    let {wailHasArchives, wailHasCrawls} = this.loadingState
     if (wailHasArchives && wailHasCrawls) {
       this.loadingState.wailHasBothStates = true
     }

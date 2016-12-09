@@ -22,6 +22,7 @@ module.exports = {
               'targets': {
                 'node': 6.5
               },
+              "useBuiltIns": true,
               'whitelist': [
                 'transform-class-properties',
                 'transform-es2015-classes',

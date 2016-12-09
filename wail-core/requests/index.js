@@ -1,15 +1,3 @@
-import {
-  BuildLaunchJob,
-  StopJob,
-  JobLifeCycle,
-  RescanJobDirRequest
-  BuildJobRequest,
-  LaunchJobRequest,
-  TeardownJobRequest,
-  TerminateJobRequest,
-  TerminateAndRestartJob
-} from './heritrixRequests'
-
 export {
   TerminateAndRestartJob,
   BuildJobRequest,
@@ -20,4 +8,4 @@ export {
   RescanJobDirRequest,
   BuildLaunchJob,
   StopJob
-}
+} from './heritrixRequests'

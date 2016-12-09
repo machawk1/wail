@@ -47,15 +47,15 @@ export default class SignIn extends Component {
             title='You have not signed into Twitter through WAIL'
           />
           <CardText>
-            In order to use this feature you must authorize WAIL to access your account. <br/>
-            You can do so by clicking the sign in button. <br/>
-            After doing so a new window will appear for you to do so. <br/>
+            In order to use this feature you must authorize WAIL to access your account. <br />
+            You can do so by clicking the sign in button. <br />
+            After doing so a new window will appear for you to do so. <br />
             Once you have authorized WAIL the window will close and
             the Archive Twitter Screen will appear
           </CardText>
           <CardActions>
             <FlatButton disabled={this.state.disabled} label='Sign In' labelPosition='before'
-                        onTouchTap={::this.doSignIn}/>
+              onTouchTap={::this.doSignIn} />
           </CardActions>
         </Card>
       </div>

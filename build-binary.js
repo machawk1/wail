@@ -341,42 +341,40 @@ function createDeb_redHat (arc, cb) {
   })
 }
 
-function log (plat, arch) {
-  return (err, filepath) => {
-    if (err) return console.error(err)
-    let moveToPath
-    let cb
-    if (plat === 'darwin') {
-      let appPath = `release/wail-${plat}-${arch}/wail.app`
-      moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
-      let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
-      cb = () => {
-        // fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
-        if (process.platform === 'darwin') {
-          console.log('Building dmg')
-          createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
-          // console.log(`${plat}-${arch} finished!`)
-        } else {
-          console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
-          console.log(`${plat}-${arch} finished!`)
-        }
-      }
-    } else {
-      if (plat === 'win32') {
-        cb = () => {
-          createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
-        }
+const log = (plat, arch) => (err, filepath) => {
+  if (err) return console.error(err)
+  let moveToPath
+  let cb
+  if (plat === 'darwin') {
+    let appPath = `release/wail-${plat}-${arch}/wail.app`
+    moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
+    let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
+    cb = () => {
+      // fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
+      if (process.platform === 'darwin') {
+        console.log('Building dmg')
+        createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
+        // console.log(`${plat}-${arch} finished!`)
       } else {
-        // cb = () => {
-        //   createDeb_redHat(arch, () => console.log(`${plat}-${arch} finished!`))
-        // }
+        console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
         console.log(`${plat}-${arch} finished!`)
       }
-      moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
     }
-    let releasePath = path.normalize(path.join(cwd, moveToPath))
-    moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
+  } else {
+    if (plat === 'win32') {
+      cb = () => {
+        createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
+      }
+    } else {
+      // cb = () => {
+      //   createDeb_redHat(arch, () => console.log(`${plat}-${arch} finished!`))
+      // }
+      console.log(`${plat}-${arch} finished!`)
+    }
+    moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
   }
+  let releasePath = path.normalize(path.join(cwd, moveToPath))
+  moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
 }
 
 // async function doBuild () {
@@ -483,7 +481,6 @@ const doBuild = () => {
                 console.error('building core', error)
                 reject(error)
               })
-
           }).catch(error => {
             console.error('building ui', error)
             reject(error)

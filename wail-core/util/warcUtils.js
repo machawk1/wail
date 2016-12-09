@@ -1,14 +1,14 @@
 import cp from 'child_process'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import {remote} from 'electron'
+import { remote } from 'electron'
 import S from 'string'
 S.TMPL_CLOSE = '}'
 S.TMPL_OPEN = '{'
 
 export class WarcUtilError extends Error {
   constructor (oError, where) {
-    super()
+    super(`WarcUtilError[${where}]`)
     Object.defineProperty(this, 'name', {
       value: this.constructor.name
     })
@@ -25,7 +25,7 @@ export function extractSeeds (path, mode = 'f') {
   } else {
     template = remote.getGlobal('settings').get('extractSeed.dir')
   }
-  let exePath = S(template).template({ path }).s
+  let exePath = S(template).template({path}).s
   console.log(exePath)
   return new Promise((resolve, reject) => {
     cp.exec(exePath, (error, stdout, stderr) => {
@@ -51,7 +51,7 @@ export function isWarcValid (path, mode = 'f') {
   } else {
     template = remote.getGlobal('settings').get('warcChecker.dir')
   }
-  let exePath = S(template).template({ path }).s
+  let exePath = S(template).template({path}).s
 
   return new Promise((resolve, reject) => {
     cp.exec(exePath, (error, stdout, stderr) => {
@@ -84,7 +84,7 @@ const warcRenamer = badWarc =>
 
 export function renameBadWarcs (badWarcs) {
   if (Array.isArray(badWarcs)) {
-    return Promise.map(badWarcs, warcRenamer, { concurrency: 1 })
+    return Promise.map(badWarcs, warcRenamer, {concurrency: 1})
   }
   return warcRenamer(badWarcs)
 }

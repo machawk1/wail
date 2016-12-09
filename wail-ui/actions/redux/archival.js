@@ -22,7 +22,6 @@ export const checkDoneError = (result) => ({
   result
 })
 
-
 export const checkingUrl = (message) => ({
   type: CHECKING_URL,
   message

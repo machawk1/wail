@@ -1,4 +1,4 @@
-Set.prototype.isSuperset = function(subset) {
+Set.prototype.isSuperset = function (subset) {
   for (let elem of subset) {
     if (!this.has(elem)) {
       return false
@@ -7,7 +7,7 @@ Set.prototype.isSuperset = function(subset) {
   return true
 }
 
-Set.prototype.union = function(setB) {
+Set.prototype.union = function (setB) {
   const union = new Set(this)
   for (let elem of setB) {
     union.add(elem)
@@ -15,7 +15,7 @@ Set.prototype.union = function(setB) {
   return union
 }
 
-Set.prototype.intersection = function(setB) {
+Set.prototype.intersection = function (setB) {
   const intersection = new Set()
   for (let elem of setB) {
     if (this.has(elem)) {
@@ -25,7 +25,7 @@ Set.prototype.intersection = function(setB) {
   return intersection
 }
 
-Set.prototype.difference = function(setB) {
+Set.prototype.difference = function (setB) {
   const difference = new Set(this)
   for (let elem of setB) {
     difference.delete(elem)

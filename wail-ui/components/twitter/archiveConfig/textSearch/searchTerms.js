@@ -20,7 +20,7 @@ const searchTermRender = ({ fields, meta: { touched, error } }) => {
   return (
     <div>
       <Flex row alignItems='center'>
-        <CardTitle subtitle='Look For What In The Tweets Text?'/>
+        <CardTitle subtitle='Look For What In The Tweets Text?' />
         <RaisedButton
           onTouchTap={() => fields.push('')}
           primary label={'Add'}
@@ -35,7 +35,7 @@ const searchTermRender = ({ fields, meta: { touched, error } }) => {
                 key={index}
                 rightIconButton={
                   <IconButton onTouchTap={() => fields.remove(index)}>
-                    <Remove/>
+                    <Remove />
                   </IconButton>
                 }
                 primaryText={
@@ -59,11 +59,11 @@ class SearchTerms extends Component {
     return (
       <form onSubmit={handleSubmit} style={{ width: 'inherit', height: 'inherit' }}>
         <div style={{ maxHeight: 'calc(100% - 300px)' }}>
-          <FieldArray name="searchT" component={searchTermRender}/>
+          <FieldArray name='searchT' component={searchTermRender} />
         </div>
         <CardActions>
-          <FlatButton label='Previous' onTouchTap={previousPage}/>
-          <FlatButton label='Start' type='submit' disabled={ invalid || pristine || submitting} primary/>
+          <FlatButton label='Previous' onTouchTap={previousPage} />
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         </CardActions>
       </form>
     )

@@ -34,9 +34,9 @@ class CheckSeed extends Component {
 
   render () {
     return (
-      <div style={{ position: 'relative', marginRight: 25,}}>
-        <div style={{ position: 'absolute',  right: 50, top: -225 }}>
-          <RaisedButton label='Check Seed' onTouchTap={::this.checkSeed}/>
+      <div style={{ position: 'relative', marginRight: 25 }}>
+        <div style={{ position: 'absolute', right: 50, top: -225 }}>
+          <RaisedButton label='Check Seed' onTouchTap={::this.checkSeed} />
           <CheckResults />
         </div>
       </div>

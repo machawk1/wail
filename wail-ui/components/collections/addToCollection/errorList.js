@@ -4,7 +4,7 @@ import {List, ListItem} from 'material-ui/List'
 export default class ErrorList extends Component {
   static propTypes = {
     done: PropTypes.bool.isRequired,
-    hadErrors: PropTypes.array.isRequired,
+    hadErrors: PropTypes.array.isRequired
   }
 
   renderPossibleSeeds () {
@@ -25,7 +25,7 @@ export default class ErrorList extends Component {
     return (
       done && <List style={{ marginLeft: 16, overflowY: 'auto', height: 'calc(50% - 200px)', maxHeight: 'calc(50% - 200px)' }}>
         {this.props.hadErrors.length > 0 && this.renderPossibleSeeds()}
-        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determing The Seeds'/>}
+        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determing The Seeds' />}
       </List>
     )
   }

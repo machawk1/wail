@@ -1,7 +1,7 @@
 import {List} from 'immutable'
 import {CrawlEvents} from '../constants/wail-constants'
 
-const { GOT_ALL_RUNS, } = CrawlEvents
+const { GOT_ALL_RUNS } = CrawlEvents
 
 export default (state = List(), action) => {
   console.log('in crawls reducer', action)

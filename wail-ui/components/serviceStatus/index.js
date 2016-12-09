@@ -23,7 +23,7 @@ const style = {
   },
   serviceActionButton: {
     margin: '10px'
-  },
+  }
 }
 
 const stateToProps = state => {
@@ -70,24 +70,24 @@ const ServiceStatus = ({
         <TableRowColumn style={style.servicesSS}>{waybackStatus}</TableRowColumn>
         <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
         <TableRowColumn style={style.servicesActions}>
-            <span style={{ marginLeft: '50px' }}>
-              <RaisedButton
-                disabled={wbGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Start'
-                onMouseDown={startWayback}
-                icon={<FixIcon />}
+          <span style={{ marginLeft: '50px' }}>
+            <RaisedButton
+              disabled={wbGood}
+              style={style.serviceActionButton}
+              labelPosition='before'
+              label='Start'
+              onMouseDown={startWayback}
+              icon={<FixIcon />}
               />
-              <RaisedButton
-                disabled={!wbGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Stop'
-                onMouseDown={stopWayback}
-                icon={<KillIcon />}
+            <RaisedButton
+              disabled={!wbGood}
+              style={style.serviceActionButton}
+              labelPosition='before'
+              label='Stop'
+              onMouseDown={stopWayback}
+              icon={<KillIcon />}
               />
-            </span>
+          </span>
         </TableRowColumn>
       </TableRow>
       <TableRow
@@ -97,24 +97,24 @@ const ServiceStatus = ({
         <TableRowColumn style={style.servicesSS}>{heritrixStatus}</TableRowColumn>
         <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
         <TableRowColumn style={style.servicesActions}>
-            <span style={{ marginLeft: '50px' }}>
-              <RaisedButton
-                disabled={hGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Start'
-                onMouseDown={startHeritrix}
-                icon={<FixIcon />}
+          <span style={{ marginLeft: '50px' }}>
+            <RaisedButton
+              disabled={hGood}
+              style={style.serviceActionButton}
+              labelPosition='before'
+              label='Start'
+              onMouseDown={startHeritrix}
+              icon={<FixIcon />}
               />
-              <RaisedButton
-                disabled={!hGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Stop'
-                onMouseDown={stopHeritrix}
-                icon={<KillIcon />}
+            <RaisedButton
+              disabled={!hGood}
+              style={style.serviceActionButton}
+              labelPosition='before'
+              label='Stop'
+              onMouseDown={stopHeritrix}
+              icon={<KillIcon />}
               />
-            </span>
+          </span>
         </TableRowColumn>
       </TableRow>
     </TableBody>

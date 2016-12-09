@@ -30,6 +30,7 @@ module.exports = {
               'targets': {
                 'node': 6.5
               },
+              "useBuiltIns": true,
               'whitelist': [
                 'syntax-trailing-function-commas',
                 'transform-class-properties',

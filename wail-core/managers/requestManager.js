@@ -1,9 +1,9 @@
 import autobind from 'autobind-decorator'
 import rp from 'request-promise'
 import _ from 'lodash'
-import {ipcRenderer as ipc, remote} from 'electron'
+import { ipcRenderer as ipc, remote } from 'electron'
 import moment from 'moment'
-import {default as wc} from '../constants'
+import { default as wc } from '../constants'
 import util from 'util'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'

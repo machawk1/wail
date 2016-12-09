@@ -19,7 +19,6 @@ export default class NetworkMonitor {
       let oldRequest = this.networkRequests.get(request.url).request
       this.networkRequests.get(request.url).request = [ oldRequest, clonner(request) ]
     }
-
   }
 
   responseReceived (params) {
@@ -27,7 +26,6 @@ export default class NetworkMonitor {
     if (this.networkRequests.has(response.url)) {
       if (!this.networkRequests.get(response.url).response) {
         this.networkRequests.get(response.url).response = clonner(response)
-
       } else {
         let oldResponse = this.networkRequests.get(response.url).response
         this.networkRequests.get(response.url).response = [ oldResponse, clonner(response) ]

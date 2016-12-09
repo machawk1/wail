@@ -105,7 +105,7 @@ class FriendList extends Component {
           size={40}
           left={10}
           top={0}
-          status="loading"
+          status='loading'
         />}
         {!this.state.loading &&
         <List style={{ maxHeight: '63%', overflowY: 'auto', overflowX: 'hidden' }}>
