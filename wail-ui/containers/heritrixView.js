@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React from 'react'
 import HeritrixToolBar from '../components/heritrix/heritrixToolBar'
 import Heritrix2 from '../components/heritrix/heritrix2'
 

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Card, CardHeader, CardMedia} from 'material-ui/Card'
 import EventLog from '../components/miscellaneous/eventLog'
 import MiscToolBar from '../components/miscellaneous/miscToolBar'

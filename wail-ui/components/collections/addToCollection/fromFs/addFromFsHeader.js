@@ -3,8 +3,8 @@ import CardTitle from 'material-ui/Card/CardTitle'
 import {Link, IndexLink} from 'react-router'
 import {connect} from 'react-redux'
 import {batchActions} from 'redux-batched-actions'
-import {resetCheckMessage} from '../../../actions/redux/archival'
-import {resetAddFSSeedMessage} from '../../../actions/redux/addSeedFromFs'
+import {resetCheckMessage} from '../../../../actions/redux/archival'
+import {resetAddFSSeedMessage} from '../../../../actions/redux/addSeedFromFs'
 
 const dispatchToProp = dispatch => ({
   nukeCheckUrl () {

@@ -1,0 +1,44 @@
+import React, { PropTypes } from 'react'
+import { CardTitle } from 'material-ui/Card'
+import { RadioButton } from 'material-ui/RadioButton'
+import { reduxForm } from 'redux-form/immutable'
+import S from 'string'
+import seedName from './seedName'
+import SeedListFormPage from './seedListFormPage'
+
+const configureFormPage = (onSubmit, warcSeeds) => {
+  const formConfig = {
+    form: 'fsSeedDiscovery',  // a unique identifier for this form,
+    destroyOnUnmount: false,
+    validate (values) {
+      const errors = {}
+      let name = seedName(warcSeeds[0].name)
+      let realSeed = values.get(name)
+      if (!realSeed) {
+        errors[name] = 'Required'
+      } else {
+        if (S(realSeed).isEmpty()) {
+          errors[name] = 'Must Select The Seed'
+        }
+      }
+      return errors
+    }
+  }
+  const FormPage = reduxForm(formConfig)(SeedListFormPage)
+  const seeds = warcSeeds[0].seeds.map((seed, idx) =>
+    <RadioButton key={`${idx}-${seed.url}-rb`} value={seed.url} label={seed.url}/>
+  )
+  return (
+    <div style={{width: '100%', height: 'inherit'}}>
+      <CardTitle subtitle={warcSeeds[0].name}/>
+      <FormPage
+        containerName={'seedListFPContainer'}
+        onSubmit={onSubmit}
+        warcSeeds={seeds}
+        seedName={seedName(warcSeeds[0].name)}
+      />
+    </div>
+  )
+}
+
+export default configureFormPage

@@ -2,10 +2,10 @@ import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import {connect} from 'react-redux'
 import {List, ListItem} from 'material-ui/List'
-import MyAutoSizer from '../../utilComponents/myAutoSizer'
+import MyAutoSizer from '../../../utilComponents/myAutoSizer'
 import OpenInBrowser from 'material-ui/svg-icons/action/open-in-new'
 import IconButton from 'material-ui/IconButton'
-import {openUrlInBrowser} from '../../../actions/util-actions'
+import {openUrlInBrowser} from '../../../../actions/util-actions'
 import _ from 'lodash'
 
 const pStyle = {

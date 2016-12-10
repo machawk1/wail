@@ -1,6 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import Immutable from 'immutable'
-import {Flex, Item} from 'react-flex'
+import React from 'react'
+import {Flex} from 'react-flex'
 import ATwitterUser from '../components/twitter/archiveConfig/aTwitterUser'
 import TwitterUserTextSearch from '../components/twitter/archiveConfig/twitterUserTextSearch'
 

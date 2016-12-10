@@ -3,7 +3,7 @@ import CardTitle from 'material-ui/Card/CardTitle'
 import {Link, IndexLink} from 'react-router'
 import FlatButton from 'material-ui/FlatButton'
 import {Flex} from 'react-flex'
-import {resetCheckMessage} from '../../../actions/redux/archival'
+import {resetCheckMessage} from '../../../../actions/redux/archival'
 import {connect} from 'react-redux'
 
 const dispatchToProp = dispatch => ({

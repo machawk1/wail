@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React from 'react'
 import ViewCollection from '../components/collections/viewCollection'
 
 const CollectionView = ({ params }) => (

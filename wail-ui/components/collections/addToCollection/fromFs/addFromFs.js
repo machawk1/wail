@@ -1,16 +1,15 @@
 import React, { Component, PropTypes } from 'react'
-import { ipcRenderer as ipc, remote } from 'electron'
+import { ipcRenderer as ipc } from 'electron'
 import path from 'path'
 import { Card, CardHeader } from 'material-ui/Card'
 import { joinStrings } from 'joinable'
 import BeamMeUpScotty from 'drag-drop'
 import moment from 'moment'
-import * as notify from '../../../actions/notification-actions'
-import { doSeedExtraction } from '../../../actions/redux/addSeedFromFs'
-import SeedList from './seedList'
-import ErrorList from './errorList'
+import * as notify from '../../../../actions/notification-actions'
+import { doSeedExtraction } from '../../../../actions/redux/addSeedFromFs'
+import { resetAddFSSeedMessage } from '../../../../actions/redux/addSeedFromFs'
 import seedName from './seedName'
-import { resetAddFSSeedMessage } from '../../../actions/redux/addSeedFromFs'
+import SelectSeed from './selectSeed'
 
 const defaultM = 'File Name with seeds will be displayed below'
 
@@ -18,8 +17,8 @@ const timeStampFinder = (target, seeds) => {
   let len = seeds.length
   let jobId
   for (let i = 0; i < len; ++i) {
-    if (seeds[ i ].url === target) {
-      jobId = seeds[ i ].timestamp
+    if (seeds[i].url === target) {
+      jobId = seeds[i].timestamp
       break
     }
   }
@@ -87,6 +86,11 @@ export default class AddFromFs extends Component {
     }
   }
 
+  componentWillUnmount () {
+    this.removeWarcAdder()
+    this.removeWarcAdder = null
+  }
+
   fileListener (files) {
     console.log(`adding warcs maybe to col ${this.props.col}`, files)
     let addMe = []
@@ -102,12 +106,12 @@ export default class AddFromFs extends Component {
     })
 
     if (badFiles.size > 0 && addMe.length <= 1) {
-      notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, { separator: ',' })}`)
+      notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, {separator: ','})}`)
     }
 
     if (addMe.length > 0) {
-      notify.notifyInfo(`Determining Seeds for ${addMe.length} ${path.extname(addMe[ 0 ])} Files`, true)
-      let wpath = addMe[ 0 ]
+      notify.notifyInfo(`Determining Seeds for ${addMe.length} ${path.extname(addMe[0])} Files`, true)
+      let wpath = addMe[0]
       let mode = 'f'
       if (addMe.length > 1) {
         // wpath = path.dirname(addMe[ 0 ])
@@ -121,7 +125,7 @@ export default class AddFromFs extends Component {
           uid: message
         })
       } else {
-        this.setState({ message: 'Determining seed from added (W)arc' }, () => {
+        this.setState({message: 'Determining seed from added (W)arc'}, () => {
           this.extractSeeds(wpath, mode)
         })
       }
@@ -145,59 +149,59 @@ export default class AddFromFs extends Component {
       })
   }
 
-  componentWillUnmount () {
-    this.removeWarcAdder()
-    this.removeWarcAdder = null
+  resetForm () {
+    this.context.store.dispatch(resetAddFSSeedMessage())
   }
 
   addWarcWTrueSeeds (values) {
+    const {warcSeeds} = this.state
+    const {col} = this.props
     let realSeeds = values.toJS()
     console.log('real seeds', values)
     let addToCol = {
       lastUpdated: moment().format(),
-      col: this.props.col,
+      col,
       seedWarcs: []
     }
     let channel = 'addfs-warcs-to-col'
-    let { warcSeeds } = this.state
+
     if (warcSeeds.length > 1) {
       channel = 'add-multi-warcs-to-col'
       warcSeeds.forEach(ws => {
-        let realSeed = realSeeds[ seedName(ws.name) ]
+        let realSeed = realSeeds[seedName(ws.name)]
         if (realSeed) {
-          let addConfig = makeAddConfig(this.props.col, ws.seeds, realSeed)
+          let addConfig = makeAddConfig(col, ws.seeds, realSeed)
           addToCol.seedWarcs.push(addConfig)
         } else {
           throw new Error(`${seedName(ws.name)} had no real seed`)
         }
       })
     } else {
-      let realSeed = realSeeds[ seedName(warcSeeds[ 0 ].name) ]
+      let realSeed = realSeeds[seedName(warcSeeds[0].name)]
       if (realSeed) {
-        addToCol.seed = makeAddConfig(this.props.col, warcSeeds[ 0 ].seeds, realSeed)
+        addToCol.seed = makeAddConfig(col, warcSeeds[0].seeds, realSeed)
         addToCol.warcs = warcSeeds[0].filep
       } else {
-        throw new Error(`${seedName(warcSeeds[ 0 ].name)} had no real seed`)
+        throw new Error(`${seedName(warcSeeds[0].name)} had no real seed`)
       }
     }
     console.log('add these seeds ', addToCol, channel)
-    ipc.send(channel, addToCol)
-    this.setState({
-      message: defaultM,
-      checkingDone: false,
-      warcSeeds: [],
-      hadErrors: []
-    }, () => this.context.store.dispatch(resetAddFSSeedMessage()))
+    // ipc.send(channel, addToCol)
+    // this.setState({
+    //   message: defaultM,
+    //   checkingDone: false,
+    //   warcSeeds: [],
+    //   hadErrors: []
+    // }, ::this.resetForm)
   }
 
   render () {
-    const { checkingDone, warcSeeds, message, hadErrors } = this.state
+    const {checkingDone, message} = this.state
     return (
-      <div id='warcUpload' style={{ width: '100%', height: '100%' }}>
-        <Card style={{ width: 'inherit', height: 'inherit', overflowY: 'auto' }}>
-          {!checkingDone && <CardHeader title={message} />}
-          {checkingDone && <SeedList onSubmit={::this.addWarcWTrueSeeds} warcSeeds={warcSeeds} />}
-          <ErrorList done={checkingDone} hadErrors={hadErrors} />
+      <div id='warcUpload' style={{width: '100%', height: '100%'}}>
+        <Card id='seedListFPContainer' style={{width: 'inherit', height: 'inherit'}}>
+          {!checkingDone && <CardHeader title={message}/>}
+          {checkingDone && <SelectSeed onSubmit={::this.addWarcWTrueSeeds} {...this.state} />}
         </Card>
       </div>
     )

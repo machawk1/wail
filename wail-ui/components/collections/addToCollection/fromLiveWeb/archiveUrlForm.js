@@ -7,8 +7,8 @@ import isURL from 'validator/lib/isURL'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
 import {TextField, SelectField} from 'redux-form-material-ui'
-import * as notify from '../../../actions/notification-actions'
-import {resetCheckMessage} from '../../../actions/redux/archival'
+import * as notify from '../../../../actions/notification-actions'
+import {resetCheckMessage} from '../../../../actions/redux/archival'
 
 const archive = (forCol, config) => {
   let message = `Archiving ${config.get('url')} for ${forCol} Now!`
