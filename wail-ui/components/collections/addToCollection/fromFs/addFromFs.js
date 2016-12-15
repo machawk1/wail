@@ -11,8 +11,6 @@ import { resetAddFSSeedMessage } from '../../../../actions/redux/addSeedFromFs'
 import seedName from './seedName'
 import SelectSeed from './selectSeed'
 
-const defaultM = 'File Name with seeds will be displayed below'
-
 const timeStampFinder = (target, seeds) => {
   let len = seeds.length
   let jobId
@@ -69,8 +67,9 @@ export default class AddFromFs extends Component {
   constructor (...args) {
     super(...args)
     this.removeWarcAdder = null
+    this.defaultM = 'File Name with seeds will be displayed below when added'
     this.state = {
-      message: defaultM,
+      message: this.defaultM,
       checkingDone: false,
       warcSeeds: [],
       hadErrors: []
@@ -140,7 +139,7 @@ export default class AddFromFs extends Component {
           checkingDone: true,
           warcSeeds: extractedSeeds.warcSeeds,
           hadErrors: extractedSeeds.hadErrors,
-          message: defaultM
+          message: this.defaultM
         })
       })
       .catch(error => {
@@ -186,21 +185,21 @@ export default class AddFromFs extends Component {
       }
     }
     console.log('add these seeds ', addToCol, channel)
-    // ipc.send(channel, addToCol)
-    // this.setState({
-    //   message: defaultM,
-    //   checkingDone: false,
-    //   warcSeeds: [],
-    //   hadErrors: []
-    // }, ::this.resetForm)
+    ipc.send(channel, addToCol)
+    this.setState({
+      message: this.defaultM,
+      checkingDone: false,
+      warcSeeds: [],
+      hadErrors: []
+    }, ::this.resetForm)
   }
 
   render () {
     const {checkingDone, message} = this.state
     return (
-      <div id='warcUpload' style={{width: '100%', height: '100%'}}>
-        <Card id='seedListFPContainer' style={{width: 'inherit', height: 'inherit'}}>
-          {!checkingDone && <CardHeader title={message}/>}
+      <div id='seedListFPContainer' style={{height: '95%'}}>
+        <Card style={{marginLeft: 10, marginRight: 10, minHeight: 400}}>
+          {!checkingDone && <CardHeader style={{height: 400}} title={message}/>}
           {checkingDone && <SelectSeed onSubmit={::this.addWarcWTrueSeeds} {...this.state} />}
         </Card>
       </div>

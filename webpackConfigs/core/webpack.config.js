@@ -28,16 +28,15 @@ module.exports = {
           presets: [ 'react-hmre',  'react',
             ['env', {
               'targets': {
-                'node': 6.5
+                'electron': 1.4
               },
+              'debug': true,
               "useBuiltIns": true,
-              'whitelist': [
+              'include': [
                 'syntax-trailing-function-commas',
-                'transform-class-properties',
                 'transform-es2015-classes',
                 'transform-es2015-object-super',
-                'transform-es2015-destructuring',
-                'transform-object-rest-spread'
+                'transform-es2015-destructuring'
               ]
             }]
           ],

@@ -29,9 +29,10 @@ module.exports = {
           presets: [
             [ 'env', {
               'targets': {
-                'node': 6.5
+                'electron': 1.4
               },
-              'whitelist': [
+              "useBuiltIns": true,
+              'include': [
                 'transform-class-properties',
                 'transform-es2015-destructuring',
                 'transform-object-rest-spread'

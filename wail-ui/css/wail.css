@@ -385,102 +385,83 @@
     }
 }
 
-.json-inspector,
-.json-inspector__selection {
-    font: 14px/1.4 Consolas, monospace;
-}
-
-.json-inspector__leaf {
-    padding-left: 10px;
-}
-
-.json-inspector__line {
-    display: block;
+[class^="wtooltip"] {
     position: relative;
-
-    cursor: default;
 }
-
-.json-inspector__line:after {
-    content: '';
-
+[class^="wtooltip"]:after {
+    opacity: 0;
+    visibility: hidden;
     position: absolute;
-    top: 0;
-    left: -200px;
-    right: -50px;
-    bottom: 0;
-    z-index: -1;
-
-    pointer-events: none;
-}
-
-.json-inspector__line:hover:after {
-    background: rgba(0, 0, 0, 0.06);
-}
-
-.json-inspector__leaf_composite > .json-inspector__line {
-    cursor: pointer;
-}
-
-.json-inspector__radio,
-.json-inspector__flatpath {
-    display: none;
-}
-
-.json-inspector__value {
-    margin-left: 5px;
-}
-
-.json-inspector__search {
-    min-width: 300px;
-    margin: 0 10px 10px 0;
-    padding: 2px;
-}
-
-.json-inspector__key {
-    color: #505050;
-}
-
-.json-inspector__value_helper,
-.json-inspector__value_null,
-.json-inspector__not-found {
-    color: #b0b0b0;
-}
-
-.json-inspector__value_string {
-    color: #798953;
-}
-
-.json-inspector__value_boolean {
-    color: #75b5aa;
-}
-
-.json-inspector__value_number {
-    color: #d28445;
-}
-
-.json-inspector__hl {
-    background: #ff0;
-    box-shadow: 0 -1px 0 2px #ff0;
+    content: attr(data-tooltip);
+    padding: 6px 10px;
+    top: 1.4em;
+    left: 50%;
+    -webkit-transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%) translateY(-2px);
+    background: grey;
+    color: white;
+    white-space: nowrap;
+    z-index: 3;
     border-radius: 2px;
+    -webkit-transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+}
+[class^="wtooltip"]:hover:after {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0);
 }
 
-.json-inspector__show-original {
-    display: inline-block;
-    padding: 0 6px;
-
-    color: #666;
-    cursor: pointer;
+.wtooltip--left:after {
+    top: -4px;
+    left: 0;
+    -webkit-transform: translateX(-112%) translateY(0);
+    transform: translateX(-112%) translateY(0);
+}
+.wtooltip--left:hover:after {
+    -webkit-transform: translateX(-110%) translateY(0);
+    transform: translateX(-110%) translateY(0);
 }
 
-.json-inspector__show-original:hover {
-    color: #111;
+.wtooltip--right:after {
+    top: -4px;
+    left: 100%;
+    -webkit-transform: translateX(12%) translateY(0);
+    transform: translateX(12%) translateY(0);
+}
+.wtooltip--right:hover:after {
+    -webkit-transform: translateX(10%) translateY(0);
+    transform: translateX(10%) translateY(0);
 }
 
-.json-inspector__show-original:before {
-    content: '⥂';
+.wtooltip--triangle:before {
+    content: '';
+    width: 0;
+    height: 0;
+    border-left: solid 5px transparent;
+    border-right: solid 5px transparent;
+    border-bottom: solid 5px grey;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    -webkit-transform: translateX(-50%) translateY(-2px);
+    transform: translateX(-50%) translateY(-2px);
+    top: 1.1em;
+    left: 50%;
+    -webkit-transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
+    z-index: 3;
 }
-
-.json-inspector__show-original:hover:after {
-    content: ' expand'
+.wtooltip--triangle:hover:before {
+    display: block;
+    opacity: 1;
+    visibility: visible;
+    -webkit-transform: translateX(-50%) translateY(0);
+    transform: translateX(-50%) translateY(0);
 }

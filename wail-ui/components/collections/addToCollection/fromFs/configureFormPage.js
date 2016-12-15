@@ -1,5 +1,7 @@
 import React, { PropTypes } from 'react'
-import { CardTitle } from 'material-ui/Card'
+import CardHeader from 'material-ui/Card/CardHeader'
+import CardTitle from 'material-ui/Card/CardTitle'
+import Divider from 'material-ui/Divider'
 import { RadioButton } from 'material-ui/RadioButton'
 import { reduxForm } from 'redux-form/immutable'
 import S from 'string'
@@ -30,7 +32,9 @@ const configureFormPage = (onSubmit, warcSeeds) => {
   )
   return (
     <div style={{width: '100%', height: 'inherit'}}>
-      <CardTitle subtitle={warcSeeds[0].name}/>
+      <CardTitle title='Select Correct Seed For The (W)arc'/>
+      <Divider style={{width: '95%'}}/>
+      <CardHeader title={warcSeeds[0].name}/>
       <FormPage
         containerName={'seedListFPContainer'}
         onSubmit={onSubmit}

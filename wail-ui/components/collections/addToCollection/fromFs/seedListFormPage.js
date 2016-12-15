@@ -1,35 +1,30 @@
 import React, { PropTypes } from 'react'
-import { CardActions } from 'material-ui/Card'
+import CardActions from 'material-ui/Card/CardActions'
 import FlatButton from 'material-ui/FlatButton'
-import MyAutoSizer from '../../../utilComponents/myAutoSizer'
 import SeedFormEntry from './seedFormEntry'
 
-const SeedListFormPage = ({containerName, seedName, onSubmit,  warcSeeds}) => (
-  <form
-    onSubmit={onSubmit}
-    style={{height: 'inherit'}}
-  >
-    <MyAutoSizer findElement={containerName}>
-      {
-        ({height}) => (
-          <SeedFormEntry
-            height={height}
-            onSubmit={onSubmit}
-            seeds={warcSeeds}
-            name={seedName}
-          />
-        )
-      }
-    </MyAutoSizer>
-    <CardActions>
-      <FlatButton
-        label='Add (W)arc Seed(s)'
-        primary
-        type='submit'
+const SeedListFormPage = (props) => {
+  const {handleSubmit, pristine, invalid, reset, submitting, containerName, seedName, onSubmit, warcSeeds} = props
+  return (
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      style={{height: 'inherit'}}
+    >
+      <SeedFormEntry
+        containerName={containerName}
+        seeds={warcSeeds}
+        name={seedName}
       />
-    </CardActions>
-  </form>
-)
+      <CardActions>
+        <FlatButton
+          label='Add (W)arc Seed(s)'
+          type='submit'
+          disabled={invalid || pristine || submitting}
+        />
+      </CardActions>
+    </form>
+  )
+}
 
 SeedListFormPage.propTypes = {
   containerName: PropTypes.string.isRequired,

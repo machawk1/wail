@@ -1,9 +1,9 @@
 import React, {Component, PropTypes} from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import Immutable from 'immutable'
+import Rx from 'rxjs/Rx'
 import {connect} from 'react-redux'
 import CollectionViewHeader from './collectionViewHeader'
-import Search from '../../utilComponents/Search'
 import SeedTable from './seedTable'
 import AddSeedFab from './addSeedFab'
 
@@ -16,11 +16,6 @@ class ViewCollection extends Component {
     collection: PropTypes.instanceOf(Immutable.Map).isRequired,
     viewingCol: PropTypes.string.isRequired
   }
-
-  constructor (...args) {
-    super(...args)
-  }
-
   // shouldComponentUpdate (nextProps, nextState, nextContext) {
   //   console.log('colview combined should component update')
   //   return shallowCompare(this, nextProps, nextState)

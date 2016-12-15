@@ -32,7 +32,7 @@ export default class CollectionViewHeader extends Component {
           <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`} />
           <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`} />
         </Flex>
-        <Card>
+        <Card style={{maxHeight: 100, overflowY: 'auto'}}>
           <CardText>
             {description}
           </CardText>

@@ -1,7 +1,7 @@
-import React, {Component, PropTypes} from 'react'
-import {Provider} from 'react-redux'
-import {Router, hashHistory} from 'react-router'
-import {darkBlack, lightBlue900, blue500, cyan500, cyan700, white} from 'material-ui/styles/colors'
+import React, { Component, PropTypes } from 'react'
+import { Provider } from 'react-redux'
+import { Router } from 'react-router'
+import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import routes from '../routes'
@@ -24,21 +24,19 @@ const wailTheme = getMuiTheme({
   userAgent: false
 })
 
-const Wail = ({ store, history }) => {
-  return (
-    <Provider store={store}>
-      <MuiThemeProvider muiTheme={wailTheme}>
-        <div style={{ width: '100%', height: '100%' }}>
-          <Header />
-          <div className='layoutBody'>
-            <Router history={history} routes={routes} />
-          </div>
-          <Footer />
+const Wail = ({store, history}) => (
+  <Provider store={store}>
+    <MuiThemeProvider muiTheme={wailTheme}>
+      <div style={{width: '100%', height: '100%'}}>
+        <Header />
+        <div className='layoutBody'>
+          <Router history={history} routes={routes}/>
         </div>
-      </MuiThemeProvider>
-    </Provider>
-  )
-}
+        <Footer />
+      </div>
+    </MuiThemeProvider>
+  </Provider>
+)
 
 Wail.propTypes = {
   store: PropTypes.object.isRequired,

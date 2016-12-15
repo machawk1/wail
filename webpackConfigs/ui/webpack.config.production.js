@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const path = require('path')
-const BabiliPlugin = require("babili-webpack-plugin")
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 module.exports = {
@@ -34,9 +33,10 @@ module.exports = {
           presets: [
             [ 'env', {
               'targets': {
-                'node': 6.5
+                'electron': 1.4
               },
-              'whitelist': [
+              "useBuiltIns": true,
+              'include': [
                 'transform-class-properties',
                 'transform-es2015-destructuring',
                 'transform-object-rest-spread'

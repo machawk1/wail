@@ -1,14 +1,17 @@
 import React, { PropTypes } from 'react'
-import { Flex } from 'react-flex'
 import SeedList from './seedList'
-import ErrorList from './errorList'
+import DisplayInvalidMessage from './displayInvalidMessage'
 
-const SelectSeed = ({onSubmit, checkingDone, warcSeeds, hadErrors}) => (
-  <Flex row >
-    <SeedList onSubmit={onSubmit} warcSeeds={warcSeeds}/>
-    <ErrorList done={checkingDone} hadErrors={hadErrors}/>
-  </Flex>
-)
+const SelectSeed = ({onSubmit, checkingDone, warcSeeds, hadErrors}) => {
+  let errorsLen = hadErrors.length
+  let renderComponent
+  if (errorsLen > 0) {
+    renderComponent = <DisplayInvalidMessage hadErrors={hadErrors}/>
+  } else {
+    renderComponent = <SeedList onSubmit={onSubmit} warcSeeds={warcSeeds}/>
+  }
+  return (renderComponent)
+}
 
 SelectSeed.propTypes = {
   checkingDone: PropTypes.bool.isRequired,
