@@ -27,7 +27,7 @@ module.exports = {
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query: {
           cacheDirectory: true,
           presets: [
@@ -37,9 +37,8 @@ module.exports = {
               },
               "useBuiltIns": true,
               'include': [
-                'transform-class-properties',
-                'transform-es2015-destructuring',
-                'transform-object-rest-spread'
+                'syntax-trailing-function-commas',
+                'transform-es2015-destructuring'
               ]
             } ],
             'react',

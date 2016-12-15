@@ -20,9 +20,8 @@ module.exports =  {
               },
               "useBuiltIns": true,
               'include': [
-                'transform-class-properties',
-                'transform-es2015-destructuring',
-                'transform-object-rest-spread'
+                'syntax-trailing-function-commas',
+                'transform-es2015-destructuring'
               ]
             } ]
           ],

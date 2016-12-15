@@ -781,7 +781,7 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         }
-        this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
+        // this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })

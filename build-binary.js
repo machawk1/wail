@@ -431,7 +431,7 @@ const doBuild = () => {
     console.log('Transpiling WAIL-Electron-Main')
     build(electronCfg)
       .then((stats) => {
-        console.log('Transpiling WAIL-UI')
+        console.log('Transpiling WAIL-UI',stats)
         return build(cfgUI)
           .then((nstats) => {
             console.log('Transpiling WAIL-Core')
