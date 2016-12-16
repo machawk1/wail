@@ -3,10 +3,12 @@ import Immutable from 'immutable'
 import { shell, remote } from 'electron'
 import FlatButton from 'material-ui/FlatButton'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import { push } from 'react-router-redux'
+import wc from '../../../constants/wail-constants'
+import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import { momentSortRev } from '../../../util/momentSort'
 
+const { QUEUE_MESSAGE } = wc.EventTypes
 const wbUrl = remote.getGlobal('settings').get('pywb.url')
 const openInWb = (seed, forCol) => shell.openExternal(`${wbUrl}${forCol}/*/${seed}`)
 
@@ -25,7 +27,21 @@ export default class SeedTable extends Component {
   // }
 
   viewArchiveConfig () {
-    this.context.store.dispatch(push(`Collections/${this.props.collection.get('colName')}/viewArchiveConfig`))
+    let col = this.props.collection.get('colName')
+    if (this.props.collection.get('seeds').size > 0) {
+      this.context.store.dispatch(push(`Collections/${col}/viewArchiveConfig`))
+    } else {
+      global.notifications$.next({
+        type: QUEUE_MESSAGE,
+        message: {
+          autoDismiss: 0,
+          title: 'No Seeds',
+          level: 'warning',
+          message: `Add Seeds to ${col} In Order To View Their Archive Config`,
+          uid: `Add Seeds to ${col} In Order To View There Archive Config`
+        }
+      })
+    }
   }
 
   renTr () {

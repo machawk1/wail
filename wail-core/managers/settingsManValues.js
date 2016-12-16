@@ -1,7 +1,8 @@
 import path from 'path'
 
+let vals
 if (process.env.NODE_ENV === 'development') {
-  module.exports = {
+  vals = {
     dbgOSX: true,
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
@@ -165,7 +166,7 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
       { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
       { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix -Xmx756m' },
+      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
       { name: 'memgator' }
     ],
     pywb: {
@@ -256,7 +257,7 @@ if (process.env.NODE_ENV === 'development') {
 
   }
 } else {
-  module.exports = {
+  vals = {
     dbgOSX: false,
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
@@ -420,7 +421,7 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
       { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
       { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix -Xmx756m' },
+      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
       { name: 'memgator' }
     ],
     pywb: {
@@ -510,3 +511,5 @@ if (process.env.NODE_ENV === 'development') {
     dumpTwitterWarcs: 'twitterDump'
   }
 }
+
+export default vals

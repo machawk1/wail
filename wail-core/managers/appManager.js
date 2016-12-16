@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import SettingsManager from './settingsManager'
 import ServiceManager from './serviceManager'
 import S from 'string'
+import fs from 'fs-extra'
 import bunyan from 'bunyan'
 
 S.TMPL_OPEN = '{'
@@ -46,7 +47,6 @@ export default class AppManager {
   }
 
   init (base, userData, version, loadFrom, docsPath, debug = false, notDebugUI = false, openBackGroundWindows = false) {
-    console.log('appManager init')
     return new Promise((resolve) => {
       this.notDebugUI = notDebugUI
       this.debug = debug
@@ -59,12 +59,14 @@ export default class AppManager {
       let settingsPath = userData
       if (process.env.NODE_ENV === 'development') {
         logPath = this.pathMan.joinWBase('waillogs')// path.join(control.base, 'waillogs')
-        v = '1.0.0-rc.2.9.26'
+        v = '1.0.0-rc.2.9.27'
         settingsPath = logPath
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
       }
       //  bdb
+      fs.ensureFileSync(this.pathMan.join(logPath, 'wail.log'))
+      fs.ensureFileSync(this.pathMan.join(logPath, 'wail-ui.log'))
       global.logger = bunyan.createLogger({
         name: 'wail-ui-main',
         streams: [

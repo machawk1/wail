@@ -41,8 +41,8 @@ class NewCollection extends Component {
   }
 
   submit (values) {
-    let col = values.get('name')
-    let title = values.get('title')
+    let col = values.get('name').trim()
+    let title = values.get('title').trim()
     let description = values.get('description')
     let newCol = {
       col,
