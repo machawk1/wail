@@ -146,7 +146,7 @@ const menus = {
           click (item, focusedWindow) {
             console.log('clicked settings menu')
             if (focusedWindow) {
-              showSettingsWindow(focusedWindow)
+              // showSettingsWindow(focusedWindow)
             } else {
               console.log('window for settings click is a no go')
             }
@@ -514,7 +514,7 @@ const menus = {
           click (item, focusedWindow) {
             console.log('clicked settings menu')
             if (focusedWindow) {
-              showSettingsWindow(focusedWindow)
+              // showSettingsWindow(focusedWindow)
             } else {
               console.log('window for settings click is a no go')
             }

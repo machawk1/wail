@@ -1,8 +1,7 @@
 import path from 'path'
 
-let vals
-if (process.env.NODE_ENV === 'development') {
-  vals = {
+if(process.env.NODE_ENV === 'development') {
+  module.exports = {
     dbgOSX: true,
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
@@ -20,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'jobConf', path: 'crawler-beans.cxml' },
       { name: 'jre', path: 'bundledApps/openjdk' },
       { name: 'memgator', path: 'bundledApps/memgator' },
-      { name: 'tomcat', path: 'bundledApps/tomcat' }
+      { name: 'tomcat', path: 'bundledApps/tomcat' },
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -246,18 +245,18 @@ if (process.env.NODE_ENV === 'development') {
     },
     warcChecker: {
       dir: 'bundledApps/warcChecker/warcChecker -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker -f {path}'
+      file: 'bundledApps/warcChecker/warcChecker -f {path}',
     },
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
-      file: 'bundledApps/listUris/listUris -f {path}'
+      file: 'bundledApps/listUris/listUris -f {path}',
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'
 
   }
 } else {
-  vals = {
+  module.exports = {
     dbgOSX: false,
     paths: [
       { name: 'bundledApps', path: 'bundledApps' },
@@ -275,7 +274,7 @@ if (process.env.NODE_ENV === 'development') {
       { name: 'jobConf', path: 'crawler-beans.cxml' },
       { name: 'jre', path: 'bundledApps/openjdk' },
       { name: 'memgator', path: 'bundledApps/memgator' },
-      { name: 'tomcat', path: 'bundledApps/tomcat' }
+      { name: 'tomcat', path: 'bundledApps/tomcat' },
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -501,15 +500,13 @@ if (process.env.NODE_ENV === 'development') {
     },
     warcChecker: {
       dir: 'bundledApps/warcChecker/warcChecker -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker -f {path}'
+      file: 'bundledApps/warcChecker/warcChecker -f {path}',
     },
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
-      file: 'bundledApps/listUris/listUris -f {path}'
+      file: 'bundledApps/listUris/listUris -f {path}',
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'
   }
 }
-
-export default vals
