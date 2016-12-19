@@ -346,7 +346,7 @@ const log = (plat, arch) => (err, filepath) => {
   let moveToPath
   let cb
   if (plat === 'darwin') {
-    let appPath = `release/wail-${plat}-${arch}/wail.app`
+    let appPath = `release/wail-${plat}-${arch}/WAIL.app`
     moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
     let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
     cb = () => {
@@ -371,59 +371,11 @@ const log = (plat, arch) => (err, filepath) => {
       // }
       console.log(`${plat}-${arch} finished!`)
     }
-    moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
+    moveToPath = `release/WAIL-${plat}-${arch}/resources/app/bundledApps`
   }
   let releasePath = path.normalize(path.join(cwd, moveToPath))
   moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
 }
-
-// async function doBuild () {
-//   console.log('Building WAIL')
-//   try {
-//     console.log('Transpiling WAIL-Electron-Main')
-//     await build(electronCfg)
-//     console.log('Transpiling WAIL-UI')
-//     await build(cfgUI)
-//     console.log('Transpiling WAIL-Core')
-//     await build(cfgCore)
-//     const paths = await del('release')
-//     if (shouldBuildCurrent) {
-//       console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-//       pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-//     } else {
-//       let buildFor
-//       let archs
-//       let platforms
-//       if (shouldBuildAll) {
-//         buildFor = 'building for all platforms'
-//         archs = [ 'ia32', 'x64' ]
-//         platforms = [ 'linux', 'win32', 'darwin' ]
-//       } else if (shouldBuildLinux) {
-//         buildFor = 'building for linux'
-//         archs = [ 'ia32', 'x64' ]
-//         platforms = [ 'linux' ]
-//       } else if (shouldBuildOSX) {
-//         buildFor = 'building for OSX'
-//         archs = [ 'x64' ]
-//         platforms = [ 'darwin' ]
-//       } else {
-//         buildFor = 'building for Windows'
-//         archs = [ 'ia32', 'x64' ]
-//         platforms = [ 'win32' ]
-//       }
-//       console.log(buildFor)
-//       platforms.forEach(plat => {
-//         archs.forEach(arch => {
-//           console.log(`building the binary for ${plat}-${arch}`)
-//           pack(plat, arch, log(plat, arch))
-//         })
-//       })
-//     }
-//   } catch (error) {
-//     console.error(error)
-//   }
-//   cp.exec(`open ${path.join(cwd, 'release')}`)
-// }
 
 const doBuild = () => {
   console.log('Building WAIL')
@@ -431,7 +383,7 @@ const doBuild = () => {
     console.log('Transpiling WAIL-Electron-Main')
     build(electronCfg)
       .then((stats) => {
-        console.log('Transpiling WAIL-UI',stats)
+        console.log('Transpiling WAIL-UI')
         return build(cfgUI)
           .then((nstats) => {
             console.log('Transpiling WAIL-Core')

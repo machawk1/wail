@@ -83,7 +83,7 @@ fi
 # Make sure of java opts.
 if [ -z "$JAVA_OPTS" ]
 then
-  JAVA_OPTS="-Xmx256m"
+  JAVA_OPTS=" -Xmx256m"
 fi
 
 # Main heritrix class.
@@ -104,10 +104,10 @@ do
     fi
 done
 
-# heritrix_dmesg.log contains startup output from the crawler main class. 
-# As soon as content appears in this log, this shell script prints the 
+# heritrix_dmesg.log contains startup output from the crawler main class.
+# As soon as content appears in this log, this shell script prints the
 # successful (or failed) startup content and moves off waiting on heritrix
-# startup. This technique is done so we can show on the console startup 
+# startup. This technique is done so we can show on the console startup
 # messages emitted by java subsequent to the redirect of stdout and stderr.
 startMessage="${HERITRIX_HOME}/heritrix_dmesg.log"
 
@@ -145,7 +145,7 @@ else
 
     # Wait for content in the heritrix_dmesg.log file.
     echo -n "`date` Heritrix starting (pid $HERITRIX_PID)"
-    while true 
+    while true
     do
         sleep 1
         if [ -s $startMessage ]
@@ -171,7 +171,7 @@ else
     done
 
     kill -0 $HERITRIX_PID > /dev/null 2>&1
-    if [ $? -eq 0 ] 
+    if [ $? -eq 0 ]
     then
         echo $HERITRIX_PID > heritrix.pid
     fi
