@@ -85,7 +85,7 @@ app.on('ready', () => {
       global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
 
       global.showSettingsMenu = showSettingsWindow
-
+      global.windowMan = winMan
       winMan.init(control.winConfigs)
     })
 })
@@ -117,6 +117,7 @@ app.on('before-quit', (e) => {
   // console.log('before-quit')
   e.preventDefault()
   console.log('killing all serivices')
+
   control.serviceMan.killService('all')
     .then(() => app.quit())
 })

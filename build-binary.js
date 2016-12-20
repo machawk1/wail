@@ -346,7 +346,7 @@ const log = (plat, arch) => (err, filepath) => {
   let moveToPath
   let cb
   if (plat === 'darwin') {
-    let appPath = `release/wail-${plat}-${arch}/WAIL.app`
+    let appPath = `release/WAIL-${plat}-${arch}/WAIL.app`
     moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
     let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
     cb = () => {
@@ -380,13 +380,13 @@ const log = (plat, arch) => (err, filepath) => {
 const doBuild = () => {
   console.log('Building WAIL')
   return new Promise((resolve, reject) => {
-    console.log('Transpiling WAIL-Electron-Main')
+    console.log('Transpiling and Creating Single File WAIL-Electron-Main')
     build(electronCfg)
       .then((stats) => {
-        console.log('Transpiling WAIL-UI')
+        console.log('Transpiling and Creating Single File WAIL-UI')
         return build(cfgUI)
           .then((nstats) => {
-            console.log('Transpiling WAIL-Core')
+            console.log('Transpiling and Creating Single File WAIL-Core')
             return build(cfgCore)
               .then((nnstats) => {
                 return del('release')
