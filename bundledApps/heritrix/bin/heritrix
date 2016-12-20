@@ -137,7 +137,7 @@ then
         -Dheritrix.out=${HERITRIX_OUT} ${JAVA_OPTS} ${JMX_OPTS} \
         $CLASS_MAIN $@
 else
-    CLASSPATH=${CP} nohup $JAVACMD -Dheritrix.home=${HERITRIX_HOME} \
+    CLASSPATH=${CP} nohup $JAVACMD -Dname=heritrix -Dheritrix.home=${HERITRIX_HOME} \
         -Djava.protocol.handler.pkgs=org.archive.net \
         -Dheritrix.out=${HERITRIX_OUT} ${JAVA_OPTS} ${JMX_OPTS} \
         $CLASS_MAIN $@ >> ${stdouterrlog} 2>&1 &

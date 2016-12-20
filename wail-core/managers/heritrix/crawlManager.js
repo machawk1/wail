@@ -156,6 +156,7 @@ export default class CrawlManager {
   }
 
   /**
+   * Creates a new crawler-beans.cxml(heritrix crawl config)
    * @param {Object} options
    * @returns {Promise|Promise<Object>}
    */
