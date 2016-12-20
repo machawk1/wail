@@ -224,8 +224,8 @@ if(process.env.NODE_ENV === 'development') {
       dhost: 'localhost',
       host: 'localhost',
       url: 'http://{host}:{port}',
-      db: 'dev_coreData/database',
-      timemaps: 'dev_coreData/timemaps'
+      db: 'database',
+      timemaps: 'timemaps'
     },
     iwailCore: {
       dport: '3030',
@@ -233,8 +233,8 @@ if(process.env.NODE_ENV === 'development') {
       dhost: 'localhost',
       host: 'localhost',
       url: 'http://{host}:{port}',
-      db: 'dev_coreData/database',
-      timemaps: 'dev_coreData/timemaps'
+      db: 'database',
+      timemaps: 'timemaps'
     },
     twitter: {
       wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
@@ -479,8 +479,8 @@ if(process.env.NODE_ENV === 'development') {
       dhost: 'localhost',
       host: 'localhost',
       url: 'http://{host}:{port}',
-      db: 'coreData/database',
-      timemaps: 'coreData/timemaps'
+      db: 'database',
+      timemaps: 'timemaps'
     },
     iwailCore: {
       dport: '3030',
@@ -488,8 +488,8 @@ if(process.env.NODE_ENV === 'development') {
       dhost: 'localhost',
       host: 'localhost',
       url: 'http://{host}:{port}',
-      db: 'coreData/database',
-      timemaps: 'coreData/timemaps'
+      db: 'database',
+      timemaps: 'timemaps'
     },
     twitter: {
       wailKey: 'K1y1GmSdDfUmBNMJeX1lf8Ono',

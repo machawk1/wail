@@ -8,7 +8,7 @@ module.exports = {
   entry: {
     archiveMan: './wail-ui/background/js/archives',
     crawlMan: './wail-ui/background/js/crawls',
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     notFirstLoad: './wail-ui/loadingScreens/loading/entry',
     requestD: './wail-ui/background/js/requestDaemon',

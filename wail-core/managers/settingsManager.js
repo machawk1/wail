@@ -30,25 +30,26 @@ export const templates = {
 }
 
 export default class SettingsManager {
-  constructor (base, docsPath, settingsDir, version) {
+  constructor (base, docsPath, settingsDir, dbParentPath, version) {
     this._version = version
     this._settings = null
     this._settingsDir = settingsDir
     this._base = base
     this._docsPath = docsPath
+    this._dbParentPath = dbParentPath
   }
 
   configure () {
-    let { pathMan } = global
+    let {pathMan} = global
     this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
     return new Promise((resolve, reject) => {
       try {
-        this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
       } catch (e) {
         // if something went terrible wrong during a config the json becomes malformed
         // electron settings throws an error in this case
         fs.removeSync(this._settingsDir)
-        this._settings = new ElectronSettings({ configDirPath: this._settingsDir })
+        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
       }
 
       if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
@@ -57,9 +58,11 @@ export default class SettingsManager {
         let doFirstLoad = false
         if (didFirstLoad === null || didFirstLoad === undefined) {
           doFirstLoad = true
+          console.log('doing first load')
         } else {
           doFirstLoad = didFirstLoad
         }
+        console.log(doFirstLoad)
 
         this._writeSettings(pathMan, doFirstLoad)
         // console.log(base, settings)
@@ -103,7 +106,7 @@ export default class SettingsManager {
   }
 
   writeSettings () {
-    let { pathMan } = global
+    let {pathMan} = global
     this._writeSettings(pathMan, this._settings.get('didFirstLoad'))
   }
 
@@ -141,15 +144,15 @@ export default class SettingsManager {
     }
     heritrix.jobConf = jobConfPath
     this._settings.set('heritrix', heritrix)
-    let checkArray = [ 'port', 'url', 'dport', 'dhost', 'host' ]
+    let checkArray = ['port', 'url', 'dport', 'dhost', 'host']
     let wci = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
-        v = pathMan.normalizeJoinWBase(v)
+        v = pathMan.normalizeJoin(this._dbParentPath, v)
       }
 
       if (k === 'url') {
-        v = S(v).template({ port: managed.wailCore.dport, host: managed.wailCore.dhost }).s
+        v = S(v).template({port: managed.wailCore.dport, host: managed.wailCore.dhost}).s
       }
       return v
     })
@@ -157,11 +160,11 @@ export default class SettingsManager {
     let wc = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
-        v = pathMan.normalizeJoin(this._settingsDir, v)
+        v = pathMan.normalizeJoin(this._dbParentPath, v)
       }
 
       if (k === 'url') {
-        v = S(v).template({ port: managed.wailCore.dport, host: managed.wailCore.dhost }).s
+        v = S(v).template({port: managed.wailCore.dport, host: managed.wailCore.dhost}).s
       }
       return v
     })
@@ -183,7 +186,7 @@ export default class SettingsManager {
         v = pathMan.normalizeJoinWBase(v)
       }
       if (k === 'url') {
-        v = S(v).template({ port: managed.pywb.port }).s
+        v = S(v).template({port: managed.pywb.port}).s
       }
       return v
     })
@@ -261,7 +264,7 @@ export default class SettingsManager {
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
-    fs.ensureDirSync(pathMan.normalizeJoin(this._settingsDir, managed.wailCore.db))
+    fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
   }
 
   resetToDefault () {

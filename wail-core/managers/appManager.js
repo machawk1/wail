@@ -55,12 +55,14 @@ export default class AppManager {
       this.base = base
       this.pathMan = global.pathMan = new Pather(this.base)
       let logPath
+      let dbPath
       let v = version
-      let settingsPath = userData
+      let settingsPath = dbPath = userData
       if (process.env.NODE_ENV === 'development') {
-        logPath = this.pathMan.joinWBase('waillogs')// path.join(control.base, 'waillogs')
+        settingsPath = this.pathMan.joinWBase('wail-config')
+        logPath = this.pathMan.joinWBase('wail-config', 'waillogs')// path.join(control.base, 'waillogs')
+        dbPath = this.pathMan.joinWBase('wail-config')
         v = '1.0.0-rc.3.0.0s'
-        settingsPath = logPath
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
       }
@@ -77,12 +79,12 @@ export default class AppManager {
         ]
       })
       this.logPath = logPath
-      this.settingsMan = new SettingsManager(base, docsPath, settingsPath, v)
+      this.settingsMan = new SettingsManager(base, docsPath, settingsPath, dbPath, v)
       return this.settingsMan.configure()
         .then(() => {
           if (!this.settingsMan.get('didFirstLoad')) {
             this.firstLoad = true
-            settings.set('didFirstLoad', true)
+            this.settingsMan.set('didFirstLoad', true)
           }
           if (process.platform === 'darwin') {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))

@@ -49,7 +49,6 @@ export default class LoadingProgress extends Component {
             >
               <CheckOS />
               <CheckJava />
-              <MigratePywb settings={settings} migrate />
               <CheckServices firstLoad wait={false} />
             </TableBody>
           </Table>
