@@ -2,7 +2,6 @@ import {hashHistory} from 'react-router'
 import {createStore, applyMiddleware, compose} from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-import {routerMiddleware} from 'react-router-redux'
 import {ipc, requestHandler} from '../middleware'
 import rootReducer from '../reducers'
 import * as actionCreators from '../actions/redux/index'
@@ -14,7 +13,7 @@ const configureStore = () => {
   const store = createStore(
     rootReducer,
     composeEnhancers(
-      applyMiddleware(thunk, promiseMiddleware, routerMiddleware(hashHistory), requestHandler, ipc)
+      applyMiddleware(thunk, promiseMiddleware, requestHandler, ipc)
     )
   )
 
