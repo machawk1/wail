@@ -558,13 +558,14 @@ export default class WindowManager extends EventEmitter {
       this.windows[ 'loadingWindow' ].window = new BrowserWindow(conf)
       let loadUrl  // windows.settingsWindowURL windows.mWindowURL
       console.log(urls,control.loading,control.firstLoad)
-      if (control.loading && control.firstLoad) {
-        console.log('first load')
-        loadUrl = urls.firstLoad
-      } else {
-        loadUrl = urls.notFirstLoad
-        control.didLoad = true
-      }
+      loadUrl = urls.firstLoad
+      // if (control.loading && control.firstLoad) {
+      //   console.log('first load')
+      //   loadUrl = urls.firstLoad
+      // } else {
+      //   loadUrl = urls.notFirstLoad
+      //   control.didLoad = true
+      // }
 
       this.windows[ 'loadingWindow' ].window.webContents.on('unresponsive', () => {
         this.emit('window-unresponsive', 'loadingWindow')

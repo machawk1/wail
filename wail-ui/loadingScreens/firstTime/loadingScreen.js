@@ -1,14 +1,15 @@
-import 'babel-polyfill'
+import '../../../wailPollyfil'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import LoadingProgress from './fLoadingProgress'
-require('../../css/toaster.css')
-require('../../css/animate.css')
+import FirstTime from './containers/firstTime'
+import configureStore from '../store/firstTime'
 window.React = React
 
 injectTapEventPlugin()
 
-ReactDOM.render(
-  <LoadingProgress />,
+const store = configureStore()
+
+render(
+  <FirstTime store={store}/>,
   document.getElementById('loading'))

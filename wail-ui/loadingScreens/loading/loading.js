@@ -7,8 +7,8 @@ import {remote, ipcRenderer} from 'electron'
 import CheckServices2 from '../shared/checkServices2'
 import WailInternals from '../shared/wailInterals'
 import LoadingStore from '../shared/loadingStore'
-import CheckOS from '../firstTime/checkOS2'
-import CheckJava from '../firstTime/checkJava2'
+import CheckOS from '../firstTime/old/checkOS2'
+import CheckJava from '../firstTime/old/checkJava2'
 
 const baseTheme = getMuiTheme(lightBaseTheme)
 const settings = remote.getGlobal('settings')

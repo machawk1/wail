@@ -6,14 +6,14 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 module.exports = {
   devtool: '#@inline-source-map',
   entry: {
-    archiveMan: './wail-ui/background/js/archives',
-    crawlMan: './wail-ui/background/js/crawls',
+    // archiveMan: './wail-ui/background/js/archives',
+    // crawlMan: './wail-ui/background/js/crawls',
     firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    notFirstLoad: './wail-ui/loadingScreens/loading/entry',
-    requestD: './wail-ui/background/js/requestDaemon',
-    twitterM: './wail-ui/background/js/twitterM',
-    archiver: './wail-ui/background/js/archiver',
+    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
+    // notFirstLoad: './wail-ui/loadingScreens/loading/entry',
+    // requestD: './wail-ui/background/js/requestDaemon',
+    // twitterM: './wail-ui/background/js/twitterM',
+    // archiver: './wail-ui/background/js/archiver',
     // settingsW: './wail-ui/childWindows/settings/settingsW',
   },
   module: {

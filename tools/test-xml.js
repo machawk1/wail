@@ -41,11 +41,41 @@ const iter = function * () {
   yield * iterBIter
 }()
 
-let n = iter.next()
-while (!n.done) {
-  console.log(n.value)
-  n = iter.next()
+const swapper = S('')
+
+const checkJavaOnPath = () => {
+  let oneSevenOnPath = false, haveJava = false
+  swapper.setValue(process.env[ 'JAVA_HOME' ] || '')
+  if (!swapper.isEmpty()) {
+    if (swapper.contains('1.7')) {
+      oneSevenOnPath = true
+    }
+    haveJava = true
+  }
+  swapper.setValue(process.env[ 'JDK_HOME' ] || '')
+  if (!swapper.isEmpty()) {
+    if (swapper.contains('1.7')) {
+      oneSevenOnPath = true
+    }
+    haveJava = true
+  }
+  swapper.setValue(process.env[ 'JRE_HOME' ] || '')
+  if (!swapper.isEmpty()) {
+    if (swapper.contains('1.7')) {
+      oneSevenOnPath = true
+    }
+    haveJava = true
+  }
+  return {
+    oneSevenOnPath,
+    haveJava
+  }
 }
+
+console.log(checkJavaOnPath())
+console.log(process.env[ 'JAVA_HOME' ])
+console.log(process.env[ 'JDK_HOME' ])
+console.log(process.env[ 'JRE_HOME' ])
 
 // const archives = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',

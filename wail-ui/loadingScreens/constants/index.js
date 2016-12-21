@@ -11,4 +11,6 @@ export default keymirror({
   CHECKED_JAVA_OSX: null,
   EXECUTE_JAVA_VERSION: null,
   EXECUTED_JAVA_VERSION: null,
+  NEXT_LOADING_STEP: null,
+  PREV_LOADING_STEP: null,
 })

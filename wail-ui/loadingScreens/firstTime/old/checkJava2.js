@@ -7,8 +7,8 @@ import cp from 'child_process'
 import S from 'string'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
 import SvgIcon from 'material-ui/svg-icons/action/done'
-import wc from '../../constants/wail-constants'
-import LoadingDispatcher from '../shared/loadingDispatcher'
+import wc from '../../../constants/wail-constants'
+import LoadingDispatcher from '../../shared/loadingDispatcher'
 
 const style = {
   container: {
