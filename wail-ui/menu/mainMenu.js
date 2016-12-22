@@ -241,6 +241,9 @@ const menus = {
           }
         },
         {
+          role: 'reload'
+        },
+        {
           type: 'separator'
         },
         {

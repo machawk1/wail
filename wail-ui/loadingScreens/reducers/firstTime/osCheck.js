@@ -1,12 +1,9 @@
-import { Map } from 'immutable'
+import { OsCheckRecord } from '../../records'
 import { CHECKED_OS } from '../../constants'
 
-export default (state = Map({ checkDone: false, os: '', arch: '' }), action) => {
+export default (state = new OsCheckRecord(), action) => {
   if (action.type === CHECKED_OS) {
-    let { os, arch } = action
-    return state.withMutations(tstate =>
-      tstate.set('checkDone', true).set('os', os).set('arch', arch)
-    )
+    return state.updateFromAction(action)
   } else {
     return state
   }

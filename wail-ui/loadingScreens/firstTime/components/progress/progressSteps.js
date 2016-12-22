@@ -1,15 +1,13 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import {
-  Step,
-  Stepper,
-  StepLabel,
-  StepContent,
-} from 'material-ui/Stepper'
+import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-import { nextLoadingStep, prevLoadingStep } from '../../actions'
+import { compose, setDisplayName, onlyUpdateForKeys } from 'recompose'
+import { nextLoadingStep, prevLoadingStep } from '../../../actions'
+import { OsCheckStep } from '../osCheck'
+import { JavaCheckStep } from '../javaCheck'
 
 const stateToProps = state => ({
   step: state.get('loadingStep')
@@ -18,12 +16,6 @@ const stateToProps = state => ({
 const dispatchToProps = dispatch => ({
   nextStep: bindActionCreators(nextLoadingStep, dispatch),
   prevStep: bindActionCreators(prevLoadingStep, dispatch)
-})
-
-const mergeProps = (stateProps, dispatchProps, ownProps) => ({
-  ...dispatchProps,
-  ...stateProps,
-  ...ownProps
 })
 
 const getStepContent = (stepIndex) => {
@@ -38,15 +30,15 @@ const getStepContent = (stepIndex) => {
       return 'You\'re a long way from home sonny jim!'
   }
 }
-
-const Progress = ({ step, nextStep, prevStep }) => (
+const enhance = compose(setDisplayName('ProgressSteps'), onlyUpdateForKeys(['step']))
+const ProgressSteps = enhance(({step, nextStep, prevStep}) => (
   <div>
     <Stepper activeStep={step}>
       <Step>
-        <StepLabel>Select campaign settings</StepLabel>
+        <OsCheckStep />
       </Step>
       <Step>
-        <StepLabel>Create an ad group</StepLabel>
+        <JavaCheckStep />
       </Step>
       <Step>
         <StepLabel>Create an ad</StepLabel>
@@ -54,12 +46,12 @@ const Progress = ({ step, nextStep, prevStep }) => (
     </Stepper>
     <div>
       <p>{getStepContent(step)}</p>
-      <div style={{ marginTop: 12 }}>
+      <div style={{marginTop: 12}}>
         <FlatButton
           label="Back"
           disabled={step === 0}
           onTouchTap={prevStep}
-          style={{ marginRight: 12 }}
+          style={{marginRight: 12}}
         />
         <RaisedButton
           label={step === 2 ? 'Finish' : 'Next'}
@@ -69,12 +61,12 @@ const Progress = ({ step, nextStep, prevStep }) => (
       </div>
     </div>
   </div>
-)
+))
 
-Progress.propTypes = {
+ProgressSteps.propTypes = {
   step: PropTypes.number.isRequired,
   nextStep: PropTypes.func.isRequired,
   prevStep: PropTypes.func.isRequired
 }
 
-export default connect(stateToProps, dispatchToProps)(Progress)
+export default connect(stateToProps, dispatchToProps)(ProgressSteps)

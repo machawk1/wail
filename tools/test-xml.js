@@ -14,11 +14,14 @@ const prettyBytes = require('pretty-bytes')
 const path = require('path')
 const schedule = require('node-schedule')
 const Twit = require('twit')
-
+const request = require('request')
+const progress = require('request-progress')
+const prettyMs = require('pretty-ms')
+const prettySeconds = require('pretty-seconds')
 // */5 * * * *
 // const Twit = require('twit')
 //
-const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
+const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
 let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
@@ -41,41 +44,39 @@ const iter = function * () {
   yield * iterBIter
 }()
 
-const swapper = S('')
-
-const checkJavaOnPath = () => {
-  let oneSevenOnPath = false, haveJava = false
-  swapper.setValue(process.env[ 'JAVA_HOME' ] || '')
-  if (!swapper.isEmpty()) {
-    if (swapper.contains('1.7')) {
-      oneSevenOnPath = true
-    }
-    haveJava = true
-  }
-  swapper.setValue(process.env[ 'JDK_HOME' ] || '')
-  if (!swapper.isEmpty()) {
-    if (swapper.contains('1.7')) {
-      oneSevenOnPath = true
-    }
-    haveJava = true
-  }
-  swapper.setValue(process.env[ 'JRE_HOME' ] || '')
-  if (!swapper.isEmpty()) {
-    if (swapper.contains('1.7')) {
-      oneSevenOnPath = true
-    }
-    haveJava = true
-  }
-  return {
-    oneSevenOnPath,
-    haveJava
-  }
-}
-
-console.log(checkJavaOnPath())
-console.log(process.env[ 'JAVA_HOME' ])
-console.log(process.env[ 'JDK_HOME' ])
-console.log(process.env[ 'JRE_HOME' ])
+progress(request('http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'), {
+  // throttle: 2000,                    // Throttle the progress event to 2000ms, defaults to 1000ms
+  // delay: 1000,                       // Only start to emit after 1000ms delay, defaults to 0ms
+  // lengthHeader: 'x-transfer-length'  // Length header to use, defaults to content-length
+}).on('progress', function (state) {
+  // The state is an object that looks like this:
+  // {
+  //     percent: 0.5,               // Overall percent (between 0 to 1)
+  //     speed: 554732,              // The download speed in bytes/sec
+  //     size: {
+  //         total: 90044871,        // The total payload size in bytes
+  //         transferred: 27610959   // The transferred payload size in bytes
+  //     },
+  //     time: {
+  //         elapsed: 36.235,        // The total elapsed seconds since the start (3 decimals)
+  //         remaining: 81.403       // The remaining seconds to finish (3 decimals)
+  //     }
+  // }
+  let {time: {elapsed, remaining}, percent, speed, size: {total, transferred}} = state
+  console.log(`Time Elapsed ${prettySeconds(elapsed)}. Time Remaining ${remaining === null ? 'infinity' : prettySeconds(remaining)}`)
+  console.log(`Percent downloaded ${percent * 100}%`)
+  console.log(`Download speed ${prettyBytes(speed === null ? 0 : speed)}/s`)
+  console.log(`Total Size ${prettyBytes(total)}. Have ${prettyBytes(transferred)}`)
+})
+  .on('error', function (err) {
+    // Do something with err
+    console.log('error happened')
+  })
+  .on('end', function () {
+    // Do something after request finishes
+    console.log('done downloading')
+  })
+  .pipe(fs.createWriteStream('jdk-osx.dmg'))
 
 // const archives = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
@@ -689,7 +690,7 @@ function *updateGen (iterate) {
 }
 
 function update (iter, updateFun) {
-  let { done, value } = iter.next()
+  let {done, value} = iter.next()
   if (!done) {
     updateFun(value)
       .then(() => {

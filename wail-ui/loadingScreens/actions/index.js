@@ -22,7 +22,7 @@ const askDLConfig = {
   type: 'question',
   title: 'Download Required JDK',
   detail: 'In order to use Wail you must have a jdk. Otherwise you can not use this this tool.',
-  buttons: [ 'Yes', 'No' ],
+  buttons: ['Yes', 'No'],
   message: 'Java needs to be installed for Heritrix',
   cancelId: 666
 }
@@ -48,19 +48,19 @@ export const osCheck = () => ({
 
 const checkJavaOnPath = () => {
   let oneSevenOnPath = false
-  swapper.setValue(process.env[ 'JAVA_HOME' ] || '')
+  swapper.setValue(process.env['JAVA_HOME'] || '')
   if (!swapper.isEmpty()) {
     if (swapper.contains('1.7')) {
       oneSevenOnPath = true
     }
   }
-  swapper.setValue(process.env[ 'JDK_HOME' ] || '')
+  swapper.setValue(process.env['JDK_HOME'] || '')
   if (!swapper.isEmpty()) {
     if (swapper.contains('1.7')) {
       oneSevenOnPath = true
     }
   }
-  swapper.setValue(process.env[ 'JRE_HOME' ] || '')
+  swapper.setValue(process.env['JRE_HOME'] || '')
   if (!swapper.isEmpty()) {
     if (swapper.contains('1.7')) {
       oneSevenOnPath = true
@@ -73,6 +73,7 @@ export const checkJavaOsx = () => {
   let haveCorrectJava = false, haveJava = false
   let oneSevenOnPath = checkJavaOnPath()
   if (oneSevenOnPath) {
+    console.log('darwin java check 1.7 on path')
     haveCorrectJava = true
     haveJava = true
   } else {
@@ -82,10 +83,11 @@ export const checkJavaOsx = () => {
     if (len > 0) {
       haveJava = true
       for (let i = 0; i < len; ++i) {
-        let jvm = jvms[ i ]
+        let jvm = jvms[i]
         let jvmTest = jvmRegex.exec(jvm)
         if (jvmTest) {
           if (swapper.setValue(jvmTest.capture('jvm')).contains('1.7')) {
+            console.log('darwin java check 1.7 installed')
             haveCorrectJava = true
             break
           }
@@ -101,6 +103,7 @@ export const checkJavaOsx = () => {
 
 export const executeJavaVersion = (resolve, reject) =>
   cp.exec('java -version', (err, stdout, stderr) => {
+    console.log('check java linux/win executed java version')
     let haveCorrectJava = false
     let haveJava = false
     let jvRegex = named.named(/java version "(:<jv>[0-9._]+)"/g)
@@ -109,22 +112,27 @@ export const executeJavaVersion = (resolve, reject) =>
       haveJava = true
       let jv = jvTest.capture('jv')
       if (swapper.setValue(jv).contains('1.7')) {
+        console.log('check java linux/win executed java version have 1.7')
         haveCorrectJava = true
       }
     } else {
+      console.log('check java linux/win executed java version done have java')
       haveJava = false
     }
-    resolve({ type: CHECKED_JAVA, haveJava, haveCorrectJava, download: false })
+    resolve({type: CHECKED_JAVA, haveJava, haveCorrectJava, download: false})
   })
 
 export const checkJava = () => new Promise((resolve, reject) => {
   if (process.platform === 'darwin') {
-    let { haveCorrectJava, haveJava } = checkJavaOsx()
-    resolve({ type: CHECKED_JAVA, haveJava, haveCorrectJava, download: !haveCorrectJava })
+    console.log('checking java darwin')
+    let {haveCorrectJava, haveJava} = checkJavaOsx()
+    resolve({type: CHECKED_JAVA, haveJava, haveCorrectJava, download: !haveCorrectJava})
   } else {
+    console.log('checking java linux/windows')
     let oneSevenOnPath = checkJavaOnPath()
     if (oneSevenOnPath) {
-      resolve({ type: CHECKED_JAVA, haveJava: true, haveCorrectJava: true, download: false })
+      console.log('checking java linux/windows 1.7 on path')
+      resolve({type: CHECKED_JAVA, haveJava: true, haveCorrectJava: true, download: false})
     } else {
       executeJavaVersion(resolve, reject)
     }
@@ -132,7 +140,7 @@ export const checkJava = () => new Promise((resolve, reject) => {
 })
 
 export const askDownloadJDK = () => new Promise((resolve, reject) => {
-  const { dialog, app } = remote
+  const {dialog, app} = remote
   dialog.showMessageBox(askDLConfig, dResponse => {
     if (dResponse === 1 || dResponse === 666) {
       app.exit(1)

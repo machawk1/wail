@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import Progress from './progress'
+import Progress from './progressContainer'
 
 const wailTheme = getMuiTheme({
   palette: {
@@ -31,9 +31,8 @@ const FirstTime = ({ store }) => (
   </Provider>
 )
 
-process.NODE_ENV !== 'production' ?
-  FirstTime.propTypes = {
-    store: PropTypes.object.isRequired,
-  } : void 0
+FirstTime.propTypes = {
+  store: PropTypes.object.isRequired,
+}
 
 export default FirstTime
