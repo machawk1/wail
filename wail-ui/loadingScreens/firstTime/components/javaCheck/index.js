@@ -1,3 +1,2 @@
-export JavaCheckNotDone from './checkNotDone'
-export JavaCheckDone from './checkDone'
+export JavaCheckContents from './javaCheckContents'
 export JavaCheckStep from './javaCheckStep'

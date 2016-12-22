@@ -1,22 +1,10 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import { compose, setDisplayName, onlyUpdateForKeys } from 'recompose'
-import { nextLoadingStep, prevLoadingStep } from '../../../actions'
 import { OsCheckStep } from '../osCheck'
 import { JavaCheckStep } from '../javaCheck'
-
-const stateToProps = state => ({
-  step: state.get('loadingStep')
-})
-
-const dispatchToProps = dispatch => ({
-  nextStep: bindActionCreators(nextLoadingStep, dispatch),
-  prevStep: bindActionCreators(prevLoadingStep, dispatch)
-})
 
 const getStepContent = (stepIndex) => {
   switch (stepIndex) {
@@ -69,4 +57,4 @@ ProgressSteps.propTypes = {
   prevStep: PropTypes.func.isRequired
 }
 
-export default connect(stateToProps, dispatchToProps)(ProgressSteps)
+export default ProgressSteps

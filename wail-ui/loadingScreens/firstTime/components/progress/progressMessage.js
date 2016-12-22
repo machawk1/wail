@@ -1,17 +1,17 @@
 import React, { PropTypes } from 'react'
 import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
 import { compose, setDisplayName, onlyUpdateForKeys } from 'recompose'
-import { OsCheckStep } from '../osCheck'
-import { JavaCheckStep } from '../javaCheck'
+import { OsCheckContents } from '../osCheck'
+import { JavaCheckContents } from '../javaCheck'
 
-const enhance = compose(setDisplayName('ProgressMessage'), onlyUpdateForKeys(['step']))
-const ProgressMessage = enhance(({step, nextStep, prevStep}) => (
+const enhance = compose(setDisplayName('ProgressMessage'), onlyUpdateForKeys([ 'step' ]))
+const ProgressMessage = enhance(({ step, nextStep, prevStep }) => (
   <Stepper activeStep={step}>
     <Step>
-      <OsCheckStep />
+      <OsCheckContents />
     </Step>
     <Step>
-      <JavaCheckStep />
+      <JavaCheckContents step={step}/>
     </Step>
     <Step>
       <StepLabel>Create an ad</StepLabel>

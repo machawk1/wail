@@ -18,10 +18,12 @@ const request = require('request')
 const progress = require('request-progress')
 const prettyMs = require('pretty-ms')
 const prettySeconds = require('pretty-seconds')
+const Rx = require('rxjs')
+const delay = require('lodash/delay')
 // */5 * * * *
 // const Twit = require('twit')
 //
-const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
+const inspect = _.partialRight(util.inspect, { depth: null, colors: true })
 let toMove = '/home/john/my-fork-wail/archives2/*'
 let moveWhere = '/home/john/Documents/WAIL_ManagedCollections/'
 
@@ -43,40 +45,150 @@ const iter = function * () {
   yield 5
   yield * iterBIter
 }()
+// const pumpProgress = Rx.Observable.fromEvent(monitorEvent, 'progress')
+//
+// pumpProgress.subscribe(({ time: { elapsed, remaining }, percent, speed, size: { total, transferred } }) => {
+//   console.log(`Time Elapsed ${prettySeconds(elapsed)}. Time Remaining ${remaining === null ? 'infinity' : prettySeconds(remaining)}`)
+//   console.log(`Percent downloaded ${percent * 100}%`)
+//   console.log(`Download speed ${prettyBytes(speed === null ? 0 : speed)}/s`)
+//   console.log(`Total Size ${prettyBytes(total)}. Have ${prettyBytes(transferred)}`)
+const jdkDLOpts = {
+  saveLoc: 'jdk-osx.dmg',//'/tmp/java7.dmg',
+  url: 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
+}
+class JDKDLProgression extends EventEmitter {
+  constructor (options = jdkDLOpts) {
+    super()
+    this._options = options
+    this.monitoring = null
+    this.working = false
+  }
 
-progress(request('http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'), {
-  // throttle: 2000,                    // Throttle the progress event to 2000ms, defaults to 1000ms
-  // delay: 1000,                       // Only start to emit after 1000ms delay, defaults to 0ms
-  // lengthHeader: 'x-transfer-length'  // Length header to use, defaults to content-length
-}).on('progress', function (state) {
-  // The state is an object that looks like this:
-  // {
-  //     percent: 0.5,               // Overall percent (between 0 to 1)
-  //     speed: 554732,              // The download speed in bytes/sec
-  //     size: {
-  //         total: 90044871,        // The total payload size in bytes
-  //         transferred: 27610959   // The transferred payload size in bytes
-  //     },
-  //     time: {
-  //         elapsed: 36.235,        // The total elapsed seconds since the start (3 decimals)
-  //         remaining: 81.403       // The remaining seconds to finish (3 decimals)
-  //     }
-  // }
-  let {time: {elapsed, remaining}, percent, speed, size: {total, transferred}} = state
-  console.log(`Time Elapsed ${prettySeconds(elapsed)}. Time Remaining ${remaining === null ? 'infinity' : prettySeconds(remaining)}`)
-  console.log(`Percent downloaded ${percent * 100}%`)
-  console.log(`Download speed ${prettyBytes(speed === null ? 0 : speed)}/s`)
-  console.log(`Total Size ${prettyBytes(total)}. Have ${prettyBytes(transferred)}`)
-})
-  .on('error', function (err) {
-    // Do something with err
-    console.log('error happened')
-  })
-  .on('end', function () {
-    // Do something after request finishes
-    console.log('done downloading')
-  })
-  .pipe(fs.createWriteStream('jdk-osx.dmg'))
+  _onProgress ({ time: { elapsed, remaining }, percent, speed, size: { total, transferred } }) {
+    this.emit('progress', {
+      elapsed: prettySeconds(elapsed),
+      remaining: remaining === null ? 'infinity' : prettySeconds(remaining),
+      percent: `${percent * 100}%`,
+      speed: `${prettyBytes(speed === null ? 0 : speed)}/s`,
+      totalSize: prettyBytes(total),
+      have: prettyBytes(transferred)
+    })
+  }
+
+  _onError (err) {
+    this.emit('error', err)
+  }
+
+  _onEnd () {
+    this.working = false
+    this.emit('finished')
+  }
+
+  _start (options) {
+    let { saveLoc, url } = options === null ? this._options : options
+    console.log(`${url} ${saveLoc}`)
+    progress(request(url))
+      .on('progress', (prog) => {this._onProgress(prog)})
+      .on('error', (err) => {this._onError(err)})
+      .on('end', () => {this._onEnd()})
+      .pipe(fs.createWriteStream(saveLoc))
+
+    // progress(request(url))
+    //   .on('progress', ::this._onProgress)
+    //   .on('error', ::this._onError)
+    //   .on('end', ::this._onEnd)
+    //   .pipe(fs.createWriteStream(saveLoc))
+  }
+
+  start (options = null) {
+    if (!this.working) {
+      this.working = true
+      delay(() => this._start(options), 1000)
+    } else {
+      console.log('RequestProgression is already working')
+    }
+  }
+}
+
+const dler = new JDKDLProgression()
+
+const progressMonitor = Rx.Observable.fromEvent(dler, 'progress')
+const errorMonitor = Rx.Observable.fromEvent(dler, 'error')
+const finishMonitor = Rx.Observable.fromEvent(dler, 'finished')
+
+monitor.subscribe(
+  data => {console.log(`Got data from TT ${data}`)},
+  error => {console.log(`Got errror from TT ${error.msg}`)},
+  () => {console.log('Monitoring done')}
+)
+
+Rx.Observable.interval(1000).subscribe(
+  x => {
+    console.log('Observer 1: onNext: ' + x)
+    if (x % 2 === 0) {
+      TT.data(x)
+    } else {
+      TT.error(x)
+    }
+  },
+  e => console.log('Observer 1: onError: ' + e.message),
+  () => console.log('Observer 1: onCompleted'))
+// const monitorEvent = progress(request('http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'), {
+//   // throttle: 2000,                    // Throttle the progress event to 2000ms, defaults to 1000ms
+//   // delay: 1000,                       // Only start to emit after 1000ms delay, defaults to 0ms
+//   // lengthHeader: 'x-transfer-length'  // Length header to use, defaults to content-length
+// }).on('error', function (err) {
+//   // Do something with err
+//   console.log('error happened')
+// })
+//   .on('end', function () {
+//     // Do something after request finishes
+//     console.log('done downloading')
+//   })
+//   .pipe(fs.createWriteStream('jdk-osx.dmg'))
+//
+// const pumpProgress = Rx.Observable.fromEvent(monitorEvent, 'progress')
+//
+// pumpProgress.subscribe(({ time: { elapsed, remaining }, percent, speed, size: { total, transferred } }) => {
+//   console.log(`Time Elapsed ${prettySeconds(elapsed)}. Time Remaining ${remaining === null ? 'infinity' : prettySeconds(remaining)}`)
+//   console.log(`Percent downloaded ${percent * 100}%`)
+//   console.log(`Download speed ${prettyBytes(speed === null ? 0 : speed)}/s`)
+//   console.log(`Total Size ${prettyBytes(total)}. Have ${prettyBytes(transferred)}`)
+// })
+
+// progress(request('http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'), {
+//   // throttle: 2000,                    // Throttle the progress event to 2000ms, defaults to 1000ms
+//   // delay: 1000,                       // Only start to emit after 1000ms delay, defaults to 0ms
+//   // lengthHeader: 'x-transfer-length'  // Length header to use, defaults to content-length
+// }).on('progress', function (state) {
+//   // The state is an object that looks like this:
+//   // {
+//   //     percent: 0.5,               // Overall percent (between 0 to 1)
+//   //     speed: 554732,              // The download speed in bytes/sec
+//   //     size: {
+//   //         total: 90044871,        // The total payload size in bytes
+//   //         transferred: 27610959   // The transferred payload size in bytes
+//   //     },
+//   //     time: {
+//   //         elapsed: 36.235,        // The total elapsed seconds since the start (3 decimals)
+//   //         remaining: 81.403       // The remaining seconds to finish (3 decimals)
+//   //     }
+//   // }
+//   let {time: {elapsed, remaining}, percent, speed, size: {total, transferred}} = state
+//   console.log(`Time Elapsed ${prettySeconds(elapsed)}. Time Remaining ${remaining === null ? 'infinity' : prettySeconds(remaining)}`)
+//   console.log(`Percent downloaded ${percent * 100}%`)
+//   console.log(`Download speed ${prettyBytes(speed === null ? 0 : speed)}/s`)
+//   console.log(`Total Size ${prettyBytes(total)}. Have ${prettyBytes(transferred)}`)
+// })
+//   .on('error', function (err) {
+//     // Do something with err
+//     console.log('error happened')
+//   })
+//   .on('end', function () {
+//     // Do something after request finishes
+//     console.log('done downloading')
+//   })
+//   .pipe(fs.createWriteStream('jdk-osx.dmg'))
 
 // const archives = new DB({
 //   filename: '/home/john/my-fork-wail/dev_coreData/database (copy)/archives2.db',
@@ -690,7 +802,7 @@ function *updateGen (iterate) {
 }
 
 function update (iter, updateFun) {
-  let {done, value} = iter.next()
+  let { done, value } = iter.next()
   if (!done) {
     updateFun(value)
       .then(() => {
@@ -701,6 +813,7 @@ function update (iter, updateFun) {
       })
   }
 }
+
 //
 const runsToLatest = (db, run) => new Promise((resolve, reject) => {
   run.hasRuns = true
