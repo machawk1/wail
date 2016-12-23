@@ -17,16 +17,16 @@ const displayWhich = shouldDisplay =>
 
 const enhance = compose(
   setDisplayName('JavaCheckNotDone'),
-  onlyUpdateForKeys([ 'step' ]),
+  onlyUpdateForKeys(['step']),
   displayWhich(props => props.step === 0 || props.step > 1)
 )
 
-const NotJStepOrIs = enhance(props => (
+const NotJStepOrIs = props => (
   <JavaCheckNotDone />
-))
+)
 
 NotJStepOrIs.propTypes = {
   step: PropTypes.number.isRequired
 }
 
-export default NotJStepOrIs
+export default enhance(NotJStepOrIs)

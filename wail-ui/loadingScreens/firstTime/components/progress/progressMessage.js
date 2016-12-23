@@ -4,6 +4,7 @@ import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { OsCheckContents } from '../osCheck'
 import { JavaCheckContents } from '../javaCheck'
+import ServiceContents from '../serviceCheck/serviceCheckMessage'
 
 const stateToProps = state => ({
   step: state.get('loadingStep')
@@ -20,7 +21,7 @@ const ProgressMessage = ({step}) => (
       <JavaCheckContents step={step}/>
     </Step>
     <Step>
-      <StepLabel>Start Services</StepLabel>
+      <ServiceContents step={step}/>
     </Step>
   </Stepper>
 )

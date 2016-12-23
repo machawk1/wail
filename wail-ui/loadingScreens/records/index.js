@@ -74,9 +74,9 @@ class JdkDlRecord extends Immutable.Record({
 
 class SSRecord extends Immutable.Record({
   hStarted: false,
-  hStartErReport: '',
+  hStartErReport: {},
   wStarted: false,
-  wStartErReport: '',
+  wStartErReport: {},
   bothStarted: false,
   hError: false,
   wError: false,
@@ -84,6 +84,10 @@ class SSRecord extends Immutable.Record({
 
   startStatus () {
     return {bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted')}
+  }
+
+  wasError () {
+    return this.get('hError') || this.get('wError')
   }
 
   heritrixStarted () {
@@ -94,7 +98,7 @@ class SSRecord extends Immutable.Record({
   }
 
   heritrixStartedError (hStartErReport) {
-    return this.merge({hStartErReport})
+    return this.merge({hError: true, hStartErReport})
   }
 
   waybackStarted () {
@@ -105,7 +109,7 @@ class SSRecord extends Immutable.Record({
   }
 
   waybackStartedError (wStartErReport) {
-    return this.merge({wStartErReport})
+    return this.merge({wError: true, wStartErReport})
   }
 }
 
