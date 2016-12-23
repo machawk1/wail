@@ -2,7 +2,7 @@ import { STEP } from '../../constants'
 
 const {NEXT_LOADING_STEP, PREV_LOADING_STEP} = STEP
 
-export default  (state = 2, action) => {
+export default  (state = 0, action) => {
   if (action.type === NEXT_LOADING_STEP) {
     return state + 1
   } else if (action.type === PREV_LOADING_STEP) {
