@@ -77,7 +77,6 @@
     fill: currentColor;
 }
 
-
 .flipText {
     display: block;
     -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
@@ -208,6 +207,12 @@
 .layoutBody {
     background-color: #f2f2f2;
     position: absolute;
+    top: 64px;
+    width: 100%;
+    height: inherit;
+}
+
+.firstLoadBody {
     top: 64px;
     width: 100%;
     height: inherit;
@@ -388,6 +393,7 @@
 [class^="wtooltip"] {
     position: relative;
 }
+
 [class^="wtooltip"]:after {
     opacity: 0;
     visibility: hidden;
@@ -408,6 +414,7 @@
     transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
     transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
 }
+
 [class^="wtooltip"]:hover:after {
     display: block;
     opacity: 1;
@@ -422,6 +429,7 @@
     -webkit-transform: translateX(-112%) translateY(0);
     transform: translateX(-112%) translateY(0);
 }
+
 .wtooltip--left:hover:after {
     -webkit-transform: translateX(-110%) translateY(0);
     transform: translateX(-110%) translateY(0);
@@ -433,6 +441,7 @@
     -webkit-transform: translateX(12%) translateY(0);
     transform: translateX(12%) translateY(0);
 }
+
 .wtooltip--right:hover:after {
     -webkit-transform: translateX(10%) translateY(0);
     transform: translateX(10%) translateY(0);
@@ -458,6 +467,7 @@
     transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
     z-index: 3;
 }
+
 .wtooltip--triangle:hover:before {
     display: block;
     opacity: 1;

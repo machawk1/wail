@@ -1,18 +1,34 @@
 import React, { PropTypes } from 'react'
-import StepContent from 'material-ui/Stepper/StepContent'
+import { compose, branch, renderComponent, setDisplayName } from 'recompose'
 import { JavaCheckRecord } from '../../../../records'
+import { CheckStepContent } from '../../../../shared/checkStepContents'
+import DownloadJDK from '../downloadJDk'
 
-const JavaCheckDone = ({javaCheckRec}) => {
-  const checkL = `${javaCheckRec.haveReport()} ${javaCheckRec.haveCorrectReport()} ${javaCheckRec.downloadReport()}`
-  return (
-    <div>
-      <StepContent active><span>{checkL}</span></StepContent>
-    </div>
+const displayWhich = shouldDisplay =>
+  branch(
+    props => shouldDisplay(props),
+    renderComponent(DownloadJDK)
   )
-}
+
+const enhance = compose(
+  setDisplayName('JavaCheckDone'),
+  displayWhich(props => props.javaCheckRec.get('download'))
+)
+
+const JavaCheckDone = enhance(({javaCheckRec}) => (
+  <CheckStepContent>
+    <p>
+      {`${javaCheckRec.haveReport()}`}
+      <br/>
+      {`${javaCheckRec.haveCorrectReport()}`}
+      <br/>
+      {`${javaCheckRec.downloadReport()}`}
+    </p>
+  </CheckStepContent>
+))
 
 JavaCheckDone.propTypes = {
-  javaCheckRec: PropTypes.instanceOf(JavaCheckRecord).isRequired,
+  javaCheckRec: PropTypes.instanceOf(JavaCheckRecord).isRequired
 }
 
 export default JavaCheckDone

@@ -1,5 +1,7 @@
 import { JavaCheckRecord } from '../../records'
-import { CHECKED_JAVA } from '../../constants'
+import { JAVA_CHECK } from '../../constants'
+
+const {CHECKED_JAVA} = JAVA_CHECK
 
 export default (state = new JavaCheckRecord(), action) => {
   if (action.type === CHECKED_JAVA) {

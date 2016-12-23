@@ -1,4 +1,6 @@
 import '../../../wailPollyfil'
+import 'react-flex/index.css'
+import '../../css/wail.css'
 import React from 'react'
 import { render } from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'

@@ -1,5 +1,7 @@
 import { OsCheckRecord } from '../../records'
-import { CHECKED_OS } from '../../constants'
+import { OS_CHECK } from '../../constants'
+
+const {CHECKED_OS} = OS_CHECK
 
 export default (state = new OsCheckRecord(), action) => {
   if (action.type === CHECKED_OS) {

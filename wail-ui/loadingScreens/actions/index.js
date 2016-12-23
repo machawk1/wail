@@ -4,33 +4,27 @@ import Promise from 'bluebird'
 import S from 'string'
 import os from 'os'
 import cp from 'child_process'
-import request from 'request'
 import { remote } from 'electron'
-import {
-  CHECKED_OS,
-  CHECKED_JAVA,
-  CHECKED_JAVA_ON_PATH,
-  CHECKED_JAVA_OSX,
-  NEXT_LOADING_STEP,
-  PREV_LOADING_STEP
-} from '../constants'
+import { OS_CHECK, JAVA_CHECK, JDK_DOWNLOAD, STEP, JDK_INSTALL, SERVICES } from '../constants'
 
-const osxJava7DMG = 'http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg'
+const {NEXT_LOADING_STEP, PREV_LOADING_STEP,} = STEP
+const {CHECKED_OS} = OS_CHECK
+const {CHECKED_JAVA} = JAVA_CHECK
+const {DL_JDK, DL_JDK_STARTED} = JDK_DOWNLOAD
+const {START_INSTALL, INSTALL_PROCESS_ERROR} = JDK_INSTALL
+
+const {HERITRIX_STARTED, HERITRIX_STARTED_ERROR, WAYBACK_STARTED, WAYBACK_STARTED_ERROR,} = SERVICES
+
+const settings = remote.getGlobal('settings')
+const serviceManager = remote.getGlobal('serviceMan')
+const {app} = remote
+
 const swapper = S('')
-
-const askDLConfig = {
-  type: 'question',
-  title: 'Download Required JDK',
-  detail: 'In order to use Wail you must have a jdk. Otherwise you can not use this this tool.',
-  buttons: ['Yes', 'No'],
-  message: 'Java needs to be installed for Heritrix',
-  cancelId: 666
-}
 
 const whichOS = os => {
   switch (os) {
     case 'darwin':
-      return 'OSX'
+      return 'MacOS'
     case 'linux':
       return 'Linux'
     case 'win':
@@ -139,18 +133,45 @@ export const checkJava = () => new Promise((resolve, reject) => {
   }
 })
 
-export const askDownloadJDK = () => new Promise((resolve, reject) => {
-  const {dialog, app} = remote
-  dialog.showMessageBox(askDLConfig, dResponse => {
-    if (dResponse === 1 || dResponse === 666) {
-      app.exit(1)
+export const installJdk = () => new Promise((resolve, reject) => {
+  cp.exec('hdiutil attach /tmp/java7.dmg', (errAttach, stdoutO, stderrO) => {
+    if (errAttach) {
+      resolve({
+        type: INSTALL_PROCESS_ERROR,
+        report: {
+          where: 'attach',
+          error: errAttach,
+          stderr: stderrO
+        }
+      })
+    } else {
+      // console.log(stderr, stdout)
+      cp.exec('open /Volumes/JDK\\ 7\\ Update\\ 79/JDK\\ 7\\ Update\\ 79.pkg', (errOpen, stdout, stderr) => {
+        if (errOpen) {
+          console.error(errOpen)
+          resolve({
+            type: INSTALL_PROCESS_ERROR,
+            report: {
+              where: 'open',
+              error: errOpen,
+              stderr
+            }
+          })
+
+        } else {
+          console.log(stderr, stdout)
+          app.exit(1)
+        }
+      })
     }
   })
 })
 
-export const downloadJDK = () => {
+export const startJdkInstall = () => ({type: START_INSTALL})
 
-}
+export const downloadJDK = () => ({
+  type: DL_JDK_STARTED
+})
 
 export const nextLoadingStep = () => ({
   type: NEXT_LOADING_STEP
@@ -159,3 +180,31 @@ export const nextLoadingStep = () => ({
 export const prevLoadingStep = () => ({
   type: PREV_LOADING_STEP
 })
+
+export const startHeritrix = () => new Promise((resolve, reject) =>
+  serviceManager.startHeritrixLoading()
+    .then(startReport => {
+      if (startReport.wasError) {
+        resolve({
+          type: HERITRIX_STARTED_ERROR,
+          errorReport: startReport.errorReport
+        })
+      } else {
+        resolve({type: HERITRIX_STARTED})
+      }
+    })
+)
+
+export const startWayback = () => new Promise((resolve, reject) =>
+  serviceManager.startWaybackLoading()
+    .then(startReport => {
+      if (startReport.wasError) {
+        resolve({
+          type: WAYBACK_STARTED_ERROR,
+          errorReport: startReport.errorReport
+        })
+      } else {
+        resolve({type: WAYBACK_STARTED})
+      }
+    })
+)

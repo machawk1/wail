@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
-import Progress from './progressContainer'
+import Layout from './layout'
 
 const wailTheme = getMuiTheme({
   palette: {
@@ -21,12 +21,10 @@ const wailTheme = getMuiTheme({
   userAgent: false
 })
 
-const FirstTime = ({ store }) => (
+const FirstTime = ({store}) => (
   <Provider store={store}>
     <MuiThemeProvider muiTheme={wailTheme}>
-      <div style={{ width: '100%', height: '100%' }}>
-        <Progress />
-      </div>
+      <Layout />
     </MuiThemeProvider>
   </Provider>
 )

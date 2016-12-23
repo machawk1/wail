@@ -1,8 +1,13 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { compose, branch, onlyUpdateForKeys, renderComponent, setDisplayName } from 'recompose'
 import { OsCheckRecord } from '../../../records'
 import OsCheckNotDone from './osCheckNotDone'
 import OsCheckDone from './osCheckDone'
+
+const stateToProps = state => ({
+  osCheckRec: state.get('osCheck')
+})
 
 const displayWhich = shouldDisplay =>
   branch(
@@ -24,4 +29,4 @@ OsCheckContents.propTypes = {
   osCheckRec: PropTypes.instanceOf(OsCheckRecord).isRequired
 }
 
-export default OsCheckContents
+export default connect(stateToProps)(OsCheckContents)

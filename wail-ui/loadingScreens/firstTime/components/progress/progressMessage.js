@@ -1,12 +1,18 @@
 import React, { PropTypes } from 'react'
+import { connect } from 'react-redux'
 import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
-import { compose, setDisplayName, onlyUpdateForKeys } from 'recompose'
+import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { OsCheckContents } from '../osCheck'
 import { JavaCheckContents } from '../javaCheck'
 
-const enhance = compose(setDisplayName('ProgressMessage'), onlyUpdateForKeys([ 'step' ]))
-const ProgressMessage = enhance(({ step, nextStep, prevStep }) => (
-  <Stepper activeStep={step}>
+const stateToProps = state => ({
+  step: state.get('loadingStep')
+})
+
+const enhance = namedUpdateKeys('ProgressMessage', ['step'])
+
+const ProgressMessage = ({step}) => (
+  <Stepper activeStep={step} orientation='vertical'>
     <Step>
       <OsCheckContents />
     </Step>
@@ -14,13 +20,13 @@ const ProgressMessage = enhance(({ step, nextStep, prevStep }) => (
       <JavaCheckContents step={step}/>
     </Step>
     <Step>
-      <StepLabel>Create an ad</StepLabel>
+      <StepLabel>Start Services</StepLabel>
     </Step>
   </Stepper>
-))
+)
 
 ProgressMessage.propTypes = {
   step: PropTypes.number.isRequired
 }
 
-export default ProgressMessage
+export default connect(stateToProps)(enhance(ProgressMessage))

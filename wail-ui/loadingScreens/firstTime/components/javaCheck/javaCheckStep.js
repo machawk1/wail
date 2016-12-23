@@ -29,6 +29,7 @@ const javaCheckLabler = (checkDone, download) => {
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const {javaCheckRec, step} = stateProps
+  const {doCheck, nextStep} = dispatchProps
   const checkDone = javaCheckRec.checkDone
   return {
     step,
@@ -36,7 +37,6 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     label: javaCheckLabler(checkDone, javaCheckRec.download),
     ownProps: Object.assign({}, ownProps, {completed: checkDone, disabled: false}),
     check () {
-      const {doCheck, nextStep} = dispatchProps
       if (!checkDone && step === 1) {
         console.log('JavaCheckStep doing check', step)
         delay(() => doCheck(), 1000)
