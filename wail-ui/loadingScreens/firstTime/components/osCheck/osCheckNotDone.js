@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react'
+import { namedPure } from '../../../../util/recomposeHelpers'
 import { CheckStepContent } from '../../../shared/checkStepContents'
 
 const OsCheckNotDone = () => (
@@ -7,4 +8,4 @@ const OsCheckNotDone = () => (
   </CheckStepContent>
 )
 
-export default OsCheckNotDone
+export default namedPure('OsCheckNotDone')(OsCheckNotDone)

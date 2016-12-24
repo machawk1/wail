@@ -9,8 +9,8 @@ const stateToProps = state => ({
   serviceRec: state.get('services'),
 })
 
-const HeritrixStartError = ({serviceRec}) => {
-  const {where, error} = serviceRec.get('hStartErReport')
+const HeritrixStartError = ({ serviceRec }) => {
+  const { where, error } = serviceRec.get('hStartErReport')
   return (
     <span>
       Heritrix Could Not Be Started <br/>
@@ -24,12 +24,12 @@ const maybeDisplayHError = branch(
   renderComponent(HeritrixStartError)
 )
 
-const HeritrixStartM = maybeDisplayHError(({serviceRec}) => (
-  <span>Heritrix Was Started</span>
+const HeritrixStartM = maybeDisplayHError(({ serviceRec }) => (
+  <span>{serviceRec.heritrixStatusMessage()}</span>
 ))
 
-const WaybackStartError = ({serviceRec}) => {
-  const {where, error} = serviceRec.get('wStartErReport')
+const WaybackStartError = ({ serviceRec }) => {
+  const { where, error } = serviceRec.get('wStartErReport')
   return (
     <span>
       Wayback Could Not Be Started <br/>
@@ -43,8 +43,8 @@ const maybeDisplayWError = branch(
   renderComponent(WaybackStartError)
 )
 
-const WaybackStartM = maybeDisplayWError(({serviceRec}) => (
-  <p>Wayback Was Started</p>
+const WaybackStartM = maybeDisplayWError(({ serviceRec }) => (
+  <span>{serviceRec.waybackStatusMessage()}</span>
 ))
 
 const NotServiceStep = () => (
@@ -65,7 +65,7 @@ const enhance = compose(
   onlyDisplayOnStep
 )
 
-const ServiceCheckMessage = ({serviceRec}) => (
+const ServiceCheckMessage = ({ serviceRec }) => (
   <CheckStepContent>
     <Flex row alignItems='center' justifyContent='space-between'>
       <HeritrixStartM serviceRec={serviceRec}/>

@@ -1,9 +1,9 @@
 import Immutable from 'immutable'
 
-class OsCheckRecord extends Immutable.Record({checkDone: false, os: '', arch: ''}) {
+class OsCheckRecord extends Immutable.Record({ checkDone: false, os: '', arch: '' }) {
   updateFromAction (action) {
-    let {os, arch} = action
-    return this.merge({checkDone: true, os, arch})
+    let { os, arch } = action
+    return this.merge({ checkDone: true, os, arch })
   }
 }
 
@@ -14,8 +14,8 @@ class JavaCheckRecord extends Immutable.Record({
   download: false
 }) {
   updateFromAction (action) {
-    let {haveJava, haveCorrectJava, download} = action
-    return this.merge({checkDone: true, haveJava, haveCorrectJava, download})
+    let { haveJava, haveCorrectJava, download } = action
+    return this.merge({ checkDone: true, haveJava, haveCorrectJava, download })
   }
 
   haveReport () {
@@ -58,17 +58,17 @@ class JdkDlRecord extends Immutable.Record({
 
   progressUpdate (stats) {
     if (!this.get('running')) {
-      return this.merge({...stats, running: true})
+      return this.merge({ ...stats, running: true })
     }
     return this.merge(stats)
   }
 
   finishedNoError () {
-    return this.merge({finished: true, error: false})
+    return this.merge({ finished: true, error: false })
   }
 
   finishedError () {
-    return this.merge({finished: true, error: true})
+    return this.merge({ finished: true, error: true })
   }
 }
 
@@ -83,7 +83,7 @@ class SSRecord extends Immutable.Record({
 }) {
 
   startStatus () {
-    return {bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted')}
+    return { bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted') }
   }
 
   wasError () {
@@ -92,24 +92,48 @@ class SSRecord extends Immutable.Record({
 
   heritrixStarted () {
     if (this.get('wStarted' && !this.get('bothStarted'))) {
-      return this.merge({hStarted: true, bothStarted: true})
+      return this.merge({ hStarted: true, bothStarted: true })
     }
     return this.set('hStarted', true)
   }
 
   heritrixStartedError (hStartErReport) {
-    return this.merge({hError: true, hStartErReport})
+    return this.merge({ hError: true, hStartErReport })
   }
 
   waybackStarted () {
     if (this.get('hStarted' && !this.get('bothStarted'))) {
-      return this.merge({wStarted: true, bothStarted: true})
+      return this.merge({ wStarted: true, bothStarted: true })
     }
     return this.set('wStarted', true)
   }
 
   waybackStartedError (wStartErReport) {
-    return this.merge({wError: true, wStartErReport})
+    return this.merge({ wError: true, wStartErReport })
+  }
+
+  waybackStatusMessage () {
+    if (!this.get('hStarted')) {
+      return 'Wayback is waiting to be started'
+    } else {
+      if (this.get('wStarted')) {
+        return 'Wayback was started'
+      } else {
+        return 'Wayback was not started'
+      }
+    }
+  }
+
+  heritrixStatusMessage () {
+    if (!this.get('hStarted')) {
+      return 'Heritrix is being started'
+    } else {
+      if (!this.get('hError')) {
+        return 'Heritrix was started'
+      } else {
+        return 'Heritrix was not started'
+      }
+    }
   }
 }
 
