@@ -58,10 +58,10 @@ const findProcessOnHeritrixPort = () => new Promise((resolve, reject) => {
     } else {
       let maybeMatch = stdout.match(netStatReg)
       if (maybeMatch) {
-        let [pid, process] = maybeMatch[1].split('/')
+        let [pid, p] = maybeMatch[1].split('/')
         resolve({
           found: true,
-          whoOnPort: {pid, process}
+          whoOnPort: {pid, process: p}
         })
       } else {
         resolve({found: false})
