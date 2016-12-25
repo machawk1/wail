@@ -101,7 +101,6 @@ export default class AppManager {
             this.h = 600
           }
 
-          this.serviceMan = new ServiceManager(this.settingsMan)
           this.winConf = {
             width: this.w,
             minWidth: this.w,
@@ -200,7 +199,14 @@ export default class AppManager {
               name: 'archiveManWindow'
             }
           ]
-          return resolve()
+          this.serviceMan = new ServiceManager(this.settingsMan)
+
+          return this.serviceMan.init()
+            .then(() => { resolve() })
+            .catch(error => {
+              console.error(':( service man init failed', error)
+              resolve()
+            })
         })
     })
   }

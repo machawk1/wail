@@ -1,21 +1,16 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
 import { compose, branch, setDisplayName, renderComponent, shouldUpdate } from 'recompose'
 import { Flex } from 'react-flex'
 import { SSRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'
 
-const stateToProps = state => ({
-  serviceRec: state.get('services'),
-})
-
 const HeritrixStartError = ({ serviceRec }) => {
   const { where, error } = serviceRec.get('hStartErReport')
   return (
-    <span>
+    <p>
       Heritrix Could Not Be Started <br/>
       {where} : {error}
-    </span>
+    </p>
   )
 }
 
@@ -25,16 +20,16 @@ const maybeDisplayHError = branch(
 )
 
 const HeritrixStartM = maybeDisplayHError(({ serviceRec }) => (
-  <span>{serviceRec.heritrixStatusMessage()}</span>
+  <p>{serviceRec.heritrixStatusMessage()}</p>
 ))
 
 const WaybackStartError = ({ serviceRec }) => {
   const { where, error } = serviceRec.get('wStartErReport')
   return (
-    <span>
+    <p>
       Wayback Could Not Be Started <br/>
       {where} : {error}
-    </span>
+    </p>
   )
 }
 
@@ -44,7 +39,7 @@ const maybeDisplayWError = branch(
 )
 
 const WaybackStartM = maybeDisplayWError(({ serviceRec }) => (
-  <span>{serviceRec.waybackStatusMessage()}</span>
+  <p>{serviceRec.waybackStatusMessage()}</p>
 ))
 
 const NotServiceStep = () => (
@@ -79,4 +74,4 @@ ServiceCheckMessage.propTypes = {
   step: PropTypes.number.isRequired
 }
 
-export default connect(stateToProps)(enhance(ServiceCheckMessage))
+export default enhance(ServiceCheckMessage)

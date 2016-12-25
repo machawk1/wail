@@ -65,26 +65,24 @@ const checkJavaOnPath = () => {
 
 export const checkJavaOsx = () => {
   let haveCorrectJava = false, haveJava = false
-  let oneSevenOnPath = checkJavaOnPath()
-  if (oneSevenOnPath) {
-    console.log('darwin java check 1.7 on path')
-    haveCorrectJava = true
+  let jvmRegex = named.named(/\/[a-zA-z/]+(:<jvm>.+)/)
+  let jvms = shelljs.ls('-d', '/Library/Java/JavaVirtualMachines/*.jdk')
+  let len = jvms.length
+  let javaV = ''
+  if (len > 0) {
     haveJava = true
-  } else {
-    let jvmRegex = named.named(/\/[a-zA-z/]+(:<jvm>.+)/)
-    let jvms = shelljs.ls('-d', '/Library/Java/JavaVirtualMachines/*.jdk')
-    let len = jvms.length
-    if (len > 0) {
-      haveJava = true
-      for (let i = 0; i < len; ++i) {
-        let jvm = jvms[i]
-        let jvmTest = jvmRegex.exec(jvm)
-        if (jvmTest) {
-          if (swapper.setValue(jvmTest.capture('jvm')).contains('1.7')) {
-            console.log('darwin java check 1.7 installed')
-            haveCorrectJava = true
-            break
-          }
+    let javaVs = []
+    for (let i = 0; i < len; ++i) {
+      let jvm = jvms[i]
+      let jvmTest = jvmRegex.exec(jvm)
+      if (jvmTest) {
+        let jvm = jvmTest.capture('jvm')
+        if (swapper.setValue(jvm).contains('1.7')) {
+          console.log('darwin java check 1.7 installed')
+          haveCorrectJava = true
+          break
+        } else {
+          javaVs.push()
         }
       }
     }
@@ -100,6 +98,7 @@ export const executeJavaVersion = (resolve, reject) =>
     console.log('check java linux/win executed java version')
     let haveCorrectJava = false
     let haveJava = false
+    let javaV = ''
     let jvRegex = named.named(/java version "(:<jv>[0-9._]+)"/g)
     let jvTest = jvRegex.exec(stderr)
     if (jvTest) {
@@ -108,12 +107,14 @@ export const executeJavaVersion = (resolve, reject) =>
       if (swapper.setValue(jv).contains('1.7')) {
         console.log('check java linux/win executed java version have 1.7')
         haveCorrectJava = true
+      } else {
+        javaV = jv.substr(0, 3)
       }
     } else {
       console.log('check java linux/win executed java version done have java')
       haveJava = false
     }
-    resolve({type: CHECKED_JAVA, haveJava, haveCorrectJava, download: false})
+    resolve({type: CHECKED_JAVA, haveJava, javaV, haveCorrectJava, download: false})
   })
 
 export const checkJava = () => new Promise((resolve, reject) => {
@@ -185,6 +186,7 @@ export const startHeritrix = () => new Promise((resolve, reject) =>
   serviceManager.startHeritrixLoading()
     .then(startReport => {
       if (startReport.wasError) {
+        console.log('heritrix started error')
         resolve({
           type: HERITRIX_STARTED_ERROR,
           errorReport: startReport.errorReport

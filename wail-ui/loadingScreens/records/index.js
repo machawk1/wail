@@ -1,25 +1,30 @@
 import Immutable from 'immutable'
 
-class OsCheckRecord extends Immutable.Record({ checkDone: false, os: '', arch: '' }) {
+class OsCheckRecord extends Immutable.Record({checkDone: false, os: '', arch: ''}) {
   updateFromAction (action) {
-    let { os, arch } = action
-    return this.merge({ checkDone: true, os, arch })
+    let {os, arch} = action
+    return this.merge({checkDone: true, os, arch})
   }
 }
 
 class JavaCheckRecord extends Immutable.Record({
   checkDone: false,
   haveJava: false,
+  javaV: '',
   haveCorrectJava: false,
   download: false
 }) {
   updateFromAction (action) {
-    let { haveJava, haveCorrectJava, download } = action
-    return this.merge({ checkDone: true, haveJava, haveCorrectJava, download })
+    let {haveJava, haveCorrectJava, download, javaV} = action
+    return this.merge({checkDone: true, javaV, haveJava, haveCorrectJava, download})
   }
 
   haveReport () {
-    return `Have Java: ${this.get('haveJava') ? 'Yes' : 'No'}`
+    let have = 'No'
+    if (this.get('haveJava')) {
+      have = `Yes ${this.get('javaV')}`
+    }
+    return `Have Java: ${have}`
   }
 
   haveCorrectReport () {
@@ -29,7 +34,7 @@ class JavaCheckRecord extends Immutable.Record({
   downloadReport () {
     if (process.platform !== 'darwin') {
       if (!this.get('haveCorrectJava') || !this.get('haveJava')) {
-        return `Need To Download 1.7: Yes But WAIL Can Use The Packaged OpenJDK`
+        return `Need To Download 1.7: No WAIL Can Use The Packaged OpenJDK`
       } else {
         return `Need To Download 1.7: No`
       }
@@ -58,17 +63,17 @@ class JdkDlRecord extends Immutable.Record({
 
   progressUpdate (stats) {
     if (!this.get('running')) {
-      return this.merge({ ...stats, running: true })
+      return this.merge({...stats, running: true})
     }
     return this.merge(stats)
   }
 
   finishedNoError () {
-    return this.merge({ finished: true, error: false })
+    return this.merge({finished: true, error: false})
   }
 
   finishedError () {
-    return this.merge({ finished: true, error: true })
+    return this.merge({finished: true, error: true})
   }
 }
 
@@ -83,7 +88,7 @@ class SSRecord extends Immutable.Record({
 }) {
 
   startStatus () {
-    return { bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted') }
+    return {bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted')}
   }
 
   wasError () {
@@ -91,25 +96,24 @@ class SSRecord extends Immutable.Record({
   }
 
   heritrixStarted () {
-    if (this.get('wStarted' && !this.get('bothStarted'))) {
-      return this.merge({ hStarted: true, bothStarted: true })
-    }
+    console.log('heritrix was started', this.toJS())
     return this.set('hStarted', true)
   }
 
   heritrixStartedError (hStartErReport) {
-    return this.merge({ hError: true, hStartErReport })
+    return this.merge({hError: true, hStartErReport})
   }
 
   waybackStarted () {
-    if (this.get('hStarted' && !this.get('bothStarted'))) {
-      return this.merge({ wStarted: true, bothStarted: true })
+    console.log('wayback was started')
+    if (this.get('hStarted')) {
+      return this.merge({wStarted: true, bothStarted: true})
     }
     return this.set('wStarted', true)
   }
 
   waybackStartedError (wStartErReport) {
-    return this.merge({ wError: true, wStartErReport })
+    return this.merge({wError: true, wStartErReport})
   }
 
   waybackStatusMessage () {

@@ -1,13 +1,7 @@
 import React, { PropTypes } from 'react'
-import { connect } from 'react-redux'
 import { compose, branch, shouldUpdate, renderComponent, setDisplayName } from 'recompose'
 import { JavaCheckRecord, JdkDlRecord } from '../../../records'
 import { NotJStepOrIs, JavaCheckDone }  from './checkReports'
-
-const stateToProps = state => ({
-  javaCheckRec: state.get('javaCheck'),
-  jdkDlRec: state.get('jdkDl'),
-})
 
 const displayWhich = shouldDisplay =>
   branch(
@@ -33,4 +27,4 @@ JavaCheckContents.propTypes = {
   jdkDlRec: PropTypes.instanceOf(JdkDlRecord).isRequired
 }
 
-export default connect(stateToProps)(JavaCheckContents)
+export default JavaCheckContents
