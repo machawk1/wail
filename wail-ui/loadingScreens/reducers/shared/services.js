@@ -8,7 +8,7 @@ const {
   WAYBACK_STARTED_ERROR,
 } = SERVICES
 
-export default (state = new SSRecord(), action) => {
+const services = (state = new SSRecord(), action) => {
   switch (action.type) {
     case HERITRIX_STARTED:
       return state.heritrixStarted()
@@ -22,3 +22,5 @@ export default (state = new SSRecord(), action) => {
       return state
   }
 }
+
+export default services

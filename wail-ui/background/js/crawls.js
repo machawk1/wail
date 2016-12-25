@@ -55,11 +55,11 @@ ipc.on('stop-watching-job', (e, jobId) => {
 
 })
 
-// crawlMan.initialLoad()
-//   .then(crawls => {
-//     ipc.send('crawlMan-initial-load', crawls)
-//   })
-//   .catch(error => {
-//
-//   })
+crawlMan.initialLoad()
+  .then(crawls => {
+    ipc.send('crawlMan-initial-load', crawls)
+  })
+  .catch(error => {
+
+  })
 

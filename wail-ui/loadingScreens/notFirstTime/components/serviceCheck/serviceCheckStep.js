@@ -28,7 +28,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     label: 'Start Services',
     ownProps: Object.assign({}, ownProps, {completed: bothStarted}),
     check () {
-      if (!bothStarted && step === 2) {
+      if (!bothStarted && step === 0) {
         if (!hStarted) {
           startH()
         } else {
@@ -37,14 +37,14 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
           }
         }
       }
-      if (bothStarted && step === 2) {
+      if (bothStarted && step === 0) {
         process.nextTick(() => nextStep())
       }
     }
   }
 }
 
-const updateWhen = (props, nextProps) => props.step === 2 || nextProps.step === 2
+const updateWhen = (props, nextProps) => props.step === 0 || nextProps.step === 0
 
 const DisplayWarningLabel = ({ownProps, label}) => (
   <CheckStepWarningLabel ownProps={ownProps} label={label}/>

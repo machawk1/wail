@@ -149,7 +149,7 @@ export default class WarcWriter extends EventEmitter {
 
         const writeIter = function* () {
           yield wh
-          yield wc
+          yield whc
           yield recordSeparator
           yield wmh
           yield wmhc

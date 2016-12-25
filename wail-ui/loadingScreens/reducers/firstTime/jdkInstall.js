@@ -3,13 +3,15 @@ import { JDK_INSTALL } from '../../constants'
 
 const {INSTALL_PROCESS_ERROR, START_INSTALL} = JDK_INSTALL
 
-export default (state = Immutable.Map({
+const defaultState = Immutable.Map({
   started: false,
   wasError: false,
   error: null,
   where: '',
   stderr: ''
-}), action) => {
+})
+
+const jdkInstall = (state = defaultState, action) => {
   console.log(action)
   switch (action.type) {
     case INSTALL_PROCESS_ERROR:
@@ -20,3 +22,5 @@ export default (state = Immutable.Map({
       return state
   }
 }
+
+export default jdkInstall

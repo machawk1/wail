@@ -5,6 +5,7 @@ import S from 'string'
 import os from 'os'
 import cp from 'child_process'
 import { remote } from 'electron'
+import { send } from 'redux-electron-ipc'
 import { OS_CHECK, JAVA_CHECK, JDK_DOWNLOAD, STEP, JDK_INSTALL, SERVICES } from '../constants'
 
 const {NEXT_LOADING_STEP, PREV_LOADING_STEP,} = STEP
@@ -135,6 +136,7 @@ export const checkJava = () => new Promise((resolve, reject) => {
 })
 
 export const installJdk = () => new Promise((resolve, reject) => {
+  settings.set('didFirstLoad', false)
   cp.exec('hdiutil attach /tmp/java7.dmg', (errAttach, stdoutO, stderrO) => {
     if (errAttach) {
       resolve({
@@ -210,3 +212,10 @@ export const startWayback = () => new Promise((resolve, reject) =>
       }
     })
 )
+
+export const didFirstLoad = () => {
+  settings.set('didFirstLoad', true)
+  return send('loading-finished')
+}
+
+export const notFirstLoadComplete = () => send('loading-finished')

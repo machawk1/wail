@@ -8,8 +8,8 @@ module.exports = {
   entry: {
     archiveMan: './wail-ui/background/js/archives',
     crawlMan: './wail-ui/background/js/crawls',
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // notFirstLoad: './wail-ui/loadingScreens/loading/entry',
+    firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
+    notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
     newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
     requestD: './wail-ui/background/js/requestDaemon',
     twitterM: './wail-ui/background/js/twitterM',

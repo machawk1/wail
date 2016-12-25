@@ -1,9 +1,9 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-// import {ipc, requestHandler} from '../middleware'
-import rootReducer from '../../reducers/notFirstTime'
+import rootReducer from '../../reducers/firstTime'
 import * as actionCreators from '../../actions'
+import { ipc } from '../../middleware'
 
 const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
@@ -12,7 +12,7 @@ const configureStore = () => {
   const store = createStore(
     rootReducer,
     composeEnhancers(
-      applyMiddleware(thunk, promiseMiddleware, requestHandler, ipc)
+      applyMiddleware(thunk, promiseMiddleware, ipc)
     )
   )
 

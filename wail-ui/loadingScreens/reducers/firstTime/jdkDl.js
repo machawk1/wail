@@ -3,7 +3,7 @@ import { JDK_DOWNLOAD } from '../../constants'
 
 const {DL_JDK_PROGRESS, DL_JDK_ERROR, DL_JDK_FINISHED, DL_JDK, DL_JDK_STARTED} = JDK_DOWNLOAD
 
-export default (state = new JdkDlRecord(), action) => {
+const jdkDl = (state = new JdkDlRecord(), action) => {
   switch (action.type) {
     case DL_JDK_STARTED:
       return state.started()
@@ -17,3 +17,5 @@ export default (state = new JdkDlRecord(), action) => {
       return state
   }
 }
+
+export default jdkDl

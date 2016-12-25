@@ -1,6 +1,8 @@
-import { NEXT_LOADING_STEP, PREV_LOADING_STEP } from '../../constants'
+import { STEP } from '../../constants'
 
-export default  (state = 0, action) => {
+const {NEXT_LOADING_STEP, PREV_LOADING_STEP} = STEP
+
+const loadingStep = (state = 0, action) => {
   if (action.type === NEXT_LOADING_STEP) {
     return state + 1
   } else if (action.type === PREV_LOADING_STEP) {
@@ -10,4 +12,6 @@ export default  (state = 0, action) => {
     return state
   }
 }
+
+export default loadingStep
 

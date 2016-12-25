@@ -420,12 +420,16 @@ export default class WindowManager extends EventEmitter {
     this.initIpc(control)
     console.log('init wail')
     this.showLoadingWindow(control)
-      .then(() => this.createRequestD(control)
+      .then(() => this.createWail(control)
         .then(() => this.createArchiveMan(control)
           .then(() => this.createCrawlMan(control)
-            .then(() => this.createWail(control)
+            .then(() => this.createRequestD(control)
               .then(() => {
                 console.log('all windows loaded')
+                return dlExtensions()
+                  .then(() => {
+                    console.log('downloaded extensions')
+                  })
               })
             )
           )
@@ -557,16 +561,14 @@ export default class WindowManager extends EventEmitter {
     return new Promise((resolve) => {
       let {conf, urls, open} = this.windows['loadingWindow']
       this.windows['loadingWindow'].window = new BrowserWindow(conf)
-      let loadUrl  // windows.settingsWindowURL windows.mWindowURL
-      console.log(urls, control.loading, control.firstLoad)
-      loadUrl = urls.firstLoad
-      // if (control.loading && control.firstLoad) {
-      //   console.log('first load')
-      //   loadUrl = urls.firstLoad
-      // } else {
-      //   loadUrl = urls.notFirstLoad
-      //   control.didLoad = true
-      // }
+      let loadUrl  // windows.settingsWindowURL windows.mWindowURL*
+      if (control.loading && control.firstLoad) {
+        console.log('first load')
+        loadUrl = urls.firstLoad
+      } else {
+        loadUrl = urls.notFirstLoad
+        control.didLoad = true
+      }
 
       this.windows['loadingWindow'].window.webContents.on('unresponsive', () => {
         this.emit('window-unresponsive', 'loadingWindow')
@@ -795,8 +797,7 @@ export default class WindowManager extends EventEmitter {
   createWail (control) {
     console.log('creating wail window')
     control.didClose = false
-    return new Promise((resolve) => dlExtensions()
-      .then(() => {
+    return new Promise((resolve) => {
         let {conf, url} = this.windows['mainWindow']
         this.windows['mainWindow'].window = new BrowserWindow(conf)
         this.windows['mainWindow'].window.loadURL(url)
@@ -878,7 +879,7 @@ export default class WindowManager extends EventEmitter {
           }
           resolve()
         })
-      })
+      }
     )
   }
 

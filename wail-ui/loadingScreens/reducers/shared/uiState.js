@@ -1,7 +1,7 @@
 import { INITIAL_LOAD } from '../../constants'
 import { UIStateRecord } from '../../records'
 
-export default (state = new UIStateRecord(), action) => {
+const uiState = (state = new UIStateRecord(), action) => {
   switch (action.type) {
     case INITIAL_LOAD.HAVE_UI_STATE:
       return state.progress(action)
@@ -9,3 +9,5 @@ export default (state = new UIStateRecord(), action) => {
       return state
   }
 }
+
+export default uiState

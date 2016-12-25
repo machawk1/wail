@@ -7,14 +7,23 @@
           href="../../../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"/>
     <link rel="stylesheet" type="text/css" href="../../../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"/>
     <style>
-        html {
-            font-family: 'Roboto', sans-serif;
+        html, body {
             -webkit-font-smoothing: antialiased;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Roboto, sans-serif;
+            background-color: #f2f2f2;
+        }
+        .full {
+            width: inherit;
+            height: inherit;
         }
     </style>
 </head>
-<body style="margin: 0; font-family: Roboto, sans-serif;">
-<div id="loading"></div>
+<body>
+<div class="full" id="loading"></div>
 <script>
     {
       if(process.env.HOT) {

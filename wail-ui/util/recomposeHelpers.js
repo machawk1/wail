@@ -43,5 +43,6 @@ export {
   namedUpdateKeys,
   displayWhich,
   updateWhen,
-  namedUpdateWhenBranch
+  namedUpdateWhenBranch,
+  setProps
 }

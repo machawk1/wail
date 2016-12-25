@@ -1,15 +1,17 @@
 import '../../../wailPollyfil'
+import 'react-flex/index.css'
+import '../../css/wail.css'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { render } from 'react-dom'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import LoadingProgress from './nfLoadingProgress'
-require('../../css/toaster.css')
-require('../../css/animate.css')
+import NotFirstTime from './containers/notFirstTime'
+import configureStore from '../store/notFirstTime'
 
 window.React = React
 
 injectTapEventPlugin()
 
-ReactDOM.render(
-  <LoadingProgress />,
-  document.getElementById('loading'))
+const store = configureStore()
+
+render(<NotFirstTime store={store}/>, document.getElementById('loading'))
+

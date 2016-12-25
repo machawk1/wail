@@ -1,14 +1,11 @@
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
-import { createEpicMiddleware } from 'redux-observable'
 import promiseMiddleware from 'redux-promise'
 import rootReducer from '../../reducers/firstTime'
-import rootEpic from '../../epics'
-
-const epicMiddleware = createEpicMiddleware(rootEpic)
+import { epic, ipc } from '../../middleware'
 
 const configureStore = () => createStore(rootReducer,
-  applyMiddleware(epicMiddleware,thunk, promiseMiddleware)
+  applyMiddleware(thunk, promiseMiddleware, epic, ipc)
 )
 
 export default configureStore
