@@ -58,10 +58,10 @@ const findProcessOnHeritrixPort = () => new Promise((resolve, reject) => {
     } else {
       let maybeMatch = stdout.match(netStatReg)
       if (maybeMatch) {
-        let [pid, p] = maybeMatch[1].split('/')
+        let [pid, pname] = maybeMatch[1].split('/')
         resolve({
           found: true,
-          whoOnPort: {pid, process: p}
+          whoOnPort: {pid, pname}
         })
       } else {
         resolve({found: false})
@@ -654,12 +654,12 @@ export default class ServiceManager {
         }
       } else {
         return findProcessOnHeritrixPort()
-          .then(({found, whoOnPort:{pid, process}}) => {
+          .then(({found, whoOnPort:{pid, pname}}) => {
             // who's on first?
             let eMessage, where = 'Launching Heritrix'
             if (found) {
-              console.log(pid, process)
-              eMessage = `Another process[name=${process}, pid=${pid}] is using the port[8443] that Heritrix uses`
+              console.log(pid, pname)
+              eMessage = `Another process[name=${pname}, pid=${pid}] is using the port[8443] that Heritrix uses`
             } else {
               console.log('couldnt find who is on port')
               eMessage = 'Another process is using the port[8443] that Heritrix uses. But WAIL could not determine which one'
