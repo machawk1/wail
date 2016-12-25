@@ -1,3 +1,4 @@
+require('core-js/modules/es7.error.is-error')
 const moment = require('moment')
 // require('moment-precise-range-plugin')
 const EventEmitter = require('eventemitter3')
@@ -41,7 +42,8 @@ let result = [{
     gid: '1000',
     name: 'java',
     cmd: '/home/john/my-fork-wail/bundledApps/openjdk/bin/java -Dname=heritrix -Dheritrix.home=/home/john/my-fork-wail/bundledApps/heritrix -Djava.protocol.handler.pkgs=org.archive.net -Dheritrix.out=/home/john/my-fork-wail/bundledApps/heritrix/heritrix_out.log -Xmx256m org.archive.crawler.Heritrix -a lorem:ipsum'
-  }]
+  }
+]
 
 const bundledHeritrix = `bundledApps${path.sep}heritrix`
 const hFindRegx = /(heritrix)|(java)/i
@@ -66,15 +68,27 @@ const doFind = () =>
   findP('name', hFindRegx)
     .then(heritrixFinder)
 
-doFind().then(({found, pid, isWails}) => {
-  if (found) {
-    console.log(`there is a heritrix instance running pid=${pid}`)
-    if (isWails) {
-      console.log('it is wails')
+const netStatReg = /(?:[^\s]+\s+){6}([^\s]+).+/
+
+const findPidOnHeritrixPort = () => new Promise((resolve, reject) => {
+  cp.exec('netstat -anp 2> /dev/null | grep :8443', (err, stdout, stderr) => {
+    if (err) {
+      reject(err)
     } else {
-      console.log('it is not wails')
+      let maybeMatch = stdout.match(netStatReg)
+      if (maybeMatch) {
+        let [pid, process] = maybeMatch[1].split('/')
+        console.log(pid, process)
+        resolve({
+          found: true,
+          whoOnPort: {pid, process}
+        })
+      } else {
+        resolve({found: false})
+      }
     }
-  } else {
-    console.log('no heritrix instance running')
-  }
+  })
 })
+
+let it = new Error('it')
+console.log(Error.isError(it))

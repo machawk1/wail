@@ -28,7 +28,7 @@
     {
       if(process.env.HOT) {
         const script = document.createElement('script')
-        script.src = 'http://localhost:9001/dist/firstLoad.bundle.js'
+        script.src = 'http://localhost:9002/dist/firstLoad.bundle.js'
         document.write(script.outerHTML)
       } else {
         require('../../../dist/firstLoad.bundle.js')

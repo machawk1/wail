@@ -87,6 +87,16 @@ class SSRecord extends Immutable.Record({
   wError: false,
 }) {
 
+  getHeritrixErrorReport () {
+    let er = this.get('hStartErReport')
+    return {where: er.get('where'), message: er.get('error')}
+  }
+
+  getWaybackErrorReport () {
+    let er = this.get('wStartErReport')
+    return {where: er.get('where'), message: er.get('error')}
+  }
+
   startStatus () {
     return {bothStarted: this.get('bothStarted'), hStarted: this.get('hStarted'), wStarted: this.get('wStarted')}
   }
@@ -141,9 +151,45 @@ class SSRecord extends Immutable.Record({
   }
 }
 
+class UIStateRecord extends Immutable.Record({archivesLoaded: false, crawlsLoaded: false}) {
+  progress (action) {
+    if (action.whichOne === 'Archives have loaded') {
+      return this.set('archivesLoaded', true)
+    } else if (action.whichOne === 'both-loaded') {
+      return this.merge({
+        archivesLoaded: true,
+        crawlsLoaded: true
+      })
+    } else {
+      return this.set('crawlsLoaded', true)
+    }
+  }
+
+  bothLoaded () {
+    return this.get('archivesLoaded') && this.get('crawlsLoaded')
+  }
+
+  archiveMessage () {
+    if (this.get('archivesLoaded')) {
+      return 'Archives Have Been Loaded'
+    } else {
+      return 'Archives Have Not Been Loaded'
+    }
+  }
+
+  crawlMessage () {
+    if (this.get('crawlsLoaded')) {
+      return 'Crawls Have Been Loaded'
+    } else {
+      return 'Crawls Have Not Been Loaded'
+    }
+  }
+}
+
 export {
   OsCheckRecord,
   JavaCheckRecord,
   JdkDlRecord,
-  SSRecord
+  SSRecord,
+  UIStateRecord
 }

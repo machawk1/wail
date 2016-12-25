@@ -35,5 +35,8 @@ export default {
     HERITRIX_STARTED_ERROR: null,
     WAYBACK_STARTED: null,
     WAYBACK_STARTED_ERROR: null,
+  }),
+  INITIAL_LOAD: keymirror({
+    HAVE_UI_STATE: null
   })
 }

@@ -1,3 +1,4 @@
+**FINAL UI UPDATES/TESTS IN PROGRESS May not build until this is gone**
 <h2 align="center">
  <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/build/icons/whale_256.png" alt="WAIL logo" /></a><br />&nbsp;Web Archiving Integration Layer (WAIL)</h2>
 <p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>

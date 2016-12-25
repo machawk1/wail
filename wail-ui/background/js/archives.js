@@ -155,14 +155,14 @@ ipc.on('update-metadata', (e, update) => {
     .catch(error => ipc.send('updated-metadata', { wasError: true, error, forCol: update.forCol }))
 })
 
-archiveMan.initialLoad()
-  .then((loaded) => {
-    console.log('archive man inital load')
-    ipc.send('archiveMan-initial-load', {
-      cols: loaded,
-      wasError: false
-    })
-  })
-  .catch(error => {
-    ipc.send('archiveMan-initial-load-failed', error)
-  })
+// archiveMan.initialLoad()
+//   .then((loaded) => {
+//     console.log('archive man inital load')
+//     ipc.send('archiveMan-initial-load', {
+//       cols: loaded,
+//       wasError: false
+//     })
+//   })
+//   .catch(error => {
+//     ipc.send('archiveMan-initial-load-failed', error)
+//   })

@@ -25,6 +25,7 @@
     "dev-core": "cross-env HOT=1 NODE_ENV=development node ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/core/webpack.config.js --port 9001 --content-base ./wail-core/ --hot --inline",
     "dev-ui": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024  ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
+    "dev-only": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024  ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-ui/ --hot --inline",
     "nightmare": "babel-node tools/testNightmare",
     "standard": "standard --verbose | snazzy",
     "test-xml": "node --harmony ./tools/test-xml.js",

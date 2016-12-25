@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
+import { Step, Stepper } from 'material-ui/Stepper'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { OsCheckStep } from '../osCheck'
 import { JavaCheckStep } from '../javaCheck'
 import ServiceStep from '../serviceCheck/serviceCheckStep'
+import UIStateStep from '../uiState/uiStateStep'
 
 const stateToProps = state => ({
   step: state.get('loadingStep')
@@ -21,7 +22,10 @@ const ProgressSteps = ({step}) => (
       <JavaCheckStep />
     </Step>
     <Step>
-      <ServiceStep/>
+      <ServiceStep />
+    </Step>
+    <Step>
+      <UIStateStep />
     </Step>
   </Stepper>
 )

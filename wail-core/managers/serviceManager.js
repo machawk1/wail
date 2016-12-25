@@ -10,6 +10,7 @@ import findP from 'find-process'
 
 const hpidGetter = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
 const hFindRegx = /(heritrix)|(java)/i
+const netStatReg = /(?:[^\s]+\s+){6}([^\s]+).+/
 
 const bundledHeritrix = `bundledApps${path.sep}heritrix`
 
@@ -20,7 +21,7 @@ const wasHeritrixStartError = (out, err) => {
     errorType: -1,
     errorMessage: '',
   }
-  if (out.contains('exception') || errOut.contains('exception')) {
+  if (out.contains('Exception') || errOut.contains('Exception')) {
     wasStartErrorReport.wasError = true
     if (out.contains('java.net.BindException') || errOut.contains('java.net.BindException')) {
       wasStartErrorReport.errorType = 1
@@ -49,6 +50,33 @@ const heritrixFinder = result => {
   }
   return findReport
 }
+
+const findProcessOnHeritrixPort = () => new Promise((resolve, reject) => {
+  cp.exec('netstat -anp 2> /dev/null | grep :8443', (err, stdout, stderr) => {
+    if (err) {
+      reject(err)
+    } else {
+      let maybeMatch = stdout.match(netStatReg)
+      if (maybeMatch) {
+        let [pid, process] = maybeMatch[1].split('/')
+        resolve({
+          found: true,
+          whoOnPort: {pid, process}
+        })
+      } else {
+        resolve({found: false})
+      }
+    }
+  })
+})
+
+const heritrixLaunchErrorReport = (eMessage, where) => ({
+  wasError: true,
+  errorReport: {
+    error: eMessage,
+    where
+  }
+})
 
 export default class ServiceManager {
   constructor (settings) {
@@ -300,7 +328,7 @@ export default class ServiceManager {
     return new Promise((resolve, reject) => {
       let {logger} = global
       console.log('service man starting heritrix loading')
-      if (false) { //this.isServiceUp('heritrix')) {
+      if (this.isServiceUp('heritrix')) {
         if (logger) {
           logger.info('starting heritrix but it was up already')
         }
@@ -429,7 +457,7 @@ export default class ServiceManager {
               resolve({
                 wasError: true,
                 errorReport: {
-                  error: insertError,
+                  error: insertError.message,
                   where: 'updating pid store'
                 }
               })
@@ -448,7 +476,7 @@ export default class ServiceManager {
           resolve({
             wasError: true,
             errorReport: {
-              error: err,
+              error: err.message,
               where: 'Launching Wayack'
             }
           })
@@ -538,9 +566,10 @@ export default class ServiceManager {
           }
           resolve({
             wasError: true,
+            errorType: 4,
             errorReport: {
-              error: err,
-              where: stderr
+              error: err.message,
+              where: 'Launch Heritrix Technical Reason'
             }
           })
         } else {
@@ -559,8 +588,8 @@ export default class ServiceManager {
               wasError: true,
               errorType,
               errorReport: {
-                error: theError,
-                where: 'launching heritrix'
+                error: errorMessage,
+                where: 'Launching Heritrix'
               }
             })
           } else {
@@ -573,15 +602,14 @@ export default class ServiceManager {
               if (logger) {
                 logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
               }
-              return this._updatePidStore(pid, 'heritrix')
-                .then(() => { resolve({wasError: false}) })
+              return this._updatePidStore(pid, 'heritrix').then(() => { resolve({wasError: false}) })
                 .catch(error => {
                   resolve({
                     wasError: true,
                     errorType: 3,
                     errorReport: {
-                      error,
-                      where: 'updating the pidStore'
+                      error: error.message,
+                      where: 'Updating the pidStore'
                     }
                   })
                 })
@@ -594,7 +622,7 @@ export default class ServiceManager {
                 wasError: true,
                 errorType: 3,
                 errorReport: {
-                  error: new Error('the pid extraction could not be done for heritrix'),
+                  error: 'the pid extraction could not be done for heritrix',
                   where: 'Extracting pid'
                 }
               })
@@ -606,6 +634,7 @@ export default class ServiceManager {
   }
 
   _maybeFindHeritrixProcess (didStart, resolve, reject) {
+    let {logger} = global
     return findP('name', hFindRegx).then(findResults => {
       let {found, pid, isWails} = heritrixFinder(findResults)
       if (found) {
@@ -617,22 +646,31 @@ export default class ServiceManager {
               if (logger) {
                 logger.fatal({err: error, msg: 'service manager inserting heritrix pid error'})
               }
-              resolve({
-                wasError: true,
-                errorReport: {
-                  error,
-                  where: 'Internal'
-                }
-              })
+              resolve(heritrixLaunchErrorReport(error.message, 'Internal'))
             })
         } else {
           console.log('it is not wails')
-          delete didStart.errorType
-          resolve(didStart)
+          resolve(heritrixLaunchErrorReport("Another Heritrix instance not under WAIL's control is in use", 'Launching Heritrix'))
         }
       } else {
-        delete didStart.errorType
-        resolve(didStart)
+        return findProcessOnHeritrixPort()
+          .then(({found, whoOnPort:{pid, process}}) => {
+            // who's on first?
+            let eMessage, where = 'Launching Heritrix'
+            if (found) {
+              console.log(pid, process)
+              eMessage = `Another process[name=${process}, pid=${pid}] is using the port[8443] that Heritrix uses`
+            } else {
+              console.log('couldnt find who is on port')
+              eMessage = 'Another process is using the port[8443] that Heritrix uses. But WAIL could not determine which one'
+            }
+            resolve(heritrixLaunchErrorReport(eMessage, where))
+          })
+          .catch(() => {
+            let eMessage = 'Another process is using the port[8443] that Heritrix uses. But WAIL could not determine which one'
+            let where = 'Launching Heritrix'
+            resolve(heritrixLaunchErrorReport(eMessage, where))
+          })
       }
     })
   }
