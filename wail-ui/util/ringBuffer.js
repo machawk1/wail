@@ -41,7 +41,7 @@ export default class RingBuffer extends EventEmitter {
 
   unListenNewRecord (handler) {
     this.shoulEmit = false
-    this.addListener('new-record', handler)
+    this.removeListener('new-record', handler)
   }
 
   momentizeRecords () {

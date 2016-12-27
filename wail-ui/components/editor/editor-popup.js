@@ -2,9 +2,9 @@ import React, {Component} from 'react'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
-import EditorDispatcher from '../../dispatchers/editorDispatcher'
+// import EditorDispatcher from '../../dispatchers/editorDispatcher'
 import Editor from './editor'
-import EditorStore from '../../stores/editorStore'
+// import EditorStore from '../../stores/editorStore'
 import wc from '../../constants/wail-constants'
 import {List, ListItem} from 'material-ui/List'
 import Subheader from 'material-ui/Subheader'
@@ -38,11 +38,11 @@ export default class EditorPopup extends Component {
     let loadCode = this.props.codeToLoad
     // console.log(loadCode)
 
-    this.state = {
-      open: false,
-      codeText: Reflect.has(this.props.codeToLoad, 'which') ?
-        EditorStore.getCode(loadCode.which, loadCode.jid) : EditorStore.getCode(loadCode.codeToLoad)
-    }
+    // this.state = {
+    //   open: false,
+    //   codeText: Reflect.has(this.props.codeToLoad, 'which') ?
+    //     EditorStore.getCode(loadCode.which, loadCode.jid) : EditorStore.getCode(loadCode.codeToLoad)
+    // }
 
     this.handleOpen = this.handleOpen.bind(this)
     this.handleClose = this.handleClose.bind(this)
@@ -53,18 +53,18 @@ export default class EditorPopup extends Component {
 
   storeUpdate () {
     // console.log('code add')
-    this.setState({ codeText: EditorStore.getCode(this.props.codeToLoad) })
+    // this.setState({ codeText: EditorStore.getCode(this.props.codeToLoad) })
   }
 
   componentWillMount () {
     if (this.props.useButton) {
-      EditorStore.on('wbc-fetched', this.storeUpdate)
+      // EditorStore.on('wbc-fetched', this.storeUpdate)
     }
   }
 
   componentWillUnmount () {
     if (this.props.useButton) {
-      EditorStore.removeListener('wbc-fetched', this.storeUpdate)
+      // EditorStore.removeListener('wbc-fetched', this.storeUpdate)
     }
   }
 
@@ -97,13 +97,13 @@ export default class EditorPopup extends Component {
       which = this.props.codeToLoad.which
     }
     // console.log(savePath)
-    EditorDispatcher.dispatch({
-      type: wc.EventTypes.SAVE_CODE,
-      which: which,
-      savePath: savePath,
-      code: this.state.codeText,
-      jid: this.props.codeToLoad.jid
-    })
+    // EditorDispatcher.dispatch({
+    //   type: wc.EventTypes.SAVE_CODE,
+    //   which: which,
+    //   savePath: savePath,
+    //   code: this.state.codeText,
+    //   jid: this.props.codeToLoad.jid
+    // })
   }
 
   editorWithButton (actions) {

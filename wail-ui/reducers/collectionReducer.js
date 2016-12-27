@@ -1,6 +1,6 @@
 import Immutable from 'immutable'
 import S from 'string'
-import {CollectionEvents} from '../constants/wail-constants'
+import { CollectionEvents } from '../constants/wail-constants'
 import moment from 'moment'
 const {
   GOT_ALL_COLLECTIONS,
@@ -10,12 +10,12 @@ const {
   CRAWL_TO_COLLECTION
 } = CollectionEvents
 
-export default (state = Immutable.Map(), action) => {
+const collectionReducer = (state = Immutable.Map(), action) => {
   console.log('in collections reducer', action)
   switch (action.type) {
     case GOT_ALL_COLLECTIONS:
       window.logger.debug('collection store got all collections')
-      let { cols } = action
+      let {cols} = action
       let collections = {}
       cols.forEach(col => {
         col.lastUpdated = moment(col.lastUpdated)
@@ -25,11 +25,12 @@ export default (state = Immutable.Map(), action) => {
           s.lastUpdated = moment(s.lastUpdated)
           return s
         })
-        collections[ col.colName ] = col
+        collections[col.colName] = col
       })
       return state.merge(collections)
     case CREATED_COLLECTION:
-      let { col } = action
+      window.logger.debug('collection store got a new collection')
+      let {col} = action
       col.lastUpdated = moment(col.lastUpdated)
       col.created = moment(col.created)
       return state.merge({
@@ -37,33 +38,33 @@ export default (state = Immutable.Map(), action) => {
       })
     case ADDED_WARCS_TO_COLL: {
       console.log(action)
-      let { col } = action
+      let {col} = action
       col.lastUpdated = moment(col.lastUpdated)
       col.seeds = col.seeds.map(s => {
         s.added = moment(s.added)
         s.lastUpdated = moment(s.lastUpdated)
         return s
       })
-      return state.mergeDeepIn([ col.colName ], col)
+      return state.mergeDeepIn([col.colName], col)
     }
     case CRAWL_TO_COLLECTION: {
       console.log(action)
-      let { col } = action
+      let {col} = action
       col.lastUpdated = moment(col.lastUpdated)
       col.seeds = col.seeds.map(s => {
         s.added = moment(s.added)
         s.lastUpdated = moment(s.lastUpdated)
         return s
       })
-      return state.mergeDeepIn([ col.colName ], col)
+      return state.mergeDeepIn([col.colName], col)
     }
     case ADD_METADATA_TO_COLLECTION: {
-      let { mdata, forCol } = action
-      return state.updateIn([ forCol, 'metadata' ], metadata => {
+      let {mdata, forCol} = action
+      return state.updateIn([forCol, 'metadata'], metadata => {
         let meta = {}
         mdata.forEach(m => {
           let split = m.split('=')
-          meta[ split[ 0 ] ] = S(split[ 1 ]).replaceAll('"', '').s
+          meta[split[0]] = S(split[1]).replaceAll('"', '').s
         })
         return metadata.merge(meta)
       })
@@ -73,3 +74,4 @@ export default (state = Immutable.Map(), action) => {
   }
 }
 
+export default collectionReducer

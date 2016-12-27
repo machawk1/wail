@@ -4,7 +4,7 @@ import {formValueSelector} from 'redux-form/immutable'
 import {connect} from 'react-redux'
 import isURL from 'validator/lib/isURL'
 import partialRight from 'lodash/partialRight'
-import {checkUrl} from '../../../../actions/redux/archival'
+import {checkUrl} from '../../../../actions/archival'
 import CheckResults from './checkResults'
 
 const urlSelector = partialRight(formValueSelector('archiveUrl'), 'url')

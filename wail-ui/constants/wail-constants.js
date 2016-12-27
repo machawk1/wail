@@ -26,7 +26,8 @@ export default {
     BUILD_LAUNCH_JOB: null,
     STOP_JOB: null,
     TERMINATE_RESTART_JOB: null,
-    TERMINATE_JOB: null
+    TERMINATE_JOB: null,
+    RESCAN_JOB_DIR: null
   }),
   AddSeedFromFsEvents: keyMirror({
     SEED_CHECKED: null,

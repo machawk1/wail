@@ -99,10 +99,10 @@ export default class WarcWriter extends EventEmitter {
   }
 
   writeWarc (config) {
-    let { seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header } = config
+    let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header} = config
     console.log(ua)
-    let { doctype, dom } = dtDom
-    let { outlinks } = this.extractOutlinks(seedUrl, dom, preserveA)
+    let {doctype, dom} = dtDom
+    let {outlinks} = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
     networkMonitor.matchNetworkToWC(seedUrl)
     networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
@@ -134,7 +134,7 @@ export default class WarcWriter extends EventEmitter {
           concurrentTo: rid,
           rid: uuid.v1()
         }).s, 'utf8')
-        let opts = { seedUrl, concurrentTo: rid, now }
+        let opts = {seedUrl, concurrentTo: rid, now}
         let warcOut = fs.createWriteStream(toPath)
         warcOut.on('error', err => {
           console.error('error happened while writting to the warc', err)
@@ -147,7 +147,7 @@ export default class WarcWriter extends EventEmitter {
           warcOut.destroy()
         })
 
-        const writeIter = function* () {
+        const writeIter = function*  () {
           yield wh
           yield whc
           yield recordSeparator
@@ -166,7 +166,7 @@ export default class WarcWriter extends EventEmitter {
             warcOut.end()
           }
         }
-        process.nextTick(doWrite)
+        doWrite()
       })
       .catch(error => {
         this.emit('error', error)

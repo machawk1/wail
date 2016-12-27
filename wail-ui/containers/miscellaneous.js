@@ -1,11 +1,14 @@
 import React from 'react'
-import {Card, CardHeader, CardMedia} from 'material-ui/Card'
+import { Card, CardHeader, CardMedia } from 'material-ui/Card'
+import { namedPure } from '../util/recomposeHelpers'
 import EventLog from '../components/miscellaneous/eventLog'
 import MiscToolBar from '../components/miscellaneous/miscToolBar'
 
-const Misc = () => (
-  <div style={{ width: '100%', height: 'calc(100% - 60px)' }}>
-    <div style={{ height: 'inherit', margin: 'auto', padding: '25px' }} id='eventLogContainer'>
+const enhance = namedPure('Misc')
+
+const Misc = enhance(() => (
+  <div style={{width: '100%', height: 'calc(100% - 60px)'}}>
+    <div style={{height: 'inherit', margin: 'auto', padding: '25px'}} id='eventLogContainer'>
       <Card>
         <CardHeader
           title='Event Log'
@@ -18,6 +21,6 @@ const Misc = () => (
       </Card>
     </div>
   </div>
-)
+))
 
 export default Misc

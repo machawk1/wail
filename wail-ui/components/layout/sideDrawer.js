@@ -9,7 +9,7 @@ import Divider from 'material-ui/Divider'
 import {Link, IndexLink} from 'react-router'
 import {connect} from 'react-redux'
 import {batchActions} from 'redux-batched-actions'
-import {openClose, locationChange} from '../../actions/redux/header'
+import {openClose, locationChange} from '../../actions/header'
 
 const stateToProps = state => ({
   open: state.get('header').get('open')

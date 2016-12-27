@@ -7,8 +7,9 @@ import { push } from 'react-router-redux'
 import wc from '../../../constants/wail-constants'
 import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import { momentSortRev } from '../../../util/momentSort'
+import { List } from 'react-virtualized'
 
-const { QUEUE_MESSAGE } = wc.EventTypes
+const {QUEUE_MESSAGE} = wc.EventTypes
 const wbUrl = remote.getGlobal('settings').get('pywb.url')
 const openInWb = (seed, forCol) => shell.openExternal(`${wbUrl}${forCol}/*/${seed}`)
 
@@ -53,14 +54,14 @@ export default class SeedTable extends Component {
       let seed = seeds.get(i)
       let url = seed.get('url')
       trs.push(<TableRow key={`${i}-${url}`}>
-        <TableRowColumn key={`${i}-${url}-seed-url`} style={{paddingLeft: 10, paddingRight: 0, width: 200}}>
+        <TableRowColumn key={`${i}-${url}-seed-url`} style={{paddingLeft: 10, paddingRight: 0, width: 300}}>
           {url}
         </TableRowColumn>
-        <TableRowColumn key={`${i}-${url}-added`} style={{width: 130}}>
-          {seed.get('added').format('MMM DD YYYY h:mma')}
+        <TableRowColumn key={`${i}-${url}-added`} style={{width: 130, paddingRight: 0}}>
+          {seed.get('added').format('MMM DD, YYYY h:mma')}
         </TableRowColumn>
-        <TableRowColumn key={`${i}-${url}-lastArchived`} style={{width: 130}}>
-          {seed.get('lastUpdated').format('MMM DD YYYY h:mma')}
+        <TableRowColumn key={`${i}-${url}-lastArchived`} style={{width: 130, paddingRight: 20}}>
+          {seed.get('lastUpdated').format('MMM DD, YYYY h:mma')}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-size`} style={{width: 55}}>
           {seed.get('mementos')}
@@ -90,7 +91,7 @@ export default class SeedTable extends Component {
                 adjustForCheckbox={false}
               >
                 <TableRow >
-                  <TableHeaderColumn style={{width: 200}}>Seed Url</TableHeaderColumn>
+                  <TableHeaderColumn style={{width: 270}}>Seed Url</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 100}}>Added</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 100}}>Last Archived</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 55}}>Mementos</TableHeaderColumn>

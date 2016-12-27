@@ -1,25 +1,16 @@
-import React, {Component} from 'react'
-import {Toolbar, ToolbarGroup} from 'material-ui/Toolbar'
+import React, { Component } from 'react'
+import { Toolbar, ToolbarGroup } from 'material-ui/Toolbar'
 import RaisedButton from 'material-ui/FlatButton'
 import FolderOpen from 'material-ui/svg-icons/file/folder-open'
 import CheckUpdateIcon from 'material-ui/svg-icons/action/open-in-browser'
-import SettingIcon from 'material-ui/svg-icons/action/settings-applications'
-import {remote, ipcRenderer as ipc} from 'electron'
-import {openUrlInBrowser, openFSLocation} from '../../actions/util-actions'
+import { remote } from 'electron'
+import { openUrlInBrowser, openFSLocation } from '../../actions/util-actions'
 
 const settings = remote.getGlobal('settings')
 
 const MiscToolBar = () => (
-  <Toolbar style={{ marginTop: '50px', backgroundColor: 'transparent' }}>
+  <Toolbar style={{marginTop: '50px', backgroundColor: 'transparent'}}>
     <ToolbarGroup firstChild>
-      <RaisedButton
-        icon={<SettingIcon />}
-        label='Settings'
-        labelPosition='before'
-        onMouseDown={() => ipc.send('open-settings-window', 'hi')}
-      />
-    </ToolbarGroup>
-    <ToolbarGroup>
       <RaisedButton
         icon={<FolderOpen />}
         label='View Collections'

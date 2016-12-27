@@ -1,5 +1,5 @@
-import Immutable, {Map, List} from 'immutable'
-import {CheckUrlEvents} from '../constants/wail-constants'
+import { Map } from 'immutable'
+import { CheckUrlEvents } from '../constants/wail-constants'
 const {
   CHECKING_URL,
   CHECKING_DONE,
@@ -7,7 +7,7 @@ const {
   RESET_CHECK_MESSAGE
 } = CheckUrlEvents
 
-export default (state = Map({ message: '', checkingDone: false, result: {} }), action) => {
+const checkUrl = (state = Map({message: '', checkingDone: false, result: {}}), action) => {
   console.log('checkUrl Reducer', action)
   switch (action.type) {
     case CHECKING_URL:
@@ -22,3 +22,5 @@ export default (state = Map({ message: '', checkingDone: false, result: {} }), a
       return state
   }
 }
+
+export default checkUrl

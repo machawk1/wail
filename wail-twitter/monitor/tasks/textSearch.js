@@ -35,7 +35,6 @@ export default class TextSearch extends MonitorTask {
           let tweets = this.searchTweets(data)
           if (tweets.length > 0) {
             this.emit('tweets', tweets)
-            this.stop()
           }
         }
       }

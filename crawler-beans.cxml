@@ -33,8 +33,8 @@
     # This Properties map is specified in the Java 'property list' text format
     # http://java.sun.com/javase/6/docs/api/java/util/Properties.html#load%28java.io.Reader%29
     metadata.operatorContactUrl=http://yourdomain.com
-    metadata.jobName=basic
-    metadata.description=Basic crawl starting with useful defaults
+    metadata.jobName=MyWAILBasedHeritrixCrawl
+    metadata.description=SampleCrawl
     ##..more?..##
    </value>
   </property>

@@ -1,9 +1,9 @@
 import * as notify from '../actions/notification-actions'
-import {send} from 'redux-electron-ipc'
-import {crawlStarted, crawlEnded} from '../actions/redux/heritrix'
-import {HeritrixRequestTypes, JobActionEvents, RequestTypes, RequestActions} from '../constants/wail-constants'
+import { send } from 'redux-electron-ipc'
+import { crawlStarted, crawlEnded } from '../actions/heritrix'
+import { HeritrixRequestTypes, JobActionEvents, RequestTypes, RequestActions } from '../constants/wail-constants'
 
-const { START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB } = JobActionEvents
+const {START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB} = JobActionEvents
 
 const {
   BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
@@ -11,17 +11,20 @@ const {
   REQUEST_SUCCESS
 } = RequestTypes
 
-const { MAKE_REQUEST, HANDLED_REQUEST } = RequestActions
+const {MAKE_REQUEST, HANDLED_REQUEST} = RequestActions
 
 const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
-  let { jobId } = request
-  let job = store.getState().get('runs').get(`${jobId}`)
-  if (!job) {
-    job = store.getState().get('runs').get(jobId)
+  let {jobId} = request
+  let job, latestRun
+  if (request.type !== RESCAN_JOB_DIR) {
+    job = store.getState().get('runs').get(`${jobId}`)
+    if (!job) {
+      job = store.getState().get('runs').get(jobId)
+    }
+    latestRun = job.get('latestRun')
+    console.log(job)
   }
-  let latestRun = job.get('latestRun')
-  console.log(job)
   switch (request.type) {
     case START_JOB:
       console.log('start job')
@@ -75,6 +78,13 @@ const makeRequest = (store, next, action, request) => {
         jobId
       }))
     }
+    case RESCAN_JOB_DIR:
+      console.log('terminate job', jobId)
+      notify.notifyInfo('Rescanning Heritrix Job Directory')
+      return next(send('send-to-requestDaemon', {
+        type: HeritrixRequestTypes.RESCAN_JOB_DIR,
+        jobId
+      }))
     default: {
       console.log('in default of handling actions heritrix request handler')
       return next(action)
@@ -83,10 +93,13 @@ const makeRequest = (store, next, action, request) => {
 }
 
 const handledRequest = (store, next, action, handledRequest) => {
-  let { type, rtype, jobId } = handledRequest
-  let job = store.getState().get('runs').get(`${jobId}`)
-  if (!job) {
-    job = store.getState().get('runs').get(jobId)
+  let {type, rtype, jobId} = handledRequest
+  let job
+  if (type !== RESCAN_JOB_DIR) {
+    job = store.getState().get('runs').get(`${jobId}`)
+    if (!job) {
+      job = store.getState().get('runs').get(jobId)
+    }
   }
   switch (type) {
     case BUILT_CRAWL_JOB:
@@ -121,9 +134,9 @@ const handledRequest = (store, next, action, handledRequest) => {
       break
     case RESCAN_JOB_DIR:
       if (rtype === REQUEST_SUCCESS) {
-        notify.notifySuccess(`Rescanned Heritrix Crawl Directory for ${job.displayUrls()}`)
+        notify.notifySuccess(`Rescanned Heritrix Crawl Directory`)
       } else {
-        notify.notifyError(`Rescanning Heritrix Crawl Directory for ${job.displayUrls()} failed`)
+        notify.notifyError(`Rescanning Heritrix Crawl Directory failed`)
       }
       break
     default:
@@ -131,7 +144,7 @@ const handledRequest = (store, next, action, handledRequest) => {
   }
 }
 
-export default (store, next, action) => {
+const heritrixRequestHandler = (store, next, action) => {
   if (action.type === MAKE_REQUEST) {
     return makeRequest(store, next, action, action.request)
   } else if (action.type === HANDLED_REQUEST) {
@@ -140,3 +153,5 @@ export default (store, next, action) => {
     return next(action)
   }
 }
+
+export default heritrixRequestHandler

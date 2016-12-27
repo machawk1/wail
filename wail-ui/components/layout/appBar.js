@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import AppBar from 'material-ui/AppBar'
 import CrawlIndicator from './crawlingIndicator'
 import {connect} from 'react-redux'
-import {toggle} from '../../actions/redux/header'
+import {toggle} from '../../actions/header'
 
 const stateToProp = state => ({
   location: state.get('header').get('location')

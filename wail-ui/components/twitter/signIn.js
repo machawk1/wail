@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {Card, CardTitle, CardText, CardActions} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import {ipcRenderer as ipc} from 'electron'
-import {signedIntoTwitter} from '../../actions/redux/twitter'
+import {signedIntoTwitter} from '../../actions/twitter'
 import {notify} from '../../actions/notification-actions'
 
 export default class SignIn extends Component {

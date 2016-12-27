@@ -1,16 +1,16 @@
-import React, {Component, PropTypes} from 'react'
-import {remote} from 'electron'
-import {grey400} from 'material-ui/styles/colors'
+import React, { Component, PropTypes } from 'react'
+import { remote } from 'electron'
+import { grey400 } from 'material-ui/styles/colors'
 import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import IconMenu from 'material-ui/IconMenu'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-import {connect} from 'react-redux'
-import {openFSLocation, openUrlInBrowser} from '../../actions/util-actions'
-import {bindActionCreators} from 'redux'
-import * as heritrixActions from '../../actions/redux/heritrix'
-import HertrixJobItem2 from './heritrixJobItem2'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { openFSLocation, openUrlInBrowser } from '../../actions/util-actions'
+import * as heritrixActions from '../../actions/heritrix'
+import HertrixJobItem from './heritrixJobItem'
 
 const style = {
   cursor: 'pointer'
@@ -41,9 +41,9 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => ({
   jobId: ownProps.jobId
 })
 
-const log = console.log.bind(console)
 
 class HJobItemContainer extends Component {
+
   static propTypes = {
     jobId: PropTypes.number.isRequired,
     startJob: PropTypes.func.isRequired,
@@ -54,8 +54,8 @@ class HJobItemContainer extends Component {
     viewConf: PropTypes.func.isRequired
   }
 
-  componentDidUpdate (prevProps, prevState, prevContext) {
-    log(`HJobItemContainer ${this.props.jobId} did update`)
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return this.props.jobId !== nextProps.jobId
   }
 
   render () {
@@ -64,7 +64,7 @@ class HJobItemContainer extends Component {
         key={`HJIR-${this.props.jobId}-actionButton`}
         touch
       >
-        <MoreVertIcon color={grey400} />
+        <MoreVertIcon color={grey400}/>
       </IconButton>
     )
 
@@ -72,21 +72,21 @@ class HJobItemContainer extends Component {
       <IconMenu
         key={`HJIR-${this.props.jobId}-actionButton-menu`}
         iconButtonElement={actionIcon}
-        anchorOrigin={{ horizontal: 'right', vertical: 'top' }}
-        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{horizontal: 'right', vertical: 'top'}}
+        targetOrigin={{horizontal: 'right', vertical: 'top'}}
       >
-        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config' />
-        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix' />
+        <MenuItem style={style} onTouchTap={this.props.viewConf} primaryText='View Config'/>
+        <MenuItem style={style} onTouchTap={this.props.viewInHeritrix} primaryText='View In Heritrix'/>
         <Divider />
-        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start' />
-        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart' />
-        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl' />
-        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete' />
+        <MenuItem style={style} onTouchTap={this.props.startJob} primaryText='Start'/>
+        <MenuItem style={style} onTouchTap={this.props.restartJob} primaryText='Restart'/>
+        <MenuItem style={style} onTouchTap={this.props.terminateJob} primaryText='Terminate Crawl'/>
+        <MenuItem style={style} onTouchTap={this.props.deleteJob} primaryText='Delete'/>
       </IconMenu>
     )
 
     return (
-      <HertrixJobItem2 jobId={this.props.jobId} actionMenu={rightIconMenu} />
+      <HertrixJobItem jobId={this.props.jobId} actionMenu={rightIconMenu}/>
     )
   }
 }

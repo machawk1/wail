@@ -5,7 +5,7 @@ import promiseMiddleware from 'redux-promise'
 import {routerMiddleware} from 'react-router-redux'
 import {ipc, requestHandler} from '../middleware'
 import rootReducer from '../reducers'
-import * as actionCreators from '../actions/redux/index'
+import * as actionCreators from '../actions/index'
 
 const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
