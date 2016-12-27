@@ -1,12 +1,8 @@
 import React, {Component, PropTypes} from 'react'
-import Immutable from 'immutable'
-import {remote} from 'electron'
 import fs from 'fs-extra'
 import {List, ListItem} from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'
-import Button from 'material-ui/RaisedButton'
 import RefreshIndicator from 'material-ui/RefreshIndicator'
-import TimePicker from 'material-ui/TimePicker'
 
 const style = {
   container: {
