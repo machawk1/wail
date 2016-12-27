@@ -21,7 +21,8 @@ const {
   BUILD_LAUNCH_JOB,
   STOP_JOB,
   TERMINATE_RESTART_JOB,
-  TERMINATE_JOB
+  TERMINATE_JOB,
+  PERMANENT_DELETE_JOB
 } = wc.HeritrixRequestTypes
 
 const priorities = {

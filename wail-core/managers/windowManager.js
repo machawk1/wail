@@ -589,7 +589,7 @@ export default class WindowManager extends EventEmitter {
         console.log('loadingWindow is ready to show')
         this.windows['loadingWindow'].open = true
         this.windows['loadingWindow'].window.show()
-        this.windows['loadingWindow'].window.webContents.openDevTools()
+        // this.windows['loadingWindow'].window.webContents.openDevTools()
         resolve()
       })
     })

@@ -99,6 +99,7 @@ export const executeJavaVersion = (resolve, reject) =>
     console.log('check java linux/win executed java version')
     let haveCorrectJava = false
     let haveJava = false
+    let download = false
     let javaV = ''
     let jvRegex = named.named(/java version "(:<jv>[0-9._]+)"/g)
     let jvTest = jvRegex.exec(stderr)
@@ -115,23 +116,23 @@ export const executeJavaVersion = (resolve, reject) =>
       console.log('check java linux/win executed java version done have java')
       haveJava = false
     }
-    resolve({type: CHECKED_JAVA, haveJava, javaV, haveCorrectJava, download: false})
+    if (process.platform === 'darwin') {
+      download = !haveCorrectJava
+      if (download){
+        settings.set('didFirstLoad', false)
+      }
+    }
+    resolve({type: CHECKED_JAVA, haveJava, javaV, haveCorrectJava, download})
   })
 
 export const checkJava = () => new Promise((resolve, reject) => {
-  if (process.platform === 'darwin') {
-    console.log('checking java darwin')
-    let {haveCorrectJava, haveJava} = checkJavaOsx()
-    resolve({type: CHECKED_JAVA, haveJava, haveCorrectJava, download: !haveCorrectJava})
+  console.log('checking java')
+  let oneSevenOnPath = checkJavaOnPath()
+  if (oneSevenOnPath) {
+    console.log('checking java linux/windows 1.7 on path')
+    resolve({type: CHECKED_JAVA, haveJava: true, haveCorrectJava: true, download: false})
   } else {
-    console.log('checking java linux/windows')
-    let oneSevenOnPath = checkJavaOnPath()
-    if (oneSevenOnPath) {
-      console.log('checking java linux/windows 1.7 on path')
-      resolve({type: CHECKED_JAVA, haveJava: true, haveCorrectJava: true, download: false})
-    } else {
-      executeJavaVersion(resolve, reject)
-    }
+    executeJavaVersion(resolve, reject)
   }
 })
 

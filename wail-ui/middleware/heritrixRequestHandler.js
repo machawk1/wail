@@ -66,7 +66,7 @@ const makeRequest = (store, next, action, request) => {
       // TODO handle better
       let message = `Terminating Heritrix Crawl for ${job.displayUrls()}`
       return next(send('send-to-requestDaemon', {
-        type: HeritrixRequestTypes.TERMINATE_JOB,
+        type: HeritrixRequestTypes.PERMANENT_DELETE_JOB,
         jobId
       }))
     }

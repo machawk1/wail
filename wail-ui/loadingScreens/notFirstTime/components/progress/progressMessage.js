@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
+import { Step, Stepper } from 'material-ui/Stepper'
 import ServiceContents from '../serviceCheck/serviceCheckMessage'
 import UIStateContents from '../uiState/uiStateMessages'
 import * as recs from '../../../records'
@@ -12,7 +12,7 @@ const stateToProps = state => ({
 })
 
 const ProgressMessage = (props) => (
-  <Stepper style={{minHeight: '163px'}} activeStep={props.step} orientation='vertical'>
+  <Stepper activeStep={props.step} orientation='vertical'>
     <Step>
       <ServiceContents {...props}/>
     </Step>

@@ -55,16 +55,13 @@ export default class SettingsManager {
       if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
         console.log('We are not configured')
         let didFirstLoad = this._settings.get('didFirstLoad')
-        let doFirstLoad = false
         if (didFirstLoad === null || didFirstLoad === undefined) {
-          doFirstLoad = true
-          console.log('doing first load')
-        } else {
-          doFirstLoad = didFirstLoad
+          didFirstLoad = false
         }
-        console.log(doFirstLoad)
 
-        this._writeSettings(pathMan, doFirstLoad)
+        // console.log('We are not configured due to binary directory being moved')
+        this._writeSettings(pathMan, didFirstLoad )
+        console.log(didFirstLoad)
         // console.log(base, settings)
       } else {
         if (this._settings.get('base') !== this._base) {
@@ -74,15 +71,12 @@ export default class SettingsManager {
            I did this to myself....
            */
           let didFirstLoad = this._settings.get('didFirstLoad')
-          let doFirstLoad = false
           if (didFirstLoad === null || didFirstLoad === undefined) {
-            doFirstLoad = true
-          } else {
-            doFirstLoad = didFirstLoad
+            didFirstLoad = false
           }
 
           // console.log('We are not configured due to binary directory being moved')
-          this._writeSettings(pathMan, doFirstLoad)
+          this._writeSettings(pathMan, didFirstLoad )
         }
         // console.log('We are configured')
       }

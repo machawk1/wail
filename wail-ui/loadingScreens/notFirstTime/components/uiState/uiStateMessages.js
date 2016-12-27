@@ -5,14 +5,14 @@ import { CheckStepContent } from '../../../shared/checkStepContents'
 
 const enhance = onlyUpdateForKeys(['uiStateRec'])
 
-const UIStateMessage = ({uiStateRec}) => (
+const UIStateMessage = enhance(({uiStateRec}) => (
   <CheckStepContent>
     <p>{uiStateRec.archiveMessage()}<br/>{uiStateRec.crawlMessage()}</p>
   </CheckStepContent>
-)
+))
 
 UIStateMessage.propTypes = {
   uiStateRec: PropTypes.instanceOf(UIStateRecord).isRequired,
 }
 
-export default enhance(UIStateMessage)
+export default UIStateMessage

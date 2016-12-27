@@ -62,7 +62,7 @@ export default class AppManager {
         settingsPath = this.pathMan.joinWBase('wail-config')
         logPath = this.pathMan.joinWBase('wail-config', 'waillogs')// path.join(control.base, 'waillogs')
         dbPath = this.pathMan.joinWBase('wail-config')
-        v = '1.0.0-rc.3.0.0s'
+        v = '1.0.0-rc.3.0.1s'
       } else {
         logPath = this.pathMan.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
       }
@@ -84,7 +84,7 @@ export default class AppManager {
         .then(() => {
           if (!this.settingsMan.get('didFirstLoad')) {
             this.firstLoad = true
-            this.settingsMan.set('didFirstLoad', true)
+            // this.settingsMan.set('didFirstLoad', true)
           }
           if (process.platform === 'darwin') {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.icns') // path.normalize(path.join(control.base, 'src/icons/whale.icns'))
