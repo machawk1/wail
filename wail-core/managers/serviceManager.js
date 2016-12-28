@@ -64,7 +64,7 @@ const findProcessOnHeritrixPort = () => new Promise((resolve, reject) => {
           whoOnPort: {pid, pname}
         })
       } else {
-        resolve({found: false})
+        resolve({found: false, whoOnPort: {}})
       }
     }
   })

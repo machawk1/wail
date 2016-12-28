@@ -267,6 +267,7 @@ export default class SettingsManager {
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
     this._settings.set('didRedoFl',true)
+    this._settings.set('logBasePath',global.__wailControl.logPath)
     fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
   }
 

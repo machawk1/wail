@@ -8,7 +8,10 @@ import {
   PermanentlyDeleteJob
 } from '../../requests/heritrixRequests'
 
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
+
 
 const {
   BUILD_HERITIX_JOB,

@@ -1,5 +1,4 @@
 import { ipcRenderer as ipc, remote } from 'electron'
-import path from 'path'
 import cp from 'child_process'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
@@ -7,9 +6,25 @@ import rp from 'request-promise'
 import _ from 'lodash'
 import wc from '../../wail-ui/constants/wail-constants'
 import { HeritrixRequest } from './requestTypes'
+import bunyan from 'bunyan'
+import path from 'path'
 
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')
+
+
+const logger = bunyan.createLogger({
+  name: 'heritrixRequestLogger',
+  streams: [
+    {
+      level: 'error',
+      path: path.normalize(path.join(settings.get('logBasePath'), 'heritrixRequest.log')) // log ERROR and above to a file
+    }
+  ],
+  serializers: {
+    err: bunyan.stdSerializers.err,   // <--- use this
+  }
+})
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 const {
@@ -61,6 +76,7 @@ export class BuildJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('BuildJobRequest completedError')
+    logger.error({err: this.finalError}, `BuildJobRequest ${this.jobId} operation went boom: %s`, this.finalError)
     ipc.send('handled-request', {
       type: BUILT_CRAWL_JOB,
       rtype: REQUEST_FAILURE,
@@ -88,6 +104,7 @@ export class LaunchJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('LaunchJobRequest completedError ')
+    logger.error({err: this.finalError}, `LaunchJobRequest {jthis.jobId} operation went boom: %s`, this.finalError)
     ipc.send('handled-request', {
       type: LAUNCHED_CRAWL_JOB,
       rtype: REQUEST_FAILURE,
@@ -114,6 +131,7 @@ export class TerminateJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('TerminateJobRequest completedError ')
+    logger.error({err: this.finalError}, `TerminateJobRequest ${this.jobId} operation went boom: %s`, this.finalError)
     ipc.send('handled-request', {
       type: TERMINATE_CRAWL,
       rtype: REQUEST_FAILURE,
@@ -140,6 +158,7 @@ export class TeardownJobRequest extends HeritrixRequest {
 
   completedError () {
     console.log('TeardownJobRequest completedError ')
+    logger.error({err: this.finalError}, `TeardownJobRequest ${this.jobId} operation went boom: %s`, this.finalError)
     ipc.send('handled-request', {
       type: TEARDOWN_CRAWL,
       rtype: REQUEST_FAILURE,
@@ -165,6 +184,7 @@ export class RescanJobDirRequest extends HeritrixRequest {
 
   completedError () {
     console.log('RescanJobDirRequest completedError ')
+    logger.error({err: this.finalError}, `RescanJobDirRequest ${this.jobId} operation went boom: %s`, this.finalError)
     ipc.send('handled-request', {
       type: RESCAN_JOB_DIR,
       rtype: REQUEST_FAILURE,
