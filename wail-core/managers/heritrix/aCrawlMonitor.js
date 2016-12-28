@@ -15,11 +15,11 @@ export default class ACrawlMonitor {
     this.errorCount = 0
     this.onExceedECount = onExceedECount
 
-    // console.log(`logpath for ${jobId} latest launch ${this.logPath}`)
+    console.log(`logpath for ${jobId} latest launch ${this.logPath}`)
     this.logWatcher = chokidar.watch(this.logPath, watcherConfig)
     this.logWatcher.on('add', filePath => {
       this._added.push(filePath)
-      // console.log(`File ${filePath} has been added`)
+      console.log(`File ${filePath} has been added`)
     })
     this.logWatcher.on('change', ::this._monitorUpdate)
     this.logWatcher.on('error', ::this._monitorError)

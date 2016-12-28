@@ -59,12 +59,12 @@ export default class SettingsManager {
           didFirstLoad = false
         }
 
-        if(this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+        if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
           didFirstLoad = false
         }
 
         // console.log('We are not configured due to binary directory being moved')
-        this._writeSettings(pathMan, didFirstLoad )
+        this._writeSettings(pathMan, didFirstLoad)
         console.log(didFirstLoad)
         // console.log(base, settings)
       } else {
@@ -79,12 +79,12 @@ export default class SettingsManager {
             didFirstLoad = false
           }
 
-          if(this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+          if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
             didFirstLoad = false
           }
 
           // console.log('We are not configured due to binary directory being moved')
-          this._writeSettings(pathMan, didFirstLoad )
+          this._writeSettings(pathMan, didFirstLoad)
         }
         // console.log('We are configured')
       }
@@ -127,8 +127,10 @@ export default class SettingsManager {
     let darwinExport = managed.dbgOSX ? cmdexport : `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
     let command = 'sh'
     heritrix.path = this._settings.get('heritrix')
-    var jobConfPath
+    heritrix.jobsDir = pathMan.normalizeJoin(this._docsPath, heritrix.jobsDir)
+    fs.ensureDirSync(heritrix.jobsDir)
 
+    let jobConfPath
     if (isWindows) {
       let cdxWin = `${cmdexport} ${this._settings.get('cdxIndexerWin')}`
       this._settings.set('cdxIndexer', cdxWin)
@@ -246,7 +248,7 @@ export default class SettingsManager {
           if (isWindows) {
             this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/heritrix.bat')} ${this._settings.get('heritrix.login')}`)
           } else {
-            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')}`
+            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')} --jobs-dir ${heritrix.jobsDir}`
             this._settings.set(cmd.name, `${cmdexport} ${hStart}`)
             this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${hStart}`)
           }
@@ -266,8 +268,8 @@ export default class SettingsManager {
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
-    this._settings.set('didRedoFl',true)
-    this._settings.set('logBasePath',global.__wailControl.logPath)
+    this._settings.set('didRedoFl', true)
+    this._settings.set('logBasePath', global.__wailControl.logPath)
     fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
   }
 

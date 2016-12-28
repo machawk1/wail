@@ -182,7 +182,7 @@ export default class CrawlManager {
           urlConf.text(urlText)
           let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
           maxHops.attr('value', `${depth}`)
-          let confPath = pathMan.join(settings.get('heritrixJob'), `${jobId}`)
+          let confPath = pathMan.join(settings.get('heritrix.jobsDir'), `${jobId}`)
           let cfp = pathMan.join(confPath, 'crawler-beans.cxml')
           return ensureDirAndWrite(confPath, cfp, doc.xml())
             .then(() => {

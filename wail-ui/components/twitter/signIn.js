@@ -23,12 +23,12 @@ export default class SignIn extends Component {
         console.log('dang error case :(')
         this.setState({ disabled: false }, () => {
           window.logger.error(whatHappened.error)
-          global.notifications$.next(notify({
+          notify({
             title: 'Twitter Sign In Not Completed',
             level: 'warning',
             message: 'An error occurred during sign in. If you closed the window cary on.',
             autoDismiss: 10
-          }))
+          })
         })
       }
     })
