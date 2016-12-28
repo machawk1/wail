@@ -2,11 +2,13 @@ const moment = require('moment')
 // require('moment-precise-range-plugin')
 // const EventEmitter = require('eventemitter3')
 // const DB = require('nedb')
+const shelljs =  require('shelljs')
+const named = require('named-regexp')
 const _ = require('lodash')
 const util = require('util')
 // const Immutable = require('immutable')
 // const Promise = require('bluebird')
-// const S = require('string')
+const S = require('string')
 // const cp = require('child_process')
 // const fs = require('fs-extra')
 // const through2 = require('through2')
@@ -26,7 +28,7 @@ const util = require('util')
 //
 const tld = require('tldjs')
 const rp = require('request-promise')
-const madge = require('madge')
+// const madge = require('madge')
 
 const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
 
@@ -36,31 +38,6 @@ const electronMainConfig = {
   }
 }
 
-const mq = {
-  uri: 'http://localhost:1208/timemap/json/http://cs.odu.edu',
-  transform (body) {
-    let {original_uri, mementos: {list, first, last}} = JSON.parse(body)
-    return {
-      original_uri,
-      mementos: _.map(list, m => {
-        m.datetimeM = moment(m.datetime)
-        m.year = m.datetimeM.year()
-        m.month = m.datetimeM.month() + 1
-        m.archive = tld.getDomain(m.uri)
-        return m
-      }),
-      first,
-      last
-    }
-  }
-}
-rp(mq)
-  .then(({original_uri, mementos, first, last}) => {
-    console.log(original_uri)
-    console.log(first)
-    console.log(last)
-    console.log(inspect(mementos))
-  })
 // const groups = {}
 //
 // madge('/home/john/my-fork-wail/wail-ui/wail.js')

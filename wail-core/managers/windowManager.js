@@ -230,6 +230,10 @@ export default class WindowManager extends EventEmitter {
         })
     })
 
+    ipcMain.on('remove-crawl',(e,jobId) => {
+      this.send('crawlManWindow', 'remove-crawl', jobId)
+    })
+
     /* Wayback */
 
     ipcMain.on('crawl-to-collection', (event, colCrawl) => {

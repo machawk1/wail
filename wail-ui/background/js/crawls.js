@@ -55,6 +55,10 @@ ipc.on('stop-watching-job', (e, jobId) => {
 
 })
 
+ipc.on('remove-crawl', (e, jobId) => {
+  crawlMan.removeCrawl(jobId)
+})
+
 crawlMan.initialLoad()
   .then(crawls => {
     ipc.send('crawlMan-initial-load', crawls)

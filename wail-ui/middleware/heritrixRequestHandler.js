@@ -1,9 +1,9 @@
 import * as notify from '../actions/notification-actions'
 import { send } from 'redux-electron-ipc'
-import { crawlStarted, crawlEnded } from '../actions/heritrix'
+import { crawlStarted, crawlEnded,removeJob } from '../actions/heritrix'
 import { HeritrixRequestTypes, JobActionEvents, RequestTypes, RequestActions } from '../constants/wail-constants'
 
-const {START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB} = JobActionEvents
+const { START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB } = JobActionEvents
 
 const {
   BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
@@ -11,11 +11,11 @@ const {
   REQUEST_SUCCESS
 } = RequestTypes
 
-const {MAKE_REQUEST, HANDLED_REQUEST} = RequestActions
+const { MAKE_REQUEST, HANDLED_REQUEST } = RequestActions
 
 const makeRequest = (store, next, action, request) => {
   console.log('make request', request)
-  let {jobId} = request
+  let { jobId } = request
   let job, latestRun
   if (request.type !== RESCAN_JOB_DIR) {
     job = store.getState().get('runs').get(`${jobId}`)
@@ -63,12 +63,20 @@ const makeRequest = (store, next, action, request) => {
       }
     case REMOVE_JOB:
     case DELETE_JOB: {
-      // TODO handle better
-      let message = `Terminating Heritrix Crawl for ${job.displayUrls()}`
-      return next(send('send-to-requestDaemon', {
+      let message = `Permanently Deleting Crawl for ${job.displayUrls()}`
+      let deleteOpts = {
         type: HeritrixRequestTypes.PERMANENT_DELETE_JOB,
-        jobId
-      }))
+        jobId,
+        running: false
+      }
+      if (!latestRun.get('ended')) {
+        console.log('deleting crawl for a job that is running', jobId)
+        deleteOpts.running = true
+      } else {
+        console.log('deleting crawl for a job that is not running', jobId)
+      }
+      notify.notifyInfo(message)
+      return next(send('send-to-requestDaemon', deleteOpts))
     }
     case TERMINATE_JOB: {
       console.log('terminate job', jobId)
@@ -93,7 +101,7 @@ const makeRequest = (store, next, action, request) => {
 }
 
 const handledRequest = (store, next, action, handledRequest) => {
-  let {type, rtype, jobId} = handledRequest
+  let { type, rtype, jobId } = handledRequest
   let job
   if (type !== RESCAN_JOB_DIR) {
     job = store.getState().get('runs').get(`${jobId}`)
@@ -137,6 +145,26 @@ const handledRequest = (store, next, action, handledRequest) => {
         notify.notifySuccess(`Rescanned Heritrix Crawl Directory`)
       } else {
         notify.notifyError(`Rescanning Heritrix Crawl Directory failed`)
+      }
+      break
+    case HeritrixRequestTypes.PERMANENT_DELETE_JOB:
+      if (rtype === REQUEST_SUCCESS) {
+        store.dispatch(removeJob(jobId))
+        notify.notifySuccess(`Deleted Heritrix Crawl for ${job.displayUrls()}`)
+      } else {
+        let {where} = handledRequest
+        switch (where) {
+          case 'rescan':
+            store.dispatch(removeJob(jobId))
+            notify.notifyError(`Deleted Heritrix Crawl for ${job.displayUrls()} but could not rescan the job directory`)
+            break
+          case 'deletion':
+            notify.notifyError(`Could not deleted Heritrix Crawl for ${job.displayUrls()}`)
+            break
+          case 'teardown':
+            notify.notifyError(`Could not deleted Heritrix Crawl for  ${job.displayUrls()}. It was running and could not be stopped`)
+            break
+        }
       }
       break
     default:

@@ -115,14 +115,15 @@ export function restartJob (jobId) {
   }
 }
 
+
 export function removeJob (jobId) {
   console.log('removeJob', jobId)
-  return {
-    type: MAKE_REQUEST,
-    request: {
-      type: REMOVE_JOB,
+  return dispatch => {
+    dispatch(send('remove-crawl', jobId))
+    dispatch({
+      type: JobIdActions.REMOVE_ID,
       jobId
-    }
+    })
   }
 }
 

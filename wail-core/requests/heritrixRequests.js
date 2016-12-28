@@ -1,4 +1,7 @@
 import { ipcRenderer as ipc, remote } from 'electron'
+import path from 'path'
+import cp from 'child_process'
+import fs from 'fs-extra'
 import Promise from 'bluebird'
 import rp from 'request-promise'
 import _ from 'lodash'
@@ -25,6 +28,8 @@ const {
   REQUEST_SUCCESS,
   REQUEST_FAILURE
 } = wc.RequestTypes
+
+const { PERMANENT_DELETE_JOB } = wc.HeritrixRequestTypes
 
 const optsReplaceUrl = (jobId, settingsKey) => {
   let options = _.cloneDeep(settings.get(settingsKey))
@@ -431,6 +436,261 @@ export class TerminateAndRestartJob {
           }
         }
       })
+  }
+}
+
+export class PermanentlyDeleteJob {
+  constructor (jobId, running) {
+    this.jobId = jobId
+    this.running = running
+    this.rescan = new RescanJobDirRequest()
+    if (running) {
+      this.teardown = new TeardownJobRequest(jobId)
+      this.q = [ 1, 2, 3 ]
+    } else {
+      this.teardown = null
+      this.q = [ 1, 2 ]
+    }
+  }
+
+  maybeMore () {
+    return this.q.length > 0
+  }
+
+  makeRequest () {
+    if (this.running) {
+      return this._makeRequestRunning()
+    } else {
+      return this._makeRequestNotRunning()
+    }
+  }
+
+  _makeRequestNotRunning () {
+    return new Promise((resolve, reject) => {
+      let idx = this.q.shift()
+      if (idx === 1) {
+        console.log(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId}`)
+        this._doDeletion()
+          .then(() => {
+            console.log(`Permanently Delete Heritrix Job deleted jobId ${this.jobId}`)
+            resolve({
+              done: false,
+              doRetry: false
+            })
+          })
+          .catch(error => {
+            console.error(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId} had error`,error)
+            ipc.send('handled-request', {
+              type: PERMANENT_DELETE_JOB,
+              rtype: REQUEST_FAILURE,
+              jobId: this.jobId,
+              where: 'deletion',
+              err: error
+            })
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          })
+      } else {
+        console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId}`)
+        return rp(this.rescan.options)
+          .then(success => {
+            ipc.send('handled-request', {
+              type: PERMANENT_DELETE_JOB,
+              rtype: REQUEST_SUCCESS,
+              jobId: this.jobId
+            })
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          }).catch(error => {
+            console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error`, error)
+            this.rescan.handleError(error)
+            if (this.rescan.doRetry) {
+              console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} retrying`)
+              this.q.unshift(idx)
+              resolve({
+                done: false,
+                doRetry: true
+              })
+            } else {
+              if (this.rescan.trueFailure) {
+                console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error it was a true error`)
+                ipc.send('handled-request', {
+                  type: PERMANENT_DELETE_JOB,
+                  rtype: REQUEST_FAILURE,
+                  where: 'rescan',
+                  jobId: this.jobId,
+                  err: error
+                })
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              } else {
+                console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error it was not a true error`)
+                ipc.send('handled-request', {
+                  type: PERMANENT_DELETE_JOB,
+                  rtype: REQUEST_SUCCESS,
+                  jobId: this.jobId
+                })
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              }
+            }
+          })
+      }
+    })
+  }
+
+  _makeRequestRunning () {
+    return new Promise((resolve, reject) => {
+      let idx = this.q.shift()
+      if (idx === 1) {
+        console.log(`Permanently Delete Heritrix Job doing maybe teardown for jobId ${this.jobId}`)
+        return rp(this.teardown.options)
+          .then(success => {
+            resolve({
+              done: false,
+              doRetry: false
+            })
+          }).catch(error => {
+            console.log(`Permanently Delete Heritrix Job doing maybe teardown for jobId ${this.jobId} had error`, error)
+            this.teardown.handleError(error)
+            if (this.teardown.doRetry) {
+              console.log(`Permanently Delete Heritrix Job doing maybe teardown for jobId ${this.jobId} retrying`)
+              this.q.unshift(idx)
+              resolve({
+                done: false,
+                doRetry: true
+              })
+            } else {
+              if (this.teardown.trueFailure) {
+                console.log(`Permanently Delete Heritrix Job doing maybe teardown for jobId ${this.jobId} had error it was a true error`)
+                ipc.send('handled-request', {
+                  type: PERMANENT_DELETE_JOB,
+                  rtype: REQUEST_FAILURE,
+                  jobId: this.jobId,
+                  where: 'teardown',
+                  err: error
+                })
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              } else {
+                console.log(`Permanently Delete Heritrix Job doing maybe teardown for jobId ${this.jobId} had error it was not a true error`)
+                resolve({
+                  done: false,
+                  doRetry: false
+                })
+              }
+            }
+          })
+      } else if (idx === 2) {
+        console.log(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId}`)
+        this._doDeletion()
+          .then(() => {
+            console.log(`Permanently Delete Heritrix Job deleted jobId ${this.jobId}`)
+            resolve({
+              done: false,
+              doRetry: false
+            })
+          })
+          .catch(error => {
+            console.log(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId} had error`)
+            ipc.send('handled-request', {
+              type: PERMANENT_DELETE_JOB,
+              rtype: REQUEST_FAILURE,
+              jobId: this.jobId,
+              where: 'deletion',
+              err: error
+            })
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          })
+      } else {
+        console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId}`)
+        return rp(this.rescan.options)
+          .then(success => {
+            ipc.send('handled-request', {
+              type: PERMANENT_DELETE_JOB,
+              rtype: REQUEST_SUCCESS,
+              jobId: this.jobId
+            })
+            resolve({
+              done: true,
+              doRetry: false
+            })
+          }).catch(error => {
+            console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error`, error)
+            this.rescan.handleError(error)
+            if (this.rescan.doRetry) {
+              console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} retrying`)
+              this.q.unshift(idx)
+              resolve({
+                done: false,
+                doRetry: true
+              })
+            } else {
+              if (this.rescan.trueFailure) {
+                console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error it was a true error`)
+                ipc.send('handled-request', {
+                  type: PERMANENT_DELETE_JOB,
+                  rtype: REQUEST_FAILURE,
+                  jobId: this.jobId,
+                  where: 'rescan',
+                  err: error
+                })
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              } else {
+                console.log(`Permanently Delete Heritrix Job doing rescanning for jobId ${this.jobId} had error it was not a true error`)
+                ipc.send('handled-request', {
+                  type: PERMANENT_DELETE_JOB,
+                  rtype: REQUEST_SUCCESS,
+                  jobId: this.jobId
+                })
+                resolve({
+                  done: true,
+                  doRetry: false
+                })
+              }
+            }
+          })
+      }
+    })
+  }
+
+  _doDeletion () {
+    return new Promise((resolve, reject) => {
+      let jPath = `${settings.get('heritrixJob')}${path.sep}${this.jobId}`
+      if (process.platform === 'win32') {
+        cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve()
+          }
+        })
+      } else {
+        fs.remove(jPath, error => {
+          if (error) {
+            reject(error)
+          } else {
+            resolve()
+          }
+        })
+      }
+    })
   }
 }
 

@@ -30,6 +30,9 @@ export default {
     RESCAN_JOB_DIR: null,
     PERMANENT_DELETE_JOB: null
   }),
+  REMOVE_RUN: keyMirror({
+    REMOVE_RUN: null
+  }),
   AddSeedFromFsEvents: keyMirror({
     SEED_CHECKED: null,
     ADD_SEED: null,

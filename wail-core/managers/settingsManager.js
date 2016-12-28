@@ -59,6 +59,10 @@ export default class SettingsManager {
           didFirstLoad = false
         }
 
+        if(this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+          didFirstLoad = false
+        }
+
         // console.log('We are not configured due to binary directory being moved')
         this._writeSettings(pathMan, didFirstLoad )
         console.log(didFirstLoad)
@@ -72,6 +76,10 @@ export default class SettingsManager {
            */
           let didFirstLoad = this._settings.get('didFirstLoad')
           if (didFirstLoad === null || didFirstLoad === undefined) {
+            didFirstLoad = false
+          }
+
+          if(this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
             didFirstLoad = false
           }
 
@@ -258,6 +266,7 @@ export default class SettingsManager {
 
     let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
+    this._settings.set('didRedoFl',true)
     fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
   }
 
