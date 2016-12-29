@@ -49,7 +49,7 @@ function normalizeJoin (...paths) {
 const replaceOldCrawlPath = () => {
   console.log(cwd)
   const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
-  const newPath = '/home/john/Documents/WAIL_Managed_Crawls'
+  const newPath = '/Users/jberlin/Documents/WAIL_Managed_Crawls'
   const oldPath = path.join(cwd, 'bundledApps/heritrix/jobs')
   console.log(oldPath, newPath)
   const crawls = new DB({
@@ -92,23 +92,41 @@ const replaceOldCrawlPath = () => {
     })
   })
 }
-
-//allRuns.map(r => r.jobId)
+//
+// //allRuns.map(r => r.jobId)
 const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
 const crawls = new DB({
   filename: dbPath,
   autoload: true
 })
+//
+const trans = lfp.map(r => ({
+  jobId: r.jobId,
+  timestamp: moment(r.latestRun.timestamp)
+}))
 
-const trans = lfp.compose(
-  lfp.map(
-    lfp.pick(['jobId', 'latestRun.timestamp'])
-  ),
-  lfp.assign()
-)
-
+const momentSortRev = (m1, m2) => {
+  let t1 = m1.timestamp
+  let t2 = m2.timestamp
+  if (t1.isBefore(t2)) {
+    return 1
+  } else if (t1.isSame(t2)) {
+    return 0
+  } else {
+    return -1
+  }
+}
+//
 crawls.find({}, (err, docs) => {
-  console.log(inspect(trans(docs)))
+  let ndocs = docs.map(r => {
+    console.log(r.latestRun)
+    return {
+      jobId: r.jobId,
+      timestamp: moment(r.latestRun.timestamp)
+    }
+  })
+  ndocs.sort(momentSortRev)
+  console.log(inspect(trans(ndocs)))
 })
 // replaceOldCrawlPath().then(result => {
 //   if (result.wasError) {

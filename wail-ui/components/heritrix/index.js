@@ -7,7 +7,7 @@ import HJobItemContainer from './hJobItemContainer'
 import styles from './heritrixInlineStyles'
 const {
   crawlUrlS, statusS, timestampS,
-  discoveredS, queuedS, downloadedS, actionS
+  discoveredS, queuedS, downloadedS, actionS,forColS
 } = styles
 
 const log = console.log.bind(console)
@@ -55,6 +55,9 @@ class Heritrix extends Component {
                   </TableHeaderColumn>
                   <TableHeaderColumn style={statusS}>
                     Status
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={forColS}>
+                    For Collection
                   </TableHeaderColumn>
                   <TableHeaderColumn style={timestampS}>
                     Timestamp

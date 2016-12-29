@@ -104,7 +104,8 @@ class SelectColTable extends Component {
                   <SortHeader
                     key='SortHeader-name'
                     text='Name' sortDirection={sdirection}
-                    onTouchTap={::this.setSortState} />
+                    onTouchTap={::this.setSortState}
+                  />
                   <TableHeaderColumn>
                     Seeds
                   </TableHeaderColumn>

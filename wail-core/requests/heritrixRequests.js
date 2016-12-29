@@ -692,7 +692,7 @@ export class PermanentlyDeleteJob {
 
   _doDeletion () {
     return new Promise((resolve, reject) => {
-      let jPath = `${settings.get('heritrixJob')}${path.sep}${this.jobId}`
+      let jPath = `${settings.get('heritrix.jobsDir')}${path.sep}${this.jobId}`
       if (process.platform === 'win32') {
         cp.execFile(settings.get('winDeleteJob'), [ `${jPath}` ], (error, stdout, stderr) => {
           if (error) {

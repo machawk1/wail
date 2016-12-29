@@ -6,7 +6,7 @@ import styles from './heritrixInlineStyles'
 
 const {
   crawlUrlS, statusS, timestampS,
-  discoveredS, queuedS, downloadedS, actionS
+  discoveredS, queuedS, downloadedS, actionS,forColS
 } = styles
 
 const stateToProps = (state, ownProps) => ({jobRecord: state.get('runs').get(`${ownProps.jobId}`)})
@@ -40,6 +40,9 @@ class HeritrixJobItem extends Component {
         </TableRowColumn>
         <TableRowColumn key={`${jobId}-TRCol-Stat`} style={statusS}>
           {job.status()}
+        </TableRowColumn>
+        <TableRowColumn key={`${jobId}-TRCol-ForCol`} style={forColS}>
+          {jobRecord.forCol}
         </TableRowColumn>
         <TableRowColumn key={`${jobId}-TRCol-Tstamp`} style={timestampS}>
           {job.tsMoment.format('MMM DD YYYY h:mma')}

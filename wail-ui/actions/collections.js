@@ -1,6 +1,6 @@
 import {ipcRenderer as ipc, remote} from 'electron'
 import {CollectionEvents} from '../constants/wail-constants'
-import * as notify from './notification-actions'
+
 const {
   GOT_ALL_COLLECTIONS,
   CREATED_COLLECTION,
@@ -16,11 +16,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 export function gotAllCollections (event, ac) {
-  let {
-    cols,
-    wasError
-  } = ac
-
+  let { cols, wasError } = ac
   if (wasError) {
     console.error(wasError)
     window.logger.error({ err: ac.err, msg: 'got all collections error' })
@@ -39,7 +35,8 @@ export function gotAllCollections (event, ac) {
 }
 
 export function addedWarcs (event, col) {
-  window.logger.debug('collection store got all collections')
+  let whichCol = col.name || ''
+  window.logger.debug(`added (w)arcs to coll ${whichCol}`)
   return {
     type: ADDED_WARCS_TO_COLL,
     col
@@ -47,6 +44,8 @@ export function addedWarcs (event, col) {
 }
 
 export function addedNewCol (event, col) {
+  let whichCol = col.name || ''
+  window.logger.debug(`creating new collection ${whichCol}`)
   return {
     type: CREATED_COLLECTION,
     col
@@ -63,6 +62,8 @@ export function addMetadata (mdata, forCol) {
 }
 
 export function crawlToCol (e, col) {
+  let whichCol = col.name || col.forCol || ''
+  window.logger.debug(`added crawl to collection ${whichCol}`)
   return {
     type: CRAWL_TO_COLLECTION,
     col

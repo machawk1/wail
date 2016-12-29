@@ -198,7 +198,7 @@ export default class CrawlManager {
                   queued: 0,
                   downloaded: 0
                 },
-                path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
+                path: pathMan.join(settings.get('heritrix.jobsDir'), `${jobId}`),
                 confP: cfp, urls: urls, running: false, forCol
               }
               // {"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
