@@ -57,11 +57,12 @@ const ServiceStatus = (props) => {
           selectable={false}
         >
           <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
-          <TableRowColumn style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
+          <TableRowColumn id='waybackStatus' style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
           <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
           <span style={{marginLeft: '50px'}}>
             <RaisedButton
+              id='startWayback'
               disabled={wbGood}
               style={style.serviceActionButton}
               labelPosition='before'
@@ -70,6 +71,7 @@ const ServiceStatus = (props) => {
               icon={<FixIcon />}
             />
             <RaisedButton
+              id='stopWayback'
               disabled={!wbGood}
               style={style.serviceActionButton}
               labelPosition='before'
@@ -84,11 +86,12 @@ const ServiceStatus = (props) => {
           selectable={false}
         >
           <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
-          <TableRowColumn style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
+          <TableRowColumn id='heritrixStatus' style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
           <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
           <span style={{marginLeft: '50px'}}>
             <RaisedButton
+              id='startHeritrix'
               disabled={hGood}
               style={style.serviceActionButton}
               labelPosition='before'
@@ -97,6 +100,7 @@ const ServiceStatus = (props) => {
               icon={<FixIcon />}
             />
             <RaisedButton
+              id='stopHeritrix'
               disabled={!hGood}
               style={style.serviceActionButton}
               labelPosition='before'

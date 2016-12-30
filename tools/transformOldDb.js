@@ -346,5 +346,52 @@ function moveStartingCol (moveMe, moveTo) {
   })
 }
 
+const replaceOldCrawlPath = () => {
+  const cwd = path.resolve('.')
+  console.log(cwd)
+  const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
+  const newPath = '/Users/jberlin/Documents/WAIL_Managed_Crawls'
+  const oldPath = path.join(cwd, 'bundledApps/heritrix/jobs')
+  console.log(oldPath, newPath)
+  const crawls = new DB({
+    filename: dbPath,
+    autoload: true
+  })
+  return new Promise((resolve, reject) => {
+    crawls.find({}, (errFind, docs) => {
+      if (errFind) {
+        resolve({
+          wasError: true,
+          where: 'finding',
+          err: errFind
+        })
+      } else {
+        let ndocs = docs.map(ac => {
+          ac.path = S(ac.path).replaceAll(oldPath, newPath).s
+          ac.confP = S(ac.confP).replaceAll(oldPath, newPath).s
+          return ac
+        })
+        crawls.remove({}, {multi: true}, (errRemove, nremoved) => {
+          if (errRemove) {
+            console.error(errRemove)
+            resolve({
+              wasError: true,
+              where: 'removing',
+              err: errRemove
+            })
+          } else {
+            console.log(nremoved)
+            crawls.insert(ndocs, (errInsert, iDocs) => {
+              resolve({
+                wasError: false,
+                docs: iDocs
+              })
+            })
+          }
+        })
+      }
+    })
+  })
+}
 
-moveStartingCol(toMove,moveWhere)
+// moveStartingCol(toMove,moveWhere)

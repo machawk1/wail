@@ -49,7 +49,7 @@ const enhance = compose(
 )
 
 const OsCheckStep = enhance(({ownProps, label, check, osCheckRec, step}) => (
-  <CheckStepLabel check={check} ownProps={ownProps} label={label}/>
+  <CheckStepLabel lid='OsCheckStep' check={check} ownProps={ownProps} label={label}/>
 ))
 
 OsCheckStep.propTypes = {

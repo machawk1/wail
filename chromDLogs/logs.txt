@@ -1,0 +1,1782 @@
+[0.102][INFO]: COMMAND InitSession {
+   "desiredCapabilities": {
+      "browserName": "electron",
+      "chromeOptions": {
+         "args": [ "spectron-path=/home/john/my-fork-wail/release/WAIL-linux-x64/WAIL" ],
+         "binary": "/home/john/my-fork-wail/node_modules/spectron/lib/launcher.js"
+      },
+      "handlesAlerts": true,
+      "javascriptEnabled": true,
+      "locationContextEnabled": true,
+      "loggingPrefs": {
+         "browser": "ALL",
+         "driver": "ALL"
+      },
+      "requestOrigins": {
+         "name": "webdriverio",
+         "url": "http://webdriver.io",
+         "version": "4.5.2"
+      },
+      "rotatable": true
+   }
+}
+[0.102][INFO]: Populating Preferences file: {
+   "alternate_error_pages": {
+      "enabled": false
+   },
+   "autofill": {
+      "enabled": false
+   },
+   "browser": {
+      "check_default_browser": false
+   },
+   "distribution": {
+      "import_bookmarks": false,
+      "import_history": false,
+      "import_search_engine": false,
+      "make_chrome_default_for_user": false,
+      "show_welcome_page": false,
+      "skip_first_run_ui": true
+   },
+   "dns_prefetching": {
+      "enabled": false
+   },
+   "profile": {
+      "content_settings": {
+         "pattern_pairs": {
+            "https://*,*": {
+               "media-stream": {
+                  "audio": "Default",
+                  "video": "Default"
+               }
+            }
+         }
+      },
+      "default_content_setting_values": {
+         "geolocation": 1
+      },
+      "default_content_settings": {
+         "geolocation": 1,
+         "mouselock": 1,
+         "notifications": 1,
+         "popups": 1,
+         "ppapi-broker": 1
+      },
+      "password_manager_enabled": false
+   },
+   "safebrowsing": {
+      "enabled": false
+   },
+   "search": {
+      "suggest_enabled": false
+   },
+   "translate": {
+      "enabled": false
+   }
+}
+[0.102][INFO]: Populating Local State file: {
+   "background_mode": {
+      "enabled": false
+   },
+   "ssl": {
+      "rev_checking": {
+         "enabled": false
+      }
+   }
+}
+[0.103][INFO]: Launching chrome: /home/john/my-fork-wail/node_modules/spectron/lib/launcher.js --disable-background-networking --disable-client-side-phishing-detection --disable-component-update --disable-default-apps --disable-hang-monitor --disable-popup-blocking --disable-prompt-on-repost --disable-sync --disable-web-resources --enable-logging --ignore-certificate-errors --load-extension=/tmp/.org.chromium.Chromium.Fdk5lz/internal --log-level=0 --metrics-recording-only --no-first-run --password-store=basic --remote-debugging-port=12115 --safebrowsing-disable-auto-update --spectron-path=/home/john/my-fork-wail/release/WAIL-linux-x64/WAIL --test-type=webdriver --use-mock-keychain --user-data-dir=/tmp/.org.chromium.Chromium.AKx74T data:,
+[0.103][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.185][DEBUG]: DevTools request failed
+[0.235][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.235][DEBUG]: DevTools request failed
+[0.285][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.286][DEBUG]: DevTools request failed
+[0.336][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.336][DEBUG]: DevTools request failed
+[0.386][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.386][DEBUG]: DevTools request failed
+[0.437][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.437][DEBUG]: DevTools request failed
+[0.487][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.487][DEBUG]: DevTools request failed
+[0.537][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.538][DEBUG]: DevTools request failed
+[0.588][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.588][DEBUG]: DevTools request failed
+[0.638][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.639][DEBUG]: DevTools request failed
+[0.689][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.689][DEBUG]: DevTools request failed
+[0.739][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.740][DEBUG]: DevTools request failed
+[0.790][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.790][DEBUG]: DevTools request failed
+[0.840][DEBUG]: DevTools request: http://localhost:12115/json/version
+[0.842][DEBUG]: DevTools response: {
+   "Browser": "",
+   "Protocol-Version": "1.1",
+   "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Electron/1.4.13 Safari/537.36",
+   "WebKit-Version": "537.36 (@f33d44362232c20d1ce2111c53ea8730698f3c88)"
+}
+
+[0.842][DEBUG]: DevTools request: http://localhost:12115/json
+[0.843][DEBUG]: DevTools response: [  ]
+
+[0.893][DEBUG]: DevTools request: http://localhost:12115/json
+[0.894][DEBUG]: DevTools response: [  ]
+
+[0.944][DEBUG]: DevTools request: http://localhost:12115/json
+[0.944][DEBUG]: DevTools response: [  ]
+
+[0.994][DEBUG]: DevTools request: http://localhost:12115/json
+[0.995][DEBUG]: DevTools response: [  ]
+
+[1.045][DEBUG]: DevTools request: http://localhost:12115/json
+[1.046][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "id": "6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "title": "loadingScreen.html",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/6590f6d0-d7f7-4101-879c-2e3e6be3c895"
+} ]
+
+[1.046][DEBUG]: DevTools request: http://localhost:12115/json
+[1.047][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "id": "6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "title": "loadingScreen.html",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/6590f6d0-d7f7-4101-879c-2e3e6be3c895"
+} ]
+
+[1.047][INFO]: resolved localhost to ["127.0.0.1"]
+[1.047][DEBUG]: DEVTOOLS COMMAND Console.enable (id=1) {
+
+}
+[1.047][DEBUG]: DEVTOOLS COMMAND DOM.getDocument (id=2) {
+
+}
+[1.047][DEBUG]: DEVTOOLS COMMAND Runtime.enable (id=3) {
+
+}
+[1.048][DEBUG]: DEVTOOLS COMMAND Page.enable (id=4) {
+
+}
+[1.048][DEBUG]: DEVTOOLS COMMAND Page.enable (id=5) {
+
+}
+[1.117][DEBUG]: DEVTOOLS RESPONSE Console.enable (id=1) {
+
+}
+[1.117][DEBUG]: DEVTOOLS RESPONSE DOM.getDocument (id=2) {
+   "root": {
+      "baseURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "childNodeCount": 0,
+      "children": [  ],
+      "documentURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "localName": "",
+      "nodeId": 1,
+      "nodeName": "#document",
+      "nodeType": 9,
+      "nodeValue": "",
+      "xmlVersion": ""
+   }
+}
+[1.118][DEBUG]: DEVTOOLS EVENT Runtime.executionContextCreated {
+   "context": {
+      "frameId": "19166.1",
+      "id": 1,
+      "isDefault": true,
+      "name": "",
+      "origin": "file://"
+   }
+}
+[1.118][DEBUG]: DEVTOOLS RESPONSE Runtime.enable (id=3) {
+
+}
+[1.118][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=4) {
+
+}
+[1.118][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=5) {
+
+}
+[1.118][DEBUG]: DEVTOOLS COMMAND Page.enable (id=6) {
+
+}
+[1.118][DEBUG]: DEVTOOLS EVENT DOM.childNodeInserted {
+   "node": {
+      "localName": "",
+      "nodeId": 2,
+      "nodeName": "html",
+      "nodeType": 10,
+      "nodeValue": "",
+      "publicId": "",
+      "systemId": ""
+   },
+   "parentNodeId": 1,
+   "previousNodeId": 0
+}
+[1.118][DEBUG]: DEVTOOLS EVENT DOM.childNodeInserted {
+   "node": {
+      "attributes": [ "lang", "en" ],
+      "childNodeCount": 0,
+      "frameId": "19166.1",
+      "localName": "html",
+      "nodeId": 3,
+      "nodeName": "HTML",
+      "nodeType": 1,
+      "nodeValue": ""
+   },
+   "parentNodeId": 1,
+   "previousNodeId": 2
+}
+[1.118][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 1,
+   "nodeId": 3
+}
+[1.118][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 2,
+   "nodeId": 3
+}
+[1.118][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=6) {
+
+}
+[1.118][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=7) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[1.123][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=7) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": 1
+      }
+   },
+   "wasThrown": false
+}
+[1.123][INFO]: RESPONSE InitSession {
+   "acceptSslCerts": true,
+   "applicationCacheEnabled": false,
+   "browserConnectionEnabled": false,
+   "browserName": "chrome",
+   "chrome": {
+      "chromedriverVersion": "2.22 (63b939087a4a8170a82c8caf0f6e9cfcf234472b)",
+      "userDataDir": "/tmp/.org.chromium.Chromium.AKx74T"
+   },
+   "cssSelectorsEnabled": true,
+   "databaseEnabled": false,
+   "handlesAlerts": true,
+   "hasTouchScreen": false,
+   "javascriptEnabled": true,
+   "locationContextEnabled": true,
+   "mobileEmulationEnabled": false,
+   "nativeEvents": true,
+   "platform": "Linux",
+   "rotatable": false,
+   "takesHeapSnapshot": true,
+   "takesScreenshot": true,
+   "version": "",
+   "webStorageEnabled": true
+}
+[1.131][INFO]: COMMAND ExecuteScript {
+   "args": [ "require" ],
+   "script": "return (function (requireName) {\n    return typeof window[requireName] === 'function'\n  }).apply(null, arguments)"
+}
+[1.131][INFO]: Waiting for pending navigations...
+[1.131][DEBUG]: DEVTOOLS COMMAND DOM.getDocument (id=8) {
+
+}
+[1.798][DEBUG]: DEVTOOLS EVENT DOM.documentUpdated {
+
+}
+[1.798][DEBUG]: DEVTOOLS COMMAND DOM.getDocument (id=9) {
+
+}
+[1.798][DEBUG]: DEVTOOLS EVENT Page.domContentEventFired {
+   "timestamp": 38216.02173
+}
+[1.852][DEBUG]: DEVTOOLS RESPONSE DOM.getDocument (id=8) {
+   "root": {
+      "baseURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "childNodeCount": 2,
+      "children": [ {
+         "localName": "",
+         "nodeId": 5,
+         "nodeName": "html",
+         "nodeType": 10,
+         "nodeValue": "",
+         "publicId": "",
+         "systemId": ""
+      }, {
+         "attributes": [ "lang", "en" ],
+         "childNodeCount": 2,
+         "children": [ {
+            "attributes": [  ],
+            "childNodeCount": 7,
+            "localName": "head",
+            "nodeId": 7,
+            "nodeName": "HEAD",
+            "nodeType": 1,
+            "nodeValue": ""
+         }, {
+            "attributes": [  ],
+            "childNodeCount": 2,
+            "localName": "body",
+            "nodeId": 8,
+            "nodeName": "BODY",
+            "nodeType": 1,
+            "nodeValue": ""
+         } ],
+         "frameId": "19166.1",
+         "localName": "html",
+         "nodeId": 6,
+         "nodeName": "HTML",
+         "nodeType": 1,
+         "nodeValue": ""
+      } ],
+      "documentURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "localName": "",
+      "nodeId": 4,
+      "nodeName": "#document",
+      "nodeType": 9,
+      "nodeValue": "",
+      "xmlVersion": ""
+   }
+}
+[1.873][DEBUG]: DEVTOOLS RESPONSE DOM.getDocument (id=9) {
+   "root": {
+      "baseURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "childNodeCount": 2,
+      "children": [ {
+         "localName": "",
+         "nodeId": 10,
+         "nodeName": "html",
+         "nodeType": 10,
+         "nodeValue": "",
+         "publicId": "",
+         "systemId": ""
+      }, {
+         "attributes": [ "lang", "en" ],
+         "childNodeCount": 2,
+         "children": [ {
+            "attributes": [  ],
+            "childNodeCount": 7,
+            "localName": "head",
+            "nodeId": 12,
+            "nodeName": "HEAD",
+            "nodeType": 1,
+            "nodeValue": ""
+         }, {
+            "attributes": [  ],
+            "childNodeCount": 2,
+            "localName": "body",
+            "nodeId": 13,
+            "nodeName": "BODY",
+            "nodeType": 1,
+            "nodeValue": ""
+         } ],
+         "frameId": "19166.1",
+         "localName": "html",
+         "nodeId": 11,
+         "nodeName": "HTML",
+         "nodeType": 1,
+         "nodeValue": ""
+      } ],
+      "documentURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html",
+      "localName": "",
+      "nodeId": 9,
+      "nodeName": "#document",
+      "nodeType": 9,
+      "nodeValue": "",
+      "xmlVersion": ""
+   }
+}
+[1.873][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=10) {
+   "expression": "var isLoaded = document.readyState == 'complete' ||    document.readyState == 'interactive';if (isLoaded) {  var frame = document.createElement('iframe');  frame.name = 'chromedriver dummy frame'; ..."
+}
+[1.899][DEBUG]: DEVTOOLS EVENT Page.loadEventFired {
+   "timestamp": 38216.091111
+}
+[1.899][DEBUG]: DEVTOOLS EVENT Page.frameStoppedLoading {
+   "frameId": "19166.1"
+}
+[1.906][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 3,
+   "nodeId": 13
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Page.frameAttached {
+   "frameId": "19166.2",
+   "parentFrameId": "19166.1"
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Page.frameStartedLoading {
+   "frameId": "19166.2"
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Page.frameNavigated {
+   "frame": {
+      "id": "19166.2",
+      "loaderId": "19166.1",
+      "mimeType": "text/html",
+      "name": "chromedriver dummy frame",
+      "parentId": "19166.1",
+      "securityOrigin": "file://",
+      "url": "about:blank"
+   }
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Runtime.executionContextCreated {
+   "context": {
+      "frameId": "19166.2",
+      "id": 2,
+      "isDefault": true,
+      "name": "",
+      "origin": "file://"
+   }
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Page.frameStoppedLoading {
+   "frameId": "19166.2"
+}
+[1.906][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=10) {
+   "result": {
+      "description": "1",
+      "type": "number",
+      "value": 1
+   },
+   "wasThrown": false
+}
+[1.906][INFO]: Done waiting for pending navigations. Status: ok
+[1.906][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=11) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[1.906][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 2,
+   "nodeId": 13
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Runtime.executionContextDestroyed {
+   "executionContextId": 2
+}
+[1.906][DEBUG]: DEVTOOLS EVENT Page.frameDetached {
+   "frameId": "19166.2"
+}
+[1.910][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=11) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": true
+      }
+   },
+   "wasThrown": false
+}
+[1.910][INFO]: Waiting for pending navigations...
+[1.910][INFO]: Done waiting for pending navigations. Status: ok
+[1.910][INFO]: RESPONSE ExecuteScript true
+[1.914][INFO]: COMMAND ExecuteScript {
+   "args": [  ],
+   "script": "return (function () {\n    if (typeof process !== 'undefined') {\n      if (process != null && process.versions != null) {\n        return process.versions.electron\n      }\n    }\n  }).apply(null, argu..."
+}
+[1.914][INFO]: Waiting for pending navigations...
+[1.914][INFO]: Done waiting for pending navigations. Status: ok
+[1.914][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=12) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[1.916][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=12) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": "1.4.13"
+      }
+   },
+   "wasThrown": false
+}
+[1.916][INFO]: Waiting for pending navigations...
+[1.916][INFO]: Done waiting for pending navigations. Status: ok
+[1.916][INFO]: RESPONSE ExecuteScript "1.4.13"
+[1.919][INFO]: COMMAND ExecuteScript {
+   "args": [ "require" ],
+   "script": "return (function (requireName) {\n    var electron = window[requireName]('electron')\n\n    var api = {\n      browserWindow: {},\n      electron: {},\n      rendererProcess: {},\n      webContents: {}\n  ..."
+}
+[1.919][INFO]: Waiting for pending navigations...
+[1.919][INFO]: Done waiting for pending navigations. Status: ok
+[1.919][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=13) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[2.076][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=13) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": {
+            "browserWindow": {
+               "addListener": "browserWindow.addListener",
+               "blur": "browserWindow.blur",
+               "blurWebView": "browserWindow.blurWebView",
+               "capturePage": "browserWindow.capturePage",
+               "center": "browserWindow.center",
+               "close": "browserWindow.close",
+               "closeDevTools": "browserWindow.closeDevTools",
+               "closeFilePreview": "browserWindow.closeFilePreview",
+               "destroy": "browserWindow.destroy",
+               "emit": "browserWindow.emit",
+               "eventNames": "browserWindow.eventNames",
+               "flashFrame": "browserWindow.flashFrame",
+               "focus": "browserWindow.focus",
+               "focusOnWebView": "browserWindow.focusOnWebView",
+               "getBounds": "browserWindow.getBounds",
+               "getChildWindows": "browserWindow.getChildWindows",
+               "getContentBounds": "browserWindow.getContentBounds",
+               "getContentSize": "browserWindow.getContentSize",
+               "getMaxListeners": "browserWindow.getMaxListeners",
+               "~~~": "..."
+            },
+            "electron": {
+               "clipboard": {
+                  "availableFormats": "electron.clipboard.availableFormats",
+                  "clear": "electron.clipboard.clear",
+                  "has": "electron.clipboard.has",
+                  "read": "electron.clipboard.read",
+                  "readBookmark": "electron.clipboard.readBookmark",
+                  "readFindText": "electron.clipboard.readFindText",
+                  "readHTML": "electron.clipboard.readHTML",
+                  "readHtml": "electron.clipboard.readHtml",
+                  "readImage": "electron.clipboard.readImage",
+                  "readRTF": "electron.clipboard.readRTF",
+                  "readRtf": "electron.clipboard.readRtf",
+                  "readText": "electron.clipboard.readText",
+                  "write": "electron.clipboard.write",
+                  "writeBookmark": "electron.clipboard.writeBookmark",
+                  "writeFindText": "electron.clipboard.writeFindText",
+                  "writeHTML": "electron.clipboard.writeHTML",
+                  "writeHtml": "electron.clipboard.writeHtml",
+                  "writeImage": "electron.clipboard.writeImage",
+                  "writeRTF": "electron.clipboard.writeRTF",
+                  "~~~": "..."
+               },
+               "crashReporter": {
+
+               },
+               "desktopCapturer": {
+                  "getSources": "electron.desktopCapturer.getSources"
+               },
+               "ipcRenderer": {
+                  "addListener": "electron.ipcRenderer.addListener",
+                  "domain": "electron.ipcRenderer.domain",
+                  "emit": "electron.ipcRenderer.emit",
+                  "eventNames": "electron.ipcRenderer.eventNames",
+                  "getMaxListeners": "electron.ipcRenderer.getMaxListeners",
+                  "listenerCount": "electron.ipcRenderer.listenerCount",
+                  "listeners": "electron.ipcRenderer.listeners",
+                  "on": "electron.ipcRenderer.on",
+                  "once": "electron.ipcRenderer.once",
+                  "prependListener": "electron.ipcRenderer.prependListener",
+                  "prependOnceListener": "electron.ipcRenderer.prependOnceListener",
+                  "removeAllListeners": "electron.ipcRenderer.removeAllListeners",
+                  "removeListener": "electron.ipcRenderer.removeListener",
+                  "send": "electron.ipcRenderer.send",
+                  "sendSync": "electron.ipcRenderer.sendSync",
+                  "sendTo": "electron.ipcRenderer.sendTo",
+                  "sendToAll": "electron.ipcRenderer.sendToAll",
+                  "sendToHost": "electron.ipcRenderer.sendToHost",
+                  "setMaxListeners": "electron.ipcRenderer.setMaxListeners"
+               },
+               "isPromise": {
+
+               },
+               "nativeImage": {
+                  "createEmpty": "electron.nativeImage.createEmpty",
+                  "createFromBuffer": "electron.nativeImage.createFromBuffer",
+                  "createFromDataURL": "electron.nativeImage.createFromDataURL",
+                  "createFromPath": "electron.nativeImage.createFromPath"
+               },
+               "remote": {
+                  "BrowserWindow": {
+                     "addDevToolsExtension": "electron.remote.BrowserWindow.addDevToolsExtension",
+                     "fromDevToolsWebContents": "electron.remote.BrowserWindow.fromDevToolsWebContents",
+                     "fromId": "electron.remote.BrowserWindow.fromId",
+                     "fromWebContents": "electron.remote.BrowserWindow.fromWebContents",
+                     "getAllWindows": "electron.remote.BrowserWindow.getAllWindows",
+                     "getDevToolsExtensions": "electron.remote.BrowserWindow.getDevToolsExtensions",
+                     "getFocusedWindow": "electron.remote.BrowserWindow.getFocusedWindow",
+                     "removeDevToolsExtension": "electron.remote.BrowserWindow.removeDevToolsExtension"
+                  },
+                  "Menu": {
+                     "buildFromTemplate": "electron.remote.Menu.buildFromTemplate",
+                     "getApplicationMenu": "electron.remote.Menu.getApplicationMenu",
+                     "sendActionToFirstResponder": "electron.remote.Menu.sendActionToFirstResponder",
+                     "setApplicationMenu": "electron.remote.Menu.setApplicationMenu"
+                  },
+                  "MenuItem": {
+                     "types": "electron.remote.MenuItem.types"
+                  },
+                  "NavigationController": "electron.remote.NavigationController",
+                  "app": {
+                     "addListener": "electron.remote.app.addListener",
+                     "addRecentDocument": "electron.remote.app.addRecentDocument",
+                     "allowNTLMCredentialsForAllDomains": "electron.remote.app.allowNTLMCredentialsForAllDomains",
+                     "clearRecentDocuments": "electron.remote.app.clearRecentDocuments",
+                     "commandLine": "electron.remote.app.commandLine",
+                     "disableHardwareAcceleration": "electron.remote.app.disableHardwareAcceleration",
+                     "domain": "electron.remote.app.domain",
+                     "emit": "electron.remote.app.emit",
+                     "eventNames": "electron.remote.app.eventNames",
+                     "exit": "electron.remote.app.exit",
+                     "focus": "electron.remote.app.focus",
+                     "getAppPath": "electron.remote.app.getAppPath",
+                     "getApplicationMenu": "electron.remote.app.getApplicationMenu",
+                     "getBadgeCount": "electron.remote.app.getBadgeCount",
+                     "getLocale": "electron.remote.app.getLocale",
+                     "getLoginItemSettings": "electron.remote.app.getLoginItemSettings",
+                     "getMaxListeners": "electron.remote.app.getMaxListeners",
+                     "getName": "electron.remote.app.getName",
+                     "getPath": "electron.remote.app.getPath",
+                     "~~~": "..."
+                  },
+                  "autoUpdater": {
+                     "addListener": "electron.remote.autoUpdater.addListener",
+                     "checkForUpdates": "electron.remote.autoUpdater.checkForUpdates",
+                     "domain": "electron.remote.autoUpdater.domain",
+                     "emit": "electron.remote.autoUpdater.emit",
+                     "eventNames": "electron.remote.autoUpdater.eventNames",
+                     "getFeedURL": "electron.remote.autoUpdater.getFeedURL",
+                     "getMaxListeners": "electron.remote.autoUpdater.getMaxListeners",
+                     "listenerCount": "electron.remote.autoUpdater.listenerCount",
+                     "listeners": "electron.remote.autoUpdater.listeners",
+                     "on": "electron.remote.autoUpdater.on",
+                     "once": "electron.remote.autoUpdater.once",
+                     "prependListener": "electron.remote.autoUpdater.prependListener",
+                     "prependOnceListener": "electron.remote.autoUpdater.prependOnceListener",
+                     "quitAndInstall": "electron.remote.autoUpdater.quitAndInstall",
+                     "removeAllListeners": "electron.remote.autoUpdater.removeAllListeners",
+                     "removeListener": "electron.remote.autoUpdater.removeListener",
+                     "setFeedURL": "electron.remote.autoUpdater.setFeedURL",
+                     "setMaxListeners": "electron.remote.autoUpdater.setMaxListeners"
+                  },
+                  "clipboard": {
+                     "availableFormats": "electron.remote.clipboard.availableFormats",
+                     "clear": "electron.remote.clipboard.clear",
+                     "has": "electron.remote.clipboard.has",
+                     "read": "electron.remote.clipboard.read",
+                     "readBookmark": "electron.remote.clipboard.readBookmark",
+                     "readFindText": "electron.remote.clipboard.readFindText",
+                     "readHTML": "electron.remote.clipboard.readHTML",
+                     "readHtml": "electron.remote.clipboard.readHtml",
+                     "readImage": "electron.remote.clipboard.readImage",
+                     "readRTF": "electron.remote.clipboard.readRTF",
+                     "readRtf": "electron.remote.clipboard.readRtf",
+                     "readText": "electron.remote.clipboard.readText",
+                     "write": "electron.remote.clipboard.write",
+                     "writeBookmark": "electron.remote.clipboard.writeBookmark",
+                     "writeFindText": "electron.remote.clipboard.writeFindText",
+                     "writeHTML": "electron.remote.clipboard.writeHTML",
+                     "writeHtml": "electron.remote.clipboard.writeHtml",
+                     "writeImage": "electron.remote.clipboard.writeImage",
+                     "writeRTF": "electron.remote.clipboard.writeRTF",
+                     "~~~": "..."
+                  },
+                  "contentTracing": {
+                     "cancelWatchEvent": "electron.remote.contentTracing.cancelWatchEvent",
+                     "getCategories": "electron.remote.contentTracing.getCategories",
+                     "getTraceBufferUsage": "electron.remote.contentTracing.getTraceBufferUsage",
+                     "setWatchEvent": "electron.remote.contentTracing.setWatchEvent",
+                     "startRecording": "electron.remote.contentTracing.startRecording",
+                     "stopRecording": "electron.remote.contentTracing.stopRecording"
+                  },
+                  "crashReporter": {
+
+                  },
+                  "createFunctionWithReturnValue": "electron.remote.createFunctionWithReturnValue",
+                  "dialog": {
+                     "showErrorBox": "electron.remote.dialog.showErrorBox",
+                     "showMessageBox": "electron.remote.dialog.showMessageBox",
+                     "showOpenDialog": "electron.remote.dialog.showOpenDialog",
+                     "showSaveDialog": "electron.remote.dialog.showSaveDialog"
+                  },
+                  "getBuiltin": "electron.remote.getBuiltin",
+                  "getCurrentWebContents": "electron.remote.getCurrentWebContents",
+                  "getCurrentWindow": "electron.remote.getCurrentWindow",
+                  "getGlobal": "electron.remote.getGlobal",
+                  "getGuestWebContents": "electron.remote.getGuestWebContents",
+                  "globalShortcut": {
+                     "isRegistered": "electron.remote.globalShortcut.isRegistered",
+                     "register": "electron.remote.globalShortcut.register",
+                     "unregister": "electron.remote.globalShortcut.unregister",
+                     "unregisterAll": "electron.remote.globalShortcut.unregisterAll"
+                  },
+                  "ipcMain": {
+                     "addListener": "electron.remote.ipcMain.addListener",
+                     "domain": "electron.remote.ipcMain.domain",
+                     "emit": "electron.remote.ipcMain.emit",
+                     "eventNames": "electron.remote.ipcMain.eventNames",
+                     "getMaxListeners": "electron.remote.ipcMain.getMaxListeners",
+                     "listenerCount": "electron.remote.ipcMain.listenerCount",
+                     "listeners": "electron.remote.ipcMain.listeners",
+                     "on": "electron.remote.ipcMain.on",
+                     "once": "electron.remote.ipcMain.once",
+                     "prependListener": "electron.remote.ipcMain.prependListener",
+                     "prependOnceListener": "electron.remote.ipcMain.prependOnceListener",
+                     "removeAllListeners": "electron.remote.ipcMain.removeAllListeners",
+                     "removeListener": "electron.remote.ipcMain.removeListener",
+                     "setMaxListeners": "electron.remote.ipcMain.setMaxListeners"
+                  },
+                  "isPromise": "electron.remote.isPromise",
+                  "~~~": "..."
+               },
+               "screen": {
+                  "addListener": "electron.screen.addListener",
+                  "domain": "electron.screen.domain",
+                  "emit": "electron.screen.emit",
+                  "eventNames": "electron.screen.eventNames",
+                  "getAllDisplays": "electron.screen.getAllDisplays",
+                  "getCursorScreenPoint": "electron.screen.getCursorScreenPoint",
+                  "getDisplayMatching": "electron.screen.getDisplayMatching",
+                  "getDisplayNearestPoint": "electron.screen.getDisplayNearestPoint",
+                  "getMaxListeners": "electron.screen.getMaxListeners",
+                  "getPrimaryDisplay": "electron.screen.getPrimaryDisplay",
+                  "listenerCount": "electron.screen.listenerCount",
+                  "listeners": "electron.screen.listeners",
+                  "on": "electron.screen.on",
+                  "once": "electron.screen.once",
+                  "prependListener": "electron.screen.prependListener",
+                  "prependOnceListener": "electron.screen.prependOnceListener",
+                  "removeAllListeners": "electron.screen.removeAllListeners",
+                  "removeListener": "electron.screen.removeListener",
+                  "setMaxListeners": "electron.screen.setMaxListeners"
+               },
+               "shell": {
+                  "beep": "electron.shell.beep",
+                  "moveItemToTrash": "electron.shell.moveItemToTrash",
+                  "openExternal": "electron.shell.openExternal",
+                  "openItem": "electron.shell.openItem",
+                  "showItemInFolder": "electron.shell.showItemInFolder"
+               },
+               "webFrame": {
+                  "addListener": "electron.webFrame.addListener",
+                  "attachGuest": "electron.webFrame.attachGuest",
+                  "clearCache": "electron.webFrame.clearCache",
+                  "detachGuest": "electron.webFrame.detachGuest",
+                  "domain": "electron.webFrame.domain",
+                  "emit": "electron.webFrame.emit",
+                  "eventNames": "electron.webFrame.eventNames",
+                  "executeJavaScript": "electron.webFrame.executeJavaScript",
+                  "getMaxListeners": "electron.webFrame.getMaxListeners",
+                  "getResourceUsage": "electron.webFrame.getResourceUsage",
+                  "getZoomFactor": "electron.webFrame.getZoomFactor",
+                  "getZoomLevel": "electron.webFrame.getZoomLevel",
+                  "insertText": "electron.webFrame.insertText",
+                  "listenerCount": "electron.webFrame.listenerCount",
+                  "listeners": "electron.webFrame.listeners",
+                  "on": "electron.webFrame.on",
+                  "once": "electron.webFrame.once",
+                  "prependListener": "electron.webFrame.prependListener",
+                  "prependOnceListener": "electron.webFrame.prependOnceListener",
+                  "~~~": "..."
+               }
+            },
+            "rendererProcess": {
+               "NativeModule": "process.NativeModule",
+               "abort": "process.abort",
+               "activateUvLoop": "process.activateUvLoop",
+               "addListener": "process.addListener",
+               "arch": "process.arch",
+               "argv": "process.argv",
+               "argv0": "process.argv0",
+               "assert": "process.assert",
+               "atomBinding": "process.atomBinding",
+               "binding": "process.binding",
+               "chdir": "process.chdir",
+               "config": "process.config",
+               "cpuUsage": "process.cpuUsage",
+               "crash": "process.crash",
+               "cwd": "process.cwd",
+               "debugPort": "process.debugPort",
+               "dlopen": "process.dlopen",
+               "domain": "process.domain",
+               "emit": "process.emit",
+               "~~~": "..."
+            },
+            "webContents": {
+               "addListener": "webContents.addListener",
+               "addWorkSpace": "webContents.addWorkSpace",
+               "beginFrameSubscription": "webContents.beginFrameSubscription",
+               "canGoBack": "webContents.canGoBack",
+               "canGoForward": "webContents.canGoForward",
+               "canGoToIndex": "webContents.canGoToIndex",
+               "canGoToOffset": "webContents.canGoToOffset",
+               "capturePage": "webContents.capturePage",
+               "clearHistory": "webContents.clearHistory",
+               "closeDevTools": "webContents.closeDevTools",
+               "copy": "webContents.copy",
+               "copyImageAt": "webContents.copyImageAt",
+               "cut": "webContents.cut",
+               "delete": "webContents.delete",
+               "destroy": "webContents.destroy",
+               "disableDeviceEmulation": "webContents.disableDeviceEmulation",
+               "downloadURL": "webContents.downloadURL",
+               "emit": "webContents.emit",
+               "enableDeviceEmulation": "webContents.enableDeviceEmulation",
+               "~~~": "..."
+            }
+         }
+      }
+   },
+   "wasThrown": false
+}
+[2.077][INFO]: Waiting for pending navigations...
+[2.077][INFO]: Done waiting for pending navigations. Status: ok
+[2.077][INFO]: RESPONSE ExecuteScript {
+   "browserWindow": {
+      "addListener": "browserWindow.addListener",
+      "blur": "browserWindow.blur",
+      "blurWebView": "browserWindow.blurWebView",
+      "capturePage": "browserWindow.capturePage",
+      "center": "browserWindow.center",
+      "close": "browserWindow.close",
+      "closeDevTools": "browserWindow.closeDevTools",
+      "closeFilePreview": "browserWindow.closeFilePreview",
+      "destroy": "browserWindow.destroy",
+      "emit": "browserWindow.emit",
+      "eventNames": "browserWindow.eventNames",
+      "flashFrame": "browserWindow.flashFrame",
+      "focus": "browserWindow.focus",
+      "focusOnWebView": "browserWindow.focusOnWebView",
+      "getBounds": "browserWindow.getBounds",
+      "getChildWindows": "browserWindow.getChildWindows",
+      "getContentBounds": "browserWindow.getContentBounds",
+      "getContentSize": "browserWindow.getContentSize",
+      "getMaxListeners": "browserWindow.getMaxListeners",
+      "~~~": "..."
+   },
+   "electron": {
+      "clipboard": {
+         "availableFormats": "electron.clipboard.availableFormats",
+         "clear": "electron.clipboard.clear",
+         "has": "electron.clipboard.has",
+         "read": "electron.clipboard.read",
+         "readBookmark": "electron.clipboard.readBookmark",
+         "readFindText": "electron.clipboard.readFindText",
+         "readHTML": "electron.clipboard.readHTML",
+         "readHtml": "electron.clipboard.readHtml",
+         "readImage": "electron.clipboard.readImage",
+         "readRTF": "electron.clipboard.readRTF",
+         "readRtf": "electron.clipboard.readRtf",
+         "readText": "electron.clipboard.readText",
+         "write": "electron.clipboard.write",
+         "writeBookmark": "electron.clipboard.writeBookmark",
+         "writeFindText": "electron.clipboard.writeFindText",
+         "writeHTML": "electron.clipboard.writeHTML",
+         "writeHtml": "electron.clipboard.writeHtml",
+         "writeImage": "electron.clipboard.writeImage",
+         "writeRTF": "electron.clipboard.writeRTF",
+         "~~~": "..."
+      },
+      "crashReporter": {
+
+      },
+      "desktopCapturer": {
+         "getSources": "electron.desktopCapturer.getSources"
+      },
+      "ipcRenderer": {
+         "addListener": "electron.ipcRenderer.addListener",
+         "domain": "electron.ipcRenderer.domain",
+         "emit": "electron.ipcRenderer.emit",
+         "eventNames": "electron.ipcRenderer.eventNames",
+         "getMaxListeners": "electron.ipcRenderer.getMaxListeners",
+         "listenerCount": "electron.ipcRenderer.listenerCount",
+         "listeners": "electron.ipcRenderer.listeners",
+         "on": "electron.ipcRenderer.on",
+         "once": "electron.ipcRenderer.once",
+         "prependListener": "electron.ipcRenderer.prependListener",
+         "prependOnceListener": "electron.ipcRenderer.prependOnceListener",
+         "removeAllListeners": "electron.ipcRenderer.removeAllListeners",
+         "removeListener": "electron.ipcRenderer.removeListener",
+         "send": "electron.ipcRenderer.send",
+         "sendSync": "electron.ipcRenderer.sendSync",
+         "sendTo": "electron.ipcRenderer.sendTo",
+         "sendToAll": "electron.ipcRenderer.sendToAll",
+         "sendToHost": "electron.ipcRenderer.sendToHost",
+         "setMaxListeners": "electron.ipcRenderer.setMaxListeners"
+      },
+      "isPromise": {
+
+      },
+      "nativeImage": {
+         "createEmpty": "electron.nativeImage.createEmpty",
+         "createFromBuffer": "electron.nativeImage.createFromBuffer",
+         "createFromDataURL": "electron.nativeImage.createFromDataURL",
+         "createFromPath": "electron.nativeImage.createFromPath"
+      },
+      "remote": {
+         "BrowserWindow": {
+            "addDevToolsExtension": "electron.remote.BrowserWindow.addDevToolsExtension",
+            "fromDevToolsWebContents": "electron.remote.BrowserWindow.fromDevToolsWebContents",
+            "fromId": "electron.remote.BrowserWindow.fromId",
+            "fromWebContents": "electron.remote.BrowserWindow.fromWebContents",
+            "getAllWindows": "electron.remote.BrowserWindow.getAllWindows",
+            "getDevToolsExtensions": "electron.remote.BrowserWindow.getDevToolsExtensions",
+            "getFocusedWindow": "electron.remote.BrowserWindow.getFocusedWindow",
+            "removeDevToolsExtension": "electron.remote.BrowserWindow.removeDevToolsExtension"
+         },
+         "Menu": {
+            "buildFromTemplate": "electron.remote.Menu.buildFromTemplate",
+            "getApplicationMenu": "electron.remote.Menu.getApplicationMenu",
+            "sendActionToFirstResponder": "electron.remote.Menu.sendActionToFirstResponder",
+            "setApplicationMenu": "electron.remote.Menu.setApplicationMenu"
+         },
+         "MenuItem": {
+            "types": "electron.remote.MenuItem.types"
+         },
+         "NavigationController": "electron.remote.NavigationController",
+         "app": {
+            "addListener": "electron.remote.app.addListener",
+            "addRecentDocument": "electron.remote.app.addRecentDocument",
+            "allowNTLMCredentialsForAllDomains": "electron.remote.app.allowNTLMCredentialsForAllDomains",
+            "clearRecentDocuments": "electron.remote.app.clearRecentDocuments",
+            "commandLine": "electron.remote.app.commandLine",
+            "disableHardwareAcceleration": "electron.remote.app.disableHardwareAcceleration",
+            "domain": "electron.remote.app.domain",
+            "emit": "electron.remote.app.emit",
+            "eventNames": "electron.remote.app.eventNames",
+            "exit": "electron.remote.app.exit",
+            "focus": "electron.remote.app.focus",
+            "getAppPath": "electron.remote.app.getAppPath",
+            "getApplicationMenu": "electron.remote.app.getApplicationMenu",
+            "getBadgeCount": "electron.remote.app.getBadgeCount",
+            "getLocale": "electron.remote.app.getLocale",
+            "getLoginItemSettings": "electron.remote.app.getLoginItemSettings",
+            "getMaxListeners": "electron.remote.app.getMaxListeners",
+            "getName": "electron.remote.app.getName",
+            "getPath": "electron.remote.app.getPath",
+            "~~~": "..."
+         },
+         "autoUpdater": {
+            "addListener": "electron.remote.autoUpdater.addListener",
+            "checkForUpdates": "electron.remote.autoUpdater.checkForUpdates",
+            "domain": "electron.remote.autoUpdater.domain",
+            "emit": "electron.remote.autoUpdater.emit",
+            "eventNames": "electron.remote.autoUpdater.eventNames",
+            "getFeedURL": "electron.remote.autoUpdater.getFeedURL",
+            "getMaxListeners": "electron.remote.autoUpdater.getMaxListeners",
+            "listenerCount": "electron.remote.autoUpdater.listenerCount",
+            "listeners": "electron.remote.autoUpdater.listeners",
+            "on": "electron.remote.autoUpdater.on",
+            "once": "electron.remote.autoUpdater.once",
+            "prependListener": "electron.remote.autoUpdater.prependListener",
+            "prependOnceListener": "electron.remote.autoUpdater.prependOnceListener",
+            "quitAndInstall": "electron.remote.autoUpdater.quitAndInstall",
+            "removeAllListeners": "electron.remote.autoUpdater.removeAllListeners",
+            "removeListener": "electron.remote.autoUpdater.removeListener",
+            "setFeedURL": "electron.remote.autoUpdater.setFeedURL",
+            "setMaxListeners": "electron.remote.autoUpdater.setMaxListeners"
+         },
+         "clipboard": {
+            "availableFormats": "electron.remote.clipboard.availableFormats",
+            "clear": "electron.remote.clipboard.clear",
+            "has": "electron.remote.clipboard.has",
+            "read": "electron.remote.clipboard.read",
+            "readBookmark": "electron.remote.clipboard.readBookmark",
+            "readFindText": "electron.remote.clipboard.readFindText",
+            "readHTML": "electron.remote.clipboard.readHTML",
+            "readHtml": "electron.remote.clipboard.readHtml",
+            "readImage": "electron.remote.clipboard.readImage",
+            "readRTF": "electron.remote.clipboard.readRTF",
+            "readRtf": "electron.remote.clipboard.readRtf",
+            "readText": "electron.remote.clipboard.readText",
+            "write": "electron.remote.clipboard.write",
+            "writeBookmark": "electron.remote.clipboard.writeBookmark",
+            "writeFindText": "electron.remote.clipboard.writeFindText",
+            "writeHTML": "electron.remote.clipboard.writeHTML",
+            "writeHtml": "electron.remote.clipboard.writeHtml",
+            "writeImage": "electron.remote.clipboard.writeImage",
+            "writeRTF": "electron.remote.clipboard.writeRTF",
+            "~~~": "..."
+         },
+         "contentTracing": {
+            "cancelWatchEvent": "electron.remote.contentTracing.cancelWatchEvent",
+            "getCategories": "electron.remote.contentTracing.getCategories",
+            "getTraceBufferUsage": "electron.remote.contentTracing.getTraceBufferUsage",
+            "setWatchEvent": "electron.remote.contentTracing.setWatchEvent",
+            "startRecording": "electron.remote.contentTracing.startRecording",
+            "stopRecording": "electron.remote.contentTracing.stopRecording"
+         },
+         "crashReporter": {
+
+         },
+         "createFunctionWithReturnValue": "electron.remote.createFunctionWithReturnValue",
+         "dialog": {
+            "showErrorBox": "electron.remote.dialog.showErrorBox",
+            "showMessageBox": "electron.remote.dialog.showMessageBox",
+            "showOpenDialog": "electron.remote.dialog.showOpenDialog",
+            "showSaveDialog": "electron.remote.dialog.showSaveDialog"
+         },
+         "getBuiltin": "electron.remote.getBuiltin",
+         "getCurrentWebContents": "electron.remote.getCurrentWebContents",
+         "getCurrentWindow": "electron.remote.getCurrentWindow",
+         "getGlobal": "electron.remote.getGlobal",
+         "getGuestWebContents": "electron.remote.getGuestWebContents",
+         "globalShortcut": {
+            "isRegistered": "electron.remote.globalShortcut.isRegistered",
+            "register": "electron.remote.globalShortcut.register",
+            "unregister": "electron.remote.globalShortcut.unregister",
+            "unregisterAll": "electron.remote.globalShortcut.unregisterAll"
+         },
+         "ipcMain": {
+            "addListener": "electron.remote.ipcMain.addListener",
+            "domain": "electron.remote.ipcMain.domain",
+            "emit": "electron.remote.ipcMain.emit",
+            "eventNames": "electron.remote.ipcMain.eventNames",
+            "getMaxListeners": "electron.remote.ipcMain.getMaxListeners",
+            "listenerCount": "electron.remote.ipcMain.listenerCount",
+            "listeners": "electron.remote.ipcMain.listeners",
+            "on": "electron.remote.ipcMain.on",
+            "once": "electron.remote.ipcMain.once",
+            "prependListener": "electron.remote.ipcMain.prependListener",
+            "prependOnceListener": "electron.remote.ipcMain.prependOnceListener",
+            "removeAllListeners": "electron.remote.ipcMain.removeAllListeners",
+            "removeListener": "electron.remote.ipcMain.removeListener",
+            "setMaxListeners": "electron.remote.ipcMain.setMaxListeners"
+         },
+         "isPromise": "electron.remote.isPromise",
+         "~~~": "..."
+      },
+      "screen": {
+         "addListener": "electron.screen.addListener",
+         "domain": "electron.screen.domain",
+         "emit": "electron.screen.emit",
+         "eventNames": "electron.screen.eventNames",
+         "getAllDisplays": "electron.screen.getAllDisplays",
+         "getCursorScreenPoint": "electron.screen.getCursorScreenPoint",
+         "getDisplayMatching": "electron.screen.getDisplayMatching",
+         "getDisplayNearestPoint": "electron.screen.getDisplayNearestPoint",
+         "getMaxListeners": "electron.screen.getMaxListeners",
+         "getPrimaryDisplay": "electron.screen.getPrimaryDisplay",
+         "listenerCount": "electron.screen.listenerCount",
+         "listeners": "electron.screen.listeners",
+         "on": "electron.screen.on",
+         "once": "electron.screen.once",
+         "prependListener": "electron.screen.prependListener",
+         "prependOnceListener": "electron.screen.prependOnceListener",
+         "removeAllListeners": "electron.screen.removeAllListeners",
+         "removeListener": "electron.screen.removeListener",
+         "setMaxListeners": "electron.screen.setMaxListeners"
+      },
+      "shell": {
+         "beep": "electron.shell.beep",
+         "moveItemToTrash": "electron.shell.moveItemToTrash",
+         "openExternal": "electron.shell.openExternal",
+         "openItem": "electron.shell.openItem",
+         "showItemInFolder": "electron.shell.showItemInFolder"
+      },
+      "webFrame": {
+         "addListener": "electron.webFrame.addListener",
+         "attachGuest": "electron.webFrame.attachGuest",
+         "clearCache": "electron.webFrame.clearCache",
+         "detachGuest": "electron.webFrame.detachGuest",
+         "domain": "electron.webFrame.domain",
+         "emit": "electron.webFrame.emit",
+         "eventNames": "electron.webFrame.eventNames",
+         "executeJavaScript": "electron.webFrame.executeJavaScript",
+         "getMaxListeners": "electron.webFrame.getMaxListeners",
+         "getResourceUsage": "electron.webFrame.getResourceUsage",
+         "getZoomFactor": "electron.webFrame.getZoomFactor",
+         "getZoomLevel": "electron.webFrame.getZoomLevel",
+         "insertText": "electron.webFrame.insertText",
+         "listenerCount": "electron.webFrame.listenerCount",
+         "listeners": "electron.webFrame.listeners",
+         "on": "electron.webFrame.on",
+         "once": "electron.webFrame.once",
+         "prependListener": "electron.webFrame.prependListener",
+         "prependOnceListener": "electron.webFrame.prependOnceListener",
+         "~~~": "..."
+      }
+   },
+   "rendererProcess": {
+      "NativeModule": "process.NativeModule",
+      "abort": "process.abort",
+      "activateUvLoop": "process.activateUvLoop",
+      "addListener": "process.addListener",
+      "arch": "process.arch",
+      "argv": "process.argv",
+      "argv0": "process.argv0",
+      "assert": "process.assert",
+      "atomBinding": "process.atomBinding",
+      "binding": "process.binding",
+      "chdir": "process.chdir",
+      "config": "process.config",
+      "cpuUsage": "process.cpuUsage",
+      "crash": "process.crash",
+      "cwd": "process.cwd",
+      "debugPort": "process.debugPort",
+      "dlopen": "process.dlopen",
+      "domain": "process.domain",
+      "emit": "process.emit",
+      "~~~": "..."
+   },
+   "webContents": {
+      "addListener": "webContents.addListener",
+      "addWorkSpace": "webContents.addWorkSpace",
+      "beginFrameSubscription": "webContents.beginFrameSubscription",
+      "canGoBack": "webContents.canGoBack",
+      "canGoForward": "webContents.canGoForward",
+      "canGoToIndex": "webContents.canGoToIndex",
+      "canGoToOffset": "webContents.canGoToOffset",
+      "capturePage": "webContents.capturePage",
+      "clearHistory": "webContents.clearHistory",
+      "closeDevTools": "webContents.closeDevTools",
+      "copy": "webContents.copy",
+      "copyImageAt": "webContents.copyImageAt",
+      "cut": "webContents.cut",
+      "delete": "webContents.delete",
+      "destroy": "webContents.destroy",
+      "disableDeviceEmulation": "webContents.disableDeviceEmulation",
+      "downloadURL": "webContents.downloadURL",
+      "emit": "webContents.emit",
+      "enableDeviceEmulation": "webContents.enableDeviceEmulation",
+      "~~~": "..."
+   }
+}
+[2.118][INFO]: COMMAND SetScriptTimeout {
+   "ms": 60000
+}
+[2.118][INFO]: RESPONSE SetScriptTimeout
+[2.125][INFO]: COMMAND ExecuteScript {
+   "args": [ "isLoading", [  ], "require" ],
+   "script": "return (function callWebContentsApi(name, args, requireName) {\n  var webContents = window[requireName]('electron').remote.getCurrentWebContents()\n  return webContents[name].apply(webContents, args)..."
+}
+[2.125][INFO]: Waiting for pending navigations...
+[2.125][INFO]: Done waiting for pending navigations. Status: ok
+[2.125][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=14) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[2.131][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=14) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": false
+      }
+   },
+   "wasThrown": false
+}
+[2.131][INFO]: Waiting for pending navigations...
+[2.131][INFO]: Done waiting for pending navigations. Status: ok
+[2.131][INFO]: RESPONSE ExecuteScript false
+[2.135][INFO]: COMMAND GetWindows {
+
+}
+[2.135][DEBUG]: DevTools request: http://localhost:12115/json
+[2.135][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "id": "68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "title": "Web Archiving Integration Layer",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde"
+}, {
+   "description": "",
+   "id": "6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "title": "Wail is loading",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html"
+} ]
+
+[2.135][INFO]: RESPONSE GetWindows [ "CDwindow-6590f6d0-d7f7-4101-879c-2e3e6be3c895", "CDwindow-68aca3cb-e93f-454b-8c64-3ec90e4fbdde" ]
+[2.139][INFO]: COMMAND GetWindows {
+
+}
+[2.139][DEBUG]: DevTools request: http://localhost:12115/json
+[2.139][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "id": "68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "title": "Web Archiving Integration Layer",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde"
+}, {
+   "description": "",
+   "id": "6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "title": "Wail is loading",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html"
+} ]
+
+[2.139][INFO]: RESPONSE GetWindows [ "CDwindow-6590f6d0-d7f7-4101-879c-2e3e6be3c895", "CDwindow-68aca3cb-e93f-454b-8c64-3ec90e4fbdde" ]
+[2.143][INFO]: COMMAND SwitchToWindow {
+   "name": "CDwindow-68aca3cb-e93f-454b-8c64-3ec90e4fbdde"
+}
+[2.143][DEBUG]: DevTools request: http://localhost:12115/json
+[2.143][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "id": "68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "title": "Web Archiving Integration Layer",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde"
+}, {
+   "description": "",
+   "id": "6590f6d0-d7f7-4101-879c-2e3e6be3c895",
+   "title": "Wail is loading",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/loadingScreens/notFirstTime/loadingScreen.html"
+} ]
+
+[2.143][INFO]: RESPONSE SwitchToWindow
+[5.150][INFO]: COMMAND GetWindows {
+
+}
+[5.150][DEBUG]: DevTools request: http://localhost:12115/json
+[5.151][DEBUG]: DevTools response: [ {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/bb6761c9-64ae-4a0a-98d6-2548e0546f39",
+   "id": "bb6761c9-64ae-4a0a-98d6-2548e0546f39",
+   "title": "Request Daemon",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/background/requestDaemon.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/bb6761c9-64ae-4a0a-98d6-2548e0546f39"
+}, {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/df450a0e-c2bf-4672-b5e6-0603736d6c48",
+   "id": "df450a0e-c2bf-4672-b5e6-0603736d6c48",
+   "title": "Crawl Manager",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/background/crawls.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/df450a0e-c2bf-4672-b5e6-0603736d6c48"
+}, {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/ed172702-9ee3-40ae-9f52-64571abfa572",
+   "id": "ed172702-9ee3-40ae-9f52-64571abfa572",
+   "title": "Archive Manager",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/background/archives.html",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/ed172702-9ee3-40ae-9f52-64571abfa572"
+}, {
+   "description": "",
+   "devtoolsFrontendUrl": "/devtools/inspector.html?ws=localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "id": "68aca3cb-e93f-454b-8c64-3ec90e4fbdde",
+   "title": "Web Archiving Integration Layer",
+   "type": "page",
+   "url": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html#/",
+   "webSocketDebuggerUrl": "ws://localhost:12115/devtools/page/68aca3cb-e93f-454b-8c64-3ec90e4fbdde"
+} ]
+
+[5.151][INFO]: RESPONSE GetWindows [ "CDwindow-68aca3cb-e93f-454b-8c64-3ec90e4fbdde", "CDwindow-bb6761c9-64ae-4a0a-98d6-2548e0546f39", "CDwindow-df450a0e-c2bf-4672-b5e6-0603736d6c48", "CDwindow-ed172702-9ee3-40ae-9f52-64571abfa572" ]
+[5.155][INFO]: COMMAND ExecuteScript {
+   "args": [ "getTitle", [  ], "require" ],
+   "script": "return (function callWebContentsApi(name, args, requireName) {\n  var webContents = window[requireName]('electron').remote.getCurrentWebContents()\n  return webContents[name].apply(webContents, args)..."
+}
+[5.156][INFO]: resolved localhost to ["127.0.0.1"]
+[5.156][DEBUG]: DEVTOOLS COMMAND Console.enable (id=1) {
+
+}
+[5.156][DEBUG]: DEVTOOLS COMMAND DOM.getDocument (id=2) {
+
+}
+[5.156][DEBUG]: DEVTOOLS COMMAND Runtime.enable (id=3) {
+
+}
+[5.156][DEBUG]: DEVTOOLS COMMAND Page.enable (id=4) {
+
+}
+[5.156][DEBUG]: DEVTOOLS COMMAND Page.enable (id=5) {
+
+}
+[5.161][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 12,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 122868,
+      "parameters": [ {
+         "type": "string",
+         "value": "checkUrl Reducer"
+      }, {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":1}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 12,
+            "functionName": "checkUrl",
+            "lineNumber": 122868,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "checkUrl Reducer",
+      "timestamp": 1483082236.23113,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.161][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 12,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 122918,
+      "parameters": [ {
+         "type": "string",
+         "value": "in collections reducer"
+      }, {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":2}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 12,
+            "functionName": "collectionReducer",
+            "lineNumber": 122918,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "in collections reducer",
+      "timestamp": 1483082236.23151,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.161][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 12,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 123031,
+      "parameters": [ {
+         "type": "string",
+         "value": "runs reducer"
+      }, {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":3}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 12,
+            "functionName": "runsReducer",
+            "lineNumber": 123031,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "runs reducer",
+      "timestamp": 1483082236.23209,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.161][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 18,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 117190,
+      "parameters": [ {
+         "type": "string",
+         "value": "twitter user not signed in"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 18,
+            "functionName": "_checkTwit",
+            "lineNumber": 117190,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "twitter user not signed in",
+      "timestamp": 1483082236.26748,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 14,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 23909,
+      "parameters": [ {
+         "type": "string",
+         "value": "myAutoSizer did mount"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 14,
+            "functionName": "componentDidMount",
+            "lineNumber": 23909,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "myAutoSizer did mount",
+      "timestamp": 1483082236.40939,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 14,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 120424,
+      "parameters": [ {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":4}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 14,
+            "functionName": "receiveMessage",
+            "lineNumber": 120424,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "[object Object]",
+      "timestamp": 1483082236.41244,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 18,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 120432,
+      "parameters": [ {
+         "type": "string",
+         "value": "no need to display the initial notification event"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 18,
+            "functionName": "receiveMessage",
+            "lineNumber": 120432,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "no need to display the initial notification event",
+      "timestamp": 1483082236.4125,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 12,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 122918,
+      "parameters": [ {
+         "type": "string",
+         "value": "in collections reducer"
+      }, {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":5}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 12,
+            "functionName": "collectionReducer",
+            "lineNumber": 122918,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "in collections reducer",
+      "timestamp": 1483082236.94462,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS EVENT Console.messageAdded {
+   "message": {
+      "column": 12,
+      "executionContextId": 1,
+      "level": "log",
+      "line": 123031,
+      "parameters": [ {
+         "type": "string",
+         "value": "runs reducer"
+      }, {
+         "className": "Object",
+         "description": "Object",
+         "objectId": "{\"injectedScriptId\":1,\"id\":6}",
+         "type": "object"
+      } ],
+      "source": "console-api",
+      "stack": {
+         "callFrames": [ {
+            "columnNumber": 12,
+            "functionName": "runsReducer",
+            "lineNumber": 123031,
+            "scriptId": "87",
+            "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+         } ]
+      },
+      "text": "runs reducer",
+      "timestamp": 1483082237.26084,
+      "type": "log",
+      "url": "/home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/dist/wail.bundle.js"
+   }
+}
+[5.162][DEBUG]: DEVTOOLS RESPONSE Console.enable (id=1) {
+
+}
+[5.163][DEBUG]: DEVTOOLS RESPONSE DOM.getDocument (id=2) {
+   "root": {
+      "baseURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html#/",
+      "childNodeCount": 2,
+      "children": [ {
+         "localName": "",
+         "nodeId": 2,
+         "nodeName": "html",
+         "nodeType": 10,
+         "nodeValue": "",
+         "publicId": "",
+         "systemId": ""
+      }, {
+         "attributes": [  ],
+         "childNodeCount": 2,
+         "children": [ {
+            "attributes": [  ],
+            "childNodeCount": 9,
+            "localName": "head",
+            "nodeId": 4,
+            "nodeName": "HEAD",
+            "nodeType": 1,
+            "nodeValue": ""
+         }, {
+            "attributes": [  ],
+            "childNodeCount": 5,
+            "localName": "body",
+            "nodeId": 5,
+            "nodeName": "BODY",
+            "nodeType": 1,
+            "nodeValue": ""
+         } ],
+         "frameId": "19232.1",
+         "localName": "html",
+         "nodeId": 3,
+         "nodeName": "HTML",
+         "nodeType": 1,
+         "nodeValue": ""
+      } ],
+      "documentURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html#/",
+      "localName": "",
+      "nodeId": 1,
+      "nodeName": "#document",
+      "nodeType": 9,
+      "nodeValue": "",
+      "xmlVersion": ""
+   }
+}
+[5.163][DEBUG]: DEVTOOLS EVENT Runtime.executionContextCreated {
+   "context": {
+      "frameId": "19232.1",
+      "id": 1,
+      "isDefault": true,
+      "name": "",
+      "origin": "file://"
+   }
+}
+[5.163][DEBUG]: DEVTOOLS RESPONSE Runtime.enable (id=3) {
+
+}
+[5.163][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=4) {
+
+}
+[5.163][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=5) {
+
+}
+[5.163][DEBUG]: DEVTOOLS COMMAND Page.enable (id=6) {
+
+}
+[5.163][DEBUG]: DEVTOOLS RESPONSE Page.enable (id=6) {
+
+}
+[5.163][INFO]: Waiting for pending navigations...
+[5.163][DEBUG]: DEVTOOLS COMMAND DOM.getDocument (id=7) {
+
+}
+[5.164][DEBUG]: DEVTOOLS RESPONSE DOM.getDocument (id=7) {
+   "root": {
+      "baseURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html#/",
+      "childNodeCount": 2,
+      "children": [ {
+         "localName": "",
+         "nodeId": 7,
+         "nodeName": "html",
+         "nodeType": 10,
+         "nodeValue": "",
+         "publicId": "",
+         "systemId": ""
+      }, {
+         "attributes": [  ],
+         "childNodeCount": 2,
+         "children": [ {
+            "attributes": [  ],
+            "childNodeCount": 9,
+            "localName": "head",
+            "nodeId": 9,
+            "nodeName": "HEAD",
+            "nodeType": 1,
+            "nodeValue": ""
+         }, {
+            "attributes": [  ],
+            "childNodeCount": 5,
+            "localName": "body",
+            "nodeId": 10,
+            "nodeName": "BODY",
+            "nodeType": 1,
+            "nodeValue": ""
+         } ],
+         "frameId": "19232.1",
+         "localName": "html",
+         "nodeId": 8,
+         "nodeName": "HTML",
+         "nodeType": 1,
+         "nodeValue": ""
+      } ],
+      "documentURL": "file:///home/john/my-fork-wail/release/WAIL-linux-x64/resources/app/wail-ui/wail.html#/",
+      "localName": "",
+      "nodeId": 6,
+      "nodeName": "#document",
+      "nodeType": 9,
+      "nodeValue": "",
+      "xmlVersion": ""
+   }
+}
+[5.164][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=8) {
+   "expression": "var isLoaded = document.readyState == 'complete' ||    document.readyState == 'interactive';if (isLoaded) {  var frame = document.createElement('iframe');  frame.name = 'chromedriver dummy frame'; ..."
+}
+[5.169][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 6,
+   "nodeId": 10
+}
+[5.169][DEBUG]: DEVTOOLS EVENT Page.frameAttached {
+   "frameId": "19232.2",
+   "parentFrameId": "19232.1"
+}
+[5.169][DEBUG]: DEVTOOLS EVENT Page.frameStartedLoading {
+   "frameId": "19232.2"
+}
+[5.169][DEBUG]: DEVTOOLS EVENT Page.frameNavigated {
+   "frame": {
+      "id": "19232.2",
+      "loaderId": "19232.1",
+      "mimeType": "text/html",
+      "name": "chromedriver dummy frame",
+      "parentId": "19232.1",
+      "securityOrigin": "file://",
+      "url": "about:blank"
+   }
+}
+[5.169][DEBUG]: DEVTOOLS EVENT Runtime.executionContextCreated {
+   "context": {
+      "frameId": "19232.2",
+      "id": 2,
+      "isDefault": true,
+      "name": "",
+      "origin": "file://"
+   }
+}
+[5.169][DEBUG]: DEVTOOLS EVENT Page.frameStoppedLoading {
+   "frameId": "19232.2"
+}
+[5.169][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=8) {
+   "result": {
+      "description": "3",
+      "type": "number",
+      "value": 3
+   },
+   "wasThrown": false
+}
+[5.169][INFO]: Done waiting for pending navigations. Status: ok
+[5.170][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=9) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[5.171][DEBUG]: DEVTOOLS EVENT DOM.childNodeCountUpdated {
+   "childNodeCount": 5,
+   "nodeId": 10
+}
+[5.171][DEBUG]: DEVTOOLS EVENT Runtime.executionContextDestroyed {
+   "executionContextId": 2
+}
+[5.171][DEBUG]: DEVTOOLS EVENT Page.frameDetached {
+   "frameId": "19232.2"
+}
+[5.179][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=9) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": "Web Archiving Integration Layer"
+      }
+   },
+   "wasThrown": false
+}
+[5.179][INFO]: Waiting for pending navigations...
+[5.179][INFO]: Done waiting for pending navigations. Status: ok
+[5.179][INFO]: RESPONSE ExecuteScript "Web Archiving Integration Layer"
+[5.182][INFO]: COMMAND ExecuteScript {
+   "args": [  ],
+   "script": "return (function () {\n      return window.___header.curState()\n    }).apply(null, arguments)"
+}
+[5.182][INFO]: Waiting for pending navigations...
+[5.182][INFO]: Done waiting for pending navigations. Status: ok
+[5.182][DEBUG]: DEVTOOLS COMMAND Runtime.evaluate (id=10) {
+   "expression": "(function() { // Copyright (c) 2012 The Chromium Authors. All rights reserved.\n// Use of this source code is governed by a BSD-style license that can be\n// found in the LICENSE file.\n\n/**\n * Enum f...",
+   "returnByValue": true
+}
+[5.185][DEBUG]: DEVTOOLS RESPONSE Runtime.evaluate (id=10) {
+   "result": {
+      "type": "object",
+      "value": {
+         "status": 0,
+         "value": {
+            "location": "WAIL",
+            "open": false
+         }
+      }
+   },
+   "wasThrown": false
+}
+[5.185][INFO]: Waiting for pending navigations...
+[5.185][INFO]: Done waiting for pending navigations. Status: ok
+[5.185][INFO]: RESPONSE ExecuteScript {
+   "location": "WAIL",
+   "open": false
+}

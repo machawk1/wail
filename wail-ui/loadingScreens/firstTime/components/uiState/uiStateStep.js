@@ -38,7 +38,7 @@ const enhance = shouldUpdate((props, nextProps) =>
 )
 
 const UIStateStep = enhance((props) => (
-  <CheckStepLabel {...props} />
+  <CheckStepLabel lid='UIStateStep' {...props} />
 ))
 
 UIStateStep.propTypes = {

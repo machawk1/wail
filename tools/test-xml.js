@@ -33,7 +33,7 @@ const rp = require('request-promise')
 const chokidar = require('chokidar')
 // const madge = require('madge')
 const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
-const cwd = path.resolve('.')
+
 
 const electronMainConfig = {
   detectiveOptions: {
@@ -46,52 +46,7 @@ function normalizeJoin (...paths) {
   return path.normalize(path.join(...paths))
 }
 
-const replaceOldCrawlPath = () => {
-  console.log(cwd)
-  const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
-  const newPath = '/Users/jberlin/Documents/WAIL_Managed_Crawls'
-  const oldPath = path.join(cwd, 'bundledApps/heritrix/jobs')
-  console.log(oldPath, newPath)
-  const crawls = new DB({
-    filename: dbPath,
-    autoload: true
-  })
-  return new Promise((resolve, reject) => {
-    crawls.find({}, (errFind, docs) => {
-      if (errFind) {
-        resolve({
-          wasError: true,
-          where: 'finding',
-          err: errFind
-        })
-      } else {
-        let ndocs = docs.map(ac => {
-          ac.path = S(ac.path).replaceAll(oldPath, newPath).s
-          ac.confP = S(ac.confP).replaceAll(oldPath, newPath).s
-          return ac
-        })
-        crawls.remove({}, {multi: true}, (errRemove, nremoved) => {
-          if (errRemove) {
-            console.error(errRemove)
-            resolve({
-              wasError: true,
-              where: 'removing',
-              err: errRemove
-            })
-          } else {
-            console.log(nremoved)
-            crawls.insert(ndocs, (errInsert, iDocs) => {
-              resolve({
-                wasError: false,
-                docs: iDocs
-              })
-            })
-          }
-        })
-      }
-    })
-  })
-}
+
 //
 // //allRuns.map(r => r.jobId)
 const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
@@ -116,18 +71,25 @@ const momentSortRev = (m1, m2) => {
     return -1
   }
 }
+
+const t =  async () => {
+  const bar = await Promise.resolve('bar')
+  console.log(bar)
+}
+
+t()
 //
-crawls.find({}, (err, docs) => {
-  let ndocs = docs.map(r => {
-    console.log(r.latestRun)
-    return {
-      jobId: r.jobId,
-      timestamp: moment(r.latestRun.timestamp)
-    }
-  })
-  ndocs.sort(momentSortRev)
-  console.log(inspect(trans(ndocs)))
-})
+// crawls.find({}, (err, docs) => {
+//   let ndocs = docs.map(r => {
+//     console.log(r.latestRun)
+//     return {
+//       jobId: r.jobId,
+//       timestamp: moment(r.latestRun.timestamp)
+//     }
+//   })
+//   ndocs.sort(momentSortRev)
+//   console.log(inspect(trans(ndocs)))
+// })
 // replaceOldCrawlPath().then(result => {
 //   if (result.wasError) {
 //     let {err, where} = result

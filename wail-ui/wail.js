@@ -22,7 +22,7 @@ if (process.env.NODE_ENV === 'development') {
 
 Promise.promisifyAll(fs)
 
-global.notifications$ = new Rx.BehaviorSubject({ type: 'initial' })
+global.notifications$ = new Rx.BehaviorSubject({type: 'initial'})
 global.resizer = createDetectElementResize()
 global.twitterClient = new TwitterClient()
 
@@ -53,5 +53,10 @@ window.logger = bunyan.createLogger({
 
 const store = configureStore()
 
-render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))
+if (process.env.WAILTEST) {
+  const setupTestHook = require('./setupTestHook')
+  setupTestHook(store)
+}
+
+render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
 
