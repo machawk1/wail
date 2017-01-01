@@ -11,9 +11,10 @@ const path = require('path')
 const Promise = require('bluebird')
 const S = require('string')
 const cp = require('child_process')
-const lfp = require('lodash/fp')
-// const fs = require('fs-extra')
-// const through2 = require('through2')
+const fp = require('lodash/fp')
+const fs = require('fs-extra')
+const through2 = require('through2')
+const split = require('split2')
 // const prettyBytes = require('pretty-bytes')
 // const path = require('path')
 // const schedule = require('node-schedule')
@@ -24,60 +25,38 @@ const lfp = require('lodash/fp')
 // const prettySeconds = require('pretty-seconds')
 // const Rx = require('rxjs')
 // const delay = require('lodash/delay')
-// const findP = require('find-process')
-// */5 * * * *
+const findP = require('find-process')
 // const Twit = require('twit')
-//
 const tld = require('tldjs')
 const rp = require('request-promise')
 const chokidar = require('chokidar')
-// const madge = require('madge')
-const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
+const isRunning = require('is-running')
+const pathExists = require('path-exists')
+const ElectronSettings = require('electron-settings')
 
 
-const electronMainConfig = {
-  detectiveOptions: {
-    webpackConfig: '/home/john/my-fork-wail/webpackConfigs/ui/webpack.config.electron.js'
-  }
-}
-
-function normalizeJoin (...paths) {
-  console.log(arguments)
-  return path.normalize(path.join(...paths))
-}
-
-
-//
-// //allRuns.map(r => r.jobId)
-const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
-const crawls = new DB({
-  filename: dbPath,
-  autoload: true
+findP('name','wayback').then(it => {
+  console.log(it)
 })
+
+// const pathChecker = async path => {
+//   return await pathExists(path)
+// }
 //
-const trans = lfp.map(r => ({
-  jobId: r.jobId,
-  timestamp: moment(r.latestRun.timestamp)
-}))
+// pathExists('/home/john/Documents/WAIL_ManagedCollections').then(exists => {
+//   console.log(exists)
+// })
+//
+// pathExists('/home/john/Documents/WAIL_Managed_Crawls').then(exists => {
+//   console.log(exists)
+// })
 
-const momentSortRev = (m1, m2) => {
-  let t1 = m1.timestamp
-  let t2 = m2.timestamp
-  if (t1.isBefore(t2)) {
-    return 1
-  } else if (t1.isSame(t2)) {
-    return 0
-  } else {
-    return -1
-  }
-}
-
-const t =  async () => {
-  const bar = await Promise.resolve('bar')
-  console.log(bar)
-}
-
-t()
+// const dbPath = path.join(cwd, 'wail-config/database/crawls.db')
+// const crawls = new DB({
+//   filename: dbPath,
+//   autoload: true
+// })
+//
 //
 // crawls.find({}, (err, docs) => {
 //   let ndocs = docs.map(r => {

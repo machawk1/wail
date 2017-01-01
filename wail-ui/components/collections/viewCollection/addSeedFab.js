@@ -1,11 +1,11 @@
-import React, {PropTypes} from 'react'
-import {Link} from 'react-router'
+import React, { PropTypes } from 'react'
+import { Link } from 'react-router'
 import Add from 'material-ui/svg-icons/content/add'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 
-const AddSeedFab = ({ viewingCol, fabStyle }) => (
+const AddSeedFab = ({viewingCol, fabStyle}) => (
   <Link to={`/Collections/${viewingCol}/addSeed`}>
-    <FloatingActionButton style={fabStyle}>
+    <FloatingActionButton id='addSeedFab' style={fabStyle}>
       <Add />
     </FloatingActionButton>
   </Link>

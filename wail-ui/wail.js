@@ -55,7 +55,7 @@ const store = configureStore()
 
 if (process.env.WAILTEST) {
   const setupTestHook = require('./setupTestHook')
-  setupTestHook(store)
+  setupTestHook(store, hashHistory)
 }
 
 render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))

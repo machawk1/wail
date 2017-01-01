@@ -7,7 +7,6 @@ import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
 import CrawlIndicator from './crawlingIndicator'
 import changeLocation from '../../actions/changeLocation'
-import Promise from 'bluebird'
 
 export default class Header extends Component {
   static contextTypes = {
@@ -23,11 +22,10 @@ export default class Header extends Component {
         toggle: () => {
           this.handleToggle()
         },
-        goTo: (loc, to) => {
-          this.handleClose(loc, to)
+        goHome: () => {
+          this.handleClose('WAIL', '/')
         }
       }
-
     }
   }
 

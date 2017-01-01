@@ -2,6 +2,7 @@ const Application = require('spectron').Application
 const path = require('path')
 const util = require('util')
 const _ = require('lodash')
+const fs = require('fs-extra')
 const Promise = require('bluebird')
 
 const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
@@ -41,7 +42,11 @@ const wailApp = new Application({
   chromeDriverLogPath: '/home/john/my-fork-wail/chromDLogs/logs.txt'
 })
 
-let fullLoadTo
+const executeJs = async (toExecute) => {
+  let {value} = await wailApp.client.execute(toExecute)
+  return value
+}
+
 console.log(wailApp.getSettings())
 wailApp.start()
   .then(async () => {
@@ -49,43 +54,18 @@ wailApp.start()
     await wailApp.client.waitUntilWindowLoaded()
 
     const beforeLoadCount = await wailApp.client.getWindowCount()
-    // exspected 2
-    console.log(`initial open windows ${beforeLoadCount}`)
-
     // switch to wail-ui window
     await wailApp.client.windowByIndex(1)
 
     const afterLoadCount = await Promise.delay(3000).then(async () => await wailApp.client.getWindowCount())
-    // exspected 4
-    console.log(`after full load window count ${afterLoadCount}`)
-
-    const title = await wailApp.webContents.getTitle()
-    // exspected Web Archiving Integration Layer
-    console.log(`the current windows title is ${title}`)
-
-    // exspected {open: false, location: 'WAIL'}
-    let {value} = await wailApp.client.execute(function () {
-      return window.___header.curState()
+    await wailApp.client.execute(function () {
+      return window.___header.toggle()
     })
-    const {location, open} = value
-    console.log(`after loading the header is open? ${open} and we are at ${location}`)
-    // wailApp.webContents.executeJavaScript('', false)
-    //   .then((result) => {
-    //     console.log(result)
-    //   }, (err) => console.error(err))
-    // console.log(`after loading the header is open? ${open} and we are at ${location}`)
-
-    // let ussText = await wailApp.client.getText('#UIStateStep')
-    // console.log(ussText)
-    // console.log(await wailApp.client.getText('#UIStateStep'))
-    // count = await wailApp.client.getWindowCount()
-    // console.log(`open windows ${count}`)
-
-    // console.log(inspect(wailApp.electron))
-    // .ipcMain.on('loading-finished', (e, loadState) => {
-    //   console.log('got intial load')
-    //   console.log(inspect(loadState))
-    // })
+    await Promise.delay(2000).then(async () => await wailApp.client.click('#sidebarServices'))
+    let rr = await executeJs(function () {
+      return window.___getTrueLoc()
+    })
+    console.log(rr)
   })
   .catch((error) => {
     console.error(error)

@@ -1,10 +1,10 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import CardTitle from 'material-ui/Card/CardTitle'
-import {Link, IndexLink} from 'react-router'
+import { Link, IndexLink } from 'react-router'
 import FlatButton from 'material-ui/FlatButton'
-import {Flex} from 'react-flex'
-import {resetCheckMessage} from '../../../../actions/archival'
-import {connect} from 'react-redux'
+import { Flex } from 'react-flex'
+import { resetCheckMessage } from '../../../../actions/archival'
+import { connect } from 'react-redux'
 
 const dispatchToProp = dispatch => ({
   nukeCheckUrl () {
@@ -12,8 +12,8 @@ const dispatchToProp = dispatch => ({
   }
 })
 
-const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
-  let { primary1Color } = context.muiTheme.baseTheme.palette
+const CollAddSeedHeader = ({col, nukeCheckUrl}, context) => {
+  let {primary1Color} = context.muiTheme.baseTheme.palette
   let linkStyle = {
     color: primary1Color,
     textDecoration: 'none'
@@ -27,7 +27,7 @@ const CollAddSeedHeader = ({ col, nukeCheckUrl }, context) => {
       <CardTitle
         title={title}
       />
-      <Link to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem' /></Link>
+      <Link id='addFromFs' to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem'/></Link>
     </Flex>
   )
 }

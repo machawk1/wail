@@ -64,7 +64,7 @@ class SelectColTable extends Component {
       let cname = col.get('colName')
       trs.push(<TableRow key={`${i}-${cname}`}>
         <TableRowColumn key={`${i}-${cname}-name`}>
-          <Link to={`Collections/${cname}`} style={{ color: primary1Color, textDecoration: 'none' }}>{cname}</Link>
+          <Link id={`linkTo-${cname}`} to={`Collections/${cname}`} style={{ color: primary1Color, textDecoration: 'none' }}>{cname}</Link>
         </TableRowColumn>
         <TableRowColumn key={`${i}-${cname}-numSeeds`}>
           {col.get('seeds').size}

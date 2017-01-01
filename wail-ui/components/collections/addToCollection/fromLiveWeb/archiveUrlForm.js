@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react'
+import ReactDom from 'react-dom'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { ipcRenderer as ipc } from 'electron'
 import { SubmissionError, reset as resetForm } from 'redux-form'
@@ -49,6 +50,11 @@ class ArchiveUrlForm extends Component {
     }
   }
 
+  getUrlInput () {
+    console.log(ReactDom.findDOMNode(this.refs.urlInput).value)
+    return this.refs.urlInput
+  }
+
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid} = this.props
     return (
@@ -56,6 +62,7 @@ class ArchiveUrlForm extends Component {
         <form onSubmit={handleSubmit(::this.submit)} style={{height: '300px'}}>
           <div style={{height: '75px'}}>
             <Field
+              id='urlInput'
               name='url'
               component={TextField}
               floatingLabelText='Seed to add:'
@@ -66,19 +73,21 @@ class ArchiveUrlForm extends Component {
           </div>
           <div style={{height: '175px', width: '310px'}}>
             <Field
+              id='archiveConfig'
               name='config'
               component={SelectField}
               hintText='Archive Configuration'
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem value={1} primaryText='Page Only'/>
-              <MenuItem value={2} primaryText='Page + Same domain links'/>
-              <MenuItem value={3} primaryText='Page + All internal and external links'/>
+              <MenuItem id='ponly' value={1} primaryText='Page Only'/>
+              <MenuItem id='p_sdl' value={2} primaryText='Page + Same domain links'/>
+              <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links'/>
             </Field>
           </div>
           <div style={{height: '40px', transform: 'translateY(20px)'}}>
             <FlatButton
+              id='archiveNowButton'
               label='Add and Archive Now'
               type='submit'
               disabled={invalid || pristine || submitting}

@@ -96,7 +96,11 @@ export default class SeedTable extends Component {
                   <TableHeaderColumn style={{width: 100}}>Last Archived</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 55}}>Mementos</TableHeaderColumn>
                   <TableHeaderColumn>
-                    <FlatButton label={'Show Archive Configurations'} onTouchTap={::this.viewArchiveConfig}/>
+                    <FlatButton
+                      id='showArchiveConf'
+                      label={'Show Archive Configurations'}
+                      onTouchTap={::this.viewArchiveConfig}
+                    />
                   </TableHeaderColumn>
                 </TableRow>
               </TableHeader>
