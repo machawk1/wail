@@ -110,7 +110,7 @@ test.serial('WAIL can start and stop the services', async t => {
   t.true(dbChecker.isPidRunning(hpid), 'the pid for heritrix in the database should be tied to a running instance before testing start stop')
   t.true(dbChecker.isPidRunning(wpid), 'the pid for wayback in the database should be tied to a running instance before testing start stop')
 
-  await wailApp.gotTo('#sidebarServices')
+  await wailApp.goTo('#sidebarServices')
 
   let heritrixStatus = await wailApp.getText('#heritrixStatus')
   t.is(heritrixStatus, 'Running', 'heritrix status as indicated by the ui should be Running')
@@ -151,23 +151,22 @@ test.serial('WAIL can start and stop the services', async t => {
 })
 
 test.serial('Visiting different parts of the ui does not fail', async t => {
-  await wailApp.gotTo('#sidebarHeritrix')
-  let loc = await wailApp.getUiLoaction()
-  t.deepEqual(loc, {header: {open: false, location: 'Heritrix'}, hist: '/heritrix'},
+  await wailApp.goTo('#sidebarHeritrix')
+  t.deepEqual(await wailApp.getUiLoaction(), {header: {open: false, location: 'Heritrix'}, hist: '/heritrix'},
     'after clicking the nav drawer heritrix entry the ui should be at heritrix'
   )
 
-  await wailApp.gotTo('#sidebarServices')
+  await wailApp.goTo('#sidebarServices')
   t.deepEqual(await wailApp.getUiLoaction(), {header: {open: false, location: 'Services'}, hist: '/services'},
     'after clicking the nav drawer services entry the ui should be at services'
   )
 
-  await wailApp.gotTo('#sidebarMisc')
+  await wailApp.goTo('#sidebarMisc')
   t.deepEqual(await wailApp.getUiLoaction(), {header: {open: false, location: 'Miscellaneous'}, hist: '/misc'},
     'after clicking the nav drawer miscellaneous entry the ui should be at miscellaneous'
   )
 
-  await wailApp.gotTo('#sidebarTwitter')
+  await wailApp.goTo('#sidebarTwitter')
   t.deepEqual(await wailApp.getUiLoaction(), {
       header: {open: false, location: 'Twitter Archive'},
       hist: '/twitter-signin'
@@ -175,7 +174,7 @@ test.serial('Visiting different parts of the ui does not fail', async t => {
     'after clicking the nav drawer twitter entry the ui should be at twitter'
   )
 
-  await wailApp.gotTo('#sidebarWail')
+  await wailApp.goTo('#sidebarWail')
   t.deepEqual(await wailApp.getUiLoaction(), {header: {open: false, location: 'WAIL'}, hist: '/'},
     'after clicking the nav drawer wail entry the ui should be at wail'
   )

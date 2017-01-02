@@ -191,7 +191,7 @@ export default class WailApp {
     })
   }
 
-  async gotTo (where) {
+  async goTo (where) {
     await this.executeJs(function () {
       return window.___header.toggle()
     })

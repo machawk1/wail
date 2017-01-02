@@ -1,4 +1,4 @@
-import {dialog, app, shell} from 'electron'
+import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
@@ -7,7 +7,11 @@ const name = app.getName()
 export function screenShotPDF (window) {
   if (window) {
     // console.log('Saving pdf')
-    window.webContents.printToPDF({}, (error, data) => {
+    window.webContents.printToPDF({
+      marginsType: 0,
+      printBackground: true,
+      printSelectionOnly: false,
+    }, (error, data) => {
       if (error) {
         dialog.showErrorBox("Something went wrong :'(", 'Saving screen shot as PDF failed')
       } else {
@@ -15,7 +19,7 @@ export function screenShotPDF (window) {
           title: 'Save Screen Shot As PDF',
           defaultPath: app.getPath('documents'),
           filters: [
-            { name: 'PDF', extensions: [ 'pdf' ] }
+            {name: 'PDF', extensions: ['pdf']}
           ]
         }
         let cb = (path) => {
@@ -28,7 +32,7 @@ export function screenShotPDF (window) {
                   type: 'info',
                   title: 'Done',
                   message: 'PDF screen shot saved',
-                  buttons: [ 'Ok' ]
+                  buttons: ['Ok']
                 }, (r) => console.log(r))
               }
             })
@@ -47,15 +51,15 @@ export function screenShot (window) {
         title: 'Save Screen Shot',
         defaultPath: app.getPath('documents'),
         filters: [
-          { name: 'PNG', extensions: [ 'png' ] },
-          { name: 'JPG', extensions: [ 'jpg' ] }
+          {name: 'PNG', extensions: ['png']},
+          {name: 'JPG', extensions: ['jpg']}
         ]
       }
       let cb = (path) => {
         if (path) {
           let png = S(path.toLowerCase()).endsWith('png')
 
-          let buf = png ? image.toPng() : image.toJpeg(100)
+          let buf = png ? image.toPNG() : image.toJPEG(100)
           fs.writeFile(path, buf, 'binary', (wError) => {
             if (wError) {
               dialog.showErrorBox("Something went wrong :'(", 'Screen shot could not be saved to that path')
@@ -64,7 +68,7 @@ export function screenShot (window) {
                 type: 'info',
                 title: 'Done',
                 message: 'Screen shot saved',
-                buttons: [ 'Ok' ]
+                buttons: ['Ok']
               }, (r) => console.log(r))
             }
           })
@@ -87,7 +91,7 @@ export const forceKill = {
               type: 'question',
               title: 'Are you sure?',
               message: 'Forcefully terminating Heritrix will stop any crawls in progress',
-              buttons: [ 'Im Sure', 'Cancel' ],
+              buttons: ['Im Sure', 'Cancel'],
               cancelId: 666
             }, (r) => {
               if (r === 1) {
@@ -103,11 +107,11 @@ export const forceKill = {
               type: 'question',
               title: 'Are you sure?',
               message: 'Forcefully terminating Wayback will stop any indexing in progress',
-              buttons: [ 'Im Sure', 'Cancel' ],
+              buttons: ['Im Sure', 'Cancel'],
               cancelId: 666
             }, (r) => {
               if (r === 1) {
-                cp.exec("ps ax | grep 'tomcat' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
+                cp.exec("ps ax | grep 'wayback' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
               }
             })
           }
