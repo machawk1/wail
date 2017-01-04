@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import {CardActions} from 'material-ui/Card'
+import React, { Component, PropTypes } from 'react'
+import { CardActions } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
-import {Field, reduxForm} from 'redux-form/immutable'
-import {TextField, AutoComplete} from 'redux-form-material-ui'
+import { Field, reduxForm } from 'redux-form/immutable'
+import { TextField, AutoComplete } from 'redux-form-material-ui'
 import fuzzyFilter from '../../../../util/fuzzyFilter'
 import timeVales from '../timeValues'
 import validate from './validate'
@@ -19,22 +19,22 @@ class UserBasic extends Component {
   }
 
   render () {
-    const { handleSubmit, previousPage, cols } = this.props
+    const {handleSubmit, previousPage, cols} = this.props
     return (
-      <form onSubmit={handleSubmit} style={{ marginLeft: 16 }}>
-        <div>
+      <form onSubmit={handleSubmit} style={{marginLeft: 16}}>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='How Long To Monitor'
             name='length'
             component={AutoComplete}
             dataSource={timeVales.times}
-            menuProps={{ desktop: true }}
+            menuProps={{desktop: true, maxHeight: 100}}
             openOnFocus
             maxSearchResults={10}
             filter={fuzzyFilter}
           />
         </div>
-        <div>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
@@ -42,20 +42,20 @@ class UserBasic extends Component {
             component={TextField}
           />
         </div>
-        <div>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='For Collection'
             name='forCol'
             component={AutoComplete}
             dataSource={cols}
-            menuProps={{ desktop: true }}
+            menuProps={{desktop: true, maxHeight: 110}}
             openOnFocus
             maxSearchResults={10}
             filter={fuzzyFilter}
           />
         </div>
         <CardActions>
-          <FlatButton label='Next' type='submit' primary />
+          <FlatButton label='Next' type='submit' primary/>
         </CardActions>
       </form>
     )

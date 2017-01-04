@@ -92,7 +92,7 @@ class ATwitterUser extends Component {
   render () {
     const { page } = this.state
     return (
-      <div style={{ width: '30%', height: '100%' }} id='twitterArchive'>
+      <div style={{ width: '35%', height: '100%' }} id='twitterArchive'>
         <Card style={{ height: '100%' }}>
           <CardTitle title={"A User's Timeline"} />
           {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage} />}

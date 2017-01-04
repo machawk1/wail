@@ -22,19 +22,19 @@ class UserBasic extends Component {
     const { handleSubmit, previousPage, cols } = this.props
     return (
       <form onSubmit={handleSubmit} style={{ marginLeft: 16 }}>
-        <div>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='How Long To Monitor'
             name='length'
             component={AutoComplete}
             dataSource={timeVales.times}
-            menuProps={{ desktop: true }}
+            menuProps={{ desktop: true, maxHeight: 110 }}
             openOnFocus
             maxSearchResults={10}
             filter={fuzzyFilter}
           />
         </div>
-        <div>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
@@ -42,13 +42,13 @@ class UserBasic extends Component {
             component={TextField}
           />
         </div>
-        <div>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='For Collection'
             name='forCol'
             component={AutoComplete}
             dataSource={cols}
-            menuProps={{ desktop: true }}
+            menuProps={{desktop: true, maxHeight: 110}}
             openOnFocus
             maxSearchResults={10}
             filter={fuzzyFilter}
