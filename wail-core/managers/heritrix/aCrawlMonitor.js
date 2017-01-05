@@ -1,5 +1,6 @@
 import chokidar from 'chokidar'
 import path from 'path'
+import cp from 'child_process'
 import getCrawlStats from '../../util/getCrawStats'
 
 export default class ACrawlMonitor {
@@ -25,18 +26,22 @@ export default class ACrawlMonitor {
     this.logWatcher.on('error', ::this._monitorError)
   }
 
-  _monitorUpdate (filePath, stats) {
+  _monitorUpdate (filePath, fstats) {
     if (!this._hasEnded) {
       getCrawlStats(filePath)
         .then(stats => {
           // console.log(`crawlJob-status-update ${this.jobId}`, stats)
           if (stats.ended) {
             this.stopWatching()
-            let finalStats = Object.assign({}, {
-              started: this.started,
-              warcs: path.normalize(`${filePath}/../../warcs/*.warc`)
-            }, stats)
-            this.onEnd(this.jobId, { jobId: this.jobId, stats: finalStats })
+            if (process.platform === 'win32') {
+              this._findWarcWin(path.normalize(`${filePath}/../../warcs/*.warc`),stats)
+            } else {
+              let finalStats = Object.assign({}, {
+                started: this.started,
+                warcs: path.normalize(`${filePath}/../../warcs/*.warc`)
+              }, stats)
+              this.onEnd(this.jobId, { jobId: this.jobId, stats: finalStats })
+            }
           } else {
             this.onUpdate({
               jobId: this.jobId,
@@ -48,6 +53,27 @@ export default class ACrawlMonitor {
           this._statsGetterError(error)
         })
     }
+  }
+
+  _findWarcWin(where,stats) {
+    let command = `dir /B /s ${where}`
+    cp.exec(command, (err, stdout, stderr) => {
+      if (err) {
+        //windows hack
+        this.onExceedECount(this.jobId)
+      } else {
+        //get rid of \r from windows
+        stdout = stdout.replace(/\r/g, "")
+        let files = stdout.split('\n')
+        //remove last entry because it is empty
+        files.splice(-1, 1)
+        let finalStats = Object.assign({}, {
+          started: this.started,
+          warcs: files[0]
+        }, stats)
+        this.onEnd(this.jobId, { jobId: this.jobId, stats: finalStats })
+      }
+    })
   }
 
   _monitorError (error) {

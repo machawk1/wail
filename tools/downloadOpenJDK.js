@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../wailPollyfil'
 import fs from 'fs-extra'
 import path from 'path'
 import Promise from 'bluebird'

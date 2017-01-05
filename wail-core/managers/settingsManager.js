@@ -185,12 +185,13 @@ export default class SettingsManager {
     code.crawlerBean = pathMan.normalizeJoinWBase(code.crawlerBean)
     code.wayBackConf = pathMan.normalizeJoinWBase(code.wayBackConf)
 
-    let pywb = _.mapValues(managed.pywb, (v, k) => {
+    let whichPywb = process.platform === 'win32' ? managed.pywbwin : managed.pywb
+    let pywb = _.mapValues(whichPywb, (v, k) => {
       if (k !== 'port' && k !== 'url') {
         v = pathMan.normalizeJoinWBase(v)
       }
       if (k === 'url') {
-        v = S(v).template({port: managed.pywb.port}).s
+        v = S(v).template({port: whichPywb.port}).s
       }
       return v
     })
@@ -222,27 +223,8 @@ export default class SettingsManager {
           this._settings.set('memgatorQuery', `${this._settings.get('memgator')} -a ${this._settings.get('archives')}`)
           break
         case 'catalina':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
-          }
-          break
         case 'tomcatStart':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} start`)
-          }
-          break
         case 'tomcatStop':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} stop`)
-          }
           break
         case 'heritrixStart':
           if (isWindows) {

@@ -465,8 +465,9 @@ export default class ServiceManager {
       let opts = this._hStartOptsWin()
       let usrpwrd = `${this._settings.get('heritrix.username')}:${this._settings.get('heritrix.password')}`
       let pid = -1
+      let args = ['-a', `${usrpwrd}`,'--jobs-dir',`${this._settings.get('heritrix.jobsDir')}`]
       try {
-        let heritrix = cp.spawn('bin\\heritrix.cmd', ['-a', `${usrpwrd}`], opts)
+        let heritrix = cp.spawn('bin\\heritrix.cmd', args, opts)
         pid = heritrix.pid
         this._monitoring.set('heritrix', pid)
         heritrix.unref()

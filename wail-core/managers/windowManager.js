@@ -17,6 +17,7 @@ function dlExtensions (update = false) {
         installExtension.default(installExtension['REDUX_DEVTOOLS'], update),
         installExtension.default(installExtension['REACT_PERF'], update)])
         .then(() => {
+          console.log('downloaded extensions')
           resolve()
         })
         .catch((error) => {
@@ -423,22 +424,21 @@ export default class WindowManager extends EventEmitter {
   initWail (control) {
     this.initIpc(control)
     console.log('init wail')
-    this.showLoadingWindow(control)
-      .then(() => this.createWail(control)
-        .then(() => this.createArchiveMan(control)
-          .then(() => this.createCrawlMan(control)
-            .then(() => this.createRequestD(control)
-              .then(() => {
-                console.log('all windows loaded')
-                return dlExtensions()
+    dlExtensions()
+      .then(() => {
+        return this.showLoadingWindow(control)
+          .then(() => this.createWail(control)
+            .then(() => this.createArchiveMan(control)
+              .then(() => this.createCrawlMan(control)
+                .then(() => this.createRequestD(control)
                   .then(() => {
-                    console.log('downloaded extensions')
+                    console.log('all windows loaded')
                   })
-              })
+                )
+              )
             )
           )
-        )
-      )
+      })
   }
 
   didCoreLoad () {

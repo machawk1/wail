@@ -25,28 +25,58 @@ const split = require('split2')
 // const prettySeconds = require('pretty-seconds')
 // const Rx = require('rxjs')
 // const delay = require('lodash/delay')
-const madge = require('madge')
+// const madge = require('madge')
 // const groups = {}
-const inspect = _.partialRight(util.inspect, {depth: null, colors: true})
+const ESettings = require('electron-settings')
 
-const wbp = '/home/john/my-fork-wail/bundledApps/pywb/runPywb.sh'
-let opts = {
-  cwd: '/home/john/my-fork-wail/bundledApps/pywb',
-  detached: true,
-  shell: true
-}
-const spawned = cp.spawn(wbp, ['/home/john/Documents/WAIL_ManagedCollections'],opts)
-spawned.stdout.on('data', (data) => {
-  console.log(`stdout: ${data}`);
-});
+const settings = new ESettings({ configDirPath: 'A:\\WebstromProjects\\wail\\wail-config\\wail-settings' })
 
-spawned.stderr.on('data', (data) => {
-  console.log(`stderr: ${data}`);
-});
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
 
-spawned.on('close', (code) => {
-  console.log(`child process exited with code ${code}`);
-});
+let statP = 'A:\\Documents\\WAIL_Managed_Crawls\\1483597436878\\20170105062359\\logs\\progress-statistics.log'
+
+
+
+const findWarcsWin = where => new Promise((resolve, reject) => {
+  let command = `dir /B /s ${where}`
+  cp.exec(command, (err, stdout, stderr) => {
+    if (err) {
+      reject(err)
+    } else {
+      //get rid of \r from windows
+      stdout = stdout.replace(/\r/g, "")
+      let files = stdout.split('\n')
+      //remove last entry because it is empty
+      files.splice(-1, 1)
+      resolve(files[ 0 ])
+    }
+  })
+})
+
+findWarcsWin(path.normalize(`${statP}}/../../warcs/*.warc`))
+  .then(warcs => {
+    console.log(warcs)
+    // let opts = {
+    //   cwd: settings.get('warcs')
+    // }
+    // let exec = S(settings.get('pywb.addWarcsToCol')).template({
+    //   col: 'default',
+    //   warcs
+    // }).s
+    // cp.exec(exec, opts, (error, stdout, stderr) => {
+    //   if (error) {
+    //     console.error(error)
+    //     console.error(stdout, stderr)
+    //   } else {
+    //     console.log(stdout, stderr)
+    //   }
+    // })
+  })
+  .catch(error => {
+    console.error(error)
+  })
+
 /*
  .then((res) => res.dot())
  .then((output) => {
