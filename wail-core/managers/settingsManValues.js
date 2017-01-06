@@ -1,25 +1,25 @@
 import path from 'path'
 
-if(process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === 'development') {
   module.exports = {
     dbgOSX: true,
     paths: [
-      { name: 'bundledApps', path: 'bundledApps' },
-      { name: 'logs', path: 'waillogs/wail.log' },
-      { name: 'archives', path: 'config/archives.json' },
-      { name: 'cdx', path: 'archiveIndexes' },
-      { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
-      { name: 'crawlerBean', path: 'crawler-beans.cxml' },
-      { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
-      { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
-      { name: 'heritrix', path: 'bundledApps/heritrix' },
-      { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
-      { name: 'index', path: '/config/path-index.txt' },
-      { name: 'jdk', path: 'bundledApps/openjdk' },
-      { name: 'jobConf', path: 'crawler-beans.cxml' },
-      { name: 'jre', path: 'bundledApps/openjdk' },
-      { name: 'memgator', path: 'bundledApps/memgator' },
-      { name: 'tomcat', path: 'bundledApps/tomcat' },
+      {name: 'bundledApps', path: 'bundledApps'},
+      {name: 'logs', path: 'waillogs/wail.log'},
+      {name: 'archives', path: 'config/archives.json'},
+      {name: 'cdx', path: 'archiveIndexes'},
+      {name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt'},
+      {name: 'crawlerBean', path: 'crawler-beans.cxml'},
+      {name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix'},
+      {name: 'heritrixJob', path: 'bundledApps/heritrix/jobs'},
+      {name: 'heritrix', path: 'bundledApps/heritrix'},
+      {name: 'indexCDX', path: 'archiveIndexes/index.cdx'},
+      {name: 'index', path: '/config/path-index.txt'},
+      {name: 'jdk', path: 'bundledApps/openjdk'},
+      {name: 'jobConf', path: 'crawler-beans.cxml'},
+      {name: 'jre', path: 'bundledApps/openjdk'},
+      {name: 'memgator', path: 'bundledApps/memgator'},
+      {name: 'tomcat', path: 'bundledApps/tomcat'},
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -36,7 +36,7 @@ if(process.env.NODE_ENV === 'development') {
       addJobDirectoryOptions: {
         method: 'POST',
         url: 'https://localhost:8443/engine',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         timeout: 15000,
         form: {
           action: 'add',
@@ -54,7 +54,7 @@ if(process.env.NODE_ENV === 'development') {
       sendActionOptions: {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         timeout: 15000,
         form: {
           action: ''
@@ -92,7 +92,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
         timeout: 15000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'launch'
         },
@@ -122,7 +122,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
         timeout: 15000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'build'
         },
@@ -139,7 +139,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine',
         timeout: 5000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'rescan'
         },
@@ -151,8 +151,8 @@ if(process.env.NODE_ENV === 'development') {
         strictSSL: false,
         rejectUnauthorized: false,
         resolveWithFullResponse: true
-      }
-
+      },
+      jobsDir: 'WAIL_Managed_Crawls'
     },
     wayback: {
       port: '8080',
@@ -162,11 +162,11 @@ if(process.env.NODE_ENV === 'development') {
       notIndexCDX: `${path.sep}index.cdx`
     },
     commands: [
-      { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
-      { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
-      { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
-      { name: 'memgator' }
+      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh'},
+      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh'},
+      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh'},
+      {name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix'},
+      {name: 'memgator'}
     ],
     pywb: {
       home: 'bundledApps/pywb',
@@ -188,6 +188,30 @@ if(process.env.NODE_ENV === 'development') {
       waybackPort: 'bundledApps/pywb/wayback -p {port}',
       waybackReplayDir: 'bundledApps/pywb/wayback -d {dir}',
       waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
+      templates: 'bundledApps/pywb/templates',
+      statics: 'bundledApps/pywb/static',
+      checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
+    },
+    pywbwin: {
+      home: 'bundledApps/pywb',
+      port: '8080',
+      url: 'http://localhost:{port}/',
+      wbMan: 'bundledApps\\pywb\\Scripts\\wb-manager.exe',
+      newCollection: 'bundledApps\\pywb\\Scripts\\wb-manager.exe init {col}',
+      addWarcsToCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe add {col} {warcs}',
+      addMetadata: 'bundledApps\\pywb\\Scripts\\wb-manager.exe metadata {col} --set {metadata}',
+      reindexCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe reindex {col}',
+      convertCdx: 'bundledApps\\pywb\\Scripts\\wb-manager.exe convert-cdx {cdx}',
+      autoIndexCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe autoindex {col}',
+      autoIndexDir: 'bundledApps\\pywb\\Scripts\\wb-manager.exe autoindex {dir}',
+      sortedCombinedCdxj: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort -j combined.cdxj {warcs}',
+      sortedCombinedCdx: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort combined.cdx {warcs}',
+      cdxjPerColWarc: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort -j {cdx} {warc}',
+      cdxPerColWarc: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort {cdx} {warc}',
+      wayback: 'bundledApps\\pywb\\Scripts\\wayback.exe',
+      waybackPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port}',
+      waybackReplayDir: 'bundledApps\\pywb\\Scripts\\wayback.exe -d {dir}',
+      waybackReplayDirPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port} -d {dir}',
       templates: 'bundledApps/pywb/templates',
       statics: 'bundledApps/pywb/static',
       checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
@@ -251,6 +275,14 @@ if(process.env.NODE_ENV === 'development') {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
     },
+    warcCheckerWin: {
+      dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+    },
+    extractSeedWin: {
+      dir: 'bundledApps/listUris/listUris.exe -d {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}',
+    },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'
 
@@ -259,22 +291,22 @@ if(process.env.NODE_ENV === 'development') {
   module.exports = {
     dbgOSX: false,
     paths: [
-      { name: 'bundledApps', path: 'bundledApps' },
-      { name: 'logs', path: 'waillogs/wail.log' },
-      { name: 'archives', path: 'config/archives.json' },
-      { name: 'cdx', path: 'archiveIndexes' },
-      { name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt' },
-      { name: 'crawlerBean', path: 'crawler-beans.cxml' },
-      { name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix' },
-      { name: 'heritrixJob', path: 'bundledApps/heritrix/jobs' },
-      { name: 'heritrix', path: 'bundledApps/heritrix' },
-      { name: 'indexCDX', path: 'archiveIndexes/index.cdx' },
-      { name: 'index', path: '/config/path-index.txt' },
-      { name: 'jdk', path: 'bundledApps/openjdk' },
-      { name: 'jobConf', path: 'crawler-beans.cxml' },
-      { name: 'jre', path: 'bundledApps/openjdk' },
-      { name: 'memgator', path: 'bundledApps/memgator' },
-      { name: 'tomcat', path: 'bundledApps/tomcat' },
+      {name: 'bundledApps', path: 'bundledApps'},
+      {name: 'logs', path: 'waillogs/wail.log'},
+      {name: 'archives', path: 'config/archives.json'},
+      {name: 'cdx', path: 'archiveIndexes'},
+      {name: 'cdxTemp', path: 'archiveIndexes/combined_unsorted.cdxt'},
+      {name: 'crawlerBean', path: 'crawler-beans.cxml'},
+      {name: 'heritrixBin', path: 'bundledApps/heritrix/bin/heritrix'},
+      {name: 'heritrixJob', path: 'bundledApps/heritrix/jobs'},
+      {name: 'heritrix', path: 'bundledApps/heritrix'},
+      {name: 'indexCDX', path: 'archiveIndexes/index.cdx'},
+      {name: 'index', path: '/config/path-index.txt'},
+      {name: 'jdk', path: 'bundledApps/openjdk'},
+      {name: 'jobConf', path: 'crawler-beans.cxml'},
+      {name: 'jre', path: 'bundledApps/openjdk'},
+      {name: 'memgator', path: 'bundledApps/memgator'},
+      {name: 'tomcat', path: 'bundledApps/tomcat'},
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -291,7 +323,7 @@ if(process.env.NODE_ENV === 'development') {
       addJobDirectoryOptions: {
         method: 'POST',
         url: 'https://localhost:8443/engine',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         timeout: 15000,
         form: {
           action: 'add',
@@ -309,7 +341,7 @@ if(process.env.NODE_ENV === 'development') {
       sendActionOptions: {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         timeout: 15000,
         form: {
           action: ''
@@ -347,7 +379,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
         timeout: 15000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'launch'
         },
@@ -377,7 +409,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine/job/',
         timeout: 15000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'build'
         },
@@ -394,7 +426,7 @@ if(process.env.NODE_ENV === 'development') {
         method: 'POST',
         url: 'https://localhost:8443/engine',
         timeout: 5000,
-        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        headers: {'content-type': 'application/x-www-form-urlencoded'},
         form: {
           action: 'rescan'
         },
@@ -406,8 +438,8 @@ if(process.env.NODE_ENV === 'development') {
         strictSSL: false,
         rejectUnauthorized: false,
         resolveWithFullResponse: true
-      }
-
+      },
+      jobsDir: 'WAIL_Managed_Crawls'
     },
     wayback: {
       port: '8080',
@@ -417,11 +449,11 @@ if(process.env.NODE_ENV === 'development') {
       notIndexCDX: `${path.sep}index.cdx`
     },
     commands: [
-      { name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh' },
-      { name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh' },
-      { name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh' },
-      { name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix' },
-      { name: 'memgator' }
+      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh'},
+      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh'},
+      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh'},
+      {name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix'},
+      {name: 'memgator'}
     ],
     pywb: {
       home: 'bundledApps/pywb',
@@ -445,6 +477,30 @@ if(process.env.NODE_ENV === 'development') {
       waybackReplayDirPort: 'bundledApps/pywb/wayback -p {port} -d {dir}',
       templates: 'bundledApps/pywb/templates',
       statics: 'bundledApps/pywb/static',
+      checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
+    },
+    pywbwin: {
+      home: 'bundledApps/pywb',
+      port: '8080',
+      url: 'http://localhost:{port}/',
+      wbMan: 'bundledApps\\pywb\\Scripts\\wb-manager.exe',
+      newCollection: 'bundledApps\\pywb\\Scripts\\wb-manager.exe init {col}',
+      addWarcsToCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe add {col} {warcs}',
+      addMetadata: 'bundledApps\\pywb\\Scripts\\wb-manager.exe metadata {col} --set {metadata}',
+      reindexCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe reindex {col}',
+      convertCdx: 'bundledApps\\pywb\\Scripts\\wb-manager.exe convert-cdx {cdx}',
+      autoIndexCol: 'bundledApps\\pywb\\Scripts\\wb-manager.exe autoindex {col}',
+      autoIndexDir: 'bundledApps\\pywb\\Scripts\\wb-manager.exe autoindex {dir}',
+      sortedCombinedCdxj: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort -j combined.cdxj {warcs}',
+      sortedCombinedCdx: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort combined.cdx {warcs}',
+      cdxjPerColWarc: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort -j {cdx} {warc}',
+      cdxPerColWarc: 'bundledApps\\pywb\\Scripts\\cdx-indexer.exe --sort {cdx} {warc}',
+      wayback: 'bundledApps\\pywb\\Scripts\\wayback.exe',
+      waybackPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port}',
+      waybackReplayDir: 'bundledApps\\pywb\\Scripts\\wayback.exe -d {dir}',
+      waybackReplayDirPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port} -d {dir}',
+      templates: 'bundledApps\\pywb\\templates',
+      statics: 'bundledApps\\pywb\\static',
       checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
     },
     collections: {
@@ -505,6 +561,14 @@ if(process.env.NODE_ENV === 'development') {
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
+    },
+    warcCheckerWin: {
+      dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+    },
+    extractSeedWin: {
+      dir: 'bundledApps/listUris/listUris.exe -d {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}',
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'

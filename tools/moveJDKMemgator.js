@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import '../wailPollyfil'
 import fs from 'fs-extra'
 import shelljs from 'shelljs'
 import path from 'path'

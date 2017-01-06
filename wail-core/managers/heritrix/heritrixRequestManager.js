@@ -4,10 +4,14 @@ import {
   BuildLaunchJob,
   StopJob,
   JobLifeCycle,
-  RescanJobDirRequest
+  RescanJobDirRequest,
+  PermanentlyDeleteJob
 } from '../../requests/heritrixRequests'
 
+
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
+
+
 
 const {
   BUILD_HERITIX_JOB,
@@ -21,7 +25,8 @@ const {
   BUILD_LAUNCH_JOB,
   STOP_JOB,
   TERMINATE_RESTART_JOB,
-  TERMINATE_JOB
+  TERMINATE_JOB,
+  PERMANENT_DELETE_JOB
 } = wc.HeritrixRequestTypes
 
 const priorities = {
@@ -44,7 +49,7 @@ export default class HeritrixRequestManager {
 
   queueRequest (request) {
     console.log('heritrix request manager queuing request', request)
-    let {jobId, type} = request
+    let { jobId, type } = request
     switch (type) {
       case BUILD_LAUNCH_JOB: {
         let haveRequestFor = this.requestForJob.has(jobId)
@@ -82,6 +87,10 @@ export default class HeritrixRequestManager {
         }
         break
       }
+      case PERMANENT_DELETE_JOB: {
+        let { running } = request
+        this.deleteJob(jobId, running)
+      }
     }
   }
 
@@ -91,7 +100,7 @@ export default class HeritrixRequestManager {
     console.log('heritrix request manager making for request for job', jobId)
     jr.makeRequest()
       .then(maybeDone => {
-        let {done, doRetry} = maybeDone
+        let { done, doRetry } = maybeDone
         if (done) {
           console.log(`heritrix request manager job ${jobId} is done`)
           this.requestForJob.delete(jobId)
@@ -158,7 +167,7 @@ export default class HeritrixRequestManager {
 
   jobLifeCyle (jobId, starting) {
     let jlc = new JobLifeCycle(jobId, starting)
-    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[starting]}`)
+    console.log(`heritrix request manager creating job lif cycle for job ${jobId} starting at ${priorities[ starting ]}`)
     this.requestForJob.set(jobId, jlc)
     this.jobRequestQ.push(jobId)
     if (!this.working) {
@@ -178,5 +187,18 @@ export default class HeritrixRequestManager {
       this.working = true
       this.handleRequest()
     }
+  }
+
+  deleteJob (jobId, running) {
+    let djob = new PermanentlyDeleteJob(jobId, running)
+    console.log(`heritrix request manager creating PermanentlyDeleteJob`)
+    this.requestForJob.set(jobId, djob)
+    this.jobRequestQ.push(jobId)
+    if (!this.working) {
+      console.log('heritrix request manager was not working it is now')
+      this.working = true
+      this.handleRequest()
+    }
+
   }
 }

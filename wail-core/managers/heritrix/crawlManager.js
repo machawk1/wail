@@ -62,7 +62,7 @@ export default class CrawlManager {
       // so babel will make this Math.max.apply(Math,array)
       let latestLaunch = Math.max(...files.filter(item => this.launchId.test(item)))
       let warcPath = path.join(jobPath, `${latestLaunch}`, 'warcs', '*.warc')
-      ipc.send('add-warcs-to-col', {forCol, warcs: warcPath})
+      ipc.send('add-warcs-to-col', { forCol, warcs: warcPath })
     })
   }
 
@@ -75,7 +75,7 @@ export default class CrawlManager {
           console.log(docs)
           let pDocs = docs
           if (pDocs.length > 0) {
-            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), ['jobId'], ['desc'])
+            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), [ 'jobId' ], [ 'desc' ])
           }
           resolve(pDocs)
         }
@@ -84,7 +84,7 @@ export default class CrawlManager {
   }
 
   crawlStarted (jobId) {
-    this.db.update({jobId}, {$set: {running: true}}, {returnUpdatedDocs: true}, (error, numUpdated, updated) => {
+    this.db.update({ jobId }, { $set: { running: true } }, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error inserting document', error)
         ipc.send('managers-error', {
@@ -117,7 +117,7 @@ export default class CrawlManager {
         }
       }
     }
-    this.db.update({jobId: update.jobId}, theUpdate, {returnUpdatedDocs: true}, (error, numUpdated, updated) => {
+    this.db.update({ jobId: update.jobId }, theUpdate, { returnUpdatedDocs: true }, (error, numUpdated, updated) => {
       if (error) {
         console.error('error updating document', update, error)
         ipc.send('managers-error', {
@@ -133,7 +133,7 @@ export default class CrawlManager {
           col: updated.forCol,
           warcs: update.stats.warcs,
           lastUpdated: update.stats.timestamp,
-          seed: {url: updated.urls, jobId: update.jobId}
+          seed: { url: updated.urls, jobId: update.jobId }
         })
       }
     })
@@ -142,7 +142,7 @@ export default class CrawlManager {
   areCrawlsRunning () {
     console.log('checking if crawls are running')
     return new Promise((resolve, reject) => {
-      this.db.count({running: true}, (err, runningCount) => {
+      this.db.count({ running: true }, (err, runningCount) => {
         if (err) {
           console.error('error finding if crawls are running')
           reject(err)
@@ -161,7 +161,7 @@ export default class CrawlManager {
    * @returns {Promise|Promise<Object>}
    */
   makeCrawlConf (options) {
-    let {urls, forCol, jobId, depth} = options
+    let { urls, forCol, jobId, depth } = options
     return new Promise((resolve, reject) =>
       readFile(settings.get('heritrix.jobConf'))
         .then(data => {
@@ -182,7 +182,7 @@ export default class CrawlManager {
           urlConf.text(urlText)
           let maxHops = doc('bean[class="org.archive.modules.deciderules.TooManyHopsDecideRule"]').find('property[name="maxHops"]')
           maxHops.attr('value', `${depth}`)
-          let confPath = pathMan.join(settings.get('heritrixJob'), `${jobId}`)
+          let confPath = pathMan.join(settings.get('heritrix.jobsDir'), `${jobId}`)
           let cfp = pathMan.join(confPath, 'crawler-beans.cxml')
           return ensureDirAndWrite(confPath, cfp, doc.xml())
             .then(() => {
@@ -198,7 +198,7 @@ export default class CrawlManager {
                   queued: 0,
                   downloaded: 0
                 },
-                path: pathMan.join(settings.get('heritrixJob'), `${jobId}`),
+                path: pathMan.join(settings.get('heritrix.jobsDir'), `${jobId}`),
                 confP: cfp, urls: urls, running: false, forCol
               }
               // {"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
@@ -210,11 +210,11 @@ export default class CrawlManager {
                 },
                 forArchives: {
                   forCol, lastUpdated,
-                  seed: {forCol, url: urls, jobIds: [jobId], lastUpdated, added: lastUpdated, mementos: 0}
+                  seed: { forCol, url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
                 }
               })
 
-              this.db.insert({_id: `${jobId}`, ...crawlInfo}, (iError, doc) => {
+              this.db.insert({ _id: `${jobId}`, ...crawlInfo }, (iError, doc) => {
                 if (iError) {
                   console.error(iError)
                   reject(iError)
@@ -232,6 +232,27 @@ export default class CrawlManager {
           reject(errorRead)
         })
     )
+  }
+
+  removeCrawl (jobId) {
+    this.db.remove({ _id: `${jobId}` }, (err, numRemoved) => {
+      if (err) {
+        console.error(`Could not remove crawl for ${jobId}`, err)
+        ipc.send('managers-error', {
+          wasError: true,
+          err: err,
+          message: {
+            title: 'Error',
+            level: 'error',
+            message: `There was an internal error permanently removing the crawl for jobId[${jobId}]`,
+            uid:  `There was an internal error permanently removing the crawl for jobId[${jobId}]`,
+            autoDismiss: 0
+          }
+        })
+      } else {
+        console.log(`Removed crawl for ${jobId}`, numRemoved)
+      }
+    })
   }
 
   stopMonitoringJob (jobId) {

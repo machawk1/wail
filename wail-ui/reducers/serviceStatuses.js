@@ -1,17 +1,19 @@
-import {Map} from 'immutable'
-import {ServiceEvents} from '../constants/wail-constants'
+import ServiceStats from '../records/serviceStatus'
+import { ServiceEvents } from '../constants/wail-constants'
 
-const { HERITRIX_STATUS_UPDATE, WAYBACK_STATUS_UPDATE, WAYBACK_RESTART } = ServiceEvents
+const {HERITRIX_STATUS_UPDATE, WAYBACK_STATUS_UPDATE, WAYBACK_RESTART} = ServiceEvents
 
-export default (state = Map({ heritrix: true, wayback: true }), action) => {
+const serviceStatuses = (state = new ServiceStats(), action) => {
   switch (action.type) {
     case HERITRIX_STATUS_UPDATE:
-      return state.set('heritrix', action.status)
+      return state.updateHeritrix(action.status)
     case WAYBACK_STATUS_UPDATE:
-      return state.set('wayback', action.status)
+      return state.updateWayback(action.status)
     case WAYBACK_RESTART:
-      return state.set('wayback', false)
+      return state.waybackRestarting()
     default:
       return state
   }
 }
+
+export default serviceStatuses

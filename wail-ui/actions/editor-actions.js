@@ -1,6 +1,6 @@
 import fs from 'fs-extra'
-import EditorDispatcher from '../dispatchers/editorDispatcher'
-import wc from '../constants/wail-constants'
+// import EditorDispatcher from '../dispatchers/editorDispatcher'
+// import wc from '../constants/wail-constants'
 
 export function fetchCode () {
   EditorDispatcher.dispatch({

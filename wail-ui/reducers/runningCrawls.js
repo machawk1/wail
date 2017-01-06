@@ -1,6 +1,6 @@
-import {RunningCrawlCounter} from '../constants/wail-constants'
+import { RunningCrawlCounter } from '../constants/wail-constants'
 
-export default (state = 0, action) => {
+const runningCrawls = (state = 0, action) => {
   switch (action.type) {
     case RunningCrawlCounter.INCREMENT:
       return state + 1
@@ -10,3 +10,5 @@ export default (state = 0, action) => {
       return state
   }
 }
+
+export default runningCrawls

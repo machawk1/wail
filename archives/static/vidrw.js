@@ -165,7 +165,7 @@ __wbvidrw = (function() {
                 var name = child.getAttribute("name");
                 name = name.toLowerCase();
 
-                if (name == "movie") {
+                if (name == "movie" || name == "src") {
                     var value = child.getAttribute("value");
                     obj_url = value;
                 }
@@ -192,10 +192,9 @@ __wbvidrw = (function() {
                         });
                     }
 
-
-                    if (wbinfo.url.indexOf("livestream") >= 0) {
-                        obj_url = wbinfo.url;
-                    }
+                    //if (wbinfo.url.indexOf("livestream") >= 0) {
+                    obj_url = wbinfo.url;
+                    //}
                 }
             }
         }
@@ -344,7 +343,7 @@ __wbvidrw = (function() {
         // if in proxy mode, access video info via special proxy magic path
         // eg: http://pywb.proxy/<coll>/vi_/<url>
         if (wbinfo.proxy_magic) {
-            info_url = "http://" + wbinfo.proxy_magic + "/" + wbinfo.coll + "/";
+            info_url = window.location.protocol + "//" + wbinfo.proxy_magic + "/" + wbinfo.coll + "/";
         } else {
             info_url = wbinfo.prefix;
         }
@@ -364,7 +363,7 @@ __wbvidrw = (function() {
                     return;
                 }
 
-                if (videoinfo._type == "playlist" && videoinfo.extractor == "livestream") {
+                if (videoinfo._type == "playlist") {
                     if (videoinfo.entries && videoinfo.entries.length > 0) {
                         do_replace_video(elem, videoinfo.entries[0]);
                         return;

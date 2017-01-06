@@ -1,4 +1,4 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
 import Avatar from 'material-ui/Avatar'
@@ -6,7 +6,7 @@ import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
 import CrawlIndicator from './crawlingIndicator'
-import changeLocation from '../../actions/redux/changeLocation'
+import changeLocation from '../../actions/changeLocation'
 
 export default class Header extends Component {
   static contextTypes = {
@@ -15,26 +15,43 @@ export default class Header extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { open: false, location: 'WAIL' }
+    this.state = {open: false, location: 'WAIL'}
+    if (process.env.WAILTEST) {
+      window.___header = {
+        curState: () => this.state,
+        toggle: () => {
+          this.handleToggle()
+        },
+        goHome: () => {
+          this.handleClose('WAIL', '/')
+        }
+      }
+    }
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    const {open, location} = this.state
+    return open !== nextState.open || location !== nextState.location
   }
 
   handleToggle () {
-    this.setState({ open: !this.state.open })
+    this.setState({open: !this.state.open})
   }
 
   open (open) {
-    this.setState({ open })
+    this.setState({open})
   }
 
   handleClose (location, to) {
     this.context.store.dispatch(changeLocation(to))
-    this.setState({ open: false, location })
+    this.setState({open: false, location})
   }
 
   render () {
     return (
       <div>
         <AppBar
+          id='wailAppBar'
           title={this.state.location}
           onLeftIconButtonTouchTap={::this.handleToggle}
           iconElementRight={<CrawlIndicator />}
@@ -46,26 +63,31 @@ export default class Header extends Component {
           onRequestChange={::this.open}
         >
           <MenuItem
+            id='sidebarWail'
             primaryText={'WAIL'}
-            rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'} />}
-            onTouchTap={(e) => this.handleClose('WAIL', '/')} />
+            rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'}/>}
+            onTouchTap={(e) => this.handleClose('WAIL', '/')}/>
           <Divider />
           <MenuItem
+            id='sidebarHeritrix'
             primaryText={'Heritrix'}
-            rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
-            onTouchTap={(e) => this.handleClose('Heritrix', '/heritrix')} />
+            rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
+            onTouchTap={(e) => this.handleClose('Heritrix', '/heritrix')}/>
           <Divider />
           <MenuItem
+            id='sidebarServices'
             primaryText={'Service Statuses'}
             rightIcon={<ServiceIcon />}
-            onTouchTap={(e) => this.handleClose('Services', '/services')} />
+            onTouchTap={(e) => this.handleClose('Services', '/services')}/>
           <MenuItem
+            id='sidebarMisc'
             primaryText={'Miscellaneous'}
-            onTouchTap={(e) => this.handleClose('Miscellaneous', '/misc')} />
+            onTouchTap={(e) => this.handleClose('Miscellaneous', '/misc')}/>
           <Divider />
           <MenuItem
+            id='sidebarTwitter'
             primaryText={'Twitter Archive'}
-            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')} />
+            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')}/>
         </Drawer>
       </div>
     )

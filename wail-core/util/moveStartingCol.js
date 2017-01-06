@@ -3,6 +3,7 @@ import Promise from 'bluebird'
 import cp from 'child_process'
 
 export default function moveStartingCol (moveMe, moveTo) {
+  console.log('move starting col',moveMe,moveTo)
   return new Promise((resolve, reject) => {
     fs.stat(moveTo, (errC, stats) => {
       if (errC) {
@@ -12,16 +13,29 @@ export default function moveStartingCol (moveMe, moveTo) {
               errEn.where = 1
               return reject(errEn)
             } else {
-              cp.exec(`cp -r ${moveMe} ${moveTo}`, (error, stdout, stderr) => {
-                if (error) {
-                  error.where = 2
+              if (process.platform === 'win32') {
+                fs.copy(moveMe, moveTo, (errCopy) => {
+                  if (errCopy) {
+                    errCopy.where = 2
+                    console.error(errCopy)
+                    return reject(errCopy)
+                  } else {
+                    return resolve()
+                  }
+                })
+              } else {
+                cp.exec(`cp -r ${moveMe} ${moveTo}`, (error, stdout, stderr) => {
+                  if (error) {
+                    error.where = 2
+                    console.log(`stderr: ${stderr}`)
+                    return reject(error)
+                  }
+                  console.log(`stdout: ${stdout}`)
                   console.log(`stderr: ${stderr}`)
-                  return reject(error)
-                }
-                console.log(`stdout: ${stdout}`)
-                console.log(`stderr: ${stderr}`)
-                return resolve()
-              })
+                  return resolve()
+                })
+              }
+
             }
           })
         }

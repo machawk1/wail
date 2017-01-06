@@ -55,16 +55,13 @@ export default class SettingsManager {
       if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
         console.log('We are not configured')
         let didFirstLoad = this._settings.get('didFirstLoad')
-        let doFirstLoad = false
         if (didFirstLoad === null || didFirstLoad === undefined) {
-          doFirstLoad = true
-          console.log('doing first load')
-        } else {
-          doFirstLoad = didFirstLoad
+          didFirstLoad = false
         }
-        console.log(doFirstLoad)
 
-        this._writeSettings(pathMan, doFirstLoad)
+        // console.log('We are not configured due to binary directory being moved')
+        this._writeSettings(pathMan, didFirstLoad)
+        console.log(didFirstLoad)
         // console.log(base, settings)
       } else {
         if (this._settings.get('base') !== this._base) {
@@ -74,15 +71,16 @@ export default class SettingsManager {
            I did this to myself....
            */
           let didFirstLoad = this._settings.get('didFirstLoad')
-          let doFirstLoad = false
           if (didFirstLoad === null || didFirstLoad === undefined) {
-            doFirstLoad = true
-          } else {
-            doFirstLoad = didFirstLoad
+            didFirstLoad = false
+          }
+
+          if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+            didFirstLoad = false
           }
 
           // console.log('We are not configured due to binary directory being moved')
-          this._writeSettings(pathMan, doFirstLoad)
+          this._writeSettings(pathMan, didFirstLoad)
         }
         // console.log('We are configured')
       }
@@ -125,8 +123,10 @@ export default class SettingsManager {
     let darwinExport = managed.dbgOSX ? cmdexport : `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
     let command = 'sh'
     heritrix.path = this._settings.get('heritrix')
-    var jobConfPath
+    heritrix.jobsDir = pathMan.normalizeJoin(this._docsPath, heritrix.jobsDir)
+    fs.ensureDirSync(heritrix.jobsDir)
 
+    let jobConfPath
     if (isWindows) {
       let cdxWin = `${cmdexport} ${this._settings.get('cdxIndexerWin')}`
       this._settings.set('cdxIndexer', cdxWin)
@@ -181,12 +181,13 @@ export default class SettingsManager {
     code.crawlerBean = pathMan.normalizeJoinWBase(code.crawlerBean)
     code.wayBackConf = pathMan.normalizeJoinWBase(code.wayBackConf)
 
-    let pywb = _.mapValues(managed.pywb, (v, k) => {
+    let whichPywb = process.platform === 'win32' ? managed.pywbwin : managed.pywb
+    let pywb = _.mapValues(whichPywb, (v, k) => {
       if (k !== 'port' && k !== 'url') {
         v = pathMan.normalizeJoinWBase(v)
       }
       if (k === 'url') {
-        v = S(v).template({port: managed.pywb.port}).s
+        v = S(v).template({port: whichPywb.port}).s
       }
       return v
     })
@@ -218,33 +219,14 @@ export default class SettingsManager {
           this._settings.set('memgatorQuery', `${this._settings.get('memgator')} -a ${this._settings.get('archives')}`)
           break
         case 'catalina':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${path.normalize(path.join(base, 'bundledApps/wayback.bat'))} start`)
-          }
-          break
         case 'tomcatStart':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} start`)
-          }
-          break
         case 'tomcatStop':
-          if (!isWindows) {
-            this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          } else {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/wayback.bat')} stop`)
-          }
           break
         case 'heritrixStart':
           if (isWindows) {
             this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/heritrix.bat')} ${this._settings.get('heritrix.login')}`)
           } else {
-            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')}`
+            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')} --jobs-dir ${heritrix.jobsDir}`
             this._settings.set(cmd.name, `${cmdexport} ${hStart}`)
             this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${hStart}`)
           }
@@ -256,14 +238,17 @@ export default class SettingsManager {
     })
 
     this._settings.set('twitter', managed.twitter)
-
-    let wcChecker = _.mapValues(managed.warcChecker, v => pathMan.normalizeJoinWBase(v))
+    let whichWarcChecker = process.platform === 'win32' ? managed.warcCheckerWin : managed.warcChecker
+    let wcChecker = _.mapValues(whichWarcChecker, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('warcChecker', wcChecker)
     this._settings.set('dumpTwitterWarcs', pathMan.normalizeJoinWBase(managed.dumpTwitterWarcs))
     this._settings.set('archivePreload', pathMan.normalizeJoinWBase(managed.archivePreload))
 
-    let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
+    let whichExtractSeed =  process.platform === 'win32' ? managed.extractSeedWin : managed.extractSeed
+    let extractSeed = _.mapValues(whichExtractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
+    this._settings.set('didRedoFl', true)
+    this._settings.set('logBasePath', global.__wailControl.logPath)
     fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
   }
 

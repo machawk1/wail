@@ -52,8 +52,10 @@ export default class Notifications extends Component {
     if (notif) {
       if (notif.type === EventTypes.QUEUE_MESSAGE) {
         this.notifier.addNotification(notif.message)
+      } else if (notif.type === 'initial') {
+        console.log('no need to display the initial notification event')
       } else {
-        console.log('unreconized notfication', notif)
+        console.log('unrecognized notification', notif)
       }
     }
   }

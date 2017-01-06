@@ -1,8 +1,8 @@
-import React, {Component, PropTypes} from 'react'
-import {Field, reduxForm} from 'redux-form/immutable'
-import {Flex} from 'react-flex'
+import React, { Component, PropTypes } from 'react'
+import { Field, reduxForm } from 'redux-form/immutable'
+import { Flex } from 'react-flex'
 import FlatButton from 'material-ui/FlatButton'
-import {TextField} from 'redux-form-material-ui'
+import { TextField } from 'redux-form-material-ui'
 import S from 'string'
 
 const validate = values => {
@@ -40,18 +40,20 @@ const formConfig = {
   validate
 }
 
-const NewCollectionForm = ({ handleSubmit, pristine, reset, submitting, invalid, onSubmit, onCancel }) => (
-  <div style={{ width: 'inherit', height: 'inherit' }}>
-    <form onSubmit={handleSubmit(onSubmit)} style={{ height: '100%' }}>
+const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, onSubmit, onCancel}) => (
+  <div style={{width: 'inherit', height: 'inherit'}}>
+    <form onSubmit={handleSubmit(onSubmit)} style={{height: '100%'}}>
       <div>
         <Flex row alignContent='center' justifyContent='space-between'>
           <Field
+            id='newCol-name'
             name='name'
             component={TextField}
             floatingLabelText='Collection Name'
             hintText='MyAwesomeCollection'
           />
           <Field
+            id='newCol-title'
             name='title'
             component={TextField}
             floatingLabelText='Collection Title'
@@ -61,6 +63,7 @@ const NewCollectionForm = ({ handleSubmit, pristine, reset, submitting, invalid,
       </div>
       <div>
         <Field
+          id='newCol-decription'
           name='description'
           component={TextField}
           floatingLabelText='Collection Description'
@@ -69,14 +72,16 @@ const NewCollectionForm = ({ handleSubmit, pristine, reset, submitting, invalid,
           multiLine
         />
       </div>
-      <div style={{ height: '40px' }}>
+      <div style={{height: '40px'}}>
         <FlatButton
+          id='newCol-create'
           label='Create Collection'
           type='submit'
           disabled={invalid || pristine || submitting}
           primary
         />
         <FlatButton
+          id='newCol-cancel'
           label='Cancel'
           onTouchTap={onCancel}
         />

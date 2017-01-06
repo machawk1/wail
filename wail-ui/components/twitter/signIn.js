@@ -2,7 +2,7 @@ import React, {Component, PropTypes} from 'react'
 import {Card, CardTitle, CardText, CardActions} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import {ipcRenderer as ipc} from 'electron'
-import {signedIntoTwitter} from '../../actions/redux/twitter'
+import {signedIntoTwitter} from '../../actions/twitter'
 import {notify} from '../../actions/notification-actions'
 
 export default class SignIn extends Component {
@@ -23,12 +23,12 @@ export default class SignIn extends Component {
         console.log('dang error case :(')
         this.setState({ disabled: false }, () => {
           window.logger.error(whatHappened.error)
-          global.notifications$.next(notify({
+          notify({
             title: 'Twitter Sign In Not Completed',
             level: 'warning',
             message: 'An error occurred during sign in. If you closed the window cary on.',
             autoDismiss: 10
-          }))
+          })
         })
       }
     })

@@ -26,7 +26,12 @@ export default {
     BUILD_LAUNCH_JOB: null,
     STOP_JOB: null,
     TERMINATE_RESTART_JOB: null,
-    TERMINATE_JOB: null
+    TERMINATE_JOB: null,
+    RESCAN_JOB_DIR: null,
+    PERMANENT_DELETE_JOB: null
+  }),
+  REMOVE_RUN: keyMirror({
+    REMOVE_RUN: null
   }),
   AddSeedFromFsEvents: keyMirror({
     SEED_CHECKED: null,

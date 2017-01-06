@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { namedPure } from '../../../util/recomposeHelpers'
 import Header from '../../shared/header'
-import { Card, CardHeader, CardMedia, CardText } from 'material-ui/Card'
+import { Card, CardHeader, CardMedia } from 'material-ui/Card'
 import ProgressSteps from '../components/progress/progressSteps'
 import ProgressMessage from '../components/progress/progressMessage'
 
@@ -16,7 +16,7 @@ const Layout = () => (
           <CardHeader
             title='Loading Steps'
           />
-          <CardMedia style={{minHeight: '300px'}}>
+          <CardMedia style={{minHeight: '250px'}}>
             <ProgressSteps />
             <ProgressMessage />
           </CardMedia>

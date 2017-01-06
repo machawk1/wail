@@ -1,11 +1,12 @@
-import React, {Component, PropTypes} from 'react'
-import {bindActionCreators} from 'redux'
-import {connect} from 'react-redux'
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
+import React, { Component, PropTypes } from 'react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import RaisedButton from 'material-ui/RaisedButton'
 import FixIcon from 'material-ui/svg-icons/action/build'
 import KillIcon from 'material-ui/svg-icons/content/clear'
-import * as serviceAction from '../../actions/redux/services'
+import ServiceStats from '../../records/serviceStatus'
+import * as serviceAction from '../../actions/services'
 
 const style = {
   servicesSS: {
@@ -26,106 +27,100 @@ const style = {
   }
 }
 
-const stateToProps = state => {
-  let serviceStatues = state.get('serviceStatuses')
-  let wbGood = serviceStatues.get('wayback')
-  let hGood = serviceStatues.get('heritrix')
-  let waybackStatus = wbGood ? 'Running' : 'X'
-  let heritrixStatus = hGood ? 'Running' : 'X'
-  return {
-    wbGood,
-    hGood,
-    waybackStatus,
-    heritrixStatus
-  }
-}
+const actionMarginLeft = process.platform === 'win32' ? '30px' : '50px'
+
+
+const stateToProps = state => ({
+  serviceStatRec: state.get('serviceStatuses')
+})
 
 const dispatchToProps = dispatch => bindActionCreators(serviceAction, dispatch)
 
-const ServiceStatus = ({
-  wbGood, hGood, waybackStatus, heritrixStatus,
-  startHeritrix, stopHeritrix,
-  startWayback, stopWayback
-}) => (
-  <Table>
-    <TableHeader
-      displaySelectAll={false}
-      adjustForCheckbox={false}
-    >
-      <TableRow>
-        <TableHeaderColumn style={style.servicesSS}>Service</TableHeaderColumn>
-        <TableHeaderColumn style={style.servicesSS}>State</TableHeaderColumn>
-        <TableHeaderColumn style={style.servicesSS}>Version</TableHeaderColumn>
-        <TableHeaderColumn style={style.servicesActionsH}>Actions</TableHeaderColumn>
-      </TableRow>
-    </TableHeader>
-    <TableBody
-      displayRowCheckbox={false}
-      showRowHover={false}
-    >
-      <TableRow
-        selectable={false}
+const ServiceStatus = (props) => {
+  const {serviceStatRec, startHeritrix, stopHeritrix, startWayback, stopWayback} = props
+  const hGood = serviceStatRec.get('heritrix'), wbGood = serviceStatRec.get('wayback')
+  return (
+    <Table>
+      <TableHeader
+        displaySelectAll={false}
+        adjustForCheckbox={false}
       >
-        <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
-        <TableRowColumn style={style.servicesSS}>{waybackStatus}</TableRowColumn>
-        <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
-        <TableRowColumn style={style.servicesActions}>
-          <span style={{ marginLeft: '50px' }}>
+        <TableRow>
+          <TableHeaderColumn style={style.servicesSS}>Service</TableHeaderColumn>
+          <TableHeaderColumn style={style.servicesSS}>State</TableHeaderColumn>
+          <TableHeaderColumn style={style.servicesSS}>Version</TableHeaderColumn>
+          <TableHeaderColumn style={style.servicesActionsH}>Actions</TableHeaderColumn>
+        </TableRow>
+      </TableHeader>
+      <TableBody
+        displayRowCheckbox={false}
+        showRowHover={false}
+      >
+        <TableRow
+          selectable={false}
+        >
+          <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
+          <TableRowColumn id='waybackStatus' style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
+          <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
+          <TableRowColumn style={style.servicesActions}>
+          <span style={{marginLeft: actionMarginLeft}}>
             <RaisedButton
+              id='startWayback'
               disabled={wbGood}
               style={style.serviceActionButton}
               labelPosition='before'
               label='Start'
-              onMouseDown={startWayback}
+              onTouchTap={startWayback}
               icon={<FixIcon />}
-              />
+            />
             <RaisedButton
+              id='stopWayback'
               disabled={!wbGood}
               style={style.serviceActionButton}
               labelPosition='before'
               label='Stop'
-              onMouseDown={stopWayback}
+              onTouchTap={stopWayback}
               icon={<KillIcon />}
-              />
+            />
           </span>
-        </TableRowColumn>
-      </TableRow>
-      <TableRow
-        selectable={false}
-      >
-        <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
-        <TableRowColumn style={style.servicesSS}>{heritrixStatus}</TableRowColumn>
-        <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
-        <TableRowColumn style={style.servicesActions}>
-          <span style={{ marginLeft: '50px' }}>
+          </TableRowColumn>
+        </TableRow>
+        <TableRow
+          selectable={false}
+        >
+          <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
+          <TableRowColumn id='heritrixStatus' style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
+          <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
+          <TableRowColumn style={style.servicesActions}>
+          <span style={{marginLeft: actionMarginLeft}}>
             <RaisedButton
+              id='startHeritrix'
               disabled={hGood}
               style={style.serviceActionButton}
               labelPosition='before'
               label='Start'
-              onMouseDown={startHeritrix}
+              onTouchTap={startHeritrix}
               icon={<FixIcon />}
-              />
+            />
             <RaisedButton
+              id='stopHeritrix'
               disabled={!hGood}
               style={style.serviceActionButton}
               labelPosition='before'
               label='Stop'
-              onMouseDown={stopHeritrix}
+              onTouchTap={stopHeritrix}
               icon={<KillIcon />}
-              />
+            />
           </span>
-        </TableRowColumn>
-      </TableRow>
-    </TableBody>
-  </Table>
-)
+          </TableRowColumn>
+        </TableRow>
+      </TableBody>
+    </Table>
+  )
+}
 
 ServiceStatus.propTypes = {
-  wbGood: PropTypes.bool.isRequired,
-  hGood: PropTypes.bool.isRequired,
-  waybackStatus: PropTypes.string.isRequired,
-  heritrixStatus: PropTypes.string.isRequired,
+  serviceStatRec: PropTypes.instanceOf(ServiceStats),
   startHeritrix: PropTypes.func.isRequired,
   stopHeritrix: PropTypes.func.isRequired,
   startWayback: PropTypes.func.isRequired,

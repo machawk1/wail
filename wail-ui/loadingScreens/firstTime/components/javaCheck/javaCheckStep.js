@@ -70,7 +70,7 @@ const enhance = compose(
 )
 
 const JavaCheckStep = enhance(({ownProps, label, check, javaCheckRec, step}) => (
-  <CheckStepLabel check={check} ownProps={ownProps} label={label}/>
+  <CheckStepLabel lid='JavaCheckStep' check={check} ownProps={ownProps} label={label}/>
 ))
 
 JavaCheckStep.propTypes = {

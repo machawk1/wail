@@ -16,10 +16,10 @@ class ViewCollection extends Component {
     collection: PropTypes.instanceOf(Immutable.Map).isRequired,
     viewingCol: PropTypes.string.isRequired
   }
-  // shouldComponentUpdate (nextProps, nextState, nextContext) {
-  //   console.log('colview combined should component update')
-  //   return shallowCompare(this, nextProps, nextState)
-  // }
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    console.log('colview combined should component update')
+    return this.props.collection !== nextProps.collection
+  }
 
   render () {
     return (

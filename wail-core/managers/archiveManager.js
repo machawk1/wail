@@ -77,6 +77,14 @@ const updateSingleOpts = {
   multi: false
 }
 
+const firstTimeMoveCollectionsPath = () => {
+  if (process.platform === 'win32') {
+    return settings.get('iwarcs')
+  } else {
+    return `${settings.get('iwarcs')}/*`
+  }
+}
+
 export default class ArchiveManager {
   constructor () {
     this.collections = new Db({
@@ -136,7 +144,7 @@ export default class ArchiveManager {
               if (docs.length === 0) {
                 return this.createDefaultCol()
                   .then(defaultCol =>
-                    moveStartingCol(`${settings.get('iwarcs')}/*`, settings.get('warcs'))
+                    moveStartingCol(firstTimeMoveCollectionsPath(), settings.get('warcs'))
                       .then(() => {
                         resolve(defaultCol)
                       })

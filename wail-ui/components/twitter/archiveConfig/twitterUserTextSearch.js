@@ -15,6 +15,8 @@ const monitor = (config) => {
   window.logger.debug(message)
 }
 
+const width = process.platform === 'win32' ? '40%' : '35%'
+
 class TwitterUserTextSearch extends Component {
   static contextTypes = {
     store: PropTypes.object
@@ -82,9 +84,9 @@ class TwitterUserTextSearch extends Component {
   render () {
     const { page } = this.state
     return (
-      <div style={{ width: '30%', height: '100%' }}>
+      <div style={{ width, height: '100%' }}>
         <Card style={{ height: '100%' }}>
-          <CardTitle title={'Terms In A Users Tweets'} />
+          <CardTitle title={'Terms In Users Tweets'} />
           {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage} />}
           {page === 2 && <SearchTerms previousPage={::this.previousPage} onSubmit={::this.submit} />}
         </Card>

@@ -39,9 +39,13 @@ const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildO
 
 // /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
-  '^/archiveIndexes/',
+  '^/archiveIndexes($|/)',
   '^/archives2($|/)',
   '^/.babelrc($|/)',
+  '^/.babelrc2($|/)',
+  '^/.babelrc.bk($|/)',
+  '^/.gitattributes$',
+  '^/depDifWinRest.txt$',
   '^/build($|/)',
   '^/build-binary.js$',
   '^/build-binary-old.js$',
@@ -52,12 +56,17 @@ const ignore = [
   '^/bundledApps/memgator($|/)',
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
+  '^/bundledApps/tomcat($|/)',
   '^/.codeclimate.yml($|/)',
+  '^/crawler-beans_bk.cxml$',
   '^/dev_coreData',
+  '^/coreData($|/)',
   '^/doElectron.sh$',
   '^/wail-core_old($|/)',
   '^/bootstrap.sh$',
   '^/npm-debug.log.*$',
+  '^/tests($|/)',
+  '^/chromDLogs($|/)',
   '^/electron-main-dev.js$',
   '^/.gitignore($|/)',
   '^/.idea($|/)',
@@ -75,9 +84,11 @@ const ignore = [
   '^/buildResources($|/)$',
   '^/sharedUtil($|/)$',
   '^/wail-core_old($|/)$',
+  '^/wail-config($|/)$',
   '^/bundledApps/pywb_old($|/)$',
   '^/support($|/)$',
   '^/temp($|/)$',
+  '^/yarn.lock$',
   '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
@@ -87,7 +98,7 @@ const ignore = [
   )
 
 const DEFAULT_OPTS = {
-  'app-copyright': 'jberlin',
+  'app-copyright':  'Copyright © 2016-2017 Web Science And Digital Libraries Research Group ODU CS',
   'app-version': pkg.version,
   asar: false,
   prune: true,
@@ -120,7 +131,7 @@ const darwinSpecificOpts = {
 }
 
 const windowsSpecificOpts = {
-  'version-string': {
+  win32metadata: {
 
     // Company that produced the file.
     CompanyName: 'wsdl.cs.odu.edu',
@@ -363,7 +374,8 @@ const log = (plat, arch) => (err, filepath) => {
   } else {
     if (plat === 'win32') {
       cb = () => {
-        createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
+        console.log(`${plat}-${arch} finished!`)
+        // createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
       }
     } else {
       // cb = () => {

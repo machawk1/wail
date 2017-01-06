@@ -17,6 +17,7 @@ function dlExtensions (update = false) {
         installExtension.default(installExtension['REDUX_DEVTOOLS'], update),
         installExtension.default(installExtension['REACT_PERF'], update)])
         .then(() => {
+          console.log('downloaded extensions')
           resolve()
         })
         .catch((error) => {
@@ -230,6 +231,10 @@ export default class WindowManager extends EventEmitter {
         })
     })
 
+    ipcMain.on('remove-crawl',(e,jobId) => {
+      this.send('crawlManWindow', 'remove-crawl', jobId)
+    })
+
     /* Wayback */
 
     ipcMain.on('crawl-to-collection', (event, colCrawl) => {
@@ -419,22 +424,21 @@ export default class WindowManager extends EventEmitter {
   initWail (control) {
     this.initIpc(control)
     console.log('init wail')
-    this.showLoadingWindow(control)
-      .then(() => this.createWail(control)
-        .then(() => this.createArchiveMan(control)
-          .then(() => this.createCrawlMan(control)
-            .then(() => this.createRequestD(control)
-              .then(() => {
-                console.log('all windows loaded')
-                return dlExtensions()
+    dlExtensions()
+      .then(() => {
+        return this.showLoadingWindow(control)
+          .then(() => this.createWail(control)
+            .then(() => this.createArchiveMan(control)
+              .then(() => this.createCrawlMan(control)
+                .then(() => this.createRequestD(control)
                   .then(() => {
-                    console.log('downloaded extensions')
+                    console.log('all windows loaded')
                   })
-              })
+                )
+              )
             )
           )
-        )
-      )
+      })
   }
 
   didCoreLoad () {
@@ -589,7 +593,7 @@ export default class WindowManager extends EventEmitter {
         console.log('loadingWindow is ready to show')
         this.windows['loadingWindow'].open = true
         this.windows['loadingWindow'].window.show()
-        this.windows['loadingWindow'].window.webContents.openDevTools()
+        // this.windows['loadingWindow'].window.webContents.openDevTools()
         resolve()
       })
     })

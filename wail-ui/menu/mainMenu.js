@@ -1,13 +1,18 @@
-import {dialog, app, shell} from 'electron'
+import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
+
 const name = app.getName()
 
 export function screenShotPDF (window) {
   if (window) {
     // console.log('Saving pdf')
-    window.webContents.printToPDF({}, (error, data) => {
+    window.webContents.printToPDF({
+      marginsType: 0,
+      printBackground: true,
+      printSelectionOnly: false,
+    }, (error, data) => {
       if (error) {
         dialog.showErrorBox("Something went wrong :'(", 'Saving screen shot as PDF failed')
       } else {
@@ -15,7 +20,7 @@ export function screenShotPDF (window) {
           title: 'Save Screen Shot As PDF',
           defaultPath: app.getPath('documents'),
           filters: [
-            { name: 'PDF', extensions: [ 'pdf' ] }
+            {name: 'PDF', extensions: ['pdf']}
           ]
         }
         let cb = (path) => {
@@ -28,7 +33,7 @@ export function screenShotPDF (window) {
                   type: 'info',
                   title: 'Done',
                   message: 'PDF screen shot saved',
-                  buttons: [ 'Ok' ]
+                  buttons: ['Ok']
                 }, (r) => console.log(r))
               }
             })
@@ -47,15 +52,15 @@ export function screenShot (window) {
         title: 'Save Screen Shot',
         defaultPath: app.getPath('documents'),
         filters: [
-          { name: 'PNG', extensions: [ 'png' ] },
-          { name: 'JPG', extensions: [ 'jpg' ] }
+          {name: 'PNG', extensions: ['png']},
+          {name: 'JPG', extensions: ['jpg']}
         ]
       }
       let cb = (path) => {
         if (path) {
           let png = S(path.toLowerCase()).endsWith('png')
 
-          let buf = png ? image.toPng() : image.toJpeg(100)
+          let buf = png ? image.toPNG() : image.toJPEG(100)
           fs.writeFile(path, buf, 'binary', (wError) => {
             if (wError) {
               dialog.showErrorBox("Something went wrong :'(", 'Screen shot could not be saved to that path')
@@ -64,7 +69,7 @@ export function screenShot (window) {
                 type: 'info',
                 title: 'Done',
                 message: 'Screen shot saved',
-                buttons: [ 'Ok' ]
+                buttons: ['Ok']
               }, (r) => console.log(r))
             }
           })
@@ -87,7 +92,7 @@ export const forceKill = {
               type: 'question',
               title: 'Are you sure?',
               message: 'Forcefully terminating Heritrix will stop any crawls in progress',
-              buttons: [ 'Im Sure', 'Cancel' ],
+              buttons: ['Im Sure', 'Cancel'],
               cancelId: 666
             }, (r) => {
               if (r === 1) {
@@ -103,11 +108,11 @@ export const forceKill = {
               type: 'question',
               title: 'Are you sure?',
               message: 'Forcefully terminating Wayback will stop any indexing in progress',
-              buttons: [ 'Im Sure', 'Cancel' ],
+              buttons: ['Im Sure', 'Cancel'],
               cancelId: 666
             }, (r) => {
               if (r === 1) {
-                cp.exec("ps ax | grep 'tomcat' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
+                cp.exec("ps ax | grep 'wayback' | grep -v grep | awk '{print \"kill -9 \" $1}' | sh")
               }
             })
           }
@@ -127,7 +132,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -137,20 +142,6 @@ const menus = {
               label: `Version: ${app.getVersion()}`
             }
           ]
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Preferences',
-          click (item, focusedWindow) {
-            console.log('clicked settings menu')
-            if (focusedWindow) {
-              // showSettingsWindow(focusedWindow)
-            } else {
-              console.log('window for settings click is a no go')
-            }
-          }
         },
         {
           type: 'separator'
@@ -171,28 +162,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -284,17 +257,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }
@@ -310,7 +278,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -352,28 +320,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -473,17 +423,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }
@@ -498,7 +443,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -513,20 +458,6 @@ const menus = {
           type: 'separator'
         },
         {
-          label: 'Preferences',
-          click (item, focusedWindow) {
-            console.log('clicked settings menu')
-            if (focusedWindow) {
-              // showSettingsWindow(focusedWindow)
-            } else {
-              console.log('window for settings click is a no go')
-            }
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
           role: 'quit'
         }
       ]
@@ -535,28 +466,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -595,13 +508,6 @@ const menus = {
     {
       label: 'View',
       submenu: [
-        {
-          label: 'Reload',
-          accelerator: 'Ctrl+R',
-          click (item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          }
-        },
         {
           label: 'Toggle Developer Tools',
           accelerator: 'Ctrl+Shift+I',
@@ -652,17 +558,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }

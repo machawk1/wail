@@ -1,7 +1,7 @@
 import createIpc from 'redux-electron-ipc'
-import {addedNewCol, addedWarcs, gotAllCollections, crawlToCol} from '../actions/redux/collections'
-import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate, handledRequest} from '../actions/redux/heritrix'
-import {serviceStarted, serviceKilled, restartedWayback} from '../actions/redux/services'
+import {addedNewCol, addedWarcs, gotAllCollections, crawlToCol} from '../actions/collections'
+import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate, handledRequest} from '../actions/heritrix'
+import {serviceStarted, serviceKilled, restartedWayback} from '../actions/services'
 
 export default createIpc({
   /* collection store */

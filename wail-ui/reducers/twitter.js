@@ -1,9 +1,9 @@
-import Immutable, {Map, List} from 'immutable'
-import {remote} from 'electron'
-import {Twitter} from '../constants/wail-constants'
+import { Map } from 'immutable'
+import { remote } from 'electron'
+import { Twitter } from '../constants/wail-constants'
 const settings = remote.getGlobal('settings')
 
-export default (state = Map({ userSignedIn: settings.get('twitter.userSignedIn') }), action) => {
+const twitter = (state = Map({userSignedIn: settings.get('twitter.userSignedIn')}), action) => {
   switch (action.type) {
     case Twitter.SIGNED_IN:
       return state.set('userSignedIn', true)
@@ -11,3 +11,6 @@ export default (state = Map({ userSignedIn: settings.get('twitter.userSignedIn')
       return state
   }
 }
+
+export default twitter
+
