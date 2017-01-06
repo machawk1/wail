@@ -29,31 +29,30 @@ const split = require('split2')
 // const groups = {}
 const ESettings = require('electron-settings')
 
-const settings = new ESettings({ configDirPath: 'A:\\WebstromProjects\\wail\\wail-config\\wail-settings' })
+const settings = new ESettings({ configDirPath: '/home/john/my-fork-wail/wail-config/wail-settings' })
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-let heritrixPath = settings.get('heritrix.path')
+console.log('starting wayback')
+let exec = settings.get('pywb.wayback')
 let opts = {
-  cwd: heritrixPath,
-  env: {
-    JAVA_HOME: settings.get('jdk'),
-    JRE_HOME: settings.get('jre'),
-    HERITRIX_HOME: heritrixPath
-  }
+  cwd: settings.get('warcs'),
+  shell: true
 }
 
-let usrpwrd = `${settings.get('heritrix.username')}:${settings.get('heritrix.password')}`
-let pid = -1
-let args = [ '-a', `${usrpwrd}`, '--jobs-dir', `${settings.get('heritrix.jobsDir')}` ]
-cp.execFile('bin\\heritrix.cmd', args, opts,(err,stderr,stdout) => {
-  if (err) {
-    console.error(err)
-    console.error(stderr,stdout)
-  } else {
-    console.log(stderr,stdout)
-  }
+let wayback = cp.spawn(exec, opts)
+
+wayback.stdout.on('data', (data) => {
+  console.log(`stdout: ${data}`);
+});
+
+wayback.stderr.on('data', (data) => {
+  console.log(`stderr: ${data}`);
+});
+
+wayback.on('close', (code) => {
+  console.log(`child process exited with code ${code}`);
 })
 /*
  .then((res) => res.dot())

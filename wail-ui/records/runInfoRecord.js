@@ -18,7 +18,7 @@ export default class RunInfoRecord extends RunRecord {
   }
 
   status () {
-    if (this.ending) {
+    if (this.ending && !this.get('ended')) {
       return 'Ending'
     }
     return this.get('ended') ? 'Ended' : 'Running'

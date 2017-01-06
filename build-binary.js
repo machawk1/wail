@@ -45,6 +45,7 @@ const ignore = [
   '^/.babelrc2($|/)',
   '^/.babelrc.bk($|/)',
   '^/.gitattributes$',
+  '^/depDifWinRest.txt$',
   '^/build($|/)',
   '^/build-binary.js$',
   '^/build-binary-old.js$',

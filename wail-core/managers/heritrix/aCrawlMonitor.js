@@ -34,18 +34,18 @@ export default class ACrawlMonitor {
           if (stats.ended) {
             this.stopWatching()
             if (process.platform === 'win32') {
-              this._findWarcWin(path.normalize(`${filePath}/../../warcs/*.warc`),stats)
+              this._findWarcWin(path.normalize(`${filePath}/../../warcs/*.warc`), stats)
             } else {
               let finalStats = Object.assign({}, {
                 started: this.started,
                 warcs: path.normalize(`${filePath}/../../warcs/*.warc`)
               }, stats)
-              this.onEnd(this.jobId, { jobId: this.jobId, stats: finalStats })
+              this.onEnd(this.jobId, {jobId: this.jobId, stats: finalStats})
             }
           } else {
             this.onUpdate({
               jobId: this.jobId,
-              stats: Object.assign({}, { started: this.started }, stats)
+              stats: Object.assign({}, {started: this.started}, stats)
             })
           }
         })
@@ -55,7 +55,7 @@ export default class ACrawlMonitor {
     }
   }
 
-  _findWarcWin(where,stats) {
+  _findWarcWin (where, stats) {
     let command = `dir /B /s ${where}`
     cp.exec(command, (err, stdout, stderr) => {
       if (err) {
@@ -71,7 +71,7 @@ export default class ACrawlMonitor {
           started: this.started,
           warcs: files[0]
         }, stats)
-        this.onEnd(this.jobId, { jobId: this.jobId, stats: finalStats })
+        this.onEnd(this.jobId, {jobId: this.jobId, stats: finalStats})
       }
     })
   }

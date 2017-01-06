@@ -20,7 +20,7 @@
   "scripts": {
     "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
     "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
-    "build-core": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/win/webpack.config.production.js --progress --profile --colors",
+    "build-core": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/webpack.config.production.js --progress --profile --colors",
     "build-wail-for-tests": "node --harmony tools/wailBuildTest.js",
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
@@ -225,7 +225,7 @@
     "babel-plugin-webpack-loaders": "^0.8.0",
     "babel-polyfill": "^6.20.0",
     "babel-preset-babili": "0.0.9",
-    "babel-preset-env": "1.1.1",
+    "babel-preset-env": "1.1.4",
     "babel-preset-latest": "^6.16.0",
     "babel-preset-node7": "^1.4.0",
     "babel-preset-react": "^6.16.0",
