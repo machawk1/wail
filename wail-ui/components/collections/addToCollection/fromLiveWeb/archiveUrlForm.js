@@ -50,11 +50,6 @@ class ArchiveUrlForm extends Component {
     }
   }
 
-  getUrlInput () {
-    console.log(ReactDom.findDOMNode(this.refs.urlInput).value)
-    return this.refs.urlInput
-  }
-
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid} = this.props
     return (
