@@ -275,6 +275,14 @@ if (process.env.NODE_ENV === 'development') {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
     },
+    warcCheckerWin: {
+      dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+    },
+    extractSeedWin: {
+      dir: 'bundledApps/listUris/listUris.exe -d {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}',
+    },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'
 
@@ -491,8 +499,8 @@ if (process.env.NODE_ENV === 'development') {
       waybackPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port}',
       waybackReplayDir: 'bundledApps\\pywb\\Scripts\\wayback.exe -d {dir}',
       waybackReplayDirPort: 'bundledApps\\pywb\\Scripts\\wayback.exe -p {port} -d {dir}',
-      templates: 'bundledApps/pywb/templates',
-      statics: 'bundledApps/pywb/static',
+      templates: 'bundledApps\\pywb\\templates',
+      statics: 'bundledApps\\pywb\\static',
       checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
     },
     collections: {
@@ -553,6 +561,14 @@ if (process.env.NODE_ENV === 'development') {
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
       file: 'bundledApps/listUris/listUris -f {path}',
+    },
+    warcCheckerWin: {
+      dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+    },
+    extractSeedWin: {
+      dir: 'bundledApps/listUris/listUris.exe -d {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}',
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'

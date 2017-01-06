@@ -27,6 +27,9 @@ const style = {
   }
 }
 
+const actionMarginLeft = process.platform === 'win32' ? '30px' : '50px'
+
+
 const stateToProps = state => ({
   serviceStatRec: state.get('serviceStatuses')
 })
@@ -60,7 +63,7 @@ const ServiceStatus = (props) => {
           <TableRowColumn id='waybackStatus' style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
           <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
-          <span style={{marginLeft: '50px'}}>
+          <span style={{marginLeft: actionMarginLeft}}>
             <RaisedButton
               id='startWayback'
               disabled={wbGood}
@@ -89,7 +92,7 @@ const ServiceStatus = (props) => {
           <TableRowColumn id='heritrixStatus' style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
           <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
-          <span style={{marginLeft: '50px'}}>
+          <span style={{marginLeft: actionMarginLeft}}>
             <RaisedButton
               id='startHeritrix'
               disabled={hGood}

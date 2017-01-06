@@ -2,6 +2,7 @@ import { dialog, app, shell } from 'electron'
 import fs from 'fs-extra'
 import S from 'string'
 import cp from 'child_process'
+
 const name = app.getName()
 
 export function screenShotPDF (window) {
@@ -131,7 +132,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -141,20 +142,6 @@ const menus = {
               label: `Version: ${app.getVersion()}`
             }
           ]
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Preferences',
-          click (item, focusedWindow) {
-            console.log('clicked settings menu')
-            if (focusedWindow) {
-              // showSettingsWindow(focusedWindow)
-            } else {
-              console.log('window for settings click is a no go')
-            }
-          }
         },
         {
           type: 'separator'
@@ -175,28 +162,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -288,17 +257,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }
@@ -314,7 +278,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -356,28 +320,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -477,17 +423,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }
@@ -502,7 +443,7 @@ const menus = {
           submenu: [
             {
               label: `Learn more about ${name}`,
-              click () { shell.openExternal('http://machawk1.github.io/wail/') }
+              click () { shell.openExternal('https://github.com/N0taN3rd/wail/wiki') }
             },
             {
               label: 'WSDL',
@@ -517,20 +458,6 @@ const menus = {
           type: 'separator'
         },
         {
-          label: 'Preferences',
-          click (item, focusedWindow) {
-            console.log('clicked settings menu')
-            if (focusedWindow) {
-              // showSettingsWindow(focusedWindow)
-            } else {
-              console.log('window for settings click is a no go')
-            }
-          }
-        },
-        {
-          type: 'separator'
-        },
-        {
           role: 'quit'
         }
       ]
@@ -539,28 +466,10 @@ const menus = {
       label: 'File',
       submenu: [
         {
-          label: 'Open',
-          submenu: [
-            {
-              label: 'WARC Files Location',
-              click () {
-                shell.openItem(global.settings.get('warcs'))
-              }
-            },
-            {
-              label: 'CDX Files Location',
-              click () {
-                shell.openItem(global.settings.get('cdx'))
-              }
-            },
-            {
-              label: 'Archive List',
-              click () {
-                shell.openItem(global.settings.get('archives'))
-              }
-
-            }
-          ]
+          label: 'Open Collections Location',
+          click () {
+            shell.openItem(global.settings.get('warcs'))
+          }
         }
       ]
     },
@@ -599,13 +508,6 @@ const menus = {
     {
       label: 'View',
       submenu: [
-        {
-          label: 'Reload',
-          accelerator: 'Ctrl+R',
-          click (item, focusedWindow) {
-            if (focusedWindow) focusedWindow.reload()
-          }
-        },
         {
           label: 'Toggle Developer Tools',
           accelerator: 'Ctrl+Shift+I',
@@ -656,17 +558,12 @@ const menus = {
       role: 'help',
       submenu: [
         {
-          label: 'Submit Bug Report',
-          subMenu: [
-            {
-              label: 'Via Email',
-              click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
-            },
-            {
-              label: 'Through Github',
-              click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
-            }
-          ]
+          label: 'Submit Bug Report Via Email',
+          click () { shell.openExternal('mailto:jberlin@cs.odu.edu') }
+        },
+        {
+          label: 'Submit Bug Report Through Github',
+          click () { shell.openExternal('https://github.com/N0taN3rd/wail/issues') }
         }
       ]
     }

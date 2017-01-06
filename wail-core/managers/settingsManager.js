@@ -59,10 +59,6 @@ export default class SettingsManager {
           didFirstLoad = false
         }
 
-        if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
-          didFirstLoad = false
-        }
-
         // console.log('We are not configured due to binary directory being moved')
         this._writeSettings(pathMan, didFirstLoad)
         console.log(didFirstLoad)
@@ -242,13 +238,14 @@ export default class SettingsManager {
     })
 
     this._settings.set('twitter', managed.twitter)
-
-    let wcChecker = _.mapValues(managed.warcChecker, v => pathMan.normalizeJoinWBase(v))
+    let whichWarcChecker = process.platform === 'win32' ? managed.warcCheckerWin : managed.warcChecker
+    let wcChecker = _.mapValues(whichWarcChecker, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('warcChecker', wcChecker)
     this._settings.set('dumpTwitterWarcs', pathMan.normalizeJoinWBase(managed.dumpTwitterWarcs))
     this._settings.set('archivePreload', pathMan.normalizeJoinWBase(managed.archivePreload))
 
-    let extractSeed = _.mapValues(managed.extractSeed, v => pathMan.normalizeJoinWBase(v))
+    let whichExtractSeed =  process.platform === 'win32' ? managed.extractSeedWin : managed.extractSeed
+    let extractSeed = _.mapValues(whichExtractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
     this._settings.set('didRedoFl', true)
     this._settings.set('logBasePath', global.__wailControl.logPath)
