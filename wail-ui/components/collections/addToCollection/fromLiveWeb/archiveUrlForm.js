@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react'
-import ReactDom from 'react-dom'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { ipcRenderer as ipc } from 'electron'
 import { SubmissionError, reset as resetForm } from 'redux-form'
