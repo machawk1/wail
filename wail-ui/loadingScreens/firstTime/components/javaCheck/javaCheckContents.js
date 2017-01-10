@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
 import { compose, branch, shouldUpdate, renderComponent, setDisplayName } from 'recompose'
 import { JavaCheckRecord, JdkDlRecord } from '../../../records'
-import { NotJStepOrIs, JavaCheckDone }  from './checkReports'
+import { NotJStepOrIs, JavaCheckDone } from './checkReports'
 
 const displayWhich = shouldDisplay =>
   branch(
@@ -18,7 +18,7 @@ const enhance = compose(
 )
 
 const JavaCheckContents = enhance(({step, javaCheckRec, jdkDlRec}) => (
-  <JavaCheckDone javaCheckRec={javaCheckRec}/>
+  <JavaCheckDone javaCheckRec={javaCheckRec} />
 ))
 
 JavaCheckContents.propTypes = {

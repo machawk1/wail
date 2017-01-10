@@ -13,7 +13,7 @@ import {
   findWbPidWindows,
   heritrixFinder,
   wasHeritrixStartError,
-  heritrixLaunchErrorReport,
+  heritrixLaunchErrorReport
 } from '../util/serviceManHelpers'
 
 const hpidGetter = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
@@ -506,7 +506,6 @@ export default class ServiceManager {
           }
         })
       }
-
     })
   }
 
@@ -658,7 +657,7 @@ export default class ServiceManager {
         }
       } else {
         return findProcessOnHeritrixPort()
-          .then(({ found, whoOnPort:{ pid, pname } }) => {
+          .then(({ found, whoOnPort: { pid, pname } }) => {
             // who's on first?
             let eMessage, where = 'Launching Heritrix'
             if (found) {

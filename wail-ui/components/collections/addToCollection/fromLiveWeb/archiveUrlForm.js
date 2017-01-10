@@ -74,8 +74,8 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem id='p_sdl' value={1} primaryText='Page + Same domain links'/>
-              <MenuItem id='p_al'  value={2} primaryText='Page + All internal and external links'/>
+              <MenuItem id='p_sdl' value={1} primaryText='Page + Same domain links' />
+              <MenuItem id='p_al' value={2} primaryText='Page + All internal and external links' />
             </Field>
           </div>
           <div style={{height: '40px', transform: 'translateY(20px)'}}>
@@ -86,7 +86,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
           </div>
         </form>
       </div>

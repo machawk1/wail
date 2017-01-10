@@ -11,7 +11,7 @@ export function screenShotPDF (window) {
     window.webContents.printToPDF({
       marginsType: 0,
       printBackground: true,
-      printSelectionOnly: false,
+      printSelectionOnly: false
     }, (error, data) => {
       if (error) {
         dialog.showErrorBox("Something went wrong :'(", 'Saving screen shot as PDF failed')

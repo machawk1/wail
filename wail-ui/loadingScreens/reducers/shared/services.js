@@ -1,11 +1,11 @@
 import { SSRecord } from '../../records'
-import { SERVICES } from   '../../constants'
+import { SERVICES } from '../../constants'
 
 const {
   HERITRIX_STARTED,
   HERITRIX_STARTED_ERROR,
   WAYBACK_STARTED,
-  WAYBACK_STARTED_ERROR,
+  WAYBACK_STARTED_ERROR
 } = SERVICES
 
 const services = (state = new SSRecord(), action) => {

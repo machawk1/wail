@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   jdkDl: filterActions(jdkDl, Object.values(JDK_DOWNLOAD)),
   jdkInstall: filterActions(jdkInstall, Object.values(JDK_INSTALL)),
   services: filterActions(services, Object.values(SERVICES)),
-  uiState: filterActions(uiState, Object.values(INITIAL_LOAD)),
+  uiState: filterActions(uiState, Object.values(INITIAL_LOAD))
 })
 
 export default rootReducer

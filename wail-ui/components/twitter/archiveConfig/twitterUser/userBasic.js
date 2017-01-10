@@ -55,7 +55,7 @@ class UserBasic extends Component {
           />
         </div>
         <CardActions>
-          <FlatButton label='Next' type='submit' primary/>
+          <FlatButton label='Next' type='submit' primary />
         </CardActions>
       </form>
     )

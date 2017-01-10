@@ -61,7 +61,7 @@ export default class ArchiveCrawlManager {
           console.log(docs)
           let pDocs = docs
           if (pDocs.length > 0) {
-            pDocs =  _.orderBy(pDocs.map(r => new CrawlInfo(r)), [ 'jobId' ], [ 'desc' ])
+            pDocs = _.orderBy(pDocs.map(r => new CrawlInfo(r)), [ 'jobId' ], [ 'desc' ])
           }
           resolve(pDocs)
         }

@@ -8,17 +8,14 @@ import {
   PermanentlyDeleteJob
 } from '../../requests/heritrixRequests'
 
-
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
-
-
 
 const {
   BUILD_HERITIX_JOB,
   RESCAN_JOB_DIR,
   LAUNCH_HERITRIX_JOB,
   TERMINATE_CRAWL,
-  TEARDOWN_CRAWL,
+  TEARDOWN_CRAWL
 } = wc.RequestTypes
 
 const {
@@ -199,6 +196,5 @@ export default class HeritrixRequestManager {
       this.working = true
       this.handleRequest()
     }
-
   }
 }

@@ -8,7 +8,7 @@ const HeritrixStartError = ({serviceRec}) => {
   const {where, message} = serviceRec.getHeritrixErrorReport('hStartErReport')
   return (
     <p>
-      Heritrix Could Not Be Started <br/>
+      Heritrix Could Not Be Started <br />
       {where} : {message}
     </p>
   )
@@ -27,7 +27,7 @@ const WaybackStartError = ({serviceRec}) => {
   const {where, message} = serviceRec.getWaybackErrorReport('hStartErReport')
   return (
     <p>
-      Wayback Could Not Be Started <br/>
+      Wayback Could Not Be Started <br />
       {where} : {message}
     </p>
   )
@@ -49,8 +49,8 @@ const enhance = shouldUpdate(updateWhen)
 const ServiceCheckMessage = enhance(({serviceRec}) => (
   <CheckStepContent>
     <Flex row alignItems='center' justifyContent='space-between'>
-      <HeritrixStartM serviceRec={serviceRec}/>
-      <WaybackStartM serviceRec={serviceRec}/>
+      <HeritrixStartM serviceRec={serviceRec} />
+      <WaybackStartM serviceRec={serviceRec} />
     </Flex>
   </CheckStepContent>
 ))

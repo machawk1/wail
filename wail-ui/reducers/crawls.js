@@ -60,7 +60,7 @@ const jobIds = (state = List(), action) => {
       return state.unshift(action.jobId)
     case REMOVE_ID:
       let idx = state.indexOf(action.jobId)
-      console.log('remove heritrix job',action.jobId,'idx',idx)
+      console.log('remove heritrix job', action.jobId, 'idx', idx)
       if (idx >= 0) {
         return state.remove(idx)
       } else {

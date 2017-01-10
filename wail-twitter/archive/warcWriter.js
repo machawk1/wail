@@ -1,7 +1,6 @@
 import cheerio from 'cheerio'
 import Promise from 'bluebird'
 import fs from 'fs-extra'
-import moment from 'moment'
 import EventEmitter from 'eventemitter3'
 import S from 'string'
 import url from 'url'
@@ -100,7 +99,6 @@ export default class WarcWriter extends EventEmitter {
 
   writeWarc (config) {
     let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header} = config
-    console.log(ua)
     let {doctype, dom} = dtDom
     let {outlinks} = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
@@ -108,33 +106,6 @@ export default class WarcWriter extends EventEmitter {
     networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
     networkMonitor.wcRequests.retrieve()
       .then(() => {
-        let now = new Date().toISOString()
-        now = now.substr(0, now.indexOf('.')) + 'Z'
-        let rid = uuid.v1()
-        let swapper = S(warcHeaderContent)
-        let whc = Buffer.from('\r\n' + swapper.template({
-            version: '0.1',
-            isPartOfV: header.isPartOfV,
-            warcInfoDescription: header.description,
-            ua
-          }).s + '\r\n', 'utf8')
-
-        let wh = Buffer.from(swapper.setValue(warcHeader).template({
-          fileName: toPath,
-          now,
-          len: whc.length,
-          rid
-        }).s, 'utf8')
-
-        let wmhc = Buffer.from('\r\n' + outlinks + '\r\n', 'utf8')
-        let wmh = Buffer.from(swapper.setValue(warcMetadataHeader).template({
-          targetURI: seedUrl,
-          now,
-          len: wmhc.length,
-          concurrentTo: rid,
-          rid: uuid.v1()
-        }).s, 'utf8')
-        let opts = {seedUrl, concurrentTo: rid, now}
         let warcOut = fs.createWriteStream(toPath)
         warcOut.on('error', err => {
           console.error('error happened while writting to the warc', err)
@@ -147,18 +118,8 @@ export default class WarcWriter extends EventEmitter {
           warcOut.destroy()
         })
 
-        const writeIter = function*  () {
-          yield wh
-          yield whc
-          yield recordSeparator
-          yield wmh
-          yield wmhc
-          yield recordSeparator
-          yield * networkMonitor.reqWriteIterator(opts)
-        }()
-
+        const writeIter = this.createWriteIterator(header, ua, toPath, outlinks, seedUrl, networkMonitor)
         const doWrite = () => {
-          console.log('doing write', moment().format())
           let next = writeIter.next()
           if (!next.done) {
             warcOut.write(next.value, 'utf8', doWrite)
@@ -171,5 +132,44 @@ export default class WarcWriter extends EventEmitter {
       .catch(error => {
         this.emit('error', error)
       })
+  }
+
+  * createWriteIterator (header, ua, toPath, outlinks, seedUrl, networkMonitor) {
+    let now = new Date().toISOString()
+    now = now.substr(0, now.indexOf('.')) + 'Z'
+    let rid = uuid.v1()
+    let swapper = S(warcHeaderContent)
+    let whc = Buffer.from('\r\n' + swapper.template({
+        version: '0.1',
+        isPartOfV: header.isPartOfV,
+        warcInfoDescription: header.description,
+        ua
+      }).s + '\r\n', 'utf8')
+
+    let wh = Buffer.from(swapper.setValue(warcHeader).template({
+      fileName: toPath,
+      now,
+      len: whc.length,
+      rid
+    }).s, 'utf8')
+
+    let wmhc = Buffer.from('\r\n' + outlinks + '\r\n', 'utf8')
+    let wmh = Buffer.from(swapper.setValue(warcMetadataHeader).template({
+      targetURI: seedUrl,
+      now,
+      len: wmhc.length,
+      concurrentTo: rid,
+      rid: uuid.v1()
+    }).s, 'utf8')
+
+    let opts = {seedUrl, concurrentTo: rid, now}
+
+    yield wh
+    yield whc
+    yield recordSeparator
+    yield wmh
+    yield wmhc
+    yield recordSeparator
+    yield * networkMonitor.reqWriteIterator(opts)
   }
 }

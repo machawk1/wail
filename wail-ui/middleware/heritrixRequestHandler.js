@@ -1,6 +1,6 @@
 import * as notify from '../actions/notification-actions'
 import { send } from 'redux-electron-ipc'
-import { crawlStarted, crawlEnded,removeJob } from '../actions/heritrix'
+import { crawlStarted, crawlEnded, removeJob } from '../actions/heritrix'
 import { HeritrixRequestTypes, JobActionEvents, RequestTypes, RequestActions } from '../constants/wail-constants'
 
 const { START_JOB, RESTART_JOB, REMOVE_JOB, DELETE_JOB, TERMINATE_JOB } = JobActionEvents

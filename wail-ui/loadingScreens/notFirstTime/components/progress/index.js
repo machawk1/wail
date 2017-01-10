@@ -14,10 +14,10 @@ const enhance = onlyUpdateForKeys(['step'])
 const Progress = ({step}) => (
   <div>
     <CardMedia>
-      <ProgressSteps step={step}/>
+      <ProgressSteps step={step} />
     </CardMedia>
     <CardText>
-      <ProgressMessage step={step}/>
+      <ProgressMessage step={step} />
     </CardText>
   </div>
 )

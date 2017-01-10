@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'development') {
       {name: 'jobConf', path: 'crawler-beans.cxml'},
       {name: 'jre', path: 'bundledApps/openjdk'},
       {name: 'memgator', path: 'bundledApps/memgator'},
-      {name: 'tomcat', path: 'bundledApps/tomcat'},
+      {name: 'tomcat', path: 'bundledApps/tomcat'}
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -269,19 +269,19 @@ if (process.env.NODE_ENV === 'development') {
     },
     warcChecker: {
       dir: 'bundledApps/warcChecker/warcChecker -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker -f {path}',
+      file: 'bundledApps/warcChecker/warcChecker -f {path}'
     },
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
-      file: 'bundledApps/listUris/listUris -f {path}',
+      file: 'bundledApps/listUris/listUris -f {path}'
     },
     warcCheckerWin: {
       dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}'
     },
     extractSeedWin: {
       dir: 'bundledApps/listUris/listUris.exe -d {path}',
-      file: 'bundledApps/listUris/listUris.exe -f {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}'
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'
@@ -306,7 +306,7 @@ if (process.env.NODE_ENV === 'development') {
       {name: 'jobConf', path: 'crawler-beans.cxml'},
       {name: 'jre', path: 'bundledApps/openjdk'},
       {name: 'memgator', path: 'bundledApps/memgator'},
-      {name: 'tomcat', path: 'bundledApps/tomcat'},
+      {name: 'tomcat', path: 'bundledApps/tomcat'}
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -556,19 +556,19 @@ if (process.env.NODE_ENV === 'development') {
     },
     warcChecker: {
       dir: 'bundledApps/warcChecker/warcChecker -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker -f {path}',
+      file: 'bundledApps/warcChecker/warcChecker -f {path}'
     },
     extractSeed: {
       dir: 'bundledApps/listUris/listUris -d {path}',
-      file: 'bundledApps/listUris/listUris -f {path}',
+      file: 'bundledApps/listUris/listUris -f {path}'
     },
     warcCheckerWin: {
       dir: 'bundledApps/warcChecker/warcChecker.exe -d {path}',
-      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}',
+      file: 'bundledApps/warcChecker/warcChecker.exe -f {path}'
     },
     extractSeedWin: {
       dir: 'bundledApps/listUris/listUris.exe -d {path}',
-      file: 'bundledApps/listUris/listUris.exe -f {path}',
+      file: 'bundledApps/listUris/listUris.exe -f {path}'
     },
     archivePreload: 'wail-twitter/archive/inject.js',
     dumpTwitterWarcs: 'twitterDump'

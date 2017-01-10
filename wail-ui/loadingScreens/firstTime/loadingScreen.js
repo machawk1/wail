@@ -12,4 +12,4 @@ injectTapEventPlugin()
 
 const store = configureStore()
 
-render(<FirstTime store={store}/>, document.getElementById('loading'))
+render(<FirstTime store={store} />, document.getElementById('loading'))

@@ -5,7 +5,7 @@ import { CheckStepContent } from '../../../../shared/checkStepContents'
 const JavaCheckNotDoneDarwin = () => (
   <CheckStepContent>
     <p>
-      Usage of Heritrix on MacOS <br/>
+      Usage of Heritrix on MacOS <br />
       Requires JDK 1.7 to be installed
     </p>
   </CheckStepContent>

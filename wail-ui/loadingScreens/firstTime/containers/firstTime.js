@@ -30,7 +30,7 @@ const FirstTime = ({store}) => (
 )
 
 FirstTime.propTypes = {
-  store: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired
 }
 
 export default FirstTime

@@ -8,7 +8,7 @@ import { CheckStepLabel, CheckStepWarningLabel } from '../../../shared/checkStep
 
 const stateToProps = state => ({
   step: state.get('loadingStep'),
-  serviceRec: state.get('services'),
+  serviceRec: state.get('services')
 })
 
 const dispatchToProps = dispatch => ({
@@ -47,7 +47,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 const updateWhen = (props, nextProps) => props.step === 2 || nextProps.step === 2
 
 const DisplayWarningLabel = ({ownProps, label}) => (
-  <CheckStepWarningLabel ownProps={ownProps} label={label}/>
+  <CheckStepWarningLabel ownProps={ownProps} label={label} />
 )
 
 const maybeDisplayWarning = shouldDisplay =>
@@ -63,7 +63,7 @@ const enhance = compose(
 )
 
 const ServiceCheckStep = enhance(({ownProps, label, check, osCheckRec, step}) => (
-  <CheckStepLabel lid='ServiceCheckStep' check={check} ownProps={ownProps} label={label}/>
+  <CheckStepLabel lid='ServiceCheckStep' check={check} ownProps={ownProps} label={label} />
 ))
 
 ServiceCheckStep.propTypes = {

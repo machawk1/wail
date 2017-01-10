@@ -5,8 +5,6 @@ import MyAutoSizer from '../../utilComponents/myAutoSizer'
 
 const depthToConfig = d => {
   if (d === 1) {
-    return 'Page Only'
-  } else if (d === 2) {
     return 'Page + Same domain links'
   } else {
     return 'Page + All internal and external links'

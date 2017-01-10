@@ -3,7 +3,6 @@ import Immutable from 'immutable'
 import {joinStrings} from 'joinable'
 import RunInfoRecord from './runInfoRecord'
 
-
 const CrawlRecord = Immutable.Record({
   lastUpdated: null,
   jobId: 0, created: 0, urls: '',

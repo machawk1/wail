@@ -58,5 +58,5 @@ if (process.env.WAILTEST) {
   setupTestHook(store, hashHistory)
 }
 
-render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
+render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))
 

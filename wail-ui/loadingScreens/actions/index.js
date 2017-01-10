@@ -8,13 +8,13 @@ import { remote } from 'electron'
 import { send } from 'redux-electron-ipc'
 import { OS_CHECK, JAVA_CHECK, JDK_DOWNLOAD, STEP, JDK_INSTALL, SERVICES } from '../constants'
 
-const {NEXT_LOADING_STEP, PREV_LOADING_STEP,} = STEP
+const {NEXT_LOADING_STEP, PREV_LOADING_STEP } = STEP
 const {CHECKED_OS} = OS_CHECK
 const {CHECKED_JAVA} = JAVA_CHECK
 const {DL_JDK, DL_JDK_STARTED} = JDK_DOWNLOAD
 const {START_INSTALL, INSTALL_PROCESS_ERROR} = JDK_INSTALL
 
-const {HERITRIX_STARTED, HERITRIX_STARTED_ERROR, WAYBACK_STARTED, WAYBACK_STARTED_ERROR,} = SERVICES
+const {HERITRIX_STARTED, HERITRIX_STARTED_ERROR, WAYBACK_STARTED, WAYBACK_STARTED_ERROR } = SERVICES
 
 const settings = remote.getGlobal('settings')
 const serviceManager = remote.getGlobal('serviceMan')
@@ -125,7 +125,7 @@ export const executeJavaVersion = (resolve, reject) =>
     }
     if (process.platform === 'darwin') {
       download = !haveCorrectJava
-      if (download){
+      if (download) {
         settings.set('didFirstLoad', false)
       }
     }
@@ -135,8 +135,8 @@ export const executeJavaVersion = (resolve, reject) =>
 export const checkJava = () => new Promise((resolve, reject) => {
   if (process.platform === 'darwin') {
     console.log('checking java darwin')
-    let {haveCorrectJava, haveJava,javaV} = checkJavaOsx()
-    resolve({type: CHECKED_JAVA, haveJava,javaV, haveCorrectJava, download: !haveCorrectJava})
+    let {haveCorrectJava, haveJava, javaV} = checkJavaOsx()
+    resolve({type: CHECKED_JAVA, haveJava, javaV, haveCorrectJava, download: !haveCorrectJava})
   } else {
     console.log('checking java linux/windows')
     executeJavaVersion(resolve, reject)
@@ -168,7 +168,6 @@ export const installJdk = () => new Promise((resolve, reject) => {
               stderr
             }
           })
-
         } else {
           console.log(stderr, stdout)
           app.exit(1)

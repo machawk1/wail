@@ -199,7 +199,7 @@ export default class AddFromFs extends Component {
     return (
       <div id='seedListFPContainer' style={{height: '95%'}}>
         <Card style={{marginLeft: 10, marginRight: 10, minHeight: 400}}>
-          {!checkingDone && <CardHeader style={{height: 400}} title={message}/>}
+          {!checkingDone && <CardHeader style={{height: 400}} title={message} />}
           {checkingDone && <SelectSeed onSubmit={::this.addWarcWTrueSeeds} {...this.state} />}
         </Card>
       </div>

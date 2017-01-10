@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { List, ListItem } from 'material-ui/List'
 
-
 export default class ErrorList extends Component {
   static propTypes = {
     done: PropTypes.bool.isRequired,
@@ -27,7 +26,7 @@ export default class ErrorList extends Component {
       done &&
       <List style={{marginLeft: 16, overflowY: 'auto', height: '100%', maxHeight: 'calc(100% - 200px)'}}>
         {this.props.hadErrors.length > 0 && this.renderPossibleSeeds()}
-        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determing The Seeds'/>}
+        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determing The Seeds' />}
       </List>
     )
   }

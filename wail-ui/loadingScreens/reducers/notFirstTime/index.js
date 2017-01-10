@@ -8,7 +8,7 @@ import uiState from '../shared/uiState'
 const rootReducer = combineReducers({
   loadingStep: filterActions(loadingStep, Object.values(STEP)),
   services: filterActions(services, Object.values(SERVICES)),
-  uiState: filterActions(uiState, Object.values(INITIAL_LOAD)),
+  uiState: filterActions(uiState, Object.values(INITIAL_LOAD))
 })
 
 export default rootReducer

@@ -67,7 +67,7 @@ export default class SeedTable extends Component {
           {seed.get('mementos')}
         </TableRowColumn>
         <TableRowColumn key={`${i}-${url}-viewInWB`}>
-          <FlatButton label={'View In Wayback'} onTouchTap={() => openInWb(url, viewingCol)}/>
+          <FlatButton label={'View In Wayback'} onTouchTap={() => openInWb(url, viewingCol)} />
         </TableRowColumn>
       </TableRow>)
     }

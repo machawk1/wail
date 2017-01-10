@@ -38,7 +38,6 @@ class JavaCheckRecord extends Immutable.Record({
       } else {
         return `Need To Download 1.7: No`
       }
-
     } else {
       return `Need To Download 1.7: ${this.get('download') ? 'Yes' : 'No'}`
     }
@@ -84,7 +83,7 @@ class SSRecord extends Immutable.Record({
   wStartErReport: {},
   bothStarted: false,
   hError: false,
-  wError: false,
+  wError: false
 }) {
 
   getHeritrixErrorReport () {

@@ -23,7 +23,6 @@ test.after.always('cleanup after tests', async t => {
 })
 
 test.serial('WAIL loads properly', async t => {
-
   await wailApp.waitTillLoaded()
 
   t.is(await wailApp.windowCount(), 2, 'at first start there should only be two windows')
@@ -168,9 +167,9 @@ test.serial('Visiting different parts of the ui does not fail', async t => {
 
   await wailApp.goTo('#sidebarTwitter')
   t.deepEqual(await wailApp.getUiLoaction(), {
-      header: {open: false, location: 'Twitter Archive'},
-      hist: '/twitter-signin'
-    },
+    header: {open: false, location: 'Twitter Archive'},
+    hist: '/twitter-signin'
+  },
     'after clicking the nav drawer twitter entry the ui should be at twitter'
   )
 

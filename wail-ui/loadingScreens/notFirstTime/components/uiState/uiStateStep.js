@@ -24,7 +24,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     step,
     label: completed ? 'Loaded Collections and Crawls' : 'Loading Collections and Crawls',
     ownProps: Object.assign({}, ownProps, {completed, active: true, disabled: false}),
-    check(){
+    check () {
       if (step === 1 && completed) {
         loadingFinished()
         console.log('finished')
@@ -43,7 +43,7 @@ const UIStateStep = enhance((props) => (
 
 UIStateStep.propTypes = {
   uiStateRec: PropTypes.instanceOf(UIStateRecord).isRequired,
-  step: PropTypes.number.isRequired,
+  step: PropTypes.number.isRequired
 }
 
 export default connect(stateToProps, dispatchToProps, mergeProps)(UIStateStep)

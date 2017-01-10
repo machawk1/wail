@@ -98,7 +98,7 @@ const ignore = [
   )
 
 const DEFAULT_OPTS = {
-  'app-copyright':  'Copyright © 2016-2017 Web Science And Digital Libraries Research Group ODU CS',
+  'app-copyright': 'Copyright © 2016-2017 Web Science And Digital Libraries Research Group ODU CS',
   'app-version': pkg.version,
   asar: false,
   prune: true,
@@ -450,9 +450,9 @@ const doBuild = () => {
             reject(error)
           })
       }).catch(error => {
-      console.error('building electron main', error)
-      reject(error)
-    })
+        console.error('building electron main', error)
+        reject(error)
+      })
   })
 }
 

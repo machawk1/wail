@@ -244,7 +244,7 @@ export default class SettingsManager {
     this._settings.set('dumpTwitterWarcs', pathMan.normalizeJoinWBase(managed.dumpTwitterWarcs))
     this._settings.set('archivePreload', pathMan.normalizeJoinWBase(managed.archivePreload))
 
-    let whichExtractSeed =  process.platform === 'win32' ? managed.extractSeedWin : managed.extractSeed
+    let whichExtractSeed = process.platform === 'win32' ? managed.extractSeedWin : managed.extractSeed
     let extractSeed = _.mapValues(whichExtractSeed, v => pathMan.normalizeJoinWBase(v))
     this._settings.set('extractSeed', extractSeed)
     this._settings.set('didRedoFl', true)

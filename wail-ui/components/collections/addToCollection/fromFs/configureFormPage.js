@@ -28,13 +28,13 @@ const configureFormPage = (onSubmit, warcSeeds) => {
   }
   const FormPage = reduxForm(formConfig)(SeedListFormPage)
   const seeds = warcSeeds[0].seeds.map((seed, idx) =>
-    <RadioButton key={`${idx}-${seed.url}-rb`} value={seed.url} label={seed.url}/>
+    <RadioButton key={`${idx}-${seed.url}-rb`} value={seed.url} label={seed.url} />
   )
   return (
     <div style={{width: '100%', height: 'inherit'}}>
-      <CardTitle title='Select Correct Seed For The (W)arc'/>
-      <Divider style={{width: '95%'}}/>
-      <CardHeader title={warcSeeds[0].name}/>
+      <CardTitle title='Select Correct Seed For The (W)arc' />
+      <Divider style={{width: '95%'}} />
+      <CardHeader title={warcSeeds[0].name} />
       <FormPage
         containerName={'seedListFPContainer'}
         onSubmit={onSubmit}

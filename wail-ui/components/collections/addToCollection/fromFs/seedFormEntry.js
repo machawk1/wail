@@ -22,7 +22,7 @@ const SeedFormEntry = ({containerName, name, seeds, height}) => (
 SeedFormEntry.propTypes = {
   containerName: PropTypes.string.isRequired,
   seeds: PropTypes.array.isRequired,
-  name: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired
 }
 
 export default SeedFormEntry

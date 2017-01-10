@@ -6,9 +6,9 @@ const SelectSeed = ({onSubmit, checkingDone, warcSeeds, hadErrors}) => {
   let errorsLen = hadErrors.length
   let renderComponent
   if (errorsLen > 0) {
-    renderComponent = <DisplayInvalidMessage hadErrors={hadErrors}/>
+    renderComponent = <DisplayInvalidMessage hadErrors={hadErrors} />
   } else {
-    renderComponent = <SeedList onSubmit={onSubmit} warcSeeds={warcSeeds}/>
+    renderComponent = <SeedList onSubmit={onSubmit} warcSeeds={warcSeeds} />
   }
   return (renderComponent)
 }

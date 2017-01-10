@@ -7,7 +7,7 @@ import HJobItemContainer from './hJobItemContainer'
 import styles from './heritrixInlineStyles'
 const {
   crawlUrlS, statusS, timestampS,
-  discoveredS, queuedS, downloadedS, actionS,forColS
+  discoveredS, queuedS, downloadedS, actionS, forColS
 } = styles
 
 const log = console.log.bind(console)
@@ -31,7 +31,7 @@ class Heritrix extends Component {
     let len = this.props.jobIds.size, i = 0
     for (; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
-      trs.push(<HJobItemContainer key={`${i}-${jobId}`} jobId={jobId}/>)
+      trs.push(<HJobItemContainer key={`${i}-${jobId}`} jobId={jobId} />)
     }
     return trs
   }

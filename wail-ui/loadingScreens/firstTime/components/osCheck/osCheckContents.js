@@ -17,7 +17,7 @@ const enhance = compose(
 )
 
 const OsCheckContents = enhance(({osCheckRec}) => (
-  <OsCheckDone osCheckRec={osCheckRec}/>
+  <OsCheckDone osCheckRec={osCheckRec} />
 ))
 
 OsCheckContents.propTypes = {

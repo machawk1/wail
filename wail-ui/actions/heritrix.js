@@ -11,7 +11,6 @@ import {
 } from '../constants/wail-constants'
 import { openUrlInBrowser } from './util-actions'
 
-
 const {
   BUILT_CRAWL_JOB, LAUNCHED_CRAWL_JOB,
   TERMINATE_CRAWL, TEARDOWN_CRAWL, RESCAN_JOB_DIR,
@@ -37,7 +36,7 @@ const {
 
 const {
   MAKE_REQUEST,
-  HANDLED_REQUEST,
+  HANDLED_REQUEST
 } = RequestActions
 
 const settings = remote.getGlobal('settings')
@@ -114,7 +113,6 @@ export function restartJob (jobId) {
     }
   }
 }
-
 
 export function removeJob (jobId) {
   console.log('removeJob', jobId)

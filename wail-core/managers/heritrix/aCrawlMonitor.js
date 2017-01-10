@@ -59,13 +59,13 @@ export default class ACrawlMonitor {
     let command = `dir /B /s ${where}`
     cp.exec(command, (err, stdout, stderr) => {
       if (err) {
-        //windows hack
+        // windows hack
         this.onExceedECount(this.jobId)
       } else {
-        //get rid of \r from windows
-        stdout = stdout.replace(/\r/g, "")
+        // get rid of \r from windows
+        stdout = stdout.replace(/\r/g, '')
         let files = stdout.split('\n')
-        //remove last entry because it is empty
+        // remove last entry because it is empty
         files.splice(-1, 1)
         let finalStats = Object.assign({}, {
           started: this.started,

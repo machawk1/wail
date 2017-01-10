@@ -5,7 +5,6 @@ import { red500 } from 'material-ui/styles/colors'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
 import { downloadJDK } from '../../../../actions'
 
-
 class AskDownload extends Component {
   constructor (...args) {
     super(...args)
@@ -21,11 +20,11 @@ class AskDownload extends Component {
       title: 'Required',
       message: 'Downloading and installing of JDK 1.7 on MacOS is required.\nYou will not be able to use WAIL without it. Are you sure you do not want to download?',
       cancelId: 666,
-      buttons: ['No','Yes']
+      buttons: ['No', 'Yes']
     }
-    dialog.showMessageBox(remote.getCurrentWindow(),opts,(choice) => {
+    dialog.showMessageBox(remote.getCurrentWindow(), opts, (choice) => {
       console.log(choice)
-      if (choice === 1){
+      if (choice === 1) {
         console.log('yes')
       } else {
         console.log('no')
@@ -45,14 +44,14 @@ class AskDownload extends Component {
     return (
       <CheckStepContent>
         <p>
-          Usage of Heritrix through WAIL requires the Java 1.7 JDK (Java Developer Kit)<br/>
-          to be installed. This is required and WAIL will guide you through the installation<br/>
+          Usage of Heritrix through WAIL requires the Java 1.7 JDK (Java Developer Kit)<br />
+          to be installed. This is required and WAIL will guide you through the installation<br />
           process. Do you wish to download and install this JDK?
         </p>
         <RaisedButton
           label='Yes'
-          disableTouchRipple={true}
-          disableFocusRipple={true}
+          disableTouchRipple
+          disableFocusRipple
           primary
           disabled={this.state.dlButtonDisabled}
           onTouchTap={::this.startDownload}
@@ -60,8 +59,8 @@ class AskDownload extends Component {
         />
         <RaisedButton
           label='No'
-          disableTouchRipple={true}
-          disableFocusRipple={true}
+          disableTouchRipple
+          disableFocusRipple
           secondary
           disabled={this.state.dlButtonDisabled}
           onTouchTap={::this.showNoDialog}

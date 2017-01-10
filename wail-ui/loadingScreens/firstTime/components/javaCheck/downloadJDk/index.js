@@ -17,10 +17,10 @@ const displayWhich = shouldDisplay =>
 
 const updateWhen = (props, nextProps) => props.step === 1 || nextProps.step === 1
 
-const enhance =  displayWhich(props => !props.jdkDlRec.get('started'))
+const enhance = displayWhich(props => !props.jdkDlRec.get('started'))
 
 const DownloadJdk = enhance(({jdkDlRec}) => (
-  <DownloadDarwinJdk jdkDlRec={jdkDlRec}/>
+  <DownloadDarwinJdk jdkDlRec={jdkDlRec} />
 ))
 
 DownloadJdk.propTypes = {

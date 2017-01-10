@@ -6,7 +6,7 @@ import styles from './heritrixInlineStyles'
 
 const {
   crawlUrlS, statusS, timestampS,
-  discoveredS, queuedS, downloadedS, actionS,forColS
+  discoveredS, queuedS, downloadedS, actionS, forColS
 } = styles
 
 const stateToProps = (state, ownProps) => ({jobRecord: state.get('runs').get(`${ownProps.jobId}`)})

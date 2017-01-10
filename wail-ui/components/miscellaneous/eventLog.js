@@ -8,7 +8,7 @@ const enhance = namedPure('EventLog')
 const EventLog = enhance(() => (
   <MyAutoSizer findElement='eventLogContainer'>
     {({height}) => (
-      <LogViewer height={height}/>
+      <LogViewer height={height} />
     )}
   </MyAutoSizer>
 ))

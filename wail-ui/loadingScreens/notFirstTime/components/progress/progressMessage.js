@@ -8,16 +8,16 @@ import * as recs from '../../../records'
 const stateToProps = state => ({
   step: state.get('loadingStep'),
   serviceRec: state.get('services'),
-  uiStateRec: state.get('uiState'),
+  uiStateRec: state.get('uiState')
 })
 
 const ProgressMessage = (props) => (
   <Stepper activeStep={props.step} orientation='vertical'>
     <Step>
-      <ServiceContents {...props}/>
+      <ServiceContents {...props} />
     </Step>
     <Step>
-      <UIStateContents {...props}/>
+      <UIStateContents {...props} />
     </Step>
   </Stepper>
 )
@@ -25,7 +25,7 @@ const ProgressMessage = (props) => (
 ProgressMessage.propTypes = {
   step: PropTypes.number.isRequired,
   serviceRec: PropTypes.instanceOf(recs.SSRecord).isRequired,
-  uiStateRec: PropTypes.instanceOf(recs.UIStateRecord).isRequired,
+  uiStateRec: PropTypes.instanceOf(recs.UIStateRecord).isRequired
 }
 
 export default connect(stateToProps)(ProgressMessage)

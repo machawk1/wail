@@ -15,7 +15,7 @@ const enhance = displayWhich(props => !props.jdkInstall.get('wasError'))
 const DownloadFinished = ({jdkInstall}) => (
   <CheckStepContent>
     <p>There was an error while initiating the JDK install process</p>
-    <br/>
+    <br />
     <p>{jdkInstall.get('stderr')}</p>
   </CheckStepContent>
 )

@@ -26,7 +26,7 @@ class CheckResults extends Component {
   renderResult () {
     let result = this.props.check.get('result')
     if (result.wasError) {
-      return <p id='checkSeedResults' style={pStyle} dangerouslySetInnerHTML={{__html: result.m}}/>
+      return <p id='checkSeedResults' style={pStyle} dangerouslySetInnerHTML={{__html: result.m}} />
     }
     let render = ['HTTP 200 OK', '<br />']
     _.toPairs(result.stats).forEach(([k, v]) => {
@@ -35,7 +35,7 @@ class CheckResults extends Component {
         render.push('<br/>')
       }
     })
-    return <p id='checkSeedResults' style={pStyle} dangerouslySetInnerHTML={{__html: render.join('')}}/>
+    return <p id='checkSeedResults' style={pStyle} dangerouslySetInnerHTML={{__html: render.join('')}} />
   }
 
   render () {

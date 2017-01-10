@@ -37,7 +37,7 @@ const DownloadDarwinJdk = enhance2(({jdkDlRec}) => (
       <span>Time Remaining: {jdkDlRec.get('remaining')}</span>
       <span>Download Speed: {jdkDlRec.get('speed')}</span>
     </Flex>
-    <LinearProgress mode='determinate' value={jdkDlRec.get('percent')}/>
+    <LinearProgress mode='determinate' value={jdkDlRec.get('percent')} />
   </CheckStepContent>
 ))
 

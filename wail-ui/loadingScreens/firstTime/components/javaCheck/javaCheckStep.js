@@ -52,7 +52,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 }
 
 const DisplayWarningLabel = ({ownProps, label, check, ...rest}) => (
-  <CheckStepWarningLabel ownProps={ownProps} label={label}/>
+  <CheckStepWarningLabel ownProps={ownProps} label={label} />
 )
 
 const maybeDisplayWarning = shouldDisplay =>
@@ -70,7 +70,7 @@ const enhance = compose(
 )
 
 const JavaCheckStep = enhance(({ownProps, label, check, javaCheckRec, step}) => (
-  <CheckStepLabel lid='JavaCheckStep' check={check} ownProps={ownProps} label={label}/>
+  <CheckStepLabel lid='JavaCheckStep' check={check} ownProps={ownProps} label={label} />
 ))
 
 JavaCheckStep.propTypes = {

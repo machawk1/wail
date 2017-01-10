@@ -7,8 +7,8 @@ import { epic, ipc } from '../../middleware'
 
 const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-      actionCreators
-    }) || compose
+    actionCreators
+  }) || compose
   const store = createStore(
     rootReducer,
     composeEnhancers(

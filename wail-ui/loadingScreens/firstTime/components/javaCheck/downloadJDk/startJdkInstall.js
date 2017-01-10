@@ -24,15 +24,15 @@ class StartJdkInstall extends Component {
     return (
       <CheckStepContent>
         <p>
-          The Java 1.7 JDK download is completed.<br/>
-          WAIL will initiate the Java 1.7 JDK install process and <br/>
+          The Java 1.7 JDK download is completed.<br />
+          WAIL will initiate the Java 1.7 JDK install process and <br />
           exit when it starts.
           Start this process?
         </p>
         <RaisedButton
           label='Yes'
-          disableTouchRipple={true}
-          disableFocusRipple={true}
+          disableTouchRipple
+          disableFocusRipple
           primary
           disabled={this.state.dlButtonDisabled}
           onTouchTap={::this.startDownload}
@@ -45,7 +45,7 @@ class StartJdkInstall extends Component {
 
 StartJdkInstall.propTypes = {
   startInstall: PropTypes.func.isRequired,
-  doInstall: PropTypes.func.isRequired,
+  doInstall: PropTypes.func.isRequired
 }
 
 export default StartJdkInstall

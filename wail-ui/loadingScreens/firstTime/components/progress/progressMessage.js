@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { Step, Stepper, StepLabel, } from 'material-ui/Stepper'
+import { Step, Stepper, StepLabel } from 'material-ui/Stepper'
 import { OsCheckContents } from '../osCheck'
 import { JavaCheckContents } from '../javaCheck'
 import ServiceContents from '../serviceCheck/serviceCheckMessage'
@@ -13,22 +13,22 @@ const stateToProps = state => ({
   javaCheckRec: state.get('javaCheck'),
   jdkDlRec: state.get('jdkDl'),
   serviceRec: state.get('services'),
-  uiStateRec: state.get('uiState'),
+  uiStateRec: state.get('uiState')
 })
 
 const ProgressMessage = (props) => (
   <Stepper style={{minHeight: '163px'}} activeStep={props.step} orientation='vertical'>
     <Step>
-      <OsCheckContents {...props}/>
+      <OsCheckContents {...props} />
     </Step>
     <Step>
-      <JavaCheckContents {...props}/>
+      <JavaCheckContents {...props} />
     </Step>
     <Step>
-      <ServiceContents {...props}/>
+      <ServiceContents {...props} />
     </Step>
     <Step>
-      <UIStateContents {...props}/>
+      <UIStateContents {...props} />
     </Step>
   </Stepper>
 )
@@ -39,7 +39,7 @@ ProgressMessage.propTypes = {
   osCheckRec: PropTypes.instanceOf(recs.OsCheckRecord).isRequired,
   javaCheckRec: PropTypes.instanceOf(recs.JavaCheckRecord).isRequired,
   jdkDlRec: PropTypes.instanceOf(recs.JdkDlRecord).isRequired,
-  uiStateRec: PropTypes.instanceOf(recs.UIStateRecord).isRequired,
+  uiStateRec: PropTypes.instanceOf(recs.UIStateRecord).isRequired
 }
 
 export default connect(stateToProps)(ProgressMessage)

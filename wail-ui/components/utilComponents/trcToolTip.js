@@ -28,7 +28,7 @@ export default class TRCToolTip extends Component {
     this.state = {
       tooltipShown: false,
       showX: 0,
-      showY: 0,
+      showY: 0
     }
   }
 

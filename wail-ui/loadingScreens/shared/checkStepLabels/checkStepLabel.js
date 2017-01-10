@@ -12,7 +12,7 @@ CheckStepLabel.propTypes = {
   ownProps: PropTypes.object.isRequired,
   lid: PropTypes.string.isRequired,
   check: PropTypes.func.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
 }
 
 export default CheckStepLabel

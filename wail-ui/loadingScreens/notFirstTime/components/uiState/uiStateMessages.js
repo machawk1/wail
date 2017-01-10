@@ -7,12 +7,12 @@ const enhance = onlyUpdateForKeys(['uiStateRec'])
 
 const UIStateMessage = enhance(({uiStateRec}) => (
   <CheckStepContent>
-    <p>{uiStateRec.archiveMessage()}<br/>{uiStateRec.crawlMessage()}</p>
+    <p>{uiStateRec.archiveMessage()}<br />{uiStateRec.crawlMessage()}</p>
   </CheckStepContent>
 ))
 
 UIStateMessage.propTypes = {
-  uiStateRec: PropTypes.instanceOf(UIStateRecord).isRequired,
+  uiStateRec: PropTypes.instanceOf(UIStateRecord).isRequired
 }
 
 export default UIStateMessage

@@ -5,7 +5,7 @@ import { red500 } from 'material-ui/styles/colors'
 
 const CheckStepWarningLabel = ({ownProps, label}) => (
   <StepLabel
-    icon={<WarningIcon color={red500}/>}
+    icon={<WarningIcon color={red500} />}
     style={{color: red500}}
   >
     {label}
@@ -14,7 +14,7 @@ const CheckStepWarningLabel = ({ownProps, label}) => (
 
 CheckStepWarningLabel.propTypes = {
   ownProps: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired
 }
 
 export default CheckStepWarningLabel

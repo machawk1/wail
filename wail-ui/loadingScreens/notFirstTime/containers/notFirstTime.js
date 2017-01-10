@@ -30,7 +30,7 @@ const NotFirstTime = ({store}) => (
 )
 
 NotFirstTime.propTypes = {
-  store: PropTypes.object.isRequired,
+  store: PropTypes.object.isRequired
 }
 
 export default NotFirstTime

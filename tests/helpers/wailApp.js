@@ -69,7 +69,7 @@ const compareScreenShots = (act, expt) => {
 export default class WailApp {
   constructor () {
     this._app = new Application({
-      path: wailReleasePath(),
+      path: wailReleasePath()
     })
     this._settings = null
   }

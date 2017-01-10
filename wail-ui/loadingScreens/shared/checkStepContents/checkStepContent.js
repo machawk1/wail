@@ -7,8 +7,8 @@ const getStyles = (last, context) => {
       marginLeft: 14 + 11, // padding + 1/2 icon
       paddingLeft: 24 - 11 + 8,
       paddingRight: 16,
-      overflow: 'hidden',
-    },
+      overflow: 'hidden'
+    }
   }
   if (!last) {
     styles.root.borderLeft = `1px solid ${context.muiTheme.stepper.connectorLineColor}`
@@ -30,7 +30,7 @@ const CheckStepContent = ({last, children}, context) => {
 
 CheckStepContent.contextTypes = {
   muiTheme: PropTypes.object.isRequired,
-  stepper: PropTypes.object,
+  stepper: PropTypes.object
 }
 
 export default CheckStepContent

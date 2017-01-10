@@ -6,7 +6,7 @@ import {
   renderComponent,
   setDisplayName,
   setPropTypes,
-  shouldUpdate,
+  shouldUpdate
 } from 'recompose'
 
 const setProps = (props, ...funcs) => {

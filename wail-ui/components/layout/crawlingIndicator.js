@@ -8,7 +8,6 @@ const stateToProps = state => ({
   crawlIconVisible: state.get('runningCrawls') > 0 ? 'visible' : 'hidden'
 })
 
-
 const enhance = onlyUpdateForKeys(['crawlIconVisible'])
 
 const CrawlingIndicator = enhance(({crawlIconVisible}) => (

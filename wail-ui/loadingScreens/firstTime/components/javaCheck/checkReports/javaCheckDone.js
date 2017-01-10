@@ -19,9 +19,9 @@ const JavaCheckDone = enhance(({javaCheckRec}) => (
   <CheckStepContent>
     <p>
       {`${javaCheckRec.haveReport()}`}
-      <br/>
+      <br />
       {`${javaCheckRec.haveCorrectReport()}`}
-      <br/>
+      <br />
       {`${javaCheckRec.downloadReport()}`}
     </p>
   </CheckStepContent>

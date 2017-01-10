@@ -12,7 +12,6 @@ import path from 'path'
 const settings = remote.getGlobal('settings')
 const pathMan = remote.getGlobal('pathMan')
 
-
 const logger = bunyan.createLogger({
   name: 'heritrixRequestLogger',
   streams: [
@@ -22,7 +21,7 @@ const logger = bunyan.createLogger({
     }
   ],
   serializers: {
-    err: bunyan.stdSerializers.err,   // <--- use this
+    err: bunyan.stdSerializers.err   // <--- use this
   }
 })
 
@@ -499,7 +498,7 @@ export class PermanentlyDeleteJob {
             })
           })
           .catch(error => {
-            console.error(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId} had error`,error)
+            console.error(`Permanently Delete Heritrix Job doing deletion for jobId ${this.jobId} had error`, error)
             ipc.send('handled-request', {
               type: PERMANENT_DELETE_JOB,
               rtype: REQUEST_FAILURE,

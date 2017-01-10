@@ -245,7 +245,7 @@ export default class CrawlManager {
             title: 'Error',
             level: 'error',
             message: `There was an internal error permanently removing the crawl for jobId[${jobId}]`,
-            uid:  `There was an internal error permanently removing the crawl for jobId[${jobId}]`,
+            uid: `There was an internal error permanently removing the crawl for jobId[${jobId}]`,
             autoDismiss: 0
           }
         })

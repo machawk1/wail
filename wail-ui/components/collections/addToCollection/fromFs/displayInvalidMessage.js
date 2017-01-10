@@ -9,11 +9,11 @@ const DisplayInvalidMessage = ({hadErrors}) => (
     <CardTitle
       title='(W)arc File Processing Error'
     />
-    <Divider/>
+    <Divider />
     <CardHeader
       title={hadErrors[0].name}
     />
-    <CardHeader title='Message Received During Processing'/>
+    <CardHeader title='Message Received During Processing' />
     <CardText>
       {hadErrors[0].error}
     </CardText>

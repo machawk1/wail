@@ -14,15 +14,15 @@ import ViewArchiveConfig from './containers/viewArchiveConfig'
 
 export default (
   <Route path='/' component={Layout}>
-    <IndexRoute component={SelectColContainer}/>
-    <Route path='Collections/:col' component={CollectionView}/>
-    <Route path='Collections/:col/addSeed' component={CollectionAddSeed}/>
-    <Route path='Collections/:col/addSeed/fs' component={CollectionAddSeedFs}/>
-    <Route path='Collections/:col/viewArchiveConfig' component={ViewArchiveConfig}/>
-    <Route path='heritrix' component={HeritrixView}/>
-    <Route path='misc' component={Misc}/>
-    <Route path='services' component={ServiceStats}/>
-    <Route path='twitter' component={TwitterView}/>
-    <Route path='twitter-signin' component={SignIn}/>
+    <IndexRoute component={SelectColContainer} />
+    <Route path='Collections/:col' component={CollectionView} />
+    <Route path='Collections/:col/addSeed' component={CollectionAddSeed} />
+    <Route path='Collections/:col/addSeed/fs' component={CollectionAddSeedFs} />
+    <Route path='Collections/:col/viewArchiveConfig' component={ViewArchiveConfig} />
+    <Route path='heritrix' component={HeritrixView} />
+    <Route path='misc' component={Misc} />
+    <Route path='services' component={ServiceStats} />
+    <Route path='twitter' component={TwitterView} />
+    <Route path='twitter-signin' component={SignIn} />
   </Route>
 )
