@@ -79,7 +79,7 @@ export const checkJavaOsx = () => {
       let jvmTest = jvmRegex.exec(ajvm)
       if (jvmTest) {
         let jvm = jvmTest.capture('jvm')
-        if (swapper.setValue(jvm).contains('1.7')) {
+        if (swapper.setValue(jvm).contains('1.7.0_79')) {
           console.log('darwin java check 1.7 installed')
           haveCorrectJava = true
           javaV = '1.7'

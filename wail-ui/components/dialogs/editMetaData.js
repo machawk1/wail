@@ -1,7 +1,5 @@
 import React, {Component, PropTypes} from 'react'
-import {Flex, Item} from 'react-flex'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
-import {Editor, EditorState} from 'draft-js'
 import {ipcRenderer as ipc} from 'electron'
 import Dialog from 'material-ui/Dialog'
 import shallowCompare from 'react-addons-shallow-compare'
