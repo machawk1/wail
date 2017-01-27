@@ -9,7 +9,7 @@ const enhance = namedPure('Layout')
 
 const Layout = () => (
   <div>
-    <Header title='Wail Is Loading' />
+    <Header title='WAIL Is Loading' />
     <div style={{transform: 'translateY(10px)'}}>
       <div className='wail-container'>
         <Card style={{minHeight: '350px'}}>
