@@ -1,13 +1,14 @@
 import '../wailPollyfil'
-import {app, Menu, dialog} from 'electron'
+import { app, Menu, dialog } from 'electron'
 import path from 'path'
+import getPort from 'get-port'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
 
 process.on('uncaughtException', (err) => {
   console.log(`uncaughtException: ${err}`, err, err.stack)
-  let { logger } = global
+  let {logger} = global
   if (logger) {
     logger.fatal(err)
   }
@@ -15,12 +16,6 @@ process.on('uncaughtException', (err) => {
   // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
   app.quit()
 })
-
-app.commandLine.appendSwitch('js-flags', '--harmony')
-// do not lower the priority of our invisible background windows
-app.commandLine.appendSwitch('disable-renderer-backgrounding')
-app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
-app.commandLine.appendSwitch('allow-http-screen-capture')
 
 const winMan = new WindowManager()
 const control = global.__wailControl = new AppManager()
@@ -53,41 +48,55 @@ winMan.on('send-failed', (report) => {
   console.log(report)
 })
 
-app.on('ready', () => {
-  console.log('app ready')
-  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
-  let base = path.resolve('./')
-  let loadFrom = __dirname
-  let userData = null
+app.commandLine.appendSwitch('js-flags', '--harmony')
+// do not lower the priority of our invisible background windows
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
+app.commandLine.appendSwitch('allow-http-screen-capture')
+app.commandLine.appendSwitch('ignore-urlfetcher-cert-requests')
+app.commandLine.appendSwitch('ignore-certificate-errors')
 
-  if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')({
-      showDevTools: true
-    })
-  } else {
-    base = app.getAppPath()
-    loadFrom = `${base}/wail-ui`
-    userData = app.getPath('userData')
-  }
+getPort().then(port => {
+  global.proxyPort = port
+  global.proxySSLCaDir = path.resolve(app.getPath('userData'), 'ssl')
+  app.commandLine.appendSwitch('proxy-server', `localhost:${port}`)
+  app.commandLine.appendSwitch('proxy-bypass-list', '<local>;')
+  app.on('ready', () => {
+    console.log('app ready')
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+    let base = path.resolve('./')
+    let loadFrom = __dirname
+    let userData = null
 
-  control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
-    .then(() => {
-      global.wailVersion = control.version
-      global.wailLogp = control.logPath
-      global.settings = control.settingsMan
-      global.serviceMan = control.serviceMan
-      global.accessLogPath = path.join(control.logPath, 'accessibility.log')
-      global.jobLogPath = path.join(control.logPath, 'jobs.log')
-      global.indexLogPath = path.join(control.logPath, 'index.log')
-      global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
+    if (process.env.NODE_ENV === 'development') {
+      require('electron-debug')({
+        showDevTools: true
+      })
+    } else {
+      base = app.getAppPath()
+      loadFrom = `${base}/wail-ui`
+      userData = app.getPath('userData')
+    }
 
-      global.wailLogp = path.join(control.logPath, 'wail.log')
-      global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
+    control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
+      .then(() => {
+        global.wailVersion = control.version
+        global.wailLogp = control.logPath
+        global.settings = control.settingsMan
+        global.serviceMan = control.serviceMan
+        global.accessLogPath = path.join(control.logPath, 'accessibility.log')
+        global.jobLogPath = path.join(control.logPath, 'jobs.log')
+        global.indexLogPath = path.join(control.logPath, 'index.log')
+        global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
 
-      global.showSettingsMenu = showSettingsWindow
-      global.windowMan = winMan
-      winMan.init(control.winConfigs)
-    })
+        global.wailLogp = path.join(control.logPath, 'wail.log')
+        global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
+
+        global.showSettingsMenu = showSettingsWindow
+        global.windowMan = winMan
+        winMan.init(control.winConfigs)
+      })
+  })
 })
 
 app.on('window-all-closed', () => {

@@ -113,7 +113,8 @@ export default class AppManager {
             show: false,
             icon: this.iconp,
             webPreferences: {
-              webSecurity: false
+              webSecurity: false,
+              backgroundThrottling: false
             }
           }
           this.winConfigs = [
@@ -159,12 +160,20 @@ export default class AppManager {
               name: 'accessibilityWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false, webPreferences: {
+                  backgroundThrottling: false
+                }
+              },
               url: `file://${loadFrom}/background/twitterMonitor.html`,
               name: 'twitterMonitor'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false, webPreferences: {
+                  backgroundThrottling: false
+                }
+              },
               url: `file://${loadFrom}/background/archiver.html`,
               name: 'archiverWindow'
             },

@@ -13,7 +13,7 @@ import _ from 'lodash'
 import { execute } from '../util/childProcHelpers'
 import {
   find, findOne, insert,
-  inserAndFindAll, updateSingle,
+  inserAndFindAll, updateSingle, remove,
   updateAndFindAll, CompoundNedbError
 } from '../util/nedb'
 import moveStartingCol from '../util/moveStartingCol'
@@ -85,6 +85,17 @@ const firstTimeMoveCollectionsPath = () => {
   }
 }
 
+const checkCollExistence = () => new Promise((resolve, reject) => {
+  fs.stat(settings.get('warcs'), (err, stats) => {
+    if (err) {
+      resolve(false)
+    } else {
+      fs.stat(path.join(settings.get('warcs'), 'collections'))
+      resolve(true)
+    }
+  })
+})
+
 export default class ArchiveManager {
   constructor () {
     this.collections = new Db({
@@ -95,6 +106,16 @@ export default class ArchiveManager {
     this.colSeeds = new Db({
       filename: path.join(settings.get('wailCore.db'), 'archiveSeeds.db'),
       autoload: true
+    })
+  }
+
+  _backUpDbs () {
+    return new Promise((resolve, reject) => {
+      fs.copy(path.join(settings.get('wailCore.db'), 'archives.db'), path.join(settings.get('wailCore.db'), 'archives.db.bk'), (err1) => {
+        fs.copy(path.join(settings.get('wailCore.db'), 'archiveSeeds.db'), path.join(settings.get('wailCore.db'), 'archiveSeeds.db.bk'), (err) => {
+          resolve()
+        })
+      })
     })
   }
 
@@ -163,7 +184,31 @@ export default class ArchiveManager {
                     reject(errCreateD)
                   })
               } else {
-                resolve(docs)
+                return checkCollExistence().then(exists => {
+                  if (exists) {
+                    resolve(docs)
+                  } else {
+                    return this._backUpDbs().then(() => remove(this.collections).then(() =>
+                        remove(this.colSeeds).then(() => this.createDefaultCol().then(defaultCol =>
+                            moveStartingCol(firstTimeMoveCollectionsPath(), settings.get('warcs'))
+                              .then(() => { resolve(defaultCol) })
+                              .catch(errMove => {
+                                if (errMove.where === 1) {
+                                  console.error('big fail', errMove)
+                                  reject(errMove)
+                                } else if (errMove.where === 2) {
+                                  console.error('even bigger fail', errMove)
+                                  reject(errMove)
+                                } else {
+                                  resolve(defaultCol)
+                                }
+                              })
+                          )
+                        )
+                      )
+                    )
+                  }
+                })
               }
             })
             .catch(errSeeds => {

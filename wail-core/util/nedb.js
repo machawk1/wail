@@ -163,3 +163,10 @@ export function count (db, what) {
   })
 }
 
+export function remove (db) {
+  return new Promise((resolve, reject) => {
+    db.remove({}, {multi: true}, (err, rmc) => {
+      resolve(rmc)
+    })
+  })
+}
