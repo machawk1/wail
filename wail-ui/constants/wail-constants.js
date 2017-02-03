@@ -7,6 +7,10 @@ export default {
       CRAWLBEAN: null
     })
   },
+  Closing: keyMirror({
+    CLOSING: null,
+    CLOSING_MESSAGE: null
+  }),
   RunningCrawlCounter: keyMirror({
     INCREMENT: null,
     DECREMENT: null

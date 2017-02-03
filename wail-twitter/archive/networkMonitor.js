@@ -35,28 +35,10 @@ export default class NetworkMonitor {
 
   attach (webContents) {
     this.wcRequests.attach(webContents)
-    try {
-      webContents.debugger.attach('1.1')
-      webContents.debugger.on('detach', (event, reason) => {
-        console.log('Debugger detached due to : ', reason)
-      })
-      webContents.debugger.sendCommand('Network.enable')
-      webContents.debugger.on('message', (event, method, params) => {
-        if (method === 'Network.requestWillBeSent') {
-          this.requestWillBeSent(params)
-        } else if (method === 'Network.responseReceived') {
-          this.responseReceived(params)
-        }
-      })
-    } catch (err) {
-      console.log('Debugger attach failed : ', err)
-      return false
-    }
     return true
   }
 
   detach (webContents) {
-    webContents.debugger.detach()
     this.wcRequests.detach(webContents)
   }
 

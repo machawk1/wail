@@ -1,4 +1,5 @@
 const EventEmitter = require('eventemitter3')
+
 class ResponseBodyGetter extends EventEmitter {
   constructor () {
     super()

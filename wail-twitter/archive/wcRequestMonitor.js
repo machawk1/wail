@@ -3,7 +3,7 @@ import _ from 'lodash'
 import Promise from 'bluebird'
 
 const filter = {
-  urls: [ 'http://*/*', 'https://*/*' ]
+  urls: ['http://*/*', 'https://*/*']
 }
 
 export default class WcRequestMonitor {
@@ -18,7 +18,7 @@ export default class WcRequestMonitor {
     })
     webContents.session.webRequest.onHeadersReceived(filter, (dets, cb) => {
       this.add('receiveHead', dets)
-      cb({ cancel: false, requestHeaders: dets.requestHeaders })
+      cb({cancel: false, requestHeaders: dets.requestHeaders})
     })
     webContents.session.webRequest.onBeforeRedirect(filter, (dets) => {
       this.add('beforeRedirect', dets)
@@ -48,10 +48,11 @@ export default class WcRequestMonitor {
   }
 
   retrieve (doNotInclude) {
+    const vals = Array.from(this.wcRequests.values())
     if (doNotInclude) {
-      return Promise.all(Array.from(this.wcRequests.values()).filter(r => r.url !== doNotInclude).map(r => r.dl()))
+      return Promise.map(vals.filter(r => r.url !== doNotInclude), r => r.dl(), {concurrency: 4})
     } else {
-      return Promise.all(Array.from(this.wcRequests.values()).map(r => r.dl()))
+      return Promise.map(vals, r => r.dl(), {concurrency: 4})
     }
   }
 
@@ -84,7 +85,7 @@ export default class WcRequestMonitor {
   }
 
   resources () {
-    return Array.from(this.wcRequests.values())
+    return Array.from(this.wcRequests.values()).filter(r => r.method === 'GET' && r.rdata !== null)
   }
 
   [Symbol.iterator] () {

@@ -1,19 +1,19 @@
-import {combineReducers} from 'redux-immutable'
-import {enableBatching} from 'redux-batched-actions'
-import {filterActions} from 'redux-ignore'
-import {reducer as form, actionTypes} from 'redux-form/immutable'
+import { combineReducers } from 'redux-immutable'
+import { enableBatching } from 'redux-batched-actions'
+import { filterActions } from 'redux-ignore'
+import { reducer as form, actionTypes } from 'redux-form/immutable'
 import collections from './collectionReducer'
 import runningCrawls from './runningCrawls'
 import checkUrl from './checkUrl'
 import twitter from './twitter'
-import {runsReducer, jobIds} from './crawls'
+import { runsReducer, jobIds } from './crawls'
 import serviceStatuses from './serviceStatuses'
 import {
   CollectionEvents, CrawlEvents, CheckUrlEvents, ServiceEvents,
   Twitter, RunningCrawlCounter, JobIdActions
 } from '../constants/wail-constants'
 
-const jobIdFilter = [ CrawlEvents.GOT_ALL_RUNS, JobIdActions.ADD_ID, JobIdActions.REMOVE_ID ]
+const jobIdFilter = [CrawlEvents.GOT_ALL_RUNS, JobIdActions.ADD_ID, JobIdActions.REMOVE_ID]
 
 const rootReducer = enableBatching(combineReducers({
   checkUrl: filterActions(checkUrl, Object.values(CheckUrlEvents)),

@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import { Field, reduxForm } from 'redux-form/immutable'
-import { ipcRenderer as ipc } from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import { SubmissionError, reset as resetForm } from 'redux-form'
 import { batchActions } from 'redux-batched-actions'
 import isURL from 'validator/lib/isURL'
@@ -9,13 +9,33 @@ import FlatButton from 'material-ui/FlatButton'
 import { TextField, SelectField } from 'redux-form-material-ui'
 import * as notify from '../../../../actions/notification-actions'
 import { resetCheckMessage } from '../../../../actions/archival'
+import path from 'path'
+import S from 'string'
+
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
 
 const archive = (forCol, config) => {
   let message = `Archiving ${config.get('url')} for ${forCol} Now!`
-  let jId = new Date().getTime()
+  let depth = config.get('config') - 1
+  if (depth === 0) {
+    let saveThisOne = `${forCol}-${new Date().getTime()}.warc`
+    const settings = remote.getGlobal('settings')
+    ipc.send('archive-uri-r', {
+      forCol,
+      type: 'po',
+      uri_r: config.get('url'),
+      saveTo: path.join(S(settings.get('collections.colWarcs')).template({col: forCol}).s, saveThisOne),
+      header: {
+        isPartOfV: forCol,
+        description: `Archived by WAIL for ${forCol}`
+      }
+    })
+  } else {
+    ipc.send('makeHeritrixJobConf', {urls: config.get('url'), depth, jobId: new Date().getTime(), forCol})
+  }
   notify.notifyInfo(message)
-  ipc.send('makeHeritrixJobConf', {urls: config.get('url'), depth: config.get('config'), jobId: jId, forCol})
-  window.logger.debug(message)
+  window.logger.info(message)
 }
 
 const validate = values => {
@@ -74,8 +94,9 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem id='p_sdl' value={1} primaryText='Page + Same domain links' />
-              <MenuItem id='p_al' value={2} primaryText='Page + All internal and external links' />
+              <MenuItem id='ponly' value={1} primaryText='Page Only'/>
+              <MenuItem id='p_sdl' value={2} primaryText='Page + Same domain links'/>
+              <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links'/>
             </Field>
           </div>
           <div style={{height: '40px', transform: 'translateY(20px)'}}>
@@ -86,7 +107,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
           </div>
         </form>
       </div>

@@ -1,5 +1,5 @@
 import WarcWriter from './warcWriter'
-import NetworkMonitor from './networkMonitor'
+import WcRequestMonitor from './wcRequestMonitor'
 import Promise from 'bluebird'
 import EventEmitter from 'eventemitter3'
 
@@ -11,7 +11,7 @@ export default class Archive extends EventEmitter {
     this.webview = document.getElementById('awv')
     this.wbReady = false
     this.saveTo = null
-    this.networkMonitor = new NetworkMonitor()
+    this.networkMonitor = new WcRequestMonitor()
     this.warcWritter = new WarcWriter()
     this.warcWritter.on('error', (error) => {
       this.emit('error', {
@@ -53,11 +53,8 @@ export default class Archive extends EventEmitter {
     let { uri_r } = this.archiveQ[ 0 ]
     console.log('archiving', uri_r)
     let webContents = this.webview.getWebContents()
-    this.freshSession(webContents)
-      .then(() => {
-        this.networkMonitor.attach(webContents)
-        this.webview.loadURL(uri_r)
-      })
+    this.networkMonitor.attach(webContents)
+    this.webview.loadURL(uri_r)
   }
 
   maybeMore () {

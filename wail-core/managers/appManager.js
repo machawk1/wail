@@ -113,8 +113,8 @@ export default class AppManager {
             show: false,
             icon: this.iconp,
             webPreferences: {
-              webSecurity: false,
-              backgroundThrottling: false
+              allowRunningInsecureContent: true,
+              allowDisplayingInsecureContent: true
             }
           }
           this.winConfigs = [
@@ -137,7 +137,11 @@ export default class AppManager {
                 modal: true,
                 show: false,
                 minimizable: false,
-                autoHideMenuBar: true
+                autoHideMenuBar: true,
+                webPreferences: {
+                  allowRunningInsecureContent: true,
+                  allowDisplayingInsecureContent: true
+                }
               },
               url: `${loadFrom}/childWindows/newCrawl/newCrawl.html`,
               name: 'newCrawlWindow'
@@ -155,14 +159,20 @@ export default class AppManager {
               name: 'settingsWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/accessibility.html`,
               name: 'accessibilityWindow'
             },
             {
               conf: {
-                show: false, webPreferences: {
-                  backgroundThrottling: false
+                show: false,
+                webPreferences: {
+                  webSecurity: false
                 }
               },
               url: `file://${loadFrom}/background/twitterMonitor.html`,
@@ -170,40 +180,71 @@ export default class AppManager {
             },
             {
               conf: {
-                show: false, webPreferences: {
-                  backgroundThrottling: false
+                show: false,
+                webPreferences: {
+                  webSecurity: false
                 }
               },
               url: `file://${loadFrom}/background/archiver.html`,
               name: 'archiverWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/indexer.html`,
               name: 'indexWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/jobs.html`,
               name: 'jobWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/requestDaemon.html`,
               name: 'reqDaemonWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/managers.html`,
-              name: 'managersWindow'
+              name: 'managersWindow',
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/crawls.html`,
               name: 'crawlManWindow'
             },
             {
-              conf: {show: false},
+              conf: {
+                show: false,
+                webPreferences: {
+                  webSecurity: false
+                }
+              },
               url: `file://${loadFrom}/background/archives.html`,
               name: 'archiveManWindow'
             }

@@ -1,5 +1,5 @@
 import EventEmitter from 'eventemitter3'
-import {remote, ipcRenderer as ipc} from 'electron'
+import { remote, ipcRenderer as ipc } from 'electron'
 import schedule from 'node-schedule'
 import TwitterClient from '../twitterClient'
 import makeTask from './tasks'
@@ -7,15 +7,19 @@ import moment from 'moment'
 import S from 'string'
 import path from 'path'
 
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
+
 const settings = remote.getGlobal('settings')
 
 const makeArchiveConfig = (config, tweet) => {
   let name = S(tweet).strip('twitter.com', 'status', 'https:', '/', '.').s
   let saveThisOne = `${config.forCol}_${config.account}_twitter_${name}_${new Date().getTime()}.warc`
   return {
+    type: 'twitter',
     forCol: config.forCol,
     uri_r: tweet,
-    saveTo: path.join(settings.get('dumpTwitterWarcs'), saveThisOne),
+    saveTo: path.join(S(settings.get('collections.colWarcs')).template({col: config.forCol}).s, saveThisOne),
     header: {
       isPartOfV: config.forCol,
       description: `Archived by WAIL for ${config.forCol}`
@@ -33,7 +37,7 @@ export default class TwitterMonitor extends EventEmitter {
   watchTwitter (config) {
     console.log('watching twitter for', config)
     if (!config.dur) {
-      config.dur = { val: 5, what: 'minutes' }
+      config.dur = {val: 5, what: 'minutes'}
     }
 
     let task = makeTask(config, this.twitterClient)
@@ -46,7 +50,7 @@ export default class TwitterMonitor extends EventEmitter {
         message,
         uid: message
       })
-      delete this.monitorJobs[ config.account ]
+      delete this.monitorJobs[config.account]
     })
     task.on('error', (err) => {
       let message = `Error occurred while monitoring ${config.account} for ${config.forCol}`
@@ -61,7 +65,7 @@ export default class TwitterMonitor extends EventEmitter {
         },
         err: `${err} ${err.stack}`
       })
-      delete this.monitorJobs[ config.account ]
+      delete this.monitorJobs[config.account]
     })
 
     task.on('tweets', (tweets) => {
@@ -76,8 +80,8 @@ export default class TwitterMonitor extends EventEmitter {
     if (config.oneOff) {
       task.poll()
     } else {
-      this.monitorJobs[ config.account ] = task
-      this.monitorJobs[ config.account ].start(schedule, '*/5 * * * *')
+      this.monitorJobs[config.account] = task
+      this.monitorJobs[config.account].start(schedule, '*/5 * * * *')
     }
   }
 

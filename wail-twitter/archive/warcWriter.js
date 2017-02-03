@@ -80,14 +80,16 @@ export default class WarcWriter extends EventEmitter {
     dom('a').each(function (i, elem) {
       let outlink = elem.attribs.href
       if (outlink) {
+        let startedWithHash = false
         if (urlType.isRelative(outlink)) {
+          startedWithHash = outlink.startsWith('#')
           outlink = url.resolve(seedUrl, outlink)
         }
         if (outlink.indexOf('mailto:') < 0) {
           if (!outlinks.has(outlink)) {
             ret.outlinks += `outlink: ${outlink} L a/@href\r\n`
             outlinks.add(outlink)
-            if (preserveA) {
+            if (preserveA && !startedWithHash) {
               ret.aTags.add(outlink)
             }
           }
@@ -102,7 +104,6 @@ export default class WarcWriter extends EventEmitter {
     let {doctype, dom} = dtDom
     let {outlinks} = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
-    networkMonitor.matchNetworkToWC(seedUrl)
     networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
     networkMonitor.wcRequests.retrieve()
       .then(() => {

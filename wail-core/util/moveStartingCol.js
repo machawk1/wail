@@ -13,28 +13,15 @@ export default function moveStartingCol (moveMe, moveTo) {
               errEn.where = 1
               return reject(errEn)
             } else {
-              if (process.platform === 'win32') {
-                fs.copy(moveMe, moveTo, (errCopy) => {
-                  if (errCopy) {
-                    errCopy.where = 2
-                    console.error(errCopy)
-                    return reject(errCopy)
-                  } else {
-                    return resolve()
-                  }
-                })
-              } else {
-                cp.exec(`cp -r ${moveMe} ${moveTo}`, (error, stdout, stderr) => {
-                  if (error) {
-                    error.where = 2
-                    console.log(`stderr: ${stderr}`)
-                    return reject(error)
-                  }
-                  console.log(`stdout: ${stdout}`)
-                  console.log(`stderr: ${stderr}`)
+              fs.copy(moveMe, moveTo, (errCopy) => {
+                if (errCopy) {
+                  errCopy.where = 2
+                  console.error(errCopy)
+                  return reject(errCopy)
+                } else {
                   return resolve()
-                })
-              }
+                }
+              })
             }
           })
         }

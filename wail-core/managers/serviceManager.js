@@ -5,7 +5,6 @@ import Promise from 'bluebird'
 import isRunning from 'is-running'
 import Datastore from 'nedb'
 import path from 'path'
-import psTree from 'ps-tree'
 import findP from 'find-process'
 import {
   findProcessOnHeritrixPort,
@@ -13,7 +12,8 @@ import {
   findWbPidWindows,
   heritrixFinder,
   wasHeritrixStartError,
-  heritrixLaunchErrorReport
+  heritrixLaunchErrorReport,
+  killPid
 } from '../util/serviceManHelpers'
 
 const hpidGetter = named.named(/[a-zA-z0-9\s:]+\(pid+\s(:<hpid>[0-9]+)\)/)
@@ -71,101 +71,76 @@ export default class ServiceManager {
       })
   }
 
-  killService (which) {
+  killAllServices () {
     return new Promise((resolve, reject) => {
-      if (which === 'all') {
-        let forgetMe = []
-        for (let [ who, pid ] of this._monitoring) {
-          if (this.isServiceUp(who)) {
-            console.log(`ServiceManager killing ${who}`)
-            if (!this._isWin) {
-              // process.kill(pid, 'SIGTERM')
-              psTree(pid, (err, kids) => {
-                console.log(kids)
-                if (err) {
-                  console.error('ps tree error', err)
-                  process.kill(pid, 'SIGTERM')
-                } else {
-                  if (kids.length > 0) {
-                    let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
-                      detached: true,
-                      shell: true,
-                      stdio: [ 'ignore', 'ignore', 'ignore' ]
-                    })
-                    dukeNukem.unref()
-                  } else {
-                    process.kill(pid, 'SIGTERM')
-                  }
-                }
-              })
-            } else {
-              cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
-                if (error) {
-                  console.error('really bad juju', stderr)
-                }
-              })
-            }
-          }
+      let forgetMe = [], killPids = []
+      for (let [who, pid] of this._monitoring) {
+        if (this.isServiceUp(who)) {
           forgetMe.push(who)
+          killPids.push(pid)
         }
-        this._pidStore.remove({}, { multi: true }, (err) => {
-          if (err) {
-            console.error('there was an error removing all services', err)
-          } else {
-            console.log(`Removed all pids from the pidstore`)
-          }
-          forgetMe.forEach(fm => {
-            this._monitoring.delete(fm)
+      }
+      if (forgetMe.length > 0) {
+        return Promise.map(killPids, killPid).then(() => {
+          this._pidStore.remove({}, {multi: true}, (err) => {
+            if (err) {
+              console.error('there was an error removing all services', err)
+            } else {
+              console.log(`Removed all pids from the pidstore`)
+            }
+            forgetMe.forEach(fm => {
+              this._monitoring.delete(fm)
+            })
+            resolve()
           })
+        }).catch(killErr => {
+          console.error('error killing all pids')
+          console.error(killErr)
           resolve()
         })
       } else {
+        resolve()
+      }
+    })
+  }
+
+  killService (which) {
+    return new Promise((resolve, reject) => {
+      if (which === 'all') {
+        return this.killAllServices()
+          .then(() => {resolve()})
+          .catch(killErr => {
+            console.error('error killing all services')
+            console.error(killErr)
+            resolve()
+          })
+      } else {
         if (this.isServiceUp(which)) {
           let pid = this._monitoring.get(which)
-          if (!this._isWin) {
-            // process.kill(killMe, 'SIGTERM')
-            psTree(pid, (err, kids) => {
-              console.log(kids)
-              if (err) {
-                console.error('ps tree error', err)
-                process.kill(pid, 'SIGTERM')
-              } else {
-                if (kids.length > 0) {
-                  let dukeNukem = cp.spawn('kill', [ '-9' ].concat(kids.map(p => p.PID)), {
-                    detached: true,
-                    shell: true,
-                    stdio: [ 'ignore', 'ignore', 'ignore' ]
-                  })
-                  dukeNukem.unref()
-                } else {
-                  process.kill(pid, 'SIGTERM')
-                }
-              }
-            })
-          } else {
-            cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {
+          return killPid(pid).then(() => {
+            this._monitoring.delete(which)
+            this._pidStore.remove({_id: which, who: which}, (error) => {
               if (error) {
-                console.error('really bad juju')
+                console.error(`ServiceManager error removing from pidstore ${which}`)
+              } else {
+                console.log(`ServiceManager removed ${which} from pidstore`)
               }
+              resolve()
             })
-          }
-        }
-        this._monitoring.delete(which)
-        this._pidStore.remove({ _id: which, who: which }, (error) => {
-          if (error) {
-            console.error(`ServiceManager error removing from pidstore ${which}`)
-          } else {
-            console.log(`ServiceManager removed ${which} from pidstore`)
-          }
-
+          }).catch(killErr => {
+            console.error(`error killing ${which}`)
+            console.error(killErr)
+            resolve()
+          })
+        } else {
           resolve()
-        })
+        }
       }
     })
   }
 
   startHeritrix () {
-    let { logger } = global
+    let {logger} = global
     console.log('service man starting heritrix')
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('heritrix')) {
@@ -176,7 +151,6 @@ export default class ServiceManager {
         resolve()
       } else {
         console.log('heritrix is not up starting')
-
         if (this._isWin) {
           return this._startHeritrixWin().then(didStart => {
             if (didStart.wasError) {
@@ -196,12 +170,12 @@ export default class ServiceManager {
             if (err) {
               console.error('heritrix could not be started due to an error', err, stderr, stdout)
               if (logger) {
-                logger.fatal({ err, msg: `heritrix could not be started ${stderr}` })
+                logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
               }
               reject(err)
             } else {
               console.log(stdout, stderr)
-              let pidLine = S(stdout).lines()[ 0 ]
+              let pidLine = S(stdout).lines()[0]
               let maybepid = hpidGetter.exec(pidLine)
               if (maybepid) {
                 let pid = S(maybepid.capture('hpid')).toInt()
@@ -213,10 +187,10 @@ export default class ServiceManager {
                 this._pidStore.update({
                   who: 'heritrix',
                   _id: 'heritrix'
-                }, { $set: { pid } }, { upsert: true }, insertError => {
+                }, {$set: {pid}}, {upsert: true}, insertError => {
                   if (insertError) {
                     if (logger) {
-                      logger.fatal({ err: insertError, msg: 'service manager inserting heritrix pid error' })
+                      logger.fatal({err: insertError, msg: 'service manager inserting heritrix pid error'})
                     }
                     console.error('service manager inserting pid error', insertError)
                     reject(insertError)
@@ -240,14 +214,14 @@ export default class ServiceManager {
 
   startHeritrixLoading () {
     return new Promise((resolve, reject) => {
-      let { logger } = global
+      let {logger} = global
       console.log('service man starting heritrix loading')
       if (this.isServiceUp('heritrix')) {
         if (logger) {
           logger.info('starting heritrix but it was up already')
         }
         console.log('heritrix is already up', this._monitoring)
-        resolve({ wasError: false })
+        resolve({wasError: false})
       } else {
         console.log('heritrix is not up starting')
         if (this._isWin) {
@@ -283,7 +257,7 @@ export default class ServiceManager {
 
   startWayback () {
     console.log('service man starting wayback')
-    let { logger } = global
+    let {logger} = global
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
@@ -308,10 +282,10 @@ export default class ServiceManager {
             cwd: this._settings.get('pywb.home'),
             detached: true,
             shell: true,
-            stdio: [ 'ignore', 'ignore', 'ignore' ]
+            stdio: ['ignore', 'ignore', 'ignore']
           }
           try {
-            let wayback = cp.spawn(exec, [ '-d', this._settings.get('warcs') ], opts)
+            let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
             let pid = wayback.pid
             this._monitoring.set('wayback', pid)
             console.log('wayback was started', pid)
@@ -319,11 +293,11 @@ export default class ServiceManager {
             this._pidStore.update({
               who: 'wayback',
               _id: 'wayback'
-            }, { $set: { pid } }, { upsert: true }, insertError => {
+            }, {$set: {pid}}, {upsert: true}, insertError => {
               if (insertError) {
                 console.error('service manager inserting pid for wayback error', insertError)
                 if (logger) {
-                  logger.fatal({ msg: 'service manager inserting pid for wayback error', err: insertError })
+                  logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
                 }
                 reject(insertError)
               } else {
@@ -335,7 +309,7 @@ export default class ServiceManager {
             })
           } catch (err) {
             if (logger) {
-              logger.fatal({ err, msg: 'wayback could not be started' })
+              logger.fatal({err, msg: 'wayback could not be started'})
             }
             console.error('wayback could not be started', err)
             reject(err)
@@ -347,14 +321,14 @@ export default class ServiceManager {
 
   startWaybackLoading () {
     console.log('service man starting wayback')
-    let { logger } = global
+    let {logger} = global
     return new Promise((resolve, reject) => {
       if (this.isServiceUp('wayback')) {
         console.log('wayback was already up')
         if (logger) {
           logger.info('starting wayback but was already up')
         }
-        resolve({ wasError: false })
+        resolve({wasError: false})
       } else {
         if (process.platform === 'win32') {
           return this._startWaybackWin(logger).then(result => { resolve(result) })
@@ -365,10 +339,10 @@ export default class ServiceManager {
             cwd: this._settings.get('pywb.home'),
             detached: true,
             shell: true,
-            stdio: [ 'ignore', 'ignore', 'ignore' ]
+            stdio: ['ignore', 'ignore', 'ignore']
           }
           try {
-            let wayback = cp.spawn(exec, [ '-d', this._settings.get('warcs') ], opts)
+            let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
             let pid = wayback.pid
             this._monitoring.set('wayback', pid)
             console.log('wayback was started', pid)
@@ -376,11 +350,11 @@ export default class ServiceManager {
             this._pidStore.update({
               who: 'wayback',
               _id: 'wayback'
-            }, { $set: { pid } }, { upsert: true }, insertError => {
+            }, {$set: {pid}}, {upsert: true}, insertError => {
               if (insertError) {
                 console.error('service manager inserting pid for wayback error', insertError)
                 if (logger) {
-                  logger.fatal({ msg: 'service manager inserting pid for wayback error', err: insertError })
+                  logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
                 }
                 resolve({
                   wasError: true,
@@ -393,12 +367,12 @@ export default class ServiceManager {
                 if (logger) {
                   logger.info(`wayback was started ${pid}`)
                 }
-                resolve({ wasError: false })
+                resolve({wasError: false})
               }
             })
           } catch (err) {
             if (logger) {
-              logger.fatal({ err, msg: 'wayback could not be started' })
+              logger.fatal({err, msg: 'wayback could not be started'})
             }
             console.error('wayback could not be started', err)
             resolve({
@@ -416,7 +390,7 @@ export default class ServiceManager {
 
   _updatePidStore (pid, who) {
     return new Promise((resolve, reject) => {
-      this._pidStore.update({ _id: who, who }, { $set: { pid } }, { upsert: true }, insertError => {
+      this._pidStore.update({_id: who, who}, {$set: {pid}}, {upsert: true}, insertError => {
         if (insertError) {
           console.error('service manager inserting pid error', insertError)
           reject(insertError)
@@ -446,7 +420,7 @@ export default class ServiceManager {
       },
       detached: true,
       shell: true,
-      stdio: [ 'ignore', 'ignore', 'ignore' ]
+      stdio: ['ignore', 'ignore', 'ignore']
     }
   }
 
@@ -457,10 +431,10 @@ export default class ServiceManager {
         cwd: this._settings.get('pywb.home'),
         detached: true,
         shell: true,
-        stdio: [ 'ignore', 'ignore', 'ignore' ]
+        stdio: ['ignore', 'ignore', 'ignore']
       }
       try {
-        let wayback = cp.spawn(exec, [ '-d', this._settings.get('warcs') ], opts)
+        let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
         wayback.unref()
         return findWbPidWindows()
           .then(result => {
@@ -472,7 +446,7 @@ export default class ServiceManager {
                   logger.info(`wayback was started ${result.pid}`)
                 }
                 console.log('resolving waybackpid')
-                resolve({ wasError: false })
+                resolve({wasError: false})
               })
                 .catch(error => {
                   resolve({
@@ -495,7 +469,7 @@ export default class ServiceManager {
           })
       } catch (err) {
         if (logger) {
-          logger.fatal({ err, msg: 'wayback could not be started' })
+          logger.fatal({err, msg: 'wayback could not be started'})
         }
         console.error('wayback could not be started', err)
         resolve({
@@ -514,7 +488,7 @@ export default class ServiceManager {
       let opts = this._hStartOptsWin()
       let usrpwrd = `${this._settings.get('heritrix.username')}:${this._settings.get('heritrix.password')}`
       let pid = -1
-      let args = [ '-a', `${usrpwrd}`, '--jobs-dir', `${this._settings.get('heritrix.jobsDir')}` ]
+      let args = ['-a', `${usrpwrd}`, '--jobs-dir', `${this._settings.get('heritrix.jobsDir')}`]
       try {
         let heritrix = cp.spawn('bin\\heritrix.cmd', args, opts)
         heritrix.unref()
@@ -523,7 +497,7 @@ export default class ServiceManager {
             if (result.found) {
               this._monitoring.set('heritrix', result.pid)
               return this._updatePidStore(result.pid, 'heritrix')
-                .then(() => { resolve({ wasError: false }) })
+                .then(() => { resolve({wasError: false}) })
                 .catch(error => {
                   resolve({
                     wasError: true,
@@ -565,7 +539,7 @@ export default class ServiceManager {
         if (err) {
           console.error('heritrix could not be started due to an error', err, stderr, stdout)
           if (logger) {
-            logger.fatal({ err, msg: `heritrix could not be started ${stderr}` })
+            logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
           }
           resolve({
             wasError: true,
@@ -580,12 +554,12 @@ export default class ServiceManager {
           console.log('stdout', stdout)
           console.log('stderr', stderr)
           let out = S(stdout)
-          let { wasError, errorType, errorMessage } = wasHeritrixStartError(out, stderr)
+          let {wasError, errorType, errorMessage} = wasHeritrixStartError(out, stderr)
           if (wasError) {
             console.error('heritrix could not be started due to an error', stderr, stdout)
             let theError = new Error(errorMessage)
             if (logger) {
-              logger.fatal({ err: theError, msg: `heritrix could not be started ${stdout} ${errorMessage}` })
+              logger.fatal({err: theError, msg: `heritrix could not be started ${stdout} ${errorMessage}`})
             }
             resolve({
               wasError: true,
@@ -596,7 +570,7 @@ export default class ServiceManager {
               }
             })
           } else {
-            let pidLine = S(stdout).lines()[ 0 ]
+            let pidLine = S(stdout).lines()[0]
             let maybepid = hpidGetter.exec(pidLine)
             if (maybepid) {
               let pid = S(maybepid.capture('hpid')).toInt()
@@ -605,7 +579,7 @@ export default class ServiceManager {
               if (logger) {
                 logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
               }
-              return this._updatePidStore(pid, 'heritrix').then(() => { resolve({ wasError: false }) })
+              return this._updatePidStore(pid, 'heritrix').then(() => { resolve({wasError: false}) })
                 .catch(error => {
                   resolve({
                     wasError: true,
@@ -637,17 +611,17 @@ export default class ServiceManager {
   }
 
   _maybeFindHeritrixProcess (didStart, resolve, reject) {
-    let { logger } = global
+    let {logger} = global
     return findP('name', hFindRegx).then(findResults => {
-      let { found, pid, isWails } = heritrixFinder(findResults)
+      let {found, pid, isWails} = heritrixFinder(findResults)
       if (found) {
         console.log(`there is a heritrix instance running pid=${pid}`)
         if (isWails) {
           console.log('it is wails')
-          return this._updatePidStore(pid, 'heritrix').then(() => { resolve({ wasError: false }) })
+          return this._updatePidStore(pid, 'heritrix').then(() => { resolve({wasError: false}) })
             .catch(error => {
               if (logger) {
-                logger.fatal({ err: error, msg: 'service manager inserting heritrix pid error' })
+                logger.fatal({err: error, msg: 'service manager inserting heritrix pid error'})
               }
               resolve(heritrixLaunchErrorReport(error.message, 'Internal'))
             })
@@ -657,7 +631,7 @@ export default class ServiceManager {
         }
       } else {
         return findProcessOnHeritrixPort()
-          .then(({ found, whoOnPort: { pid, pname } }) => {
+          .then(({found, whoOnPort: {pid, pname}}) => {
             // who's on first?
             let eMessage, where = 'Launching Heritrix'
             if (found) {

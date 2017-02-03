@@ -3,6 +3,20 @@ const path = require('path')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
+const babelEnvConfig = ['env', {
+  'targets': {
+    'electron': 1.4
+  },
+  'debug': true,
+  "useBuiltIns": true,
+  'include': [
+    'syntax-trailing-function-commas',
+    'transform-es2015-classes',
+    'transform-es2015-object-super',
+    'transform-es2015-destructuring'
+  ]
+}]
+
 module.exports = {
   devtool: '#@inline-source-map',
   entry: {
@@ -18,54 +32,40 @@ module.exports = {
   },
   module: {
     noParse: noParseRe,
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel-loader',
-        query: {
-          cacheDirectory: true,
-          presets: [ 'react-hmre',  'react',
-            ['env', {
-              'targets': {
-                'electron': 1.4
-              },
-              'debug': true,
-              "useBuiltIns": true,
-              'include': [
-                'syntax-trailing-function-commas',
-                'transform-es2015-classes',
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'babel-loader',
+            query: {
+              cacheDirectory: true,
+              presets: [babelEnvConfig, 'react-hmre', 'react'],
+              plugins: [
+                'transform-decorators-legacy',
+                'transform-class-properties',
                 'transform-es2015-object-super',
-                'transform-es2015-destructuring'
-              ]
-            }]
-          ],
-          plugins: [
-            'transform-decorators-legacy',
-            'transform-class-properties',
-            'transform-es2015-object-super',
-            'transform-es2015-destructuring',
-            'transform-async-to-generator',
-            'transform-exponentiation-operator',
-            'transform-object-rest-spread',
-            'syntax-trailing-function-commas',
-            'transform-export-extensions',
-            'transform-do-expressions',
-            'transform-function-bind',
-            'add-module-exports'
-          ],
-        },
+                'transform-es2015-destructuring',
+                'transform-async-to-generator',
+                'transform-exponentiation-operator',
+                'transform-object-rest-spread',
+                'syntax-trailing-function-commas',
+                'transform-export-extensions',
+                'transform-do-expressions',
+                'transform-function-bind',
+                'add-module-exports'
+              ],
+            }
+          }
+        ]
       },
-      { test: /\.css$/, loader: 'style!css?sourceMap', exclude: /flexboxgrid/ },
       {
         test: /\.css$/,
-        loader: 'style!css?sourceMap&modules&localIdentName=[name]__[local]___[hash:base64:5]',
-        include: /flexboxgrid/,
-      },
-      {
-        test: /\.scss$/,
-        loaders: [ 'style!css!less|scss', 'style-loader',
-          'css-loader?sourceMap' ]
+        use: [
+          {loader: 'style-loader'},
+          {loader: 'css-loader'}
+        ]
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,

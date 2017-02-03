@@ -1,7 +1,6 @@
 import '../wailPollyfil'
 import { app, Menu, dialog } from 'electron'
 import path from 'path'
-import getPort from 'get-port'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
@@ -49,54 +48,43 @@ winMan.on('send-failed', (report) => {
 })
 
 app.commandLine.appendSwitch('js-flags', '--harmony')
-// do not lower the priority of our invisible background windows
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
-app.commandLine.appendSwitch('enable-usermedia-screen-capturing')
-app.commandLine.appendSwitch('allow-http-screen-capture')
-app.commandLine.appendSwitch('ignore-urlfetcher-cert-requests')
-app.commandLine.appendSwitch('ignore-certificate-errors')
 
-getPort().then(port => {
-  global.proxyPort = port
-  global.proxySSLCaDir = path.resolve(app.getPath('userData'), 'ssl')
-  app.commandLine.appendSwitch('proxy-server', `localhost:${port}`)
-  app.commandLine.appendSwitch('proxy-bypass-list', '<local>;')
-  app.on('ready', () => {
-    console.log('app ready')
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
-    let base = path.resolve('./')
-    let loadFrom = __dirname
-    let userData = null
+app.on('ready', () => {
+  console.log('app ready')
+  Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
+  let base = path.resolve('./')
+  let loadFrom = __dirname
+  let userData = null
 
-    if (process.env.NODE_ENV === 'development') {
-      require('electron-debug')({
-        showDevTools: true
-      })
-    } else {
-      base = app.getAppPath()
-      loadFrom = `${base}/wail-ui`
-      userData = app.getPath('userData')
-    }
+  if (process.env.NODE_ENV === 'development') {
+    require('electron-debug')({
+      showDevTools: true
+    })
+  } else {
+    base = app.getAppPath()
+    loadFrom = `${base}/wail-ui`
+    userData = app.getPath('userData')
+  }
 
-    control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
-      .then(() => {
-        global.wailVersion = control.version
-        global.wailLogp = control.logPath
-        global.settings = control.settingsMan
-        global.serviceMan = control.serviceMan
-        global.accessLogPath = path.join(control.logPath, 'accessibility.log')
-        global.jobLogPath = path.join(control.logPath, 'jobs.log')
-        global.indexLogPath = path.join(control.logPath, 'index.log')
-        global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
+  control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
+    .then(() => {
+      global.wailVersion = control.version
+      global.wailLogp = control.logPath
+      global.settings = control.settingsMan
+      global.serviceMan = control.serviceMan
+      global.accessLogPath = path.join(control.logPath, 'accessibility.log')
+      global.jobLogPath = path.join(control.logPath, 'jobs.log')
+      global.indexLogPath = path.join(control.logPath, 'index.log')
+      global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
 
-        global.wailLogp = path.join(control.logPath, 'wail.log')
-        global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
+      global.wailLogp = path.join(control.logPath, 'wail.log')
+      global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
 
-        global.showSettingsMenu = showSettingsWindow
-        global.windowMan = winMan
-        winMan.init(control.winConfigs)
-      })
-  })
+      global.showSettingsMenu = showSettingsWindow
+      global.windowMan = winMan
+      winMan.init(control.winConfigs)
+    })
 })
 
 app.on('window-all-closed', () => {
@@ -104,7 +92,10 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     control.isQuitting = true
     console.log('not darwin we should close')
-    app.quit()
+    // app.quit()
+    control.serviceMan.killAllServices().then(() => {
+      app.quit()
+    })
   }
 })
 
@@ -127,7 +118,8 @@ app.on('before-quit', (e) => {
   e.preventDefault()
   console.log('killing all serivices')
 
-  control.serviceMan.killService('all')
-    .then(() => app.quit())
+  control.serviceMan.killAllServices().then(() => {
+    app.quit()
+  })
 })
 

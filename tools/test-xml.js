@@ -1,68 +1,49 @@
-const moment = require('moment')
-// require('moment-precise-range-plugin')
-// const EventEmitter = require('eventemitter3')
-const DB = require('nedb')
-const shelljs = require('shelljs')
-const named = require('named-regexp')
 const _ = require('lodash')
+const DB = require('nedb')
 const util = require('util')
-// const Immutable = require('immutable')
 const path = require('path')
 const Promise = require('bluebird')
 const S = require('string')
 const cp = require('child_process')
 const fp = require('lodash/fp')
 const fs = require('fs-extra')
+const DropBox = require('dropbox')
+const prettyBytes = require('pretty-bytes')
 const through2 = require('through2')
-const split = require('split2')
-// const prettyBytes = require('pretty-bytes')
-// const path = require('path')
-// const schedule = require('node-schedule')
-// const Twit = require('twit')
-// const request = require('request')
-// const progress = require('request-progress')
-// const prettyMs = require('pretty-ms')
-// const prettySeconds = require('pretty-seconds')
-// const Rx = require('rxjs')
-// const delay = require('lodash/delay')
-// const madge = require('madge')
-// const groups = {}
 
-console.log(path.normalize(path.join('/home/it/WAIL 2.app')))
-// const ESettings = require('electron-settings')
+const heritrixPath = '/home/john/some thing/heritrix'
+// fs.stat('/home/john/some thing2/heritrix', (errC, stats) => {
+//   console.log(errC, stats)
+// })
 
-fs.stat(path.join('/home/it/WAIL 2.app'), (err, stats) => {
-  console.log(err, stats)
+fs.ensureDir('/home/john/some thing/some thing 2', e => {
+  console.log(e)
 })
+fs.copy('/home/john/some thing/heritrix', '/home/john/some thing/some thing 2/h', (errCopy) => {
+  console.log(errCopy)
+})
+// const ls = cp.spawn('cp', ['-r', '/home/john/some thing/heritrix', '/home/john/some thing/some thing else'])
 //
-// const settings = new ESettings({ configDirPath: '/home/john/my-fork-wail/wail-config/wail-settings' })
-//
-// S.TMPL_OPEN = '{'
-// S.TMPL_CLOSE = '}'
-//
-// console.log('starting wayback')
-// let exec = settings.get('pywb.wayback')
-// let opts = {
-//   cwd: settings.get('warcs'),
-//   shell: true
-// }
-//
-// let wayback = cp.spawn(exec, opts)
-//
-// wayback.stdout.on('data', (data) => {
+// ls.stdout.on('data', (data) => {
 //   console.log(`stdout: ${data}`);
 // });
 //
-// wayback.stderr.on('data', (data) => {
+// ls.stderr.on('data', (data) => {
 //   console.log(`stderr: ${data}`);
 // });
 //
-// wayback.on('close', (code) => {
+// ls.on('close', (code) => {
 //   console.log(`child process exited with code ${code}`);
 // })
-/*
- .then((res) => res.dot())
- .then((output) => {
- console.log(output)
- })
- */
+// const myDrpBx = new DropBox({accessToken: 'mWS__8ZEoCIAAAAAAAAAR2diLk1kQo31OKfnAq9YQp5QG1ueh1_Q7-T5DJexumwK'})
+// myDrpBx.filesDownload({path: '/Convict Conditioning - Paul Wade.pdf'})
+//   .then(response => {
+//     fs.writeFile(response.name, response.fileBinary, 'binary', function (err) {
+//       if (err) { throw err; }
+//       console.log('File: ' + data.name + ' saved.');
+//     })
+//   })
+//   .catch(error => {
+//     console.log(error)
+//   })
+

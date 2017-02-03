@@ -75,9 +75,9 @@ export default class SettingsManager {
             didFirstLoad = false
           }
 
-          if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
-            didFirstLoad = false
-          }
+          // if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+          //   didFirstLoad = false
+          // }
 
           // console.log('We are not configured due to binary directory being moved')
           this._writeSettings(pathMan, didFirstLoad)

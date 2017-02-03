@@ -4,6 +4,17 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
+const babelEnvConfig = ['env', {
+  'targets': {
+    'electron': 1.4
+  },
+  "useBuiltIns": true,
+  'include': [
+    'syntax-trailing-function-commas',
+    'transform-es2015-destructuring'
+  ]
+}]
+
 module.exports = {
   devtool: 'source-map',
   entry: {
@@ -19,7 +30,7 @@ module.exports = {
   },
   module: {
     noParse: noParseRe,
-    loaders: [
+    rules: [
       {
         test: /\.jsx?$/,
         exclude: /(node_modules|bower_components)/,
@@ -27,16 +38,7 @@ module.exports = {
         query: {
           cacheDirectory: true,
           presets: [
-            [ 'env', {
-              'targets': {
-                'electron': 1.4
-              },
-              "useBuiltIns": true,
-              'include': [
-                'syntax-trailing-function-commas',
-                'transform-es2015-destructuring'
-              ]
-            } ],
+            babelEnvConfig,
             'react'
           ],
           plugins: [
@@ -54,16 +56,12 @@ module.exports = {
           ],
         },
       },
-      { test: /\.css$/, loader: 'style!css?sourceMap', exclude: /flexboxgrid/ },
       {
         test: /\.css$/,
-        loader: 'style!css?sourceMap&modules&localIdentName=[name]__[local]___[hash:base64:5]',
-        include: /flexboxgrid/,
-      },
-      {
-        test: /\.scss$/,
-        loaders: [ 'style!css!less|scss', 'style-loader',
-          'css-loader?sourceMap' ]
+        use: [
+          {loader: 'style-loader'},
+          {loader: 'css-loader'}
+        ]
       },
       {
         test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ico)$/,
@@ -97,7 +95,6 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: './wail-twitter/archive/inject.js'
     }]),
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: false,
       'process.env.NODE_ENV': JSON.stringify('production'),

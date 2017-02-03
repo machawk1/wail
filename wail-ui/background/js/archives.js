@@ -65,7 +65,7 @@ ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
 })
 
 ipc.on('add-metadata-to-col', (event, addMe) => {
-  let { forCol, mdata } = addMe
+  let {forCol, mdata} = addMe
   archiveMan.addMetadata(forCol, mdata)
     .then(numUpdate => {
       ipc.send('added-metadata-to-col', {
@@ -97,12 +97,18 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
   archiveMan.addWarcsFromWCreate(addMe)
     .then(update => {
       ipc.send('added-warcs-to-col', update)
+      let message
+      if (addMe.type && addMe.type === 'twitter') {
+        message = `Saved one tweet for the collection ${addMe.col}`
+      } else {
+        message = `Page only crawl finished. WARC was added to the collection ${addMe.col}`
+      }
       ipc.send('display-message', {
         title: 'Tweet Successfully Saved',
         level: 'success',
         autoDismiss: 10,
-        message: `Saved one tweet for the collection ${addMe.col}`,
-        uid: `Saved one tweet for the collection ${addMe.col}`
+        message,
+        uid: message
       })
     })
     .catch(error => {
@@ -111,7 +117,7 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
 })
 
 ipc.on('create-collection', (event, nc) => {
-  let { mdata } = nc
+  let {mdata} = nc
   archiveMan.createCollection(nc)
     .then((newCol) => {
       console.log('archiveman really did create the new collection', newCol)
@@ -151,8 +157,8 @@ ipc.on('create-collection', (event, nc) => {
 ipc.on('update-metadata', (e, update) => {
   console.log('archive man got update-metadata', update)
   archiveMan.updateMetadata(update)
-    .then(updated => ipc.send('updated-metadata', { wasError: false, forCol: update.forCol, mdata: updated }))
-    .catch(error => ipc.send('updated-metadata', { wasError: true, error, forCol: update.forCol }))
+    .then(updated => ipc.send('updated-metadata', {wasError: false, forCol: update.forCol, mdata: updated}))
+    .catch(error => ipc.send('updated-metadata', {wasError: true, error, forCol: update.forCol}))
 })
 
 archiveMan.initialLoad()

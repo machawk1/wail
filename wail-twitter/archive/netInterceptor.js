@@ -75,7 +75,7 @@ class NetInterceptor extends EventEmitter {
 
   handleIncomingRequest (ctx, callback) {
     let connection = new CapturedRequest()
-    this._requests.set(ctx.clientToProxyRequest.url, connection)
+    this._requests.set(connection.getId(), connection)
     ctx.log = {
       id: connection.getId()
     }
@@ -94,10 +94,14 @@ class NetInterceptor extends EventEmitter {
   handleIncomingResponse (ctx, callback) {
     let request = ctx.clientToProxyRequest
     let response = ctx.serverToProxyResponse
-    this.emit('log', 'Response arrived: ' + request.method + ' ' + request.url + ' ' + response.statusCode)
-    let connection = this._requests.get(request.url)
+    // this.emit('log', 'Response arrived: ' + request.method + ' ' + request.url + ' ' + response.statusCode)
+    let connectionId = ctx.log && ctx.log.id
+    let connection = null
+    if (connectionId) {
+      connection = this._requests.get(connectionId)
+    }
     if (!connection) {
-      this.emit('error', 'Connection not found.')
+      this.emit('error', `Connection not found. ${request.url}`)
       return
     }
     connection.setResponse(response)

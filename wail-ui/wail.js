@@ -15,6 +15,7 @@ import configureStore from './stores/configureStore'
 import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
 import RingBuffer from './util/ringBuffer'
+import windowCloseHandler from './windowCloseHandler'
 
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
@@ -58,5 +59,7 @@ if (process.env.WAILTEST) {
   setupTestHook(store, hashHistory)
 }
 
-render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))
+window.onbeforeunload = windowCloseHandler(store)
+
+render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
 

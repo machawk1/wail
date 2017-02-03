@@ -8,12 +8,20 @@ import moment from 'moment'
 // /home/john/my-fork-wail/wail-twitter/archive/inject.js
 
 const addWarcToCol = config => {
+  let type = config.type || 'WC'
   let lastUpdated = moment().format()
   ipc.send('add-warcs-to-col-wcreate', {
+    type,
     col: config.forCol,
     warcs: config.saveTo,
     lastUpdated,
-    seed: { forCol: config.forCol, url: config.uri_r, jobId: `${config.forCol}_TWM`, lastUpdated, added: lastUpdated }
+    seed: {
+      forCol: config.forCol,
+      url: config.uri_r,
+      jobId: `${config.forCol}_WAIL_${type}`,
+      lastUpdated,
+      added: lastUpdated
+    }
   })
 }
 
@@ -53,7 +61,7 @@ export default class ArchiveComponent extends Component {
 
     this.warcWritter.on('error', (error) => {
       console.error('there was an error in the warc writter', error)
-      let config = this.archiveQ[ 0 ]
+      let config = this.archiveQ[0]
       console.error(config)
       failUseHeritrix(config, error)
       this.archiveQ.shift()
@@ -61,7 +69,7 @@ export default class ArchiveComponent extends Component {
     })
 
     this.warcWritter.on('finished', () => {
-      let config = this.archiveQ[ 0 ]
+      let config = this.archiveQ[0]
       console.log('finished', config)
       addWarcToCol(config)
       this.archiveQ.shift()
@@ -126,14 +134,11 @@ export default class ArchiveComponent extends Component {
   }
 
   startArchiving () {
-    let { uri_r } = this.archiveQ[ 0 ]
+    let {uri_r} = this.archiveQ[0]
     console.log('archiving', uri_r)
     let webContents = this.webview.getWebContents()
-    this.freshSession(webContents)
-      .then(() => {
-        this.networkMonitor.attach(webContents)
-        this.webview.loadURL(uri_r)
-      })
+    this.networkMonitor.attach(webContents)
+    this.webview.loadURL(uri_r)
   }
 
   maybeMore () {
@@ -150,7 +155,7 @@ export default class ArchiveComponent extends Component {
       console.log('in promise')
       let opts = {
         origin: webContents.getURL(),
-        storages: [ 'appcache', 'filesystem', 'local storage' ]
+        storages: ['appcache', 'filesystem', 'local storage']
       }
       webContents.session.clearStorageData(opts, () => {
         console.log('cleared storage data')
@@ -164,7 +169,7 @@ export default class ArchiveComponent extends Component {
     return new Promise((resolve, reject) => {
       webContents.executeJavaScript('document.doctype.name', false, doctype => {
         webContents.executeJavaScript('document.documentElement.outerHTML', false, dom => {
-          resolve({ doctype, dom })
+          resolve({doctype, dom})
         })
       })
     })
@@ -172,7 +177,7 @@ export default class ArchiveComponent extends Component {
 
   ipcMessage (event) {
     if (event.channel === 'injected-archive') {
-      let msg = event.args[ 0 ]
+      let msg = event.args[0]
       if (msg === 'did-finish-load') {
         console.log('real did finish load')
         // this.webview.send('get-resources')
@@ -180,7 +185,7 @@ export default class ArchiveComponent extends Component {
         this.networkMonitor.detach(webContents)
         this.extractDoctypeDom(webContents)
           .then(ret => {
-            let arConfig = this.archiveQ[ 0 ]
+            let arConfig = this.archiveQ[0]
             let opts = {
               seedUrl: arConfig.uri_r,
               networkMonitor: this.networkMonitor,
@@ -199,11 +204,11 @@ export default class ArchiveComponent extends Component {
   }
 
   render () {
-    let wb = { __html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} partition="archive" plugins> </webview>` }
+    let wb = {__html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} partition="archive" plugins> </webview>`}
     console.log(wb)
     return (
-      <div style={{ width: 'inherit', height: 'inherit' }}>
-        <div dangerouslySetInnerHTML={wb} />
+      <div style={{width: 'inherit', height: 'inherit'}}>
+        <div dangerouslySetInnerHTML={wb}/>
       </div>
     )
   }

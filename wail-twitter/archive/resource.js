@@ -1,11 +1,11 @@
 import rp from 'request-promise'
-const { STATUS_CODES } = require('http')
+const {STATUS_CODES} = require('http')
 import Promise from 'bluebird'
 import _ from 'lodash'
 import zlib from 'zlib'
 import S from 'string'
 import url from 'url'
-import {cloneWC} from './util'
+import { cloneWC } from './util'
 import uuid from './node-uuid'
 import warcFields from './warcFields'
 const {
@@ -28,10 +28,10 @@ const events = {
 }
 
 const headerStringHelper = (s, pair) => {
-  if (Array.isArray(pair[ 1 ])) {
-    return s + pair[ 1 ].reduce((ss, val) => ss + `${pair[ 0 ]}: ${val}\r\n`, '')
+  if (Array.isArray(pair[1])) {
+    return s + pair[1].reduce((ss, val) => ss + `${pair[0]}: ${val}\r\n`, '')
   }
-  return s + `${pair[ 0 ]}: ${pair[ 1 ]}\r\n`
+  return s + `${pair[0]}: ${pair[1]}\r\n`
 }
 
 function requestHttpString (r) {
@@ -41,16 +41,16 @@ function requestHttpString (r) {
   return `${r.method} ${url.parse(r.url).path} HTTP/1.1\r\n`
 }
 const responseHttpString = r => {
-  let { statusLine, statusCode } = r
-  if (statusLine.indexOf(STATUS_CODES[ statusCode ]) < 0) {
-    console.log('badded we do not have the full status code', statusLine, statusCode, STATUS_CODES[ statusCode ])
-    return `${statusLine.substr(0, 8)} ${statusCode} ${STATUS_CODES[ statusCode ]}\r\n`
+  let {statusLine, statusCode} = r
+  if (statusLine.indexOf(STATUS_CODES[statusCode]) < 0) {
+    console.log('badded we do not have the full status code', statusLine, statusCode, STATUS_CODES[statusCode])
+    return `${statusLine.substr(0, 8)} ${statusCode} ${STATUS_CODES[statusCode]}\r\n`
   }
   return `${r.statusLine}\r\n`
 }
 
 const stringifyHeaders = (r, accessor) => _
-  .sortBy(_.toPairs(r[ accessor ]), [ 0 ])
+  .sortBy(_.toPairs(r[accessor]), [0])
   .reduce((s, hpair) => headerStringHelper(s, hpair), '')
 
 const makeHeaderString = (r, accessor, func) =>
@@ -75,7 +75,7 @@ export default class Resource {
   }
 
   add (event, dets) {
-    let eNum = events[ event ]
+    let eNum = events[event]
     if (eNum === 1) {
       if (!this.getHeaders) {
         this.getHeaders = dets.requestHeaders
@@ -136,7 +136,7 @@ export default class Resource {
   }
 
   * yeildWritable (opts) {
-    let { seedUrl, concurrentTo, now } = opts
+    let {seedUrl, concurrentTo, now} = opts
     if (this.method === 'GET') {
       let res = this._response()
       let reqHeaderString
@@ -166,11 +166,11 @@ export default class Resource {
         let resHeaderContentBuffer = Buffer.from('\r\n' + resHeaderString + '\r\n', 'utf8')
         let respWHeader = swapper.setValue(warcResponseHeader).template({
           targetURI: this.url,
-          now, rid: uuid.v1(), len: resHeaderContentBuffer.length + this.rdata.length
+          now, rid: uuid.v1(), len: resHeaderContentBuffer.length + (this.rdata || Buffer.from([])).length
         }).s
         yield respWHeader
         yield resHeaderContentBuffer
-        yield this.rdata
+        yield (this.rdata || Buffer.from([]))
         yield '\r\n'
         yield recordSeparator
       }
@@ -197,7 +197,14 @@ export default class Resource {
           })
           .catch(error => {
             console.log('downloading error', error)
-            reject(error)
+            if (error.name === 'StatusCodeError') {
+              if (error.response.body) {
+                this.rdata = error.response.body
+              }
+              resolve()
+            } else {
+              reject(error)
+            }
           })
       } else {
         resolve()
