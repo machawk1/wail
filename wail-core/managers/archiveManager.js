@@ -81,7 +81,7 @@ const firstTimeMoveCollectionsPath = () => {
   if (process.platform === 'win32') {
     return settings.get('iwarcs')
   } else {
-    return `${settings.get('iwarcs')}/*`
+    return `${settings.get('iwarcs')}`
   }
 }
 
