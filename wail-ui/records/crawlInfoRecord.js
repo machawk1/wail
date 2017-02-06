@@ -35,10 +35,7 @@ const makeCrawlInfoRecord = crawlInfo => {
   crawlInfo.latestRun.jobId = crawlInfo.jobId
   crawlInfo.lastUpdated = moment(crawlInfo.latestRun.timestamp)
   crawlInfo.latestRun = new RunInfoRecord(crawlInfo.latestRun)
-  let crec = new CrawlInfoRecord(crawlInfo)
-  console.log(crec.lastUpdated.format('MMM DD YYYY h:mma'))
-  console.log(crec.latestRun.tsMoment.format('MMM DD YYYY h:mma'))
-  return crec
+  return new CrawlInfoRecord(crawlInfo)
 }
 
 export default makeCrawlInfoRecord

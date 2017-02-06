@@ -1,9 +1,17 @@
 import Extractor from './extractor'
+import _ from 'lodash'
+
+const htMap = ht => {
+  if (ht.startsWith('#')) {
+    return [ht, ht.substr(1)]
+  }
+  return ht
+}
 
 export default class HashTagExtractor extends Extractor {
   constructor (hashTags) {
     super()
-    this.hashTags = new Set(hashTags)
+    this.hashTags = new Set(_.flatMap(hashTags, htMap))
   }
 
   shouldExtract (tweet) {

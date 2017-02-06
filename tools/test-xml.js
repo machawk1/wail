@@ -10,40 +10,48 @@ const fs = require('fs-extra')
 const DropBox = require('dropbox')
 const prettyBytes = require('pretty-bytes')
 const through2 = require('through2')
+const streamSort = require('sort-stream2')
+const Twit = require('twit')
+const jsSearch = require('js-search')
 
-const heritrixPath = '/home/john/some thing/heritrix'
-// fs.stat('/home/john/some thing2/heritrix', (errC, stats) => {
-//   console.log(errC, stats)
+// const autoI = cp.fork('/home/john/my-fork-wail/wail-core/autoIndexer/autoIndexer.js')
+//
+// autoI.on('message', (m) => {
+//   console.log(m)
+// })
+// autoI.send({
+//   type: 'init',
+//   pywbP: '/home/john/my-fork-wail/bundledApps/pywb',
+//   colPs: ['/home/john/Documents/_WAIL_ManagedCollections/collections/default']
 // })
 
-fs.ensureDir('/home/john/some thing/some thing 2', e => {
-  console.log(e)
-})
-fs.copy('/home/john/some thing/heritrix', '/home/john/some thing/some thing 2/h', (errCopy) => {
-  console.log(errCopy)
-})
-// const ls = cp.spawn('cp', ['-r', '/home/john/some thing/heritrix', '/home/john/some thing/some thing else'])
-//
-// ls.stdout.on('data', (data) => {
-//   console.log(`stdout: ${data}`);
-// });
-//
-// ls.stderr.on('data', (data) => {
-//   console.log(`stderr: ${data}`);
-// });
-//
-// ls.on('close', (code) => {
-//   console.log(`child process exited with code ${code}`);
-// })
-// const myDrpBx = new DropBox({accessToken: 'mWS__8ZEoCIAAAAAAAAAR2diLk1kQo31OKfnAq9YQp5QG1ueh1_Q7-T5DJexumwK'})
-// myDrpBx.filesDownload({path: '/Convict Conditioning - Paul Wade.pdf'})
-//   .then(response => {
-//     fs.writeFile(response.name, response.fileBinary, 'binary', function (err) {
-//       if (err) { throw err; }
-//       console.log('File: ' + data.name + ' saved.');
-//     })
-//   })
-//   .catch(error => {
-//     console.log(error)
-//   })
+const indexerP = path.join('/home/john/my-fork-wail/bundledApps/pywb', 'cdx-indexer')
+const archiveP = path.join('/home/john/Documents/_WAIL_ManagedCollections/collections/default', 'archive')
 
+const indexer = cp.spawn(indexerP, ['-j', `${archiveP}`])
+
+indexer.stdout.on('data', function (data) {
+  console.log('stdout: ' + data.toString());
+});
+
+indexer.stderr.on('data', function (data) {
+  console.log('stderr: ' + data.toString());
+});
+
+indexer.on('exit', function (code) {
+  console.log('child process exited with code ' + code.toString());
+});
+
+// const readTweets = async () => {
+//   const tweets = await fs.readJSONAsync('wsdlTweet.json')
+//   console.log(tweets)
+//   tweets.forEach(t => {
+//     console.log(t.entities)
+//   })
+//   // searcher.addDocuments(tweets)
+//   // searcher.search('unarchivable').forEach(it => {
+//   //   console.log(it)
+//   // })
+// }
+
+// readTweets()

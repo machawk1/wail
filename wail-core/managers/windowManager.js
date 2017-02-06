@@ -358,19 +358,20 @@ export default class WindowManager extends EventEmitter {
         })
       }
       console.log('got sign in with twitter')
-      this.twitterSignin.startRequest().then((result) => {
-        const accessToken = result.oauth_access_token
-        const accessTokenSecret = result.oauth_access_token_secret
-        let twitter = global.settings.get('twitter')
-        twitter.userSignedIn = true
-        twitter.userToken = accessToken
-        twitter.userSecret = accessTokenSecret
-        global.twitterClient.signIn(twitter)
-        global.settings.set('twitter', twitter)
-        this.send('mainWindow', 'signed-into-twitter', {wasError: false, accessToken, accessTokenSecret})
-      }).catch((error) => {
-        console.error(error, error.stack)
-        this.send('mainWindow', 'signed-into-twitter', {wasError: true, error})
+      process.nextTick(() => {
+        this.twitterSignin.startRequest().then((result) => {
+          const accessToken = result.oauth_access_token
+          const accessTokenSecret = result.oauth_access_token_secret
+          let twitter = global.settings.get('twitter')
+          twitter.userSignedIn = true
+          twitter.userToken = accessToken
+          twitter.userSecret = accessTokenSecret
+          global.settings.set('twitter', twitter)
+          this.send('mainWindow', 'signed-into-twitter', {wasError: false, accessToken, accessTokenSecret})
+        }).catch((error) => {
+          console.error(error, error.stack)
+          this.send('mainWindow', 'signed-into-twitter', {wasError: true, error})
+        })
       })
     })
 
@@ -630,7 +631,6 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows['twitterMonitor'].window.webContents.openDevTools()
         }
-        this.windows['twitterMonitor'].window.webContents.openDevTools()
         this.windows['twitterMonitor'].open = true
         this.windows['twitterMonitor'].loadComplete = true
         resolve()
@@ -670,8 +670,6 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows['archiverWindow'].window.webContents.openDevTools()
         }
-        this.windows['archiverWindow'].window.show()
-        this.windows['archiverWindow'].window.webContents.openDevTools()
         this.windows['archiverWindow'].open = true
         this.windows['archiverWindow'].loadComplete = true
         resolve()
