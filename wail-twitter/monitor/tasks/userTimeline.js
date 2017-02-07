@@ -1,7 +1,7 @@
 import MonitorTask from './monitorTask'
 
 export default class UserTimeLineTask extends MonitorTask {
-  constructor ({ twitterClient, account, dur, extractor }) {
+  constructor ({twitterClient, account, dur, extractor}) {
     super(dur)
     this.twitterClient = twitterClient
     this.mostRecentTweet = null
@@ -11,12 +11,10 @@ export default class UserTimeLineTask extends MonitorTask {
   }
 
   poll () {
-    console.log('doing poll')
     let options = {
       'screen_name': this.account,
       'exclude_replies': 'true'
     }
-    console.log(options)
     if (this.mostRecentTweet) {
       options.since_id = this.mostRecentTweet
     }
@@ -24,7 +22,6 @@ export default class UserTimeLineTask extends MonitorTask {
       if (err) {
         this.wasError(err)
       } else {
-        console.log('userTimeline no errors', data)
         if (data.length > 0) {
           let tweets = this.doExtraction(data)
           if (tweets.length > 0) {
@@ -41,7 +38,9 @@ export default class UserTimeLineTask extends MonitorTask {
     if (this.firstTime) {
       data.forEach(tweet => {
         this.isRecent(tweet)
-        if (this.extractor.shouldExtract(tweet)) {
+      })
+      data.forEach(tweet => {
+        if (this.isRecent(tweet) && this.extractor.shouldExtract(tweet)) {
           tweets.push(this.extractor.extract(tweet))
         }
       })

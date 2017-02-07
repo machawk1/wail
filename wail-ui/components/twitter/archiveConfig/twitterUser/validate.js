@@ -39,6 +39,10 @@ export default function validate (values) {
     errors.screenName = 'Screen Name Required'
   }
 
+  if (values.get('screenName').startsWith('@')) {
+    errors.screenName = 'Do not include @ in Screen Name'
+  }
+
   if (!values.get('forCol')) {
     errors.forCol = 'Collection Required'
   }

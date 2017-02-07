@@ -15,8 +15,10 @@ const makeExtractor = extractor => {
 const makeTask = (config, twitterClient) => {
   switch (config.taskType) {
     case 'UserTimeLine':
+      let e = config.extractor
+      delete  config.extractor
       return new UserTimeLine({
-        extractor: makeExtractor(config.extractor),
+        extractor: makeExtractor(e),
         twitterClient,
         ...config
       })
