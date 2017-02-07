@@ -103,6 +103,7 @@
     "node-schedule": "^1.2.0",
     "normalize-url": "^1.9.0",
     "normalizr": "^3.1.0",
+    "oauth": "^0.9.15",
     "path-exists": "^3.0.0",
     "pretty-bytes": "^4.0.2",
     "pretty-ms": "^2.1.0",
