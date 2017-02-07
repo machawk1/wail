@@ -42,7 +42,7 @@ from requests.auth import HTTPDigestAuth
 from os import listdir
 from os.path import isfile, join
 
-import wxversion
+#import wxversion
 
 import tarfile  # For updater
 

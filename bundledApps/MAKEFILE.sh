@@ -52,6 +52,12 @@ esac
 
 
 
+installRequirements ()
+{
+  pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
+  pip install -r requirements.txt
+}
+
 createBinary ()
 {
   pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns"
@@ -95,6 +101,7 @@ tweakOS ()
   /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
 }
 
+installRequirements
 createBinary
 deleteBinary # Remove previous version
 mvProducts
