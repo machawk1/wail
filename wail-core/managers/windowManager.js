@@ -249,6 +249,9 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('created-collection', (event, nc) => {
       console.log('crated-collection', nc)
       this.send('mainWindow', 'created-collection', nc)
+      control.serviceMan.restartWayback()
+        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
+        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
     })
 
     ipcMain.on('create-collection-failed', (event, fail) => {

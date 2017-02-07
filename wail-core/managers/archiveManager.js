@@ -875,23 +875,25 @@ export default class ArchiveManager {
           // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
           let colpath = path.join(settings.get('warcs'), 'collections', col)
           let created = moment().format()
-          let toCreate = {
-            _id: col, name: col, colpath, created,
-            size: '0 B', lastUpdated: created,
-            archive: path.join(colpath, 'archive'),
-            indexes: path.join(colpath, 'indexes'),
-            colName: col, numArchives: 0, metadata,
-            hasRunningCrawl: false
-          }
-          this.collections.insert(toCreate, (err, doc) => {
-            if (err) {
-              reject(err)
-            } else {
-              resolve({
-                seeds: [],
-                ...doc
-              })
+          fs.ensureFile(path.join(colpath, 'indexes', 'index.cdxj'), () => {
+            let toCreate = {
+              _id: col, name: col, colpath, created,
+              size: '0 B', lastUpdated: created,
+              archive: path.join(colpath, 'archive'),
+              indexes: path.join(colpath, 'indexes'),
+              colName: col, numArchives: 0, metadata,
+              hasRunningCrawl: false
             }
+            this.collections.insert(toCreate, (err, doc) => {
+              if (err) {
+                reject(err)
+              } else {
+                resolve({
+                  seeds: [],
+                  ...doc
+                })
+              }
+            })
           })
         })
         .catch(({error, stdout, stderr}) => {
