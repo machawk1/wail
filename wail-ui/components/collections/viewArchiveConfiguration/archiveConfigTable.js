@@ -13,7 +13,6 @@ const depthToConfig = d => {
 
 const seedToConfig = (state, viewingCol) => {
   const col = state.get('collections').get(viewingCol)
-  console.log(col.toJS())
   const colName = col.get('colName')
   const crawls = state.get('runs').filter((crawl, jid) => crawl.get('forCol') === colName)
   let sTcs = []
@@ -23,7 +22,8 @@ const seedToConfig = (state, viewingCol) => {
       if (crawl) {
         sTcs.push({
           url: seed.get('url'),
-          config: depthToConfig(crawl.get('depth'))
+          config: depthToConfig(crawl.get('depth')),
+          jid
         })
       } else {
         sTcs.push({

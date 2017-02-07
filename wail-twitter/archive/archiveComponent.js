@@ -34,7 +34,7 @@ const failUseHeritrix = (config, error) => {
     forCol: config.forCol
   })
 
-  let message = `There was an error while using Wail-WarCreate. Resorting to using Heritrix`
+  let message = `There was an error while using Wail-WarCreate. Resorting to using Heritrix ${error}`
 
   ipc.send('log-error-display-message', {
     m: {

@@ -9,10 +9,12 @@ const filter = {
 export default class WcRequestMonitor {
   constructor () {
     this.wcRequests = new Map()
+    this.hadErrors = new Set()
   }
 
   attach (webContents) {
     this.wcRequests.clear()
+    this.hadErrors.clear()
     webContents.session.webRequest.onSendHeaders(filter, (dets, cb) => {
       this.add('beforeSend', dets)
     })
@@ -27,7 +29,7 @@ export default class WcRequestMonitor {
       this.add('complete', dets)
     })
     webContents.session.webRequest.onErrorOccurred(filter, (dets) => {
-      // this.add('complete', dets)
+      this.add('error', dets)
       console.log('WEBREQUEST MONITOR ERROR DANGER!!!', dets)
     })
   }
@@ -41,10 +43,19 @@ export default class WcRequestMonitor {
   }
 
   add (event, dets) {
-    if (!this.wcRequests.has(dets.url)) {
-      this.wcRequests.set(dets.url, new Resource(dets.url, dets.resourceType, dets.method))
+    if (event === 'error') {
+      this.hadErrors.add(dets.url)
+      if (this.wcRequests.has(dets.url)) {
+        this.wcRequests.delete(dets.url)
+      }
+    } else {
+      if (!this.hadErrors.has(dets.url)) {
+        if (!this.wcRequests.has(dets.url)) {
+          this.wcRequests.set(dets.url, new Resource(dets.url, dets.resourceType, dets.method))
+        }
+        this.wcRequests.get(dets.url).add(event, dets)
+      }
     }
-    this.wcRequests.get(dets.url).add(event, dets)
   }
 
   retrieve (doNotInclude) {

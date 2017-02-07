@@ -180,7 +180,6 @@ export default class Resource {
   dl () {
     return new Promise((resolve, reject) => {
       if (this.method !== 'POST' && !this.isSeed) {
-        console.log('downloading')
         rp({
           headers: this.getHeaders,
           method: 'GET',
@@ -191,7 +190,6 @@ export default class Resource {
           resolveWithFullResponse: true
         })
           .then(data => {
-            console.log('done downloading')
             this.rdata = data.body
             resolve()
           })
