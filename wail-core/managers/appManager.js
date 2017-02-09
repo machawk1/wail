@@ -94,7 +94,7 @@ export default class AppManager {
             // console.log('windows')
             this.iconp = this.pathMan.normalizeJoinWBase('icons/whale.ico')
             this.w = 1000
-            this.h = 600
+            this.h = 700
           } else {
             this.iconp = this.pathMan.normalizeJoinWBase('icons/linux/whale_64.png')
             this.w = 1000

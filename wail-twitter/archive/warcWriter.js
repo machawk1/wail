@@ -100,11 +100,16 @@ export default class WarcWriter extends EventEmitter {
   }
 
   writeWarc (config) {
-    let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header} = config
+    let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header,lookUp} = config
     let {doctype, dom} = dtDom
     let {outlinks} = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
-    networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
+    if (!networkMonitor.wcRequests.has(seedUrl)) {
+      networkMonitor.wcRequests.get(lookUp).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
+    } else {
+      networkMonitor.wcRequests.get(seedUrl).addSeedUrlBody(`<!DOCTYPE ${doctype}>\n${dom}`)
+    }
+
     networkMonitor.wcRequests.retrieve()
       .then(() => {
         let warcOut = fs.createWriteStream(toPath)

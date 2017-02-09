@@ -56,7 +56,7 @@ export default class ArchiveComponent extends Component {
     this.wbReady = false
     this.webview = null
     this.archiveQ = []
-    this.networkMonitor = new NetworkMonitor()
+    this.networkMonitor = window.nm = new NetworkMonitor()
     this.warcWritter = new WarcWriter()
 
     this.warcWritter.on('error', (error) => {
@@ -188,6 +188,7 @@ export default class ArchiveComponent extends Component {
             let arConfig = this.archiveQ[0]
             let opts = {
               seedUrl: arConfig.uri_r,
+              lookUp: webContents.getURL(),
               networkMonitor: this.networkMonitor,
               ua: this.webview.getUserAgent(),
               dtDom: ret,

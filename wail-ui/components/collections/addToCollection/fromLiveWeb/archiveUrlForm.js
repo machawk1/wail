@@ -58,6 +58,8 @@ const formConfig = {
   validate
 }
 
+const trans = process.platform === 'win32' ? 'translateY(30px)' : 'translateY(20px)'
+
 class ArchiveUrlForm extends Component {
 
   submit (values) {
@@ -99,7 +101,7 @@ class ArchiveUrlForm extends Component {
               <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links'/>
             </Field>
           </div>
-          <div style={{height: '40px', transform: 'translateY(20px)'}}>
+          <div style={{height: '40px', transform: trans}}>
             <FlatButton
               id='archiveNowButton'
               label='Add and Archive Now'
