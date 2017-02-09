@@ -112,6 +112,7 @@
     "react": "15.4.2",
     "react-addons-shallow-compare": "^15.4.2",
     "react-addons-update": "^15.4.2",
+    "react-contextmenu": "^2.1.0",
     "react-dom": "15.4.2",
     "react-fittext": "0.0.7",
     "react-flex": "^2.2.7",

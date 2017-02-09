@@ -33,12 +33,17 @@ class TwitterUserTextSearch extends Component {
   }
 
   submit (values) {
-    return global.twitterClient.getUserId({ screen_name: values.get('screenName') })
+    let screenName = values.get('screenName')
+    if (screenName.startsWith('@')) {
+      screenName = screenName.substr(1)
+    }
+    return global.twitterClient.getUserId({ screen_name: screenName })
       .catch(error => {
         console.error(error)
       })
       .then(({ data, resp }) => {
         if (data.errors) {
+          notifyError(`Invalid Screen Name: ${values.get('userName')} does not exist`)
           throw new SubmissionError({
             userName: `${values.get('userName')} does not exist`,
             _error: 'Invalid Screen Name'
@@ -56,12 +61,11 @@ class TwitterUserTextSearch extends Component {
         let hts = values.get('searchT')
         if (hts && hts.size > 0) {
           config = {
-            account: values.get('screenName'),
+            account: screenName,
             dur: timeVales.values[ values.get('length') ],
             forCol: values.get('forCol'),
             lookFor: hts.size > 1 ? hts.toJS() : hts.get(0),
             configOpts: { count: 100 },
-            oneOff: true,
             taskType: 'TextSearch'
           }
           // console.log(config)

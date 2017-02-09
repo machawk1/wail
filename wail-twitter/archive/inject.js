@@ -20,7 +20,7 @@ if (!window.__archive) {
               this.ipc.sendToHost('injected-archive', 'did-finish-load')
               this.count += 1
               wc.removeAllListeners('did-stop-loading')
-            }, 3000)
+            }, 5000)
           }
         })
       }

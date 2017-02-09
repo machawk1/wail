@@ -22,7 +22,6 @@ export default function validate (values) {
   } else {
     let swapper = S('')
     sts.forEach((ht, idx) => {
-      console.log(ht)
       if (swapper.setValue(ht).isEmpty()) {
         stErrors[ idx ] = 'Cant Have Empty HashTag'
       }

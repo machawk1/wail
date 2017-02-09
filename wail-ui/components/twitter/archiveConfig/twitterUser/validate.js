@@ -3,7 +3,7 @@ import S from 'string'
 const log = ::console.log
 
 export default function validate (values) {
-  log('validate', values.toJS())
+  // log('validate', values.toJS())
   const errors = {}
   let length = values.get('length')
   if (!length) {
@@ -20,27 +20,15 @@ export default function validate (values) {
   if (hts && hts.size > 0) {
     let swapper = S('')
     hts.forEach((ht, idx) => {
-      console.log(ht)
       if (swapper.setValue(ht).isEmpty()) {
         htErrors[ idx ] = 'Cant Have Empty HashTag'
       }
       return true
     })
-    /*
-     Array.from(hts.values()).forEach((ht, idx) => {
-     if (swapper.setValue(ht).isEmpty()) {
-     htErrors[ idx ] = 'Cant Have Empty HashTag'
-     }
-     })
-     */
   }
 
   if (!values.get('screenName')) {
     errors.screenName = 'Screen Name Required'
-  }
-
-  if (values.get('screenName').startsWith('@')) {
-    errors.screenName = 'Do not include @ in Screen Name'
   }
 
   if (!values.get('forCol')) {

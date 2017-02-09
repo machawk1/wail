@@ -21,7 +21,7 @@ class InjectArchive {
         clearTimeout(this.stopLoadingTimer)
         this.stopLoadingTimer = setTimeout(() => {
           this.ipc.sendToHost('injected-archive', 'did-finish-load')
-        }, 1000)
+        }, 3000)
       })
     }
   }

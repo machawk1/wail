@@ -4,7 +4,7 @@ const fromTwitterDate = (date) => moment(date, 'dd MMM DD HH:mm:ss ZZ YYYY', 'en
 
 export default class Extractor {
   constructor () {
-    this.now = moment().startOf('hour')
+    this.now = moment()
   }
 
   shouldExtract (tweet) {
@@ -12,7 +12,7 @@ export default class Extractor {
   }
 
   tweetIsAfterStart (tweet) {
-    return this.now.isSameOrAfter(fromTwitterDate(tweet.created_at))
+    return fromTwitterDate(tweet.created_at).isSameOrAfter(this.now)
   }
 
   extract (tweet) {
