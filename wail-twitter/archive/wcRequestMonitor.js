@@ -107,6 +107,10 @@ export default class WcRequestMonitor {
     return this.wcRequests.get(key)
   }
 
+  has (key) {
+    return this.wcRequests.has(key)
+  }
+
   match (networkInfo) {
     for (let [url, winfo] of this.wcRequests) {
       let ninfo = networkInfo.get(url)

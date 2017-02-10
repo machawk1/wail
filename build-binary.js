@@ -15,7 +15,7 @@ import moveTo from './tools/moveJDKMemgator'
 Promise.promisifyAll(fs)
 
 const argv = require('minimist')(process.argv.slice(2))
-const cwd = path.resolve('.')
+const cwd = process.cwd()
 fs.emptyDirSync(path.join(cwd, 'dist'))
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
 
@@ -57,6 +57,7 @@ const ignore = [
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
   '^/bundledApps/tomcat($|/)',
+  '^/bundledApps/pywb_($|/)',
   '^/.codeclimate.yml($|/)',
   '^/crawler-beans_bk.cxml$',
   '^/dev_coreData',
