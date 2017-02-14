@@ -13,6 +13,9 @@ and [PyWb 0.33.0](https://github.com/ikreymer/pywb).
 
 More information about the motivations behind WAIL see the [Motivations](https://github.com/N0taN3rd/wail/wiki/Why-Wail%3F) section in the projects wiki.
 
+
+This work is supported by the [National Endowment for the Humanities](https://www.neh.gov/) (NEH), through Digital Humanities grants [HD-51670-13](https://securegrants.neh.gov/publicquery/main.aspx?f=1&gn=HD-51670-13) and [HK-50181-14](https://securegrants.neh.gov/publicquery/main.aspx?f=1&gn=HK-50181-14)
+
 ## Wail Electron
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
