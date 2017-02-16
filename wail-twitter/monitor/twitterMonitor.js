@@ -52,8 +52,9 @@ export default class TwitterMonitor extends EventEmitter {
       })
       delete this.monitorJobs[config.account]
     })
+
     task.on('error', (err) => {
-      let message = `Error occurred while monitoring ${config.account} for ${config.forCol}`
+      let message = `Error occurred while monitoring ${config.account} for ${config.forCol} ${err.message||''}`
       console.error('error while monitoring', config.account)
       console.error(err)
       ipc.send('log-error-display-message', {
@@ -63,7 +64,7 @@ export default class TwitterMonitor extends EventEmitter {
           message,
           uid: message
         },
-        err: `${err} ${err.stack}`
+        err: err
       })
       delete this.monitorJobs[config.account]
     })

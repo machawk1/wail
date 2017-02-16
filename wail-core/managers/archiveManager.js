@@ -90,11 +90,27 @@ const checkCollExistence = () => new Promise((resolve, reject) => {
     if (err) {
       resolve(false)
     } else {
-      fs.stat(path.join(settings.get('warcs'), 'collections'))
-      resolve(true)
+      fs.stat(path.join(settings.get('warcs'), 'collections'), (err2, stats) => {
+        if (err2) {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      })
     }
   })
 })
+
+const missingBackUpPath = () => {
+  switch (process.platform) {
+    case 'darwin':
+      return '~/Library/Application Support/WAIL/database'
+    case 'linux':
+      return '~/.config/WAIL/database'
+    default:
+      return '%APPDATA%/WAIL/database'
+  }
+}
 
 export default class ArchiveManager {
   constructor () {
@@ -113,7 +129,7 @@ export default class ArchiveManager {
     const backUpTime = new Date().getTime()
     const oa = path.join(settings.get('wailCore.db'), 'archives.db')
     const oas = path.join(settings.get('wailCore.db'), 'archiveSeeds.db')
-    const message = `${settings.get('collections.dir')} was not found on the filesystem after creating it. WAIL has backed up previous settings and recreated this directory.`
+    const message = `${settings.get('collections.dir')} was not found on the filesystem after creating it. WAIL has backed up previous settings found at ${missingBackUpPath()} and recreated this directory.`
     ipc.send('display-message', {
       title: 'Collections directory no longer exists',
       level: 'error',
@@ -618,9 +634,9 @@ export default class ArchiveManager {
             })
         })
       )
-        .catch(errorExecute => {
-          errorExecute.m = errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`)
-          reject(errorExecute)
+        .catch(({ error, stdout, stderr }) => {
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          reject(error)
         })
     )
   }
@@ -730,18 +746,16 @@ export default class ArchiveManager {
               })
           })
         )
-        .catch(errorExecute => {
-          errorExecute.m = errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`)
-          reject(errorExecute)
+        .catch(({ error, stdout, stderr }) => {
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          reject(error)
         })
     )
   }
 
   addWarcsToCol ({col, warcs, lastUpdated, seed}) {
     console.log('add warcs to col', col, warcs, lastUpdated, seed)
-    let opts = {
-      cwd: settings.get('warcs')
-    }
+    let opts = { cwd: settings.get('warcs')}
     let exec = S(settings.get('pywb.addWarcsToCol')).template({col, warcs}).s
     let updateWho = {colName: col}
     const countAdded = (stdout, stderr) => {
@@ -820,9 +834,9 @@ export default class ArchiveManager {
               })
           })
         )
-        .catch(errorExecute => {
-          errorExecute.m = errorReport(errorExecute, `Unable to add warcs to the collection ${col} because ${errorExecute}`)
-          reject(errorExecute)
+        .catch(({ error, stdout, stderr }) => {
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          reject(error)
         })
     )
   }

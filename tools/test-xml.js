@@ -13,6 +13,7 @@ const through2 = require('through2')
 const streamSort = require('sort-stream2')
 const Twit = require('twit')
 const jsSearch = require('js-search')
+const Rx = require('rxjs/Rx')
 
 // const autoI = cp.fork('/home/john/my-fork-wail/wail-core/autoIndexer/autoIndexer.js')
 //

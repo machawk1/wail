@@ -9,10 +9,10 @@ import MaybeHashtags from './twitterUser/maybeHashTags'
 import { notifyError, notifyInfo } from '../../../actions/notification-actions'
 
 const monitor = (config) => {
-  let message = `Monitoring ${config.account} for ${config.forCol} Now!`
+  let message = `Monitoring ${config.account} for ${config.duration} to ${config.forCol} Now!`
   notifyInfo(message)
   ipc.send('monitor-twitter-account', config)
-  window.logger.debug(message)
+  window.logger.info(message)
 }
 
 const width = process.platform === 'win32' ? '40%' : '35%'

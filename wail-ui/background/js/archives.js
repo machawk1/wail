@@ -101,10 +101,10 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
       if (addMe.type && addMe.type === 'twitter') {
         message = `Saved one tweet for the collection ${addMe.col}`
       } else {
-        message = `Page only crawl finished. WARC was added to the collection ${addMe.col}`
+        message = `WARC was added to the collection ${addMe.col}`
       }
       ipc.send('display-message', {
-        title: 'Tweet Successfully Saved',
+        title: 'Page only crawl finished',
         level: 'success',
         autoDismiss: 10,
         message,

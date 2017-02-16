@@ -34,7 +34,8 @@ const failUseHeritrix = (config, error) => {
     forCol: config.forCol
   })
 
-  let message = `There was an error while using Wail-WarCreate. Resorting to using Heritrix ${error}`
+  let eMessage = error.message || error.m
+  let message = `There was an error while using Wail-WarCreate ${eMessage}. Resorting to using Heritrix`
 
   ipc.send('log-error-display-message', {
     m: {
@@ -44,7 +45,7 @@ const failUseHeritrix = (config, error) => {
       uid: message,
       autoDismiss: 0
     },
-    err: `${error} ${error.stack}`
+    err: error
   })
 }
 
@@ -97,9 +98,22 @@ export default class ArchiveComponent extends Component {
       }
     })
 
-    this.webview.addEventListener('console-message', (e) => {
-      console.log('Guest page logged a message:', e.message)
+    this.webview.addEventListener('did-fail-load', (e) => {
+      if (this.archiveQ.length) {
+        let config = this.archiveQ[0]
+        e.m = e.errorDescription
+        failUseHeritrix(config, e)
+        this.archiveQ.shift()
+        this.maybeMore()
+      }
+      this.wasLoadError = true
     })
+
+    if(process.NODE_ENV === 'DEV') {
+      this.webview.addEventListener('console-message', (e) => {
+        console.log('Guest page logged a message:', e.message)
+      })
+    }
 
     this.webview.addEventListener('ipc-message', this.ipcMessage)
   }
@@ -181,23 +195,31 @@ export default class ArchiveComponent extends Component {
       if (msg === 'did-finish-load') {
         console.log('real did finish load')
         // this.webview.send('get-resources')
-        let webContents = this.webview.getWebContents()
-        this.networkMonitor.detach(webContents)
-        this.extractDoctypeDom(webContents)
-          .then(ret => {
-            let arConfig = this.archiveQ[0]
-            let opts = {
-              seedUrl: arConfig.uri_r,
-              lookUp: webContents.getURL(),
-              networkMonitor: this.networkMonitor,
-              ua: this.webview.getUserAgent(),
-              dtDom: ret,
-              preserveA: false,
-              toPath: arConfig.saveTo,
-              header: arConfig
-            }
-            this.warcWritter.writeWarc(opts)
-          })
+        if (!this.wasLoadError) {
+          let webContents = this.webview.getWebContents()
+          this.networkMonitor.detach(webContents)
+          this.extractDoctypeDom(webContents)
+            .then(ret => {
+              let arConfig = this.archiveQ[0]
+              let opts = {
+                seedUrl: arConfig.uri_r,
+                lookUp: webContents.getURL(),
+                networkMonitor: this.networkMonitor,
+                ua: this.webview.getUserAgent(),
+                dtDom: ret,
+                preserveA: false,
+                toPath: arConfig.saveTo,
+                header: arConfig
+              }
+              this.warcWritter.writeWarc(opts)
+            })
+            .catch(error => {
+              let config = this.archiveQ[0]
+              failUseHeritrix(config, error)
+              this.archiveQ.shift()
+              this.maybeMore()
+            })
+        }
       } else {
         console.log(msg)
       }
