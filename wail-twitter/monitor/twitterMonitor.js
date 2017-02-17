@@ -3,7 +3,7 @@ import { remote, ipcRenderer as ipc } from 'electron'
 import schedule from 'node-schedule'
 import TwitterClient from '../twitterClient'
 import makeTask from './tasks'
-import moment from 'moment'
+import filenamify  from 'filenamify'
 import S from 'string'
 import path from 'path'
 
@@ -13,8 +13,8 @@ S.TMPL_CLOSE = '}'
 const settings = remote.getGlobal('settings')
 
 const makeArchiveConfig = (config, tweet) => {
-  let name = S(tweet).strip('twitter.com', 'status', 'https:', '/', '.').s
-  let saveThisOne = `${config.forCol}_${config.account}_twitter_${name}_${new Date().getTime()}.warc`
+  let name = filenamify(tweet)
+  let saveThisOne = `${config.forCol}_${config.account}_${name}_${new Date().getTime()}.warc`
   return {
     type: 'twitter',
     forCol: config.forCol,
@@ -76,6 +76,11 @@ export default class TwitterMonitor extends EventEmitter {
         configs.push(makeArchiveConfig(config, t))
       })
       ipc.send('archive-uri-r', configs)
+    })
+
+    task.on('archiveTimeline',anAccount => {
+      console.log('saving ',anAccount)
+      ipc.send('archive-uri-r', makeArchiveConfig(config,`https://twitter.com/${anAccount}`))
     })
 
     if (config.oneOff) {

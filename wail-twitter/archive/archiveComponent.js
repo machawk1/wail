@@ -88,7 +88,6 @@ export default class ArchiveComponent extends Component {
     console.log('we did mount')
     this.loaded = true
     this.webview = document.getElementById('awv')
-    console.log(this.webview)
     this.webview.addEventListener('did-stop-loading', (e) => {
       console.log('it finished loading')
       if (!this.wbReady) {
@@ -99,7 +98,7 @@ export default class ArchiveComponent extends Component {
     })
 
     this.webview.addEventListener('did-fail-load', (e) => {
-      if (this.archiveQ.length) {
+      if (this.archiveQ.length > 0) {
         let config = this.archiveQ[0]
         e.m = e.errorDescription
         failUseHeritrix(config, e)
@@ -109,7 +108,7 @@ export default class ArchiveComponent extends Component {
       this.wasLoadError = true
     })
 
-    if(process.NODE_ENV === 'DEV') {
+    if(process.NODE_ENV === 'development') {
       this.webview.addEventListener('console-message', (e) => {
         console.log('Guest page logged a message:', e.message)
       })
@@ -148,6 +147,7 @@ export default class ArchiveComponent extends Component {
   }
 
   startArchiving () {
+    this.wasLoadError = false
     let {uri_r} = this.archiveQ[0]
     console.log('archiving', uri_r)
     let webContents = this.webview.getWebContents()

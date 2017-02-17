@@ -15,17 +15,6 @@ export default function validate (values) {
       log('empty')
     }
   }
-  const htErrors = []
-  let hts = values.get('hashtags')
-  if (hts && hts.size > 0) {
-    let swapper = S('')
-    hts.forEach((ht, idx) => {
-      if (swapper.setValue(ht).isEmpty()) {
-        htErrors[ idx ] = 'Cant Have Empty HashTag'
-      }
-      return true
-    })
-  }
 
   if (!values.get('screenName')) {
     errors.screenName = 'Screen Name Required'
@@ -34,8 +23,6 @@ export default function validate (values) {
   if (!values.get('forCol')) {
     errors.forCol = 'Collection Required'
   }
-  if (htErrors.length) {
-    errors.hashtags = htErrors
-  }
+
   return errors
 }

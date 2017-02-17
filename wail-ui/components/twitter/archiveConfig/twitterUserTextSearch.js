@@ -27,9 +27,10 @@ class TwitterUserTextSearch extends Component {
     this.state = {
       page: 1
     }
+  }
 
-    this.cols = Array.from(this.context.store.getState().get('collections').values())
-      .map((col, i) => col.get('colName'))
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return this.state.page !== nextState.page
   }
 
   submit (values) {
@@ -91,7 +92,7 @@ class TwitterUserTextSearch extends Component {
       <div style={{ width, height: '100%' }}>
         <Card style={{ height: '100%' }}>
           <CardTitle title={'Terms In Users Tweets'} />
-          {page === 1 && <UserBasic cols={this.cols} onSubmit={::this.nextPage} />}
+          {page === 1 && <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.nextPage} />}
           {page === 2 && <SearchTerms previousPage={::this.previousPage} onSubmit={::this.submit} />}
         </Card>
       </div>

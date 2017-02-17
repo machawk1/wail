@@ -2,9 +2,8 @@ import React, { Component, PropTypes } from 'react'
 import { CardActions } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import { Field, reduxForm } from 'redux-form/immutable'
-import { TextField, AutoComplete } from 'redux-form-material-ui'
+import { TextField, AutoComplete, SelectField } from 'redux-form-material-ui'
 import fuzzyFilter from '../../../../util/fuzzyFilter'
-import timeVales from '../timeValues'
 import validate from './validate'
 
 const formConfig = {
@@ -15,26 +14,25 @@ const formConfig = {
 
 class UserBasic extends Component {
   static propTypes = {
-    cols: PropTypes.array.isRequired
+    cols: PropTypes.array.isRequired,
+    times: PropTypes.array.isRequired,
   }
 
   render () {
-    const {handleSubmit, previousPage, cols} = this.props
+    const {handleSubmit, pristine, reset, submitting, invalid, cols,times} = this.props
     return (
-      <form onSubmit={handleSubmit} style={{marginLeft: 16}}>
+      <form onSubmit={handleSubmit} style={{marginLeft: 16, height: '100%'}}>
         <div style={{height: 72}}>
           <Field
-            floatingLabelText='How Long To Monitor'
+            hintText='How Long To Monitor'
             name='length'
-            component={AutoComplete}
-            dataSource={timeVales.times}
-            menuProps={{desktop: true, maxHeight: 100}}
-            openOnFocus
-            maxSearchResults={10}
-            filter={fuzzyFilter}
-          />
+            component={SelectField}
+            maxHeight={200}
+          >
+            {times}
+          </Field>
         </div>
-        <div style={{height: 72}}>
+        <div style={{height: 75}}>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
@@ -42,7 +40,7 @@ class UserBasic extends Component {
             component={TextField}
           />
         </div>
-        <div style={{height: 72}}>
+        <div style={{height: 75}}>
           <Field
             floatingLabelText='For Collection'
             name='forCol'
@@ -54,9 +52,11 @@ class UserBasic extends Component {
             filter={fuzzyFilter}
           />
         </div>
-        <CardActions>
-          <FlatButton label='Next' type='submit' primary />
-        </CardActions>
+        <div style={{height: 75}}>
+          <CardActions>
+            <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
+          </CardActions>
+        </div>
       </form>
     )
   }

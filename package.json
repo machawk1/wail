@@ -70,6 +70,8 @@
     "extract-zip": "^1.6.0",
     "fbjs": "^0.8.9",
     "file-exists": "^3.0.1",
+    "filenamify": "^2.0.0",
+    "filenamify-url": "^1.0.0",
     "find-process": "^1.0.5",
     "flexboxgrid": "^6.3.1",
     "fs-extra": "1.0.0",

@@ -27,8 +27,8 @@ const hashtagRender = ({ fields, meta: { touched, error } }) => {
           labelPosition={'before'}
         />
       </Flex>
-      <div style={{ overflowY: 'scroll', maxHeight: 'calc(100% - 300px)' }}>
-        <List style={{ height: 300, maxHeight: 300, overFlowY: 'auto' }}>
+      <div style={{ overflowY: 'auto', maxHeight: 'calc(100% - 300px)' }}>
+        <List style={{ height: 300, maxHeight: 300 }}>
           {
             fields.map((ht, index) =>
               <ListItem

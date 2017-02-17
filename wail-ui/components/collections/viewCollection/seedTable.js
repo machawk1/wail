@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react'
 import Immutable from 'immutable'
 import { shell, remote } from 'electron'
+import {joinStrings} from 'joinable'
 import FlatButton from 'material-ui/RaisedButton'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
 import { push } from 'react-router-redux'
@@ -64,7 +65,11 @@ export default class SeedTable extends Component {
     } else {
       for (; i < len; ++i) {
         let seed = seeds.get(i)
-        let url = seed.get('url')
+        let url = seed.get('url'), conf = 'Not Archived'
+
+        if (this.props.seedConfig[url].size > 0) {
+          conf = joinStrings(...this.props.seedConfig[url])
+        }
         trs.push(<TableRow key={`${i}-${url}`}>
           <TableRowColumn key={`${i}-${url}-seed-url`} style={{paddingLeft: 10, paddingRight: 0, width: 300}}>
             {url}
@@ -75,8 +80,11 @@ export default class SeedTable extends Component {
           <TableRowColumn key={`${i}-${url}-lastArchived`} style={{width: 130, paddingRight: 20}}>
             {seed.get('lastUpdated').format('MMM DD, YYYY h:mma')}
           </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-size`} style={{width: 55}}>
+          <TableRowColumn key={`${i}-${url}-size`} style={{width: 55, paddingRight: 0}}>
             {seed.get('mementos')}
+          </TableRowColumn>
+          <TableRowColumn key={`${i}-${url}-conf`} style={{ paddingRight: 0}}>
+            {conf}
           </TableRowColumn>
           <TableRowColumn key={`${i}-${url}-viewInWB`}>
             <FlatButton label={'View In Wayback'} onTouchTap={() => openInWb(url, viewingCol)}/>
@@ -108,14 +116,7 @@ export default class SeedTable extends Component {
                   <TableHeaderColumn style={{width: 100}}>Added</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 100}}>Last Archived</TableHeaderColumn>
                   <TableHeaderColumn style={{width: 55}}>Mementos</TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton
-                      primary
-                      id='showArchiveConf'
-                      label={'Show Archive Configurations'}
-                      onTouchTap={::this.viewArchiveConfig}
-                    />
-                  </TableHeaderColumn>
+                  <TableHeaderColumn>Archive Configuration</TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody

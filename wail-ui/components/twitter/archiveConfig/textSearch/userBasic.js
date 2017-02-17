@@ -30,7 +30,6 @@ class UserBasic extends Component {
             dataSource={timeVales.times}
             menuProps={{ desktop: true, maxHeight: 110 }}
             openOnFocus
-            maxSearchResults={10}
             filter={fuzzyFilter}
           />
         </div>
