@@ -12,6 +12,7 @@ if (!window.__archive) {
       if (window.location.href !== 'about:blank') {
         // console.log(this.url)
         let wc = this.remote.getCurrentWebContents()
+        wc.removeAllListeners('did-stop-loading')
         wc.on('did-stop-loading', () => {
           this.log('did-stop-loading')
           clearTimeout(this.stopLoadingTimer)
