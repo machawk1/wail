@@ -15,7 +15,9 @@ const windowCloseHandler = store => e => {
     if (shouldClose === 0) {
       launchWebUI()
     }
+    e.preventDefault()
     e.returnValue = false
+    return false
   }
 }
 
