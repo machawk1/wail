@@ -51,8 +51,8 @@ const transformSeeds = seedDocs =>
 const joinColsSeeds = (cols, cSeeds) => {
   let colSeeds = transformSeeds(cSeeds)
   return cols.map(col => {
-    if (colSeeds[col.colName]) {
-      col.seeds = colSeeds[col.colName]
+    if (colSeeds[ col.colName ]) {
+      col.seeds = colSeeds[ col.colName ]
     } else {
       col.seeds = []
     }
@@ -85,7 +85,18 @@ const firstTimeMoveCollectionsPath = () => {
   }
 }
 
-const checkCollExistence = () => new Promise((resolve, reject) => {
+const eachColChecker = col => new Promise((resolve, reject) => {
+  fs.access(col.colpath, (err) => {
+    if (err) {
+      console.log(col.colpath, err)
+      resolve({ exists: false, col })
+    } else {
+      resolve({ exists: true, col })
+    }
+  })
+})
+
+const checkCollDirExistence = () => new Promise((resolve, reject) => {
   fs.stat(settings.get('warcs'), (err, stats) => {
     if (err) {
       resolve(false)
@@ -100,6 +111,7 @@ const checkCollExistence = () => new Promise((resolve, reject) => {
     }
   })
 })
+
 
 const missingBackUpPath = () => {
   switch (process.platform) {
@@ -140,8 +152,8 @@ export default class ArchiveManager {
     return new Promise((resolve, reject) => {
       fs.copy(oa, `${oa}.${backUpTime}.bk`, (err1) => {
         fs.copy(oas, `${oas}.${backUpTime}.bk`, (err) => {
-          this.collections.remove({}, {multi: true}, (err2, rmc) => {
-            this.colSeeds.remove({}, {multi: true}, (err3, rmc2) => {
+          this.collections.remove({}, { multi: true }, (err2, rmc) => {
+            this.colSeeds.remove({}, { multi: true }, (err3, rmc2) => {
               resolve(rmc + rmc)
             })
           })
@@ -169,7 +181,7 @@ export default class ArchiveManager {
         indexes: path.join(colpath, 'indexes'),
         colName: 'default',
         numArchives: 0,
-        metadata: {title: 'Default', description: 'Default Collection'},
+        metadata: { title: 'Default', description: 'Default Collection' },
         size: '0 B',
         created,
         lastUpdated: created,
@@ -180,7 +192,7 @@ export default class ArchiveManager {
           reject(err)
         } else {
           doc.seeds = []
-          resolve([doc])
+          resolve([ doc ])
         }
       })
     })
@@ -215,9 +227,12 @@ export default class ArchiveManager {
                     reject(errCreateD)
                   })
               } else {
-                return checkCollExistence().then(exists => {
+                return checkCollDirExistence().then(exists => {
                   if (exists) {
                     resolve(docs)
+                    // Promise.map(cols, eachColChecker)
+                    //   .then((ret) => { resolve({wasError: false,ret})})
+                    //   .catch((err3) => { resolve({wasError: true, err:err3})})
                   } else {
                     return this._backUpDbs().then(() =>
                       this.createDefaultCol().then(defaultCol =>
@@ -253,11 +268,11 @@ export default class ArchiveManager {
   }
 
   addCrawlInfo (confDetails) {
-    let {forCol, lastUpdated, seed} = confDetails
-    let colSeedIdQ = {_id: `${forCol}-${seed.url}`}
-    let updateWho = {colName: forCol}
+    let { forCol, lastUpdated, seed } = confDetails
+    let colSeedIdQ = { _id: `${forCol}-${seed.url}` }
+    let updateWho = { colName: forCol }
     console.log('addCrawlInfo ArchiveManager ', confDetails)
-    let theUpdateCol = {$set: {lastUpdated}}
+    let theUpdateCol = { $set: { lastUpdated } }
     return new Promise((resolve, reject) =>
       updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts).then((updatedCol) =>
         findOne(this.colSeeds, colSeedIdQ)
@@ -271,15 +286,15 @@ export default class ArchiveManager {
             if (foundSeedChecker(colSeed)) {
               console.log('the seed was present')
               theUpdateColSeed = {
-                $set: {lastUpdated}
+                $set: { lastUpdated }
               }
               if (!colSeed.jobIds.includes(seed.jobId)) {
-                theUpdateColSeed.$push = {jobIds: seed.jobId}
+                theUpdateColSeed.$push = { jobIds: seed.jobId }
               }
               return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
                 .then((colSeeds) => {
                   console.log(colSeeds)
-                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                   console.log(updatedCol)
                   resolve({
                     colName: updatedCol.colName,
@@ -305,7 +320,7 @@ export default class ArchiveManager {
               return inserAndFindAll(this.colSeeds, seed, findA)
                 .then((colSeeds) => {
                   console.log(`the new seeds for col ${forCol}`, colSeeds)
-                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                  updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                   console.log(updatedCol)
                   resolve({
                     colName: updatedCol.colName,
@@ -344,16 +359,16 @@ export default class ArchiveManager {
     let opts = {
       cwd: settings.get('warcs')
     }
-    let exec = S(settings.get('pywb.addMetadata')).template({col, metadata: join(...mdata)}).s
+    let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: join(...mdata) }).s
     return new Promise((resolve, reject) =>
       execute(exec, opts)
-        .then(({stdout, stderr}) => {
+        .then(({ stdout, stderr }) => {
           console.log('added metadata to collection', col)
           console.log('stdout', stdout)
           console.log('stderr', stderr)
           return resolve()
         })
-        .catch(({error, stdout, stderr}) => {
+        .catch(({ error, stdout, stderr }) => {
           console.error(stderr)
           return reject(error)
         })
@@ -362,13 +377,13 @@ export default class ArchiveManager {
 
   updateMetadata (update) {
     console.log('updateMetaData', update)
-    let {forCol, mdata} = update
+    let { forCol, mdata } = update
     console.log('updateMetaData', forCol, mdata)
     let opts = {
       cwd: settings.get('warcs')
     }
     return new Promise((resolve, reject) => {
-      let exec = S(settings.get('pywb.addMetadata')).template({col: forCol, metadata: update.mdataString}).s
+      let exec = S(settings.get('pywb.addMetadata')).template({ col: forCol, metadata: update.mdataString }).s
       console.log(exec)
       cp.exec(exec, opts, (error, stdout, stderr) => {
         console.log(stdout, stderr)
@@ -376,15 +391,15 @@ export default class ArchiveManager {
           console.error(stderr)
           return reject(error)
         }
-        this.collections.findOne({colName: forCol}, {metadata: 1, _id: 0}, (errFind, doc) => {
+        this.collections.findOne({ colName: forCol }, { metadata: 1, _id: 0 }, (errFind, doc) => {
           if (errFind) {
             console.log('errorfind', errFind)
             return reject(errFind)
           }
-          _.toPairs(update.mdata).forEach(([mk, mv]) => {
-            doc.metadata[mk] = mv
+          _.toPairs(update.mdata).forEach(([ mk, mv ]) => {
+            doc.metadata[ mk ] = mv
           })
-          this.collections.update({colName: forCol}, {$set: {metadata: doc.metadata}}, (errUpdate, numUpdated) => {
+          this.collections.update({ colName: forCol }, { $set: { metadata: doc.metadata } }, (errUpdate, numUpdated) => {
             if (errUpdate) {
               console.log('errorUpdate', errFind)
               return reject(errUpdate)
@@ -402,7 +417,7 @@ export default class ArchiveManager {
       cwd: settings.get('warcs')
     }
     return new Promise((resolve, reject) => {
-      let exec = S(settings.get('pywb.addMetadata')).template({col, metadata: join(...mdata)}).s
+      let exec = S(settings.get('pywb.addMetadata')).template({ col, metadata: join(...mdata) }).s
       cp.exec(exec, opts, (error, stdout, stderr) => {
         if (error) {
           console.error(stderr)
@@ -411,14 +426,14 @@ export default class ArchiveManager {
         let metadata = {}
         let swapper = S('')
         mdata.forEach(m => {
-          let [mk, mv] = m.split('=')
-          metadata[mk] = swapper.setValue(mv).replaceAll('"', '').s
+          let [ mk, mv ] = m.split('=')
+          metadata[ mk ] = swapper.setValue(mv).replaceAll('"', '').s
         })
         console.log('added metadata to collection', col)
         console.log('stdout', stdout)
         console.log('stderr', stderr)
         // { $push: { metadata: { $each: mdata } } }
-        this.collections.update({colName: col}, {$set: {metadata: {...metadata}}}, {}, (err, numUpdated) => {
+        this.collections.update({ colName: col }, { $set: { metadata: { ...metadata } } }, {}, (err, numUpdated) => {
           if (err) {
             return reject(err)
           } else {
@@ -432,7 +447,7 @@ export default class ArchiveManager {
   getColSize (col) {
     return new Promise((resolve, reject) => {
       let size = 0
-      fs.walk(S(settings.get('collections.colWarcs')).template({col}).s)
+      fs.walk(S(settings.get('collections.colWarcs')).template({ col }).s)
         .pipe(through2.obj(function (item, enc, next) {
           if (!item.stats.isDirectory()) this.push(item)
           next()
@@ -448,9 +463,9 @@ export default class ArchiveManager {
 
   addMultiWarcToCol (multi) {
     console.log('adding multi seeds to col', multi)
-    let {lastUpdated, col, seedWarcs} = multi
-    let opts = {cwd: settings.get('warcs')}
-    let updateWho = {colName: col}
+    let { lastUpdated, col, seedWarcs } = multi
+    let opts = { cwd: settings.get('warcs') }
+    let updateWho = { colName: col }
     let seeds = []
     let ws = []
     seedWarcs.forEach(sw => {
@@ -458,24 +473,24 @@ export default class ArchiveManager {
       ws.push(sw.warcs)
     })
     const addMulti = wpath => {
-      let exec = S(settings.get('pywb.addWarcsToCol')).template({col, warcs: wpath}).s
+      let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs: wpath }).s
       console.log('adding the warc at path to col', wpath)
       return execute(exec, opts)
     }
     const updateSeedMulti = seed => {
       console.log('updating seed', seed)
-      let colSeedIdQ = {_id: `${col}-${seed.url}`}
+      let colSeedIdQ = { _id: `${col}-${seed.url}` }
       return findOne(this.colSeeds, colSeedIdQ)
         .then(colSeed => {
           let theUpdateColSeed
           if (foundSeedChecker(colSeed)) {
             console.log('it existed')
             theUpdateColSeed = {
-              $set: {lastUpdated},
-              $inc: {mementos: 1}
+              $set: { lastUpdated },
+              $inc: { mementos: 1 }
             }
             if (!colSeed.jobIds.includes(seed.jobId)) {
-              theUpdateColSeed.$push = {jobIds: seed.jobId}
+              theUpdateColSeed.$push = { jobIds: seed.jobId }
             }
             return updateSingle(this.collections, colSeedIdQ, theUpdateColSeed, updateSingleOpts)
           } else {
@@ -491,15 +506,15 @@ export default class ArchiveManager {
       }
     }
     return new Promise((resolve, reject) =>
-      Promise.map(ws, addMulti, {concurrency: 1})
+      Promise.map(ws, addMulti, { concurrency: 1 })
         .then(allAdded => this.getColSize(col)
           .then(size => {
-            let theUpdateCol = {$inc: {numArchives: ws.length}, $set: {size, lastUpdated}}
+            let theUpdateCol = { $inc: { numArchives: ws.length }, $set: { size, lastUpdated } }
             return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
-              .then((updatedCol) => Promise.map(seeds, updateSeedMulti, {concurrency: 1})
+              .then((updatedCol) => Promise.map(seeds, updateSeedMulti, { concurrency: 1 })
                 .then(allSeedUpdated => find(this.collections, findA)
                   .then(allColSeeds => {
-                    updatedCol.seeds = cleanSeeds(Array.isArray(allColSeeds) ? allColSeeds : [allColSeeds])
+                    updatedCol.seeds = cleanSeeds(Array.isArray(allColSeeds) ? allColSeeds : [ allColSeeds ])
                     console.log(updatedCol)
                     resolve({
                       colName: updatedCol.colName,
@@ -538,19 +553,19 @@ export default class ArchiveManager {
     )
   }
 
-  addWarcsFromWCreate ({col, warcs, lastUpdated, seed}) {
+  addWarcsFromWCreate ({ col, warcs, lastUpdated, seed }) {
     console.log('addfs warcs to col', col, warcs, lastUpdated, seed)
     let opts = {
       cwd: settings.get('warcs')
     }
-    let exec = S(settings.get('pywb.reindexCol')).template({col}).s
-    let updateWho = {colName: col}
-    let colSeedIdQ = {_id: `${col}-${seed.url}`}
+    let exec = S(settings.get('pywb.reindexCol')).template({ col }).s
+    let updateWho = { colName: col }
+    let colSeedIdQ = { _id: `${col}-${seed.url}` }
     return new Promise((resolve, reject) =>
-      execute(exec, opts).then(({stdout, stderr}) =>
+      execute(exec, opts).then(({ stdout, stderr }) =>
         this.getColSize(col).then(size => {
           console.log(stdout, stderr)
-          let theUpdateCol = {$inc: {numArchives: 1}, $set: {size, lastUpdated}}
+          let theUpdateCol = { $inc: { numArchives: 1 }, $set: { size, lastUpdated } }
           console.log(theUpdateCol)
           return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts).then((updatedCol) =>
             findOne(this.colSeeds, colSeedIdQ).then(colSeed => {
@@ -562,16 +577,16 @@ export default class ArchiveManager {
               let theUpdateColSeed
               if (foundSeedChecker(colSeed)) {
                 theUpdateColSeed = {
-                  $set: {lastUpdated},
-                  $inc: {mementos: 1}
+                  $set: { lastUpdated },
+                  $inc: { mementos: 1 }
                 }
                 if (!colSeed.jobIds.includes(seed.jobId)) {
-                  theUpdateColSeed.$push = {jobIds: seed.jobId}
+                  theUpdateColSeed.$push = { jobIds: seed.jobId }
                 }
                 return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
                   .then((colSeeds) => {
                     console.log(colSeeds)
-                    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                     console.log(updatedCol)
                     resolve({
                       colName: updatedCol.colName,
@@ -595,11 +610,11 @@ export default class ArchiveManager {
                 console.log('the seed was not present')
                 seed._id = colSeedIdQ._id
                 seed.mementos = 1
-                seed.jobIds = [seed.jobId]
+                seed.jobIds = [ seed.jobId ]
                 return inserAndFindAll(this.colSeeds, seed, findA)
                   .then((colSeeds) => {
                     console.log(`the new seeds for col ${col}`, colSeeds)
-                    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                     console.log(updatedCol)
                     resolve({
                       colName: updatedCol.colName,
@@ -635,19 +650,19 @@ export default class ArchiveManager {
         })
       )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
   }
 
-  addWarcsFromFSToCol ({col, warcs, lastUpdated, seed}) {
+  addWarcsFromFSToCol ({ col, warcs, lastUpdated, seed }) {
     console.log('addfs warcs to col', col, warcs, lastUpdated, seed)
     let opts = {
       cwd: settings.get('warcs')
     }
-    let exec = S(settings.get('pywb.addWarcsToCol')).template({col, warcs}).s
-    let updateWho = {colName: col}
+    let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
+    let updateWho = { colName: col }
     const countAdded = (stdout, stderr) => {
       let c1 = ((stdout || ' ').match(/INFO/g) || []).length
       let c2 = ((stderr || ' ').match(/INFO/g) || []).length
@@ -657,12 +672,12 @@ export default class ArchiveManager {
       console.log('stderr', stderr)
       return count
     }
-    let colSeedIdQ = {_id: `${col}-${seed.url}`}
+    let colSeedIdQ = { _id: `${col}-${seed.url}` }
     return new Promise((resolve, reject) =>
       execute(exec, opts, countAdded)
         .then(count =>
           this.getColSize(col).then(size => {
-            let theUpdateCol = {$inc: {numArchives: count}, $set: {size, lastUpdated}}
+            let theUpdateCol = { $inc: { numArchives: count }, $set: { size, lastUpdated } }
             return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
               .then((updatedCol) =>
                 findOne(this.colSeeds, colSeedIdQ)
@@ -675,16 +690,16 @@ export default class ArchiveManager {
                     let theUpdateColSeed
                     if (foundSeedChecker(colSeed)) {
                       theUpdateColSeed = {
-                        $set: {lastUpdated},
-                        $inc: {mementos: 1}
+                        $set: { lastUpdated },
+                        $inc: { mementos: 1 }
                       }
                       if (!colSeed.jobIds.includes(seed.jobId)) {
-                        theUpdateColSeed.$push = {jobIds: seed.jobId}
+                        theUpdateColSeed.$push = { jobIds: seed.jobId }
                       }
                       return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
                         .then((colSeeds) => {
                           console.log(colSeeds)
-                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                           console.log(updatedCol)
                           resolve({
                             colName: updatedCol.colName,
@@ -707,11 +722,11 @@ export default class ArchiveManager {
                     } else {
                       console.log('the seed was not present')
                       seed._id = colSeedIdQ._id
-                      seed.jobIds = [seed.jobId]
+                      seed.jobIds = [ seed.jobId ]
                       return inserAndFindAll(this.colSeeds, seed, findA)
                         .then((colSeeds) => {
                           console.log(`the new seeds for col ${col}`, colSeeds)
-                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                           console.log(updatedCol)
                           resolve({
                             colName: updatedCol.colName,
@@ -747,17 +762,17 @@ export default class ArchiveManager {
           })
         )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
   }
 
-  addWarcsToCol ({col, warcs, lastUpdated, seed}) {
+  addWarcsToCol ({ col, warcs, lastUpdated, seed }) {
     console.log('add warcs to col', col, warcs, lastUpdated, seed)
-    let opts = { cwd: settings.get('warcs')}
-    let exec = S(settings.get('pywb.addWarcsToCol')).template({col, warcs}).s
-    let updateWho = {colName: col}
+    let opts = { cwd: settings.get('warcs') }
+    let exec = S(settings.get('pywb.addWarcsToCol')).template({ col, warcs }).s
+    let updateWho = { colName: col }
     const countAdded = (stdout, stderr) => {
       let c1 = ((stdout || ' ').match(/INFO/g) || []).length
       let c2 = ((stderr || ' ').match(/INFO/g) || []).length
@@ -767,12 +782,12 @@ export default class ArchiveManager {
       console.log('stderr', stderr)
       return count
     }
-    let colSeedIdQ = {_id: `${col}-${seed.url}`}
+    let colSeedIdQ = { _id: `${col}-${seed.url}` }
     return new Promise((resolve, reject) =>
       execute(exec, opts, countAdded)
         .then(count =>
           this.getColSize(col).then(size => {
-            let theUpdateCol = {$inc: {numArchives: count}, $set: {size, lastUpdated}}
+            let theUpdateCol = { $inc: { numArchives: count }, $set: { size, lastUpdated } }
             return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
               .then((updatedCol) =>
                 findOne(this.colSeeds, colSeedIdQ)
@@ -785,16 +800,16 @@ export default class ArchiveManager {
                     let theUpdateColSeed
                     if (foundSeedChecker(colSeed)) {
                       theUpdateColSeed = {
-                        $set: {lastUpdated},
-                        $inc: {mementos: 1}
+                        $set: { lastUpdated },
+                        $inc: { mementos: 1 }
                       }
                       if (!colSeed.jobIds.includes(seed.jobId)) {
-                        theUpdateColSeed.$push = {jobIds: seed.jobId}
+                        theUpdateColSeed.$push = { jobIds: seed.jobId }
                       }
                       return updateAndFindAll(this.colSeeds, colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
                         .then((colSeeds) => {
                           console.log(colSeeds)
-                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+                          updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [ colSeeds ])
                           console.log(updatedCol)
                           resolve({
                             colName: updatedCol.colName,
@@ -835,7 +850,7 @@ export default class ArchiveManager {
           })
         )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
@@ -846,8 +861,8 @@ export default class ArchiveManager {
       let opts = {
         clobber: true
       }
-      let colTemplate = S(settings.get('collections.colTemplate')).template({col})
-      let colStatic = S(settings.get('collections.colStatic')).template({col})
+      let colTemplate = S(settings.get('collections.colTemplate')).template({ col })
+      let colStatic = S(settings.get('collections.colStatic')).template({ col })
       fs.copy(settings.get('collections.templateDir'), colTemplate, opts, (errT) => {
         if (errT) {
           console.error('moving templates failed for col', col, errT)
@@ -879,12 +894,12 @@ export default class ArchiveManager {
     let opts = {
       cwd: settings.get('warcs')
     }
-    let {col, metadata} = ncol
-    let exec = S(settings.get('pywb.newCollection')).template({col}).s
+    let { col, metadata } = ncol
+    let exec = S(settings.get('pywb.newCollection')).template({ col }).s
 
     return new Promise((resolve, reject) =>
       execute(exec, opts)
-        .then(({stdout, stderr}) => {
+        .then(({ stdout, stderr }) => {
           console.log('created collection', stderr, stdout)
           // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
           let colpath = path.join(settings.get('warcs'), 'collections', col)
@@ -910,7 +925,7 @@ export default class ArchiveManager {
             })
           })
         })
-        .catch(({error, stdout, stderr}) => {
+        .catch(({ error, stdout, stderr }) => {
           console.error(stderr, error, stdout)
           reject(error)
         })
