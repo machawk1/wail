@@ -11,50 +11,20 @@ const fs = require('fs-extra')
 const DropBox = require('dropbox')
 const prettyBytes = require('pretty-bytes')
 const through2 = require('through2')
+const join = require('joinable')
 const streamSort = require('sort-stream2')
 const Twit = require('twit')
 const jsSearch = require('js-search')
 const Rx = require('rxjs/Rx')
 const yaml = require('js-yaml')
+const ElectronSettings = require('electron-settings')
 const normalizeUrl = require('normalize-url')
+
+S.TMPL_OPEN = '{'
+S.TMPL_CLOSE = '}'
 
 Promise.promisifyAll(fs)
 Promise.promisifyAll(DB.prototype)
-
-Set.prototype.isSuperset = function (subset) {
-  for (var elem of subset) {
-    if (!this.has(elem)) {
-      return false;
-    }
-  }
-  return true;
-}
-
-Set.prototype.union = function (setB) {
-  var union = new Set(this);
-  for (var elem of setB) {
-    union.add(elem);
-  }
-  return union;
-}
-
-Set.prototype.intersection = function (setB) {
-  var intersection = new Set();
-  for (var elem of setB) {
-    if (this.has(elem)) {
-      intersection.add(elem);
-    }
-  }
-  return intersection;
-}
-
-Set.prototype.difference = function (setB) {
-  var difference = new Set(this);
-  for (var elem of setB) {
-    difference.delete(elem);
-  }
-  return difference;
-}
 
 // const autoI = cp.fork('/home/john/my-fork-wail/wail-core/autoIndexer/autoIndexer.js')
 //
@@ -377,6 +347,70 @@ const getYamlOrWriteIfAbsent = async (yamlPath, obj) => {
   return yamlData
 }
 
+const settings = new ElectronSettings({configDirPath: '/home/john/my-fork-wail/wail-config/wail-settings'})
+class PyWb {
+  // static defaultExeArgs = {cwd: settings.get('warcs')}
+
+  static addMetadata (templateArgs, exeArgs = PyWb.defaultExeArgs) {
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.addMetadata')).template(templateArgs).s
+      cp.exec(exec, exeArgs, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        } else {
+          resolve({stdout, stderr})
+        }
+      })
+    })
+  }
+
+  static reindexCol (templateArgs, exeArgs = PyWb.defaultExeArgs) {
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.reindexCol')).template(templateArgs).s
+      cp.exec(exec, exeArgs, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        } else {
+          resolve({stdout, stderr})
+        }
+      })
+    })
+  }
+
+  static addWarcsToCol (templateArgs, exeArgs = PyWb.defaultExeArgs) {
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.addWarcsToCol')).template(templateArgs).s
+      cp.exec(exec, exeArgs, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        } else {
+          let c1 = ((stdout || ' ').match(/INFO/g) || []).length
+          let c2 = ((stderr || ' ').match(/INFO/g) || []).length
+          resolve(c1 === 0 ? c2 : c1)
+        }
+      })
+    })
+  }
+
+  static createCol (templateArgs, exeArgs = PyWb.defaultExeArgs) {
+    return new Promise((resolve, reject) => {
+      let exec = S(settings.get('pywb.newCollection')).template(templateArgs).s
+      cp.exec(exec, exeArgs, (error, stdout, stderr) => {
+        if (error) {
+          console.error(stderr)
+          return reject(error)
+        } else {
+          resolve({stdout, stderr})
+        }
+      })
+    })
+  }
+
+}
+
 class DataStoreError extends Error {
   constructor (oError, where) {
     super(`DataStoreError[${where}]`)
@@ -475,13 +509,61 @@ class DataStore {
 
   }
 
-  update (updateWho, theUpdate, opts = {}) {
+  nrUpdate (updateWho, theUpdate, opts = {}) {
     return new Promise((resolve, reject) => {
       this.db.update(updateWho, theUpdate, opts, (err, numAffected, affectedDocuments, upsert) => {
         if (err) {
           resolve({wasError: true, value: err})
         } else {
           resolve({wasError: false, value: {numAffected, affectedDocuments, upsert}})
+        }
+      })
+    })
+  }
+
+  update (updateWho, theUpdate, opts = {}) {
+    return new Promise((resolve, reject) => {
+      this.db.update(updateWho, theUpdate, opts, (err, numAffected, affectedDocuments, upsert) => {
+        if (err) {
+          reject(err)
+        } else {
+          resolve({numAffected, affectedDocuments, upsert})
+        }
+      })
+    })
+  }
+
+  updateFindAll (updateWho, theUpdate, upOpts, findQ) {
+    return new Promise((resolve, reject) => {
+      this.db.update(updateWho, theUpdate, upOpts, (err, numAffected, affectedDocuments, upsert) => {
+        if (err) {
+          reject(err)
+        } else {
+          this.db.find(findQ, (errF, docs) => {
+            if (errF) {
+              reject(errF)
+            } else {
+              resolve(docs)
+            }
+          })
+        }
+      })
+    })
+  }
+
+  insertFindAll (insertMe, findQ) {
+    return new Promise((resolve, reject) => {
+      this.db.insert(insertMe, (err, docs) => {
+        if (err) {
+          reject(err)
+        } else {
+          this.db.find(findQ, (errF, all) => {
+            if (errF) {
+              reject(errF)
+            } else {
+              resolve(all)
+            }
+          })
         }
       })
     })
@@ -735,175 +817,46 @@ const execute = (exec, opts) => new Promise((resolve, reject) => {
   resolve()
 })
 
+const updateSingleOpts = {
+  returnUpdatedDocs: true,
+  multi: false
+}
+
 class ColSeedsDb {
-  constructor (colOpts, seedOpts) {
-    this._collections = new DataStore(colOpts)
-    this._colSeeds = new DataStore(seedOpts)
+
+  static foundSeedChecker (colSeeds) {
+    if (colSeeds) {
+      if (Array.isArray(colSeeds)) {
+        return colSeeds.length > 0
+      } else {
+        return true
+      }
+    } else {
+      return false
+    }
   }
 
-  async _handleTrackedNotExisting (cols, seeds) {
-    const tempDb = new DataStore({
-      autoload: true,
-      filename: `${new Date().getTime()}.trackedCollectionsNoLongerExisting.db`
+  static getColSize (pathToWarcs) {
+    if (_.isObject(pathToWarcs)) {
+      pathToWarcs = S(settings.get('collections.colWarcs')).template(pathToWarcs).s
+    }
+    return new Promise((resolve, reject) => {
+      let size = 0
+      fs.walk(pathToWarcs)
+        .pipe(through2.obj(function (item, enc, next) {
+          if (!item.stats.isDirectory()) this.push(item)
+          next()
+        }))
+        .on('data', item => {
+          size += item.stats.size
+        })
+        .on('end', () => {
+          resolve(prettyBytes(size))
+        })
     })
-    const insertGood = await tempDb.insert(cols)
-    if (!insertGood.wasError) {
-      const colNamesWhoNoExist = []
-      const removeFromExisting = cols.map(col => {
-        colNamesWhoNoExist.push(col.name)
-        return {_id: col._id}
-      })
-      this._collections.remove(removeFromExisting, {multi: true})
-    }
-    return
   }
 
-  async _handleAllTrackedNotExisting (cols, seeds) {
-    const tempDb = new DataStore({
-      autoload: true,
-      filename: `${new Date().getTime()}.trackedCollectionsNoLongerExisting.db`
-    })
-    const insertGood = await tempDb.insert(cols)
-    if (!insertGood.wasError) {
-      const colNamesWhoNoExist = []
-      const removeFromExisting = cols.map(col => {
-        colNamesWhoNoExist.push(col.name)
-        return {_id: col._id}
-      })
-      this._collections.remove(removeFromExisting, {multi: true})
-    }
-    return
-  }
-
-  async _loadDbsFallBackHard () {
-
-  }
-
-  async _loadColsDb () {
-    const result = {wasError: false, backupFail: false, fatal: false}
-    let colLoadFail = false
-    try {
-      await this._collections.loadDb()
-    } catch (err) {
-      colLoadFail = true
-      result.wasError = true
-    }
-    if (colLoadFail) {
-      try {
-        result.colBackup = await this._collections.backUpHardClearDb()
-      } catch (errBackUp) {
-        result.backupFail = true
-      }
-      try {
-        await this._collections.loadDb()
-      } catch (err) {
-        result.fatal = true
-      }
-    }
-    return result
-  }
-
-  async _loadSeedsDb () {
-    const result = {wasError: false, backupFail: false, fatal: false}
-    let colLoadFail = false
-    try {
-      await this._colSeeds.loadDb()
-    } catch (err) {
-      colLoadFail = true
-      result.wasError = true
-    }
-    if (colLoadFail) {
-      try {
-        result.seedsBackup = await this._colSeeds.backUpHardClearDb()
-      } catch (errBackUp) {
-        result.backupFail = true
-      }
-      try {
-        await this._colSeeds.loadDb()
-      } catch (err) {
-        result.fatal = true
-      }
-    }
-    return result
-  }
-
-  async _loadDbsQuite () {
-    const result = {hadToBackup: false}
-    let colLoadFail = false, seedsLoadFail = false
-    try {
-      await this._collections.loadDb()
-    } catch (err) {
-      colLoadFail = true
-
-    }
-    if (colLoadFail) {
-      try {
-        await this._colSeeds.backUpHardClearDb()
-      } catch (errBackUp) {
-        result.backupFail = true
-      }
-      await this._colSeeds.loadDb()
-    }
-
-    try {
-      await this._colSeeds.loadDb()
-    } catch (err) {
-      seedsLoadFail = true
-    }
-    if (seedsLoadFail) {
-      try {
-        await this._colSeeds.backUpHardClearDb()
-      } catch (errBackUp) {
-        result.backupFail = true
-      }
-      await this._colSeeds.loadDb()
-    }
-    return result
-  }
-
-  async _handleColDirNoExistence (errExist) {
-    if (errExist.didNotExist === 'warcs') {
-      // probably the first time but check
-      await this._loadDbsQuite()
-      if (!getCols.wasError && !getColSeeds.wasError) {
-        let cols = getCols.value, seeds = getColSeeds.value
-        if (cols.length === 0 && seeds.length === 0) {
-          // this is the first time for all intents and purposes
-          let defaultCol
-          try {
-            defaultCol = await this.createDefaultCol()
-          } catch (errorCreateDefault) {
-            throw errorCreateDefault
-          }
-          return defaultCol
-        } else {
-          let seedsBackup = await this._colSeeds.backUp()
-          let colsBackup = await this._collections.backUp()
-        }
-      }
-    } else if (errExist.didNotExist === 'collections') {
-
-    }
-
-    /*
-     if (getCols.value.length !== 0 && colSeeds) {
-     // someone deleted WAIL_ManagedCollections
-
-     } else {
-     // this is the first time WAIL is ran
-     let defaultCol = await this.createDefaultCol()
-
-     if (!createDefault.wasError) {
-     await moveStartingCol()
-     return createDefault.value
-     } else {
-     throw createDefault.value
-     }
-     }
-     */
-  }
-
-  _ensureColDirs (colPath, which) {
+  static ensureColDirs (colPath, which) {
     return new Promise((resolve, reject) => {
       if (which === 'both') {
         fs.ensureDir(path.join(colPath, 'archive'), errA => {
@@ -939,6 +892,62 @@ class ColSeedsDb {
     })
   }
 
+  constructor (colOpts, seedOpts) {
+    this._collections = new DataStore(colOpts)
+    this._colSeeds = new DataStore(seedOpts)
+  }
+
+  async _handleTrackedNotExisting (cols, seeds) {
+    const collsNotExisting = new DataStore({
+      autoload: true,
+      filename: `${new Date().getTime()}.trackedCollectionsNoLongerExisting.db`
+    })
+    const seedsNotExisting = new DataStore({
+      autoload: true,
+      filename: `${new Date().getTime()}.trackedSeedsNoLongerExisting.db`
+    })
+    await collsNotExisting.insert(cols)
+    const colNamesWhoNoExist = []
+    let seedWhoNoExist = []
+    const removeFromExisting = cols.map(col => {
+      colNamesWhoNoExist.push(col.name)
+      seedWhoNoExist = seedWhoNoExist.concat(seeds[col.name])
+      return {_id: col._id}
+    })
+    await seedsNotExisting.insert(seedWhoNoExist)
+    await this._collections.remove(removeFromExisting, {multi: true})
+    await this._colSeeds.remove(seedWhoNoExist.map(s => ({_id: s._id})), {multi: true})
+  }
+
+  async _handleAllTrackedNotExisting (cols, seeds) {
+    const tempDb = new DataStore({
+      autoload: true,
+      filename: `${new Date().getTime()}.trackedCollectionsNoLongerExisting.db`
+    })
+    const insertGood = await tempDb.insert(cols)
+    if (!insertGood.wasError) {
+      const colNamesWhoNoExist = []
+      const removeFromExisting = cols.map(col => {
+        colNamesWhoNoExist.push(col.name)
+        return {_id: col._id}
+      })
+      this._collections.remove(removeFromExisting, {multi: true})
+    }
+    return
+  }
+
+  async _handleColDirNoExistence (errExist) {
+    let cols = await this._collections.getAll()
+    let seeds = await this._colSeeds.getAll()
+    if (cols.length !== 0 || seeds.length !== 0) {
+      // this is not the first time for all intents and purposes
+      let seedsBackup = await this._colSeeds.backUpClearDb()
+      let colsBackup = await this._collections.backUpClearDb()
+      //handle backup
+    }
+    return await this.createDefaultCol()
+  }
+
   async _colFromSeedsColDirExists (colPath, col, seeds) {
     const aColStats = await getFsStats(colPath)
     const colCreateTime = moment(aColStats.birthtime)
@@ -956,7 +965,7 @@ class ColSeedsDb {
       ensures = 'both'
     }
     try {
-      await this._ensureColDirs(colPath, ensures)
+      await ColSeedsDb.ensureColDirs(colPath, ensures)
     } catch (ensureError) {
       console.error(ensureError)
     }
@@ -983,7 +992,7 @@ class ColSeedsDb {
     }
     if (createdFailed) {
       try {
-        await this._ensureColDirs(colPath, 'both')
+        await ColSeedsDb.ensureColDirs(colPath, 'both')
       } catch (ensureFailed) {
         createError = ensureFailed
       }
@@ -1015,6 +1024,7 @@ class ColSeedsDb {
 
   async _recreateColsFromSeeds (seeds) {
     const collectionsPath = path.join(bPath, 'collections')
+    let recreatedCols = []
     for (const col of Object.keys(seeds)) {
       const colPath = path.join(collectionsPath, col)
       let recreatedCol
@@ -1023,133 +1033,290 @@ class ColSeedsDb {
       } else {
         recreatedCol = await this._colFromSeedsNoColDir(colPath, col, seeds[col])
       }
+      recreatedCols.push(recreatedCol)
     }
-  }
-
-  async _getSeedsAndColsWithCheck () {
-    let colSeeds, colsExistCheck
-    try {
-      colsExistCheck = await this._collections.getAllCheckExists('colpath')
-    } catch (errFind) {
-      throw new DataStoreError(errFind, 'colExistCheck')
-    }
-
-    try {
-      colSeeds = await this._colSeeds.getAllApplyFun(transSeeds)
-    } catch (errSeedFind) {
-      throw new DataStoreError(errSeedFind, 'finding seeds')
-    }
-
-    let {exist, empty, doNotExist} = colsExistCheck
-
-    if (empty) {
-      const maybeExistingCols = await readDir(path.join(bPath, 'collections'))
-      if (colSeeds.length === 0) {
-
-      } else {
-
-      }
-      // let defaultColPath = path.join(bPath, 'collections', 'default')
-      // if (!await checkPathExists(defaultColPath)) {
-      //   //something is up our db is empty and collections dir exists but default does not
-      //   if (colSeeds.length !== 0) {
-      //     let defaultSeeds = .filter(colS => colS.forCol === 'default')
-      //     let {bkupName, didInsert} = await backupDbInsert('', 'defaultColSeeds', colSeeds)
-      //   }
-      // }
-    }
-
-    return {colsExistCheck, colSeeds}
+    return recreatedCols
   }
 
   async getAllCollections () {
     try {
       await checkCollDirExistence()
     } catch (noExist) {
+      console.log('no exist')
       return await this._handleColDirNoExistence(noExist)
     }
     // WAIL_ManagedCollections && WAIL_ManagedCollections/collections exist check cols
-    let {colsExistCheck, colSeeds} = await this._getSeedsAndColsWithCheck()
+    let colSeeds, colsExistCheck
+    try {
+      colsExistCheck = await this._collections.getAllCheckExists('colpath')
+    } catch (errFind) {
+      throw errFind
+    }
 
-    if (!colsExists.wasError) {
-      const {exist, empty, doNotExist} = colsExists.value
-      if (!empty) {
-        if (doNotExist.length === 0) {
+    try {
+      colSeeds = await this._colSeeds.getAll()
+    } catch (errSeedFind) {
+      throw new DataStoreError(errSeedFind, 'finding seeds')
+    }
 
-        } else {
+    let {exist, empty, doNotExist} = colsExistCheck
 
-        }
+    if (!empty) {
+      colSeeds = transSeeds(colSeeds)
+      if (doNotExist.length === 0) {
+        return exist.map(col => {
+          col.seeds = colSeeds[col.name] || []
+          return col
+        })
+      } else {
+        await this._handleTrackedNotExisting(doNotExist, colSeeds)
+        return exist.map(col => {
+          col.seeds = colSeeds[col.name] || []
+          return col
+        })
+      }
+    } else {
+      const colDir = await readDir(path.join(bPath, 'collections'))
+      if (colDir.length === 0) {
+        return await this.createDefaultCol()
+      } else {
+        return await this.createDefaultCol(true)
       }
     }
-    if (!colDirsExisting.wasError) {
 
+  }
+
+  async addCrawlInfo (confDetails) {
+    let {forCol, lastUpdated, seed} = confDetails
+    let colSeedIdQ = {_id: `${forCol}-${seed.url}`}
+    let updateWho = {colName: forCol}
+    console.log('addCrawlInfo', confDetails)
+    let theUpdateCol = {$set: {lastUpdated}}
+    let findA = {
+      $where () {
+        return this.forCol === forCol
+      }
+    }
+    const updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    let existingSeed = await this._colSeeds.findOne(colSeedIdQ)
+    if (ColSeedsDb.foundSeedChecker(existingSeed)) {
+      let theUpdateColSeed = {
+        $set: {lastUpdated}
+      }
+      if (!existingSeed.jobIds.includes(seed.jobId)) {
+        theUpdateColSeed.$push = {jobIds: seed.jobId}
+      }
+      let updatedColSeeds = await this._collections.updateFindAll(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+      updatedCol.seeds = cleanSeeds(Array.isArray(updatedColSeeds) ? updatedColSeeds : [updatedColSeeds])
+      console.log(updatedCol)
+      return {
+        colName: updatedCol.colName,
+        numArchives: updatedCol.numArchives,
+        size: updatedCol.size,
+        seeds: updatedCol.seeds,
+        lastUpdated: updatedCol.lastUpdated
+      }
     } else {
+      seed._id = colSeedIdQ._id
+      let colSeeds = await this._colSeeds.insertFindAll(seed, findA)
+      updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+      console.log(updatedCol)
+      return {
+        colName: updatedCol.colName,
+        numArchives: updatedCol.numArchives,
+        size: updatedCol.size,
+        seeds: updatedCol.seeds,
+        lastUpdated: updatedCol.lastUpdated
+      }
+    }
+  }
+
+  async addInitialMData (col, mdata) {
+    return await PyWb.addMetadata({col, metadata: join(...mdata)})
+  }
+
+  async addWarcsFromWCreate ({col, warcs, lastUpdated, seed}) {
+    const templateArgs = {col}
+    try {
+      await PyWb.reindexCol(templateArgs)
+    } catch (reindexError) {
+      throw reindexError
+    }
+    const updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
+    const findA = {$where () { return this.forCol === col }}
+    const size = await ColSeedsDb.getColSize(templateArgs)
+    const theUpdateCol = {$inc: {numArchives: 1}, $set: {size, lastUpdated}}
+    let updatedCol, colSeed, colSeeds
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (updateError) {
 
     }
-    // if (!colDirsExisting.wasError) {
-    //   if (!getCols.wasError && getCols.value.length === 0) {
-    //     // more than likely the first time we are
-    //
-    //   }
-    // } else {
-    //   if (colDirsExisting.didNotExist === 'warcs') {
-    //     if (!getCols.wasError && getCols.value.length === 0) {
-    //       const createDefault = await this.createDefaultCol()
-    //       if (!createDefault.wasError) {
-    //         await moveStartingCol()
-    //         resolve(createDefault.value)
-    //       } else {
-    //         reject(createDefault.value)
-    //       }
-    //     }
-    //
-    //   }
-    // }
-    //
-    // const getColSeeds = await this._colSeeds.getAll()
-    // if (!getCols.wasError && !getColSeeds.wasError) {
-    //   let docs = joinColsSeeds(getCols.value, getColSeeds.value)
-    //   if (docs.length === 0) {
-    //     const createDefault = await this.createDefaultCol()
-    //     if (!createDefault.wasError) {
-    //       await moveStartingCol()
-    //       return createDefault.value
-    //     } else {
-    //       throw createDefault.value
-    //     }
-    //   } else {
-    //
-    //     if (!colDirsExisting.wasError) {
-    //       const getColDirs = await readDir(path.join(bPath, 'collections'))
-    //       if (!getColDirs.wasError) {
-    //         let gone = []
-    //         getColDirs.value.forEach()
-    //       }
-    //     } else {
-    //
-    //     }
-    //   }
-    // } else {
-    //   if (getCols.wasError && getColSeeds.wasError) {
-    //
-    //   } else if (getCols.wasError) {
-    //
-    //   } else {
-    //
-    //   }
-    // }
+    try {
+      colSeed = await this._colSeeds.findOne(colSeedIdQ)
+    } catch (findError) {
+
+    }
+    if (ColSeedsDb.foundSeedChecker(colSeed)) {
+      let theUpdateColSeed = {
+        $set: {lastUpdated},
+        $inc: {mementos: 1}
+      }
+      if (!colSeed.jobIds.includes(seed.jobId)) {
+        theUpdateColSeed.$push = {jobIds: seed.jobId}
+      }
+      colSeeds = await this._colSeeds.updateFindAll(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+    } else {
+      seed._id = colSeedIdQ._id
+      seed.mementos = 1
+      seed.jobIds = [seed.jobId]
+      colSeeds = await this._colSeeds.insertFindAll(seed, findA)
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
   }
 
-  async backUpDbs (clear = false) {
-    const bkC = await this._collections.backUp(clear)
-    const bkCs = await this._colSeeds.backUp(clear)
+  async addWarcsFromFSToCol ({col, warcs, lastUpdated, seed}) {
+    let addedCount
+    try {
+      addedCount = await PyWb.addWarcsToCol({col, warcs})
+    } catch (addError) {
+
+    }
+    let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
+    const findA = {$where () { return this.forCol === col}}
+    const size = await ColSeedsDb.getColSize({col})
+    const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
+    let updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (updateError) {
+
+    }
+    let colSeed
+    try {
+      colSeed = await this._colSeeds.findOne(colSeedIdQ)
+    } catch (findError) {
+
+    }
+    let colSeeds
+    if (ColSeedsDb.foundSeedChecker(colSeed)) {
+      let theUpdateColSeed = {
+        $set: {lastUpdated},
+        $inc: {mementos: 1}
+      }
+      if (!colSeed.jobIds.includes(seed.jobId)) {
+        theUpdateColSeed.$push = {jobIds: seed.jobId}
+      }
+      colSeeds = await this._colSeeds.updateFindAll(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+    } else {
+      seed._id = colSeedIdQ._id
+      seed.mementos = 1
+      seed.jobIds = [seed.jobId]
+      colSeeds = await this._colSeeds.insertFindAll(seed, findA)
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
   }
 
-  async createDefaultCol () {
-    // `${settings.get('warcs')}${path.sep}collections${path.sep}${col}`
+  async addWarcsToCol ({col, warcs, lastUpdated, seed}) {
+    let addedCount
+    try {
+      addedCount = await PyWb.addWarcsToCol({col, warcs})
+    } catch (addError) {
+
+    }
+    let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
+    const findA = {$where () { return this.forCol === col}}
+    const size = await ColSeedsDb.getColSize({col})
+    const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
+    let updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (updateError) {
+
+    }
+    let colSeed
+    try {
+      colSeed = await this._colSeeds.findOne(colSeedIdQ)
+    } catch (findError) {
+
+    }
+    let colSeeds
+    if (ColSeedsDb.foundSeedChecker(colSeed)) {
+      let theUpdateColSeed = {
+        $set: {lastUpdated},
+        $inc: {mementos: 1}
+      }
+      if (!colSeed.jobIds.includes(seed.jobId)) {
+        theUpdateColSeed.$push = {jobIds: seed.jobId}
+      }
+      colSeeds = await this._colSeeds.updateFindAll(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
+    } else {
+      seed._id = colSeedIdQ._id
+      seed.mementos = 1
+      seed.jobIds = [seed.jobId]
+      colSeeds = await this._colSeeds.insertFindAll(seed, findA)
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
+  }
+
+  async createCollection (ncol) {
+    let {col, metadata} = ncol
+    try {
+      await PyWb.createCol({col})
+    } catch (createError) {
+
+    }
+    let colpath = path.join(settings.get('warcs'), 'collections', col), created = moment().format()
+    try {
+      await ColSeedsDb.ensureColDirs(colpath, 'index')
+    } catch (ensureError) {
+
+    }
+    let toCreate = {
+      _id: col, name: col, colpath, created,
+      size: '0 B', lastUpdated: created,
+      archive: path.join(colpath, 'archive'),
+      indexes: path.join(colpath, 'indexes'),
+      colName: col, numArchives: 0, metadata,
+      hasRunningCrawl: false
+    }
+
+    let newCol
+    try {
+      newCol = await this._collections.insert(toCreate)
+    } catch (insertError) {
+
+    }
+    return {
+      seeds: [],
+      ...newCol
+    }
+
+  }
+
+  async createDefaultCol (ensure = false) {
     let colpath = path.join(settings.get('warcs'), 'collections', 'default')
-    // description: Default Collection
-    // title: Default
     let created = moment().format()
     let toCreate = {
       _id: 'default',
@@ -1165,7 +1332,11 @@ class ColSeedsDb {
       lastUpdated: created,
       hasRunningCrawl: false
     }
-    await execute('', {})
+    if (!ensure) {
+      await execute('', {})
+    } else {
+      await ColSeedsDb.ensureColDirs(colpath, 'both')
+    }
     const newCol = await this._collections.insert(toCreate)
     newCol.seeds = []
     return newCol
@@ -1302,27 +1473,22 @@ const colFromSeedsNoColDir = async (colPath, col, seeds) => {
 //   }
 // }
 
-const fail = () => new Promise((resolve, reject) => {
-  reject(new Error('dummy'))
+const runChecker = (aPath) => new Promise((resolve, reject) => {
+  cp.execFile('/home/john/my-fork-wail/bundledApps/listUris/listUris', ['-d', aPath], (err, stdout, stderrr) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve({stdout, stderrr})
+    }
+  })
 })
 
 const it = async () => {
-  let db = new DataStore({filename: '/home/john/my-fork-wail/hi.db'})
-  try {
-    await db.loadDb()
-  } catch (corrupted) {
-    console.error(corrupted)
-    await removeFile('/home/john/my-fork-wail/hi.db')
-    await db.loadDb()
-  }
-  let inserted = await db.insert({hi: 'hello'})
-  console.log(inserted)
+  console.log(_.isObject(' '))
+}
 
-  // await db.loadDb()
-  inserted = await db.insert({hi: 'hello'})
-
-  console.log(inserted)
-  console.log(process.cwd())
+const it2 = async () => {
+  console.log(typeof ' ')
 }
 
 it().then(() => {

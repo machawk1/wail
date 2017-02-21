@@ -48,3 +48,29 @@ export function ensureDirAndWrite (dirPath, filePath, data, options = 'utf8') {
     })
   })
 }
+
+export const checkPathExists = (path) => new Promise((resolve, reject) => {
+  fs.access(path, fs.constants.R_OK, err => {
+    resolve(!err)
+  })
+})
+
+export const removeFile = filePath => new Promise((resolve, reject) => {
+  fs.remove(filePath, err => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve()
+    }
+  })
+})
+
+export const getFsStats = toStatPath => new Promise((resolve, reject) => {
+  fs.stat(toStatPath, (err, stats) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve(stats)
+    }
+  })
+})

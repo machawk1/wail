@@ -45,8 +45,9 @@ export function updateAndFindAll (db, updateWho, theUpdate, upOpts, findQ) {
         db.find(findQ, (errF, docs) => {
           if (errF) {
             reject(new CompoundNedbError(errF, 'findAfterUpdate'))
+          } else {
+            resolve(docs)
           }
-          resolve(docs)
         })
       }
     })
