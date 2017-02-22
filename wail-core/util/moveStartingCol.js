@@ -1,6 +1,15 @@
 import fs from 'fs-extra'
 import Promise from 'bluebird'
-import cp from 'child_process'
+
+export const mvStartingCol = (moveMe, moveTo) => new Promise((resolve, reject) => {
+  fs.copy(moveMe, moveTo, (errCopy) => {
+    if (errCopy) {
+      return reject(errCopy)
+    } else {
+      return resolve()
+    }
+  })
+})
 
 export default function moveStartingCol (moveMe, moveTo) {
   console.log('move starting col', moveMe, moveTo)

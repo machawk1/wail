@@ -2,7 +2,7 @@ import '../../../wailPollyfil'
 import { remote, ipcRenderer as ipc } from 'electron'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 
-const archiveMan = window.am = new ArchiveManager()
+const archiveMan = window.am = new ArchiveManager(remote.getGlobal('settings'))
 
 ipc.on('made-heritrix-jobconf', (event, confDetails) => {
   console.log('archive man makeHeritrixJobConf', confDetails)

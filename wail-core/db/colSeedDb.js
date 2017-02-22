@@ -64,8 +64,7 @@ export default class ColSeedsDb {
     }
   }
 
-  static checkCollDirExistence = () => new Promise((resolve, reject) => {
-    const managedCollections = settings.get('warcs')
+  static checkCollDirExistence = (managedCollections) => new Promise((resolve, reject) => {
     fs.access(managedCollections, fs.constants.R_OK, err => {
       if (err) {
         reject(new ColDirExistsError('warcs'))
@@ -198,14 +197,14 @@ export default class ColSeedsDb {
     const colCreateTime = moment(aColStats.birthtime)
     let colLastUpdated
     if (seeds.length > 0) {
-      moment.max(seeds.map(s => moment(s.lastUpdated)))
+      colLastUpdated = moment.max(seeds.map(s => moment(s.lastUpdated)))
     } else {
       colLastUpdated = moment().format()
     }
     let colSize = '0 B', ensures = 'index'
     const colWarcP = path.join(colPath, 'archive')
     if (await checkPathExists(colWarcP)) {
-      colSize = await ColSeedsDb.getColSize(colWarcP)
+      colSize = prettyBytes(await ColSeedsDb.getColSize(colWarcP))
     } else {
       ensures = 'both'
     }

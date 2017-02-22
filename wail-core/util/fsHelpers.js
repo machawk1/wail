@@ -65,6 +65,26 @@ export const removeFile = filePath => new Promise((resolve, reject) => {
   })
 })
 
+export const copy = (moveMe, moveTo) => new Promise((resolve, reject) => {
+  fs.copy(moveMe, moveTo, (errCopy) => {
+    if (errCopy) {
+      return reject(errCopy)
+    } else {
+      return resolve()
+    }
+  })
+})
+
+export const readDir = dirPath => new Promise((resolve, reject) => {
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      reject(err)
+    } else {
+      resolve(files)
+    }
+  })
+})
+
 export const getFsStats = toStatPath => new Promise((resolve, reject) => {
   fs.stat(toStatPath, (err, stats) => {
     if (err) {

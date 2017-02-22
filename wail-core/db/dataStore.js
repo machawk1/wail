@@ -1,8 +1,21 @@
 import _ from 'lodash'
+import DB from 'nedb'
 import path from 'path'
 import fs from 'fs-extra'
 import Promise from 'bluebird'
 import { checkPathExists, removeFile } from '../util/fsHelpers'
+
+const errorReport = (error, m) => ({
+  wasError: true,
+  err: error,
+  message: {
+    title: 'Error',
+    level: 'error',
+    autoDismiss: 0,
+    message: m,
+    uid: m
+  }
+})
 
 export class DataStoreError extends Error {
   constructor (oError, where) {
@@ -20,14 +33,25 @@ export class DataStoreError extends Error {
   }
 }
 
+class DataStoreErrorReport extends Error {
+  constructor (oError, message) {
+    super(message)
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
+    this.m = errorReport(oError, message)
+  }
+}
+
 export default class DataStore {
-  constructor (opts) {
+  constructor (opts, dbBasePath) {
     this.humanName = opts.dbHumanName || path.basename(opts.filename, '.db')
     if (opts.dbHumanName) {
       delete opts.dbHumanName
     }
     this.db = new DB(opts)
     this.filePath = opts.filename
+    this.dbBasePath = dbBasePath
   }
 
   loadDb () {
@@ -44,7 +68,7 @@ export default class DataStore {
 
   backUp () {
     const backUpTime = new Date().getTime()
-    const backUpName = `${this.filePath}.${backUpTime}.bk`
+    const backUpName = path.join(this.dbBasePath, `${this.filePath}.${backUpTime}.bk`)
     return new Promise((resolve, reject) => {
       fs.copy(this.filePath, backUpName, (err) => {
         if (err) {
@@ -62,7 +86,7 @@ export default class DataStore {
 
   backUpClearDb () {
     const backUpTime = new Date().getTime()
-    const backUpName = `${this.filePath}.${backUpTime}.bk`
+    const backUpName = path.join(this.dbBasePath, `${this.filePath}.${backUpTime}.bk`)
     return new Promise((resolve, reject) => {
       fs.copy(this.filePath, backUpName, (err) => {
         if (err) {
@@ -78,12 +102,11 @@ export default class DataStore {
         }
       })
     })
-
   }
 
   backUpHardClearDb () {
     const backUpTime = new Date().getTime()
-    const backUpName = `${this.filePath}.${backUpTime}.bk`
+    const backUpName = path.join(this.dbBasePath, `${this.filePath}.${backUpTime}.bk`)
     return new Promise((resolve, reject) => {
       fs.copy(this.filePath, backUpName, (err) => {
         if (err) {
@@ -126,6 +149,18 @@ export default class DataStore {
     })
   }
 
+  wemUpdate (message) {
+    return (updateWho, theUpdate, opts = {}) => new Promise((resolve, reject) => {
+      this.db.update(updateWho, theUpdate, opts, (err, numAffected, affectedDocuments, upsert) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
+        } else {
+          resolve({numAffected, affectedDocuments, upsert})
+        }
+      })
+    })
+  }
+
   updateFindAll (updateWho, theUpdate, upOpts, findQ) {
     return new Promise((resolve, reject) => {
       this.db.update(updateWho, theUpdate, upOpts, (err, numAffected, affectedDocuments, upsert) => {
@@ -135,6 +170,24 @@ export default class DataStore {
           this.db.find(findQ, (errF, docs) => {
             if (errF) {
               reject(errF)
+            } else {
+              resolve(docs)
+            }
+          })
+        }
+      })
+    })
+  }
+
+  wemUpdateFindAll (message) {
+    return (updateWho, theUpdate, upOpts, findQ) => new Promise((resolve, reject) => {
+      this.db.update(updateWho, theUpdate, upOpts, (err, numAffected, affectedDocuments, upsert) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
+        } else {
+          this.db.find(findQ, (errF, docs) => {
+            if (errF) {
+              reject(new DataStoreErrorReport(errF, message))
             } else {
               resolve(docs)
             }
@@ -162,8 +215,30 @@ export default class DataStore {
     })
   }
 
+  wemInsertFindAll (message) {
+    return (insertMe, findQ) => new Promise((resolve, reject) => {
+      this.db.insert(insertMe, (err, docs) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
+        } else {
+          this.db.find(findQ, (errF, all) => {
+            if (errF) {
+              reject(new DataStoreErrorReport(errF, message))
+            } else {
+              resolve(all)
+            }
+          })
+        }
+      })
+    })
+  }
+
   getAll () {
     return this.find({})
+  }
+
+  wemGetAll (message) {
+    return this.wemFind(message)({})
   }
 
   nrGetAll () {
@@ -179,12 +254,29 @@ export default class DataStore {
   }
 
   async getAllCheckExists (prop) {
-    let docs, existCheck = {exist: [], empty: false, doNotExist: []}
-    try {
-      docs = await this.find({})
-    } catch (e) {
-      throw new DataStoreError(e, `finding ${this.humanName}`)
+    let existCheck = {exist: [], empty: false, doNotExist: []}
+    const docs = await this.find({})
+    console.log(docs)
+    if (docs.length === 0) {
+      existCheck.empty = true
+      return existCheck
+    } else {
+      let len = docs.length, i = 0
+      for (; i < len; ++i) {
+        if (await checkPathExists(docs[i][prop])) {
+          existCheck.exist.push(docs[i])
+        } else {
+          existCheck.doNotExist.push(docs[i])
+        }
+      }
+      console.log(existCheck)
+      return existCheck
     }
+  }
+
+  async wemGetAllCheckExists (message, prop) {
+    let existCheck = {exist: [], empty: false, doNotExist: []}
+    const docs = await this.wemFind(message)({})
     if (docs.length === 0) {
       existCheck.empty = true
       return existCheck
@@ -229,6 +321,18 @@ export default class DataStore {
       this.db.find(query, (err, docs) => {
         if (err) {
           reject(err)
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+  }
+
+  wemFind (message) {
+    return query => new Promise((resolve, reject) => {
+      this.db.find(query, (err, docs) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
         } else {
           resolve(docs)
         }
@@ -296,6 +400,18 @@ export default class DataStore {
     })
   }
 
+  wemFindOne (message) {
+    return query => new Promise((resolve, reject) => {
+      this.db.findOne(query, (err, doc) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
+        } else {
+          resolve(doc)
+        }
+      })
+    })
+  }
+
   nrFindOneSelect (query, select) {
     return new Promise((resolve, reject) => {
       this.db.findOne(query, select, (err, docs) => {
@@ -344,6 +460,18 @@ export default class DataStore {
     })
   }
 
+  wemInsert (message) {
+    return insertMe => new Promise((resolve, reject) => {
+      this.db.insert(insertMe, (err, docs) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+  }
+
   nrCount (what) {
     return new Promise((resolve, reject) => {
       this.db.count(what, (err, count) => {
@@ -373,6 +501,18 @@ export default class DataStore {
       this.db.remove(query, opts, (err, rmc) => {
         if (err) {
           reject(err)
+        } else {
+          resolve(rmc)
+        }
+      })
+    })
+  }
+
+  wemRemove (message) {
+    return (query, opts = {}) => new Promise((resolve, reject) => {
+      this.db.remove(query, opts, (err, rmc) => {
+        if (err) {
+          reject(new DataStoreErrorReport(err, message))
         } else {
           resolve(rmc)
         }
