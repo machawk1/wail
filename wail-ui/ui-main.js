@@ -47,7 +47,7 @@ winMan.on('send-failed', (report) => {
   console.log(report)
 })
 
-app.commandLine.appendSwitch('js-flags', '--harmony')
+app.commandLine.appendSwitch('js-flags', '--harmony --harmony_async_await')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 app.on('ready', () => {

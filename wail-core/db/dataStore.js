@@ -143,7 +143,7 @@ export default class DataStore {
         if (err) {
           reject(err)
         } else {
-          resolve({numAffected, affectedDocuments, upsert})
+          resolve(affectedDocuments)
         }
       })
     })
@@ -155,7 +155,7 @@ export default class DataStore {
         if (err) {
           reject(new DataStoreErrorReport(err, message))
         } else {
-          resolve({numAffected, affectedDocuments, upsert})
+          resolve(affectedDocuments)
         }
       })
     })
