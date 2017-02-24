@@ -323,13 +323,11 @@ export default class ArchiveManager {
   async getAllCollections () {
     try {
       await CollectionsUtils.checkCollDirExistence(this._colsBasePath)
-      console.log('they do exist')
     } catch (noExist) {
       console.log('no exist')
       return await this._handleColDirNoExistence(noExist)
     }
     const colsExistCheck = await this._collections.getAllCheckExists('colpath')
-    console.log(colsExistCheck)
     let colSeeds = await this._colSeeds.wemGetAll('Could not retrieve collections seeds from the database')
     let {exist, empty, doNotExist} = colsExistCheck
     if (!empty) {
@@ -360,7 +358,6 @@ export default class ArchiveManager {
     let {forCol, lastUpdated, seed} = confDetails
     let colSeedIdQ = {_id: `${forCol}-${seed.url}`}
     let updateWho = {colName: forCol}
-    console.log('addCrawlInfo', confDetails)
     let theUpdateCol = {$set: {lastUpdated}}
     let findA = {$where () { return this.forCol === forCol }}
     let updater = this._collections.wemUpdate(`Error updating ${forCol}'s seed ${seed.url}. It was not found for the collection`)
@@ -378,7 +375,6 @@ export default class ArchiveManager {
       updater = this._colSeeds.wemUpdateFindAll(`Error updating ${forCol}'s seed ${seed.url}. Could not add the crawl info`)
       let updatedColSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
       updatedCol.seeds = cleanSeeds(Array.isArray(updatedColSeeds) ? updatedColSeeds : [updatedColSeeds])
-      console.log(updatedCol)
       return {
         colName: updatedCol.colName,
         numArchives: updatedCol.numArchives,
@@ -415,7 +411,6 @@ export default class ArchiveManager {
     }
     return new Promise((resolve, reject) => {
       let exec = S(this._settings.get('pywb.addMetadata')).template({col: forCol, metadata: update.mdataString}).s
-      console.log(exec)
       cp.exec(exec, opts, (error, stdout, stderr) => {
         console.log(stdout, stderr)
         if (error) {
@@ -589,7 +584,7 @@ export default class ArchiveManager {
     await this._pywb.reindexColToAddWarc(templateArgs)
     const updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
     const findA = {$where () { return this.forCol === col }}
-    const size = await CollectionsUtils.getColSize(col)
+    const size = await this.getColSize(col)
     const theUpdateCol = {$inc: {numArchives: 1}, $set: {size, lastUpdated}}
     let updatedCol, colSeed, colSeeds, updater
     updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
@@ -606,14 +601,12 @@ export default class ArchiveManager {
       }
       updater = this._colSeeds.wemUpdateFindAll(`Error final update to ${col}'s seed ${seed.url}`)
       colSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
-
     } else {
       seed._id = colSeedIdQ._id
       seed.mementos = 1
       seed.jobIds = [seed.jobId]
       updater = this._colSeeds.wemInsertFindAll(`Error final update to ${col}'s seed ${seed.url}`)
       colSeeds = await updater(seed, findA)
-
     }
     updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
     return {
@@ -629,7 +622,7 @@ export default class ArchiveManager {
     let addedCount = await this._pywb.addWarcsToCol({col, warcs})
     let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
     const findA = {$where () { return this.forCol === col}}
-    const size = await CollectionsUtils.getColSize({col})
+    const size = await this.getColSize(col)
     const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
     let updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
     let updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
@@ -665,12 +658,13 @@ export default class ArchiveManager {
 
   async addWarcsToCol ({col, warcs, lastUpdated, seed}) {
     let addedCount = await this._pywb.addWarcsToCol({col, warcs})
-    let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
+    let updateWho = {name: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
     const findA = {$where () { return this.forCol === col}}
-    const size = await CollectionsUtils.getColSize({col})
+    const size = await this.getColSize(col)
     const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
     let updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
     let updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
+    console.log(updatedCol)
     updater = this._colSeeds.wemFindOne(`Error updating ${col}'s seed ${seed.url}. It was not found for the collection`)
     let colSeed = await updater(colSeedIdQ)
     let colSeeds
@@ -692,6 +686,7 @@ export default class ArchiveManager {
       colSeeds = await updater(seed, findA)
     }
     updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    console.log(updatedCol)
     return {
       colName: updatedCol.colName,
       numArchives: updatedCol.numArchives,

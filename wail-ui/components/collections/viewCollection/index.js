@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import CollectionViewHeader from './collectionViewHeader'
 import SeedTable from './seedTable'
 import {Menu, MenuItem} from 'material-ui/Menu'
+import { Card} from 'material-ui/Card'
 import AddSeedFab from './addSeedFab'
 
 const depthToConfig = d => {

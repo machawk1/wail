@@ -143,7 +143,7 @@ export default class DataStore {
         if (err) {
           reject(err)
         } else {
-          resolve({numAffected, affectedDocuments, upsert})
+          resolve(affectedDocuments)
         }
       })
     })
@@ -155,7 +155,7 @@ export default class DataStore {
         if (err) {
           reject(new DataStoreErrorReport(err, message))
         } else {
-          resolve({numAffected, affectedDocuments, upsert})
+          resolve(affectedDocuments)
         }
       })
     })
@@ -256,7 +256,6 @@ export default class DataStore {
   async getAllCheckExists (prop) {
     let existCheck = {exist: [], empty: false, doNotExist: []}
     const docs = await this.find({})
-    console.log(docs)
     if (docs.length === 0) {
       existCheck.empty = true
       return existCheck

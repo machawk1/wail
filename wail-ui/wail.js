@@ -6,8 +6,6 @@ import React from 'react'
 import { render } from 'react-dom'
 import { hashHistory } from 'react-router'
 import injectTapEventPlugin from 'react-tap-event-plugin'
-import fs from 'fs-extra'
-import Promise from 'bluebird'
 import { remote } from 'electron'
 import bunyan from 'bunyan'
 import Wail from './containers/wail'
@@ -21,7 +19,6 @@ if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
 }
 
-Promise.promisifyAll(fs)
 
 global.notifications$ = new Rx.BehaviorSubject({type: 'initial'})
 global.resizer = createDetectElementResize()
@@ -53,6 +50,7 @@ window.logger = bunyan.createLogger({
 // })
 
 const store = configureStore()
+
 
 if (process.env.WAILTEST) {
   const setupTestHook = require('./setupTestHook')

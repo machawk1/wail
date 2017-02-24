@@ -1,26 +1,19 @@
-import React, {Component, PropTypes} from 'react'
-import {connect} from 'react-redux'
-
-const stateToProp = state => ({
-  location: state.get('header').get('location')
-})
+import React, { Component, PropTypes } from 'react'
+import { connect } from 'react-redux'
+import shallowCompare from 'react-addons-shallow-compare'
+import Immutable from 'immutable'
+import { Flex } from 'react-flex'
+import { Card, CardTitle, CardText } from 'material-ui/Card'
+import { Link, IndexLink } from 'react-router'
 
 class Location extends Component {
-  static propTypes = {
-    location: PropTypes.string.isRequired
-  }
-
-  shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return this.props.location !== nextProps.location
-  }
-
   render () {
-    let loc = this.props.location
+    console.log(this.props.params)
     return (
-      {loc}
+      <span>{this.props.headLock}</span>
     )
   }
 
 }
 
-export default connect(stateToProp)(Location)
+export default Location

@@ -1,19 +1,8 @@
 import React, { Component, PropTypes } from 'react'
 import Immutable from 'immutable'
-import { shell, remote } from 'electron'
-import {joinStrings} from 'joinable'
-import FlatButton from 'material-ui/RaisedButton'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table'
-import { push } from 'react-router-redux'
-import wc from '../../../constants/wail-constants'
+import MementoCard, { MementoCardEmpty } from './mementoCard'
 import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import { momentSortRev } from '../../../util/momentSort'
-
-const {QUEUE_MESSAGE} = wc.EventTypes
-const wbUrl = remote.getGlobal('settings').get('pywb.url')
-const openInWb = (seed, forCol) => {
-  shell.openExternal(`${wbUrl}${forCol}/*/${seed}`)
-}
 
 export default class SeedTable extends Component {
   static propTypes = {
@@ -24,33 +13,8 @@ export default class SeedTable extends Component {
     store: PropTypes.object.isRequired
   }
 
-  // shouldComponentUpdate (nextProps, nextState, nextContext) {
-  //   console.log('colview combined should component update')
-  //   return shallowCompare(this, nextProps, nextState)
-  // }
-
-  viewArchiveConfig () {
-    let col = this.props.collection.get('colName')
-    if (this.props.collection.get('seeds').size > 0) {
-      this.context.store.dispatch(push(`Collections/${col}/viewArchiveConfig`))
-    } else {
-      global.notifications$.next({
-        type: QUEUE_MESSAGE,
-        message: {
-          autoDismiss: 0,
-          title: 'No Seeds',
-          level: 'warning',
-          message: `Add Seeds to ${col} In Order To View Their Archive Config`,
-          uid: `Add Seeds to ${col} In Order To View There Archive Config`,
-          action: {
-            label: 'Add Seed?',
-            callback: () => {
-              this.context.store.dispatch(push(`/Collections/${this.props.collection.get('colName')}/addSeed`))
-            }
-          }
-        }
-      })
-    }
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return this.props.collection !== nextProps.collection
   }
 
   renTr () {
@@ -59,73 +23,35 @@ export default class SeedTable extends Component {
     let seeds = this.props.collection.get('seeds').sort((s1, s2) => momentSortRev(s1.get('added'), s2.get('added')))
     let len = seeds.size, i = 0
     if (len === 0) {
-      trs.push(<TableRow key={`${i}-noSeedRow`}>
-        <TableHeaderColumn colSpan='5'>No Seeds In Collection. Click The Plus Button To Add One</TableHeaderColumn>
-      </TableRow>)
+      trs.push(<MementoCardEmpty key="mce"/>)
     } else {
       for (; i < len; ++i) {
         let seed = seeds.get(i)
         let url = seed.get('url'), conf = 'Not Archived'
-
         if (this.props.seedConfig[url].size > 0) {
-          conf = joinStrings(...this.props.seedConfig[url])
+          conf = []
+          for (const aConf of  this.props.seedConfig[url]) {
+            conf.push(aConf)
+            conf.push(<br key={`${i}-br${aConf}`}/>)
+          }
         }
-        trs.push(<TableRow key={`${i}-${url}`}>
-          <TableRowColumn key={`${i}-${url}-seed-url`} style={{paddingLeft: 10, paddingRight: 0, width: 300}}>
-            {url}
-          </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-added`} style={{width: 130, paddingRight: 0}}>
-            {seed.get('added').format('MMM DD, YYYY h:mma')}
-          </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-lastArchived`} style={{width: 130, paddingRight: 20}}>
-            {seed.get('lastUpdated').format('MMM DD, YYYY h:mma')}
-          </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-size`} style={{width: 55, paddingRight: 0}}>
-            {seed.get('mementos')}
-          </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-conf`} style={{ paddingRight: 0}}>
-            {conf}
-          </TableRowColumn>
-          <TableRowColumn key={`${i}-${url}-viewInWB`}>
-            <FlatButton label={'View In Wayback'} onTouchTap={() => openInWb(url, viewingCol)}/>
-          </TableRowColumn>
-        </TableRow>)
+
+        trs.push(<MementoCard key={`${i}-${url}-mc`} conf={conf} seed={seed} url={url} viewingCol={viewingCol}
+                              mckey={`${i}-${url}`}/>)
       }
     }
     return trs
   }
 
-  setSortDirection (sortKey, sortDirection) {
-    this.setState({sortDirection, sortKey})
-  }
-
   render () {
     let trs = this.renTr()
     return (
-      <div style={{height: 'inherit'}}>
+      <div style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '25px', paddingRight: '25px'}}>
         <MyAutoSizer findElement='collViewDiv'>
           {({height}) => (
-            <Table height={`${height - 130}px`}>
-              <TableHeader
-                selectable={false}
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-              >
-                <TableRow>
-                  <TableHeaderColumn style={{width: 270}}>Seed Url</TableHeaderColumn>
-                  <TableHeaderColumn style={{width: 100}}>Added</TableHeaderColumn>
-                  <TableHeaderColumn style={{width: 100}}>Last Archived</TableHeaderColumn>
-                  <TableHeaderColumn style={{width: 55}}>Mementos</TableHeaderColumn>
-                  <TableHeaderColumn>Archive Configuration</TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                showRowHover={false}
-                displayRowCheckbox={false}
-              >
-                {trs}
-              </TableBody>
-            </Table>
+            <div style={{height: height, maxHeight: `${height - 250}px`, overflowY: 'auto'}}>
+              {trs}
+            </div>
           )}
         </MyAutoSizer>
       </div>

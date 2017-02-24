@@ -45,10 +45,6 @@ export default class Notifications extends Component {
   }
 
   receiveMessage (notif) {
-    console.log(notif)
-    // console.log('reciever message')
-    // let message = GMessageStore.getMessage()
-    // this.notifier.addNotification(message)
     if (notif) {
       if (notif.type === EventTypes.QUEUE_MESSAGE) {
         this.notifier.addNotification(notif.message)
