@@ -43,4 +43,4 @@ export const MementoCardEmpty = () => (
   </Card>
 )
 
-export default onlyUpdateForKeys(['seed'])(MementoCard)
+export default onlyUpdateForKeys(['seed', 'viewingCol'])(MementoCard)
