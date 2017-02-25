@@ -237,6 +237,7 @@ export default class ArchiveManager {
       message,
       uid: message
     })
+    return ''
   }
 
   async handleColDirsExistNoTracked () {
@@ -339,6 +340,7 @@ export default class ArchiveManager {
           return col
         })
       } else {
+        console.log('some do not exist')
         await this._handleTrackedNotExisting(doNotExist, colSeeds)
         return exist.map(col => {
           col.seeds = colSeeds[col.name] || []
