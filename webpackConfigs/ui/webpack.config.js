@@ -5,7 +5,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.4
+    'electron': 1.6
   },
   'debug': true,
   "useBuiltIns": true,
@@ -14,6 +14,9 @@ const babelEnvConfig = ['env', {
     'transform-es2015-classes',
     'transform-es2015-object-super',
     'transform-es2015-destructuring'
+  ],
+  'exclude': [
+    'transform-async-to-generator'
   ]
 }]
 
@@ -37,7 +40,6 @@ module.exports = {
             'transform-class-properties',
             'transform-es2015-object-super',
             'transform-es2015-destructuring',
-            'transform-async-to-generator',
             'transform-exponentiation-operator',
             'transform-object-rest-spread',
             'syntax-trailing-function-commas',

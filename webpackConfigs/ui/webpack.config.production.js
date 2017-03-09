@@ -5,12 +5,15 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.4
+    'electron': 1.6
   },
   "useBuiltIns": true,
   'include': [
     'syntax-trailing-function-commas',
     'transform-es2015-destructuring'
+  ],
+  'exclude': [
+    'transform-async-to-generator'
   ]
 }]
 

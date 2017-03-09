@@ -35,7 +35,7 @@ export default class ServiceManager {
       this._pidStore.find({}, (error, pids) => {
         if (error) {
           console.error('there was an error in ServiceManage intit get persisted pids', error)
-          reject(error)
+          resolve()
         } else {
           if (pids.length > 0) {
             console.log('we have persisted pids')

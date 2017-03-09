@@ -1,6 +1,5 @@
 import '../wailPollyfil'
 import { app, Menu, dialog } from 'electron'
-import path from 'path'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
@@ -17,8 +16,8 @@ process.on('uncaughtException', (err) => {
 })
 
 const winMan = new WindowManager()
-const control = global.__wailControl = new AppManager()
 const debug = false, notDebugUI = true, openBackGroundWindows = false
+const control = global.__wailControl = new AppManager(debug, notDebugUI, openBackGroundWindows)
 
 export function showSettingsWindow (parent) {
   console.log('showing settings window')
@@ -27,7 +26,11 @@ export function showSettingsWindow (parent) {
 
 winMan.once('windowman-init-done', () => {
   console.log('windowman init is done')
-  winMan.initWail(control)
+  winMan.initWail(control).then(() => {
+    console.log('loading done')
+  }).catch(err => {
+    console.error(err)
+  })
 })
 
 winMan.on('window-unresponsive', who => {
@@ -47,45 +50,17 @@ winMan.on('send-failed', (report) => {
   console.log(report)
 })
 
-app.commandLine.appendSwitch('js-flags', '--harmony --harmony_async_await')
 app.commandLine.appendSwitch('js-flags', '--harmony --harmony_async_await --harmony_function_sent')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
-app.on('ready', () => {
+app.on('ready', async () => {
   console.log('app ready')
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
-  let base = path.resolve('./')
-  let loadFrom = __dirname
-  let userData = null
-
-  if (process.env.NODE_ENV === 'development') {
-    require('electron-debug')({
-      showDevTools: true
-    })
-  } else {
-    base = app.getAppPath()
-    loadFrom = `${base}/wail-ui`
-    userData = app.getPath('userData')
-  }
-
-  control.init(base, userData, app.getVersion(), loadFrom, app.getPath('documents'), debug, notDebugUI, openBackGroundWindows)
-    .then(() => {
-      global.wailVersion = control.version
-      global.wailLogp = control.logPath
-      global.settings = control.settingsMan
-      global.serviceMan = control.serviceMan
-      global.accessLogPath = path.join(control.logPath, 'accessibility.log')
-      global.jobLogPath = path.join(control.logPath, 'jobs.log')
-      global.indexLogPath = path.join(control.logPath, 'index.log')
-      global.requestDaemonLogPath = path.join(control.logPath, 'requestDaemon.log')
-
-      global.wailLogp = path.join(control.logPath, 'wail.log')
-      global.wailUILogp = path.join(control.logPath, 'wail-ui.log')
-
-      global.showSettingsMenu = showSettingsWindow
-      global.windowMan = winMan
-      winMan.init(control.winConfigs)
-    })
+  await control.init()
+  console.log(control.winConfigs)
+  global.showSettingsMenu = showSettingsWindow
+  global.windowMan = winMan
+  winMan.init(control.winConfigs)
 })
 
 app.on('window-all-closed', () => {
@@ -105,7 +80,11 @@ app.on('activate', () => {
   // dock icon is clicked and there are no other windows open.
   if (control.didClose) {
     control.isQuitting = false
-    winMan.initWail(control)
+    winMan.initWail(control).then(() => {
+      console.log('loading done')
+    }).catch(err => {
+      console.error(err)
+    })
   }
 })
 
