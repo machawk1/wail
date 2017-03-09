@@ -1,4 +1,4 @@
-import '../wailPollyfil'
+import 'babel-polyfill'
 import { app, Menu, dialog } from 'electron'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
@@ -50,7 +50,7 @@ winMan.on('send-failed', (report) => {
   console.log(report)
 })
 
-app.commandLine.appendSwitch('js-flags', '--harmony --harmony_async_await --harmony_function_sent')
+app.commandLine.appendSwitch('js-flags', '--harmony')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 app.on('ready', async () => {

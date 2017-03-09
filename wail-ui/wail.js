@@ -1,4 +1,4 @@
-import '../wailPollyfil'
+import 'babel-polyfill'
 import 'react-flex/index.css'
 import './css/wail.css'
 import Rx from 'rxjs/Rx'
