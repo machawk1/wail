@@ -25,4 +25,4 @@ S.TMPL_CLOSE = '}'
 //   console.error(error)
 // })
 
-console.log(isRunning(29260))
+// console.log(isRunning(15079))

@@ -12,10 +12,10 @@ test.before('test setup', async t => {
   settings = new tSettings()
   settings.configure()
   serviceMan = new ServiceManager(settings)
-  await serviceMan.init()
+  return await serviceMan.init()
 })
 
-test('the service manager should be able to start the services', async t => {
+test.serial('the service manager should be able to start the services', async t => {
   const expectedWaybackStart = {wasError: false}
   const heritrixWaybackStart = {wasError: false}
 
@@ -27,24 +27,42 @@ test('the service manager should be able to start the services', async t => {
   t.true(serviceMan.isServiceUp('wayback'), 'the service manager should be able to detect that wayback is up after starting')
   t.true(serviceMan.isServiceUp('heritrix'), 'the service manager should be able to detect that heritrix is up after starting')
 
-  const waybackStartedAct = await serviceMan.startWaybackLoading()
-  t.deepEqual(waybackStartedAct, expectedWaybackStart, 'the service manager should be able detect that wayback is already started and not try to restart it')
-  const heritrixStartedAct = await serviceMan.startHeritrixLoading()
-  t.deepEqual(heritrixStartedAct, heritrixWaybackStart, 'the service manager should be able to detect that heritrix is already started and not try to restart it')
+  t.notThrows(serviceMan.startWayback(), 'the service manager should be able detect that wayback is already started and not try to restart it')
+  t.notThrows(serviceMan.startHeritrix(), 'the service manager should be able to detect that heritrix is already started and not try to restart it')
 })
 
-test('the service manager should be able to stop the services', async t => {
-  const waybackStartedAct = await serviceMan.startWaybackLoading()
-  const expectedWaybackStart = {wasError: false}
-  t.deepEqual(waybackStartedAct, expectedWaybackStart, 'the service manager should be able to start wayback')
-  const heritrixStartedAct = await serviceMan.startHeritrixLoading()
-  const heritrixWaybackStart = {wasError: false}
-  t.deepEqual(heritrixStartedAct, heritrixWaybackStart, 'the service manager should be able to start heritrix')
+test.serial('the service manager should be able to stop each service individually', async t => {
+  t.notThrows(serviceMan.killService('wayback'), 'the service manager should be able to kill wayback without throwing an error')
+  await Promise.delay(2000)
+  t.notThrows(serviceMan.killService('heritrix'), 'the service manager should be able to kill wayback without throwing an error')
+  await Promise.delay(2000)
+  t.false(serviceMan.isServiceUp('wayback'), 'the service manager should be able to detect that wayback is down after killing it')
+  t.false(serviceMan.isServiceUp('heritrix'), 'the service manager should be able to detect that heritrix is down after killing it')
+})
 
+test.serial('the service manager should be able to restart each service after killing it', async t => {
+  t.notThrows(serviceMan.startWayback(), 'the service manager should be able to start wayback after it was killed previously')
   t.true(serviceMan.isServiceUp('wayback'), 'the service manager should be able to detect that wayback is up after starting')
+  t.notThrows(serviceMan.startHeritrix(), 'the service manager should be able to start heritrix after it was killed previously')
+  // await Promise.delay(3000)
   t.true(serviceMan.isServiceUp('heritrix'), 'the service manager should be able to detect that heritrix is up after starting')
 })
 
-test.after('stop services', async t => {
+// test.serial('the service manager should be able to stop all services at once', async t => {
+//   t.notThrows(serviceMan.killService('all'), 'the service manager should be able to kill all services without throwing an error')
+//   await Promise.delay(3000)
+//   t.false(serviceMan.isServiceUp('wayback'), 'the service manager should be able to detect that wayback is down after killing all services')
+//   t.false(serviceMan.isServiceUp('heritrix'), 'the service manager should be able to detect that heritrix is down after killing all services')
+// })
+
+// test.serial('the service manager should be able to restart each service after killing all of them', async t => {
+//   t.notThrows(serviceMan.startWayback(), 'the service manager should be able to start wayback after it was killed previously')
+//   t.notThrows(serviceMan.startHeritrix(), 'the service manager should be able to start heritrix after it was killed previously')
+//   await Promise.delay(2000)
+//   t.true(serviceMan.isServiceUp('wayback'), 'the service manager should be able to detect that wayback is down after killing it')
+//   t.true(serviceMan.isServiceUp('heritrix'), 'the service manager should be able to detect that heritrix is down after killing it')
+// })
+
+test.after.always('stop services', async t => {
   await serviceMan.killAllServices()
 })

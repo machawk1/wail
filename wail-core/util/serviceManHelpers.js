@@ -134,16 +134,18 @@ const killPid = pid => new Promise((resolve, reject) => {
       } else {
         if (kids.length > 0) {
           let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
-            detached: true,
             shell: true,
             stdio: ['ignore', 'ignore', 'ignore']
           })
-          dukeNukem.unref()
+          dukeNukem.on('exit', () => {
+            resolve()
+          })
         } else {
           process.kill(pid, 'SIGTERM')
+          resolve()
         }
       }
-      resolve()
+
     })
   } else {
     cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {

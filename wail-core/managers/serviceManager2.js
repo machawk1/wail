@@ -110,7 +110,7 @@ export default class ServiceManager {
     }
 
     if (!this._accessCache.get('firstTime')) {
-      console.log('Accessibility cache is here ', this._accessCache)
+      // console.log('Accessibility cache is here ', this._accessCache)
       let wasUpdate = false, oldWStatus = this._accessCache.get('wayback'), oldHStatus = this._accessCache.get('heritrix')
       if (wStatus !== oldWStatus) {
         wasUpdate = true
@@ -129,9 +129,9 @@ export default class ServiceManager {
           default:
             break
         }
-        console.log('there was an update to service statuses', this._accessCache, wStatus, hStatus)
+        // console.log('there was an update to service statuses', this._accessCache, wStatus, hStatus)
       } else {
-        console.log('no update to service statuses', this._accessCache, wStatus, hStatus)
+        // console.log('no update to service statuses', this._accessCache, wStatus, hStatus)
       }
     } else {
       this._accessCache.set('firstTime', false)
@@ -144,16 +144,16 @@ export default class ServiceManager {
     return new Promise((resolve, reject) => {
       this._pidStore.find({}, (error, pids) => {
         if (error) {
-          console.error('there was an error in ServiceManage intit get persisted pids', error)
+          // console.error('there was an error in ServiceManage intit get persisted pids', error)
           resolve()
         } else {
           if (pids.length > 0) {
-            console.log('we have persisted pids')
+            // console.log('we have persisted pids')
             pids.forEach(pPid => {
               this._monitoring.set(pPid.who, pPid.pid)
             })
           } else {
-            console.log('we do not have persisted pids')
+            // console.log('we do not have persisted pids')
           }
         }
         resolve()
@@ -164,16 +164,16 @@ export default class ServiceManager {
   isServiceUp (which) {
     let pid = this._monitoring.get(which)
     if (pid) {
-      console.log(`checking serivce ${which}`, pid, isRunning(pid))
+      // console.log(`checking serivce ${which}`, pid, isRunning(pid))
       return isRunning(pid)
     } else {
-      console.log(`checking serivce ${which} has not been started`)
+      // console.log(`checking serivce ${which} has not been started`)
       return false
     }
   }
 
   async restartWayback () {
-    console.log('restarting wayback')
+    // console.log('restarting wayback')
     await this.killService('wayback')
     await this.startWayback()
   }
@@ -198,39 +198,39 @@ export default class ServiceManager {
     return new Promise((resolve, reject) => {
       this._pidStore.remove(removeMe, opts, (error) => {
         if (error) {
-          console.error(`ServiceManager error removing from pidstore ${removeMe.who || 'all'}`)
+          // console.error(`ServiceManager error removing from pidstore ${removeMe.who || 'all'}`)
           reject(error)
         } else {
-          console.log(`ServiceManager removed ${removeMe.who || 'all'} from pidstore`)
+          // console.log(`ServiceManager removed ${removeMe.who || 'all'} from pidstore`)
+          resolve()
         }
-        resolve()
       })
     })
   }
 
   async killService (which) {
     if (which === 'all') {
-      return this.killAllServices()
+      return await this.killAllServices()
     } else {
       if (this.isServiceUp(which)) {
         let pid = this._monitoring.get(which)
         await killPid(pid)
         this._monitoring.delete(which)
-        await this._removeFromPidStore({_id: which, who: which})
+        return await this._removeFromPidStore({_id: which, who: which})
       }
     }
   }
 
   async startHeritrix () {
     let {logger} = global
-    console.log('service man starting heritrix')
+    // console.log('service man starting heritrix')
     if (this.isServiceUp('heritrix')) {
       if (logger) {
         logger.info('starting heritrix but it was up already')
       }
-      console.log('heritrix is already up', this._monitoring)
+      // console.log('heritrix is already up', this._monitoring)
     } else {
-      console.log('heritrix is not up starting')
+      // console.log('heritrix is not up starting')
       if (this._isWin) {
         let didStart = await this._startHeritrixWin()
         if (didStart.wasError) {
@@ -242,13 +242,13 @@ export default class ServiceManager {
           throw hStart.err
         }
         let {stderr, stdout} = hStart
-        console.log('heritrix was started')
-        console.log('stdout', stdout)
-        console.log('stderr', stderr)
+        // console.log('heritrix was started')
+        // console.log('stdout', stdout)
+        // console.log('stderr', stderr)
         let out = S(stdout)
         let {wasError, errorType, errorMessage} = wasHeritrixStartError(out, stderr)
         if (wasError) {
-          console.error('heritrix could not be started due to an error', stderr, stdout)
+          // console.error('heritrix could not be started due to an error', stderr, stdout)
           let theError = new Error(errorMessage)
           if (logger) {
             logger.fatal({err: theError, msg: `heritrix could not be started ${stdout} ${errorMessage}`})
@@ -262,7 +262,7 @@ export default class ServiceManager {
             await Promise.delay(2000)
             if (isRunning(pid)) {
               this._monitoring.set('heritrix', pid)
-              console.log('Heritrix was started')
+              // console.log('Heritrix was started')
               if (logger) {
                 logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
               }
@@ -274,7 +274,7 @@ export default class ServiceManager {
             if (logger) {
               logger.fatal('the pid extraction could not be done for heritrix')
             }
-            console.error('the pid extraction could not be done for heritrix')
+            // console.error('the pid extraction could not be done for heritrix')
             throw new Error('the pid extraction could not be done for heritrix')
           }
         }
@@ -284,15 +284,15 @@ export default class ServiceManager {
 
   async startHeritrixLoading () {
     let {logger} = global
-    console.log('service man starting heritrix loading')
+    // console.log('service man starting heritrix loading')
     if (this.isServiceUp('heritrix')) {
       if (logger) {
         logger.info('starting heritrix but it was up already')
       }
-      console.log('heritrix is already up', this._monitoring)
+      // console.log('heritrix is already up', this._monitoring)
       return {wasError: false}
     } else {
-      console.log('heritrix is not up starting')
+      // console.log('heritrix is not up starting')
       let didStart
       if (this._isWin) {
         didStart = await this._startHeritrixWin()
@@ -313,10 +313,10 @@ export default class ServiceManager {
   }
 
   async startWayback () {
-    console.log('service man starting wayback')
+    // console.log('service man starting wayback')
     let {logger} = global
     if (this.isServiceUp('wayback')) {
-      console.log('wayback was already up')
+      // console.log('wayback was already up')
       if (logger) {
         logger.info('starting wayback but was already up')
       }
@@ -328,7 +328,7 @@ export default class ServiceManager {
           throw result.errorReport.error
         }
       } else {
-        console.log('starting wayback')
+        // console.log('starting wayback')
         let exec = this._settings.get('pywb.wayback')
         let opts = {
           cwd: this._settings.get('pywb.home'),
@@ -339,23 +339,22 @@ export default class ServiceManager {
         let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
         let pid = wayback.pid
         wayback.unref()
-        await Promise.delay(3000)
-        if (isRunning(pid)) {
-          this._monitoring.set('wayback', pid)
-          console.log('wayback was started', pid)
-          await this._updatePidStore(pid, 'wayback')
-        } else {
-          throw new Error('Wayback was started but it stopped shortly after starting')
-        }
+        // await Promise.delay(2000)
+        // if (!isRunning(pid)) {
+        //   throw new Error('Wayback was started but it stopped shortly after starting')
+        // }
+        this._monitoring.set('wayback', pid)
+        console.log('wayback was started', this._monitoring, pid)
+        await this._updatePidStore(pid, 'wayback')
       }
     }
   }
 
   async startWaybackLoading () {
-    console.log('service man starting wayback')
+    // console.log('service man starting wayback')
     let {logger} = global
     if (this.isServiceUp('wayback')) {
-      console.log('wayback was already up')
+      // console.log('wayback was already up')
       if (logger) {
         logger.info('starting wayback but was already up')
       }
@@ -364,7 +363,7 @@ export default class ServiceManager {
       if (process.platform === 'win32') {
         return await this._startWaybackWin(logger)
       } else {
-        console.log('starting wayback')
+        // console.log('starting wayback')
         let exec = this._settings.get('pywb.wayback')
         let opts = {
           cwd: this._settings.get('pywb.home'),
@@ -379,7 +378,7 @@ export default class ServiceManager {
           if (logger) {
             logger.fatal({err, msg: 'wayback could not be started'})
           }
-          console.error('wayback could not be started', err)
+          // console.error('wayback could not be started', err)
           return {
             wasError: true,
             errorReport: {
@@ -393,11 +392,11 @@ export default class ServiceManager {
         await Promise.delay(3000)
         if (isRunning(pid)) {
           this._monitoring.set('wayback', pid)
-          console.log('wayback was started', pid)
+          // console.log('wayback was started', pid)
           try {
             await this._updatePidStore(pid, 'wayback')
           } catch (insertError) {
-            console.error('service manager inserting pid for wayback error', insertError)
+            // console.error('service manager inserting pid for wayback error', insertError)
             if (logger) {
               logger.fatal({msg: 'service manager inserting pid for wayback error', err: insertError})
             }
@@ -427,7 +426,7 @@ export default class ServiceManager {
     return new Promise((resolve, reject) => {
       this._pidStore.update({_id: who, who}, {$set: {pid}}, {upsert: true}, insertError => {
         if (insertError) {
-          console.error('service manager inserting pid error', insertError)
+          // console.error('service manager inserting pid error', insertError)
           reject(insertError)
         } else {
           resolve()
@@ -474,7 +473,7 @@ export default class ServiceManager {
       if (logger) {
         logger.fatal({err, msg: 'wayback could not be started'})
       }
-      console.error('wayback could not be started', err)
+      // console.error('wayback could not be started', err)
       return {
         wasError: true,
         errorReport: {
@@ -496,7 +495,7 @@ export default class ServiceManager {
       }
     }
     if (result.found) {
-      console.log('wayback pid was found')
+      // console.log('wayback pid was found')
       this._monitoring.set('wayback', result.pid)
       try {
         await this._updatePidStore(result.pid, 'wayback')
@@ -512,7 +511,7 @@ export default class ServiceManager {
       if (logger) {
         logger.info(`wayback was started ${result.pid}`)
       }
-      console.log('resolving waybackpid')
+      // console.log('resolving waybackpid')
       return {wasError: false}
     } else {
       return {
@@ -587,7 +586,7 @@ export default class ServiceManager {
     let hStart = await exec(this._hStartCmdNotWin())
     if (hStart.wasError) {
       let {err, stderr, stdout} = hStart
-      console.error('heritrix could not be started due to an error', err, stderr, stdout)
+      // console.error('heritrix could not be started due to an error', err, stderr, stdout)
       if (logger) {
         logger.fatal({err, msg: `heritrix could not be started ${stderr}`})
       }
@@ -601,13 +600,13 @@ export default class ServiceManager {
       }
     } else {
       let {stderr, stdout} = hStart
-      console.log('heritrix was started')
-      console.log('stdout', stdout)
-      console.log('stderr', stderr)
+      // console.log('heritrix was started')
+      // console.log('stdout', stdout)
+      // console.log('stderr', stderr)
       let out = S(stdout)
       let {wasError, errorType, errorMessage} = wasHeritrixStartError(out, stderr)
       if (wasError) {
-        console.error('heritrix could not be started due to an error', stderr, stdout)
+        // console.error('heritrix could not be started due to an error', stderr, stdout)
         let theError = new Error(errorMessage)
         if (logger) {
           logger.fatal({err: theError, msg: `heritrix could not be started ${stdout} ${errorMessage}`})
@@ -628,7 +627,7 @@ export default class ServiceManager {
           await Promise.delay(2000)
           if (isRunning(pid)) {
             this._monitoring.set('heritrix', pid)
-            console.log('Heritrix was started')
+            // console.log('Heritrix was started')
             if (logger) {
               logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
             }
@@ -659,7 +658,7 @@ export default class ServiceManager {
           if (logger) {
             logger.fatal('the pid extraction could not be done for heritrix')
           }
-          console.error('the pid extraction could not be done for heritrix')
+          // console.error('the pid extraction could not be done for heritrix')
           return {
             wasError: true,
             errorType: 3,
@@ -679,9 +678,9 @@ export default class ServiceManager {
     let hfinder = heritrixFinder(findpResults)
     if (hfinder.found) {
       let {pid, isWails} = hfinder
-      console.log(`there is a heritrix instance running pid=${pid}`)
+      // console.log(`there is a heritrix instance running pid=${pid}`)
       if (isWails) {
-        console.log('it is wails')
+        // console.log('it is wails')
         try {
           await this._updatePidStore(pid, 'heritrix')
         } catch (error) {
@@ -693,7 +692,7 @@ export default class ServiceManager {
         this._monitoring.set('heritrix', pid)
         return {wasError: false}
       } else {
-        console.log('it is not wails')
+        // console.log('it is not wails')
         return heritrixLaunchErrorReport("Another Heritrix instance not under WAIL's control is in use", 'Launching Heritrix')
       }
     } else {
@@ -708,10 +707,10 @@ export default class ServiceManager {
       let {found, whoOnPort: {pid, pname}} = whoOnPort
       let eMessage, where = 'Launching Heritrix'
       if (found) {
-        console.log(pid, pname)
+        // console.log(pid, pname)
         eMessage = `Another process[name=${pname}, pid=${pid}] is using the port[8443] that Heritrix uses`
       } else {
-        console.log('couldnt find who is on port')
+        // console.log('couldnt find who is on port')
         eMessage = 'Another process is using the port[8443] that Heritrix uses. But WAIL could not determine which one'
       }
       return heritrixLaunchErrorReport(eMessage, where)
