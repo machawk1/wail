@@ -11,12 +11,18 @@ const fs = require('fs-extra')
 const prettyBytes = require('pretty-bytes')
 const through2 = require('through2')
 const Rx = require('rxjs/Rx')
-const ElectronSettings = require('electron-settings')
+const rp = require('request-promise')
 const normalizeUrl = require('normalize-url')
-
+const findP = require('find-process')
+const isRunning = require('is-running')
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
-const settingsPath = Path.join(process.cwd(), 'wail-config', 'wail-settings')
-const settings = new ElectronSettings({configDirPath: settingsPath})
-console.log(settings.get('version'))
 
+// findP('name', 'wayback').then(ret => {
+//   console.log(ret)
+// }).catch(error => {
+//   console.error(error)
+// })
+
+console.log(isRunning(29260))

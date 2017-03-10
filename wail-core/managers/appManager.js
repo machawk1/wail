@@ -89,8 +89,8 @@ export default class AppManager2 {
     if (!this.settingsMan.get('didFirstLoad')) {
       this.firstLoad = true
     }
-    this.serviceMan = new ServiceManager(this.settingsMan)
     await this.serviceMan.init()
+    this.serviceMan = new ServiceManager(this.settingsMan)
     global.wailVersion = this.version
     global.wailLogp = this.logPath
     global.settings = this.settingsMan

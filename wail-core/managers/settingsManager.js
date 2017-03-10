@@ -1,10 +1,10 @@
-import ElectronSettings from 'electron-settings'
+import Settings from 'electron-settings'
 import path from 'path'
 import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
-import Promise from 'bluebird'
+import kph from 'key-path-helpers'
 import managed from './settingsManValues'
 
 S.TMPL_OPEN = '{'
@@ -29,6 +29,11 @@ export const templates = {
   notIndexCDX: '!{cdx}{notIndex}'
 }
 
+const managedPathReducer = (acum, aPath) => {
+  acum[aPath.name] = path.normalize(path.join(global.basePath, aPath))
+  return acum
+}
+
 export default class SettingsManager {
   constructor (base, docsPath, settingsDir, dbParentPath, version) {
     this._version = version
@@ -39,116 +44,87 @@ export default class SettingsManager {
     this._dbParentPath = dbParentPath
   }
 
-  configure () {
-    let {pathMan} = global
-    this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
-    return new Promise((resolve, reject) => {
-      try {
-        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
-      } catch (e) {
-        // if something went terrible wrong during a config the json becomes malformed
-        // electron settings throws an error in this case
-        fs.removeSync(this._settingsDir)
-        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
-      }
+  _shouldReConfigure (iSettings) {
+    if (!iSettings.configured || iSettings.version !== this._version) {
+      return true
+    }
+    return iSettings.base !== this._base
+  }
 
-      if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
-        console.log('We are not configured')
-        let didFirstLoad = this._settings.get('didFirstLoad')
-        if (didFirstLoad === null || didFirstLoad === undefined) {
-          didFirstLoad = false
-        }
+  async configure () {
+    this._settingsDir = global.settingsDir = path.join(this._settingsDir, 'wail-settings')
+    Settings.configure({
+      settingsDir: this._settingsDir,
+      settingsFileName: 'settings.json',
+      prettify: true
+    })
 
-        // console.log('We are not configured due to binary directory being moved')
-        this._writeSettings(pathMan, didFirstLoad)
-        console.log(didFirstLoad)
-        // console.log(base, settings)
+    let iSettings, wasError = false
+    try {
+      iSettings = await Settings.get()
+    } catch (error) {
+      console.error('getting settings', error)
+      wasError = true
+    }
+
+    if (!wasError) {
+      if (!iSettings || _.isEmpty(iSettings)) {
+        console.log('the settings are null!!')
+        this._settings = await this._writeSettings()
       } else {
-        if (this._settings.get('base') !== this._base) {
-          /*
-           If the user moves the application directory the settings will
-           will not be correct since I use absolute paths.
-           I did this to myself....
-           */
-          let didFirstLoad = this._settings.get('didFirstLoad')
+        if (this._shouldReConfigure(iSettings)) {
+          let didFirstLoad = iSettings.didFirstLoad
           if (didFirstLoad === null || didFirstLoad === undefined) {
             didFirstLoad = false
           }
-
-          // if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
-          //   didFirstLoad = false
-          // }
-
-          // console.log('We are not configured due to binary directory being moved')
-          this._writeSettings(pathMan, didFirstLoad)
+          this._settings = await this._writeSettings(didFirstLoad)
+        } else {
+          this._settings = iSettings
         }
-        // console.log('We are configured')
       }
-
-      this._settings.watch('heritrix.port', change => {
-        console.log('heritrix.port changed ', change)
-        this.rewriteHeritrixPort(change.was, change.now)
-      })
-
-      this._settings.watch('wayback.port', change => {
-        let wb = _.cloneDeep(this._settings.get('wayback'))
-        wb.port = change.now
-        let uriTomcat = S(wb.uri_tomcat)
-        wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
-        let uriWB = S(wb.uri_wayback)
-        wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
-        this._settings.set('wayback', wb)
-      })
-      return resolve()
-    })
+    }
   }
 
   writeSettings () {
-    let {pathMan} = global
-    this._writeSettings(pathMan, this._settings.get('didFirstLoad'))
+    if (!this._settings || _.isEmpty(this._settings)) {
+      return this._writeSettings()
+    }
+    return this._writeSettings(this.get('didFirstLoad'))
   }
 
-  _writeSettings (pathMan, didFirstLoad) {
-    this._settings.clear()
-    this._settings.set('version', this._version)
-    let isWindows = os.platform() === 'win32'
-    this._settings.set('configured', true)
-    this._settings.set('base', pathMan.base)
-    managed.paths.forEach(p => {
-      this._settings.set(p.name, pathMan.normalizeJoinWBase(p.path))
+  resetToDefault (didFirstLoad = false) {
+    return this.writeSettings(didFirstLoad)
+  }
+
+  _makeDefaults (didFirstLoad = false) {
+    const defaults = managed.paths.reduce(managedPathReducer, {
+      version: this._version,
+      configured: true,
+      base: global.basePath,
     })
+    let isWindows = os.platform() === 'win32'
     let heritrix = managed.heritrix
-    let cmdexport = `export JAVA_HOME=${this._settings.get('jdk')}; export JRE_HOME=${this._settings.get('jre')};`
+    let cmdexport = `export JAVA_HOME=${defaults.jdk}; export JRE_HOME=${defaults.jre};`
     let jHomeDarwin = '/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home'
     let darwinExport = managed.dbgOSX ? cmdexport : `export JAVA_HOME=${jHomeDarwin}; export JRE_HOME=${jHomeDarwin};`
     let command = 'sh'
-    heritrix.path = this._settings.get('heritrix')
-    heritrix.jobsDir = pathMan.normalizeJoin(this._docsPath, heritrix.jobsDir)
+    heritrix.path = defaults.heritrix
+    heritrix.jobsDir = path.normalize(path.join(this._docsPath, heritrix.jobsDir))
     fs.ensureDirSync(heritrix.jobsDir)
 
     let jobConfPath
     if (isWindows) {
-      let cdxWin = `${cmdexport} ${this._settings.get('cdxIndexerWin')}`
-      this._settings.set('cdxIndexer', cdxWin)
-      jobConfPath = pathMan.normalizeJoinWBase(heritrix.jobConfWin)
+      jobConfPath = path.normalize(path.join(global.basePath, heritrix.jobConfWin))
     } else {
-      jobConfPath = pathMan.normalizeJoinWBase(heritrix.jobConf) // path.normalize(path.join(base, heritrix.jobConf))
-      var cdx
-      if (process.platform === 'darwin') {
-        cdx = `${darwinExport} ${this._settings.get('cdxIndexer')}`
-      } else {
-        cdx = `${cmdexport} ${this._settings.get('cdxIndexer')}`
-      }
-
-      this._settings.set('cdxIndexer', cdx)
+      jobConfPath = path.normalize(path.join(global.basePath, heritrix.jobConf)) // path.normalize(path.join(base, heritrix.jobConf))
     }
     heritrix.jobConf = jobConfPath
-    this._settings.set('heritrix', heritrix)
+    defaults.heritrix = heritrix
     let checkArray = ['port', 'url', 'dport', 'dhost', 'host']
     let wci = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
-        v = pathMan.normalizeJoin(this._dbParentPath, v)
+        v = path.normalize(path.join(this._dbParentPath, v))
       }
 
       if (k === 'url') {
@@ -160,7 +136,7 @@ export default class SettingsManager {
     let wc = _.mapValues(managed.wailCore, (v, k) => {
       if (!checkArray.includes(k)) {
         console.log(k)
-        v = pathMan.normalizeJoin(this._dbParentPath, v)
+        v = path.normalize(path.join(this._dbParentPath, v))
       }
 
       if (k === 'url') {
@@ -169,22 +145,18 @@ export default class SettingsManager {
       return v
     })
 
-    this._settings.set('iwailCore', wci)
-    this._settings.set('wailCore', wc)
-
-    let wb = managed.wayback
-    wb.allCDX = `${this._settings.get('cdx')}${wb.allCDX}`
-    wb.notIndexCDX = `!${this._settings.get('cdx')}${wb.notIndexCDX}`
-    this._settings.set('wayback', wb)
+    defaults.iwailCore = wci
+    defaults.wailCore = wc
+    defaults.wayback = managed.wayback
 
     let code = managed.code
-    code.crawlerBean = pathMan.normalizeJoinWBase(code.crawlerBean)
-    code.wayBackConf = pathMan.normalizeJoinWBase(code.wayBackConf)
+    code.crawlerBean = path.normalize(path.join(global.basePath, code.crawlerBean))
+    code.wayBackConf = path.normalize(path.join(global.basePath, code.wayBackConf))
 
     let whichPywb = process.platform === 'win32' ? managed.pywbwin : managed.pywb
     let pywb = _.mapValues(whichPywb, (v, k) => {
       if (k !== 'port' && k !== 'url') {
-        v = pathMan.normalizeJoinWBase(v)
+        v = path.normalize(path.join(global.basePath, v))
       }
       if (k === 'url') {
         v = S(v).template({port: whichPywb.port}).s
@@ -193,127 +165,72 @@ export default class SettingsManager {
     })
 
     let collections = _.mapValues(managed.collections, (v, k) => {
-      return pathMan.normalizeJoin(this._docsPath, v)
+      return path.normalize(path.join(this._docsPath, v))
     })
 
     let icollections = _.mapValues(managed.icollections, (v, k) => {
-      return pathMan.normalizeJoinWBase(v)
+      return path.normalize(path.join(global.basePath, v))
     })
 
-    this._settings.set('documentsPath', this._docsPath)
-    this._settings.set('warcs', pathMan.normalizeJoin(this._docsPath, managed.warcs))
-    this._settings.set('iwarcs', pathMan.normalizeJoinWBase('/archives'))
-    this._settings.set('collections', collections)
-    this._settings.set('icollections', icollections)
+    defaults.documentsPath = this._docsPath
+    defaults.warcs = path.normalize(path.join(this._docsPath, managed.warcs))
+    defaults.iwarcs = path.normalize(path.join(global.basePath, '/archives'))
+    defaults.collections = collections
+    defaults.icollections = icollections
 
-    this._settings.set('pywb', pywb)
-    this._settings.set('migrate', false)
-    this._settings.set('didFirstLoad', didFirstLoad)
+    defaults.pywb = pywb
+    defaults.migrate = false
+    defaults.didFirstLoad = didFirstLoad
 
-    this._settings.set('winDeleteJob', pathMan.normalizeJoinWBase('windowsNukeDir.bat'))
+    defaults.winDeleteJob = path.normalize(path.join(global.basePath, 'windowsNukeDir.bat'))
 
-    this._settings.set('isWindows', isWindows)
-    managed.commands.forEach(cmd => {
-      switch (cmd.name) {
-        case 'memgator':
-          this._settings.set('memgatorQuery', `${this._settings.get('memgator')} -a ${this._settings.get('archives')}`)
-          break
-        case 'catalina':
-        case 'tomcatStart':
-        case 'tomcatStop':
-          break
-        case 'heritrixStart':
-          if (isWindows) {
-            this._settings.set(cmd.name, `${pathMan.normalizeJoinWBase('bundledApps/heritrix.bat')} ${this._settings.get('heritrix.login')}`)
-          } else {
-            let hStart = `${pathMan.normalizeJoinWBase(cmd.path)} ${this._settings.get('heritrix.login')} --jobs-dir ${heritrix.jobsDir}`
-            this._settings.set(cmd.name, `${cmdexport} ${hStart}`)
-            this._settings.set(`${cmd.name}Darwin`, `${darwinExport} ${hStart}`)
-          }
-          break
-        default:
-          this._settings.set(cmd.name, `${cmdexport} ${command} ${pathMan.normalizeJoinWBase(cmd.path)}`)
-          break
-      }
-    })
+    defaults.isWindows = isWindows
+    defaults.memgatorQuery = `${defaults.memgator} -a ${defaults.archives}`
+    if (isWindows) {
+      let batPath = path.normalize(path.join(global.basePath, 'bundledApps/heritrix.bat'))
+      defaults.heritrixStart = `${batPath} ${heritrix.login}`
+    } else {
+      let hstartPath = path.normalize(path.join(global.basePath, managed.commands[0].path))
+      let hStart = `${hstartPath} ${heritrix.login} --jobs-dir ${heritrix.jobsDir}`
+      defaults.heritrixStart = `${cmdexport} ${hStart}`
+      defaults.heritrixStartDarwin = `${darwinExport} ${hStart}`
+    }
 
-    this._settings.set('twitter', managed.twitter)
+    defaults.twitter = managed.twitter
     let whichWarcChecker = process.platform === 'win32' ? managed.warcCheckerWin : managed.warcChecker
-    let wcChecker = _.mapValues(whichWarcChecker, v => pathMan.normalizeJoinWBase(v))
-    this._settings.set('warcChecker', wcChecker)
-    this._settings.set('dumpTwitterWarcs', pathMan.normalizeJoinWBase(managed.dumpTwitterWarcs))
-    this._settings.set('archivePreload', pathMan.normalizeJoinWBase(managed.archivePreload))
+    defaults.warcChecker = _.mapValues(whichWarcChecker, v => path.normalize(path.join(global.basePath, v)))
+    defaults.dumpTwitterWarcs = path.normalize(path.join(global.basePath, managed.dumpTwitterWarcs))
+    defaults.archivePreload = path.normalize(path.join(global.basePath, managed.archivePreload))
 
     let whichExtractSeed = process.platform === 'win32' ? managed.extractSeedWin : managed.extractSeed
-    let extractSeed = _.mapValues(whichExtractSeed, v => pathMan.normalizeJoinWBase(v))
-    this._settings.set('extractSeed', extractSeed)
-    this._settings.set('didRedoFl', true)
-    this._settings.set('logBasePath', global.__wailControl.logPath)
-    fs.ensureDirSync(pathMan.normalizeJoin(this._dbParentPath, managed.wailCore.db))
+    defaults.extractSeed = _.mapValues(whichExtractSeed, v => path.normalize(path.join(global.basePath, v)))
+    defaults.didRedoFl = true
+    defaults.logBasePath = global.__wailControl.logPath
+    fs.ensureDirSync(path.normalize(path.join(this._dbParentPath, managed.wailCore.db)))
+    return defaults
   }
 
-  resetToDefault () {
-    this.writeSettings()
-  }
-
-  rewriteHeritrixPort (was, is) {
-    let mutate = S(' ')
-    let nh = _.mapValues(this._settings.get('heritrix'), (v, k) => {
-      if (_.has(v, 'url')) {
-        mutate = mutate.setValue(v.url)
-        mutate = mutate.replaceAll(was, is)
-        v.url = mutate.s
-      } else {
-        mutate = mutate.setValue(k)
-        if (mutate.contains('uri') || mutate.contains('ui')) {
-          mutate = mutate.setValue(v)
-          mutate = mutate.replaceAll(was, is)
-          v = mutate.s
-        }
-      }
-      return v
-    })
-
-    let hStart = mutate.setValue(this._settings.get('heritrixStart'))
-    if (hStart.contains('-p')) {
-      hStart.replaceAll(`-p ${was}`, `-p ${is}`)
-    } else {
-      hStart.setValue(`${this._settings.get('heritrixStart')} -p ${is}`)
-    }
-    this._settings.set('heritrixStart', hStart.s)
-    this._settings.set('heritrix', nh)
-  }
-
-  rewriteHeritrixAuth (usr, pwd) {
-    if (usr && pwd) {
-      let heritrix = this._settings.get('heritrix')
-      let nh = _.mapValues(heritrix, (v, k) => {
-        if (_.has(v, 'auth')) {
-          v.auth.username = usr
-          v.auth.password = pwd
-        }
-        return v
-      })
-      nh.username = usr
-      nh.password = pwd
-
-      nh.web_ui = `https://${usr}:${pwd}@localhost:${nh.port}`
-      nh.login = `-a ${usr}:${pwd}`
-
-      let hS = S(this._settings.get('heritrixStart'))
-      let hSD = S(this._settings.get('heritrixStartDarwin'))
-      this._settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
-      this._settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
-      this._settings.set('heritrix', nh)
-    }
+  async _writeSettings (didFirstLoad = false) {
+    Settings.defaults(this._makeDefaults(didFirstLoad))
+    await Settings.applyDefaults({overwrite: true, prettify: true})
+    return await Settings.get()
   }
 
   get (what) {
-    return this._settings.get(what)
+    if (typeof what === 'string') {
+      return kph.getValueAtKeyPath(this._settings, what)
+    }
+    return this._settings
   }
 
-  set (what, replacement) {
-    this._settings.set(what, replacement)
+  async set (what, replacement) {
+    await Settings.set(what, replacement, {prettify: true})
+    this._settings = await Settings.get()
+  }
+
+  setSync (what, replacement) {
+    Settings.setSync(what, replacement, {prettify: true})
+    this._settings = Settings.getSync()
   }
 
   get base () {
@@ -322,6 +239,58 @@ export default class SettingsManager {
 
   get version () {
     return this._version
+  }
+
+  rewriteHeritrixPort (was, is) {
+    // let mutate = S(' ')
+    // let nh = _.mapValues(this._settings.get('heritrix'), (v, k) => {
+    //   if (_.has(v, 'url')) {
+    //     mutate = mutate.setValue(v.url)
+    //     mutate = mutate.replaceAll(was, is)
+    //     v.url = mutate.s
+    //   } else {
+    //     mutate = mutate.setValue(k)
+    //     if (mutate.contains('uri') || mutate.contains('ui')) {
+    //       mutate = mutate.setValue(v)
+    //       mutate = mutate.replaceAll(was, is)
+    //       v = mutate.s
+    //     }
+    //   }
+    //   return v
+    // })
+    //
+    // let hStart = mutate.setValue(this._settings.get('heritrixStart'))
+    // if (hStart.contains('-p')) {
+    //   hStart.replaceAll(`-p ${was}`, `-p ${is}`)
+    // } else {
+    //   hStart.setValue(`${this._settings.get('heritrixStart')} -p ${is}`)
+    // }
+    // this._settings.set('heritrixStart', hStart.s)
+    // this._settings.set('heritrix', nh)
+  }
+
+  rewriteHeritrixAuth (usr, pwd) {
+    // if (usr && pwd) {
+    //   let heritrix = this.get('heritrix')
+    //   let nh = _.mapValues(heritrix, (v, k) => {
+    //     if (_.has(v, 'auth')) {
+    //       v.auth.username = usr
+    //       v.auth.password = pwd
+    //     }
+    //     return v
+    //   })
+    //   nh.username = usr
+    //   nh.password = pwd
+    //
+    //   nh.web_ui = `https://${usr}:${pwd}@localhost:${nh.port}`
+    //   nh.login = `-a ${usr}:${pwd}`
+    //
+    //   let hS = S(this.get('heritrixStart'))
+    //   let hSD = S(this.get('heritrixStartDarwin'))
+    //   this._settings.set('heritrixStart', hS.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    //   this._settings.set('heritrixStartDarwin', hSD.replaceAll(`${heritrix.username}:${heritrix.password}`, `${usr}:${pwd}`).s)
+    //   this._settings.set('heritrix', nh)
+    // }
   }
 
 }

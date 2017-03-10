@@ -1,15 +1,17 @@
 import test from 'ava'
 import Promise from 'bluebird'
 import Path from 'path'
-import ElectronSettings from 'electron-settings'
+import tSettings from './helpers/mockSettings'
 
 const cwd = process.cwd()
-let settings
+let settings = new tSettings()
 
 test.before('test setup', t => {
   console.log(cwd)
+  settings.configure()
 })
 
 test('blah', async t => {
-  t.is(cwd, '/home/john/my-fork-wail')
+  console.log(settings.get())
+  t.pass()
 })

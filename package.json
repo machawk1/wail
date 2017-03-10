@@ -31,7 +31,7 @@
     "dev-ui-electron": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
     "dev-only": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024  ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-ui/ --hot --inline",
     "run-tests": "node --harmony --harmony_async_await ./node_modules/.bin/ava -s --verbose",
-    "test-aman": "node --harmony --harmony_async_await ./node_modules/.bin/ava --verbose tests/testArchiveManager.js",
+    "test-aman": "node --harmony --harmony_async_await ./node_modules/.bin/ava --verbose tests/testServiceMan/testServiceManager.js",
     "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
     "package-windows": "npm run package -- --win",
@@ -65,7 +65,7 @@
     "dropbox": "^2.5.2",
     "electron": "^1.6.3",
     "electron-oauth-twitter": "^1.1.0",
-    "electron-settings": "1.1.1",
+    "electron-settings": "2.2.2",
     "electron-window": "^0.8.1",
     "eventemitter3": "^2.0.2",
     "extract-zip": "^1.6.0",
@@ -84,6 +84,7 @@
     "joinable": "^1.4.1",
     "js-search": "^1.3.7",
     "js-yaml": "^3.8.2",
+    "key-path-helpers": "^0.4.0",
     "keymirror": "^0.1.1",
     "lodash": "^4.17.4",
     "material-design-icons-iconfont": "^3.0.3",
@@ -137,6 +138,7 @@
     "request-promise": "^4.1.1",
     "roboto-fontface": "^0.7.0",
     "rxjs": "^5.2.0",
+    "serialize-error": "^2.1.0",
     "shelljs": "0.7.6",
     "sliced": "^1.0.1",
     "sort-stream2": "^1.0.0",
@@ -321,7 +323,18 @@
     "babel": {
       "babelrc": false,
       "presets": [
-        "es2017-node7"
+        [
+          "env",
+          {
+            "targets": {
+              "electron": 1.6
+            },
+            "useBuiltIns": true,
+            "exclude": [
+              "transform-async-to-generator"
+            ]
+          }
+        ]
       ],
       "plugins": [
         "espower"

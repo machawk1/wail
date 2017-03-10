@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === 'development') {
       {name: 'jobConf', path: 'crawler-beans.cxml'},
       {name: 'jre', path: 'bundledApps/openjdk'},
       {name: 'memgator', path: 'bundledApps/memgator'},
-      {name: 'tomcat', path: 'bundledApps/tomcat'}
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -162,9 +161,6 @@ if (process.env.NODE_ENV === 'development') {
       notIndexCDX: `${path.sep}index.cdx`
     },
     commands: [
-      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh'},
-      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh'},
-      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh'},
       {name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix'},
       {name: 'memgator'}
     ],
@@ -448,9 +444,6 @@ if (process.env.NODE_ENV === 'development') {
       notIndexCDX: `${path.sep}index.cdx`
     },
     commands: [
-      {name: 'catalina', path: 'bundledApps/tomcat/bin/catalina.sh'},
-      {name: 'tomcatStart', path: 'bundledApps/tomcat/bin/startup.sh'},
-      {name: 'tomcatStop', path: 'bundledApps/tomcat/bin/shutdown.sh'},
       {name: 'heritrixStart', path: 'bundledApps/heritrix/bin/heritrix'},
       {name: 'memgator'}
     ],

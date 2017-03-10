@@ -10,6 +10,7 @@ import Datastore from 'nedb'
 import path from 'path'
 import cp from 'child_process'
 import findP from 'find-process'
+import Settings from '../../../wail-core/settings'
 import {
   findProcessOnHeritrixPort,
   findHPidWindows,
@@ -29,7 +30,13 @@ Promise.promisifyAll(fs)
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
-const settings = remote.getGlobal('settings')
+const settingsDir = remote.getGlobal('settingsDir')
+
+Settings.configure({
+  settingsDir,
+  settingsFileName: 'settings.json',
+  prettify: true
+})
 
 const waybackUp = Symbol('waybackGood'), waybackDown = Symbol('waybackDown')
 const heritrixUp = Symbol('heritrixGood'), heritrixDown = Symbol('heritrixDown')
@@ -55,7 +62,7 @@ const checkStatus = async () => {
   }
 
   try {
-    await rp({ uri: settings.get('pywb.url') })
+    await rp({uri: settings.get('pywb.url')})
   } catch (err) {
     if (err.error.code === 'ECONNREFUSED') {
       wStatus = waybackDown
@@ -88,7 +95,7 @@ const checkStatus = async () => {
   }
 }
 
-const dbPath = path.join(settings.get('wailCore.db'), 'pids.db')
+const dbPath = path.join(Settings.getSync('wailCore.db'), 'pids.db')
 
 class ServiceManager {
   constructor () {
@@ -150,7 +157,7 @@ class ServiceManager {
 
   async killAllServices () {
     let forgetMe = []
-    for (let [ who, pid ] of this._monitoring) {
+    for (let [who, pid] of this._monitoring) {
       if (isRunning(pid)) {
         forgetMe.push(who)
         await killPid(pid)
@@ -158,7 +165,7 @@ class ServiceManager {
     }
     this._monitoring.clear()
     if (forgetMe.length > 0) {
-      await this._pidStore.removeAsync({}, { multi: true })
+      await this._pidStore.removeAsync({}, {multi: true})
     }
   }
 
@@ -170,7 +177,7 @@ class ServiceManager {
         let pid = this._monitoring.get(which)
         await killPid(pid)
         this._monitoring.delete(which)
-        await this._pidStore.removeAsync({ _id: which, who: which })
+        await this._pidStore.removeAsync({_id: which, who: which})
       }
     }
   }
@@ -210,7 +217,7 @@ class ServiceManager {
     let opts = this._hStartOptsWin()
     let usrpwrd = `${this._settings.get('heritrix.username')}:${this._settings.get('heritrix.password')}`
     let pid = -1
-    let args = [ '-a', `${usrpwrd}`, '--jobs-dir', `${this._settings.get('heritrix.jobsDir')}` ]
+    let args = ['-a', `${usrpwrd}`, '--jobs-dir', `${this._settings.get('heritrix.jobsDir')}`]
     try {
       let heritrix = cp.spawn('bin\\heritrix.cmd', args, opts)
       heritrix.unref()
@@ -231,7 +238,7 @@ class ServiceManager {
       this._monitoring.set('heritrix', findResults.pid)
       try {
         await this._updatePidStore(findResults.pid, 'heritrix')
-        return { wasError: false }
+        return {wasError: false}
       } catch (error) {
         return {
           wasError: true,
@@ -255,7 +262,7 @@ class ServiceManager {
 
   _updatePidStore (pid, who) {
     return new Promise((resolve, reject) => {
-      this._pidStore.update({ _id: who, who }, { $set: { pid } }, { upsert: true }, insertError => {
+      this._pidStore.update({_id: who, who}, {$set: {pid}}, {upsert: true}, insertError => {
         if (insertError) {
           console.error('service manager inserting pid error', insertError)
           reject(insertError)
@@ -293,7 +300,7 @@ class StatusMonitor {
     }
 
     try {
-      await rp({ uri: settings.get('pywb.url') })
+      await rp({uri: settings.get('pywb.url')})
     } catch (err) {
       if (err.error.code === 'ECONNREFUSED') {
         wStatus = waybackDown
@@ -338,7 +345,7 @@ class StatusMonitor {
   checkReachability (cb) {
     if (!this.started) {
       let rule = new schedule.RecurrenceRule()
-      rule.second = [ 0, 15, 30, 45 ]
+      rule.second = [0, 15, 30, 45]
       this.started = true
       this.job = schedule.scheduleJob(rule, () => {
         if (this.lastFinished) {
@@ -359,7 +366,7 @@ class StatusMonitor {
             })
             .finally(() => {
               console.log('checking wayback accessibility')
-              rp({ uri: settings.get('pywb.url') })
+              rp({uri: settings.get('pywb.url')})
                 .then(success => {
                   this.statues.wayback = true
                 })

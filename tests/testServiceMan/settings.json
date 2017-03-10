@@ -1,0 +1,231 @@
+{
+  "crawlerBean": "/home/john/my-fork-wail/crawler-beans.cxml",
+  "heritrixBin": "/home/john/my-fork-wail/bundledApps/heritrix/bin/heritrix",
+  "heritrixJob": "/home/john/my-fork-wail/bundledApps/heritrix/jobs",
+  "heritrix": {
+    "uri_heritrix": "https://127.0.0.1:8443",
+    "uri_engine": "https://localhost:8443/engine/",
+    "port": "8843",
+    "username": "lorem",
+    "password": "ipsum",
+    "login": "-a lorem:ipsum",
+    "path": "/home/john/my-fork-wail/bundledApps/heritrix",
+    "jobConf": "/home/john/my-fork-wail/crawler-beans.cxml",
+    "jobConfWin": "crawler-beans-win.cxml",
+    "web_ui": "https://lorem:ipsum@localhost:8443",
+    "addJobDirectoryOptions": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine",
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded"
+      },
+      "timeout": 15000,
+      "form": {
+        "action": "add",
+        "addPath": ""
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "sendActionOptions": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine/job/",
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded"
+      },
+      "timeout": 15000,
+      "form": {
+        "action": ""
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "killOptions": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine",
+      "timeout": 15000,
+      "body": "im_sure=on&action=exit java process",
+      "headers": {
+        "User-Agent": "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:47.0) Gecko/20100101 Firefox/47.0",
+        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Accept-Language": "en-US,en;q=0.5",
+        "Connection": "keep-alive"
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "launchJobOptions": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine/job/",
+      "timeout": 15000,
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded"
+      },
+      "form": {
+        "action": "launch"
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "optionEngine": {
+      "method": "GET",
+      "url": "https://localhost:8443/engine",
+      "timeout": 15000,
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "buildOptions": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine/job/",
+      "timeout": 15000,
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded"
+      },
+      "form": {
+        "action": "build"
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "reScanJobs": {
+      "method": "POST",
+      "url": "https://localhost:8443/engine",
+      "timeout": 5000,
+      "headers": {
+        "content-type": "application/x-www-form-urlencoded"
+      },
+      "form": {
+        "action": "rescan"
+      },
+      "auth": {
+        "username": "lorem",
+        "password": "ipsum",
+        "sendImmediately": false
+      },
+      "strictSSL": false,
+      "rejectUnauthorized": false,
+      "resolveWithFullResponse": true
+    },
+    "jobsDir": "/home/john/Documents/WAIL_Managed_Crawls"
+  },
+  "jdk": "/home/john/my-fork-wail/bundledApps/openjdk",
+  "jobConf": "/home/john/my-fork-wail/crawler-beans.cxml",
+  "jre": "/home/john/my-fork-wail/bundledApps/openjdk",
+  "memgator": "/home/john/my-fork-wail/bundledApps/memgator",
+  "iwailCore": {
+    "dport": "3030",
+    "port": "3030",
+    "dhost": "localhost",
+    "host": "localhost",
+    "url": "http://localhost:3030",
+    "db": "/home/john/my-fork-wail/wail-config/database",
+    "timemaps": "/home/john/my-fork-wail/wail-config/timemaps"
+  },
+  "wailCore": {
+    "dport": "3030",
+    "port": "3030",
+    "dhost": "localhost",
+    "host": "localhost",
+    "url": "http://localhost:3030",
+    "db": "/home/john/my-fork-wail/tests/testServiceMan/testDb",
+    "timemaps": "/home/john/my-fork-wail/wail-config/timemaps"
+  },
+  "wayback": {
+    "port": "8080",
+    "uri_tomcat": "http://localhost:8080/",
+    "uri_wayback": "http://localhost:8080/wayback/",
+    "allCDX": "/home/john/my-fork-wail/archiveIndexes/*.cdx",
+    "notIndexCDX": "!/home/john/my-fork-wail/archiveIndexes/index.cdx"
+  },
+  "documentsPath": "/home/john/Documents",
+  "warcs": "/home/john/Documents/WAIL_ManagedCollections",
+  "iwarcs": "/home/john/my-fork-wail/archives",
+  "collections": {
+    "defaultCol": "/home/john/Documents/WAIL_ManagedCollections/collections/Wail",
+    "dir": "/home/john/Documents/WAIL_ManagedCollections/collections",
+    "aCollPath": "/home/john/Documents/WAIL_ManagedCollections/collections/{col}",
+    "colTemplate": "/home/john/Documents/WAIL_ManagedCollections/collections/{col}/static",
+    "colStatic": "/home/john/Documents/WAIL_ManagedCollections/collections/{col}/templates",
+    "colWarcs": "/home/john/Documents/WAIL_ManagedCollections/collections/{col}/archive",
+    "colIndexs": "/home/john/Documents/WAIL_ManagedCollections/collections/{col}/indexes",
+    "templateDir": "/home/john/Documents/WAIL_ManagedCollections/templates",
+    "staticsDir": "/home/john/Documents/WAIL_ManagedCollections/static"
+  },
+  "icollections": {
+    "defaultCol": "/home/john/my-fork-wail/archives/collections/default",
+    "dir": "/home/john/my-fork-wail/archives/collections",
+    "aCollPath": "/home/john/my-fork-wail/archives/collections/{col}",
+    "colTemplate": "/home/john/my-fork-wail/archives/collections/{col}/static",
+    "colStatic": "/home/john/my-fork-wail/archives/collections/{col}/templates",
+    "colWarcs": "/home/john/my-fork-wail/archives/collections/{col}/archive",
+    "colIndexs": "/home/john/my-fork-wail/archives/collections/{col}/indexes",
+    "templateDir": "/home/john/my-fork-wail/archives/templates",
+    "staticsDir": "/home/john/my-fork-wail/archives/static"
+  },
+  "pywb": {
+    "home": "/home/john/my-fork-wail/bundledApps/pywb",
+    "port": "8080",
+    "url": "http://localhost:8080/",
+    "wbMan": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager",
+    "newCollection": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager init {col}",
+    "addWarcsToCol": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager add {col} {warcs}",
+    "addMetadata": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager metadata {col} --set {metadata}",
+    "reindexCol": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager reindex {col}",
+    "convertCdx": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager convert-cdx {cdx}",
+    "autoIndexCol": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager autoindex {col}",
+    "autoIndexDir": "/home/john/my-fork-wail/bundledApps/pywb/wb-manager autoindex {dir}",
+    "sortedCombinedCdxj": "/home/john/my-fork-wail/bundledApps/pywb/cdx-indexer --sort -j combined.cdxj {warcs}",
+    "sortedCombinedCdx": "/home/john/my-fork-wail/bundledApps/pywb/cdx-indexer --sort combined.cdx {warcs}",
+    "cdxjPerColWarc": "/home/john/my-fork-wail/bundledApps/pywb/cdx-indexer --sort -j {cdx} {warc}",
+    "cdxPerColWarc": "/home/john/my-fork-wail/bundledApps/pywb/cdx-indexer --sort {cdx} {warc}",
+    "wayback": "/home/john/my-fork-wail/bundledApps/pywb/wayback",
+    "waybackPort": "/home/john/my-fork-wail/bundledApps/pywb/wayback -p {port}",
+    "waybackReplayDir": "/home/john/my-fork-wail/bundledApps/pywb/wayback -d {dir}",
+    "waybackReplayDirPort": "/home/john/my-fork-wail/bundledApps/pywb/wayback -p {port} -d {dir}",
+    "templates": "/home/john/my-fork-wail/bundledApps/pywb/templates",
+    "statics": "/home/john/my-fork-wail/bundledApps/pywb/static",
+    "checkIfInCol": "/home/john/my-fork-wail/http:/localhost:{port}/${col}-cdx?url=${url}&output=json"
+  },
+  "migrate": false,
+  "didFirstLoad": true,
+  "winDeleteJob": "/home/john/my-fork-wail/windowsNukeDir.bat",
+  "isWindows": false,
+  "heritrixStart": "export JAVA_HOME=/home/john/my-fork-wail/bundledApps/openjdk; export JRE_HOME=/home/john/my-fork-wail/bundledApps/openjdk; /home/john/my-fork-wail/bundledApps/heritrix/bin/heritrix -a lorem:ipsum --jobs-dir /home/john/Documents/WAIL_Managed_Crawls",
+  "heritrixStartDarwin": "export JAVA_HOME=/home/john/my-fork-wail/bundledApps/openjdk; export JRE_HOME=/home/john/my-fork-wail/bundledApps/openjdk; /home/john/my-fork-wail/bundledApps/heritrix/bin/heritrix -a lorem:ipsum --jobs-dir /home/john/Documents/WAIL_Managed_Crawls"
+}
