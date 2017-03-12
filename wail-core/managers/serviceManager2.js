@@ -259,17 +259,12 @@ export default class ServiceManager {
           let maybepid = hpidGetter.exec(pidLine)
           if (maybepid) {
             let pid = S(maybepid.capture('hpid')).toInt()
-            await Promise.delay(2000)
-            if (isRunning(pid)) {
-              this._monitoring.set('heritrix', pid)
-              // console.log('Heritrix was started')
-              if (logger) {
-                logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
-              }
-              await this._updatePidStore(pid, 'heritrix')
-            } else {
-              throw new Error('Heritrix failed to start due to technical reasons')
+            this._monitoring.set('heritrix', pid)
+            // console.log('Heritrix was started')
+            if (logger) {
+              logger.info(`heritrix was started ${pid} ${stderr} ${stdout}`)
             }
+            await this._updatePidStore(pid, 'heritrix')
           } else {
             if (logger) {
               logger.fatal('the pid extraction could not be done for heritrix')

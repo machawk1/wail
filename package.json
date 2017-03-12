@@ -157,6 +157,7 @@
     "uuid": "^3.0.1",
     "valid-url": "^1.0.9",
     "validator": "^7.0.0",
+    "verror": "^1.9.0",
     "warning": "^3.0.0",
     "yamljs": "^0.2.8"
   },
