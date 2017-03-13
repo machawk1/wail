@@ -19,3 +19,16 @@ import {
   killPid
 } from '../../util/serviceManHelpers'
 import { processStates, WaybakProcessController, HeritrixProcessController } from './processControlers'
+
+export default class ServiceManager {
+  constructor (settings) {
+    this._wbPC = null
+    this._hPC = null
+    this._pidStore = new Datastore({
+      filename: path.join(settings.get('wailCore.db'), 'pids.db'),
+      autoload: true
+    })
+    this._isWin = process.platform === 'win32'
+    this._settings = settings
+  }
+}

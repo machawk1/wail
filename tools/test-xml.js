@@ -17,7 +17,7 @@ const rp = require('request-promise')
 const normalizeUrl = require('normalize-url')
 const findP = require('find-process')
 const isRunning = require('is-running')
-const VError = require('verror')
+const keyMirror = require('keymirror')
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -90,18 +90,21 @@ const HERITRIX_START_ERROR = Symbol('HERITRIX_START_ERROR')
 
 const HERITRIX_NOT_STARTED = Symbol('HERITRIX_NOT_STARTED')
 
-const processStates = {
-  starting: Symbol('process_starting'),
-  started: Symbol('process_started'),
-  start_error: Symbol('process_start_error'),
-  start_error_unexpected: Symbol('start_error_unexpected'),
-  start_error_port_used: Symbol('start_error_port_used'),
-  start_error_main_not_found: Symbol('start_error_main_not_found'),
-  not_started: Symbol('process_not_started'),
-  user_initiated_stop: Symbol('process_user_initiated_stop'),
-  could_not_kill: Symbol('could_not_kill'),
-  process_error: Symbol('process_error'),
-}
+const processStates = keyMirror({
+  starting: null,
+  started: null,
+  start_error: null,
+  do_restart: null,
+  restarting: null,
+  restarting_killed: null,
+  start_error_unexpected: null,
+  start_error_port_used: null,
+  start_error_main_not_found: null,
+  not_started: null,
+  user_initiated_stop: null,
+  could_not_kill: null,
+  process_error: null,
+})
 
 class HeritrixProcessController extends EventEmitter {
   constructor (hHome, jobsDir, hopts) {
@@ -377,6 +380,7 @@ class WaybackProcessController extends EventEmitter {
     this._wbExe = wbExe
     this._colDir = colDir
     this._isListening = false
+    this._isRestarting = false
     this.lastError = null
     this.process = null
     this.pid = null
@@ -384,10 +388,22 @@ class WaybackProcessController extends EventEmitter {
     this.processState = processStates.not_started
     this._processEventsObservable = null
     this._processStartDelay = null
+    this._porcessRestartExitOb = Rx.Observable.fromEventPattern(
+      (handler) => {
+        // add
+        this.on('wayback-restart-exit', handler)
+      },
+      (handler) => {
+        // remove
+        this.removeListener('wayback-restart-exit', handler)
+      }
+    )
+    this._porcessRestartExitSub = null
   }
 
   async launchWayback () {
     if (this._shouldStart()) {
+      console.log('launching wayback')
       let ret = await this._doLaunch()
       this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
       return ret
@@ -401,12 +417,37 @@ class WaybackProcessController extends EventEmitter {
       // the pid given to use by the childProcess is the PPID not PID
       // so gotta do it the long way
       try {
-        await this._doKillProcess()
+        if (this._isRestarting) {
+          await this._doKillProcessRestarting()
+        } else {
+          await this._doKillProcess()
+        }
       } catch (err) {
         this.lastError = err
         this._killProcessFailed()
       }
+      this.process = null
+      this._isListening = false
     }
+  }
+
+  async restart () {
+    this._isRestarting = true
+    await this.killProcess()
+    this._isRestarting = false
+    this.removeAllListeners('wayback-restart-exit')
+    await this.launchWayback()
+    console.log('restarting finished')
+  }
+
+  _resolveOnRestartExit () {
+    const log = console.log.bind(console)
+    return new Promise((resolve, reject) => {
+      this._porcessRestartExitSub = this._porcessRestartExitOb.subscribe((code) => {
+        log('restart exit with', code)
+        resolve()
+      })
+    })
   }
 
   observe (subscriber) {
@@ -485,6 +526,7 @@ class WaybackProcessController extends EventEmitter {
   }
 
   _startDelay (resolve) {
+    console.log('start delay')
     this._processStartDelay = setTimeout(() => {
       clearTimeout(this._processStartDelay)
       this._processStartDelay = null
@@ -495,6 +537,7 @@ class WaybackProcessController extends EventEmitter {
   _stateTransition (nextState) {
     this.prevProcessState = this.processState
     this.processState = nextState
+    console.log(`state transition ${this.prevProcessState} -> ${this.processState}`)
   }
 
   _shouldStart () {
@@ -502,6 +545,7 @@ class WaybackProcessController extends EventEmitter {
   }
 
   _processStarting () {
+    console.log('process starting')
     if (this.lastError) {
       this.lastError = null
     }
@@ -545,6 +589,10 @@ class WaybackProcessController extends EventEmitter {
     if (this._shouldEmitExit()) {
       this._stateTransition(processStates.not_started)
       this.emit('wayback-exited', {prev: this.prevProcessState, cur: this.processState, code})
+    } else if (this._isRestarting) {
+      console.log('process exited but we are restarting')
+      this._stateTransition(processStates.not_started)
+      this.emit('wayback-restart-exit', code)
     }
   }
 
@@ -558,7 +606,11 @@ class WaybackProcessController extends EventEmitter {
   }
 
   _shouldEmitExit () {
-    return this.processState !== processStates.start_error_port_used || this.processState === processStates.start_error_unexpected
+    return !(
+      this._isRestarting ||
+      this.processState === processStates.start_error_port_used ||
+      this.processState === processStates.start_error_unexpected
+    )
   }
 
   _engineListening () {
@@ -570,6 +622,7 @@ class WaybackProcessController extends EventEmitter {
     // wayback logs every action to these streams, keep our event loop for us only
     this.process.stdout.destroy()
     this.process.stderr.destroy()
+    console.log('engine listening', this.pid)
     return this.processState
   }
 
@@ -610,6 +663,48 @@ class WaybackProcessController extends EventEmitter {
       }
     })
   }
+
+  _doKillProcessRestarting () {
+    return new Promise((resolve, reject) => {
+      if (process.platform !== 'win32') {
+        psTree(this.process.pid, (err, kids) => {
+          if (err) {
+            console.error('ps tree error', err)
+            reject(err)
+          } else {
+            if (kids.length > 0) {
+              let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
+                shell: true,
+                stdio: ['ignore', 'ignore', 'ignore']
+              })
+              dukeNukem.unref()
+              this.on('wayback-restart-exit', (code) => {
+                console.log('we have the restart exit', code)
+                resolve()
+              })
+            } else {
+              process.kill(this.process.pid, 'SIGTERM')
+              this.on('wayback-restart-exit', (code) => {
+                console.log('we have the restart exit', code)
+                resolve()
+              })
+            }
+          }
+        })
+      } else {
+        cp.exec(`taskkill /PID ${this.process.pid} /T /F`, (error, stdout, stderr) => {
+          if (error) {
+            reject(error)
+          } else {
+            this.on('wayback-restart-exit', (code) => {
+              console.log('we have the restart exit', code)
+              resolve()
+            })
+          }
+        })
+      }
+    })
+  }
 }
 
 let exec = '/home/john/my-fork-wail/bundledApps/pywb/wayback'
@@ -628,9 +723,12 @@ const hpm = new WaybackProcessController('/home/john/my-fork-wail/bundledApps/py
 
 hpm.observe((event) => {
   console.log(event)
-  if (event.cur === processStates.not_started) {
+  if (event.prev === processStates.restarting) {
     console.log('goodby')
     process.exit(0)
+  }
+  if (event.cur === processStates.not_started) {
+
   }
 })
 
@@ -640,11 +738,11 @@ hpm.launchWayback()
     var numbers = Rx.Observable.timer(1000, 1000)
     numbers.subscribe(async x => {
       console.log(x)
-      // if (x === 10) {
-      //   // await hpm.killProcess()
-      //   process.exit(0)
-      //   // process.kill(hpm.pid, 'SIGTERM')
-      // }
+      if (x === 5) {
+        await hpm.restart()
+        // process.exit(0)
+        // process.kill(hpm.pid, 'SIGTERM')
+      }
     })
   })
   .catch(error => {

@@ -51,6 +51,8 @@ export default class HeritrixProcessController extends EventEmitter {
         this.lastError = err
         this._killProcessFailed()
       }
+      this.process = null
+      this._isListening = false
     }
   }
 
