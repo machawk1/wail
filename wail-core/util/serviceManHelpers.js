@@ -3,6 +3,7 @@ import cp from 'child_process'
 import S from 'string'
 import psTree from 'ps-tree'
 import Promise from 'bluebird'
+import findP from 'find-process'
 
 const netStatReg = /(?:[^\s]+\s+){6}([^\s]+).+/
 const bundledHeritrix = `bundledApps${path.sep}heritrix`
@@ -46,6 +47,25 @@ const heritrixFinder = result => {
 
 const findProcessOnHeritrixPort = () => new Promise((resolve, reject) => {
   cp.exec('netstat -anp 2> /dev/null | grep :8443', (err, stdout, stderr) => {
+    if (err) {
+      reject(err)
+    } else {
+      let maybeMatch = stdout.match(netStatReg)
+      if (maybeMatch) {
+        let [pid, pname] = maybeMatch[1].split('/')
+        resolve({
+          found: true,
+          whoOnPort: {pid, pname}
+        })
+      } else {
+        resolve({found: false, whoOnPort: {}})
+      }
+    }
+  })
+})
+
+const findProcessOnPort = (whichPort) => new Promise((resolve, reject) => {
+  cp.exec(`netstat -anp 2> /dev/null | grep :${whichPort}`, (err, stdout, stderr) => {
     if (err) {
       reject(err)
     } else {
@@ -157,6 +177,23 @@ const killPid = pid => new Promise((resolve, reject) => {
   }
 })
 
+const checkProcessExists = async (test, ...how) => {
+  let maybeFound = await findP(...how)
+  if (maybeFound.length > 0) {
+    let result = {wails: false, pids: [], found: true}, i = 0, len = maybeFound.length
+    for (; i < len; ++i) {
+      let found = maybeFound[i]
+      if (test(found)) {
+        result.wails = true
+        result.pids.push(found.pid)
+      }
+    }
+    return result
+  } else {
+    return {found: false}
+  }
+}
+
 export {
   findProcessOnHeritrixPort,
   heritrixFinder,
@@ -164,5 +201,7 @@ export {
   heritrixLaunchErrorReport,
   findHPidWindows,
   findWbPidWindows,
-  killPid
+  killPid,
+  findProcessOnPort,
+  checkProcessExists
 }

@@ -6,14 +6,32 @@ import S from 'string'
 import { Observable } from 'rxjs'
 import EventEmitter from 'eventemitter3'
 import psTree from 'ps-tree'
+import isRunning from 'is-running'
+import {
+  findProcessOnPort,
+  checkProcessExists
+} from '../../../util/serviceManHelpers'
+import * as pcErrors from '../errors'
 import processStates from './processStates'
 
 export default class HeritrixProcessController extends EventEmitter {
-  constructor (hHome, jobsDir, hopts) {
+  constructor (settings) {
     super()
-    this._hopts = hopts
-    this._hHome = hHome
-    this._jobsDir = jobsDir
+    let heritrixPath = settings.get('heritrix.path')
+    this._hopts = {
+      cwd: heritrixPath,
+      env: {
+        JAVA_HOME: settings.get('jdk'),
+        JRE_HOME: settings.get('jre'),
+        HERITRIX_HOME: heritrixPath
+      },
+      detached: true,
+      shell: true,
+      stdio: ['ignore', 'pipe', 'pipe']
+    }
+    this._userpass = `${settings.get('heritrix.username')}:${settings.get('heritrix.password')}`
+    this._hHome = heritrixPath
+    this._jobsDir = settings.get('heritrix.jobsDir')
     this._isListening = false
     this._hportInUseMessage = 'Exception in thread "main" java.net.BindException: Address already in use'
     this._noFindMainClass = 'Error: Could not find or load main class org.archive.crawler.Heritrix'
@@ -23,19 +41,58 @@ export default class HeritrixProcessController extends EventEmitter {
     this.prevProcessState = null
     this.processState = processStates.not_started
     this._processEventsObservable = null
+    this.checkIfAlive = this.checkIfAlive.bind(this)
+  }
+
+  heritrixTest (found) {
+    return found.cmd.indexOf('-Dheritrix.home=/home/john/my-fork-wail/bundledApps/heritrix') !== -1 && found.name === 'java'
+  }
+
+  async checkIfPortTaken () {
+    let maybeOnPort
+    try {
+      maybeOnPort = await findProcessOnPort(8443)
+    } catch (err) {
+      return {portTaken: false}
+    }
+    if (maybeOnPort.found) {
+      if (maybeOnPort.whoOnPort.pname === 'java') {
+        let heritrixProcesses = await checkProcessExists(this.heritrixTest, 'name', 'heritrix')
+        if (heritrixProcesses.found && heritrixProcesses.wails) {
+          return {wails: true, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        } else {
+          return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        }
+      } else {
+        return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+      }
+    } else {
+      return {portTaken: false}
+    }
   }
 
   async launchHeritrix () {
     if (this._shouldStart()) {
-      let CLASSPATH, libDir = Path.join(this._hHome, 'lib')
-      try {
-        CLASSPATH = await HeritrixProcessController.heritrixClassPath(libDir)
-      } catch (error) {
-        return this._couldNotBuildClasspath(error)
+      let check = await this.checkIfPortTaken()
+      console.log(check)
+      if (!check.portTaken) {
+        let CLASSPATH, libDir = Path.join(this._hHome, 'lib')
+        try {
+          CLASSPATH = await HeritrixProcessController.heritrixClassPath(libDir)
+        } catch (error) {
+          return this._couldNotBuildClasspath(error)
+        }
+        let ret = await this._doLaunch(CLASSPATH)
+        this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
+        return ret
+      } else {
+        if (check.wails) {
+          this.handleExistingProcessOurs(parseInt(check.pid))
+          return this.processState
+        } else {
+          throw new pcErrors.ServicesPortTakenError('heritrix', 8443)
+        }
       }
-      let ret = await this._doLaunch(CLASSPATH)
-      this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
-      return ret
     } else {
       return this.processState
     }
@@ -45,14 +102,15 @@ export default class HeritrixProcessController extends EventEmitter {
     if (this.process && this.isProcessStarted()) {
       // the pid given to use by the childProcess is the PPID not PID
       // so gotta do it the long way
-      try {
-        await this._doKillProcess()
-      } catch (err) {
-        this.lastError = err
-        this._killProcessFailed()
-      }
+      await this._doKillProcess()
       this.process = null
       this._isListening = false
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+        this._stateTransition(processStates.not_started)
+        this.emit('heritrix-exited', {prev: this.prevProcessState, cur: this.processState, code: 999})
+      }
     }
   }
 
@@ -79,14 +137,23 @@ export default class HeritrixProcessController extends EventEmitter {
     return this._processEventsObservable.subscribe(subscriber)
   }
 
+  _makehlc1 (CLASSPATH) {
+    const JAVACMD = Path.join(this._hopts.env.JAVA_HOME, 'bin', 'java')
+    if (process.platform === 'win32') {
+      return `${JAVACMD} -Dje.disable.java.adler32=true -Dname=heritrix -Dheritrix.home=${this._hHome}`
+    } else {
+      return `CLASSPATH=${CLASSPATH} ${JAVACMD} -Dname=heritrix -Dheritrix.home=${this._hHome}`
+    }
+  }
+
   _doLaunch (CLASSPATH) {
     this._processStarting()
     const javaOpts = ' -Xmx256m', CLASS_MAIN = 'org.archive.crawler.Heritrix'
-    const HERITRIX_OUT = Path.join(this._hHome, 'heritrix_out.log'), JAVACMD = Path.join(this._hopts.env.JAVA_HOME, 'bin', 'java')
-    const hlc1 = `CLASSPATH=${CLASSPATH} ${JAVACMD} -Dname=heritrix -Dheritrix.home=${this._hHome}`
+    const HERITRIX_OUT = Path.join(this._hHome, 'heritrix_out.log')
+    const hlc1 = this._makehlc1(CLASSPATH)
     const hlc2 = `-Djava.protocol.handler.pkgs=org.archive.net -Dheritrix.out=${HERITRIX_OUT} ${javaOpts} ${CLASS_MAIN}`
     const heritrixLaunchCommand = `${hlc1} ${hlc2}`
-    const args = ['-a', 'lorem:ipsum', '--jobs-dir', this._jobsDir]
+    const args = ['-a', this._userpass, '--jobs-dir', this._jobsDir]
     return new Promise((resolve, reject) => {
       const swapper = S('')
       this.process = cp.spawn(heritrixLaunchCommand, args, this._hopts)
@@ -94,9 +161,9 @@ export default class HeritrixProcessController extends EventEmitter {
         // console.log('Failed to start child process.', err)
         if (this._isUnexpectedStartExit()) {
           // we have not handled this and we are starting
-          reject(this._unexpectedStartExit(-999))
+          reject(this._unexpectedStartProcessError(err))
         } else {
-          this._hardProcessError()
+          this._hardProcessError(err)
         }
       })
       this.process.on('close', (code) => {
@@ -134,7 +201,7 @@ export default class HeritrixProcessController extends EventEmitter {
 
   _couldNotBuildClasspath (error) {
     this._stateTransition(processStates.start_error)
-    this.lastError = error
+    this.lastError = new pcErrors.BuildHeritrixClassPathError(error)
     throw error
   }
 
@@ -146,19 +213,47 @@ export default class HeritrixProcessController extends EventEmitter {
     return this.processState === processStates.started
   }
 
+  handleExistingProcessOurs (pid) {
+    this.prevProcessState = processStates.starting
+    this.processState = processStates.started
+    this.process = {pid}
+    this.pid = pid
+    this.existingCheckInterval = setInterval(this.checkIfAlive, 1000 * 120) // check every 2min
+    this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
+  }
+
+  checkIfAlive () {
+    console.log('checking if alive')
+    if (!isRunning(this.process.pid)) {
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+      }
+      this._processExited(999)
+    }
+  }
+
+  _shouldEmitExit () {
+    return !(
+      this.processState === processStates.start_error_port_used ||
+      this.processState === processStates.start_error_unexpected ||
+      this.prevProcessState === processStates.start_error_main_not_found
+    )
+  }
+
   _shouldStart () {
     return !(this.isProcessStarted() || this.isProcessStarting())
   }
 
   _processExited (code) {
-    if (this.processState !== processStates.start_error_port_used) {
+    if (this._shouldEmitExit()) {
       this._stateTransition(processStates.not_started)
       this.emit('heritrix-exited', {prev: this.prevProcessState, cur: this.processState, code})
     }
   }
 
   _startErrorPortUsed () {
-    this.lastError = new Error(this._hportInUseMessage)
+    this.lastError = new pcErrors.ServicesPortTakenError('heritrix', 8443)
     this._stateTransition(processStates.start_error_port_used)
     return this.lastError
   }
@@ -170,14 +265,21 @@ export default class HeritrixProcessController extends EventEmitter {
     return false
   }
 
+  _unexpectedStartProcessError (err) {
+    this._maybeClearExistingInterval()
+    this._stateTransition(processStates.start_error_unexpected)
+    return new pcErrors.ServiceFatalProcessError('heritrix', err)
+  }
+
   _unexpectedStartExit (code) {
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.start_error)
-    return new Error(`Heritrix Unexpectedly exited during start up with code: ${code}`)
+    return new pcErrors.ServiceUnexpectedStartError('heritrix', code)
   }
 
   _couldNotFindMain () {
     this._stateTransition(processStates.start_error_main_not_found)
-    return new Error(this._noFindMainClass)
+    return new pcErrors.CouldNotFindHeritrixMainClassError(new Error(this._noFindMainClass))
   }
 
   _killProcessFailed () {
@@ -185,8 +287,10 @@ export default class HeritrixProcessController extends EventEmitter {
     this.emit('heritrix-kill-process-failed', {prev: this.prevProcessState, cur: this.processState})
   }
 
-  _hardProcessError () {
+  _hardProcessError (err) {
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.process_error)
+    this.lastError = new pcErrors.ServiceFatalProcessError('heritrix', err)
     this.emit('heritrix-process-fatal-error', {prev: this.prevProcessState, cur: this.processState})
   }
 
@@ -224,7 +328,7 @@ export default class HeritrixProcessController extends EventEmitter {
         psTree(this.process.pid, (err, kids) => {
           if (err) {
             console.error('ps tree error', err)
-            reject(err)
+            reject(new pcErrors.KillServiceError('heritrix', 'psTree', err))
           } else {
             if (kids.length > 0) {
               let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
@@ -244,7 +348,7 @@ export default class HeritrixProcessController extends EventEmitter {
       } else {
         cp.exec(`taskkill /PID ${this.process.pid} /T /F`, (error, stdout, stderr) => {
           if (error) {
-            reject(error)
+            reject(new pcErrors.KillServiceError('heritrix', 'taskkill', error))
           } else {
             resolve()
           }
@@ -270,7 +374,7 @@ export default class HeritrixProcessController extends EventEmitter {
           if (cp.length > 0) {
             resolve(cp.join(':'))
           } else {
-            reject(new Error('no classpath'))
+            reject(new Error(this._noFindMainClass))
           }
         }
       })

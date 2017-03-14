@@ -8,7 +8,7 @@ const cp = require('child_process')
 const fp = require('lodash/fp')
 const moment = require('moment')
 const psTree = require('ps-tree')
-const fs = Promise.promisifyAll(require('fs-extra'))
+const fs = require('fs-extra')
 const EventEmitter = require('eventemitter3')
 const prettyBytes = require('pretty-bytes')
 const through2 = require('through2')
@@ -80,16 +80,6 @@ const heritrixOps = () => ({
   stdio: ['ignore', 'pipe', 'pipe']
 })
 
-const HERITRIX_NOT_RUNNING = Symbol('HERITRIX_NOT_RUNNING')
-const HERITRIX_RUNNING = Symbol('HERITRIX_RUNNING')
-
-const HERITRIX_STARTING = Symbol('HERITRIX_STARTING')
-
-const HERITRIX_STARTED = Symbol('HERITRIX_STARTED')
-const HERITRIX_START_ERROR = Symbol('HERITRIX_START_ERROR')
-
-const HERITRIX_NOT_STARTED = Symbol('HERITRIX_NOT_STARTED')
-
 const processStates = keyMirror({
   starting: null,
   started: null,
@@ -105,6 +95,45 @@ const processStates = keyMirror({
   could_not_kill: null,
   process_error: null,
 })
+
+const netStatReg = /(?:[^\s]+\s+){6}([^\s]+).+/
+const findProcessOnPort = (whichPort) => new Promise((resolve, reject) => {
+  cp.exec(`netstat -anp 2> /dev/null | grep :${whichPort}`, (err, stdout, stderr) => {
+    if (err) {
+      reject(err)
+    } else {
+      let maybeMatch = stdout.match(netStatReg)
+      if (maybeMatch) {
+        let [pid, pname] = maybeMatch[1].split('/')
+        resolve({
+          found: true,
+          whoOnPort: {pid, pname}
+        })
+      } else {
+        resolve({found: false, whoOnPort: {}})
+      }
+    }
+  })
+})
+
+const checkProcessExists = async (test, ...how) => {
+  let maybeFound = await findP(...how)
+  if (maybeFound.length > 0) {
+    let result = {wails: false, pids: [], found: true}, i = 0, len = maybeFound.length
+    for (; i < len; ++i) {
+      let found = maybeFound[i]
+      if (test(found)) {
+        result.wails = true
+        result.pids.push(found.pid)
+      }
+    }
+    return result
+  } else {
+    return {found: false}
+  }
+}
+
+// const waybackTest = found => found.cmd.indexOf('/bundledApps/pywb/wayback') !== -1
 
 class HeritrixProcessController extends EventEmitter {
   constructor (hHome, jobsDir, hopts) {
@@ -123,17 +152,54 @@ class HeritrixProcessController extends EventEmitter {
     this._processEventsObservable = null
   }
 
+  heritrixTest (found) {
+    return found.cmd.indexOf('-Dheritrix.home=/home/john/my-fork-wail/bundledApps/heritrix') !== -1 && found.name === 'java'
+  }
+
+  async checkIfPortTaken () {
+    let maybeOnPort
+    try {
+      maybeOnPort = await findProcessOnPort(8443)
+    } catch (err) {
+      return {portTaken: false}
+    }
+    if (maybeOnPort.found) {
+      if (maybeOnPort.whoOnPort.pname === 'java') {
+        let waybackProcesses = await checkProcessExists(this.heritrixTest, 'name', 'heritrix')
+        if (waybackProcesses.found && waybackProcesses.wails) {
+          return {wails: true, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        } else {
+          return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        }
+      } else {
+        return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+      }
+    } else {
+      return {portTaken: false}
+    }
+  }
+
   async launchHeritrix () {
     if (this._shouldStart()) {
-      let CLASSPATH, libDir = Path.join(this._hHome, 'lib')
-      try {
-        CLASSPATH = await HeritrixProcessController.heritrixClassPath(libDir)
-      } catch (error) {
-        return this._couldNotBuildClasspath(error)
+      let check = await this.checkIfPortTaken()
+      console.log(check)
+      if (!check.portTaken) {
+        let CLASSPATH, libDir = Path.join(this._hHome, 'lib')
+        try {
+          CLASSPATH = await HeritrixProcessController.heritrixClassPath(libDir)
+        } catch (error) {
+          return this._couldNotBuildClasspath(error)
+        }
+        let ret = await this._doLaunch(CLASSPATH)
+        this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
+        return ret
+      } else {
+        if (check.wails) {
+          return this.handleExistingProcessOurs(check.pid)
+        } else {
+          throw new Error('port taken not heritrix or wails')
+        }
       }
-      let ret = await this._doLaunch(CLASSPATH)
-      this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
-      return ret
     } else {
       return this.processState
     }
@@ -143,12 +209,36 @@ class HeritrixProcessController extends EventEmitter {
     if (this.process && this.isProcessStarted()) {
       // the pid given to use by the childProcess is the PPID not PID
       // so gotta do it the long way
-      try {
-        await this._doKillProcess()
-      } catch (err) {
-        this.lastError = err
-        this._killProcessFailed()
+      await this._doKillProcess()
+      this.process = null
+      this._isListening = false
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+        this._stateTransition(processStates.not_started)
+        this.emit('heritrix-exited', {prev: this.prevProcessState, cur: this.processState, code: 999})
       }
+    }
+  }
+
+  handleExistingProcessOurs (pid) {
+    console.log('wails wayback already exists')
+    this.prevProcessState = processStates.starting
+    this.processState = processStates.started
+    this.process = {pid}
+    this.pid = pid
+    this.existingCheckInterval = setInterval(this.checkIfAlive, 1000 * 120) // check every 2min
+    this.emit('heritrix-started', {prev: this.prevProcessState, cur: this.processState})
+  }
+
+  checkIfAlive () {
+    console.log('checking if alive')
+    if (!isRunning(this.process.pid)) {
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+      }
+      this._processExited(999)
     }
   }
 
@@ -173,6 +263,13 @@ class HeritrixProcessController extends EventEmitter {
     }
 
     return this._processEventsObservable.subscribe(handler)
+  }
+
+  _maybeClearExistingInterval () {
+    if (this.existingCheckInterval) {
+      clearInterval(this.existingCheckInterval)
+      this.existingCheckInterval = null
+    }
   }
 
   _doLaunch (CLASSPATH) {
@@ -381,34 +478,84 @@ class WaybackProcessController extends EventEmitter {
     this._colDir = colDir
     this._isListening = false
     this._isRestarting = false
+    this._processStartDelay = null
+    this._processEventsObservable = null
     this.lastError = null
     this.process = null
     this.pid = null
     this.prevProcessState = null
+    this.existingCheckInterval = null
     this.processState = processStates.not_started
-    this._processEventsObservable = null
-    this._processStartDelay = null
-    this._porcessRestartExitOb = Rx.Observable.fromEventPattern(
-      (handler) => {
-        // add
-        this.on('wayback-restart-exit', handler)
-      },
-      (handler) => {
-        // remove
-        this.removeListener('wayback-restart-exit', handler)
+    this.waybackTest = this.waybackTest.bind(this)
+    this.checkIfAlive = this.checkIfAlive.bind(this)
+  }
+
+  waybackTest (found) {
+    return found.cmd.indexOf(this._wbExe) !== -1
+  }
+
+  async checkIfPortTaken () {
+    let maybeOnPort
+    try {
+      maybeOnPort = await findProcessOnPort(8080)
+    } catch (err) {
+      return {portTaken: false}
+    }
+    if (maybeOnPort.found) {
+      if (maybeOnPort.whoOnPort.pname === 'wayback') {
+        let waybackProcesses = await checkProcessExists(this.waybackTest, 'name', 'wayback')
+        if (waybackProcesses.found && waybackProcesses.wails) {
+          return {wails: true, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        } else {
+          return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        }
+      } else {
+        return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
       }
-    )
-    this._porcessRestartExitSub = null
+    } else {
+      return {portTaken: false}
+    }
   }
 
   async launchWayback () {
     if (this._shouldStart()) {
       console.log('launching wayback')
-      let ret = await this._doLaunch()
-      this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
-      return ret
+      let check = await this.checkIfPortTaken()
+      console.log(check)
+      if (!check.portTaken) {
+        let ret = await this._doLaunch()
+        this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
+        return ret
+      } else {
+        if (check.wails) {
+          return this.handleExistingProcessOurs(check.pid)
+        } else {
+          throw new Error('')
+        }
+      }
     } else {
       return this.processState
+    }
+  }
+
+  handleExistingProcessOurs (pid) {
+    console.log('wails wayback already exists')
+    this.prevProcessState = processStates.starting
+    this.processState = processStates.started
+    this.process = {pid}
+    this.pid = pid
+    this.existingCheckInterval = setInterval(this.checkIfAlive, 1000 * 120) // check every 2min
+    this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
+  }
+
+  checkIfAlive () {
+    console.log('checking if alive')
+    if (!isRunning(this.process.pid)) {
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+      }
+      this._processExited(999)
     }
   }
 
@@ -416,18 +563,26 @@ class WaybackProcessController extends EventEmitter {
     if (this.process && this.isProcessStarted()) {
       // the pid given to use by the childProcess is the PPID not PID
       // so gotta do it the long way
-      try {
-        if (this._isRestarting) {
-          await this._doKillProcessRestarting()
-        } else {
-          await this._doKillProcess()
-        }
-      } catch (err) {
-        this.lastError = err
-        this._killProcessFailed()
+      if (this._isRestarting) {
+        await this._doKillProcessRestarting()
+      } else {
+        await this._doKillProcess()
       }
       this.process = null
       this._isListening = false
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+        this._stateTransition(processStates.not_started)
+        this.emit('wayback-exited', {prev: this.prevProcessState, cur: this.processState, code: 999})
+      }
+    }
+  }
+
+  _maybeClearExistingInterval () {
+    if (this.existingCheckInterval) {
+      clearInterval(this.existingCheckInterval)
+      this.existingCheckInterval = null
     }
   }
 
@@ -438,16 +593,7 @@ class WaybackProcessController extends EventEmitter {
     this.removeAllListeners('wayback-restart-exit')
     await this.launchWayback()
     console.log('restarting finished')
-  }
-
-  _resolveOnRestartExit () {
-    const log = console.log.bind(console)
-    return new Promise((resolve, reject) => {
-      this._porcessRestartExitSub = this._porcessRestartExitOb.subscribe((code) => {
-        log('restart exit with', code)
-        resolve()
-      })
-    })
+    process.exit(0)
   }
 
   observe (subscriber) {
@@ -487,7 +633,6 @@ class WaybackProcessController extends EventEmitter {
     return new Promise((resolve, reject) => {
       const swapper = S('')
       this.process = cp.spawn(this._wbExe, args, this._opts)
-
       this.process.on('error', (err) => {
         console.log('Failed to start child process.', err)
         if (this._isUnexpectedStartExit()) {
@@ -560,17 +705,13 @@ class WaybackProcessController extends EventEmitter {
   }
 
   _unexpectedStartExit (code) {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.start_error_unexpected)
     return new Error(`Wayback Unexpectedly exited during start up with code: ${code}`)
   }
 
   _unexpectedStartProcessError (err) {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.start_error_unexpected)
     return err
   }
@@ -597,9 +738,7 @@ class WaybackProcessController extends EventEmitter {
   }
 
   _startErrorPortUsed () {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
+    this._maybeClearExistingInterval()
     this.lastError = new Error('Port already in use')
     this._stateTransition(processStates.start_error_port_used)
     return this.lastError
@@ -678,14 +817,18 @@ class WaybackProcessController extends EventEmitter {
                 stdio: ['ignore', 'ignore', 'ignore']
               })
               dukeNukem.unref()
+              let bail = setTimeout(() => reject(new Error('we did not exit within 10 seconds'), 10000))
               this.on('wayback-restart-exit', (code) => {
+                clearTimeout(bail)
                 console.log('we have the restart exit', code)
                 resolve()
               })
             } else {
               process.kill(this.process.pid, 'SIGTERM')
+              let bail = setTimeout(() => reject(new Error('we did not exit within 10 seconds'), 10000))
               this.on('wayback-restart-exit', (code) => {
                 console.log('we have the restart exit', code)
+                clearTimeout(bail)
                 resolve()
               })
             }
@@ -696,8 +839,10 @@ class WaybackProcessController extends EventEmitter {
           if (error) {
             reject(error)
           } else {
+            let bail = setTimeout(() => reject(new Error('we did not exit within 10 seconds'), 10000))
             this.on('wayback-restart-exit', (code) => {
               console.log('we have the restart exit', code)
+              clearTimeout(bail)
               resolve()
             })
           }
@@ -711,35 +856,45 @@ let exec = '/home/john/my-fork-wail/bundledApps/pywb/wayback'
 let opts = {
   cwd: '/home/john/my-fork-wail/bundledApps/pywb',
   detached: true,
-  shell: true,
+  shell: false,
   stdio: ['ignore', 'pipe', 'pipe']
 }
 
 // let wayback = cp.spawn(exec, ['-d', '/home/john/Documents/WAIL_ManagedCollections'], opts)
 
-// //stderr: Error: Could not find or load main class org.archive.crawler.Heritrix
-const hpm = new WaybackProcessController('/home/john/my-fork-wail/bundledApps/pywb/wayback',
-  '/home/john/Documents/WAIL_ManagedCollections', opts)
-
+//stderr: Error: Could not find or load main class org.archive.crawler.Heritrix
+// const hpm = new WaybackProcessController('/home/john/my-fork-wail/bundledApps/pywb/wayback',
+//   '/home/john/Documents/WAIL_ManagedCollections', opts)
+const hpm = new HeritrixProcessController('/home/john/my-fork-wail/bundledApps/heritrix',
+  '/home/john/Documents/WAIL_Managed_Crawls', heritrixOps())
 hpm.observe((event) => {
   console.log(event)
-  if (event.prev === processStates.restarting) {
-    console.log('goodby')
-    process.exit(0)
-  }
-  if (event.cur === processStates.not_started) {
-
-  }
 })
 
-hpm.launchWayback()
+// findP('name', 'heritrix').then(ret => {
+//   console.log(ret)
+// })
+
+// checkIfWaybackRunning().then((ret) => {
+//   console.log(ret)
+// }).catch(error => {
+//   console.error(error)
+// })
+// checkProcessExists(waybackTest, 'name', 'wayback').then(result => {
+//   console.log(result)
+// }).catch(err => {
+//   console.error(err)
+// })
+// console.log(isRunning(16867))
+//
+hpm.launchHeritrix()
   .then(() => {
     console.log('launched', hpm._shouldStart())
     var numbers = Rx.Observable.timer(1000, 1000)
     numbers.subscribe(async x => {
       console.log(x)
       if (x === 5) {
-        await hpm.restart()
+        await hpm.killProcess()
         // process.exit(0)
         // process.kill(hpm.pid, 'SIGTERM')
       }

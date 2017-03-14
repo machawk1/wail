@@ -320,9 +320,16 @@
       "tests/*.js",
       "!tests/test.js"
     ],
-    "require": "babel-register",
+    "require":  "babel-register",
     "babel": {
       "babelrc": false,
+      "plugins": [
+        "transform-function-bind",
+        "transform-class-properties",
+        "syntax-trailing-function-commas",
+        "transform-export-extensions",
+        "espower"
+      ],
       "presets": [
         [
           "env",
@@ -336,9 +343,6 @@
             ]
           }
         ]
-      ],
-      "plugins": [
-        "espower"
       ]
     }
   },

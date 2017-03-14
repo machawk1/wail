@@ -1,51 +1,135 @@
 import cp from 'child_process'
-import Path from 'path'
-import * as fs from 'fs-extra'
 import Promise from 'bluebird'
 import S from 'string'
 import { Observable } from 'rxjs'
 import EventEmitter from 'eventemitter3'
 import psTree from 'ps-tree'
+import isRunning from 'is-running'
 import processStates from './processStates'
+import {
+  findProcessOnPort,
+  checkProcessExists
+} from '../../../util/serviceManHelpers'
+import * as pcErrors from '../errors'
 
 export default class WaybackProcessController extends EventEmitter {
-  constructor (wbExe, colDir, opts) {
+  constructor (settings) {
     super()
-    this._opts = opts
-    this._wbExe = wbExe
-    this._colDir = colDir
+    this._opts = {
+      cwd: settings.get('pywb.home'),
+      detached: true,
+      shell: false,
+      stdio: ['ignore', 'pipe', 'pipe']
+    }
+    this._wbExe = settings.get('pywb.wayback')
+    this._colDir = settings.get('warcs')
     this._isListening = false
+    this._isRestarting = false
+    this._processEventsObservable = null
+    this._processStartDelay = null
     this.lastError = null
     this.process = null
     this.pid = null
     this.prevProcessState = null
+    this.existingCheckInterval = null
     this.processState = processStates.not_started
-    this._processEventsObservable = null
-    this._processStartDelay = null
+    this.waybackTest = this.waybackTest.bind(this)
+    this.checkIfAlive = this.checkIfAlive.bind(this)
+  }
+
+  waybackTest (found) {
+    return found.cmd.indexOf(this._wbExe) !== -1
+  }
+
+  async checkIfPortTaken () {
+    let maybeOnPort
+    try {
+      maybeOnPort = await findProcessOnPort(8080)
+    } catch (err) {
+      return {portTaken: false}
+    }
+    if (maybeOnPort.found) {
+      if (maybeOnPort.whoOnPort.pname === 'wayback') {
+        let waybackProcesses = await checkProcessExists(this.waybackTest, 'name', 'wayback')
+        if (waybackProcesses.found && waybackProcesses.wails) {
+          return {wails: true, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        } else {
+          return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+        }
+      } else {
+        return {wails: false, portTaken: true, pid: maybeOnPort.whoOnPort.pid}
+      }
+    } else {
+      return {portTaken: false}
+    }
   }
 
   async launchWayback () {
     if (this._shouldStart()) {
-      let ret = await this._doLaunch()
-      this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
-      return ret
+      let check = await this.checkIfPortTaken()
+      if (!check.portTaken) {
+        let ret = await this._doLaunch()
+        this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
+        return ret
+      } else {
+        if (check.wails) {
+          this.handleExistingProcessOurs(parseInt(check.pid))
+          return this.processState
+        } else {
+          throw new pcErrors.ServicesPortTakenError('wayback', 8080)
+        }
+      }
     } else {
       return this.processState
     }
+  }
+
+  async restart () {
+    this._isRestarting = true
+    await this.killProcess()
+    this._isRestarting = false
+    this.removeAllListeners('wayback-restart-exit')
+    await this.launchWayback()
   }
 
   async killProcess () {
     if (this.process && this.isProcessStarted()) {
       // the pid given to use by the childProcess is the PPID not PID
       // so gotta do it the long way
-      try {
+      if (this._isRestarting) {
+        await this._doKillProcessRestarting()
+      } else {
         await this._doKillProcess()
-      } catch (err) {
-        this.lastError = err
-        this._killProcessFailed()
       }
       this.process = null
       this._isListening = false
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+        this._stateTransition(processStates.not_started)
+        this.emit('wayback-exited', {prev: this.prevProcessState, cur: this.processState, code: 999})
+      }
+    }
+  }
+
+  handleExistingProcessOurs (pid) {
+    console.log('wayback is already alive', pid)
+    this.prevProcessState = processStates.starting
+    this.processState = processStates.started
+    this.process = {pid}
+    this.pid = pid
+    this.existingCheckInterval = setInterval(this.checkIfAlive, 1000 * 120) // check every 2min
+    this.emit('wayback-started', {prev: this.prevProcessState, cur: this.processState})
+  }
+
+  checkIfAlive () {
+    console.log('checking if alive')
+    if (!isRunning(this.process.pid)) {
+      if (this.existingCheckInterval) {
+        clearInterval(this.existingCheckInterval)
+        this.existingCheckInterval = null
+      }
+      this._processExited(999)
     }
   }
 
@@ -80,6 +164,13 @@ export default class WaybackProcessController extends EventEmitter {
     return this.processState === processStates.started
   }
 
+  _maybeClearExistingInterval () {
+    if (this.existingCheckInterval) {
+      clearInterval(this.existingCheckInterval)
+      this.existingCheckInterval = null
+    }
+  }
+
   _doLaunch () {
     this._processStarting()
     const args = ['-d', this._colDir]
@@ -93,7 +184,7 @@ export default class WaybackProcessController extends EventEmitter {
           // we have not handled this and we are starting
           reject(this._unexpectedStartProcessError(err))
         } else {
-          this._hardProcessError()
+          this._hardProcessError(err)
         }
       })
 
@@ -156,19 +247,15 @@ export default class WaybackProcessController extends EventEmitter {
   }
 
   _unexpectedStartExit (code) {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.start_error_unexpected)
-    return new Error(`Wayback Unexpectedly exited during start up with code: ${code}`)
+    return new pcErrors.ServiceUnexpectedStartError('wayback', code)
   }
 
   _unexpectedStartProcessError (err) {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
+    this._maybeClearExistingInterval()
     this._stateTransition(processStates.start_error_unexpected)
-    return err
+    return new pcErrors.ServiceFatalProcessError('wayback', err)
   }
 
   _killProcessFailed () {
@@ -176,7 +263,9 @@ export default class WaybackProcessController extends EventEmitter {
     this.emit('wayback-kill-process-failed', {prev: this.prevProcessState, cur: this.processState})
   }
 
-  _hardProcessError () {
+  _hardProcessError (err) {
+    this._maybeClearExistingInterval()
+    this.lastError = err
     this._stateTransition(processStates.process_error)
     this.emit('wayback-process-fatal-error', {prev: this.prevProcessState, cur: this.processState})
   }
@@ -184,21 +273,27 @@ export default class WaybackProcessController extends EventEmitter {
   _processExited (code) {
     if (this._shouldEmitExit()) {
       this._stateTransition(processStates.not_started)
+      console.log('we should emit exit', code)
       this.emit('wayback-exited', {prev: this.prevProcessState, cur: this.processState, code})
+    } else if (this._isRestarting) {
+      this._stateTransition(processStates.not_started)
+      this.emit('wayback-restart-exit', code)
     }
   }
 
   _startErrorPortUsed () {
-    if (this._processStartDelay) {
-      clearTimeout(this._processStartDelay)
-    }
-    this.lastError = new Error('Port already in use')
+    this._maybeClearExistingInterval()
+    this.lastError = new pcErrors.ServicesPortTakenError('wayback', 8080)
     this._stateTransition(processStates.start_error_port_used)
     return this.lastError
   }
 
   _shouldEmitExit () {
-    return this.processState !== processStates.start_error_port_used || this.processState === processStates.start_error_unexpected
+    return !(
+      this._isRestarting ||
+      this.processState === processStates.start_error_port_used ||
+      this.processState === processStates.start_error_unexpected
+    )
   }
 
   _engineListening () {
@@ -223,7 +318,7 @@ export default class WaybackProcessController extends EventEmitter {
         psTree(this.process.pid, (err, kids) => {
           if (err) {
             console.error('ps tree error', err)
-            reject(err)
+            reject(new pcErrors.KillServiceError('waybak', 'psTree', err))
           } else {
             if (kids.length > 0) {
               let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
@@ -242,9 +337,63 @@ export default class WaybackProcessController extends EventEmitter {
       } else {
         cp.exec(`taskkill /PID ${this.process.pid} /T /F`, (error, stdout, stderr) => {
           if (error) {
-            reject(error)
+            reject(new pcErrors.KillServiceError('waybak', 'taskkill', error))
           } else {
             resolve()
+          }
+        })
+      }
+    })
+  }
+
+  _doKillProcessRestarting () {
+    return new Promise((resolve, reject) => {
+      if (process.platform !== 'win32') {
+        psTree(this.process.pid, (err, kids) => {
+          if (err) {
+            console.error('ps tree error', err)
+            reject(new pcErrors.KillServiceError('waybak', 'psTree', err))
+          } else {
+            if (kids.length > 0) {
+              let dukeNukem = cp.spawn('kill', ['-9'].concat(kids.map(p => p.PID)), {
+                shell: true,
+                stdio: ['ignore', 'ignore', 'ignore']
+              })
+              dukeNukem.unref()
+              let bail = setTimeout(() => {
+                reject(new pcErrors.FailedToKillServiceTimeoutError('waybak', 'kill -9 pid'))
+              }, 10000)
+              this.on('wayback-restart-exit', (code) => {
+                clearTimeout(bail)
+                console.log('we have the restart exit', code)
+                resolve()
+              })
+            } else {
+              process.kill(this.process.pid, 'SIGTERM')
+              let bail = setTimeout(() => {
+                reject(new pcErrors.FailedToKillServiceTimeoutError('waybak', 'process.kill(pid,SIGTERM)'))
+              }, 10000)
+              this.on('wayback-restart-exit', (code) => {
+                console.log('we have the restart exit', code)
+                clearTimeout(bail)
+                resolve()
+              })
+            }
+          }
+        })
+      } else {
+        cp.exec(`taskkill /PID ${this.process.pid} /T /F`, (error, stdout, stderr) => {
+          if (error) {
+            reject(new pcErrors.KillServiceError('waybak', 'taskkill', error))
+          } else {
+            let bail = setTimeout(() => {
+              reject(new pcErrors.FailedToKillServiceTimeoutError('waybak', 'taskkill'))
+            }, 10000)
+            this.on('wayback-restart-exit', (code) => {
+              console.log('we have the restart exit', code)
+              clearTimeout(bail)
+              resolve()
+            })
           }
         })
       }
