@@ -7,6 +7,10 @@ const settings = new Settings()
 settings.configure()
 
 const archiveMan = window.am = new ArchiveManager(settings)
+const notifSub = archiveMan.subscribeToNotifications((notif) => {
+  console.log(notif)
+  ipc.send('display-message', notif)
+})
 
 ipc.on('made-heritrix-jobconf', (event, confDetails) => {
   console.log('archive man makeHeritrixJobConf', confDetails)
@@ -58,7 +62,6 @@ ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
     })
 })
 
-
 ipc.on('add-warcs-to-col', (event, addMe) => {
   console.log('archive man got add warcs to col', addMe)
   archiveMan.addWarcsToCol(addMe)
@@ -95,7 +98,7 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
 })
 
 ipc.on('create-collection', (event, nc) => {
-  let {mdata} = nc
+  let { mdata } = nc
   archiveMan.createCollection(nc)
     .then((newCol) => {
       console.log('archiveman really did create the new collection', newCol)

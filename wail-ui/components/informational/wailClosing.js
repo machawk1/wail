@@ -1,13 +1,13 @@
 import React, { Component, PropTypes } from 'react'
 import Dialog from 'material-ui/Dialog'
-import Immutable from 'immutable'
+import {Map} from 'immutable'
 import { connect } from 'react-redux'
 
 const stateToProps = state => ({closing: state.get('closing')})
 
 class WailClosing extends Component {
   static propTypes = {
-    closing: PropTypes.instanceOf(Immutable.Map)
+    closing: PropTypes.instanceOf(Map)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {

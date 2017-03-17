@@ -14,7 +14,7 @@ const MementoCardHeader = ({lastUpdated, added, url}, {muiTheme:{baseTheme:{pale
     title={url}
     subtitle={
       <Flex row alignItems='baseline' justifyContent='space-between'>
-        <span style={{color: fullWhite}}>Last Updated: {lastUpdated}</span>
+        <span style={{color: fullWhite}}>Last Archived: {lastUpdated}</span>
         <span style={{color: fullWhite}}>Added: {added}</span>
       </Flex>
     }

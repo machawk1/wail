@@ -4,11 +4,17 @@ import { Map } from 'immutable'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import CollectionCardHeader from './collectionCardHeader'
 import CollectionCardBody from './collectionCardBody'
+export NoCollectionMatches from './noCollectionMatches'
 
-const enhance = namedUpdateKeys('CollectionCard', ['col'])
+const enhance = namedUpdateKeys('CollectionCard', [ 'col' ])
 
-const CollectionCard = ({col, ccKey}) => (
-  <Card key={`${ccKey}-collectioncard`} style={{marginTop: 10, marginBottom: 10}}>
+const noVirtualWidth = (vstyle) => {
+  delete vstyle.width
+  return vstyle
+}
+
+const CollectionCard = ({ col, ccKey }) => (
+  <Card key={`${ccKey}-collectioncard`} style={{ marginTop: 10, marginBottom: 10}}>
     <CollectionCardHeader key={`${ccKey}-collectioncard-header`} name={col.get('colName')}/>
     <CollectionCardBody
       key={`${ccKey}-collectioncard-body`}

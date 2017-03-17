@@ -4,7 +4,7 @@ import { amber500 } from 'material-ui/styles/colors'
 import { Link } from 'react-router-dom'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { dynamicRouteResolvers as drr } from '../../../../routes/routeNames'
-const linkStyle = {color: amber500, textDecoration: 'none'}
+const linkStyle = {color: amber500, textDecoration: 'none',textAlign: 'center'}
 
 const enhance = namedUpdateKeys('CollectionCardHeader', ['name'])
 

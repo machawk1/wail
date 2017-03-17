@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import {ipcRenderer as ipc} from 'electron'
+import React, { Component } from 'react'
+import { ipcRenderer as ipc } from 'electron'
 import Notification from 'react-notification-system'
 import wailConstants from '../../constants/wail-constants'
 // https://github.com/igorprado/react-notification-system
@@ -24,13 +24,11 @@ export default class Notifications extends Component {
         this.receiveMessage(notif)
       }
     })
-    // GMessageStore.on('new-message', ::this.receiveMessage)
   }
 
   componentWillUnmount () {
     this.$notificationSub.unsubscribe()
     this.$notificationSub = null
-    // GMessageStore.removeListener('new-message', ::this.receiveMessage)
   }
 
   ipcNotif (e, notif) {
@@ -58,7 +56,7 @@ export default class Notifications extends Component {
 
   render () {
     return (
-      <Notification ref={(c) => { this.notifier = c }} />
+      <Notification ref={(c) => { this.notifier = c }}/>
     )
   }
 }

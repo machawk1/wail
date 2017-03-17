@@ -127,10 +127,10 @@ export default class AppManager2 {
       minHeight: this.h,
       // maxHeight: this.h,
       title: 'Web Archiving Integration Layer',
-      maximizable: false,
       show: false,
       icon: this.iconp,
       webPreferences: {
+        webSecurity: false,
         allowRunningInsecureContent: true,
         allowDisplayingInsecureContent: true
       }
