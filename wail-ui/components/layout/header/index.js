@@ -75,7 +75,7 @@ export default class Header extends Component {
             onTouchTap={(e) => this.handleClose('Services', routeNames.services)}/>
           <MenuItem
             id='sidebarMisc'
-            primaryText={'Miscellaneous'}
+            primaryText={'Event Log'}
             onTouchTap={(e) => this.handleClose('Event Log', routeNames.misc)}/>
           <Divider />
           <MenuItem
