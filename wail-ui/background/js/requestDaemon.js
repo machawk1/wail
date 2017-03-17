@@ -1,4 +1,4 @@
-import '../../../wailPollyfil'
+import 'babel-polyfill'
 import {ipcRenderer, remote} from 'electron'
 import util from 'util'
 import Logger from '../../logger/logger'

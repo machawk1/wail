@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react'
 import CardTitle from 'material-ui/Card/CardTitle'
-import { Link, IndexLink } from 'react-router'
+import {Link} from 'react-router-dom'
 import FlatButton from 'material-ui/FlatButton'
 import { Flex } from 'react-flex'
 import { resetCheckMessage } from '../../../../actions/archival'
@@ -18,16 +18,16 @@ const CollAddSeedHeader = ({col, nukeCheckUrl}, context) => {
     color: primary1Color,
     textDecoration: 'none'
   }
-  let title = <span><IndexLink onClick={nukeCheckUrl} style={linkStyle} to='/'>Collections</IndexLink> > <Link
+  let title = <span><Link onClick={nukeCheckUrl} style={linkStyle} to='/'>Collections</Link> > <Link
     style={linkStyle}
     onClick={nukeCheckUrl}
-    to={`Collections/${col}`}>{col}</Link> > Add Seed</span>
+    to={`/Collections/${col}`}>{col}</Link> > Add Seed</span>
   return (
     <Flex row alignItems='center' justifyContent='space-between'>
       <CardTitle
         title={title}
       />
-      <Link id='addFromFs' to={`Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem' /></Link>
+      <Link id='addFromFs' to={`/Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem' /></Link>
     </Flex>
   )
 }

@@ -5,7 +5,7 @@ import Path from 'path'
 import bunyan from 'bunyan'
 import { app } from 'electron'
 import SettingsManager from './settingsManager'
-import ServiceManager from './serviceManager'
+import ServiceManager from './serviceManager3'
 import Pather from '../util/pather'
 import ContextMenu from '../util/contextMenu'
 
@@ -89,8 +89,8 @@ export default class AppManager2 {
     if (!this.settingsMan.get('didFirstLoad')) {
       this.firstLoad = true
     }
-    await this.serviceMan.init()
     this.serviceMan = new ServiceManager(this.settingsMan)
+    await this.serviceMan.init()
     global.wailVersion = this.version
     global.wailLogp = this.logPath
     global.settings = this.settingsMan

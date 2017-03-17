@@ -98,6 +98,7 @@ export default class ArchiveComponent extends Component {
     })
 
     this.webview.addEventListener('did-fail-load', (e) => {
+      this.wasLoadError = true
       if (this.archiveQ.length > 0) {
         let config = this.archiveQ[0]
         e.m = e.errorDescription
@@ -105,7 +106,6 @@ export default class ArchiveComponent extends Component {
         this.archiveQ.shift()
         this.maybeMore()
       }
-      this.wasLoadError = true
     })
 
     if(process.NODE_ENV === 'development') {
@@ -189,7 +189,7 @@ export default class ArchiveComponent extends Component {
     })
   }
 
-  ipcMessage (event) {
+  async ipcMessage (event) {
     if (event.channel === 'injected-archive') {
       let msg = event.args[0]
       if (msg === 'did-finish-load') {
@@ -198,27 +198,27 @@ export default class ArchiveComponent extends Component {
         if (!this.wasLoadError) {
           let webContents = this.webview.getWebContents()
           this.networkMonitor.detach(webContents)
-          this.extractDoctypeDom(webContents)
-            .then(ret => {
-              let arConfig = this.archiveQ[0]
-              let opts = {
-                seedUrl: arConfig.uri_r,
-                lookUp: webContents.getURL(),
-                networkMonitor: this.networkMonitor,
-                ua: this.webview.getUserAgent(),
-                dtDom: ret,
-                preserveA: false,
-                toPath: arConfig.saveTo,
-                header: arConfig
-              }
-              this.warcWritter.writeWarc(opts)
-            })
-            .catch(error => {
-              let config = this.archiveQ[0]
-              failUseHeritrix(config, error)
-              this.archiveQ.shift()
-              this.maybeMore()
-            })
+          let ret
+          try {
+            ret = await this.extractDoctypeDom(webContents)
+          } catch (error) {
+            let config = this.archiveQ[0]
+            failUseHeritrix(config, error)
+            this.archiveQ.shift()
+            this.maybeMore()
+          }
+          let arConfig = this.archiveQ[0]
+          let opts = {
+            seedUrl: arConfig.uri_r,
+            lookUp: webContents.getURL(),
+            networkMonitor: this.networkMonitor,
+            ua: this.webview.getUserAgent(),
+            dtDom: ret,
+            preserveA: false,
+            toPath: arConfig.saveTo,
+            header: arConfig
+          }
+          this.warcWritter.writeWarc(opts)
         }
       } else {
         console.log(msg)

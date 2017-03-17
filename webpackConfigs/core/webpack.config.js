@@ -13,7 +13,6 @@ const babelEnvConfig = ['env', {
     'syntax-trailing-function-commas',
     'transform-es2015-classes',
     'transform-es2015-object-super',
-    'transform-es2015-destructuring'
   ],
   'exclude': [
     'transform-async-to-generator'

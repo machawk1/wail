@@ -1,22 +1,20 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import Immutable from 'immutable'
-import Rx from 'rxjs/Rx'
-import MyAutoSizer from '../../utilComponents/myAutoSizer'
-import SortDirection from '../../sortDirection/sortDirection'
+import { BehaviorSubject } from 'rxjs'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 import SortHeader from '../../sortDirection/sortHeader'
-import {
-  Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn
-} from 'material-ui/Table'
-import {connect} from 'react-redux'
-import {Link} from 'react-router'
+import SortDirection from '../../sortDirection/sortDirection'
+import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import fuzzyFilter from '../../../util/fuzzyFilter'
+import CollectionCard from './collectionCard'
 
-const stateToProp = state => ({ collections: state.get('collections') })
+const stateToProp = state => ({collections: state.get('collections')})
 
 class SelectColTable extends Component {
   static propTypes = {
     collections: PropTypes.instanceOf(Immutable.Map).isRequired,
-    filterText: PropTypes.instanceOf(Rx.BehaviorSubject).isRequired
+    filterText: PropTypes.instanceOf(BehaviorSubject).isRequired
   }
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired
@@ -36,7 +34,7 @@ class SelectColTable extends Component {
   componentDidMount () {
     this.filterSubscription = this.props.filterText.subscribe({
       next: (searchText) => {
-        this.setState({ searchText })
+        this.setState({searchText})
       }
     })
   }
@@ -46,7 +44,7 @@ class SelectColTable extends Component {
     this.filterSubscription = null
   }
 
-  renTr () {
+  renCollectionCards () {
     let trs = []
     let cols
     if (this.state.sortDirection) {
@@ -58,74 +56,38 @@ class SelectColTable extends Component {
       cols = this.props.collections.toList().filter(aCol => fuzzyFilter(this.state.searchText, aCol.get('colName')))
     }
     let len = cols.size
-    let { primary1Color } = this.context.muiTheme.baseTheme.palette
     for (let i = 0; i < len; ++i) {
       let col = cols.get(i)
       let cname = col.get('colName')
-      trs.push(<TableRow key={`${i}-${cname}`}>
-        <TableRowColumn key={`${i}-${cname}-name`}>
-          <Link id={`linkTo-${cname}`} to={`Collections/${cname}`} style={{ color: primary1Color, textDecoration: 'none' }}>{cname}</Link>
-        </TableRowColumn>
-        <TableRowColumn key={`${i}-${cname}-numSeeds`}>
-          {col.get('seeds').size}
-        </TableRowColumn>
-        <TableRowColumn key={`${i}-${cname}-lastUpdated`}>
-          {col.get('lastUpdated').format('MMM DD YYYY h:mma')}
-        </TableRowColumn>
-        <TableRowColumn key={`${i}-${cname}-size`}>
-          {col.get('size')}
-        </TableRowColumn>
-      </TableRow>)
+      trs.push(
+        <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`}/>
+      )
     }
 
     return trs
   }
 
   setSortState (sortKey, sortDirection) {
-    this.setState({ sortDirection, sortKey })
+    this.setState({sortDirection, sortKey})
   }
 
   render () {
-    let trs = this.renTr()
+    let trs = this.renCollectionCards()
     let sdirection = this.state.sortDirection || SortDirection.ASC
     return (
-      <MyAutoSizer findElement='cViewContainer'>
-        {({ height }) => {
-          return (
-            <Table
-              height={`${height - 260}px`}
-              style={{maxHeight: `${height - 260}px`}}
-            >
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-              >
-                <TableRow >
-                  <SortHeader
-                    key='SortHeader-name'
-                    text='Name' sortDirection={sdirection}
-                    onTouchTap={::this.setSortState}
-                  />
-                  <TableHeaderColumn>
-                    Seeds
-                  </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    Last Updated
-                  </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    Size
-                  </TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                displayRowCheckbox={false}
+      <div style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
+        <MyAutoSizer findElement='cViewContainer'>
+          {({height}) => {
+            return (
+              <div
+                style={{height, maxHeight: `${height - 165}px`, overflowY: 'auto'}}
               >
                 {trs}
-              </TableBody>
-            </Table>
-          )
-        }}
-      </MyAutoSizer>
+              </div>
+            )
+          }}
+        </MyAutoSizer>
+      </div>
     )
   }
 

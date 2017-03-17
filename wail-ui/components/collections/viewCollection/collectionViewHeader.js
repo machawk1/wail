@@ -1,41 +1,47 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import Immutable from 'immutable'
-import {Flex} from 'react-flex'
-import {Card, CardTitle, CardText} from 'material-ui/Card'
-import {Link, IndexLink} from 'react-router'
+import { Map } from 'immutable'
+import { BehaviorSubject } from 'rxjs'
+import { Flex } from 'react-flex'
+import Paper from 'material-ui/Paper'
+import IconButton from 'material-ui/IconButton'
+import SearchI from 'material-ui/svg-icons/action/search'
+import SearchInput from '../../utilComponents/searchInput'
+import { CardTitle, CardText } from 'material-ui/Card'
 
 export default class CollectionViewHeader extends Component {
   static contextTypes = {
     muiTheme: PropTypes.object.isRequired
   }
   static propTypes = {
-    collection: PropTypes.instanceOf(Immutable.Map).isRequired
+    collection: PropTypes.instanceOf(Map).isRequired,
+    filterText: PropTypes.instanceOf(BehaviorSubject).isRequired
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    return shallowCompare(this, nextProps, nextState)
+    return this.props.collection !== nextProps.collection
   }
 
   render () {
-    let viewingCol = this.props.collection.get('colName')
-    let description = this.props.collection.get('metadata').get('description')
-    let { primary1Color } = this.context.muiTheme.baseTheme.palette
-    let linkStyle = { color: primary1Color, textDecoration: 'none' }
-    let title = <span><IndexLink to='/' style={linkStyle}>Collections</IndexLink> > {viewingCol}</span>
     return (
-      <div>
+      <Paper>
         <Flex row alignItems='baseline' justifyContent='space-between'>
-          <CardTitle title={title} />
-          <CardTitle subtitle={`Last Updated: ${this.props.collection.get('lastUpdated').format('MMM DD YYYY')}`} />
-          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD YYYY')}`} />
-          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`} />
-          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`} />
+          <CardTitle subtitle={`Last Updated: ${this.props.collection.get('lastUpdated').format('MMM DD YYYY')}`}/>
+          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD YYYY')}`}/>
+          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`}/>
+          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`}/>
         </Flex>
-        <CardText style={{maxHeight: 100, overflowY: 'auto'}}>
-          {description}
+        <CardText style={{padding: 0, paddingLeft: 64, paddingRight: 64}}>
+           <span>
+            <SearchInput searchSubject={this.props.filterText}/>
+          </span>
+          <span>
+            <IconButton tooltip={'Search Seeds By URL'}>
+               <SearchI />
+            </IconButton>
+          </span>
         </CardText>
-      </div>
+      </Paper>
     )
   }
 }

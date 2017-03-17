@@ -1,20 +1,21 @@
-import {hashHistory} from 'react-router'
-import {createStore, applyMiddleware, compose} from 'redux'
+import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-import {routerMiddleware} from 'react-router-redux'
-import {ipc, requestHandler} from '../middleware'
+import { routerMiddleware } from 'react-router-redux'
+import { ipc, requestHandler } from '../middleware'
 import rootReducer from '../reducers'
+import { Map } from 'immutable'
 import * as actionCreators from '../actions/index'
 
-const configureStore = () => {
+const configureStore = (history) => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
-    actionCreators
-  }) || compose
+      actionCreators
+    }) || compose
   const store = createStore(
     rootReducer,
+    Map(),
     composeEnhancers(
-      applyMiddleware(thunk, promiseMiddleware, routerMiddleware(hashHistory), requestHandler, ipc)
+      applyMiddleware(thunk, promiseMiddleware, routerMiddleware(history), requestHandler(history), ipc)
     )
   )
 

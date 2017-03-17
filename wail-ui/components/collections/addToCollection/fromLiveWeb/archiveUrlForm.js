@@ -74,7 +74,7 @@ class ArchiveUrlForm extends Component {
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid} = this.props
     return (
-      <div style={{width: '90%', height: 'inherit'}}>
+      <div style={{width: '90%', height: 'inherit', marginTop: 15}}>
         <form onSubmit={handleSubmit(::this.submit)} style={{height: '300px'}}>
           <div style={{height: '75px'}}>
             <Field

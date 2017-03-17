@@ -1,7 +1,8 @@
 import _ from 'lodash'
 import DB from 'nedb'
 import path from 'path'
-import fs from 'fs-extra'
+import cp from 'child_process'
+import * as fs from 'fs-extra'
 import Promise from 'bluebird'
 import { checkPathExists, removeFile } from '../util/fsHelpers'
 
@@ -51,7 +52,7 @@ export default class DataStore {
     }
     this.db = new DB(opts)
     this.filePath = opts.filename
-    this.dbBasePath = dbBasePath
+    this.dbPathMutate = dbBasePath
   }
 
   loadDb () {
@@ -63,6 +64,62 @@ export default class DataStore {
           resolve()
         }
       })
+    })
+  }
+
+  copyDbTo (to) {
+    return new Promise((resolve, reject) => {
+      fs.copy(this.filePath, to, (errCopy) => {
+        if (errCopy) {
+          this._lastDitchCopy(to, resolve, reject)
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  removeDbFromDisk () {
+    return new Promise((resolve, reject) => {
+      fs.remove(this.filePath, (errRm) => {
+        if (errRm) {
+          this._lastDitchRemove(resolve, reject)
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  _lastDitchCopy (to, resolve, reject) {
+    let rmCommand
+    if (process.platform === 'win32') {
+      rmCommand = `copy /y ${this.filePath} ${to}`
+    } else {
+      rmCommand = `cp ${this.filePath} ${to}`
+    }
+    cp.exec(rmCommand, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+  }
+
+  _lastDitchRemove (resolve, reject) {
+    let rmCommand
+    if (process.platform === 'win32') {
+      rmCommand = `del /f /q ${this.filePath}`
+    } else {
+      rmCommand = `rm -f ${this.filePath}`
+    }
+    cp.exec(rmCommand, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
     })
   }
 

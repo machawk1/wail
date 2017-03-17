@@ -12,8 +12,7 @@ const babelEnvConfig = ['env', {
   'include': [
     'syntax-trailing-function-commas',
     'transform-es2015-classes',
-    'transform-es2015-object-super',
-    'transform-es2015-destructuring'
+    'transform-es2015-object-super'
   ],
   'exclude': [
     'transform-async-to-generator'
@@ -84,11 +83,19 @@ module.exports = {
       __DEV__: true,
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'deps',
+      minChunks(module, count) {
+        const context = module.context
+        return context && context.indexOf('node_modules') >= 0
+      },
+    }),
+    new webpack.NamedModulesPlugin(),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    chunkFilename: '[id].chunk.js',
+    chunkFilename: '[name].chunk.js',
     publicPath: 'http://localhost:9000/dist/'
   },
   // bail: true,

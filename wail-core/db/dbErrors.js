@@ -130,7 +130,7 @@ export class InsertError extends Error {
     this.oError = oError
   }
 
-  errorReport (title = 'Error') {
+  errorReport (message, title = 'Error') {
     return {
       wasError: true,
       err: this.oError,
@@ -138,8 +138,8 @@ export class InsertError extends Error {
         title,
         level: 'error',
         autoDismiss: 0,
-        message: this.message,
-        uid: this.message
+        message: message,
+        uid: message
       }
     }
   }
@@ -293,3 +293,76 @@ export class InsertFindAllError extends Error {
   }
 }
 
+export class FatalDBError extends Error {
+  constructor (oError, where, dbName) {
+    super(`${dbName} FatalDBError [${getOErrorMessage(oError, where)}] ${where}`)
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
+    this.oError = oError
+    this.oError.m = this.errorReport()
+    this.where = where
+  }
+
+  errorReport (title = 'Error') {
+    return {
+      wasError: true,
+      err: this.oError,
+      message: {
+        title,
+        level: 'error',
+        autoDismiss: 0,
+        message: this.message,
+        uid: this.message
+      }
+    }
+  }
+}
+
+export class HardRemoveDbError extends Error {
+  constructor (oError, dbName) {
+    super(`${dbName} HardRemoveDbError [${getOErrorMessage(oError, `hard remove failed`)}]`)
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
+    this.oError = oError
+  }
+
+  errorReport (title = 'Error') {
+    return {
+      wasError: true,
+      err: this.oError,
+      message: {
+        title,
+        level: 'error',
+        autoDismiss: 0,
+        message: this.message,
+        uid: this.message
+      }
+    }
+  }
+}
+
+export class DBErrorReport extends Error {
+  constructor (oError, message) {
+    super(message)
+    Object.defineProperty(this, 'name', {
+      value: this.constructor.name
+    })
+    this.oError = oError
+  }
+
+  get m () {
+    return {
+      wasError: true,
+      err: this.oError,
+      message: {
+        title: 'Error',
+        level: 'error',
+        autoDismiss: 0,
+        message: message,
+        uid: message
+      }
+    }
+  }
+}

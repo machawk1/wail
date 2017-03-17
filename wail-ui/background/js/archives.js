@@ -1,8 +1,12 @@
-import '../../../wailPollyfil'
+import 'babel-polyfill'
 import { remote, ipcRenderer as ipc } from 'electron'
+import Settings from '../../../wail-core/remoteSettings'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
 
-const archiveMan = window.am = new ArchiveManager(remote.getGlobal('settings'))
+const settings = new Settings()
+settings.configure()
+
+const archiveMan = window.am = new ArchiveManager(settings)
 
 ipc.on('made-heritrix-jobconf', (event, confDetails) => {
   console.log('archive man makeHeritrixJobConf', confDetails)
@@ -36,16 +40,6 @@ ipc.on('get-all-collections', (event) => {
     })
 })
 
-ipc.on('add-multi-warcs-to-col', (event, multi) => {
-  archiveMan.addMultiWarcToCol(multi)
-    .then(update => {
-      ipc.send('added-warcs-to-col', update)
-    })
-    .catch(error => {
-      ipc.send('display-message', error.m)
-    })
-})
-
 ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
   console.log('archives got addfs warcs', fsAdd)
   archiveMan.addWarcsFromFSToCol(fsAdd)
@@ -64,22 +58,6 @@ ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
     })
 })
 
-ipc.on('add-metadata-to-col', (event, addMe) => {
-  let {forCol, mdata} = addMe
-  archiveMan.addMetadata(forCol, mdata)
-    .then(numUpdate => {
-      ipc.send('added-metadata-to-col', {
-        wasError: false,
-        numUpdate
-      })
-    })
-    .catch(error => {
-      ipc.send('added-metadata-to-col', {
-        wasError: true,
-        error
-      })
-    })
-})
 
 ipc.on('add-warcs-to-col', (event, addMe) => {
   console.log('archive man got add warcs to col', addMe)
@@ -152,13 +130,6 @@ ipc.on('create-collection', (event, nc) => {
         uid: `Creating new collection ${nc.col} for ${error}`
       })
     })
-})
-
-ipc.on('update-metadata', (e, update) => {
-  console.log('archive man got update-metadata', update)
-  archiveMan.updateMetadata(update)
-    .then(updated => ipc.send('updated-metadata', {wasError: false, forCol: update.forCol, mdata: updated}))
-    .catch(error => ipc.send('updated-metadata', {wasError: true, error, forCol: update.forCol}))
 })
 
 archiveMan.initialLoad()

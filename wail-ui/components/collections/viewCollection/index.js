@@ -1,13 +1,10 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import Immutable from 'immutable'
-import Rx from 'rxjs/Rx'
-import {connect} from 'react-redux'
+import { BehaviorSubject } from 'rxjs'
+import { connect } from 'react-redux'
 import CollectionViewHeader from './collectionViewHeader'
-import SeedTable from './seedTable'
-import {Menu, MenuItem} from 'material-ui/Menu'
-import { Card} from 'material-ui/Card'
-import AddSeedFab from './addSeedFab'
+import SeedTable from './seedTable2'
 
 const depthToConfig = d => {
   if (d === 1) {
@@ -17,16 +14,16 @@ const depthToConfig = d => {
   }
 }
 
-
 const stateToProps = (state, ownProps) => {
+  console.log('view col', ownProps)
   const collection = state.get('collections').get(ownProps.viewingCol)
   const colName = collection.get('colName')
   const crawls = state.get('runs').filter((crawl, jid) => crawl.get('forCol') === colName)
   const seedConfig = {}
-  let i =0
+  let i = 0
   collection.get('seeds').forEach(seed => {
     seed.get('jobIds').forEach(jid => {
-      let crawl = crawls.get(`${jid}`),url =  seed.get('url')
+      let crawl = crawls.get(`${jid}`), url = seed.get('url')
       if (crawl) {
         if (seedConfig[url]) {
           seedConfig[url].add(depthToConfig(crawl.get('depth')))
@@ -58,6 +55,17 @@ class ViewCollection extends Component {
     seedConfig: PropTypes.object.isRequired,
     viewingCol: PropTypes.string.isRequired
   }
+
+  constructor (...args) {
+    super(...args)
+    this.filterText = new BehaviorSubject('')
+  }
+
+  componentWillUnmount () {
+    this.filterText.complete()
+    this.filterText = null
+  }
+
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     console.log('colview combined should component update')
     return this.props.collection !== nextProps.collection
@@ -65,10 +73,9 @@ class ViewCollection extends Component {
 
   render () {
     return (
-      <div style={{ width: '100%', height: '100%' }}>
-        <CollectionViewHeader collection={this.props.collection} />
-        <SeedTable collection={this.props.collection} seedConfig={this.props.seedConfig} />
-        <AddSeedFab viewingCol={this.props.viewingCol} />
+      <div style={{width: '100%', height: '100%'}}>
+        <CollectionViewHeader filterText={this.filterText} collection={this.props.collection}/>
+        <SeedTable filterText={this.filterText} collection={this.props.collection} seedConfig={this.props.seedConfig}/>
       </div>
     )
   }

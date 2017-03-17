@@ -14,6 +14,20 @@ class CollectionUtilsError extends Error {
     this.where = where
     Error.captureStackTrace(this, CollectionUtilsError)
   }
+
+  errorReport (message, title = 'Error') {
+    return {
+      wasError: true,
+      err: this.oError,
+      message: {
+        title,
+        level: 'error',
+        autoDismiss: 0,
+        message: message,
+        uid: message
+      }
+    }
+  }
 }
 
 export default class CollectionsUtils {

@@ -1,5 +1,5 @@
-import React, {Component, PropTypes} from 'react'
-import Rx from 'rxjs/Rx'
+import React, { Component, PropTypes } from 'react'
+import {BehaviorSubject} from 'rxjs'
 import Divider from 'material-ui/Divider'
 import SelectColTable from './selectColTable'
 import Search from '../../utilComponents/Search'
@@ -7,7 +7,7 @@ import Search from '../../utilComponents/Search'
 export default class FilterSelectCol extends Component {
   constructor (...args) {
     super(...args)
-    this.filterText = new Rx.BehaviorSubject('')
+    this.filterText = new BehaviorSubject('')
   }
 
   componentWillUnmount () {
@@ -18,10 +18,10 @@ export default class FilterSelectCol extends Component {
   render () {
     return (
       <div>
-        <Search searchSubject={this.filterText} />
+        <Search tooltip={'Search By Collection Name'} searchSubject={this.filterText}/>
         <Divider />
-        <div style={{ height: 'inherit' }}>
-          <SelectColTable filterText={this.filterText} />
+        <div style={{height: 'inherit'}}>
+          <SelectColTable filterText={this.filterText}/>
         </div>
       </div>
     )

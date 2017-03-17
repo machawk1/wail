@@ -1,13 +1,10 @@
 import isRunning from 'is-running'
-import Datastore from 'nedb'
-import path from 'path'
-import processStates from './processControlers/processStates'
-import WaybakProcessController from './processControlers/waybackProcessController'
+import WaybackProcessController from './processControlers/waybackProcessController'
 import HeritrixProcessController from './processControlers/heritrixProcessController'
 
 export default class ServiceManager {
   constructor (settings) {
-    this._wbPC = new WaybakProcessController(settings)
+    this._wbPC = new WaybackProcessController(settings)
     this._hPC = new HeritrixProcessController(settings)
     this._isWin = process.platform === 'win32'
     this._settings = settings
@@ -30,7 +27,6 @@ export default class ServiceManager {
   }
 
   isWaybackRunning () {
-    console.log(this._wbPC.pid, isRunning(this._wbPC.pid))
     if (this._wbPC.pid) {
       return isRunning(this._wbPC.pid)
     } else {
@@ -55,6 +51,14 @@ export default class ServiceManager {
       return isRunning(this._hPC.pid)
     } else {
       return false
+    }
+  }
+
+  startService (which) {
+    if (which === 'heritrix') {
+      return this._hPC.killProcess()
+    } else {
+      return this._wbPC.killProcess()
     }
   }
 

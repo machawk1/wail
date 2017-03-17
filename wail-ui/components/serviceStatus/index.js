@@ -35,6 +35,7 @@ const stateToProps = state => ({
 
 const dispatchToProps = dispatch => bindActionCreators(serviceAction, dispatch)
 
+// old pywb 0.32.1
 const ServiceStatus = (props) => {
   const {serviceStatRec, startHeritrix, stopHeritrix, startWayback, stopWayback} = props
   const hGood = serviceStatRec.get('heritrix'), wbGood = serviceStatRec.get('wayback')
@@ -60,7 +61,7 @@ const ServiceStatus = (props) => {
         >
           <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
           <TableRowColumn id='waybackStatus' style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
-          <TableRowColumn style={style.servicesSS}>0.32.1</TableRowColumn>
+          <TableRowColumn style={style.servicesSS}>0.33.1</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
             <span style={{marginLeft: actionMarginLeft}}>
               <RaisedButton
@@ -71,7 +72,7 @@ const ServiceStatus = (props) => {
                 label='Start'
                 onTouchTap={startWayback}
                 icon={<FixIcon />}
-            />
+              />
               <RaisedButton
                 id='stopWayback'
                 disabled={!wbGood}
@@ -80,7 +81,7 @@ const ServiceStatus = (props) => {
                 label='Stop'
                 onTouchTap={stopWayback}
                 icon={<KillIcon />}
-            />
+              />
             </span>
           </TableRowColumn>
         </TableRow>
@@ -88,7 +89,8 @@ const ServiceStatus = (props) => {
           selectable={false}
         >
           <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
-          <TableRowColumn id='heritrixStatus' style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
+          <TableRowColumn id='heritrixStatus'
+                          style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
           <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
           <TableRowColumn style={style.servicesActions}>
             <span style={{marginLeft: actionMarginLeft}}>
@@ -100,7 +102,7 @@ const ServiceStatus = (props) => {
                 label='Start'
                 onTouchTap={startHeritrix}
                 icon={<FixIcon />}
-            />
+              />
               <RaisedButton
                 id='stopHeritrix'
                 disabled={!hGood}
@@ -109,7 +111,7 @@ const ServiceStatus = (props) => {
                 label='Stop'
                 onTouchTap={stopHeritrix}
                 icon={<KillIcon />}
-            />
+              />
             </span>
           </TableRowColumn>
         </TableRow>

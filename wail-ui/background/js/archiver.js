@@ -1,4 +1,4 @@
-import '../../../wailPollyfil'
+import 'babel-polyfill'
 import '../../../wail-core/util/setMethods'
 import React from 'react'
 import {render} from 'react-dom'

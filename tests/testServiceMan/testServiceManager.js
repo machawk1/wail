@@ -8,10 +8,12 @@ import processStates from '../../wail-core/managers/serviceManager/processContro
 const cwd = process.cwd()
 let settings, serviceMan
 let wbSub, hSub, wbStateTrans, hStateTrans
+
 test.before('test setup', t => {
   console.log(cwd)
   settings = new tSettings()
-  settings.configure()
+  settings.configure(Path.join(process.cwd(), 'tests',
+    'testServiceMan', 'settings.json'))
   serviceMan = new ServiceManager(settings)
   wbSub = serviceMan.observeWayback((stateTransition) => {
     console.log('wayback state transition', stateTransition)

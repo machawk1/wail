@@ -1,14 +1,15 @@
-import {hashHistory} from 'react-router'
-import {createStore, applyMiddleware, compose} from 'redux'
-import {routerMiddleware} from 'react-router-redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { routerMiddleware } from 'react-router-redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-import {ipc, requestHandler} from '../middleware'
+import { Map } from 'immutable'
+import { ipc, requestHandler } from '../middleware'
 import rootReducer from '../reducers'
 
-const configureStore = () => createStore(
+const configureStore = (history) => createStore(
   rootReducer,
-  applyMiddleware(thunk, promiseMiddleware, routerMiddleware(hashHistory), requestHandler, ipc)
+  Map(),
+  applyMiddleware(thunk, promiseMiddleware, routerMiddleware(history), requestHandler(history), ipc)
 )
 
 export default configureStore

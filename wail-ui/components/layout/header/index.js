@@ -1,13 +1,14 @@
 import React, { Component, PropTypes } from 'react'
-import AppBar from 'material-ui/AppBar'
 import Drawer from 'material-ui/Drawer'
 import Avatar from 'material-ui/Avatar'
 import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import MenuItem from 'material-ui/MenuItem'
 import Divider from 'material-ui/Divider'
-import Location from './location'
-import CrawlIndicator from './crawlingIndicator'
-import changeLocation from '../../actions/changeLocation'
+import changeLocation from '../../../actions/changeLocation'
+import CrawlIndicator from '../crawlingIndicator'
+import WailAppBar from './wailAppBar'
+import routeNames from '../../../routes/routeNames'
+
 
 export default class Header extends Component {
   static contextTypes = {
@@ -24,16 +25,12 @@ export default class Header extends Component {
           this.handleToggle()
         },
         goHome: () => {
-          this.handleClose('WAIL', '/')
+          this.handleClose('Collections', routeNames.selectCol)
         }
       }
     }
   }
 
-  shouldComponentUpdate (nextProps, nextState, nextContext) {
-    const {open, location} = this.state
-    return open !== nextState.open || location !== nextState.location
-  }
 
   handleToggle () {
     this.setState({open: !this.state.open})
@@ -51,12 +48,7 @@ export default class Header extends Component {
   render () {
     return (
       <div>
-        <AppBar
-          id='wailAppBar'
-          title={this.state.location}
-          onLeftIconButtonTouchTap={::this.handleToggle}
-          iconElementRight={<CrawlIndicator />}
-        />
+        <WailAppBar CrawlIndicator={<CrawlIndicator />} leftIconTouchTap={::this.handleToggle}/>
         <Drawer
           docked={false}
           width={200}
@@ -67,30 +59,32 @@ export default class Header extends Component {
             id='sidebarWail'
             primaryText={'Collections'}
             rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'}/>}
-            onTouchTap={(e) => this.handleClose('Collections', '/')}/>
+            onTouchTap={(e) => this.handleClose('Collections', routeNames.selectCol)}
+          />
           <Divider />
           <MenuItem
             id='sidebarHeritrix'
             primaryText={'Crawls'}
             rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
-            onTouchTap={(e) => this.handleClose('Heritrix', '/heritrix')}/>
+            onTouchTap={(e) => this.handleClose('Heritrix', routeNames.heritrix)}/>
           <Divider />
           <MenuItem
             id='sidebarServices'
             primaryText={'Service Statuses'}
             rightIcon={<ServiceIcon />}
-            onTouchTap={(e) => this.handleClose('Services', '/services')}/>
+            onTouchTap={(e) => this.handleClose('Services', routeNames.services)}/>
           <MenuItem
             id='sidebarMisc'
             primaryText={'Miscellaneous'}
-            onTouchTap={(e) => this.handleClose('Event Log', '/misc')}/>
+            onTouchTap={(e) => this.handleClose('Event Log', routeNames.misc)}/>
           <Divider />
           <MenuItem
             id='sidebarTwitter'
             primaryText={'Twitter Archive'}
-            onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')}/>
+            onTouchTap={(e) => this.handleClose('Twitter Archive', routeNames.twitter)}/>
         </Drawer>
       </div>
     )
   }
 }
+

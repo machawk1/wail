@@ -7,9 +7,8 @@ export default class MockSettings {
     this._settingsCache = null
   }
 
-  configure () {
-    this._settingsCache = fs.readJsonSync(path.join(process.cwd(), 'tests',
-      'testServiceMan', 'settings.json'))
+  configure (pathToSettings) {
+    this._settingsCache = fs.readJsonSync(pathToSettings)
   }
 
   get (what) {

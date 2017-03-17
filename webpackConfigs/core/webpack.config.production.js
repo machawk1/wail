@@ -10,8 +10,7 @@ const babelEnvConfig = ['env', {
   },
   "useBuiltIns": true,
   'include': [
-    'syntax-trailing-function-commas',
-    'transform-es2015-destructuring'
+    'syntax-trailing-function-commas'
   ],
   'exclude': [
     'transform-async-to-generator'

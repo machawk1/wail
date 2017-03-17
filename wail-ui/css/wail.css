@@ -207,9 +207,9 @@
 .layoutBody {
     background-color: #f2f2f2;
     position: absolute;
-    top: 64px;
+    top: 55px;
     width: 100%;
-    height: inherit;
+    height: 100%;
 }
 
 .firstLoadBody {

@@ -1,6 +1,8 @@
 import DB from 'nedb'
 import path from 'path'
 import Promise from 'bluebird'
+import * as fs from 'fs-extra'
+import cp from 'child_process'
 import * as dbErrors from './dbErrors'
 
 export default class Db {
@@ -11,7 +13,7 @@ export default class Db {
     }
     this.db = new DB(opts)
     this.filePath = opts.filename
-    this.dbBasePath = dbBasePath
+    this.dbPathMutate = dbBasePath
   }
 
   loadDb () {
@@ -23,6 +25,74 @@ export default class Db {
           resolve()
         }
       })
+    })
+  }
+
+  dbExistsOnDisk () {
+    return new Promise((resolve, reject) => {
+      fs.stat(this.filePath, (error, stats) => {
+        if (error) {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      })
+    })
+  }
+
+  copyDbTo (to) {
+    return new Promise((resolve, reject) => {
+      fs.copy(this.filePath, to, (errCopy) => {
+        if (errCopy) {
+          this._lastDitchCopy(to, resolve, reject)
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  removeDbFromDisk () {
+    return new Promise((resolve, reject) => {
+      fs.remove(this.filePath, (errRm) => {
+        if (errRm) {
+          this._lastDitchRemove(resolve, reject)
+        } else {
+          resolve()
+        }
+      })
+    })
+  }
+
+  _lastDitchCopy (to, resolve, reject) {
+    let rmCommand
+    if (process.platform === 'win32') {
+      rmCommand = `copy /y ${this.filePath} ${to}`
+    } else {
+      rmCommand = `cp ${this.filePath} ${to}`
+    }
+    cp.exec(rmCommand, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+  }
+
+  _lastDitchRemove (resolve, reject) {
+    let rmCommand
+    if (process.platform === 'win32') {
+      rmCommand = `del /f /q ${this.filePath}`
+    } else {
+      rmCommand = `rm -f ${this.filePath}`
+    }
+    cp.exec(rmCommand, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
     })
   }
 
@@ -54,6 +124,22 @@ export default class Db {
     })
   }
 
+  wemFind (message, query) {
+    return new Promise((resolve, reject) => {
+      this.db.find(query, (err, docs) => {
+        if (err) {
+          reject(new dbErrors.DBErrorReport(err, message))
+        } else {
+          resolve(docs)
+        }
+      })
+    })
+  }
+
+  wemFindAll (message) {
+    return this.wemFind(message, {})
+  }
+
   findAll () {
     return this.find({})
   }
@@ -78,7 +164,7 @@ export default class Db {
     let findRet = await this._findOne(find.q)
     if (!findRet.wasError) {
       if (find.doUpdate(findRet.doc)) {
-        let updateRet = await this._update(update.who, update.theUpdate, update.opts)
+        let updateRet = await this._update(update.who, update.theUpdate(findRet.doc), update.opts)
         if (updateRet.wasError) {
           throw new dbErrors.FindAndUpdateOrInsertError(updateRet.err, 'update after find')
         }
@@ -250,5 +336,49 @@ export default class Db {
     } else {
       throw new dbErrors.UpdateFindAllError(updateRet.err, 'update')
     }
+  }
+
+  nrRemove (query, opts = {}) {
+    return new Promise((resolve) => {
+      this.db.remove(query, opts, (err, rmc) => {
+        resolve({wasError: false, value: rmc})
+      })
+    })
+  }
+
+  nrInsert (insertMe) {
+    return new Promise((resolve, reject) => {
+      this.db.insert(insertMe, (err, docs) => {
+        if (err) {
+          resolve({wasError: true, value: err})
+        } else {
+          resolve({wasError: false, value: docs})
+        }
+      })
+    })
+  }
+
+  nrFindSelect (query, select) {
+    return new Promise((resolve, reject) => {
+      this.db.find(query, select, (err, docs) => {
+        if (err) {
+          resolve({wasError: true, value: err})
+        } else {
+          resolve({wasError: false, value: docs})
+        }
+      })
+    })
+  }
+
+  nrFind (query) {
+    return new Promise((resolve, reject) => {
+      this.db.find(query, (err, doc) => {
+        if (err) {
+          resolve({wasError: true, value: err})
+        } else {
+          resolve({wasError: false, value: doc})
+        }
+      })
+    })
   }
 }

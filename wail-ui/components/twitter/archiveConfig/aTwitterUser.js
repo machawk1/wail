@@ -37,7 +37,7 @@ class ATwitterUser extends Component {
     return global.twitterClient.getUserId({screen_name: screenName})
       .catch(error => {
         console.error(error)
-        notifyError(`An internal error occurred ${error.message || ''}`,true)
+        notifyError(`An internal error occurred ${error.message || ''}`, true)
       })
       .then(({data, resp}) => {
         if (data.errors) {
@@ -55,13 +55,18 @@ class ATwitterUser extends Component {
             _error: message
           })
         } else {
-          monitor({
+          let conf = {
             account: screenName,
             dur: timeVales.values[values.get('length')],
             forCol: values.get('forCol'),
-            taskType: 'UserTimeLine',
-            oneOff: true
-          })
+            taskType: 'UserTimeLine'
+          }
+          if (process.env.NODE_ENV === 'development') {
+            // tehehehe sssshhhhh
+            monitor({...conf, oneOff: true})
+          } else {
+            monitor(conf)
+          }
           this.props.clear()
         }
       })

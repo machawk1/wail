@@ -1,4 +1,4 @@
-import '../../../wailPollyfil'
+import 'babel-polyfill'
 import '../../../wail-core/util/setMethods'
 import TwitterMonitor from '../../../wail-twitter/monitor/twitterMonitor'
 import {remote, ipcRenderer as ipc} from 'electron'

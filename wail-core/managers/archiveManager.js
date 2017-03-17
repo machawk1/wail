@@ -6,50 +6,37 @@ import cp from 'child_process'
 import path from 'path'
 import join from 'joinable'
 import S from 'string'
-import { ipcRenderer as ipc } from 'electron'
-import fs from 'fs-extra'
-import moment from 'moment'
+import split2 from 'split2'
 import through2 from 'through2'
+import * as fs from 'fs-extra'
+import moment from 'moment'
 import prettyBytes from 'pretty-bytes'
 import _ from 'lodash'
+import EventEmitter from 'eventemitter3'
+import { Observable } from 'rxjs'
 import { checkPathExists, readDir, getFsStats, removeFile } from '../util/fsHelpers'
 import { getYamlOrWriteIfAbsent, writeYaml } from '../util/yaml'
 import { execute } from '../util/childProcHelpers'
-import {
-  find, findOne, insert,
-  inserAndFindAll, updateSingle, remove,
-  updateAndFindAll, CompoundNedbError
-} from '../util/nedb'
 import  { mvStartingCol } from '../util/moveStartingCol'
-import DataStore from '../db/dataStore'
+import { FatalDBError } from '../db/dbErrors'
 import PyWb from '../pywb'
 import CollectionsUtils from '../util/collectionsUtils'
+import Db from '../db/db'
 
-S.TMPL_OPEN = '{'
-S.TMPL_CLOSE = '}'
+const updateSingleOpts = {
+  returnUpdatedDocs: true,
+  multi: false
+}
 
-const errorReport = (error, m) => ({
-  wasError: true,
-  err: error,
-  message: {
-    title: 'Error',
-    level: 'error',
-    autoDismiss: 0,
-    message: m,
-    uid: m
-  }
-})
-
-class ArchiveManError extends Error {
-  constructor (oError, where, message) {
-    super(`ArchiveManError[${where}]`)
-    Object.defineProperty(this, 'name', {
-      value: this.constructor.name
-    })
-    this.oError = oError
-    this.where = where
-    this.m = errorReport(oError, message)
-    Error.captureStackTrace(this, ArchiveManError)
+const foundSeedChecker = (colSeeds) => {
+  if (colSeeds) {
+    if (Array.isArray(colSeeds)) {
+      return colSeeds.length > 0
+    } else {
+      return true
+    }
+  } else {
+    return false
   }
 }
 
@@ -65,82 +52,210 @@ const transSeeds = flow(
   mapValues(cleanSeeds)
 )
 
-const foundSeedChecker = (colSeeds) => {
-  if (colSeeds) {
-    if (Array.isArray(colSeeds)) {
-      return colSeeds.length > 0
-    } else {
-      return true
-    }
-  } else {
-    return false
-  }
-}
-
-const updateSingleOpts = {
-  returnUpdatedDocs: true,
-  multi: false
-}
-
-const missingBackUpPath = () => {
-  switch (process.platform) {
-    case 'darwin':
-      return '~/Library/Application Support/WAIL/database'
-    case 'linux':
-      return '~/.config/WAIL/database'
-    default:
-      return '%APPDATA%/WAIL/database'
-  }
-}
-
-export default class ArchiveManager {
+export default class ArchiveManager extends EventEmitter {
   constructor (settings) {
+    super()
     this._dbBasePath = settings.get('wailCore.db')
     this._colsBasePath = settings.get('warcs')
     this._colsSettingsObj = settings.get('collections')
     this._pywb = new PyWb(settings)
     this._settings = settings
-    this._collections = new DataStore({
+    this._collections = new Db({
       filename: path.join(this._dbBasePath, 'archives.db'),
-      autoload: true
+      autoload: false,
+      dbHumanName: 'Collections Database',
+      corruptAlertThreshold: 0
     }, this._dbBasePath)
-
-    this._colSeeds = new DataStore({
+    this._colSeeds = new Db({
       filename: path.join(this._dbBasePath, 'archiveSeeds.db'),
-      autoload: true
+      autoload: false,
+      dbHumanName: 'Seeds Database',
+      corruptAlertThreshold: 0
     }, this._dbBasePath)
+    this._didLoad = false
+    this._notificationObserver = null
   }
 
-  _backUpDbs () {
-    const backUpTime = new Date().getTime()
-    const oa = path.join(this._dbBasePath, 'archives.db')
-    const oas = path.join(this._dbBasePath, 'archiveSeeds.db')
-    const message = `${this._settings.get('collections.dir')} was not found on the filesystem after creating it. WAIL has backed up previous this._settings found at ${missingBackUpPath()} and recreated this directory.`
-    ipc.send('display-message', {
-      title: 'Collections directory no longer exists',
-      level: 'error',
-      autoDismiss: 0,
-      message,
-      uid: message
-    })
-    return new Promise((resolve, reject) => {
-      fs.copy(oa, `${oa}.${backUpTime}.bk`, (err1) => {
-        fs.copy(oas, `${oas}.${backUpTime}.bk`, (err) => {
-          this._collections.remove({}, {multi: true}, (err2, rmc) => {
-            this._colSeeds.remove({}, {multi: true}, (err3, rmc2) => {
-              resolve(rmc + rmc)
-            })
-          })
+  subscribeToNotifications (handler) {
+    if (!this._notificationObserver) {
+      this._notificationObserver = Observable.fromEventPattern(
+        (handler) => {
+          // add
+          this.on('notification', handler)
+        },
+        (handler) => {
+          // remove
+          this.removeListener('notification', handler)
+        }
+      )
+    }
+    return this._notificationObserver.subscribe(handler)
+  }
+
+  tryNormalizeDb (readFrom, writeTo) {
+    return new Promise(function (resolve, reject) {
+      const readStream = fs.createReadStream(readFrom)
+      let end = process.platform === 'win32' ? '\r\n' : '\n'
+      readStream
+        .pipe(split2())
+        .pipe(through2(function (item, enc, next) {
+          let s = item.toString()
+          let wasError = false
+          try {
+            JSON.parse(s)
+          } catch (err) {
+            wasError = true
+          }
+          if (!wasError) {
+            this.push(`${s}${end}`)
+          }
+          next()
+        }))
+        .pipe(fs.createWriteStream(writeTo))
+        .on('error', (err) => {
+          readStream.destroy()
+          reject(err)
         })
-      })
+        .on('finish', () => {
+          readStream.destroy()
+          resolve()
+        })
     })
+  }
+
+  async init () {
+    let colLoadRet, seedsLoadRet
+    try {
+      colLoadRet = await this._loadCols()
+    } catch (errLoadCols) {
+      throw new FatalDBError(errLoadCols, 'Attempting to load the database after corruption was detected', 'Collections')
+    }
+    if (colLoadRet.backUpCols) {
+      if (colLoadRet.wasHardColsBk) {
+        let seedBkName = await this._backupColSeedsLoad(true)
+        // notify seedbackup due to hard
+        let message = `Corruption correction failed to Collections database. The seeds database was backed up successfully to ${seedBkName}`
+        this.emit('notification', {
+          title: 'Corruption to Collections database caused reset to tracked Seeds',
+          level: 'warning',
+          autoDismiss: 0,
+          message,
+          uid: message
+        })
+      } else {
+        // notify cols backup normalization due to corruption
+        try {
+          seedsLoadRet = await this._loadSeeds()
+        } catch (errLoadSeeds) {
+          throw new FatalDBError(errLoadSeeds, 'Attempting to load the database after corruption was detected to the Collections db', 'Collection Seeds')
+        }
+        if (seedsLoadRet.backUpSeeds) {
+          if (seedsLoadRet.wasHardSeedsBk) {
+            let message = `Correction failed to the Seeds database but not the Collections. The Seeds database had to be reset. Collections backup made to ${colLoadRet.backupName}`
+            this.emit('notification', {
+              title: 'Corruption to the Collections and Seeds databases occurred',
+              level: 'warning',
+              autoDismiss: 0,
+              message,
+              uid: message
+            })
+          } else {
+            let message = `Back ups were made to ${colLoadRet.backupName} and ${seedsLoadRet.backupName}`
+            this.emit('notification', {
+              title: 'Corruption to the Collections and Seeds databases occurred but was corrected',
+              level: 'warning',
+              autoDismiss: 0,
+              message,
+              uid: message
+            })
+          }
+        } else {
+          // notify
+          let message = `The database was backed up successfully to ${colLoadRet.backupName}`
+          this.emit('notification', {
+            title: 'Corruption to Collections database and was corrected',
+            level: 'warning',
+            autoDismiss: 0,
+            message,
+            uid: message
+          })
+        }
+      }
+    } else {
+      try {
+        seedsLoadRet = await this._loadSeeds()
+      } catch (errLoadSeeds) {
+        throw new FatalDBError(errLoadSeeds, 'Attempting to load the database after corruption was detected', 'Tracked Seeds')
+      }
+      if (seedsLoadRet.backUpSeeds) {
+        if (seedsLoadRet.wasHardSeedsBk) {
+          let message = 'Corruption correction failed to the tracked Seeds database. The seeds database had to be reset'
+          this.emit('notification', {
+            title: 'Corruption occurred to the Seeds database',
+            level: 'warning',
+            autoDismiss: 0,
+            message,
+            uid: message
+          })
+        } else {
+          // notify had to backup seeds
+          let message = `The seeds database was backed up successfully to ${seedsLoadRet.backupName}`
+          this.emit('notification', {
+            title: 'Corruption to the tracked Seeds database occurred and was corrected',
+            level: 'warning',
+            autoDismiss: 0,
+            message,
+            uid: message
+          })
+        }
+      }
+    }
+    this._didLoad = true
   }
 
   initialLoad () {
     return this.getAllCollections()
   }
 
+  addInitialMData (col, mdata) {
+    return this._pywb.addMetadata({col, metadata: join(...mdata)})
+  }
+
+  getColSize (col) {
+    return new Promise((resolve, reject) => {
+      let size = 0
+      fs.walk(S(this._settings.get('collections.colWarcs')).template({col}).s)
+        .pipe(through2.obj(function (item, enc, next) {
+          if (!item.stats.isDirectory()) this.push(item)
+          next()
+        }))
+        .on('data', item => {
+          size += item.stats.size
+        })
+        .on('end', () => {
+          resolve(prettyBytes(size))
+        })
+        .on('error', err => {
+          err.m = {
+            wasError: true,
+            err: err,
+            message: {
+              title: 'Could not get collection size',
+              level: 'error',
+              autoDismiss: 0,
+              message: `Failed to get the size for collection ${col}`,
+              uid: `Failed to get the size for collection ${col}`
+            }
+          }
+          reject(err)
+        })
+    })
+  }
+
   async createDefaultCol () {
+    if (!this._didLoad) {
+      await this.init()
+    }
     let colpath = path.join(this._colsBasePath, 'collections', 'default')
     let created = moment().format()
     let toCreate = {
@@ -157,23 +272,337 @@ export default class ArchiveManager {
       lastUpdated: created,
       hasRunningCrawl: false
     }
-    const updater = this._collections.wemInsert('Could not create the database entry for the default collections')
-    const newCol = await updater(toCreate)
+
+    let newCol
+    try {
+      newCol = await this._collections.insert(toCreate)
+    } catch (error) {
+      error.m = error.errorReport('Could not create the database entry for the default collections')
+      throw error
+    }
     newCol.seeds = []
     return newCol
   }
 
+  async createCollection (ncol) {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    let {col, metadata} = ncol
+    await this._pywb.createCol({col})
+    let colpath = path.join(this._colsBasePath, 'collections', col), created = moment().format()
+    await CollectionsUtils.ensureColDirsNR(colpath, 'index')
+    let toCreate = {
+      _id: col, name: col, colpath, created,
+      size: '0 B', lastUpdated: created,
+      archive: path.join(colpath, 'archive'),
+      indexes: path.join(colpath, 'indexes'),
+      colName: col, numArchives: 0, metadata,
+      hasRunningCrawl: false
+    }
+    let newCol
+    try {
+      newCol = await this._collections.insert(toCreate)
+    } catch (error) {
+      error.m = error.errorReport(`Could not add the created collection ${col} to database`)
+      throw error
+    }
+    return {
+      seeds: [],
+      ...newCol
+    }
+  }
+
+  async getAllCollections () {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    try {
+      await CollectionsUtils.checkCollDirExistence(this._colsBasePath)
+    } catch (noExist) {
+      console.log('no exist')
+      return await this._handleColDirNoExistence(noExist)
+    }
+    let {exist, empty, doNotExist} = await this._getAllColsWithExistCheck()
+    let colSeeds = await this._colSeeds.wemFindAll('Could not retrieve the seeds from the database')
+    console.log(colSeeds)
+    if (empty) {
+      if (colSeeds.length > 0) {
+        console.log('recreate cols from seeds')
+        return await this._recreateColsFromSeeds(colSeeds)
+      } else {
+        console.log('fall back created default col')
+        return await this._fallBackCreateDefaultCol()
+      }
+    } else {
+      colSeeds = transSeeds(colSeeds)
+      if (doNotExist.length === 0) {
+        console.log('donot exist len 0')
+        return exist.map(col => {
+          col.seeds = colSeeds[col.name] || []
+          return col
+        })
+      } else {
+        console.log('handle tracked not existing')
+        await this._handleTrackedNotExisting(doNotExist, colSeeds)
+        return exist.map(col => {
+          col.seeds = colSeeds[col.name] || []
+          return col
+        })
+      }
+    }
+  }
+
+  async addCrawlInfo (confDetails) {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    let {forCol, lastUpdated, seed} = confDetails
+    const findSeed = {q: {_id: `${forCol}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const seedUpdate = {
+      who: {_id: `${forCol}-${seed.url}`},
+      theUpdate(existingSeed) {
+        let theUpdateColSeed = {$set: {lastUpdated}}
+        if (!existingSeed.jobIds.includes(seed.jobId)) {
+          theUpdateColSeed.$push = {jobIds: seed.jobId}
+        }
+        return theUpdateColSeed
+      },
+      opts: updateSingleOpts
+    }
+    const findAllSeeds = {$where () { return this.forCol === forCol }}
+    seed._id = findSeed.q._id
+    let colSeeds
+    try {
+      colSeeds = await this._colSeeds.findAndUpdateOrInsertThenFindAll(findSeed, seedUpdate, findAllSeeds, seed)
+    } catch (err) {
+      console.error(err)
+      let errorMessage
+      if (err.where === 'finding') {
+        errorMessage = `Error updating ${forCol}'s seed ${seed.url}. A critical error occurred`
+      } else if (err.where === 'inserting') {
+        errorMessage = `Error updating ${forCol}'s seed ${seed.url}. Could not add a new seed entry for the crawl info due to critical error`
+      } else if (err.where === 'find all after insert') {
+        errorMessage = `Error updating ${forCol}'s seed ${seed.url}. Adding a new seed entry caused a critical error when retrieving the others`
+      } else if (err.where === 'update after find') {
+        errorMessage = `Error updating ${forCol}'s seed ${seed.url}. A caused a critical error during the update`
+      } else if (err.where === 'find all after find and update') {
+        errorMessage = `Error updating ${forCol}'s seed ${seed.url}. A caused a critical error during the update`
+      }
+      err.m = err.errorReport(errorMessage)
+      throw err
+    }
+    let updateWho = {colName: forCol}, theUpdateCol = {$set: {lastUpdated}}, updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (err) {
+      err.m = err.errorReport(`Error updating ${forCol}. A caused a critical error during the update for adding crawl info`)
+      throw err
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
+  }
+
+  async addWarcsFromWCreate ({col, warcs, lastUpdated, seed}) {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    const templateArgs = {col}
+    await this._pywb.reindexColToAddWarc(templateArgs)
+    const size = await this.getColSize(col)
+    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const seedUpdate = {
+      who: {_id: `${col}-${seed.url}`},
+      theUpdate(existingSeed) {
+        let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
+        if (!existingSeed.jobIds.includes(seed.jobId)) {
+          theUpdateColSeed.$push = {jobIds: seed.jobId}
+        }
+        return theUpdateColSeed
+      },
+      opts: updateSingleOpts
+    }
+    const findAllSeeds = {$where () { return this.forCol === col }}
+    seed._id = findSeed.q._id
+    seed.mementos = 1
+    seed.jobIds = [seed.jobId]
+
+    let colSeeds
+    try {
+      colSeeds = await this._colSeeds.findAndUpdateOrInsertThenFindAll(findSeed, seedUpdate, findAllSeeds, seed)
+    } catch (err) {
+      console.error(err)
+      let errorMessage
+      if (err.where === 'finding') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after page only crawl. A critical error occurred`
+      } else if (err.where === 'inserting') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after page only crawl. Could not add a new seed entry for the crawl info due to critical error`
+      } else if (err.where === 'find all after insert') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after page only crawl. Adding a new seed entry caused a critical error when retrieving the others`
+      } else if (err.where === 'update after find') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after page only crawl. A caused a critical error during the update`
+      } else if (err.where === 'find all after find and update') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after page only crawl. A caused a critical error during the update`
+      }
+      err.m = err.errorReport(errorMessage)
+      throw err
+    }
+    let updateWho = {colName: col}, theUpdateCol = {$inc: {numArchives: 1}, $set: {size, lastUpdated}}
+    let updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (err) {
+      err.m = err.errorReport(`Error updating ${col}. A caused a critical error during the update for adding crawl info`)
+      throw err
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
+  }
+
+  async addWarcsFromFSToCol ({col, warcs, lastUpdated, seed}) {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    const addedCount = await this._pywb.addWarcsToCol({col, warcs})
+    const size = await this.getColSize(col)
+    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const seedUpdate = {
+      who: {_id: `${col}-${seed.url}`},
+      theUpdate(existingSeed) {
+        let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
+        if (!existingSeed.jobIds.includes(seed.jobId)) {
+          theUpdateColSeed.$push = {jobIds: seed.jobId}
+        }
+        return theUpdateColSeed
+      },
+      opts: updateSingleOpts
+    }
+    const findAllSeeds = {$where () { return this.forCol === col }}
+    seed._id = findSeed.q._id
+    seed.mementos = 1
+    seed.jobIds = [seed.jobId]
+
+    let colSeeds
+    try {
+      colSeeds = await this._colSeeds.findAndUpdateOrInsertThenFindAll(findSeed, seedUpdate, findAllSeeds, seed)
+    } catch (err) {
+      console.error(err)
+      let errorMessage
+      if (err.where === 'finding') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A critical error occurred`
+      } else if (err.where === 'inserting') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. Could not add a new seed entry for the crawl info due to critical error`
+      } else if (err.where === 'find all after insert') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. Adding a new seed entry caused a critical error when retrieving the others`
+      } else if (err.where === 'update after find') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A caused a critical error during the update`
+      } else if (err.where === 'find all after find and update') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A caused a critical error during the update`
+      }
+      err.m = err.errorReport(errorMessage)
+      throw err
+    }
+    let updateWho = {colName: col}, theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
+    let updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (err) {
+      err.m = err.errorReport(`Error updating ${forCol} adding a warc from the filesystem.`)
+      throw err
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
+  }
+
+  async addWarcsToCol ({col, warcs, lastUpdated, seed}) {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    const addedCount = await this._pywb.addWarcsToCol({col, warcs})
+    const size = await this.getColSize(col)
+    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const seedUpdate = {
+      who: {_id: `${col}-${seed.url}`},
+      theUpdate(existingSeed) {
+        let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
+        if (!existingSeed.jobIds.includes(seed.jobId)) {
+          theUpdateColSeed.$push = {jobIds: seed.jobId}
+        }
+        return theUpdateColSeed
+      },
+      opts: updateSingleOpts
+    }
+    const findAllSeeds = {$where () { return this.forCol === col }}
+    seed._id = findSeed.q._id
+    seed.mementos = 1
+    seed.jobIds = [seed.jobId]
+
+    let colSeeds
+    try {
+      colSeeds = await this._colSeeds.findAndUpdateOrInsertThenFindAll(findSeed, seedUpdate, findAllSeeds, seed)
+    } catch (err) {
+      console.error(err)
+      let errorMessage
+      if (err.where === 'finding') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A critical error occurred`
+      } else if (err.where === 'inserting') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. Could not add a new seed entry for the crawl info due to critical error`
+      } else if (err.where === 'find all after insert') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. Adding a new seed entry caused a critical error when retrieving the others`
+      } else if (err.where === 'update after find') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A caused a critical error during the update`
+      } else if (err.where === 'find all after find and update') {
+        errorMessage = `Error updating ${col}'s seed ${seed.url} after adding a warc from the filesystem. A caused a critical error during the update`
+      }
+      err.m = err.errorReport(errorMessage)
+      throw err
+    }
+    let updateWho = {colName: col}, theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
+    let updatedCol
+    try {
+      updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
+    } catch (err) {
+      err.m = err.errorReport(`Error updating ${forCol} adding a warc from the filesystem.`)
+      throw err
+    }
+    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
+    return {
+      colName: updatedCol.colName,
+      numArchives: updatedCol.numArchives,
+      size: updatedCol.size,
+      seeds: updatedCol.seeds,
+      lastUpdated: updatedCol.lastUpdated
+    }
+  }
+
   async _handleColDirNoExistence (errExist) {
-    let cols = await this._collections.getAll()
-    let seeds = await this._colSeeds.getAll(), hadToBkup = false, bkupM = ''
+    if (!this._didLoad) {
+      await this.init()
+    }
+    let cols = await this._collections.findAll()
+    let seeds = await this._colSeeds.findAll(), hadToBkup = false, bkupM = ''
 
     if (cols.length !== 0) {
       hadToBkup = true
-      try {
-        await this._collections.backUpClearDb()
-      } catch (err) {
-
-      }
+      await this._backupColsLoad()
       bkupM += 'Had to backup Collections database'
     }
     if (seeds.length !== 0) {
@@ -183,17 +612,12 @@ export default class ArchiveManager {
         bkupM += 'Had tp backup Seeds database'
       }
       hadToBkup = true
-      try {
-        await this._colSeeds.backUpClearDb()
-      } catch (err) {
-
-      }
-
+      await this._backupColSeedsLoad()
     }
 
     if (hadToBkup) {
       let what = errExist.what === 'warcs' ? 'WAIL_ManagedCollection' : `WAIL_ManagedCollection${path.sep}collections`
-      ipc.send('display-message', {
+      this.emit('notification', {
         title: `${what} Did Not Exist`,
         level: 'error',
         autoDismiss: 0,
@@ -201,20 +625,26 @@ export default class ArchiveManager {
         uid: bkupM
       })
     }
+    try {
+      await mvStartingCol(this._settings.get('iwarcs'), this._colsBasePath)
+    } catch (error) {
 
-    await mvStartingCol(this._settings.get('iwarcs'), this._colsBasePath)
+    }
     return await this.createDefaultCol()
   }
 
   async _handleTrackedNotExisting (cols, seeds) {
+    if (!this._didLoad) {
+      await this.init()
+    }
     const bkTime = new Date().getTime()
     let colbkPath = path.join(this._dbBasePath, `${bkTime}.trackedCollectionsNoLongerExisting.db`)
     let seedbkPath = path.join(this._dbBasePath, `${bkTime}.trackedSeedsNoLongerExisting.db`)
-    const collsNotExisting = new DataStore({
+    const collsNotExisting = new Db({
       autoload: true,
       filename: colbkPath
     })
-    const seedsNotExisting = new DataStore({
+    const seedsNotExisting = new Db({
       autoload: true,
       filename: seedbkPath
     })
@@ -230,18 +660,13 @@ export default class ArchiveManager {
     await this._collections.nrRemove(removeFromExisting, {multi: true})
     await this._colSeeds.nrRemove(seedWhoNoExist.map(s => ({_id: s._id})), {multi: true})
     const message = `${cols.length} tracked collections do not exist on the filesystem. WAIL has made a backup located at ${this._dbBasePath}`
-    ipc.send('display-message', {
+    this.emit('notification', {
       title: 'Some Tracked Collections Do Not Exist',
       level: 'error',
       autoDismiss: 0,
       message,
       uid: message
     })
-    return ''
-  }
-
-  async handleColDirsExistNoTracked () {
-    const colFiles = await readDir(path.join(this._colsBasePath, 'collections'))
   }
 
   async _colFromSeedsColDirExists (colPath, col, seeds) {
@@ -284,12 +709,20 @@ export default class ArchiveManager {
       createdFailed = true
     }
     if (createdFailed) {
-      await CollectionsUtils.manualCreateCol(defaultCol.colpath)
+      try {
+        await CollectionsUtils.manualCreateCol(defaultCol.colpath)
+      } catch (error) {
+        error.m = error.errorReport('Recreating the default collection uing PyWb and manual creation failed')
+        throw error
+      }
     }
     return defaultCol
   }
 
   async _recreateColsFromSeeds (seeds) {
+    if (!this._didLoad) {
+      await this.init()
+    }
     const collectionsPath = path.join(this._colsBasePath, 'collections')
     const recreatedCols = [], oldColSeeds = transSeeds(seeds), couldNotRecreate = []
     for (const col of Object.keys(oldColSeeds)) {
@@ -321,401 +754,174 @@ export default class ArchiveManager {
     }
   }
 
-  async getAllCollections () {
+  async _getAllColsWithExistCheck () {
+    if (!this._didLoad) {
+      await this.init()
+    }
+    const existCheck = {exist: [], empty: false, doNotExist: []}
+    let collections = await this._collections.wemFindAll('Could not retrieve the collections from the database')
+    if (collections.length === 0) {
+      existCheck.empty = true
+      return existCheck
+    } else {
+      let len = collections.length, i = 0
+      for (; i < len; ++i) {
+        if (await checkPathExists(collections[i].colpath)) {
+          existCheck.exist.push(collections[i])
+        } else {
+          existCheck.doNotExist.push(collections[i])
+        }
+      }
+      return existCheck
+    }
+  }
+
+  async _copyMaybeNormalizeDb (db, backupName) {
+    let copyGood = true, normalizeGood = true
     try {
-      await CollectionsUtils.checkCollDirExistence(this._colsBasePath)
-    } catch (noExist) {
-      console.log('no exist')
-      return await this._handleColDirNoExistence(noExist)
+      await db.copyDbTo(backupName)
+    } catch (error) {
+      copyGood = false
     }
-    const colsExistCheck = await this._collections.getAllCheckExists('colpath')
-    let colSeeds = await this._colSeeds.wemGetAll('Could not retrieve collections seeds from the database')
-    let {exist, empty, doNotExist} = colsExistCheck
-    if (!empty) {
-      colSeeds = transSeeds(colSeeds)
-      if (doNotExist.length === 0) {
-        console.log(exist)
-        return exist.map(col => {
-          col.seeds = colSeeds[col.name] || []
-          return col
-        })
+    if (copyGood) {
+      try {
+        await this.tryNormalizeDb(backupName, db.filePath)
+      } catch (error) {
+        normalizeGood = false
+      }
+      return normalizeGood
+    }
+    return copyGood
+  }
+
+  async _loadSeeds () {
+    const ret = {backUpSeeds: false, wasHardSeedsBk: false}
+    try {
+      await this._colSeeds.loadDb()
+    } catch (error) {
+      ret.backUpSeeds = true
+    }
+    if (ret.backUpSeeds) {
+      // corruption here we do not tollerate any
+      const backUpTime = new Date().getTime()
+      const backupName = `${this._colSeeds.filePath}.${backUpTime}.bk`
+      let bkFirstTry = await this._copyMaybeNormalizeDb(this._colSeeds, backupName)
+      if (!bkFirstTry) {
+        await this._colSeeds.removeDbFromDisk()
+        ret.wasHardSeedsBk = true
       } else {
-        console.log('some do not exist')
-        await this._handleTrackedNotExisting(doNotExist, colSeeds)
-        return exist.map(col => {
-          col.seeds = colSeeds[col.name] || []
-          return col
-        })
+        ret.backupName = backupName
       }
-    } else {
-      if (colSeeds.length > 0) {
-        return await this._recreateColsFromSeeds(colSeeds)
+      await this._colSeeds.loadDb()
+    }
+    return ret
+  }
+
+  async _loadCols () {
+    const ret = {backUpCols: false, wasHardColsBk: false}
+    try {
+      await this._collections.loadDb()
+    } catch (error) {
+      ret.backUpCols = true
+    }
+    if (ret.backUpCols) {
+      // corruption here we do not tollerate any
+      const backUpTime = new Date().getTime()
+      const backupName = `${this._collections.filePath}.${backUpTime}.bk`
+      let bkFirstTry = await this._copyMaybeNormalizeDb(this._collections, backupName)
+      if (!bkFirstTry) {
+        await this._collections.removeDbFromDisk()
+        ret.wasHardColsBk = true
       } else {
-        return await this._fallBackCreateDefaultCol()
+        ret.backupName = backupName
       }
+      await this._collections.loadDb()
     }
+    return ret
   }
 
-  async addCrawlInfo (confDetails) {
-    let {forCol, lastUpdated, seed} = confDetails
-    let colSeedIdQ = {_id: `${forCol}-${seed.url}`}
-    let updateWho = {colName: forCol}
-    let theUpdateCol = {$set: {lastUpdated}}
-    let findA = {$where () { return this.forCol === forCol }}
-    let updater = this._collections.wemUpdate(`Error updating ${forCol}'s seed ${seed.url}. It was not found for the collection`)
-    let updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
-    updater = this._colSeeds.wemFindOne(`Error updating ${forCol}'s seed ${seed.url}. It was not found for the collection`)
-    let existingSeed = await updater(colSeedIdQ)
-    if (foundSeedChecker(existingSeed)) {
-      let theUpdateColSeed = {
-        $set: {lastUpdated}
-      }
-      if (!existingSeed.jobIds.includes(seed.jobId)) {
-        theUpdateColSeed.$push = {jobIds: seed.jobId}
-      }
-
-      updater = this._colSeeds.wemUpdateFindAll(`Error updating ${forCol}'s seed ${seed.url}. Could not add the crawl info`)
-      let updatedColSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
-      updatedCol.seeds = cleanSeeds(Array.isArray(updatedColSeeds) ? updatedColSeeds : [updatedColSeeds])
-      return {
-        colName: updatedCol.colName,
-        numArchives: updatedCol.numArchives,
-        size: updatedCol.size,
-        seeds: updatedCol.seeds,
-        lastUpdated: updatedCol.lastUpdated
-      }
-    } else {
-      seed._id = colSeedIdQ._id
-      updater = this._colSeeds.wemInsertFindAll(`Error updating ${forCol}'s seed ${seed.url}. Could not add a new seed entry for the crawl info`)
-      let colSeeds = await updater(seed, findA)
-      updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
-      console.log(updatedCol)
-      return {
-        colName: updatedCol.colName,
-        numArchives: updatedCol.numArchives,
-        size: updatedCol.size,
-        seeds: updatedCol.seeds,
-        lastUpdated: updatedCol.lastUpdated
-      }
+  async _backupColsLoad (init = false) {
+    const backUpTime = new Date().getTime()
+    const backupName = `${this._collections.filePath}.${backUpTime}.bk`
+    let copyGood = false, removeGood = true
+    try {
+      await this._collections.copyDbTo(backupName)
+    } catch (error) {
+      copyGood = false
     }
+    try {
+      await this._collections.removeDbFromDisk()
+    } catch (error) {
+      removeGood = false
+    }
+
+    try {
+      await this._collections.loadDb()
+    } catch (error) {
+      // fatal
+      let copyPart, removePart
+      if (copyGood) {
+        copyPart = `Back up created @${backupName}`
+      } else {
+        copyPart = 'We could not back it up'
+      }
+      if (removeGood) {
+        removePart = `and we attempted to start over but loading still failed`
+      } else {
+        removePart = 'and we could not remove the database file and load still failed'
+      }
+      let fatalErrorMessage
+      if (init) {
+        fatalErrorMessage = `Loading the collection seeds database failed after the collection seeds database was to corrupted to recover. ${copyPart} ${removePart}`
+      } else {
+        fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
+      }
+      throw new FatalDBError(error, fatalErrorMessage, 'Collections')
+
+    }
+    return backupName
   }
 
-  addInitialMData (col, mdata) {
-    return this._pywb.addMetadata({col, metadata: join(...mdata)})
-  }
-
-  updateMetadata (update) {
-    console.log('updateMetaData', update)
-    let {forCol, mdata} = update
-    console.log('updateMetaData', forCol, mdata)
-    let opts = {
-      cwd: this._colsBasePath
+  async _backupColSeedsLoad (init = false) {
+    const backUpTime = new Date().getTime()
+    const backupName = `${this._colSeeds.filePath}.${backUpTime}.bk`
+    let copyGood = false, removeGood = true
+    try {
+      await this._colSeeds.copyDbTo(backupName)
+    } catch (error) {
+      copyGood = false
     }
-    return new Promise((resolve, reject) => {
-      let exec = S(this._settings.get('pywb.addMetadata')).template({col: forCol, metadata: update.mdataString}).s
-      cp.exec(exec, opts, (error, stdout, stderr) => {
-        console.log(stdout, stderr)
-        if (error) {
-          console.error(stderr)
-          return reject(error)
-        }
-        this._collections.findOne({colName: forCol}, {metadata: 1, _id: 0}, (errFind, doc) => {
-          if (errFind) {
-            console.log('errorfind', errFind)
-            return reject(errFind)
-          }
-          _.toPairs(update.mdata).forEach(([mk, mv]) => {
-            doc.metadata[mk] = mv
-          })
-          this._collections.update({colName: forCol}, {$set: {metadata: doc.metadata}}, (errUpdate, numUpdated) => {
-            if (errUpdate) {
-              console.log('errorUpdate', errFind)
-              return reject(errUpdate)
-            } else {
-              return resolve(doc.metadata)
-            }
-          })
-        })
-      })
-    })
-  }
-
-  addMetadata (col, mdata) {
-    let opts = {
-      cwd: this._colsBasePath
+    try {
+      await this._colSeeds.removeDbFromDisk()
+    } catch (error) {
+      removeGood = false
     }
-    return new Promise((resolve, reject) => {
-      let exec = S(this._settings.get('pywb.addMetadata')).template({col, metadata: join(...mdata)}).s
-      cp.exec(exec, opts, (error, stdout, stderr) => {
-        if (error) {
-          console.error(stderr)
-          return reject(error)
-        }
-        let metadata = {}
-        let swapper = S('')
-        mdata.forEach(m => {
-          let [mk, mv] = m.split('=')
-          metadata[mk] = swapper.setValue(mv).replaceAll('"', '').s
-        })
-        console.log('added metadata to collection', col)
-        console.log('stdout', stdout)
-        console.log('stderr', stderr)
-        // { $push: { metadata: { $each: mdata } } }
-        this._collections.update({colName: col}, {$set: {metadata: {...metadata}}}, {}, (err, numUpdated) => {
-          if (err) {
-            return reject(err)
-          } else {
-            return resolve(numUpdated)
-          }
-        })
-      })
-    })
-  }
 
-  getColSize (col) {
-    return new Promise((resolve, reject) => {
-      let size = 0
-      fs.walk(S(this._settings.get('collections.colWarcs')).template({col}).s)
-        .pipe(through2.obj(function (item, enc, next) {
-          if (!item.stats.isDirectory()) this.push(item)
-          next()
-        }))
-        .on('data', item => {
-          size += item.stats.size
-        })
-        .on('end', () => {
-          resolve(prettyBytes(size))
-        })
-    })
-  }
-
-  addMultiWarcToCol (multi) {
-    console.log('adding multi seeds to col', multi)
-    let {lastUpdated, col, seedWarcs} = multi
-    let opts = {cwd: this._colsBasePath}
-    let updateWho = {colName: col}
-    let seeds = []
-    let ws = []
-    seedWarcs.forEach(sw => {
-      seeds.push(sw.seed)
-      ws.push(sw.warcs)
-    })
-    const addMulti = wpath => {
-      let exec = S(this._settings.get('pywb.addWarcsToCol')).template({col, warcs: wpath}).s
-      console.log('adding the warc at path to col', wpath)
-      return execute(exec, opts)
-    }
-    const updateSeedMulti = seed => {
-      console.log('updating seed', seed)
-      let colSeedIdQ = {_id: `${col}-${seed.url}`}
-      return findOne(this.colSeeds, colSeedIdQ)
-        .then(colSeed => {
-          let theUpdateColSeed
-          if (foundSeedChecker(colSeed)) {
-            console.log('it existed')
-            theUpdateColSeed = {
-              $set: {lastUpdated},
-              $inc: {mementos: 1}
-            }
-            if (!colSeed.jobIds.includes(seed.jobId)) {
-              theUpdateColSeed.$push = {jobIds: seed.jobId}
-            }
-            return updateSingle(this.collections, colSeedIdQ, theUpdateColSeed, updateSingleOpts)
-          } else {
-            console.log('it did not exist')
-            seed._id = colSeedIdQ._id
-            return insert(this.collections, seed)
-          }
-        })
-    }
-    let findA = {
-      $where () {
-        return this.forCol === col
+    try {
+      await this._colSeeds.loadDb()
+    } catch (error) {
+      // fatal
+      let copyPart, removePart
+      if (copyGood) {
+        copyPart = `Back up created @${backupName}`
+      } else {
+        copyPart = 'We could not back it up'
       }
+      if (removeGood) {
+        removePart = `and we attempted to start over but loading still failed`
+      } else {
+        removePart = 'and we could not remove the database file and load still failed'
+      }
+      let fatalErrorMessage
+      if (init) {
+        fatalErrorMessage = `Loading the collection seeds database failed after the collections database was to corrupted to recover. ${copyPart} ${removePart}`
+      } else {
+        fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
+      }
+      throw new FatalDBError(error, fatalErrorMessage, 'Collection Seeds')
+
     }
-    return new Promise((resolve, reject) =>
-      Promise.map(ws, addMulti, {concurrency: 1})
-        .then(allAdded => this.getColSize(col)
-          .then(size => {
-            let theUpdateCol = {$inc: {numArchives: ws.length}, $set: {size, lastUpdated}}
-            return updateSingle(this.collections, updateWho, theUpdateCol, updateSingleOpts)
-              .then((updatedCol) => Promise.map(seeds, updateSeedMulti, {concurrency: 1})
-                .then(allSeedUpdated => find(this.collections, findA)
-                  .then(allColSeeds => {
-                    updatedCol.seeds = cleanSeeds(Array.isArray(allColSeeds) ? allColSeeds : [allColSeeds])
-                    console.log(updatedCol)
-                    resolve({
-                      colName: updatedCol.colName,
-                      numArchives: updatedCol.numArchives,
-                      size: updatedCol.size,
-                      seeds: updatedCol.seeds,
-                      lastUpdated: updatedCol.lastUpdated
-                    })
-                  })
-                  .catch(errorfa => {
-                    console.error(errorfa)
-                    console.log('finding all cols seeds')
-                    errorfa.m = 'Update multi failed at finding all cols seeds'
-                    reject(errorfa)
-                  })
-                )
-                .catch(errorusm => {
-                  console.error(errorusm)
-                  console.log('error updating multi seeds')
-                  errorusm.m = 'Update multi failed at updating multi seeds'
-                  reject(errorusm)
-                })
-              )
-              .catch(errorUC => {
-                console.error(errorUC)
-                console.log('error updating the col', col)
-                errorUC.m = 'Update multi failed at updating the col'
-                reject(errorUC)
-              })
-          })
-        )
-        .catch(error => {
-          error.m = 'Adding multi failed'
-          reject(error)
-        })
-    )
+    return backupName
   }
 
-  async addWarcsFromWCreate ({col, warcs, lastUpdated, seed}) {
-    const templateArgs = {col}
-    await this._pywb.reindexColToAddWarc(templateArgs)
-    const updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
-    const findA = {$where () { return this.forCol === col }}
-    const size = await this.getColSize(col)
-    const theUpdateCol = {$inc: {numArchives: 1}, $set: {size, lastUpdated}}
-    let updatedCol, colSeed, colSeeds, updater
-    updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
-    updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
-    updater = this._colSeeds.wemFindOne(`Error updating ${col}'s seed ${seed.url}. It was not found for the collection`)
-    colSeed = await updater(colSeedIdQ)
-    if (foundSeedChecker(colSeed)) {
-      let theUpdateColSeed = {
-        $set: {lastUpdated},
-        $inc: {mementos: 1}
-      }
-      if (!colSeed.jobIds.includes(seed.jobId)) {
-        theUpdateColSeed.$push = {jobIds: seed.jobId}
-      }
-      updater = this._colSeeds.wemUpdateFindAll(`Error final update to ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
-    } else {
-      seed._id = colSeedIdQ._id
-      seed.mementos = 1
-      seed.jobIds = [seed.jobId]
-      updater = this._colSeeds.wemInsertFindAll(`Error final update to ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(seed, findA)
-    }
-    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
-    return {
-      colName: updatedCol.colName,
-      numArchives: updatedCol.numArchives,
-      size: updatedCol.size,
-      seeds: updatedCol.seeds,
-      lastUpdated: updatedCol.lastUpdated
-    }
-  }
-
-  async addWarcsFromFSToCol ({col, warcs, lastUpdated, seed}) {
-    let addedCount = await this._pywb.addWarcsToCol({col, warcs})
-    let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
-    const findA = {$where () { return this.forCol === col}}
-    const size = await this.getColSize(col)
-    const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
-    let updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
-    let updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
-    updater = this._colSeeds.wemFindOne(`Error updating ${col}'s seed ${seed.url}. It was not found for the collection`)
-    let colSeed = await updater(colSeedIdQ)
-    let colSeeds
-    if (foundSeedChecker(colSeed)) {
-      let theUpdateColSeed = {
-        $set: {lastUpdated},
-        $inc: {mementos: 1}
-      }
-      if (!colSeed.jobIds.includes(seed.jobId)) {
-        theUpdateColSeed.$push = {jobIds: seed.jobId}
-      }
-      updater = this._colSeeds.wemUpdateFindAll(`Error updating ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
-    } else {
-      seed._id = colSeedIdQ._id
-      seed.mementos = 1
-      seed.jobIds = [seed.jobId]
-      updater = this._colSeeds.wemInsertFindAll(`Error updating ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(seed, findA)
-    }
-    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
-    return {
-      colName: updatedCol.colName,
-      numArchives: updatedCol.numArchives,
-      size: updatedCol.size,
-      seeds: updatedCol.seeds,
-      lastUpdated: updatedCol.lastUpdated
-    }
-  }
-
-  async addWarcsToCol ({col, warcs, lastUpdated, seed}) {
-    let addedCount = await this._pywb.addWarcsToCol({col, warcs})
-    let updateWho = {name: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
-    const findA = {$where () { return this.forCol === col}}
-    const size = await this.getColSize(col)
-    const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
-    let updater = this._collections.wemUpdate(`Unable to add warcs to non-existent collection ${col}`)
-    let updatedCol = await updater(updateWho, theUpdateCol, updateSingleOpts)
-    console.log(updatedCol)
-    updater = this._colSeeds.wemFindOne(`Error updating ${col}'s seed ${seed.url}. It was not found for the collection`)
-    let colSeed = await updater(colSeedIdQ)
-    let colSeeds
-    if (foundSeedChecker(colSeed)) {
-      let theUpdateColSeed = {
-        $set: {lastUpdated},
-        $inc: {mementos: 1}
-      }
-      if (!colSeed.jobIds.includes(seed.jobId)) {
-        theUpdateColSeed.$push = {jobIds: seed.jobId}
-      }
-      updater = this._colSeeds.wemUpdateFindAll(`Error updating ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(colSeedIdQ, theUpdateColSeed, updateSingleOpts, findA)
-    } else {
-      seed._id = colSeedIdQ._id
-      seed.mementos = 1
-      seed.jobIds = [seed.jobId]
-      updater = this._colSeeds.wemInsertFindAll(`Error updating ${col}'s seed ${seed.url}`)
-      colSeeds = await updater(seed, findA)
-    }
-    updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
-    console.log(updatedCol)
-    return {
-      colName: updatedCol.colName,
-      numArchives: updatedCol.numArchives,
-      size: updatedCol.size,
-      seeds: updatedCol.seeds,
-      lastUpdated: updatedCol.lastUpdated
-    }
-  }
-
-  async createCollection (ncol) {
-    let {col, metadata} = ncol
-    await this._pywb.createCol({col})
-    let colpath = path.join(this._colsBasePath, 'collections', col), created = moment().format()
-    await CollectionsUtils.ensureColDirsNR(colpath, 'index')
-    let toCreate = {
-      _id: col, name: col, colpath, created,
-      size: '0 B', lastUpdated: created,
-      archive: path.join(colpath, 'archive'),
-      indexes: path.join(colpath, 'indexes'),
-      colName: col, numArchives: 0, metadata,
-      hasRunningCrawl: false
-    }
-    const updater = this._collections.wemInsert(`Could not add the created collection ${col} to database`)
-    let newCol = await updater(toCreate)
-    return {
-      seeds: [],
-      ...newCol
-    }
-  }
 }

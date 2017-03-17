@@ -9,6 +9,7 @@ import os from 'os'
 import path from 'path'
 import Promise from 'bluebird'
 import S from 'string'
+import Settings from '../../remoteSettings'
 import CrawlStatsMonitor from './crawlStatsMonitor'
 import { CrawlInfo } from '../../util'
 import { readFile, ensureDirAndWrite } from '../../util/fsHelpers'
@@ -16,7 +17,8 @@ import { readFile, ensureDirAndWrite } from '../../util/fsHelpers'
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
-const settings = remote.getGlobal('settings')
+const settings = new Settings()
+settings.configure()
 const pathMan = remote.getGlobal('pathMan')
 
 export default class CrawlManager {

@@ -380,5 +380,4 @@ export default class HeritrixProcessController extends EventEmitter {
       })
     })
   }
-
 }

@@ -4,7 +4,7 @@ import './css/wail.css'
 import Rx from 'rxjs/Rx'
 import React from 'react'
 import { render } from 'react-dom'
-import { hashHistory } from 'react-router'
+import createHashHist from 'history/createHashHistory'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { remote } from 'electron'
 import bunyan from 'bunyan'
@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
 }
 
-
 global.notifications$ = new Rx.BehaviorSubject({type: 'initial'})
 global.resizer = createDetectElementResize()
 global.twitterClient = new TwitterClient()
@@ -27,6 +26,7 @@ global.twitterClient = new TwitterClient()
 injectTapEventPlugin()
 
 const wail = document.getElementById('wail')
+const hashHistory = createHashHist()
 window.eventLog = new RingBuffer()
 
 window.logger = bunyan.createLogger({
@@ -49,8 +49,7 @@ window.logger = bunyan.createLogger({
 //   window.logger.error(err)
 // })
 
-const store = configureStore()
-
+const store = configureStore(hashHistory)
 
 if (process.env.WAILTEST) {
   const setupTestHook = require('./setupTestHook')
