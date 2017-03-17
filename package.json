@@ -1,7 +1,7 @@
 {
   "name": "WAIL",
   "license": "LGPL-3.0",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "contributors": [
     {
       "name": "John Berlin",
@@ -32,7 +32,7 @@
     "dev-only": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024  ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-ui/ --hot --inline",
     "run-tests": "node --harmony --harmony_async_await ./node_modules/.bin/ava -s --verbose",
     "test-aman": "node --harmony --harmony_async_await ./node_modules/.bin/ava --verbose tests/testServiceMan/testServiceManager.js",
-    "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
+    "package": "cross-env NODE_ENV=production node --harmony -r babel-register build-binary.js",
     "package-all": "npm run package -- --all",
     "package-windows": "npm run package -- --win",
     "package-linux": "npm run package -- --linux ",

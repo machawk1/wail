@@ -325,7 +325,6 @@ export default class ArchiveManager extends EventEmitter {
     }
     let {exist, empty, doNotExist} = await this._getAllColsWithExistCheck()
     let colSeeds = await this._colSeeds.wemFindAll('Could not retrieve the seeds from the database')
-    console.log(colSeeds)
     if (empty) {
       if (colSeeds.length > 0) {
         console.log('recreate cols from seeds')
@@ -336,6 +335,7 @@ export default class ArchiveManager extends EventEmitter {
       }
     } else {
       colSeeds = transSeeds(colSeeds)
+      console.log(colSeeds)
       if (doNotExist.length === 0) {
         console.log('donot exist len 0')
         return exist.map(col => {

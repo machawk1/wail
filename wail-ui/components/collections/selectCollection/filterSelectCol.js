@@ -18,7 +18,7 @@ export default class FilterSelectCol extends Component {
   render () {
     return (
       <div style={{width: 'inherit', height: 'inherit'}}>
-        <Search tooltip={'Search By Collection Name'} searchSubject={this.filterText}/>
+        <Search hintText='Collection Name' tooltip={'Search By Collection Name'} searchSubject={this.filterText}/>
         <Divider />
         <div style={{height: 'inherit',  margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
           <SelectCol filterText={this.filterText}/>

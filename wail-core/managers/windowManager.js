@@ -646,7 +646,7 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows['archiverWindow'].window.show()
           }
-          this.windows['archiverWindow'].window.show()
+          // this.windows['archiverWindow'].window.show()
           this.windows['archiverWindow'].window.webContents.openDevTools()
         }
         this.windows['archiverWindow'].open = true
@@ -767,8 +767,8 @@ export default class WindowManager extends EventEmitter {
           }
           this.windows['archiveManWindow'].window.webContents.openDevTools()
         }
-        this.windows['archiveManWindow'].window.show()
-        this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
+        // this.windows['archiveManWindow'].window.show()
+        // this.windows[ 'archiveManWindow' ].window.webContents.openDevTools()
         resolve()
       })
     })

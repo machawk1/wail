@@ -33,7 +33,7 @@ export default class CollectionViewHeader extends Component {
         </Flex>
         <CardText style={{padding: 0, paddingLeft: 64, paddingRight: 64}}>
            <span>
-            <SearchInput searchSubject={this.props.filterText}/>
+            <SearchInput hintText={'Search By URL'} searchSubject={this.props.filterText}/>
           </span>
           <span>
             <IconButton tooltip={'Search Seeds By URL'}>

@@ -5,11 +5,11 @@ import SearchI from 'material-ui/svg-icons/action/search'
 import { Card, CardText } from 'material-ui/Card'
 import SearchInput from './searchInput'
 
-const Search = ({searchSubject, cardStyle, cardTextStyle, inputStyle, tooltip}) => (
+const Search = ({hintText, searchSubject, cardStyle, cardTextStyle, inputStyle, tooltip}) => (
   <Card style={cardStyle}>
     <CardText style={cardTextStyle}>
       <span>
-        <SearchInput searchSubject={searchSubject}/>
+        <SearchInput hintText={hintText} searchSubject={searchSubject}/>
       </span>
       <span>
         <IconButton tooltip={tooltip}>

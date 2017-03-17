@@ -390,71 +390,47 @@ const log = (plat, arch) => (err, filepath) => {
   moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
 }
 
-const doBuild = () => {
+const doBuild = async () => {
   console.log('Building WAIL')
-  return new Promise((resolve, reject) => {
-    console.log('Transpiling and Creating Single File WAIL-Electron-Main')
-    build(electronCfg)
-      .then((stats) => {
-        console.log('Transpiling and Creating Single File WAIL-UI')
-        return build(cfgUI)
-          .then((nstats) => {
-            console.log('Transpiling and Creating Single File WAIL-Core')
-            return build(cfgCore)
-              .then((nnstats) => {
-                return del('release')
-                  .then((paths) => {
-                    if (shouldBuildCurrent) {
-                      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-                      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
-                    } else {
-                      let buildFor
-                      let archs
-                      let platforms
-                      if (shouldBuildAll) {
-                        buildFor = 'building for all platforms'
-                        archs = [ 'ia32', 'x64' ]
-                        platforms = [ 'linux', 'win32', 'darwin' ]
-                      } else if (shouldBuildLinux) {
-                        buildFor = 'building for linux'
-                        archs = [ 'ia32', 'x64' ]
-                        platforms = [ 'linux' ]
-                      } else if (shouldBuildOSX) {
-                        buildFor = 'building for OSX'
-                        archs = [ 'x64' ]
-                        platforms = [ 'darwin' ]
-                      } else {
-                        buildFor = 'building for Windows'
-                        archs = [ 'ia32', 'x64' ]
-                        platforms = [ 'win32' ]
-                      }
-                      console.log(buildFor)
-                      platforms.forEach(plat => {
-                        archs.forEach(arch => {
-                          console.log(`building the binary for ${plat}-${arch}`)
-                          pack(plat, arch, log(plat, arch))
-                        })
-                      })
-                    }
-                    resolve()
-                  })
-                  .catch(error => {
-                    console.error('del', error)
-                    reject(error)
-                  })
-              }).catch(error => {
-                console.error('building core', error)
-                reject(error)
-              })
-          }).catch(error => {
-            console.error('building ui', error)
-            reject(error)
-          })
-      }).catch(error => {
-        console.error('building electron main', error)
-        reject(error)
+  console.log('Transpiling and Creating Single File WAIL-Electron-Main')
+  const mainStats = await  build(electronCfg)
+  console.log('Transpiling and Creating Single File WAIL-UI')
+  const uiStats  = await  build(cfgUI)
+  console.log('Transpiling and Creating Single File WAIL-Core')
+  const coreStats  = await  build(cfgCore)
+  const nukedPaths = await del('release')
+  if (shouldBuildCurrent) {
+    console.log(`building the binary for ${os.platform()}-${os.arch()}`)
+    pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+  } else {
+    let buildFor
+    let archs
+    let platforms
+    if (shouldBuildAll) {
+      buildFor = 'building for all platforms'
+      archs = [ 'ia32', 'x64' ]
+      platforms = [ 'linux', 'win32', 'darwin' ]
+    } else if (shouldBuildLinux) {
+      buildFor = 'building for linux'
+      archs = [ 'ia32', 'x64' ]
+      platforms = [ 'linux' ]
+    } else if (shouldBuildOSX) {
+      buildFor = 'building for OSX'
+      archs = [ 'x64' ]
+      platforms = [ 'darwin' ]
+    } else {
+      buildFor = 'building for Windows'
+      archs = [ 'ia32', 'x64' ]
+      platforms = [ 'win32' ]
+    }
+    console.log(buildFor)
+    platforms.forEach(plat => {
+      archs.forEach(arch => {
+        console.log(`building the binary for ${plat}-${arch}`)
+        pack(plat, arch, log(plat, arch))
       })
-  })
+    })
+  }
 }
 
 doBuild()

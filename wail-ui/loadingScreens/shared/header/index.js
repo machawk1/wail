@@ -7,7 +7,7 @@ const enhance = onlyUpdateForKeys(['title'])
 
 const Header = ({title}) => (
   <AppBar
-    iconElementLeft={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale.ico'} />}
+    iconElementLeft={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/whale_64.png'} />}
     title={title}
   />
 )
