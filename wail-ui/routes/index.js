@@ -9,7 +9,7 @@ import CollectionAddSeedFs from '../containers/collectionAddSeedFs'
 import ServiceStats from '../containers/serviceStats'
 import Misc from '../containers/miscellaneous'
 import TwitterView from '../containers/twitterView'
-import SignIn from '../components/twitter/signIn'
+import TwitterSignIn from '../containers/twitterSignIn'
 import ViewArchiveConfig from '../containers/viewArchiveConfig'
 import routeNames from './routeNames'
 
@@ -27,7 +27,7 @@ export default (
         <Route path={routeNames.misc} component={Misc}/>
         <Route path={routeNames.services} component={ServiceStats}/>
         <Route path={routeNames.twitter} component={TwitterView}/>
-        <Route path={routeNames.twitterSignIn} component={SignIn}/>
+        <Route path={routeNames.twitterSignIn} component={TwitterSignIn}/>
       </Switch>
     </div>
   </div>

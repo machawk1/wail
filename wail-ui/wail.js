@@ -1,7 +1,7 @@
 import 'babel-polyfill'
 import 'react-flex/index.css'
 import './css/wail.css'
-import Rx from 'rxjs/Rx'
+import {BehaviorSubject} from 'rxjs'
 import React from 'react'
 import { render } from 'react-dom'
 import createHashHist from 'history/createHashHistory'
@@ -14,21 +14,29 @@ import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
 import RingBuffer from './util/ringBuffer'
 import windowCloseHandler from './windowCloseHandler'
+injectTapEventPlugin()
+
+const store = configureStore()
+const hashHistory = createHashHist()
 
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
+  hashHistory.listen((location, action) => {
+    console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`)
+    console.log(`The last navigation action was ${action}`)
+  })
 }
 
-global.notifications$ = new Rx.BehaviorSubject({type: 'initial'})
+if (process.env.WAILTEST) {
+  const setupTestHook = require('./setupTestHook')
+  setupTestHook(store, hashHistory)
+}
+
+global.notifications$ = new BehaviorSubject({type: 'initial'})
 global.resizer = createDetectElementResize()
 global.twitterClient = new TwitterClient()
 
-injectTapEventPlugin()
-
-const wail = document.getElementById('wail')
-const hashHistory = createHashHist()
 window.eventLog = new RingBuffer()
-
 window.logger = bunyan.createLogger({
   name: 'wail-ui',
   streams: [
@@ -43,19 +51,6 @@ window.logger = bunyan.createLogger({
     }
   ]
 })
-
-// process.on('uncaughtException', (err) => {
-//   console.error(err)
-//   window.logger.error(err)
-// })
-
-const store = configureStore(hashHistory)
-
-if (process.env.WAILTEST) {
-  const setupTestHook = require('./setupTestHook')
-  setupTestHook(store, hashHistory)
-}
-
 window.onbeforeunload = windowCloseHandler(store)
 
 render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))

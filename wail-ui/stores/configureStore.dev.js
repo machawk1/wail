@@ -1,13 +1,12 @@
 import { createStore, applyMiddleware, compose } from 'redux'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise'
-import { routerMiddleware } from 'react-router-redux'
 import { ipc, requestHandler } from '../middleware'
 import rootReducer from '../reducers'
 import { Map } from 'immutable'
 import * as actionCreators from '../actions/index'
 
-const configureStore = (history) => {
+const configureStore = () => {
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__({
       actionCreators
     }) || compose
@@ -15,7 +14,7 @@ const configureStore = (history) => {
     rootReducer,
     Map(),
     composeEnhancers(
-      applyMiddleware(thunk, promiseMiddleware, routerMiddleware(history), requestHandler(history), ipc)
+      applyMiddleware(thunk, promiseMiddleware,  requestHandler, ipc)
     )
   )
 

@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react'
 import FlatButton from 'material-ui/FlatButton'
 import MenuItem from 'material-ui/MenuItem'
 import Popover from 'material-ui/Popover'
+import {Link} from 'react-router-dom'
 import { amber500 } from 'material-ui/styles/colors'
 import { dynamicRouteResolvers as drr } from '../../../routes/routeNames'
 import changeLocation from '../../../actions/changeLocation'
@@ -34,12 +35,6 @@ class AddSeedIconMenu extends Component {
     this.setState({open: false})
   }
 
-  closeGoTo (to) {
-    this.setState({open: false}, () => {
-      changeLocation(to)
-    })
-  }
-
   goToAddSeed () {
     const {match} = this.props
     const {store} = this.context
@@ -57,6 +52,7 @@ class AddSeedIconMenu extends Component {
   }
 
   render () {
+    const {match} = this.props
     return (
       <div>
         <FlatButton label='Add Seed' labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu}/>
@@ -66,18 +62,19 @@ class AddSeedIconMenu extends Component {
           targetOrigin={{horizontal: 'left', vertical: 'top'}}
           open={this.state.open}
           onRequestClose={::this.close}
-          onMouseLeave={(...args) => {console.log('mouse leave popover', args)}}
         >
-          <MenuItem
-            onTouchTap={::this.goToAddSeed}
-            style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
-            primaryText={'From Live Web'}
-          />
-          <MenuItem
-            onTouchTap={::this.goToAddSeedFs}
-            style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
-            primaryText='From File System'
-          />
+          <Link style={this.linkStyle} to={drr.addSeed(match.params.col)} onClick={::this.close}>
+            <MenuItem
+              style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
+              primaryText={'From Live Web'}
+            />
+          </Link>
+          <Link style={this.linkStyle} to={drr.addSeedFs(match.params.col)} onClick={::this.close}>
+            <MenuItem
+              style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
+              primaryText='From File System'
+            />
+          </Link>
         </Popover>
       </div>
     )

@@ -35,7 +35,7 @@ export default class Header extends Component {
   }
 
   handleClose (location, to) {
-    this.context.store.dispatch(changeLocation(to))
+    // this.context.store.dispatch(changeLocation(to))
     this.setState({ open: false, location })
   }
 

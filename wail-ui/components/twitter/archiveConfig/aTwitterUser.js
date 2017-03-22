@@ -1,8 +1,9 @@
 import React, { Component, PropTypes } from 'react'
 import { Card, CardTitle } from 'material-ui/Card'
-import { Field, reduxForm } from 'redux-form/immutable'
 import { SubmissionError } from 'redux-form'
 import { ipcRenderer as ipc } from 'electron'
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
+import { namedUpdateKeys } from '../../../util/recomposeHelpers'
 import timeVales from './timeValues'
 import UserBasic from './twitterUser/userBasic'
 import { notifyError, notifyInfo } from '../../../actions/notification-actions'
@@ -15,6 +16,7 @@ const monitor = (config) => {
 }
 
 const width = process.platform === 'win32' ? '40%' : '35%'
+const enhance = onlyUpdateForKeys([ 'cols', 'times' ])//namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
 
 class ATwitterUser extends Component {
 
@@ -34,12 +36,12 @@ class ATwitterUser extends Component {
     if (screenName.startsWith('@')) {
       screenName = screenName.substr(1)
     }
-    return global.twitterClient.getUserId({screen_name: screenName})
+    return global.twitterClient.getUserId({ screen_name: screenName })
       .catch(error => {
         console.error(error)
         notifyError(`An internal error occurred ${error.message || ''}`, true)
       })
-      .then(({data, resp}) => {
+      .then(({ data, resp }) => {
         if (data.errors) {
           notifyError(`Invalid Screen Name: ${values.get('userName')} does not exist`)
           throw new SubmissionError({
@@ -57,13 +59,13 @@ class ATwitterUser extends Component {
         } else {
           let conf = {
             account: screenName,
-            dur: timeVales.values[values.get('length')],
+            dur: timeVales.values[ values.get('length') ],
             forCol: values.get('forCol'),
             taskType: 'UserTimeLine'
           }
           if (process.env.NODE_ENV === 'development') {
             // tehehehe sssshhhhh
-            monitor({...conf, oneOff: true})
+            monitor({ ...conf, oneOff: true })
           } else {
             monitor(conf)
           }
@@ -74,8 +76,8 @@ class ATwitterUser extends Component {
 
   render () {
     return (
-      <div style={{width, height: '100%'}} id='twitterArchive'>
-        <Card style={{height: '100%'}}>
+      <div style={{ width, height: '100%' }} id='twitterArchive'>
+        <Card style={{ height: '100%' }}>
           <CardTitle title={"A User's Timeline"}/>
           <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit}/>
         </Card>
@@ -84,4 +86,4 @@ class ATwitterUser extends Component {
   }
 }
 
-export default ATwitterUser
+export default enhance(ATwitterUser)

@@ -53,7 +53,6 @@ module.exports = {
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-destructuring',
-            'transform-async-to-generator',
             'transform-exponentiation-operator',
             'transform-object-rest-spread',
             'syntax-trailing-function-commas',
