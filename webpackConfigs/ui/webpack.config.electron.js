@@ -1,6 +1,8 @@
 const webpack = require('webpack')
 const path = require('path')
 
+const here = process.cwd()
+
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
 const babelEnvConfig = ['env', {
@@ -58,11 +60,11 @@ module.exports = {
   },
   devtool: 'source-map',
 
-  entry: './wail-ui/ui-main.js',
+  entry: path.join(here,'wail-ui','ui-main.js'),
   output: {
     filename: 'ui-main.js',
-    path: './dist',
-    publicPath: './dist/',
+    path: path.join(here,'dist'),
+    publicPath: path.join(here,'dist'),
     libraryTarget: 'commonjs2'
   },
 

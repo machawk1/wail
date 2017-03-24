@@ -4,6 +4,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
+const here = process.cwd()
+
 const babelEnvConfig = ['env', {
   'targets': {
     'electron': 1.6
@@ -102,9 +104,9 @@ module.exports = {
     })
   ],
   output: {
-    path: './dist',
     filename: '[name].bundle.js',
-    publicPath: './dist/',
+    path: path.join(here,'dist'),
+    publicPath: path.join(here,'dist'),
     libraryTarget: 'commonjs2'
   },
   // bail: true,
