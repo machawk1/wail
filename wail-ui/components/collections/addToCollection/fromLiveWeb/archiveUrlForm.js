@@ -75,7 +75,7 @@ class ArchiveUrlForm extends Component {
     const {handleSubmit, pristine, reset, submitting, invalid} = this.props
     return (
       <div style={{width: '90%', height: 'inherit', marginTop: 15}}>
-        <form onSubmit={handleSubmit(::this.submit)} style={{height: '300px'}}>
+        <form id='addSeedFromLiveWebForm' onSubmit={handleSubmit(::this.submit)} style={{height: '300px'}}>
           <div style={{height: '75px'}}>
             <Field
               id='urlInput'
@@ -101,7 +101,7 @@ class ArchiveUrlForm extends Component {
               <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links'/>
             </Field>
           </div>
-          <div style={{height: '40px', transform: trans}}>
+          <div id='archiveFormButtons' style={{height: '40px', transform: trans}}>
             <FlatButton
               id='archiveNowButton'
               label='Add and Archive Now'

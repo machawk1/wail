@@ -6,16 +6,11 @@ import CollectionCardHeader from './collectionCardHeader'
 import CollectionCardBody from './collectionCardBody'
 export NoCollectionMatches from './noCollectionMatches'
 
-const enhance = namedUpdateKeys('CollectionCard', [ 'col' ])
+const enhance = namedUpdateKeys('CollectionCard', ['col', 'i'])
 
-const noVirtualWidth = (vstyle) => {
-  delete vstyle.width
-  return vstyle
-}
-
-const CollectionCard = ({ col, ccKey }) => (
-  <Card key={`${ccKey}-collectioncard`} style={{ marginTop: 10, marginBottom: 10}}>
-    <CollectionCardHeader key={`${ccKey}-collectioncard-header`} name={col.get('colName')}/>
+const CollectionCard = ({col, ccKey, i}) => (
+  <Card key={`${ccKey}-collectioncard`} style={{marginTop: 10, marginBottom: 10}}>
+    <CollectionCardHeader i={i} key={`${ccKey}-collectioncard-header`} name={col.get('colName')}/>
     <CollectionCardBody
       key={`${ccKey}-collectioncard-body`}
       seeds={col.get('seeds').size}
@@ -28,6 +23,7 @@ const CollectionCard = ({ col, ccKey }) => (
 
 CollectionCard.propTypes = {
   col: PropTypes.instanceOf(Map).isRequired,
+  i: PropTypes.number.isRequired,
   ccKey: PropTypes.string.isRequired
 }
 

@@ -7,7 +7,7 @@ import MiscToolBar from '../components/miscellaneous/miscToolBar'
 const enhance = namedPure('Misc')
 
 const Misc = enhance(() => (
-  <div style={{width: '100%', height: 'calc(100% - 60px)'}}>
+  <div id='elog' style={{width: '100%', height: 'calc(100% - 60px)'}}>
     <div style={{height: 'inherit', margin: 'auto', padding: '25px'}} id='eventLogContainer'>
       <Card>
         <CardHeader

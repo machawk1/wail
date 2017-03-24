@@ -93,11 +93,18 @@ module.exports = {
     'fsevents'
   ],
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'deps',
+      minChunks(module, count) {
+        const context = module.context
+        return context && context.indexOf('node_modules') >= 0
+      },
+    }),
+    new webpack.NamedModulesPlugin(),
   ],
   output: {
     path: path.join(__dirname, 'dist'),

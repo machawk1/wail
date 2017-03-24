@@ -3,6 +3,7 @@ import pure from 'recompose/pure'
 
 const StaticLocation = ({theLocation}, {muiTheme:{appBar}}) => (
   <h1
+    id='staticloc'
     style={{
       whiteSpace: 'nowrap',
       overflow: 'hidden',

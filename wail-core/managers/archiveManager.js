@@ -360,7 +360,7 @@ export default class ArchiveManager extends EventEmitter {
     let {forCol, lastUpdated, seed} = confDetails
     const findSeed = {q: {_id: `${forCol}-${seed.url}`}, doUpdate: foundSeedChecker}
     const seedUpdate = {
-      who: {_id: `${forCol}-${seed.url}`},
+      who: {_id: `${forCol}-${seed.url}`, url: seed.url},
       theUpdate(existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
@@ -416,9 +416,9 @@ export default class ArchiveManager extends EventEmitter {
     const templateArgs = {col}
     await this._pywb.reindexColToAddWarc(templateArgs)
     const size = await this.getColSize(col)
-    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
-      who: {_id: `${col}-${seed.url}`},
+      who: {_id: `${col}-${seed.url}`, url: seed.url},
       theUpdate(existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
@@ -477,9 +477,9 @@ export default class ArchiveManager extends EventEmitter {
     }
     const addedCount = await this._pywb.addWarcsToCol({col, warcs})
     const size = await this.getColSize(col)
-    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
-      who: {_id: `${col}-${seed.url}`},
+      who: {_id: `${col}-${seed.url}`, url: seed.url},
       theUpdate(existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
@@ -519,7 +519,7 @@ export default class ArchiveManager extends EventEmitter {
     try {
       updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
     } catch (err) {
-      err.m = err.errorReport(`Error updating ${forCol} adding a warc from the filesystem.`)
+      err.m = err.errorReport(`Error updating ${col} adding a warc from the filesystem.`)
       throw err
     }
     updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])
@@ -538,9 +538,9 @@ export default class ArchiveManager extends EventEmitter {
     }
     const addedCount = await this._pywb.addWarcsToCol({col, warcs})
     const size = await this.getColSize(col)
-    const findSeed = {q: {_id: `${col}-${seed.url}`}, doUpdate: foundSeedChecker}
+    const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
-      who: {_id: `${col}-${seed.url}`},
+      who: {_id: `${col}-${seed.url}`, url: seed.url},
       theUpdate(existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
@@ -580,7 +580,7 @@ export default class ArchiveManager extends EventEmitter {
     try {
       updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
     } catch (err) {
-      err.m = err.errorReport(`Error updating ${forCol} adding a warc from the filesystem.`)
+      err.m = err.errorReport(`Error updating ${col} adding a warc from the filesystem.`)
       throw err
     }
     updatedCol.seeds = cleanSeeds(Array.isArray(colSeeds) ? colSeeds : [colSeeds])

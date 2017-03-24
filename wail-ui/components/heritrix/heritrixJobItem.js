@@ -16,6 +16,7 @@ const log = console.log.bind(console)
 class HeritrixJobItem extends Component {
   static propTypes = {
     jobId: PropTypes.number.isRequired,
+    i: PropTypes.number.isRequired,
     jobRecord: PropTypes.instanceOf(Immutable.Record).isRequired,
     actionMenu: PropTypes.element.isRequired
   }
@@ -34,7 +35,7 @@ class HeritrixJobItem extends Component {
     let job = jobRecord.latestRun
     let urls = jobRecord.displayUrls()
     return (
-      <TableRow key={`${jobId}-TableRow`}>
+      <TableRow id={`hji${this.props.i}`} key={`${jobId}-TableRow`}>
         <TableRowColumn key={`${jobId}-TRCol-JID`} style={crawlUrlS}>
           {urls}
         </TableRowColumn>

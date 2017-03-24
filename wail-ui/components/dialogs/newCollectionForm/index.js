@@ -42,7 +42,7 @@ const formConfig = {
 
 const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, onSubmit, onCancel}) => (
   <div style={{width: 'inherit', height: 'inherit'}}>
-    <form onSubmit={handleSubmit(onSubmit)} style={{height: '100%'}}>
+    <form id='newcolform' onSubmit={handleSubmit(onSubmit)} style={{height: '100%'}}>
       <div>
         <Flex row alignContent='center' justifyContent='space-between'>
           <Field

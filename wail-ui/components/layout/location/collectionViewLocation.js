@@ -5,7 +5,7 @@ import LocationSeparator from './locationSeparator'
 import linkStyle from './linkStyle'
 
 const CollectionViewLocation = ({match}) => (
-  <span style={{margin: 0, padding: 0}}><Link to={routeNames.selectCol} style={linkStyle}>Collections</Link> {<LocationSeparator/>} {match.params.col}</span>
+  <span id='colViewLoc' style={{margin: 0, padding: 0}}><Link to={routeNames.selectCol} style={linkStyle}>Collections</Link> {<LocationSeparator/>} {match.params.col}</span>
 )
 
 export default CollectionViewLocation

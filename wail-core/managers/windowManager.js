@@ -785,6 +785,19 @@ export default class WindowManager extends EventEmitter {
           e.preventDefault()
           control.contextMenu.maybeShow(props, this.windows['mainWindow'].window)
         })
+        //destroyed
+        this.windows['mainWindow'].window.webContents.on('destroyed', () => {
+          console.log('current wbc is destroyed')
+        })
+        this.windows['mainWindow'].window.webContents.on('did-finish-load', () => {
+          if (this.windows['mainWindow'].open) {
+            let tm = setTimeout(() => {
+              this.send('archiveManWindow', 'get-all-collections')
+              this.send('crawlManWindow', 'get-all-runs')
+              clearTimeout(tm)
+            }, 2000)
+          }
+        })
 
         this.windows['mainWindow'].window.webContents.on('unresponsive', () => {
           this.emit('window-unresponsive', 'mainWindow')

@@ -32,7 +32,7 @@ export default class SelectColList extends Component {
         let col = cols.get(i)
         let cname = col.get('colName')
         cards.push(
-          <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`}/>
+          <CollectionCard i={i} key={`${i}-${cname}`} col={col} ccKey={`${i}-theCC`}/>
         )
       }
     } else {

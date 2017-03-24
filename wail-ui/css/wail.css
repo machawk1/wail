@@ -52,6 +52,35 @@
     }
 }
 
+.joyride-tooltip__header {
+    border-bottom-color: #0097a7;
+}
+
+.joyride-tooltip__button--secondary {
+    color: #0097a7;
+}
+
+.joyride-tooltip__button--primary{
+    background-color: #0097a7;
+}
+
+.joyride-beacon__inner  {
+    background-color: #ffb300;
+}
+
+.joyride-beacon__outer {
+    border-color: #ffb300;
+    background-color: rgba(255, 171, 0, 0.42);
+}
+
+.joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
+    background-color: #0097a7;
+}
+
+.hambuger {
+
+}
+
 .wail-container-fluid {
     margin-right: auto;
     margin-left: auto;

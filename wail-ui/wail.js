@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import 'react-flex/index.css'
+import 'react-joyride/lib/react-joyride-compiled.css'
 import './css/wail.css'
 import {BehaviorSubject} from 'rxjs'
 import React from 'react'
@@ -16,11 +17,13 @@ import RingBuffer from './util/ringBuffer'
 import windowCloseHandler from './windowCloseHandler'
 injectTapEventPlugin()
 
+
 const store = configureStore()
 const hashHistory = createHashHist()
 
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
+  window.__history = hashHistory
   hashHistory.listen((location, action) => {
     console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`)
     console.log(`The last navigation action was ${action}`)

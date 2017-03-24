@@ -1,14 +1,14 @@
-import React, {Component, PropTypes} from 'react'
+import React, { Component, PropTypes } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
-import {reset as resetForm} from 'redux-form'
-import {connect} from 'react-redux'
-import {ipcRenderer as ipc} from 'electron'
+import { reset as resetForm } from 'redux-form'
+import { connect } from 'react-redux'
+import { ipcRenderer as ipc } from 'electron'
 import Dialog from 'material-ui/Dialog'
 import wc from '../../constants/wail-constants'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import NewCollectionForm from './newCollectionForm'
 
-const { QUEUE_MESSAGE } = wc.EventTypes
+const {QUEUE_MESSAGE} = wc.EventTypes
 
 const dispatchToProps = dispatch => ({
   reset () {
@@ -22,14 +22,29 @@ class NewCollection extends Component {
     this.state = {
       open: false
     }
+
+    if (process.env.NODE_ENV === 'development') {
+      window.__openNC = (cb) => {
+        this.setState({open: true}, cb)
+      }
+
+      window.__closeNC = (cb) => {
+        this.setState({open: false}, () => {
+          this.props.reset()
+          cb()
+        })
+      }
+    }
   }
 
   componentWillMount () {
     ViewWatcher.on('newCollection', ::this.handleOpen)
+    ViewWatcher.on('closeNewCollection', ::this.cancel)
   }
 
   componentWillUnmount () {
     ViewWatcher.removeListener('newCollection', ::this.handleOpen)
+    ViewWatcher.removeListener('closeNewCollection', ::this.cancel)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -37,7 +52,7 @@ class NewCollection extends Component {
   }
 
   cancel () {
-    this.setState({ open: false }, ::this.props.reset)
+    this.setState({open: false}, ::this.props.reset)
   }
 
   submit (values) {
@@ -46,7 +61,7 @@ class NewCollection extends Component {
     let description = values.get('description')
     let newCol = {
       col,
-      mdata: [ `title="${title}"`, `description="${description}"` ],
+      mdata: [`title="${title}"`, `description="${description}"`],
       metadata: {
         title,
         description
@@ -64,11 +79,11 @@ class NewCollection extends Component {
         uid: `Creating new collection ${col}`
       }
     })
-    this.setState({ open: false }, ::this.props.reset)
+    this.setState({open: false}, ::this.props.reset)
   }
 
   handleOpen () {
-    this.setState({ open: true })
+    this.setState({open: true})
   }
 
   render () {
@@ -83,7 +98,7 @@ class NewCollection extends Component {
         modal
         open={this.state.open}
       >
-        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit} />
+        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit}/>
       </Dialog>
 
     )

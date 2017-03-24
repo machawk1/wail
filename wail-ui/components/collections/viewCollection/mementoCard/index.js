@@ -9,8 +9,8 @@ export MementoCardEmpty from './mementoCardEmpty'
 
 const enhanceMc = namedUpdateKeys('MementoCard', ['seed', 'viewingCol'])
 
-const MementoCard = ({mckey, seed, url, viewingCol, conf, openInWb}) => (
-  <Card key={`${mckey}-mementoCard`} style={{marginTop: 10, marginBottom: 10}}>
+const MementoCard = ({i,mckey, seed, url, viewingCol, conf, openInWb}) => (
+  <Card id={`mementoCard${i}`}  key={`${mckey}-mementoCard`} style={{marginTop: 10, marginBottom: 10}}>
     <MementoCardHeader
       key={`${mckey}-mementoCardHeader`}
       url={url}

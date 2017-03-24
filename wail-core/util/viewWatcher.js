@@ -13,6 +13,10 @@ class _ViewWatcher extends EventEmitter {
     this.emit('newCollection')
   }
 
+  closeCreateCollection () {
+    this.emit('closeNewCollection')
+  }
+
   editMdata (editMe) {
     this.emit('editMetadata', editMe)
   }

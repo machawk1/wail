@@ -67,6 +67,7 @@ export default class SeedTable extends Component {
         }
         trs.push(
           <MementoCard
+            i={i}
             key={`${i}-${url}-mc`}
             conf={conf}
             seed={seed}
@@ -85,7 +86,7 @@ export default class SeedTable extends Component {
   render () {
     let trs = this.renTr()
     return (
-      <div style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
+      <div id='colSeedsList' style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
         <MyAutoSizer findElement='collViewDiv'>
           {({height}) => (
             <div style={{height: height, maxHeight: `${height - 160}px`, overflowY: 'auto'}}>

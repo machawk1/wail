@@ -6,18 +6,19 @@ import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { dynamicRouteResolvers as drr } from '../../../../routes/routeNames'
 const linkStyle = {color: amber500, textDecoration: 'none',textAlign: 'center'}
 
-const enhance = namedUpdateKeys('CollectionCardHeader', ['name'])
+const enhance = namedUpdateKeys('CollectionCardHeader', ['name','i'])
 
-const CollectionCardHeader = ({name}, {muiTheme:{baseTheme:{palette:{primary1Color}}}}) => (
+const CollectionCardHeader = ({name,i}, {muiTheme:{baseTheme:{palette:{primary1Color}}}}) => (
   <CardTitle
     key={`CollectionCardHeader-${name}`}
     style={{backgroundColor: primary1Color, marginTop: 0, marginBottom: 10}}
-    title={<Link to={drr.viewCollection(name)} style={linkStyle}>{name}</Link>}
+    title={<Link id={`colto${i}`} to={drr.viewCollection(name)} style={linkStyle}>{name}</Link>}
   />
 )
 
 CollectionCardHeader.propTypes = {
   name: PropTypes.string.isRequired,
+  i: PropTypes.number.isRequired,
 }
 
 CollectionCardHeader.contextTypes = {

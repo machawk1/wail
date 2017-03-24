@@ -12,7 +12,7 @@ export default class Header extends Component {
 
   constructor (props, context) {
     super(props, context)
-    this.state = { open: false, location: 'Collections' }
+    this.state = {open: false, location: 'Collections'}
     if (process.env.WAILTEST) {
       window.___header = {
         curState: () => this.state,
@@ -23,20 +23,24 @@ export default class Header extends Component {
           this.handleClose('Collections', routeNames.selectCol)
         }
       }
+    } else if (process.env.NODE_ENV === 'development') {
+      window.__openSideBar = (cb) => {
+        this.setState({open: !this.state.open}, cb)
+      }
     }
   }
 
   handleToggle () {
-    this.setState({ open: !this.state.open })
+    this.setState({open: !this.state.open})
   }
 
   open (open) {
-    this.setState({ open })
+    this.setState({open})
   }
 
   handleClose (location, to) {
     // this.context.store.dispatch(changeLocation(to))
-    this.setState({ open: false, location })
+    this.setState({open: false, location})
   }
 
   render () {

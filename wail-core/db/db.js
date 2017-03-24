@@ -185,7 +185,7 @@ export default class Db {
     let findRet = await this._findOne(find.q)
     if (!findRet.wasError) {
       if (find.doUpdate(findRet.doc)) {
-        let updateRet = await this._update(update.who, update.theUpdate, update.opts)
+        let updateRet = await this._update(update.who, update.theUpdate(findRet.doc), update.opts)
         if (!updateRet.wasError) {
           let findAllRet = await this._find(findAll)
           if (!findAllRet.wasError) {

@@ -54,7 +54,7 @@ class AddSeedIconMenu extends Component {
   render () {
     const {match} = this.props
     return (
-      <div>
+      <div id='addSeedButton'>
         <FlatButton label='Add Seed' labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu}/>
         <Popover
           anchorEl={this.state.anchorEl}

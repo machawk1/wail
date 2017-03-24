@@ -27,10 +27,7 @@ ipc.on('get-all-runs', (event) => {
   console.log('crawl man got get-all-runs')
   crawlMan.getAllRuns()
     .then(runs => {
-      ipc.send('got-all-runs', {
-        wasError: false,
-        runs
-      })
+      ipc.send('got-all-runs', runs)
     })
     .catch(error => {
       ipc.send('got-all-runs', {
