@@ -69,4 +69,3 @@ export function crawlToCol (e, col) {
     col
   }
 }
-

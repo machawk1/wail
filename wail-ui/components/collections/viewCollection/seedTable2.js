@@ -22,7 +22,7 @@ export default class SeedTable extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      searchText: '',
+      searchText: ''
     }
 
     this.filterSubscription = null
@@ -53,7 +53,7 @@ export default class SeedTable extends Component {
       .sort((s1, s2) => momentSortRev(s1.get('added'), s2.get('added')))
     let len = seeds.size, i = 0
     if (len === 0) {
-      trs.push(<MementoCardEmpty viewingCol={viewingCol} key="mce"/>)
+      trs.push(<MementoCardEmpty viewingCol={viewingCol} key='mce' />)
     } else {
       for (; i < len; ++i) {
         let seed = seeds.get(i)
@@ -62,7 +62,7 @@ export default class SeedTable extends Component {
           conf = []
           for (const aConf of this.props.seedConfig[url]) {
             conf.push(aConf)
-            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`}/>)
+            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`} />)
           }
         }
         trs.push(
@@ -98,4 +98,3 @@ export default class SeedTable extends Component {
     )
   }
 }
-

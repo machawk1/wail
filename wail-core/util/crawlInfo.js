@@ -57,5 +57,4 @@ export default class CrawlInfo {
       latestRun: this.latestRun
     }
   }
-
 }

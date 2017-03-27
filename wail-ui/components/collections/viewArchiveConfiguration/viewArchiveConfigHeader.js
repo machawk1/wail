@@ -28,4 +28,3 @@ ViewArchiveConfigHeader.propTypes = {
 }
 
 export default ViewArchiveConfigHeader
-

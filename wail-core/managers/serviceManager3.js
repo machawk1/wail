@@ -108,7 +108,7 @@ export default class ServiceManager {
     return new Promise((resolve, reject) => {
       if (which === 'all') {
         return this.killAllServices()
-          .then(() => {resolve()})
+          .then(() => { resolve() })
           .catch(killErr => {
             console.error('error killing all services')
             console.error(killErr)

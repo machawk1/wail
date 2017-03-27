@@ -40,4 +40,3 @@ export const doSeedExtraction = (seedPath, mode = 'f') =>
         reject(error)
       })
   )
-

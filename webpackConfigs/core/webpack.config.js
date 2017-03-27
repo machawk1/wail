@@ -15,7 +15,9 @@ const babelEnvConfig = ['env', {
     'transform-es2015-object-super',
   ],
   'exclude': [
-    'transform-async-to-generator'
+    'transform-async-to-generator',
+    'web.timers',
+    'web.immediate'
   ]
 }]
 
@@ -50,7 +52,7 @@ module.exports = {
                 'transform-es2015-object-super',
                 'transform-es2015-destructuring',
                 'transform-exponentiation-operator',
-                'transform-object-rest-spread',
+                ['transform-object-rest-spread', {'useBuiltIns': true}],
                 'syntax-trailing-function-commas',
                 'transform-export-extensions',
                 'transform-do-expressions',

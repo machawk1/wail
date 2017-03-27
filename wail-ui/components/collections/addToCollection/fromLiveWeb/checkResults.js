@@ -47,7 +47,6 @@ class CheckResults extends Component {
       </div>
     )
   }
-
 }
 
 export default connect(state => ({check: state.get('checkUrl')}))(CheckResults)

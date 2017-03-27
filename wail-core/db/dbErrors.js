@@ -70,7 +70,6 @@ export class FindError extends Error {
       }
     }
   }
-
 }
 
 export class FindOneError extends Error {

@@ -18,17 +18,17 @@ class WarcWriter extends EventEmitter {
     super()
   }
 
-  *makeWriteIter ({seedUrl, networkMonitor, outlinks, ua}) {
+  * makeWriteIter ({seedUrl, networkMonitor, outlinks, ua}) {
     let now = new Date().toISOString()
     now = now.substr(0, now.indexOf('.')) + 'Z'
     let rid = uuid()
     let swapper = S(warcHeaderContent)
     let whc = Buffer.from('\r\n' + swapper.template({
-        version: '156',
-        isPartOfV: 'sads',
-        warcInfoDescription: 'dsadsaas',
-        ua
-      }).s + '\r\n', 'utf8')
+      version: '156',
+      isPartOfV: 'sads',
+      warcInfoDescription: 'dsadsaas',
+      ua
+    }).s + '\r\n', 'utf8')
 
     let wh = Buffer.from(swapper.setValue(warcHeader).template({
       fileName: 'test.warc',

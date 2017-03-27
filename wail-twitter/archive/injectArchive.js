@@ -25,7 +25,6 @@ class InjectArchive {
       })
     }
   }
-
 }
 
 module.exports = InjectArchive

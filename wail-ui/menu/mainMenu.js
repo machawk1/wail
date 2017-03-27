@@ -581,4 +581,3 @@ if (process.platform === 'darwin') {
 }
 
 export default template
-

@@ -18,5 +18,5 @@ test.before('test setup', t => {
 })
 
 test('the archive manager should be able to get all collections', async t => {
-  
+
 })

@@ -14,4 +14,3 @@ injectTapEventPlugin()
 const store = configureStore()
 
 render(<NotFirstTime store={store} />, document.getElementById('loading'))
-

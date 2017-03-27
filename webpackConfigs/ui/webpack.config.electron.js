@@ -14,7 +14,9 @@ const babelEnvConfig = ['env', {
     'syntax-trailing-function-commas',
   ],
   'exclude': [
-    'transform-async-to-generator'
+    'transform-async-to-generator',
+    'web.timers',
+    'web.immediate'
   ]
 }]
 
@@ -28,6 +30,7 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
+          babelrc: false,
           presets: [
             babelEnvConfig,
             'react',
@@ -37,7 +40,7 @@ module.exports = {
             'transform-class-properties',
             'transform-es2015-destructuring',
             'transform-exponentiation-operator',
-            'transform-object-rest-spread',
+            ['transform-object-rest-spread', {'useBuiltIns': true}],
             'syntax-trailing-function-commas',
             'transform-export-extensions',
             'transform-do-expressions',
@@ -60,11 +63,11 @@ module.exports = {
   },
   devtool: 'source-map',
 
-  entry: path.join(here,'wail-ui','ui-main.js'),
+  entry: path.join(here, 'wail-ui', 'ui-main.js'),
   output: {
     filename: 'ui-main.js',
-    path: path.join(here,'dist'),
-    publicPath: path.join(here,'dist'),
+    path: path.join(here, 'dist'),
+    publicPath: path.join(here, 'dist'),
     libraryTarget: 'commonjs2'
   },
 

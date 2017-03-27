@@ -108,5 +108,4 @@ export default class TwitterClient {
       return this.twit.get('users/lookup', opts)
     }
   }
-
 }

@@ -23,11 +23,11 @@ const dispatchToProp = dispatch => ({
 const AddFromFSLocation = ({match, nukeCheckUrl, nukeAddFsSeed}) => {
   let colsLink = <Link onClick={nukeCheckUrl} style={linkStyle} to={routeNames.selectCol}>Collections</Link>
   let colLink = <Link style={linkStyle} onClick={nukeCheckUrl}
-                      to={drr.viewCollection(match.params.col)}>{match.params.col}</Link>
+    to={drr.viewCollection(match.params.col)}>{match.params.col}</Link>
 
   return (
-    <span id='addSeedFsLoc' style={{margin: 0, padding: 0}}>{colsLink} {<LocationSeparator/>} {colLink} {
-      <LocationSeparator/>} Add Seed From Filesystem</span>
+    <span id='addSeedFsLoc' style={{margin: 0, padding: 0}}>{colsLink} {<LocationSeparator />} {colLink} {
+      <LocationSeparator />} Add Seed From Filesystem</span>
   )
 }
 

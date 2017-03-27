@@ -98,7 +98,7 @@ class NewCollection extends Component {
         modal
         open={this.state.open}
       >
-        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit}/>
+        <NewCollectionForm onCancel={::this.cancel} onSubmit={::this.submit} />
       </Dialog>
 
     )

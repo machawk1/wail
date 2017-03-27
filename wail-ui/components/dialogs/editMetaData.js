@@ -11,7 +11,6 @@ import wc from '../../constants/wail-constants'
 const { QUEUE_MESSAGE } = wc.EventTypes
 
 export default class NewCollection extends Component {
-
   constructor (...args) {
     super(...args)
     this.state = {
@@ -145,7 +144,11 @@ export default class NewCollection extends Component {
   handleOpen (editMe) {
     let { forCol, title, description } = editMe
     this.setState({
-      open: true, forCol, title, description, originalTitle: title,
+      open: true,
+      forCol,
+      title,
+      description,
+      originalTitle: title,
       originalDescription: description
     })
   }

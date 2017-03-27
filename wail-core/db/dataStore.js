@@ -149,12 +149,12 @@ export default class DataStore {
         if (err) {
           reject(new DataStoreError(err, 'backing up'))
         } else {
-          return this.clearDb().then(() => {resolve(backUpName)})
+          return this.clearDb().then(() => { resolve(backUpName) })
             .catch(error => {
-                const dbErr = new DataStoreError(error, 'clear failed')
-                dbErr.withExtraInfo(backUpName)
-                reject(dbErr)
-              }
+              const dbErr = new DataStoreError(error, 'clear failed')
+              dbErr.withExtraInfo(backUpName)
+              reject(dbErr)
+            }
             )
         }
       })
@@ -170,7 +170,7 @@ export default class DataStore {
           reject(new DataStoreError(err, 'backing up'))
         } else {
           return removeFile(this.filePath)
-            .then(() => {resolve(backUpName)})
+            .then(() => { resolve(backUpName) })
             .catch(errm => {
               const dbErr = new DataStoreError(errm, 'hard clear failed')
               dbErr.withExtraInfo(backUpName)
@@ -179,7 +179,6 @@ export default class DataStore {
         }
       })
     })
-
   }
 
   nrUpdate (updateWho, theUpdate, opts = {}) {

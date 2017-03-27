@@ -635,7 +635,7 @@ export default class ArchiveManager {
         })
       )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
@@ -747,7 +747,7 @@ export default class ArchiveManager {
           })
         )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
@@ -835,7 +835,7 @@ export default class ArchiveManager {
           })
         )
         .catch(({ error, stdout, stderr }) => {
-          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout+stderr}`)
+          error.m = errorReport(error, `Unable to add warcs to the collection ${col} because ${stdout + stderr}`)
           reject(error)
         })
     )
@@ -891,11 +891,17 @@ export default class ArchiveManager {
           let created = moment().format()
           fs.ensureFile(path.join(colpath, 'indexes', 'index.cdxj'), () => {
             let toCreate = {
-              _id: col, name: col, colpath, created,
-              size: '0 B', lastUpdated: created,
+              _id: col,
+              name: col,
+              colpath,
+              created,
+              size: '0 B',
+              lastUpdated: created,
               archive: path.join(colpath, 'archive'),
               indexes: path.join(colpath, 'indexes'),
-              colName: col, numArchives: 0, metadata,
+              colName: col,
+              numArchives: 0,
+              metadata,
               hasRunningCrawl: false
             }
             this.collections.insert(toCreate, (err, doc) => {

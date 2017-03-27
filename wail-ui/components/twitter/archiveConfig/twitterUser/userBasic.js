@@ -15,11 +15,11 @@ const formConfig = {
 class UserBasic extends Component {
   static propTypes = {
     cols: PropTypes.array.isRequired,
-    times: PropTypes.array.isRequired,
+    times: PropTypes.array.isRequired
   }
 
   render () {
-    const {handleSubmit, pristine, reset, submitting, invalid, cols,times} = this.props
+    const {handleSubmit, pristine, reset, submitting, invalid, cols, times} = this.props
     return (
       <form onSubmit={handleSubmit} style={{marginLeft: 16, height: '100%'}}>
         <div style={{height: 72}}>

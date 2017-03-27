@@ -15,19 +15,19 @@ import routeNames from './routeNames'
 
 export default (
   <div style={{width: 'inherit', height: 'inherit'}}>
-    <Header  />
+    <Header />
     <div className='layoutBody'>
       <Switch>
-        <Route exact path={routeNames.selectCol} component={SelectColContainer}/>
-        <Route path={routeNames.viewCollection} component={CollectionView}/>
-        <Route path={routeNames.addSeed} component={CollectionAddSeed}/>
-        <Route path={routeNames.addSeedFs} component={CollectionAddSeedFs}/>
-        <Route path={routeNames.viewArchiveConfig} component={ViewArchiveConfig}/>
-        <Route path={routeNames.heritrix} component={HeritrixView}/>
-        <Route path={routeNames.misc} component={Misc}/>
-        <Route path={routeNames.services} component={ServiceStats}/>
-        <Route path={routeNames.twitter} component={TwitterView}/>
-        <Route path={routeNames.twitterSignIn} component={TwitterSignIn}/>
+        <Route exact path={routeNames.selectCol} component={SelectColContainer} />
+        <Route path={routeNames.viewCollection} component={CollectionView} />
+        <Route path={routeNames.addSeed} component={CollectionAddSeed} />
+        <Route path={routeNames.addSeedFs} component={CollectionAddSeedFs} />
+        <Route path={routeNames.viewArchiveConfig} component={ViewArchiveConfig} />
+        <Route path={routeNames.heritrix} component={HeritrixView} />
+        <Route path={routeNames.misc} component={Misc} />
+        <Route path={routeNames.services} component={ServiceStats} />
+        <Route path={routeNames.twitter} component={TwitterView} />
+        <Route path={routeNames.twitterSignIn} component={TwitterSignIn} />
       </Switch>
     </div>
   </div>

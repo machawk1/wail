@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react'
-import pure from 'recompose/pure'
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
 
-const StaticLocation = ({theLocation}, {muiTheme:{appBar}}) => (
+const StaticLocation = ({theLocation}, {muiTheme: {appBar}}) => (
   <h1
     id='staticloc'
     style={{
@@ -29,4 +29,4 @@ StaticLocation.propTypes = {
   theLocation: PropTypes.string.isRequired
 }
 
-export default pure(StaticLocation)
+export default onlyUpdateForKeys(['theLocation'])(StaticLocation)

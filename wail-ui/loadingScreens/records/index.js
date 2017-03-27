@@ -85,7 +85,6 @@ class SSRecord extends Immutable.Record({
   hError: false,
   wError: false
 }) {
-
   getHeritrixErrorReport () {
     let er = this.get('hStartErReport')
     return {where: er.get('where'), message: er.get('error')}

@@ -18,7 +18,7 @@ const MementoCardActions = ({url, viewingCol, openInWb}) => (
 MementoCardActions.propTypes = {
   url: PropTypes.string.isRequired,
   viewingCol: PropTypes.string.isRequired,
-  openInWb: PropTypes.func.isRequired,
+  openInWb: PropTypes.func.isRequired
 }
 
 export default enhance(MementoCardActions)

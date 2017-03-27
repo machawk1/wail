@@ -6,7 +6,7 @@ import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 
 const enhance = namedUpdateKeys('MementoCardHeader', ['url', 'lastUpdated'])
 
-const MementoCardHeader = ({lastUpdated, added, url}, {muiTheme:{baseTheme:{palette:{primary1Color}}}}) => (
+const MementoCardHeader = ({lastUpdated, added, url}, {muiTheme: {baseTheme: {palette: {primary1Color}}}}) => (
   <CardTitle
     key={`mementoCardHeader-${lastUpdated}-${url}`}
     style={{backgroundColor: primary1Color, paddingTop: 0, paddingBottom: 10}}
@@ -24,7 +24,7 @@ const MementoCardHeader = ({lastUpdated, added, url}, {muiTheme:{baseTheme:{pale
 MementoCardHeader.propTypes = {
   lastUpdated: PropTypes.string,
   added: PropTypes.string,
-  url: PropTypes.string,
+  url: PropTypes.string
 }
 
 MementoCardHeader.contextTypes = {

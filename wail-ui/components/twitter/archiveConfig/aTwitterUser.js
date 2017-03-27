@@ -3,7 +3,6 @@ import { Card, CardTitle } from 'material-ui/Card'
 import { SubmissionError } from 'redux-form'
 import { ipcRenderer as ipc } from 'electron'
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
-import { namedUpdateKeys } from '../../../util/recomposeHelpers'
 import timeVales from './timeValues'
 import UserBasic from './twitterUser/userBasic'
 import { notifyError, notifyInfo } from '../../../actions/notification-actions'
@@ -16,10 +15,9 @@ const monitor = (config) => {
 }
 
 const width = process.platform === 'win32' ? '40%' : '35%'
-const enhance = onlyUpdateForKeys([ 'cols', 'times' ])//namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
+const enhance = onlyUpdateForKeys([ 'cols', 'times' ])// namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
 
 class ATwitterUser extends Component {
-
   static propTypes = {
     cols: PropTypes.array,
     times: PropTypes.array,
@@ -76,10 +74,10 @@ class ATwitterUser extends Component {
 
   render () {
     return (
-      <div style={{ width, height: '100%' }} id='twitterArchive'>
+      <div style={{ width, height: '100%' }} id='timelineArchive'>
         <Card style={{ height: '100%' }}>
-          <CardTitle title={"A User's Timeline"}/>
-          <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit}/>
+          <CardTitle title={"A User's Timeline"} />
+          <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit} />
         </Card>
       </div>
     )

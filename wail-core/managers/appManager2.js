@@ -244,7 +244,7 @@ export default class AppManager2 {
           }
         },
         url: `file://${loadFrom}/background/managers.html`,
-        name: 'managersWindow',
+        name: 'managersWindow'
       },
       {
         conf: {

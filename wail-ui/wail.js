@@ -17,7 +17,6 @@ import RingBuffer from './util/ringBuffer'
 import windowCloseHandler from './windowCloseHandler'
 injectTapEventPlugin()
 
-
 const store = configureStore()
 const hashHistory = createHashHist()
 
@@ -56,5 +55,4 @@ window.logger = bunyan.createLogger({
 })
 window.onbeforeunload = windowCloseHandler(store)
 
-render(<Wail store={store} history={hashHistory}/>, document.getElementById('wail'))
-
+render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))

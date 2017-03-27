@@ -28,7 +28,7 @@ const WailAppDrawer = ({open, onRequestChange, handleClose}) => (
         <MenuItem
           id='sidebarCols'
           primaryText={'Collections'}
-          rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/linux/whale_64.png'}/>}
+          rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'} src={'icons/linux/whale_64.png'} />}
         />
       </Link>
       <Divider />
@@ -42,7 +42,7 @@ const WailAppDrawer = ({open, onRequestChange, handleClose}) => (
         <MenuItem
           id='sidebarHeritrix'
           primaryText={'Crawls'}
-          rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
+          rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
         />
       </Link>
       <Divider />
@@ -92,7 +92,7 @@ const WailAppDrawer = ({open, onRequestChange, handleClose}) => (
 WailAppDrawer.propTypes = {
   open: PropTypes.bool.isRequired,
   onRequestChange: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired
 }
 
 export default WailAppDrawer

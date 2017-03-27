@@ -26,4 +26,3 @@ SeedFormEntry.propTypes = {
 }
 
 export default SeedFormEntry
-

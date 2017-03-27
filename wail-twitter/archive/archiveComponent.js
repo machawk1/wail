@@ -108,7 +108,7 @@ export default class ArchiveComponent extends Component {
       }
     })
 
-    if(process.NODE_ENV === 'development') {
+    if (process.NODE_ENV === 'development') {
       this.webview.addEventListener('console-message', (e) => {
         console.log('Guest page logged a message:', e.message)
       })
@@ -231,7 +231,7 @@ export default class ArchiveComponent extends Component {
     console.log(wb)
     return (
       <div style={{width: 'inherit', height: 'inherit'}}>
-        <div dangerouslySetInnerHTML={wb}/>
+        <div dangerouslySetInnerHTML={wb} />
       </div>
     )
   }

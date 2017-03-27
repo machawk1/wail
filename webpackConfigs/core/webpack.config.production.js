@@ -15,7 +15,9 @@ const babelEnvConfig = ['env', {
     'syntax-trailing-function-commas'
   ],
   'exclude': [
-    'transform-async-to-generator'
+    'transform-async-to-generator',
+    'web.timers',
+    'web.immediate'
   ]
 }]
 
@@ -41,16 +43,18 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
+          babelrc: false,
           presets: [
             babelEnvConfig,
             'react'
           ],
           plugins: [
+            'transform-react-remove-prop-types',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-destructuring',
             'transform-exponentiation-operator',
-            'transform-object-rest-spread',
+            ['transform-object-rest-spread', {'useBuiltIns': true}],
             'syntax-trailing-function-commas',
             'transform-export-extensions',
             'transform-do-expressions',
@@ -95,6 +99,9 @@ module.exports = {
     __filename: false
   },
   plugins: [
+    new webpack.BannerPlugin(
+      {banner: 'require("source-map-support").install();', raw: true, entryOnly: false}
+    ),
     new CopyWebpackPlugin([{
       from: './wail-twitter/archive/inject.js'
     }]),
@@ -105,8 +112,8 @@ module.exports = {
   ],
   output: {
     filename: '[name].bundle.js',
-    path: path.join(here,'dist'),
-    publicPath: path.join(here,'dist'),
+    path: path.join(here, 'dist'),
+    publicPath: path.join(here, 'dist'),
     libraryTarget: 'commonjs2'
   },
   // bail: true,

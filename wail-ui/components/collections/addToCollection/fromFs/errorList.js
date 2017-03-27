@@ -31,4 +31,3 @@ export default class ErrorList extends Component {
     )
   }
 }
-

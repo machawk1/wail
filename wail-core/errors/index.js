@@ -8,4 +8,3 @@ export class NullStatsError extends Error {
     Error.captureStackTrace(this, NullStatsError)
   }
 }
-

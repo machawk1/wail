@@ -11,8 +11,7 @@ export default (state = initialState, action) => {
   if (action.type === LOCATION_CHANGE) {
     let loc = action.payload.pathname
     if (action.payload.pathname !== '/') {
-      if (loc[0] === '/')
-        loc = loc.substr(1)
+      if (loc[0] === '/') { loc = loc.substr(1) }
     }
     return state.merge({
       locationBeforeTransitions: action.payload,

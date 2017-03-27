@@ -14,7 +14,9 @@ const babelEnvConfig = ['env', {
     'transform-es2015-destructuring',
   ],
   'exclude': [
-    'transform-async-to-generator'
+    'transform-async-to-generator',
+    'web.timers',
+    'web.immediate'
   ]
 }]
 
@@ -47,16 +49,18 @@ module.exports = {
         loader: 'babel-loader',
         query: {
           cacheDirectory: true,
+          babelrc: false,
           presets: [
             babelEnvConfig,
             'react',
           ],
           plugins: [
+            'transform-react-remove-prop-types',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-destructuring',
             'transform-exponentiation-operator',
-            'transform-object-rest-spread',
+            ['transform-object-rest-spread', {'useBuiltIns': true}],
             'syntax-trailing-function-commas',
             'transform-export-extensions',
             'transform-do-expressions',
@@ -94,6 +98,9 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.BannerPlugin(
+      {banner: 'require("source-map-support").install();', raw: true, entryOnly: false}
+    ),
     new webpack.ProvidePlugin({
       'Promise': 'bluebird'
     }),

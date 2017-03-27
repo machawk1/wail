@@ -4,11 +4,11 @@ import { amber500 } from 'material-ui/styles/colors'
 import { Link } from 'react-router-dom'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { dynamicRouteResolvers as drr } from '../../../../routes/routeNames'
-const linkStyle = {color: amber500, textDecoration: 'none',textAlign: 'center'}
+const linkStyle = {color: amber500, textDecoration: 'none', textAlign: 'center'}
 
-const enhance = namedUpdateKeys('CollectionCardHeader', ['name','i'])
+const enhance = namedUpdateKeys('CollectionCardHeader', ['name', 'i'])
 
-const CollectionCardHeader = ({name,i}, {muiTheme:{baseTheme:{palette:{primary1Color}}}}) => (
+const CollectionCardHeader = ({name, i}, {muiTheme: {baseTheme: {palette: {primary1Color}}}}) => (
   <CardTitle
     key={`CollectionCardHeader-${name}`}
     style={{backgroundColor: primary1Color, marginTop: 0, marginBottom: 10}}
@@ -18,7 +18,7 @@ const CollectionCardHeader = ({name,i}, {muiTheme:{baseTheme:{palette:{primary1C
 
 CollectionCardHeader.propTypes = {
   name: PropTypes.string.isRequired,
-  i: PropTypes.number.isRequired,
+  i: PropTypes.number.isRequired
 }
 
 CollectionCardHeader.contextTypes = {

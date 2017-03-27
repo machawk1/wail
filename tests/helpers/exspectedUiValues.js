@@ -4,36 +4,36 @@ const startedCrawlNotifsExpected = [{
   title: 'Info',
   uid: 'Archiving http://example.com for default Now!'
 },
-  {
-    level: 'info',
-    message: 'Starting Heritrix Crawl for http://example.com',
-    title: 'Info',
-    uid: 'Starting Heritrix Crawl for http://example.com'
-  },
-  {
-    level: 'success',
-    message: 'Heritrix Crawl for http://example.com was built',
-    title: 'Success',
-    uid: 'Heritrix Crawl for http://example.com was built'
-  },
-  {
-    level: 'success',
-    message: 'Heritrix Crawl for http://example.com has started',
-    title: 'Success',
-    uid: 'Heritrix Crawl for http://example.com has started'
-  },
-  {
-    level: 'info',
-    message: 'Terminating Heritrix Crawl for http://example.com',
-    title: 'Info',
-    uid: 'Terminating Heritrix Crawl for http://example.com'
-  },
-  {
-    level: 'success',
-    message: 'Heritrix Crawl for http://example.com has ended',
-    title: 'Success',
-    uid: 'Heritrix Crawl for http://example.com has ended'
-  }
+{
+  level: 'info',
+  message: 'Starting Heritrix Crawl for http://example.com',
+  title: 'Info',
+  uid: 'Starting Heritrix Crawl for http://example.com'
+},
+{
+  level: 'success',
+  message: 'Heritrix Crawl for http://example.com was built',
+  title: 'Success',
+  uid: 'Heritrix Crawl for http://example.com was built'
+},
+{
+  level: 'success',
+  message: 'Heritrix Crawl for http://example.com has started',
+  title: 'Success',
+  uid: 'Heritrix Crawl for http://example.com has started'
+},
+{
+  level: 'info',
+  message: 'Terminating Heritrix Crawl for http://example.com',
+  title: 'Info',
+  uid: 'Terminating Heritrix Crawl for http://example.com'
+},
+{
+  level: 'success',
+  message: 'Heritrix Crawl for http://example.com has ended',
+  title: 'Success',
+  uid: 'Heritrix Crawl for http://example.com has ended'
+}
 ]
 
 const startStopServicesExpected = [

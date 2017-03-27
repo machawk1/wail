@@ -48,5 +48,4 @@ export default class FilterCollection extends Component {
       </Card>
     )
   }
-
 }

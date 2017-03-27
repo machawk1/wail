@@ -10,7 +10,7 @@ const enhance = namedUpdateKeys('CollectionCard', ['col', 'i'])
 
 const CollectionCard = ({col, ccKey, i}) => (
   <Card key={`${ccKey}-collectioncard`} style={{marginTop: 10, marginBottom: 10}}>
-    <CollectionCardHeader i={i} key={`${ccKey}-collectioncard-header`} name={col.get('colName')}/>
+    <CollectionCardHeader i={i} key={`${ccKey}-collectioncard-header`} name={col.get('colName')} />
     <CollectionCardBody
       key={`${ccKey}-collectioncard-body`}
       seeds={col.get('seeds').size}

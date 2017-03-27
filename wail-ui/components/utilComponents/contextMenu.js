@@ -8,7 +8,6 @@ import {
 } from 'material-ui'
 
 export default class ContextMenu extends Component {
-
   static propTypes = {
     menuList: PropTypes.array,
     openEvent: PropTypes.any,
@@ -27,7 +26,7 @@ export default class ContextMenu extends Component {
     menuList: this.props.menuList
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps (nextProps) {
     let nextState = {}
     if (nextProps.openEvent) {
       nextState.openEvent = {
@@ -48,19 +47,18 @@ export default class ContextMenu extends Component {
     })
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate (nextProps, nextState) {
     return true
   }
 
-  get mockAnchorEl() {
+  get mockAnchorEl () {
     let openEvent = this.state.openEvent || this.lastOpenEvent || {relX: 0, relY: 0}
     this.lastOpenEvent = openEvent
     let height = 8
     this.state.menuList.forEach(menuItem => {
       if (menuItem === 'divider') {
         height += 16
-      }
-      else {
+      } else {
         height += 48 + 8
       }
     })
@@ -76,7 +74,7 @@ export default class ContextMenu extends Component {
     }
   }
 
-  render() {
+  render () {
     let mockAnchorEl = this.mockAnchorEl
 
     let menu = (
@@ -106,10 +104,9 @@ export default class ContextMenu extends Component {
     )
   }
 
-  closePopover() {
+  closePopover () {
     this.setState({open: false}, () => {
       this.setState({openEvent: null}, this.props.onClose)
     })
   }
-
 }

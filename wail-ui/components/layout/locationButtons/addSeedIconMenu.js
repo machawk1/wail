@@ -28,7 +28,7 @@ class AddSeedIconMenu extends Component {
 
   handleOpenMenu (event) {
     event.preventDefault()
-    this.setState({open: true, anchorEl: event.currentTarget,})
+    this.setState({open: true, anchorEl: event.currentTarget})
   }
 
   close () {
@@ -55,7 +55,7 @@ class AddSeedIconMenu extends Component {
     const {match} = this.props
     return (
       <div id='addSeedButton'>
-        <FlatButton label='Add Seed' labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu}/>
+        <FlatButton label='Add Seed' labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu} />
         <Popover
           anchorEl={this.state.anchorEl}
           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}

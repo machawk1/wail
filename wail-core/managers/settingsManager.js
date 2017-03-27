@@ -324,6 +324,4 @@ export default class SettingsManager {
   get version () {
     return this._version
   }
-
 }
-

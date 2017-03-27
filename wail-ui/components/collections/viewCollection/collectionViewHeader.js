@@ -24,18 +24,18 @@ export default class CollectionViewHeader extends Component {
       <Paper id='colViewHeader'>
         <Flex row alignItems='baseline' justifyContent='space-between'>
           <CardTitle
-            subtitle={`Last Archived: ${this.props.collection.get('lastUpdated').format('MMM DD, YYYY h:mma')}`}/>
-          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD, YYYY h:mma')}`}/>
-          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`}/>
-          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`}/>
+            subtitle={`Last Archived: ${this.props.collection.get('lastUpdated').format('MMM DD, YYYY h:mma')}`} />
+          <CardTitle subtitle={`Created: ${this.props.collection.get('created').format('MMM DD, YYYY h:mma')}`} />
+          <CardTitle subtitle={`Seeds: ${this.props.collection.get('seeds').size}`} />
+          <CardTitle subtitle={`Size: ${this.props.collection.get('size')}`} />
         </Flex>
         <CardText style={{padding: 0, paddingLeft: 64, paddingRight: 64}}>
-           <span>
-            <SearchInput hintText={'Search By URL'} searchSubject={this.props.filterText}/>
+          <span>
+            <SearchInput hintText={'Search By URL'} searchSubject={this.props.filterText} />
           </span>
           <span>
             <IconButton tooltip={'Search Seeds By URL'}>
-               <SearchI />
+              <SearchI />
             </IconButton>
           </span>
         </CardText>
@@ -43,4 +43,3 @@ export default class CollectionViewHeader extends Component {
     )
   }
 }
-

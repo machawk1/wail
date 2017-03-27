@@ -62,29 +62,29 @@ const ServiceStatus = ({serviceStatRec, startHeritrix, stopHeritrix, startWaybac
           >
             <TableRowColumn style={style.servicesSS}>Wayback</TableRowColumn>
             <TableRowColumn id='waybackStatus'
-                            style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
+              style={style.servicesSS}>{serviceStatRec.waybackStatus()}</TableRowColumn>
             <TableRowColumn style={style.servicesSS}>0.33.1</TableRowColumn>
             <TableRowColumn style={style.servicesActions}>
-            <span style={{marginLeft: actionMarginLeft}}>
-              <RaisedButton
-                id='startWayback'
-                disabled={wbGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Start'
-                onTouchTap={startWayback}
-                icon={<FixIcon />}
+              <span style={{marginLeft: actionMarginLeft}}>
+                <RaisedButton
+                  id='startWayback'
+                  disabled={wbGood}
+                  style={style.serviceActionButton}
+                  labelPosition='before'
+                  label='Start'
+                  onTouchTap={startWayback}
+                  icon={<FixIcon />}
               />
-              <RaisedButton
-                id='stopWayback'
-                disabled={!wbGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Stop'
-                onTouchTap={stopWayback}
-                icon={<KillIcon />}
+                <RaisedButton
+                  id='stopWayback'
+                  disabled={!wbGood}
+                  style={style.serviceActionButton}
+                  labelPosition='before'
+                  label='Stop'
+                  onTouchTap={stopWayback}
+                  icon={<KillIcon />}
               />
-            </span>
+              </span>
             </TableRowColumn>
           </TableRow>
           <TableRow
@@ -92,29 +92,29 @@ const ServiceStatus = ({serviceStatRec, startHeritrix, stopHeritrix, startWaybac
           >
             <TableRowColumn style={style.servicesSS}>Heritrix</TableRowColumn>
             <TableRowColumn id='heritrixStatus'
-                            style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
+              style={style.servicesSS}>{serviceStatRec.heritrixStatus()}</TableRowColumn>
             <TableRowColumn style={style.servicesSS}>3.2.0</TableRowColumn>
             <TableRowColumn style={style.servicesActions}>
-            <span style={{marginLeft: actionMarginLeft}}>
-              <RaisedButton
-                id='startHeritrix'
-                disabled={hGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Start'
-                onTouchTap={startHeritrix}
-                icon={<FixIcon />}
+              <span style={{marginLeft: actionMarginLeft}}>
+                <RaisedButton
+                  id='startHeritrix'
+                  disabled={hGood}
+                  style={style.serviceActionButton}
+                  labelPosition='before'
+                  label='Start'
+                  onTouchTap={startHeritrix}
+                  icon={<FixIcon />}
               />
-              <RaisedButton
-                id='stopHeritrix'
-                disabled={!hGood}
-                style={style.serviceActionButton}
-                labelPosition='before'
-                label='Stop'
-                onTouchTap={stopHeritrix}
-                icon={<KillIcon />}
+                <RaisedButton
+                  id='stopHeritrix'
+                  disabled={!hGood}
+                  style={style.serviceActionButton}
+                  labelPosition='before'
+                  label='Stop'
+                  onTouchTap={stopHeritrix}
+                  icon={<KillIcon />}
               />
-            </span>
+              </span>
             </TableRowColumn>
           </TableRow>
         </TableBody>

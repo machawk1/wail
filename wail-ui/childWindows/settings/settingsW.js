@@ -11,4 +11,3 @@ injectTapEventPlugin()
 ReactDOM.render(
   <SettingsForm />,
   document.getElementById('settings'))
-

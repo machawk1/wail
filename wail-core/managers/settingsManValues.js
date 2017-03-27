@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
       {name: 'jdk', path: 'bundledApps/openjdk'},
       {name: 'jobConf', path: 'crawler-beans.cxml'},
       {name: 'jre', path: 'bundledApps/openjdk'},
-      {name: 'memgator', path: 'bundledApps/memgator'},
+      {name: 'memgator', path: 'bundledApps/memgator'}
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {
@@ -210,7 +210,7 @@ if (process.env.NODE_ENV === 'development') {
       waybackReplayDirPort: 'bundledApps\\pywb\\wayback.exe -p {port} -d {dir}',
       templates: 'bundledApps/pywb/templates',
       statics: 'bundledApps/pywb/static',
-      checkIfInCol: 'http://localhost:{port}/${col}-cdx?url=${url}&output=json'
+      checkIfInCol: 'http://localhost:{port}/{col}-cdx?url={url}&output=json'
     },
     collections: {
       defaultCol: 'WAIL_ManagedCollections/collections/Wail',
@@ -301,7 +301,7 @@ if (process.env.NODE_ENV === 'development') {
       {name: 'jdk', path: 'bundledApps/openjdk'},
       {name: 'jobConf', path: 'crawler-beans.cxml'},
       {name: 'jre', path: 'bundledApps/openjdk'},
-      {name: 'memgator', path: 'bundledApps/memgator'},
+      {name: 'memgator', path: 'bundledApps/memgator'}
     ],
     warcs: '/WAIL_ManagedCollections',
     heritrix: {

@@ -103,9 +103,11 @@ export default class Archive extends EventEmitter {
           .then(ret => {
             let arConfig = this.archiveQ[ 0 ]
             let opts = {
-              seedUrl: arConfig.uri_r, networkMonitor: this.networkMonitor,
+              seedUrl: arConfig.uri_r,
+              networkMonitor: this.networkMonitor,
               ua: this.webview.getUserAgent(),
-              dtDom: ret, preserveA: false,
+              dtDom: ret,
+              preserveA: false,
               toPath: arConfig.saveTo,
               header: arConfig
             }

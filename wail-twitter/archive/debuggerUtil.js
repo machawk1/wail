@@ -5,7 +5,7 @@ const _ = require('lodash')
 const mime = require('mime-types')
 const path = require('path')
 
-const cleanLinkSearch = ret => _.uniq(_.remove(ret, it => it !== ""))
+const cleanLinkSearch = ret => _.uniq(_.remove(ret, it => it !== ''))
 
 const outLinkIs = (outlink, seedHost) => {
   if (url.parse(outlink).hostname === seedHost) {
@@ -61,7 +61,6 @@ class DebuggerUtil {
         reject(err)
       }
     })
-
   }
 
   detach () {
@@ -197,14 +196,14 @@ class DebuggerUtil {
         } else {
           let {attributes} = qRet
           let srcIdx = _.indexOf(attributes, 'src')
-          let link = ""
+          let link = ''
           if (srcIdx > -1) {
             link = attributes[srcIdx + 1]
           } else {
             link = attributes[_.indexOf(attributes, 'href') + 1]
           }
           if (link.startsWith('#') || link.startsWith('chrome-extension') || link.indexOf('mailto:') >= 0) {
-            resolve("")
+            resolve('')
           } else {
             resolve(url.resolve(this._resolveUrl, link))
           }
@@ -223,8 +222,3 @@ class DebuggerUtil {
 }
 
 module.exports = DebuggerUtil
-
-
-
-
-

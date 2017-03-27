@@ -50,7 +50,6 @@ class Archive {
       // let webContents = this.webview.getWebContents()
       // window._debugger = webContents.debugger
       // console.log('got archive', uri_r)
-
     })
     this.results = {}
     this.warcWritter.on('done', () => {
@@ -64,13 +63,11 @@ class Archive {
             console.log('next', this.uri_r, this._next.length)
             this.archive()
           } else {
-
             fs.writeJson(toPath, this.results, (err) => {
               console.log(err)
               console.log('done')
             })
           }
-
         })
       })
       console.log()
@@ -139,7 +136,8 @@ class Archive {
               this.interceptor.requests.get(this.uri_r).addSeedUrlBody(outerHTML)
               let {keep, outlinks} = links
               let opts = {
-                seedUrl: this.uri_r, networkMonitor: this.interceptor,
+                seedUrl: this.uri_r,
+                networkMonitor: this.interceptor,
                 ua: this.webview.getUserAgent(),
                 outlinks
               }

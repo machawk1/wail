@@ -29,5 +29,4 @@ export default class logger {
   cleanUp () {
     this.fileStream.end()
   }
-
 }

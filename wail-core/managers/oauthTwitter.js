@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron'
 import { OAuth } from 'oauth'
 
 export default class AuthWindow {
-  constructor({ key, secret }) {
+  constructor ({ key, secret }) {
     assert(key, 'OAuth Consumer Key is needed!')
     assert(secret, 'OAuth Consumer secret is needed!')
     this.consumerKey = key
@@ -13,7 +13,7 @@ export default class AuthWindow {
     this.reject = null
   }
 
-  startRequest() {
+  startRequest () {
     let authUrl = 'https://api.twitter.com/oauth/authenticate?oauth_token='
     let oauth = new OAuth(
       'https://api.twitter.com/oauth/request_token',
@@ -36,7 +36,7 @@ export default class AuthWindow {
         resolve(value)
       }
 
-      this.reject = (error)=> {
+      this.reject = (error) => {
         if (isResolved) {
           return
         }
@@ -58,13 +58,13 @@ export default class AuthWindow {
     return deferredPromise
   }
 
-  getAccessToken(oauth, oauth_token, oauth_token_secret, url) {
-    this.window = new BrowserWindow({ width: 800, height: 600, webPreferences: {webSecurity: false},nodeIntegration: false })
+  getAccessToken (oauth, oauth_token, oauth_token_secret, url) {
+    this.window = new BrowserWindow({ width: 800, height: 600, webPreferences: {webSecurity: false}, nodeIntegration: false })
     this.window.on('close', () => {
       this.reject(new Error('the window is closed before complete the authentication.'))
     })
     this.window.webContents.on('will-navigate', (event, url) => {
-       console.log('will nav',url)
+      console.log('will nav', url)
       let matched
       if (matched = url.match(/\?oauth_token=([^&]*)&oauth_verifier=([^&]*)/)) {
         oauth.getOAuthAccessToken(oauth_token, oauth_token_secret, matched[2], (error, oauth_access_token, oauth_access_token_secret) => {
@@ -75,7 +75,7 @@ export default class AuthWindow {
 
           this.resolve({
             oauth_access_token: oauth_access_token,
-            oauth_access_token_secret: oauth_access_token_secret,
+            oauth_access_token_secret: oauth_access_token_secret
           })
           this.window.close()
         })

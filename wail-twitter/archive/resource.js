@@ -156,8 +156,11 @@ export default class Resource {
       let swapper = S(warcRequestHeader)
       let reqHeadContentBuffer = Buffer.from('\r\n' + reqHeaderString + '\r\n', 'utf8')
       let reqWHeader = swapper.template({
-        targetURI: this.url, concurrentTo,
-        now, rid: uuid.v1(), len: reqHeadContentBuffer.length
+        targetURI: this.url,
+        concurrentTo,
+        now,
+        rid: uuid.v1(),
+        len: reqHeadContentBuffer.length
       }).s
       yield reqWHeader
       yield reqHeadContentBuffer
@@ -166,7 +169,9 @@ export default class Resource {
         let resHeaderContentBuffer = Buffer.from('\r\n' + resHeaderString + '\r\n', 'utf8')
         let respWHeader = swapper.setValue(warcResponseHeader).template({
           targetURI: this.url,
-          now, rid: uuid.v1(), len: resHeaderContentBuffer.length + (this.rdata || Buffer.from([])).length
+          now,
+          rid: uuid.v1(),
+          len: resHeaderContentBuffer.length + (this.rdata || Buffer.from([])).length
         }).s
         yield respWHeader
         yield resHeaderContentBuffer
@@ -227,5 +232,4 @@ export default class Resource {
       console.log('we have multipe completed for same url', this.url, this.complete)
     }
   }
-
 }

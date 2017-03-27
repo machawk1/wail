@@ -5,7 +5,7 @@ import AddSeedIconMenu from './addSeedIconMenu'
 const CollectionViewButtons = ({CrawlIndicator, match}) => (
   <Flex row alignItems='center' justifyContent='space-between'>
     {CrawlIndicator}
-    <AddSeedIconMenu match={match}/>
+    <AddSeedIconMenu match={match} />
   </Flex>
 )
 

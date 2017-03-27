@@ -6,8 +6,8 @@ function getStyles (props, context, state) {
   const horizontalPosition = props.horizontalPosition
   const touchMarginOffset = props.touch ? 10 : 0
   const touchOffsetTop = props.touch ? -20 : -10
-  const offset = verticalPosition === 'bottom' ?
-  14 + touchMarginOffset : -14 - touchMarginOffset
+  const offset = verticalPosition === 'bottom'
+  ? 14 + touchMarginOffset : -14 - touchMarginOffset
 
   const {
     baseTheme,
@@ -30,8 +30,8 @@ function getStyles (props, context, state) {
       userSelect: 'none',
       opacity: 0,
       right: horizontalPosition === 'left' ? 12 : null,
-      left: horizontalPosition === 'center' ?
-      (state.offsetWidth - 48) / 2 * -1 : null,
+      left: horizontalPosition === 'center'
+      ? (state.offsetWidth - 48) / 2 * -1 : null,
       transition: `${transitions.easeOut('0ms', 'top', '450ms')}, ${
         transitions.easeOut('450ms', 'transform', '0ms')}, ${
         transitions.easeOut('450ms', 'opacity', '0ms')}`
@@ -42,8 +42,8 @@ function getStyles (props, context, state) {
     },
     ripple: {
       position: 'absolute',
-      left: horizontalPosition === 'center' ? '50%' :
-        horizontalPosition === 'left' ? '100%' : '0%',
+      left: horizontalPosition === 'center' ? '50%'
+        : horizontalPosition === 'left' ? '100%' : '0%',
       top: verticalPosition === 'bottom' ? 0 : '100%',
       transform: 'translate(-50%, -50%)',
       borderRadius: '50%',

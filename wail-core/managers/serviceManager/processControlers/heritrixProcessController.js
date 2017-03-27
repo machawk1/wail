@@ -343,7 +343,6 @@ export default class HeritrixProcessController extends EventEmitter {
               resolve()
             }
           }
-
         })
       } else {
         cp.exec(`taskkill /PID ${this.process.pid} /T /F`, (error, stdout, stderr) => {

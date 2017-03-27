@@ -16,12 +16,12 @@ export default class WaybackSettings extends Component {
         primaryText='Wayback'
         primaryTogglesNestedList
         nestedItems={
-          [
-            <NumberPicker key={'Numpicker'} counter={1} hint='Port' settings={this.props.settings} warnOnChange={false}
-              notifyMain
-              channel={'rewrite-wayback-config'}
-              whichSetting='wayback.port' />
-          ]
+        [
+          <NumberPicker key={'Numpicker'} counter={1} hint='Port' settings={this.props.settings} warnOnChange={false}
+            notifyMain
+            channel={'rewrite-wayback-config'}
+            whichSetting='wayback.port' />
+        ]
         }
       />
     )

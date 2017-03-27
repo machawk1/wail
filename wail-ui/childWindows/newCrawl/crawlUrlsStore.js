@@ -11,7 +11,6 @@ import _ from 'lodash'
 const EventTypes = wailConstants.EventTypes
 
 class CrawlUrlsStore_ extends EventEmitter {
-
   constructor () {
     super()
     this.forCol = wailConstants.Default_Collection
@@ -121,7 +120,6 @@ class CrawlUrlsStore_ extends EventEmitter {
     console.log('CrawlUrlStore getCrawlUrlItems', items)
     return items
   }
-
 }
 
 const CrawlUrlsStore = new CrawlUrlsStore_()

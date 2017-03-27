@@ -15,8 +15,7 @@ export default class HeritrixActionMenu extends Component {
 
   render () {
     return (
-      <div></div>
+      <div />
     )
   }
-
 }

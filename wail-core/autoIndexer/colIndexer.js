@@ -91,7 +91,6 @@ class ColIndexer extends EventEmitter {
       this._watcher = null
     }
   }
-
 }
 
 module.exports = ColIndexer

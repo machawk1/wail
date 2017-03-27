@@ -74,8 +74,8 @@ class ViewCollection extends Component {
   render () {
     return (
       <div style={{width: '100%', height: '100%'}}>
-        <CollectionViewHeader filterText={this.filterText} collection={this.props.collection}/>
-        <SeedTable filterText={this.filterText} collection={this.props.collection} seedConfig={this.props.seedConfig}/>
+        <CollectionViewHeader filterText={this.filterText} collection={this.props.collection} />
+        <SeedTable filterText={this.filterText} collection={this.props.collection} seedConfig={this.props.seedConfig} />
       </div>
     )
   }

@@ -13,4 +13,3 @@ const twitter = (state = Map({userSignedIn: settings.get('twitter.userSignedIn')
 }
 
 export default twitter
-

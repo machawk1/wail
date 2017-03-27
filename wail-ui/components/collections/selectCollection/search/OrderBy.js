@@ -11,7 +11,7 @@ export default class OrderBy extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      value: null,
+      value: null
     }
   }
 
@@ -24,14 +24,14 @@ export default class OrderBy extends Component {
   render () {
     return (
       <SelectField
-        floatingLabelText="Order By?"
+        style={{width: '25%', height: '55px'}}
+        floatingLabelText='Order By?'
         value={this.state.value}
         onChange={::this.handleChange}
       >
-        <MenuItem value={null} primaryText=""/>
-        <MenuItem value={'colName'} primaryText="Collection Name"/>
-        <MenuItem value={'seeds'} primaryText="Number Of Seeds"/>
-        <MenuItem value={'size'} primaryText="Size"/>
+        <MenuItem value={'colName'} primaryText='Collection Name' />
+        <MenuItem value={'seeds'} primaryText='Number Of Seeds' />
+        <MenuItem value={'size'} primaryText='Size' />
       </SelectField>
     )
   }

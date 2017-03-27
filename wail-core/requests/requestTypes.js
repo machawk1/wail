@@ -44,7 +44,6 @@ export class Request {
     this.trueFailure = false
     this.doRetry = false
   }
-
 }
 
 export class HeritrixRequest extends Request {

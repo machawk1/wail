@@ -23,7 +23,7 @@ class TwitterSignIn extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      disabled: false,
+      disabled: false
     }
 
     ipc.on('signed-into-twitter', (e, whatHappened) => {
@@ -44,18 +44,18 @@ class TwitterSignIn extends Component {
   }
 
   doSignIn () {
-    this.setState({ disabled: true },() => {
+    this.setState({ disabled: true }, () => {
       ipc.send('sign-in-twitter')
     })
   }
 
   render () {
     return this.props.userSignedIn ? (
-      <Redirect from={routeNames.twitterSignIn} to={routeNames.twitter} push/>
+      <Redirect from={routeNames.twitterSignIn} to={routeNames.twitter} push />
     ) : (
-      <SignIn disabled={this.state.disabled} doSignIn={::this.doSignIn}/>
+      <SignIn disabled={this.state.disabled} doSignIn={::this.doSignIn} />
     )
   }
 }
 
-export default connect(stateToProps,dispatchToProps)(TwitterSignIn)
+export default connect(stateToProps, dispatchToProps)(TwitterSignIn)

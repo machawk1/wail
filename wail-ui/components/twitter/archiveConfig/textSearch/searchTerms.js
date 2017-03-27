@@ -57,7 +57,7 @@ class SearchTerms extends Component {
   render () {
     const { handleSubmit, pristine, reset, submitting, invalid, previousPage } = this.props
     return (
-      <form onSubmit={handleSubmit} style={{ width: 'inherit', height: 'inherit' }}>
+      <form id="tweetTerms" onSubmit={handleSubmit} style={{ width: 'inherit', height: 'inherit' }}>
         <div style={{ maxHeight: 'calc(100% - 300px)' }}>
           <FieldArray name='searchT' component={searchTermRender} />
         </div>

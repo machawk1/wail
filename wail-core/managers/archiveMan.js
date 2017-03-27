@@ -17,7 +17,7 @@ import { Observable } from 'rxjs'
 import { checkPathExists, readDir, getFsStats, removeFile } from '../util/fsHelpers'
 import { getYamlOrWriteIfAbsent, writeYaml } from '../util/yaml'
 import { execute } from '../util/childProcHelpers'
-import  { mvStartingCol } from '../util/moveStartingCol'
+import { mvStartingCol } from '../util/moveStartingCol'
 import PyWb from '../pywb'
 import { FatalDBError } from '../db/dbErrors'
 import CollectionsUtils from '../util/collectionsUtils'
@@ -243,7 +243,7 @@ export default class ArchiveManager extends EventEmitter {
     const findSeed = {q: {_id: `${forCol}-${seed.url}`}, doUpdate: foundSeedChecker}
     const seedUpdate = {
       who: {_id: `${forCol}-${seed.url}`},
-      theUpdate(existingSeed) {
+      theUpdate (existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
           theUpdateColSeed.$push = {jobIds: seed.jobId}
@@ -416,7 +416,6 @@ export default class ArchiveManager extends EventEmitter {
         fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
       }
       throw new FatalDBError(error, fatalErrorMessage, 'Collections')
-
     }
     return backupName
   }
@@ -458,9 +457,7 @@ export default class ArchiveManager extends EventEmitter {
         fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
       }
       throw new FatalDBError(error, fatalErrorMessage, 'Collection Seeds')
-
     }
     return backupName
   }
-
 }

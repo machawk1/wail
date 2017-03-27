@@ -14,4 +14,3 @@ const loadingStep = (state = 0, action) => {
 }
 
 export default loadingStep
-

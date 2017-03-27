@@ -3,6 +3,6 @@ const DB = require('nedb')
 const util = require('util')
 const Path = require('path')
 const Promise = require('bluebird')
-const fs = require('fs-extra')
+const fs = Promise.promisifyAll(require('fs-extra'))
 const chokidar = require('chokidar')
-
+const S = require('string')

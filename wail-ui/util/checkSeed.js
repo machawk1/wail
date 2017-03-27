@@ -51,10 +51,18 @@ const determinLinkType = (link, stats, seedHost) => {
 
 const statBody = (seedUrl, theDom) => {
   let stats = {
-    Images: 0, Style: 0, Iframes: 0,
-    Embed: 0, Scripts: 0, Object: 0,
-    Applet: 0, Audio: 0, Video: 0,
-    'Internal Links': 0, 'Same Domain': 0, 'External Links': 0
+    Images: 0,
+    Style: 0,
+    Iframes: 0,
+    Embed: 0,
+    Scripts: 0,
+    Object: 0,
+    Applet: 0,
+    Audio: 0,
+    Video: 0,
+    'Internal Links': 0,
+    'Same Domain': 0,
+    'External Links': 0
   }
   let seedHost = url.parse(seedUrl).hostname
   let $ = cheerio.load(theDom)
@@ -209,7 +217,9 @@ const makeRequest = (config) => new Promise((resolve, reject) =>
 const checkSeed = (seed) => {
   let uri = uriSanity(seed)
   let config = {
-    method: 'GET', followRedirect: false, uri,
+    method: 'GET',
+    followRedirect: false,
+    uri,
     resolveWithFullResponse: true
   }
   return new Promise((resolve, reject) =>

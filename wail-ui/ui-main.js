@@ -102,4 +102,3 @@ app.on('before-quit', (e) => {
     app.quit()
   })
 })
-

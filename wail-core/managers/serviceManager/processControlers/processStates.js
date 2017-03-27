@@ -13,7 +13,7 @@ const processStates = keyMirror({
   not_started: null,
   user_initiated_stop: null,
   could_not_kill: null,
-  process_error: null,
+  process_error: null
 })
 
 export default processStates

@@ -61,7 +61,6 @@ const formConfig = {
 const trans = process.platform === 'win32' ? 'translateY(30px)' : 'translateY(20px)'
 
 class ArchiveUrlForm extends Component {
-
   submit (values) {
     if (!values.get('config')) {
       throw new SubmissionError({config: 'Config Not Present', _error: 'Cant Archive'})
@@ -96,9 +95,9 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem id='ponly' value={1} primaryText='Page Only'/>
-              <MenuItem id='p_sdl' value={2} primaryText='Page + Same domain links'/>
-              <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links'/>
+              <MenuItem id='ponly' value={1} primaryText='Page Only' />
+              <MenuItem id='p_sdl' value={2} primaryText='Page + Same domain links' />
+              <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links' />
             </Field>
           </div>
           <div id='archiveFormButtons' style={{height: '40px', transform: trans}}>
@@ -109,7 +108,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
           </div>
         </form>
       </div>

@@ -12,4 +12,3 @@ const osCheck = (state = new OsCheckRecord(), action) => {
 }
 
 export default osCheck
-

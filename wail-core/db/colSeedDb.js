@@ -51,7 +51,6 @@ class ColDirExistsError extends Error {
 }
 
 export default class ColSeedsDb {
-
   static foundSeedChecker (colSeeds) {
     if (colSeeds) {
       if (Array.isArray(colSeeds)) {
@@ -177,7 +176,6 @@ export default class ColSeedsDb {
       })
       this._collections.remove(removeFromExisting, {multi: true})
     }
-    return
   }
 
   async _handleColDirNoExistence (errExist) {
@@ -187,7 +185,7 @@ export default class ColSeedsDb {
       // this is not the first time for all intents and purposes
       let seedsBackup = await this._colSeeds.backUpClearDb()
       let colsBackup = await this._collections.backUpClearDb()
-      //handle backup
+      // handle backup
     }
     return await this.createDefaultCol()
   }
@@ -221,9 +219,17 @@ export default class ColSeedsDb {
       backUpMdata.description = `${backUpMdata.description} but could not create file on disk.`
     }
     return {
-      _id: col, name: col, colPath, size: colSize, lastUpdated: colLastUpdated.format(),
-      created: colCreateTime.format(), numArchives: seeds.length, archive: path.join(colWarcP, 'archive'),
-      indexes: path.join(colWarcP, 'indexes'), hasRunningCrawl: false, metadata
+      _id: col,
+      name: col,
+      colPath,
+      size: colSize,
+      lastUpdated: colLastUpdated.format(),
+      created: colCreateTime.format(),
+      numArchives: seeds.length,
+      archive: path.join(colWarcP, 'archive'),
+      indexes: path.join(colWarcP, 'indexes'),
+      hasRunningCrawl: false,
+      metadata
     }
   }
 
@@ -260,9 +266,17 @@ export default class ColSeedsDb {
       metadata.description = `${metadata.description} but could not create file on disk.`
     }
     return {
-      _id: col, name: col, colPath, size: colSize, lastUpdated: colLastUpdated.format(),
-      created: colCreateTime.format(), numArchives: seeds.length, archive: path.join(colWarcP, 'archive'),
-      indexes: path.join(colWarcP, 'indexes'), hasRunningCrawl: false, metadata
+      _id: col,
+      name: col,
+      colPath,
+      size: colSize,
+      lastUpdated: colLastUpdated.format(),
+      created: colCreateTime.format(),
+      numArchives: seeds.length,
+      archive: path.join(colWarcP, 'archive'),
+      indexes: path.join(colWarcP, 'indexes'),
+      hasRunningCrawl: false,
+      metadata
     }
   }
 
@@ -327,7 +341,6 @@ export default class ColSeedsDb {
         return await this.createDefaultCol(true)
       }
     }
-
   }
 
   async addCrawlInfo (confDetails) {
@@ -434,7 +447,7 @@ export default class ColSeedsDb {
 
     }
     let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
-    const findA = {$where () { return this.forCol === col}}
+    const findA = {$where () { return this.forCol === col }}
     const size = await ColSeedsDb.getColSize({col})
     const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
     let updatedCol
@@ -483,7 +496,7 @@ export default class ColSeedsDb {
 
     }
     let updateWho = {colName: col}, colSeedIdQ = {_id: `${col}-${seed.url}`}
-    const findA = {$where () { return this.forCol === col}}
+    const findA = {$where () { return this.forCol === col }}
     const size = await ColSeedsDb.getColSize({col})
     const theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
     let updatedCol
@@ -538,11 +551,17 @@ export default class ColSeedsDb {
 
     }
     let toCreate = {
-      _id: col, name: col, colpath, created,
-      size: '0 B', lastUpdated: created,
+      _id: col,
+      name: col,
+      colpath,
+      created,
+      size: '0 B',
+      lastUpdated: created,
       archive: path.join(colpath, 'archive'),
       indexes: path.join(colpath, 'indexes'),
-      colName: col, numArchives: 0, metadata,
+      colName: col,
+      numArchives: 0,
+      metadata,
       hasRunningCrawl: false
     }
 
@@ -556,7 +575,6 @@ export default class ColSeedsDb {
       seeds: [],
       ...newCol
     }
-
   }
 
   async createDefaultCol (ensure = false) {

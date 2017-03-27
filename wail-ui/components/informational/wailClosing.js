@@ -17,7 +17,7 @@ class WailClosing extends Component {
   render () {
     return (
       <Dialog
-        modal={true}
+        modal
         open={this.props.closing.get('isClosing')}
       >
         WAIL is shutting down

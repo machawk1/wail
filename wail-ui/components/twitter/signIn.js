@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react'
 import {Card, CardTitle, CardText, CardActions} from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 
-const SignIn = ({disabled,doSignIn}) => (
+const SignIn = ({disabled, doSignIn}) => (
   <div style={{ width: '100%', height: '100%' }}>
     <Card>
       <CardTitle

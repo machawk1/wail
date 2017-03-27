@@ -64,5 +64,4 @@ export default class NetworkMonitor {
     }
     this.wcRequests.match(this.networkRequests)
   }
-
 }

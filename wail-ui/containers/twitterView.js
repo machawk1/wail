@@ -1,14 +1,14 @@
-import React,{ PropTypes } from 'react'
+import React, { PropTypes } from 'react'
 import { Redirect } from 'react-router-dom'
 import pure from 'recompose/pure'
 import routeNames from '../routes/routeNames'
 import ArchiveTwitter from '../components/twitter/archiveConfig'
 
-const TwitterView = (_,{ store }) => (
+const TwitterView = (_, { store }) => (
   store.getState().get('twitter').get('userSignedIn') ? (
-    <ArchiveTwitter store={store}/>
+    <ArchiveTwitter store={store} />
   ) : (
-    <Redirect from={routeNames.twitter} to={routeNames.twitterSignIn} push/>
+    <Redirect from={routeNames.twitter} to={routeNames.twitterSignIn} push />
   )
 )
 
@@ -17,4 +17,3 @@ TwitterView.contextTypes = {
 }
 
 export default pure(TwitterView)
-

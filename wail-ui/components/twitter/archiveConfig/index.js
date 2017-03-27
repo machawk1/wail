@@ -13,8 +13,8 @@ const colNames = store => Array.from(store.getState().get('collections').values(
 const makeTimeValues = () => {
   let t = { atu: [], tuts: [] }, i = 0, { times } = timeValues
   for (; i < times.length; ++i) {
-    t.atu.push(<MenuItem value={times[ i ]} key={`${i}-atu`} primaryText={times[ i ]}/>)
-    t.tuts.push(<MenuItem value={times[ i ]} key={`${i}-tuts`} primaryText={times[ i ]}/>)
+    t.atu.push(<MenuItem value={times[ i ]} key={`${i}-atu`} primaryText={times[ i ]} />)
+    t.tuts.push(<MenuItem value={times[ i ]} key={`${i}-tuts`} primaryText={times[ i ]} />)
   }
   return t
 }
@@ -38,8 +38,8 @@ const ArchiveTwitter = ({ store }) => {
     <div style={{ width: '100%', height: '100%' }}>
       <div className='wail-container' style={{ marginTop: 15 }}>
         <Flex row justifyContent='space-between'>
-          <ATwitterUser cols={cols} times={t.atu} onUnMount={onUnMount} clear={clearTwitterUser}/>
-          <TwitterUserTextSearch cols={cols} times={t.tuts} clear={clearTextSearch}/>
+          <ATwitterUser cols={cols} times={t.atu} onUnMount={onUnMount} clear={clearTwitterUser} />
+          <TwitterUserTextSearch cols={cols} times={t.tuts} clear={clearTextSearch} />
         </Flex>
       </div>
     </div>
@@ -49,6 +49,5 @@ const ArchiveTwitter = ({ store }) => {
 ArchiveTwitter.propTypes = {
   store: PropTypes.object.isRequired
 }
-
 
 export default pure(ArchiveTwitter)

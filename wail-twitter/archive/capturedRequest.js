@@ -148,8 +148,11 @@ class CapturedRequest {
     let swapper = S(warcRequestHeader)
     let reqHeadContentBuffer = Buffer.from('\r\n' + this._reqHeadString + '\r\n', 'utf8')
     let reqWHeader = swapper.template({
-      targetURI: this._url, concurrentTo,
-      now, rid: uuid(), len: this._warcReqHeaderLen(reqHeadContentBuffer.length)
+      targetURI: this._url,
+      concurrentTo,
+      now,
+      rid: uuid(),
+      len: this._warcReqHeaderLen(reqHeadContentBuffer.length)
     }).s
     yield reqWHeader
     yield reqHeadContentBuffer

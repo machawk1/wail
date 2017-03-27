@@ -75,5 +75,4 @@ export default class ArchiveTwitter extends Component {
       </div>
     )
   }
-
 }

@@ -116,7 +116,6 @@ class FriendList extends Component {
 
     )
   }
-
 }
 
 export default FriendList

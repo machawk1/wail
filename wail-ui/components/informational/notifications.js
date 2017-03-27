@@ -56,7 +56,7 @@ export default class Notifications extends Component {
 
   render () {
     return (
-      <Notification ref={(c) => { this.notifier = c }}/>
+      <Notification ref={(c) => { this.notifier = c }} />
     )
   }
 }

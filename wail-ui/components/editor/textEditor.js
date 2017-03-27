@@ -1,6 +1,5 @@
 import React, {Component, PropTypes} from 'react'
 import {Editor, EditorState} from 'draft-js'
-import autobind from 'autobind-decorator'
 
 export default class TextEditor extends Component {
   static propTypes = {
@@ -42,5 +41,4 @@ export default class TextEditor extends Component {
       </div>
     )
   }
-
 }

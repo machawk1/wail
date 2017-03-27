@@ -5,7 +5,7 @@ import CardTitle from 'material-ui/Card/CardTitle'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { dynamicRouteResolvers as drr } from '../../../../routes/routeNames'
 
-const enhance = namedUpdateKeys('MementoCardEmpty',['viewingCol'])
+const enhance = namedUpdateKeys('MementoCardEmpty', ['viewingCol'])
 
 const MementoCardEmpty = ({ viewingCol }) => (
   <Link style={{textDecoration: 'none'}} to={drr.addSeed(viewingCol)}>
@@ -19,7 +19,7 @@ const MementoCardEmpty = ({ viewingCol }) => (
 )
 
 MementoCardEmpty.propTypes = {
-  viewingCol: PropTypes.string.isRequired,
+  viewingCol: PropTypes.string.isRequired
 }
 
 export default enhance(MementoCardEmpty)

@@ -479,4 +479,3 @@ export default function configSettings (base, userData, v) {
 
   return settings
 }
-

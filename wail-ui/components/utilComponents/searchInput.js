@@ -8,7 +8,7 @@ export default class SearchInput extends Component {
   static propTypes = {
     searchSubject: PropTypes.instanceOf(Rx.BehaviorSubject).isRequired,
     inputStyle: PropTypes.object,
-    hintText: PropTypes.string,
+    hintText: PropTypes.string
   }
   static defaultProps = {
     inputStyle: {width: '90%', paddingLeft: '10px'},

@@ -25,4 +25,3 @@ export {
   momentSort,
   momentSortRev
 }
-

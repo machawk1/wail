@@ -27,9 +27,9 @@ export default class FilterSelectCol extends Component {
         <Divider />
         <div
           id='selectColList'
-          style={{height: 'inherit',  margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}
+          style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}
         >
-          <SelectCol filterText={this.filterText}/>
+          <SelectCol filterText={this.filterText} />
         </div>
       </div>
     )

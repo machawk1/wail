@@ -15,9 +15,9 @@ const dispatchToProp = dispatch => ({
 const AddSeedLocation = ({match, nukeCheckUrl}) => (
   <span id='addSeedLoc' style={{margin: 0, padding: 0}}>
     <Link onClick={nukeCheckUrl} style={linkStyle} to={routeNames.selectCol}>Collections</Link>&nbsp;
-    <LocationSeparator/>&nbsp;
+    <LocationSeparator />&nbsp;
     <Link style={linkStyle} onClick={nukeCheckUrl} to={drr.viewCollection(match.params.col)}>{match.params.col}</Link>&nbsp;
-    <LocationSeparator/>&nbsp;
+    <LocationSeparator />&nbsp;
     Add Seed From Live Web
   </span>
 )

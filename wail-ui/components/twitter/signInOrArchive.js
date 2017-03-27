@@ -21,7 +21,6 @@ class SignInOrArchive extends Component {
       </div>
     )
   }
-
 }
 
 export default connect(stateToProp)(SignInOrArchive)

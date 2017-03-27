@@ -1,7 +1,6 @@
 import { Menu } from 'electron'
 
 export default class ContextMenu {
-
   maybeShow (props, bwinow) {
     let editFlags = props.editFlags
     let menuTemp = []
@@ -66,5 +65,4 @@ export default class ContextMenu {
     }
     Menu.buildFromTemplate(menuTemp).popup(bwinow)
   }
-
 }

@@ -34,4 +34,3 @@ SeedListFormPage.propTypes = {
 }
 
 export default SeedListFormPage
-

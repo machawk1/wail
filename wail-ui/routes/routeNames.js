@@ -12,18 +12,18 @@ const routeNames = {
 }
 
 export const dynamicRouteResolvers = {
-  viewCollection(col) {
+  viewCollection (col) {
     return `/collections/${col}`
   },
-  addSeed(col) {
+  addSeed (col) {
     return `/addSeed/${col}`
   },
-  addSeedFs(col) {
+  addSeedFs (col) {
     return `/addFsSeed/${col}`
   },
-  viewArchiveConfig(col) {
+  viewArchiveConfig (col) {
     return `/viewArchiveConfig/${col}`
-  },
+  }
 }
 
 export default routeNames

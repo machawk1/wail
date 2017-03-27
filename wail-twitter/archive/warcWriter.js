@@ -100,7 +100,7 @@ export default class WarcWriter extends EventEmitter {
   }
 
   writeWarc (config) {
-    let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header,lookUp} = config
+    let {seedUrl, networkMonitor, dtDom, ua, preserveA, toPath, header, lookUp} = config
     let {doctype, dom} = dtDom
     let {outlinks} = this.extractOutlinks(seedUrl, dom, preserveA)
     // console.log(doctype)
@@ -146,11 +146,11 @@ export default class WarcWriter extends EventEmitter {
     let rid = uuid.v1()
     let swapper = S(warcHeaderContent)
     let whc = Buffer.from('\r\n' + swapper.template({
-        version: '0.1',
-        isPartOfV: header.isPartOfV,
-        warcInfoDescription: header.description,
-        ua
-      }).s + '\r\n', 'utf8')
+      version: '0.1',
+      isPartOfV: header.isPartOfV,
+      warcInfoDescription: header.description,
+      ua
+    }).s + '\r\n', 'utf8')
 
     let wh = Buffer.from(swapper.setValue(warcHeader).template({
       fileName: toPath,

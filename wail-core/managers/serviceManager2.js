@@ -79,7 +79,7 @@ export default class ServiceManager {
       if (err.error.code === 'ETIMEDOUT') {
         return false
       } else {
-        return err.statusCode !== 303;
+        return err.statusCode !== 303
       }
     }
     return false

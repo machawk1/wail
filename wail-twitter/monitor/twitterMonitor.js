@@ -3,7 +3,7 @@ import { remote, ipcRenderer as ipc } from 'electron'
 import schedule from 'node-schedule'
 import TwitterClient from '../twitterClient'
 import makeTask from './tasks'
-import filenamify  from 'filenamify'
+import filenamify from 'filenamify'
 import S from 'string'
 import path from 'path'
 
@@ -54,7 +54,7 @@ export default class TwitterMonitor extends EventEmitter {
     })
 
     task.on('error', (err) => {
-      let message = `Error occurred while monitoring ${config.account} for ${config.forCol} ${err.message||''}`
+      let message = `Error occurred while monitoring ${config.account} for ${config.forCol} ${err.message || ''}`
       console.error('error while monitoring', config.account)
       console.error(err)
       ipc.send('log-error-display-message', {
@@ -78,9 +78,9 @@ export default class TwitterMonitor extends EventEmitter {
       ipc.send('archive-uri-r', configs)
     })
 
-    task.on('archiveTimeline',anAccount => {
-      console.log('saving ',anAccount)
-      ipc.send('archive-uri-r', makeArchiveConfig(config,`https://twitter.com/${anAccount}`))
+    task.on('archiveTimeline', anAccount => {
+      console.log('saving ', anAccount)
+      ipc.send('archive-uri-r', makeArchiveConfig(config, `https://twitter.com/${anAccount}`))
     })
 
     if (config.oneOff) {
@@ -90,6 +90,4 @@ export default class TwitterMonitor extends EventEmitter {
       this.monitorJobs[config.account].start(schedule, '*/5 * * * *')
     }
   }
-
 }
-

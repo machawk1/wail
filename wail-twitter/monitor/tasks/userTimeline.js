@@ -8,8 +8,7 @@ export default class UserTimeLineTask extends MonitorTask {
   }
 
   poll () {
-    this.emit('archiveTimeline',this.account)
+    this.emit('archiveTimeline', this.account)
     this.checkForStop()
   }
-
 }

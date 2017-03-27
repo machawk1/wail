@@ -9,7 +9,7 @@ const stateToProp = state => ({ collections: state.get('collections') })
 class SelectCol extends Component {
   static propTypes = {
     filterText: PropTypes.instanceOf(BehaviorSubject).isRequired,
-    collections: PropTypes.instanceOf(Map).isRequired,
+    collections: PropTypes.instanceOf(Map).isRequired
   }
 
   constructor (...args) {
@@ -33,7 +33,7 @@ class SelectCol extends Component {
 
   render () {
     return (
-      <SelectColList collections={this.props.collections} filterText={this.state.searchText}/>
+      <SelectColList collections={this.props.collections} filterText={this.state.searchText} />
     )
   }
 }

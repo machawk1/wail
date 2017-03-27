@@ -92,36 +92,36 @@ const heritrixLaunchErrorReport = (eMessage, where) => ({
 })
 
 const findHPidWindows = () => new Promise((resolve, reject) => Promise.delay(3000).then(() => {
-    let cmd = 'Tasklist /fi "Windowtitle eq Heritrix" /fo csv'
-    cp.exec(cmd, (err, stderr, stdout) => {
-      if (err) {
-        console.error(err)
-        reject(err)
-      } else {
-        console.log(stderr)
-        let ret = {found: false}
-        if (stderr.indexOf('INFO: No tasks are running which match the specified criteria.') === -1) {
-          stderr = stderr.replace(/\r/g, '').replace(/"/g, '')
-          let lines = stderr.split('\n')
-          lines.splice(-1, 1)
-          let len = lines.length
-          if (len === 3) {
-            let pid = parseInt(lines[2].split(',')[1])
-            console.log(pid)
-            ret.found = true
-            ret.pid = pid
-          } else if (len === 2) {
-            let pid = parseInt(lines[1].split(',')[1])
-            console.log(pid)
-            ret.found = true
-            ret.pid = pid
-          }
+  let cmd = 'Tasklist /fi "Windowtitle eq Heritrix" /fo csv'
+  cp.exec(cmd, (err, stderr, stdout) => {
+    if (err) {
+      console.error(err)
+      reject(err)
+    } else {
+      console.log(stderr)
+      let ret = {found: false}
+      if (stderr.indexOf('INFO: No tasks are running which match the specified criteria.') === -1) {
+        stderr = stderr.replace(/\r/g, '').replace(/"/g, '')
+        let lines = stderr.split('\n')
+        lines.splice(-1, 1)
+        let len = lines.length
+        if (len === 3) {
+          let pid = parseInt(lines[2].split(',')[1])
+          console.log(pid)
+          ret.found = true
+          ret.pid = pid
+        } else if (len === 2) {
+          let pid = parseInt(lines[1].split(',')[1])
+          console.log(pid)
+          ret.found = true
+          ret.pid = pid
         }
-        console.log('result of trying to find the hertrix pid windows', ret)
-        resolve(ret)
       }
-    })
+      console.log('result of trying to find the hertrix pid windows', ret)
+      resolve(ret)
+    }
   })
+})
 )
 
 const findWbPidWindows = () => new Promise((resolve, reject) => {
@@ -165,7 +165,6 @@ const killPid = pid => new Promise((resolve, reject) => {
           resolve()
         }
       }
-
     })
   } else {
     cp.exec('taskkill /PID ' + pid + ' /T /F', (error, stdout, stderr) => {

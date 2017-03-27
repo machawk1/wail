@@ -12,7 +12,6 @@ import FriendListItem from './friendListItem'
 import _ from 'lodash'
 
 class ArchiveFromFriends extends Component {
-
   constructor (props) {
     super(props)
     this.state = {
@@ -40,7 +39,6 @@ class ArchiveFromFriends extends Component {
       <div style={{ height: 'inherit', width: '100%' }} />
     )
   }
-
 }
 
 export default ArchiveFromFriends

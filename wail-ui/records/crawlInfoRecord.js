@@ -5,13 +5,18 @@ import RunInfoRecord from './runInfoRecord'
 
 const CrawlRecord = Immutable.Record({
   lastUpdated: null,
-  jobId: 0, created: 0, urls: '',
-  forCol: '', depth: 0, path: '',
-  confP: null, running: false, latestRun: new RunInfoRecord()
+  jobId: 0,
+  created: 0,
+  urls: '',
+  forCol: '',
+  depth: 0,
+  path: '',
+  confP: null,
+  running: false,
+  latestRun: new RunInfoRecord()
 })
 
 export class CrawlInfoRecord extends CrawlRecord {
-
   displayUrls () {
     if (Array.isArray(this.get('urls'))) {
       return joinStrings(...this.get('urls'), { separator: ' ' })
@@ -39,4 +44,3 @@ const makeCrawlInfoRecord = crawlInfo => {
 }
 
 export default makeCrawlInfoRecord
-

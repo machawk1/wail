@@ -22,10 +22,9 @@ settings.configure()
 const pathMan = remote.getGlobal('pathMan')
 
 export default class CrawlManager {
-
   constructor () {
     this.db = new Db({
-      filename: pathMan.join(settings.get('wailCore.db'), 'crawls.db'),
+      filename: pathMan.join(settings.get('wailCore.db'), '_crawls.db'),
       autoload: true
     })
     this.csMonitor = new CrawlStatsMonitor()
@@ -190,7 +189,8 @@ export default class CrawlManager {
             .then(() => {
               console.log('done writting file')
               let crawlInfo = {
-                depth, jobId,
+                depth,
+                jobId,
                 latestRun: {
                   ending: false,
                   started: false,
@@ -201,7 +201,10 @@ export default class CrawlManager {
                   downloaded: 0
                 },
                 path: pathMan.join(settings.get('heritrix.jobsDir'), `${jobId}`),
-                confP: cfp, urls: urls, running: false, forCol
+                confP: cfp,
+                urls: urls,
+                running: false,
+                forCol
               }
               // {"url":"http://cs.odu.edu","jobIds":[1473098189935],"mementos":1,"added":"2016-09-05T13:56:29-04:00","lastUpdated":"2016-09-16T00:12:16-04:00"}
               let lastUpdated = moment(jobId).format()
@@ -211,7 +214,8 @@ export default class CrawlManager {
                   jobId
                 },
                 forArchives: {
-                  forCol, lastUpdated,
+                  forCol,
+                  lastUpdated,
                   seed: { forCol, url: urls, jobIds: [ jobId ], lastUpdated, added: lastUpdated, mementos: 0 }
                 }
               })

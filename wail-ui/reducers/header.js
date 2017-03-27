@@ -15,4 +15,3 @@ export default (state = Immutable.Map({ location: 'WAIL', open: false }), action
       return state
   }
 }
-

@@ -45,5 +45,4 @@ export default class CrawlRunInfo {
   toString () {
     return `CrawlInfo[forCol: ${this.forCol}, urls: ${this.urls}, running: ${this.running}, #runs:${this.runs.length}]`
   }
-
 }

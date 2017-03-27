@@ -10,4 +10,3 @@ test('observe', t => {
     })
     .map(() => t.pass())
 })
-

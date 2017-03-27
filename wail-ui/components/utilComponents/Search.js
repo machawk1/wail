@@ -9,11 +9,11 @@ const Search = ({id, hintText, searchSubject, cardStyle, cardTextStyle, inputSty
   <Card id={id} style={cardStyle}>
     <CardText style={cardTextStyle}>
       <span>
-        <SearchInput inputStyle={inputStyle} hintText={hintText} searchSubject={searchSubject}/>
+        <SearchInput inputStyle={inputStyle} hintText={hintText} searchSubject={searchSubject} />
       </span>
       <span>
         <IconButton tooltip={tooltip}>
-           <SearchI />
+          <SearchI />
         </IconButton>
       </span>
     </CardText>

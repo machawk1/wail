@@ -24,7 +24,7 @@ const wailTheme = getMuiTheme({
   userAgent: false
 })
 
-// <JoyRider />
+//
 
 const Wail = ({store, history}) => (
   <Provider store={store}>
@@ -33,6 +33,7 @@ const Wail = ({store, history}) => (
         <Router history={history}>
           {routes}
         </Router>
+        <JoyRider />
         <Footer />
       </div>
     </MuiThemeProvider>

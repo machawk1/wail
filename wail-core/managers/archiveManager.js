@@ -17,7 +17,7 @@ import { Observable } from 'rxjs'
 import { checkPathExists, readDir, getFsStats, removeFile } from '../util/fsHelpers'
 import { getYamlOrWriteIfAbsent, writeYaml } from '../util/yaml'
 import { execute } from '../util/childProcHelpers'
-import  { mvStartingCol } from '../util/moveStartingCol'
+import { mvStartingCol } from '../util/moveStartingCol'
 import { FatalDBError } from '../db/dbErrors'
 import PyWb from '../pywb'
 import CollectionsUtils from '../util/collectionsUtils'
@@ -61,13 +61,13 @@ export default class ArchiveManager extends EventEmitter {
     this._pywb = new PyWb(settings)
     this._settings = settings
     this._collections = new Db({
-      filename: path.join(this._dbBasePath, 'archives.db'),
+      filename: path.join(this._dbBasePath, '_archives.db'),
       autoload: false,
       dbHumanName: 'Collections Database',
       corruptAlertThreshold: 0
     }, this._dbBasePath)
     this._colSeeds = new Db({
-      filename: path.join(this._dbBasePath, 'archiveSeeds.db'),
+      filename: path.join(this._dbBasePath, '_archiveSeeds.db'),
       autoload: false,
       dbHumanName: 'Seeds Database',
       corruptAlertThreshold: 0
@@ -293,11 +293,17 @@ export default class ArchiveManager extends EventEmitter {
     let colpath = path.join(this._colsBasePath, 'collections', col), created = moment().format()
     await CollectionsUtils.ensureColDirsNR(colpath, 'index')
     let toCreate = {
-      _id: col, name: col, colpath, created,
-      size: '0 B', lastUpdated: created,
+      _id: col,
+      name: col,
+      colpath,
+      created,
+      size: '0 B',
+      lastUpdated: created,
       archive: path.join(colpath, 'archive'),
       indexes: path.join(colpath, 'indexes'),
-      colName: col, numArchives: 0, metadata,
+      colName: col,
+      numArchives: 0,
+      metadata,
       hasRunningCrawl: false
     }
     let newCol
@@ -361,7 +367,7 @@ export default class ArchiveManager extends EventEmitter {
     const findSeed = {q: {_id: `${forCol}-${seed.url}`}, doUpdate: foundSeedChecker}
     const seedUpdate = {
       who: {_id: `${forCol}-${seed.url}`, url: seed.url},
-      theUpdate(existingSeed) {
+      theUpdate (existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
           theUpdateColSeed.$push = {jobIds: seed.jobId}
@@ -419,7 +425,7 @@ export default class ArchiveManager extends EventEmitter {
     const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
       who: {_id: `${col}-${seed.url}`, url: seed.url},
-      theUpdate(existingSeed) {
+      theUpdate (existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
           theUpdateColSeed.$push = {jobIds: seed.jobId}
@@ -480,7 +486,7 @@ export default class ArchiveManager extends EventEmitter {
     const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
       who: {_id: `${col}-${seed.url}`, url: seed.url},
-      theUpdate(existingSeed) {
+      theUpdate (existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
           theUpdateColSeed.$push = {jobIds: seed.jobId}
@@ -541,7 +547,7 @@ export default class ArchiveManager extends EventEmitter {
     const findSeed = {q: {_id: `${col}-${seed.url}`, url: seed.url}, doUpdate: foundSeedChecker}
     const seedUpdate = {
       who: {_id: `${col}-${seed.url}`, url: seed.url},
-      theUpdate(existingSeed) {
+      theUpdate (existingSeed) {
         let theUpdateColSeed = {$set: {lastUpdated}, $inc: {mementos: 1}}
         if (!existingSeed.jobIds.includes(seed.jobId)) {
           theUpdateColSeed.$push = {jobIds: seed.jobId}
@@ -694,9 +700,17 @@ export default class ArchiveManager extends EventEmitter {
       backUpMdata.description = `${backUpMdata.description} but could not create file on disk.`
     }
     return {
-      _id: col, name: col, colPath, size: colSize, lastUpdated: colLastUpdated.format(),
-      created: colCreateTime.format(), numArchives: seeds.length, archive: path.join(colWarcP, 'archive'),
-      indexes: path.join(colWarcP, 'indexes'), hasRunningCrawl: false, metadata
+      _id: col,
+      name: col,
+      colPath,
+      size: colSize,
+      lastUpdated: colLastUpdated.format(),
+      created: colCreateTime.format(),
+      numArchives: seeds.length,
+      archive: path.join(colWarcP, 'archive'),
+      indexes: path.join(colWarcP, 'indexes'),
+      hasRunningCrawl: false,
+      metadata
     }
   }
 
@@ -877,7 +891,6 @@ export default class ArchiveManager extends EventEmitter {
         fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
       }
       throw new FatalDBError(error, fatalErrorMessage, 'Collections')
-
     }
     return backupName
   }
@@ -919,9 +932,7 @@ export default class ArchiveManager extends EventEmitter {
         fatalErrorMessage = `Loading the collection seeds database failed. ${copyPart} ${removePart}`
       }
       throw new FatalDBError(error, fatalErrorMessage, 'Collection Seeds')
-
     }
     return backupName
   }
-
 }

@@ -125,5 +125,4 @@ export default class WcRequestMonitor {
   clear () {
     this.wcRequests.clear()
   }
-
 }

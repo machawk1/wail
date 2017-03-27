@@ -28,4 +28,3 @@ SortIndicator.propTypes = {
 }
 
 export default SortIndicator
-

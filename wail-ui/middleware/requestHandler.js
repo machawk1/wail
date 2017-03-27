@@ -23,4 +23,3 @@ const requestHandler = store => next => action => {
 }
 
 export default requestHandler
-

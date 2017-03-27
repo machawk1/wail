@@ -5,7 +5,6 @@ import styles from '../../components/styles/styles'
 import CrawlUrlsStore from './crawlUrlsStore'
 
 export default class UrlList extends Component {
-
   constructor (props, context) {
     super(props, context)
     this.state = {

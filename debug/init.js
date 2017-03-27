@@ -1,8 +1,8 @@
-const { app, Menu, dialog, BrowserWindow,ipcMain } =  require('electron')
+const { app, Menu, dialog, BrowserWindow, ipcMain } = require('electron')
 const ElectronSettings = require('electron-settings')
 const path = require('path')
 
-global.settings = new ElectronSettings({configDirPath: path.join(process.cwd(),'wail-config/wail-settings')})
+global.settings = new ElectronSettings({configDirPath: path.join(process.cwd(), 'wail-config/wail-settings')})
 
 process.on('uncaughtException', (err) => {
   console.log(`uncaughtException: ${err}`, err, err.stack)
@@ -15,14 +15,12 @@ process.on('uncaughtException', (err) => {
   app.quit()
 })
 
-
 app.commandLine.appendSwitch('js-flags', '--harmony --harmony_async_await')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 
 ipcMain.on('archiveMan-initial-load', (event, cols) => {
   console.log(cols)
 })
-
 
 let m
 
@@ -41,5 +39,3 @@ app.on('ready', () => {
 app.on('window-all-closed', () => {
   app.quit()
 })
-
-
