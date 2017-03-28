@@ -6,7 +6,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import routes from '../routes'
 import Footer from '../components/layout/footer'
-import JoyRider from './joyRider'
+// import JoyRider from './joyRider'
 
 const wailTheme = getMuiTheme({
   palette: {
@@ -24,7 +24,7 @@ const wailTheme = getMuiTheme({
   userAgent: false
 })
 
-//
+// <JoyRider />
 
 const Wail = ({store, history}) => (
   <Provider store={store}>
@@ -33,7 +33,7 @@ const Wail = ({store, history}) => (
         <Router history={history}>
           {routes}
         </Router>
-        <JoyRider />
+
         <Footer />
       </div>
     </MuiThemeProvider>
