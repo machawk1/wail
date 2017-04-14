@@ -178,6 +178,14 @@ export default class AppManager2 {
       },
       {
         conf: {
+          width: 800,
+          height: 600
+        },
+        url: `file://${loadFrom}/childWindows/twitterLogin.html`,
+        name: 'twitterLoginWindow'
+      },
+      {
+        conf: {
           show: false,
           webPreferences: {
             webSecurity: false

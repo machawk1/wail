@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
 import { AddFromFsHeader, AddFromFs } from '../components/collections/addToCollection'
 
 const CollectionAddSeedFs = ({ match, history, location }) => (

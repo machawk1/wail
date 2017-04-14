@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import fs from 'fs-extra'
 import {List, ListItem} from 'material-ui/List'
 import Avatar from 'material-ui/Avatar'

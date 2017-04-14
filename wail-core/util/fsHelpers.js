@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import * as fs from 'fs-extra'
 import Promise from 'bluebird'
 
 export function readFile (path, options = 'utf8') {

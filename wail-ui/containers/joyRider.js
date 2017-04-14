@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import Joyride from 'react-joyride'
 import rn, { dynamicRouteResolvers as drr } from '../routes/routeNames'
 // document.getElementById('colto0').click() A popup will appear where you can enter in the Enter in the name, title and description for the collection.
@@ -180,9 +181,9 @@ const steps = [
     title: 'Create captures of a Twitter users timeline',
     text: (
       <p>
-        Enter in the length of time you want WAIL to create captures of a Users timeline<br/>
-        WAIL uses 5 minute intervals between calls to the Twitter API<br/>
-        The Twitter screen name of the users<br/>
+        Enter in the length of time you want WAIL to create captures of a Users timeline<br />
+        WAIL uses 5 minute intervals between calls to the Twitter API<br />
+        The Twitter screen name of the users<br />
         And which collection you wish to add the capture to.
       </p>
     ),
@@ -193,9 +194,9 @@ const steps = [
     title: 'Create captures of individual Tweets',
     text: (
       <p>
-        Enter in the length of time you want WAIL to create captures of a Users tweets<br/>
-        WAIL uses 5 minute intervals between calls to the Twitter API<br/>
-        The Twitter screen name of the user,s<br/>
+        Enter in the length of time you want WAIL to create captures of a Users tweets<br />
+        WAIL uses 5 minute intervals between calls to the Twitter API<br />
+        The Twitter screen name of the user,s<br />
         Which collection you wish to add the capture to
       </p>
     ),
@@ -219,9 +220,9 @@ const temp = [
     title: 'Create captures of a Twitter users timeline',
     text: (
       <p>
-        Enter in the length of time you want WAIL to create captures of a Users timeline<br/>
-        WAIL uses 5 minute intervals between calls to the Twitter API<br/>
-        The Twitter screen name of the users<br/>
+        Enter in the length of time you want WAIL to create captures of a Users timeline<br />
+        WAIL uses 5 minute intervals between calls to the Twitter API<br />
+        The Twitter screen name of the users<br />
         And which collection you wish to add the capture to.
       </p>
     ),
@@ -232,9 +233,9 @@ const temp = [
     title: 'Create captures of individual Tweets',
     text: (
       <p>
-        Enter in the length of time you want WAIL to create captures of a Users tweets<br/>
-        WAIL uses 5 minute intervals between calls to the Twitter API<br/>
-        The Twitter screen name of the user,s<br/>
+        Enter in the length of time you want WAIL to create captures of a Users tweets<br />
+        WAIL uses 5 minute intervals between calls to the Twitter API<br />
+        The Twitter screen name of the user,s<br />
         Which collection you wish to add the capture to
       </p>
     ),

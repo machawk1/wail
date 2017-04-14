@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { Flex, Item } from 'react-flex'
 import FlatButton from 'material-ui/FlatButton'
 import ViewWatcher from '../../../../wail-core/util/viewWatcher'

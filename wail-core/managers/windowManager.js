@@ -32,6 +32,7 @@ export default class WindowManager extends EventEmitter {
       mainWindow: {window: null, url: null, open: false, conf: null, loadComplete: false},
 
       twitterMonitor: {window: null, url: null, conf: null, open: false, loadComplete: false},
+      twitterLoginWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
       archiverWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
 
       managersWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
@@ -348,7 +349,6 @@ export default class WindowManager extends EventEmitter {
           secret: global.settings.get('twitter.wailSecret')
         })
       }
-      console.log('got sign in with twitter')
       process.nextTick(() => {
         this.twitterSignin.startRequest().then((result) => {
           const accessToken = result.oauth_access_token
@@ -500,6 +500,41 @@ export default class WindowManager extends EventEmitter {
     } else {
       console.log('new crawl window is open')
     }
+  }
+
+  showTwitterLoginWindow (control) {
+    let {conf, url, open} = this.windows['twitterLoginWindow']
+    if (!open) {
+      this.windows['twitterLoginWindow'].window = new BrowserWindow(conf)
+      this.windows['twitterLoginWindow'].window.loadURL(url)
+      this.windows['twitterLoginWindow'].window.on('ready-to-show', () => {
+        console.log('twitterLoginWindow is ready to show')
+        if (control.debug) {
+          if (control.openBackGroundWindows) {
+            this.windows['crawlManWindow'].window.show()
+          }
+          this.windows['crawlManWindow'].window.webContents.openDevTools()
+        }
+        this.windows['twitterLoginWindow'].open = true
+        this.windows['twitterLoginWindow'].window.show()
+        this.windows['twitterLoginWindow'].window.focus()
+      })
+
+      this.windows['twitterLoginWindow'].window.webContents.on('unresponsive', () => {
+        this.emit('window-unresponsive', 'twitterLoginWindow')
+      })
+
+      this.windows['twitterLoginWindow'].window.webContents.on('crashed', () => {
+        this.emit('window-crashed', 'twitterLoginWindow')
+      })
+
+      this.windows['twitterLoginWindow'].window.on('closed', () => {
+        console.log('twitterLoginWindow is closed')
+        this.windows['twitterLoginWindow'].window = null
+        this.windows['twitterLoginWindow'].open = false
+      })
+    }
+    //
   }
 
   showSettingsWindow (control) {

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {ipcRenderer, remote} from 'electron'
 import MenuItem from 'material-ui/MenuItem'
 import {ListItem} from 'material-ui/List'

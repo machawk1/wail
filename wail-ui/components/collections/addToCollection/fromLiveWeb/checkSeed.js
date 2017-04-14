@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/FlatButton'
 import { formValueSelector } from 'redux-form/immutable'
 import { connect } from 'react-redux'
@@ -20,7 +21,7 @@ class CheckSeed extends Component {
     col: PropTypes.string.isRequired
   }
   static contextTypes = {
-    store: React.PropTypes.object.isRequired
+    store: PropTypes.object.isRequired
   }
 
   checkSeed () {

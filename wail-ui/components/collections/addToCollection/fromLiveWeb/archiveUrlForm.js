@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { remote, ipcRenderer as ipc } from 'electron'
 import { SubmissionError, reset as resetForm } from 'redux-form'

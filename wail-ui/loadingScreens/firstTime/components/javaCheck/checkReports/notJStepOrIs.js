@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { compose, branch, onlyUpdateForKeys, renderComponent, setDisplayName } from 'recompose'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
 import JavaCheckNotDone from './javaCheckNotDone'

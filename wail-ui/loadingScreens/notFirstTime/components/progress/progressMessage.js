@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { connect } from 'react-redux'
 import { Step, Stepper } from 'material-ui/Stepper'
 import ServiceContents from '../serviceCheck/serviceCheckMessage'

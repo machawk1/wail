@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { CardActions } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import { Field, reduxForm } from 'redux-form/immutable'

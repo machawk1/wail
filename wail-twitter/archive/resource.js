@@ -185,7 +185,7 @@ export default class Resource {
   dl () {
     return new Promise((resolve, reject) => {
       if (this.method !== 'POST' && !this.isSeed) {
-        rp({
+        return rp({
           headers: this.getHeaders,
           method: 'GET',
           encoding: null, // always get buffer

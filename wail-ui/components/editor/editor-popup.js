@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import Dialog from 'material-ui/Dialog'
 import RaisedButton from 'material-ui/RaisedButton'
@@ -25,12 +26,12 @@ const style = {
 
 export default class EditorPopup extends Component {
   static propTypes = {
-    title: React.PropTypes.string.isRequired,
-    useButton: React.PropTypes.bool.isRequired,
-    openFromParent: React.PropTypes.bool,
-    onOpenChange: React.PropTypes.func,
-    buttonLabel: React.PropTypes.string,
-    codeToLoad: React.PropTypes.oneOfType([ React.PropTypes.string, React.PropTypes.object ]).isRequired
+    title: PropTypes.string.isRequired,
+    useButton: PropTypes.bool.isRequired,
+    openFromParent: PropTypes.bool,
+    onOpenChange: PropTypes.func,
+    buttonLabel: PropTypes.string,
+    codeToLoad: PropTypes.oneOfType([ PropTypes.string, PropTypes.object ]).isRequired
   }
 
   constructor (props, context) {

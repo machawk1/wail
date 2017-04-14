@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { ipcRenderer as ipc } from 'electron'
 import path from 'path'
 import { Card, CardHeader } from 'material-ui/Card'

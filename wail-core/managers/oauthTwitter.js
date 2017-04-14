@@ -3,7 +3,7 @@ import { BrowserWindow } from 'electron'
 import { OAuth } from 'oauth'
 
 export default class AuthWindow {
-  constructor ({ key, secret }) {
+  constructor ({key, secret}) {
     assert(key, 'OAuth Consumer Key is needed!')
     assert(secret, 'OAuth Consumer secret is needed!')
     this.consumerKey = key
@@ -14,7 +14,8 @@ export default class AuthWindow {
   }
 
   startRequest () {
-    let authUrl = 'https://api.twitter.com/oauth/authenticate?oauth_token='
+    const force_login = options['force_login'] || false
+    let authUrl = `https://api.twitter.com/oauth/authenticate?force_login=${force_login.toString()};oauth_token=`
     let oauth = new OAuth(
       'https://api.twitter.com/oauth/request_token',
       'https://api.twitter.com/oauth/access_token',
@@ -59,7 +60,12 @@ export default class AuthWindow {
   }
 
   getAccessToken (oauth, oauth_token, oauth_token_secret, url) {
-    this.window = new BrowserWindow({ width: 800, height: 600, webPreferences: {webSecurity: false}, nodeIntegration: false })
+    this.window = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {webSecurity: false, plugins: true},
+      nodeIntegration: false
+    })
     this.window.on('close', () => {
       this.reject(new Error('the window is closed before complete the authentication.'))
     })

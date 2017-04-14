@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import CardHeader from 'material-ui/Card/CardHeader'
 import CardTitle from 'material-ui/Card/CardTitle'
 import Divider from 'material-ui/Divider'

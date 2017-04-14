@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import TextField from 'material-ui/TextField'
 import TimePicker from 'material-ui/TimePicker'
 import moment from 'moment/moment'

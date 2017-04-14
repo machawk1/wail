@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import routeNames from '../../../routes/routeNames'
 import changeLocation from '../../../actions/changeLocation'
 import CrawlIndicator from '../crawlingIndicator'

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Redirect } from 'react-router-dom'
 import pure from 'recompose/pure'
 import routeNames from '../routes/routeNames'

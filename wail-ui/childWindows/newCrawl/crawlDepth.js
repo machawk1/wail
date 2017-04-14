@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import autobind from 'autobind-decorator'
 import SelectField from 'material-ui/SelectField'
 import MenuItem from 'material-ui/MenuItem'

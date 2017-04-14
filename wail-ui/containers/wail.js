@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'

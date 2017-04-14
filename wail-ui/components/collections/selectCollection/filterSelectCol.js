@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {BehaviorSubject} from 'rxjs'
 import Divider from 'material-ui/Divider'
 import SelectCol from './selectCol'

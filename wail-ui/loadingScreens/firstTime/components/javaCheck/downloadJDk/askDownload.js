@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import {remote} from 'electron'
 import { red500 } from 'material-ui/styles/colors'

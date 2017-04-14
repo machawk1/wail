@@ -1,4 +1,5 @@
-import React, {Component, PropTypes} from 'react'
+import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import {darkBlack, lightBlue900, blue500, cyan500, cyan700, white} from 'material-ui/styles/colors'
 import {Card, CardHeader, CardTitle, CardText} from 'material-ui/Card'
 import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
