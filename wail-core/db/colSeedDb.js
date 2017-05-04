@@ -1,4 +1,4 @@
-import fs from 'fs-extra'
+import fs from '../fs'
 import Promise from 'bluebird'
 import _ from 'lodash'
 import flow from 'lodash/fp/flow'

@@ -1,6 +1,6 @@
 import cp from 'child_process'
 import Path from 'path'
-import * as fs from 'fs-extra'
+import fs from '../../../fs'
 import Promise from 'bluebird'
 import S from 'string'
 import { Observable } from 'rxjs'

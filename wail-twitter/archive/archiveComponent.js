@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import WarcWriter from './warcWriter'
 import NetworkMonitor from './networkMonitor'
 import moment from 'moment'
+import normalizeUrl from 'normalize-url'
 
 // /home/john/my-fork-wail/wail-twitter/archive/inject.js
 
@@ -152,7 +153,7 @@ export default class ArchiveComponent extends Component {
     console.log('archiving', uri_r)
     let webContents = this.webview.getWebContents()
     this.networkMonitor.attach(webContents)
-    this.webview.loadURL(uri_r)
+    this.webview.loadURL(normalizeUrl(uri_r,{stripFragment: false,stripWWW: false}))
   }
 
   maybeMore () {
