@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React,{Component} from 'react'
+import PropTypes from 'prop-types'
 import { Card, CardTitle } from 'material-ui/Card'
 import { SubmissionError } from 'redux-form'
 import { ipcRenderer as ipc } from 'electron'
@@ -14,7 +15,7 @@ const monitor = (config) => {
   window.logger.info(message)
 }
 
-const width = process.platform === 'win32' ? '40%' : '35%'
+const width = process.platform === 'win32' ? '40%' : '40%'
 const enhance = onlyUpdateForKeys([ 'cols', 'times' ])// namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
 
 class ATwitterUser extends Component {
@@ -74,7 +75,7 @@ class ATwitterUser extends Component {
 
   render () {
     return (
-      <div style={{ width, height: '100%' }} id='timelineArchive'>
+      <div style={{height: '100%' }} id='timelineArchive'>
         <Card style={{ height: '100%' }}>
           <CardTitle title={"A User's Timeline"} />
           <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit} />

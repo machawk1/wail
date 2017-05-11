@@ -6,6 +6,7 @@ import { shouldUpdate } from 'recompose'
 import { UIStateRecord } from '../../../records'
 import { CheckStepLabel } from '../../../shared/checkStepLabels'
 import { didFirstLoad } from '../../../actions'
+import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
 
 const stateToProps = state => ({
   uiStateRec: state.get('uiState'),
@@ -23,7 +24,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     uiStateRec,
     step,
-    label: completed ? 'Loaded Collections and Crawls' : 'Loading Collections and Crawls',
+    label: completed ? ftl.loadedCollectionsAndCrawls : ftl.loadingCollectionsAndCrawls,
     ownProps: Object.assign({}, ownProps, {completed, active: true, disabled: false}),
     check () {
       if (step === 3 && completed) {

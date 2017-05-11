@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import delay from 'lodash/delay'
@@ -6,6 +7,8 @@ import { compose, branch, setDisplayName, renderComponent, shouldUpdate } from '
 import { JavaCheckRecord } from '../../../records'
 import { checkJava, nextLoadingStep } from '../../../actions'
 import { CheckStepLabel, CheckStepWarningLabel } from '../../../shared/checkStepLabels'
+import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
+
 
 const stateToProps = state => ({
   javaCheckRec: state.get('javaCheck'),
@@ -17,15 +20,6 @@ const dispatchToProps = dispatch => ({
   nextStep: bindActionCreators(nextLoadingStep, dispatch)
 })
 
-const javaCheckLabler = (checkDone, download) => {
-  if (checkDone && download) {
-    return 'Checked Java Version Action Required'
-  } else if (checkDone) {
-    return 'Checked Java Version'
-  } else {
-    return 'Checking Java Version'
-  }
-}
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const {javaCheckRec, step} = stateProps
@@ -34,7 +28,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     step,
     javaCheckRec,
-    label: javaCheckLabler(checkDone, javaCheckRec.download),
+    label: ftl.javaCheckLabeler(checkDone, javaCheckRec.download),
     ownProps: Object.assign({}, ownProps, {completed: checkDone, disabled: false}),
     check () {
       if (!checkDone && step === 1) {

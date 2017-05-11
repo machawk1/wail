@@ -1,10 +1,14 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { compose, branch, setDisplayName, renderComponent, shouldUpdate } from 'recompose'
 import { SSRecord } from '../../../records'
 import { startHeritrix, startWayback, nextLoadingStep } from '../../../actions'
 import { CheckStepLabel, CheckStepWarningLabel } from '../../../shared/checkStepLabels'
+import {notFirstTimeLoading as nftl} from '../../../../constants/uiStrings'
+
+
 
 const stateToProps = state => ({
   step: state.get('loadingStep'),
@@ -25,7 +29,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
     step,
     serviceRec,
     wasError: serviceRec.wasError(),
-    label: 'Start Services',
+    label: nftl.startServices,
     ownProps: Object.assign({}, ownProps, {completed: bothStarted}),
     check () {
       if (!bothStarted && step === 0) {

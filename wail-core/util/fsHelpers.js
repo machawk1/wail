@@ -1,4 +1,4 @@
-import * as fs from 'fs-extra'
+import fs from 'fs-extra'
 import Promise from 'bluebird'
 
 export function readFile (path, options = 'utf8') {
@@ -47,6 +47,11 @@ export function ensureDirAndWrite (dirPath, filePath, data, options = 'utf8') {
       }
     })
   })
+}
+
+export async function ensureDirAndWrite2 (dirPath, filePath, data, options = 'utf8') {
+  await fs.ensureDir(dirPath)
+  await fs.writeFile(filePath, data, options)
 }
 
 export const checkPathExists = (path) => new Promise((resolve, reject) => {

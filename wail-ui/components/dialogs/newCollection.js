@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import shallowCompare from 'react-addons-shallow-compare'
 import { reset as resetForm } from 'redux-form'
@@ -8,6 +7,7 @@ import Dialog from 'material-ui/Dialog'
 import wc from '../../constants/wail-constants'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import NewCollectionForm from './newCollectionForm'
+import {notificationMessages,general} from '../../constants/uiStrings'
 
 const {QUEUE_MESSAGE} = wc.EventTypes
 
@@ -68,16 +68,16 @@ class NewCollection extends Component {
         description
       }
     }
-    console.log('the new collection', newCol)
     ipc.send('create-collection', newCol)
+    let message = notificationMessages.creatingNewColX(col)
     global.notifications$.next({
       type: QUEUE_MESSAGE,
       message: {
         autoDismiss: 0,
         title: 'Info',
         level: 'info',
-        message: `Creating new collection ${col}`,
-        uid: `Creating new collection ${col}`
+        message,
+        uid: message
       }
     })
     this.setState({open: false}, ::this.props.reset)
@@ -95,7 +95,7 @@ class NewCollection extends Component {
           maxWidth: 'none'
         }}
         autoScrollBodyContent
-        title='New Collection'
+        title={general.newCol}
         modal
         open={this.state.open}
       >

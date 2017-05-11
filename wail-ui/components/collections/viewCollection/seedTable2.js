@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { Map } from 'immutable'
 import { BehaviorSubject } from 'rxjs'
 import { shell, remote } from 'electron'
@@ -24,8 +25,9 @@ export default class SeedTable extends Component {
     this.state = {
       searchText: ''
     }
-
     this.filterSubscription = null
+    this.subNext = this.subNext.bind(this)
+    this.seedFilter = this.seedFilter.bind(this)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -34,9 +36,7 @@ export default class SeedTable extends Component {
 
   componentDidMount () {
     this.filterSubscription = this.props.filterText.subscribe({
-      next: (searchText) => {
-        this.setState({searchText})
-      }
+      next: this.subNext
     })
   }
 
@@ -45,15 +45,25 @@ export default class SeedTable extends Component {
     this.filterSubscription = null
   }
 
-  renTr () {
+  subNext (searchText) {
+    this.setState({searchText})
+  }
+
+  seedFilter (aSeed) {
+    return fuzzyFilter(this.state.searchText, aSeed.get('url'))
+  }
+
+  sortByAdded (s1, s2) {
+    return momentSortRev(s1.get('added'), s2.get('added'))
+  }
+
+  builtMementoCards () {
     let viewingCol = this.props.collection.get('colName')
     let trs = []
-    let seeds = this.props.collection.get('seeds')
-      .filter(aSeed => fuzzyFilter(this.state.searchText, aSeed.get('url')))
-      .sort((s1, s2) => momentSortRev(s1.get('added'), s2.get('added')))
+    let seeds = this.props.collection.get('seeds').filter(this.seedFilter).sort(this.sortByAdded)
     let len = seeds.size, i = 0
     if (len === 0) {
-      trs.push(<MementoCardEmpty viewingCol={viewingCol} key='mce' />)
+      trs.push(<MementoCardEmpty viewingCol={viewingCol} key='mce'/>)
     } else {
       for (; i < len; ++i) {
         let seed = seeds.get(i)
@@ -62,7 +72,7 @@ export default class SeedTable extends Component {
           conf = []
           for (const aConf of this.props.seedConfig[url]) {
             conf.push(aConf)
-            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`} />)
+            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`}/>)
           }
         }
         trs.push(
@@ -83,16 +93,21 @@ export default class SeedTable extends Component {
     return trs
   }
 
-  render () {
-    let trs = this.renTr()
+  renderMementoCards (mementoCards, {height}) {
     return (
-      <div id='colSeedsList' style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
+      <div style={{height: height, maxHeight: `${height - 160}px`, overflowY: 'auto'}}>
+        {mementoCards}
+      </div>
+    )
+  }
+
+  render () {
+    let mementoCards = this.builtMementoCards()
+    return (
+      <div id='colSeedsList'
+           style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
         <MyAutoSizer findElement='collViewDiv'>
-          {({height}) => (
-            <div style={{height: height, maxHeight: `${height - 160}px`, overflowY: 'auto'}}>
-              {trs}
-            </div>
-          )}
+          {this.renderMementoCards.bind(undefined, mementoCards)}
         </MyAutoSizer>
       </div>
     )

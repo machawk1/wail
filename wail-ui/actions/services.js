@@ -1,14 +1,15 @@
-import {ServiceEvents} from '../constants/wail-constants'
-import {ipcRenderer as ipc} from 'electron'
+import { ServiceEvents } from '../constants/wail-constants'
+import { ipcRenderer as ipc } from 'electron'
 import S from 'string'
-import {notifyInfo, notify, notifyError, notifySuccess} from './notification-actions'
+import { notifyInfo, notify, notifyError, notifySuccess } from './notification-actions'
+import { notificationMessages as notifm } from '../constants/uiStrings'
 
-const { HERITRIX_STATUS_UPDATE, WAYBACK_STATUS_UPDATE, WAYBACK_RESTART } = ServiceEvents
+const {HERITRIX_STATUS_UPDATE, WAYBACK_STATUS_UPDATE, WAYBACK_RESTART} = ServiceEvents
 
 const swapper = S('')
 
 export const stopHeritrix = () => {
-  notifyInfo(`Stopping Heritrix`)
+  notifyInfo(notifm.stoppingHeritrix)
   ipc.send('kill-service', 'heritrix')
   return {
     type: HERITRIX_STATUS_UPDATE,
@@ -17,7 +18,7 @@ export const stopHeritrix = () => {
 }
 
 export const stopWayback = () => {
-  notifyInfo(`Stopping Wayback`)
+  notifyInfo(notifm.stoppingWayback)
   ipc.send('kill-service', 'wayback')
   return {
     type: WAYBACK_STATUS_UPDATE,
@@ -26,7 +27,7 @@ export const stopWayback = () => {
 }
 
 export const startHeritrix = () => {
-  notifyInfo(`Starting Heritrix`)
+  notifyInfo(notifm.startingHeritrix)
   ipc.send('start-service', 'heritrix')
   return {
     type: HERITRIX_STATUS_UPDATE,
@@ -35,7 +36,7 @@ export const startHeritrix = () => {
 }
 
 export const startWayback = () => {
-  notifyInfo(`Starting Wayback`)
+  notifyInfo(notifm.startingWayback)
   ipc.send('start-service', 'wayback')
   return {
     type: WAYBACK_STATUS_UPDATE,
@@ -49,11 +50,12 @@ export const restartedWayback = (e, update) => {
     status: true
   }
   if (update.wasError) {
+    let message = notifm.errorRestartingWaybacl
     notify({
       title: 'Error',
       level: 'error',
-      message: 'There was error restarting Wayback',
-      uid: 'There was error restarting Wayback',
+      message,
+      uid: message,
       autoDismiss: 0
     })
     window.logger.error({
@@ -66,7 +68,7 @@ export const restartedWayback = (e, update) => {
 }
 
 export const serviceStarted = (e, update) => {
-  let action = { status: true }
+  let action = {status: true}
   let service = swapper.setValue(update.who).capitalize().s
   if (update.who === 'wayback') {
     action.type = WAYBACK_STATUS_UPDATE
@@ -74,17 +76,17 @@ export const serviceStarted = (e, update) => {
     action.type = HERITRIX_STATUS_UPDATE
   }
   if (update.wasError) {
-    notifyError(`Starting Service ${service} encountered an error ${update.err}`, true)
+    notifyError(notifm.startingServiceEncounteredError(service, update.err), true)
     action.status = false
   } else {
-    notifySuccess(`Started Service ${service}`)
+    notifySuccess(notifm.startedService(service))
     window.logger.debug(`Started Service ${service}`)
   }
   return action
 }
 
 export const serviceKilled = (e, update) => {
-  let action = { status: false }
+  let action = {status: false}
   let service = swapper.setValue(update.who).capitalize().s
   if (update.who === 'wayback') {
     action.type = WAYBACK_STATUS_UPDATE
@@ -92,7 +94,7 @@ export const serviceKilled = (e, update) => {
     action.type = HERITRIX_STATUS_UPDATE
   }
   if (update.wasError) {
-    notifyError(`Stopping Service ${service} encountered an error ${update.err}`, true)
+    notifyError(notifm.stoppingServiceEncounteredError(service, update.err), true)
   } else {
     window.logger.debug(`Stopped Service ${service}`)
   }

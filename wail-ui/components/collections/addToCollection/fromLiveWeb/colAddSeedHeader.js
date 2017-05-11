@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import CardTitle from 'material-ui/Card/CardTitle'
 import {Link} from 'react-router-dom'
 import FlatButton from 'material-ui/FlatButton'

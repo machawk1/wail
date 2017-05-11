@@ -2,13 +2,14 @@ import React from 'react'
 import { namedPure } from '../../../../util/recomposeHelpers'
 import { Card, CardHeader, CardMedia } from 'material-ui/Card'
 import ProgressSteps from './progressSteps'
+import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
 
 const enhance = namedPure('ProgressStepsCard')
 
 const ProgressCard = () => (
   <div className='wail-container'>
     <CardHeader
-      title='Auto Configuration Steps'
+      title={ftl.autoConfigSteps}
     />
     <CardMedia>
       <ProgressSteps />
@@ -16,4 +17,4 @@ const ProgressCard = () => (
   </div>
 )
 
-export default enhance(ProgressStepsCard)
+export default enhance(ProgressCard)

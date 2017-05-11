@@ -63,7 +63,8 @@ export function notifyError (message, log = true) {
       title: 'Error',
       level: 'error',
       message,
-      uid: message
+      uid: message,
+      autoDismiss: 0
     }
   })
 }

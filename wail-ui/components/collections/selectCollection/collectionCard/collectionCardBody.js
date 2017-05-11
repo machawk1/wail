@@ -1,17 +1,22 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import CardHeader from 'material-ui/Card/CardHeader'
 import CardText from 'material-ui/Card/CardText'
 import { Flex } from 'react-flex'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
+import { collectionCard} from '../../../../constants/uiStrings'
 
 const enhance = namedUpdateKeys('CollectionCardBody', ['added', 'mementos', 'conf'])
 
 const CollectionCardBody = ({seeds, lastUpdated, size, description}) => (
-  <div key={`CollectionCardBody-div-${name}`}>
-    <Flex key={`CollectionCardBody-flex-${name}`} row alignItems='baseline' justifyContent='space-between'>
-      <CardHeader key={`CollectionCardBody-${name}-seeds`} title={`Seeds: ${seeds}`} />
-      <CardHeader key={`CollectionCardBody-${name}-lastUpdated`} title={`Last Archived: ${lastUpdated}`} />
-      <CardHeader key={`CollectionCardBody-${name}-size`} title={`Size: ${size}`} />
+  <div key={`CollectionCardBody-div-${name}`} style={{height: 100, overflowY: 'auto'}}>
+    <Flex key={`CollectionCardBody-flex-${name}`} row alignItems='baseline' >
+      <CardHeader titleStyle={{padding: 0}} style={{padding: 10,paddingBottom: 16}} key={`CollectionCardBody-${name}-seeds`}
+                  title={collectionCard.seedCount(seeds)}/>
+      <CardHeader titleStyle={{padding: 0}} style={{padding: 10,paddingBottom: 16}} key={`CollectionCardBody-${name}-size`}
+                  title={collectionCard.collSize(size)}/>
+      <CardHeader titleStyle={{padding: 0}} style={{padding: 10,paddingBottom: 16}} key={`CollectionCardBody-${name}-lastUpdated`}
+                  title={collectionCard.lastArchived(lastUpdated)}/>
     </Flex>
     <CardText>
       {description}

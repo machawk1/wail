@@ -1,7 +1,9 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { compose, setDisplayName, onlyUpdateForKeys } from 'recompose'
 import { connect } from 'react-redux'
-import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card'
+import CardMedia from 'material-ui/Card/CardMedia'
+import CardText from 'material-ui/Card/CardText'
 import ProgressSteps from './progressSteps'
 import ProgressMessage from './progressMessage'
 

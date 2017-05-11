@@ -4,6 +4,7 @@ import {BehaviorSubject} from 'rxjs'
 import Divider from 'material-ui/Divider'
 import SelectCol from './selectCol'
 import Search from '../../utilComponents/Search'
+import {selectCollection} from '../../../constants/uiStrings'
 
 export default class FilterSelectCol extends Component {
   constructor (...args) {
@@ -21,8 +22,8 @@ export default class FilterSelectCol extends Component {
       <div style={{width: 'inherit', height: 'inherit'}}>
         <Search
           id='filtercols'
-          hintText='Collection Name'
-          tooltip={'Search By Collection Name'}
+          hintText={selectCollection.filterSelectSearchHint}
+          tooltip={selectCollection.filterSelectToolTip}
           searchSubject={this.filterText}
         />
         <Divider />

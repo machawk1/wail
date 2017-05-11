@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { compose, branch, setDisplayName, renderComponent, shouldUpdate } from 'recompose'
 import { Flex } from 'react-flex'
 import { SSRecord } from '../../../records'

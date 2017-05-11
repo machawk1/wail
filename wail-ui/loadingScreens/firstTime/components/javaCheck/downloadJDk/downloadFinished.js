@@ -1,8 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Map } from 'immutable'
 import { branch, renderComponent } from 'recompose'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
 import StartJdkInstall from './startJdkInstall'
+import {firstTimeLoading as ftl} from '../../../../../constants/uiStrings'
+
 
 const displayWhich = shouldDisplay =>
   branch(
@@ -14,7 +17,7 @@ const enhance = displayWhich(props => !props.jdkInstall.get('wasError'))
 
 const DownloadFinished = ({jdkInstall}) => (
   <CheckStepContent>
-    <p>There was an error while initiating the JDK install process</p>
+    <p>{ftl.jdkDlInitiatingError}</p>
     <br />
     <p>{jdkInstall.get('stderr')}</p>
   </CheckStepContent>

@@ -42,7 +42,7 @@ export default class LogViewer extends Component {
     const { height } = this.props
     return (
       <List
-        style={{ height, maxHeight: height - 300, overflowY: 'auto' }}
+        style={{ height, maxHeight: height - 245, overflowY: 'auto' }}
       >
         {makeEventList(window.eventLog.momentizeRecords())}
       </List>

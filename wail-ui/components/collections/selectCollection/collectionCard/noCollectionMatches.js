@@ -1,14 +1,16 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Card from 'material-ui/Card/Card'
 import CardText from 'material-ui/Card/CardText'
 import { namedPure } from '../../../../util/recomposeHelpers'
+import { collectionCard } from '../../../../constants/uiStrings'
 
 const enhance = namedPure('NoCollectionMatches')
 
-const NoCollectionMatches = ({ search }) => (
+const NoCollectionMatches = ({search}) => (
   <Card>
     <CardText>
-      No Collection named: {search}
+      {collectionCard.noCollNamed(search)}
     </CardText>
   </Card>
 )

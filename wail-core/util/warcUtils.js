@@ -6,6 +6,8 @@ import S from 'string'
 S.TMPL_CLOSE = '}'
 S.TMPL_OPEN = '{'
 
+const settings = remote.getGlobal('settings')
+
 export class WarcUtilError extends Error {
   constructor (oError, where) {
     super(`WarcUtilError[${where}]`)
@@ -21,9 +23,9 @@ export class WarcUtilError extends Error {
 export function extractSeeds (path, mode = 'f') {
   let template
   if (mode === 'f' || mode === 'file') {
-    template = remote.getGlobal('settings').get('extractSeed.file')
+    template = settings.get('extractSeed.file')
   } else {
-    template = remote.getGlobal('settings').get('extractSeed.dir')
+    template = settings.get('extractSeed.dir')
   }
   let exePath = S(template).template({path}).s
   console.log(exePath)
@@ -47,9 +49,9 @@ export function extractSeeds (path, mode = 'f') {
 export function isWarcValid (path, mode = 'f') {
   let template
   if (mode === 'f' || mode === 'file') {
-    template = remote.getGlobal('settings').get('warcChecker.file')
+    template = settings.get('warcChecker.file')
   } else {
-    template = remote.getGlobal('settings').get('warcChecker.dir')
+    template = settings.get('warcChecker.dir')
   }
   let exePath = S(template).template({path}).s
 

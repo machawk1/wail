@@ -15,6 +15,10 @@ const stateToProps = state => ({
 
 const dispatchToProps = dispatch => bindActionCreators({ signedIntoTwitter }, dispatch)
 
+function startSignIn () {
+  ipc.send('sign-in-twitter')
+}
+
 class TwitterSignIn extends Component {
   static propTypes = {
     signedIntoTwitter: PropTypes.func.isRequired,
@@ -42,19 +46,18 @@ class TwitterSignIn extends Component {
         })
       }
     })
+    this.doSignIn = this.doSignIn.bind(this)
   }
 
   doSignIn () {
-    this.setState({ disabled: true }, () => {
-      ipc.send('sign-in-twitter')
-    })
+    this.setState({ disabled: true }, startSignIn)
   }
 
   render () {
     return this.props.userSignedIn ? (
       <Redirect from={routeNames.twitterSignIn} to={routeNames.twitter} push />
     ) : (
-      <SignIn disabled={this.state.disabled} doSignIn={::this.doSignIn} />
+      <SignIn disabled={this.state.disabled} doSignIn={this.doSignIn} />
     )
   }
 }

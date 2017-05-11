@@ -1,5 +1,5 @@
 import Promise from 'bluebird'
-import fs from 'fs-extra'
+import fs from '../fs'
 import path from 'path'
 import through2 from 'through2'
 import prettyBytes from 'pretty-bytes'

@@ -1,10 +1,15 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 import MyAutoSizer from '../utilComponents/myAutoSizer'
 import HJobItemContainer from './hJobItemContainer'
+import HertrixJobItem from './heritrixJobItem'
+import HeritrixJobCard from './heritrixJobCard'
+import HeritrixActionMenu from './heritrixActionMenu'
 import styles from './heritrixInlineStyles'
+import { heritrix, general } from '../../constants/uiStrings'
 const {
   crawlUrlS, statusS, timestampS,
   discoveredS, queuedS, downloadedS, actionS, forColS
@@ -19,71 +24,76 @@ class Heritrix extends Component {
   }
 
   static contextTypes = {
-    store: React.PropTypes.object.isRequired
+    store: PropTypes.object
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     return this.props.jobIds !== nextProps.jobIds
   }
 
-  renderTr () {
+  makeHeritrixJobItems () {
     let trs = []
     let len = this.props.jobIds.size, i = 0
     for (; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
-      trs.push(<HJobItemContainer i={i} key={`${i}-${jobId}`} jobId={jobId} />)
+      trs.push(<HertrixJobItem i={i} key={`${i}-${jobId}`} jobId={jobId} actionMenu={
+        <HeritrixActionMenu jobId={jobId} i={i}/>
+      }/>)
     }
     return trs
   }
 
+  renderHeritrixJobItems (jobItems, {height}) {
+    return (
+      <Table
+        height={`${height - 175}px`}
+      >
+        <TableHeader
+          displaySelectAll={false}
+          adjustForCheckbox={false}
+        >
+          <TableRow >
+            <TableHeaderColumn style={crawlUrlS}>
+              {heritrix.crawlUrls}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={statusS}>
+              {general.status}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={forColS}>
+              {heritrix.forCollection}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={timestampS}>
+              {heritrix.tstamp}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={discoveredS}>
+              {heritrix.discovered}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={queuedS}>
+              {heritrix.queued}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={downloadedS}>
+              {heritrix.dled}
+            </TableHeaderColumn>
+            <TableHeaderColumn style={actionS}>
+              {heritrix.actions}
+            </TableHeaderColumn>
+          </TableRow>
+        </TableHeader>
+        <TableBody
+          displayRowCheckbox={false}
+          showRowHover
+        >
+          {jobItems}
+        </TableBody>
+      </Table>
+    )
+  }
+
   render () {
-    const trs = this.renderTr()
+    const jobItems = this.makeHeritrixJobItems()
     return (
       <MyAutoSizer findElement='hViewContainer'>
-        {
-          ({height}) => (
-            <Table
-              height={`${height - 175}px`}
-            >
-              <TableHeader
-                displaySelectAll={false}
-                adjustForCheckbox={false}
-              >
-                <TableRow >
-                  <TableHeaderColumn style={crawlUrlS}>
-                    Crawl Url(s)
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={statusS}>
-                    Status
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={forColS}>
-                    For Collection
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={timestampS}>
-                    Timestamp
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={discoveredS}>
-                    Discovered
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={queuedS}>
-                    Queued
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={downloadedS}>
-                    Downloaded
-                  </TableHeaderColumn>
-                  <TableHeaderColumn style={actionS}>
-                    Actions
-                  </TableHeaderColumn>
-                </TableRow>
-              </TableHeader>
-              <TableBody
-                displayRowCheckbox={false}
-                showRowHover
-              >
-                {trs}
-              </TableBody>
-            </Table>
-          )}
+        {this.renderHeritrixJobItems.bind(undefined, jobItems)}
       </MyAutoSizer>
     )
   }

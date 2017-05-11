@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
 import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'
@@ -22,6 +22,7 @@ const wailTheme = getMuiTheme({
   inkBar: {
     backgroundColor: lightBlue900
   },
+  overlay: {backgroundColor: 'rgba(0,0,0,0)'},
   userAgent: false
 })
 
@@ -34,7 +35,6 @@ const Wail = ({store, history}) => (
         <Router history={history}>
           {routes}
         </Router>
-
         <Footer />
       </div>
     </MuiThemeProvider>

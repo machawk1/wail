@@ -12,6 +12,7 @@ import * as notify from '../../../../actions/notification-actions'
 import { resetCheckMessage } from '../../../../actions/archival'
 import path from 'path'
 import S from 'string'
+import acronyms from '../../../../constants/acronyms'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
@@ -62,6 +63,11 @@ const formConfig = {
 const trans = process.platform === 'win32' ? 'translateY(30px)' : 'translateY(20px)'
 
 class ArchiveUrlForm extends Component {
+  constructor (...args) {
+    super(...args)
+    this.submit = this.submit.bind(this)
+  }
+
   submit (values) {
     if (!values.get('config')) {
       throw new SubmissionError({config: 'Config Not Present', _error: 'Cant Archive'})
@@ -75,14 +81,14 @@ class ArchiveUrlForm extends Component {
     const {handleSubmit, pristine, reset, submitting, invalid} = this.props
     return (
       <div style={{width: '90%', height: 'inherit', marginTop: 15}}>
-        <form id='addSeedFromLiveWebForm' onSubmit={handleSubmit(::this.submit)} style={{height: '300px'}}>
+        <form id='addSeedFromLiveWebForm' onSubmit={handleSubmit(this.submit)} style={{height: '300px'}}>
           <div style={{height: '75px'}}>
             <Field
               id='urlInput'
               name='url'
               component={TextField}
-              floatingLabelText='Seed to add:'
-              hintText='Url'
+              floatingLabelText='Seed To Add'
+              hintText={acronyms.url}
               fullWidth
               style={{marginLeft: 25, marginRight: 25}}
             />
@@ -97,8 +103,8 @@ class ArchiveUrlForm extends Component {
               style={{marginLeft: 25, width: '310px'}}
             >
               <MenuItem id='ponly' value={1} primaryText='Page Only' />
-              <MenuItem id='p_sdl' value={2} primaryText='Page + Same domain links' />
-              <MenuItem id='p_al' value={3} primaryText='Page + All internal and external links' />
+              <MenuItem id='p_sdl' value={2} primaryText='Page + Same Domain Links' />
+              <MenuItem id='p_al' value={3} primaryText='Page + All Internal And External Links' />
             </Field>
           </div>
           <div id='archiveFormButtons' style={{height: '40px', transform: trans}}>

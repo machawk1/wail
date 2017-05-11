@@ -1,14 +1,15 @@
-import {remote} from 'electron'
-import {notifyInfo} from './notification-actions'
-import {joinStrings} from 'joinable'
-import {batchActions} from 'redux-batched-actions'
-import {send} from 'redux-electron-ipc'
+import { remote } from 'electron'
+import { notifyInfo } from './notification-actions'
+import { joinStrings } from 'joinable'
+import { batchActions } from 'redux-batched-actions'
+import { send } from 'redux-electron-ipc'
 import {
   CollectionEvents, CrawlEvents,
   JobActionEvents, RequestActions,
   RunningCrawlCounter, JobIdActions,
   RequestTypes
 } from '../constants/wail-constants'
+import { notificationMessages as notifm } from '../constants/uiStrings'
 import { openUrlInBrowser } from './util-actions'
 
 const {
@@ -58,7 +59,7 @@ export function madeJobConf (e, conf) {
     jobId: conf.jobId
   }
   return dispatch => {
-    dispatch(batchActions([ updateRuns, updateJobIds ]))
+    dispatch(batchActions([updateRuns, updateJobIds]))
     dispatch(startJob(conf.jobId))
   }
 }
@@ -75,15 +76,16 @@ export function buildDialogueCrawlJob (event, newCrawl) {
   let urls
   let maybeArray = Array.isArray(newCrawl.urls)
   if (maybeArray) {
-    forMTI = joinStrings(...newCrawl.urls, { separator: ' ' })
+    forMTI = joinStrings(...newCrawl.urls, {separator: ' '})
     urls = `Urls: ${forMTI} With depth of ${newCrawl.depth}`
   } else {
     forMTI = newCrawl.urls
     urls = `${newCrawl.urls} with depth of ${newCrawl.depth}`
   }
   let jId = new Date().getTime()
-  window.logger.debug(`Building Heritrix crawl for ${newCrawl.forCol} ${urls}`)
-  notifyInfo(`Building Heritrix crawl for ${newCrawl.forCol} with seeds: ${urls}`)
+  let messge = notifm.buildingHeritrixCrawl(newCrawl.forCol, urls)
+  window.logger.debug(messge)
+  notifyInfo(messge)
   return send('makeHeritrixJobConf', {
     urls: newCrawl.urls,
     depth: newCrawl.depth,

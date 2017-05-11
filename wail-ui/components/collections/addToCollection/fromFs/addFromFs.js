@@ -7,10 +7,11 @@ import { joinStrings } from 'joinable'
 import BeamMeUpScotty from 'drag-drop'
 import moment from 'moment'
 import * as notify from '../../../../actions/notification-actions'
-import { doSeedExtraction } from '../../../../actions/addSeedFromFs'
+import { extractSeeds as doSeedExtraction } from '../../../../../wail-core/util/warcUtils'
 import { resetAddFSSeedMessage } from '../../../../actions/addSeedFromFs'
 import seedName from './seedName'
 import SelectSeed from './selectSeed'
+import { addSeedFromFs } from '../../../../constants/uiStrings'
 
 const timeStampFinder = (target, seeds) => {
   let len = seeds.length
@@ -56,6 +57,10 @@ const makeAddConfig = (col, warcSeed, realSeed) => {
   }
 }
 
+function seedExtractionError (error) {
+  notify.notifyError(`An error occurred when determining the seeds: ${error}`)
+}
+
 export default class AddFromFs extends Component {
   static propTypes = {
     col: PropTypes.string.isRequired
@@ -68,19 +73,26 @@ export default class AddFromFs extends Component {
   constructor (...args) {
     super(...args)
     this.removeWarcAdder = null
-    this.defaultM = 'File Name with seeds will be displayed below when added'
+    this.defaultM = addSeedFromFs.defaultMessage
     this.state = {
       message: this.defaultM,
       checkingDone: false,
       warcSeeds: [],
-      hadErrors: []
+      hadErrors: [],
+      wpath: '',
+      mode: 'f',
     }
+    this.resetForm = this.resetForm.bind(this)
+    this.fileListener = this.fileListener.bind(this)
+    this.addWarcWTrueSeeds = this.addWarcWTrueSeeds.bind(this)
+    this.extractSeeds = this.extractSeeds.bind(this)
+    this.seedsExtracted = this.seedsExtracted.bind(this)
   }
 
   componentDidMount () {
     if (!this.removeWarcAdder) {
       console.log('attaching warc adder on live dom')
-      this.removeWarcAdder = BeamMeUpScotty('#warcUpload', ::this.fileListener)
+      this.removeWarcAdder = BeamMeUpScotty('#warcUpload', this.fileListener)
     } else {
       console.log('we mounted but already have the warc upload listener attached')
     }
@@ -95,28 +107,29 @@ export default class AddFromFs extends Component {
     console.log(`adding warcs maybe to col ${this.props.col}`, files)
     let addMe = []
     let badFiles = new Set()
-
-    files.forEach(f => {
+    let len = files.length
+    let i = 0
+    for (; i < len; ++i) {
+      let f = files[i]
       let ext = path.extname(f.path)
       if (ext === '.warc' || ext === '.arc') {
         addMe.push(f.path)
       } else {
         badFiles.add(ext)
       }
-    })
+    }
 
     if (badFiles.size > 0 && addMe.length <= 1) {
-      notify.notifyWarning(`Unable to add files with extensions of ${joinStrings(...badFiles, {separator: ','})}`)
+      notify.notifyWarning(addSeedFromFs.badFileTypes(joinStrings(...badFiles, {separator: ','})))
     }
 
     if (addMe.length > 0) {
-      notify.notifyInfo(`Determining Seeds for ${addMe.length} ${path.extname(addMe[0])} Files`, true)
       let wpath = addMe[0]
       let mode = 'f'
       if (addMe.length > 1) {
         // wpath = path.dirname(addMe[ 0 ])
         // mode = 'd'
-        let message = 'Please add the (W)arcs one by one. This is to ensure they are added correctly'
+        let message = addSeedFromFs.noDirectory
         notify.notify({
           title: 'Warning',
           level: 'warning',
@@ -125,28 +138,27 @@ export default class AddFromFs extends Component {
           uid: message
         })
       } else {
-        this.setState({message: 'Determining seed from added (W)arc'}, () => {
-          this.extractSeeds(wpath, mode)
-        })
+        notify.notifyInfo(addSeedFromFs.determiningSeedNotif(addMe.length, path.extname(addMe[0])), true)
+        this.setState({message: addSeedFromFs.determiningSeedMessage, wpath, mode}, this.extractSeeds)
       }
     }
   }
 
-  extractSeeds (wpath, mode = 'f') {
-    doSeedExtraction(wpath, mode)
-      .then(extractedSeeds => {
-        console.log(extractedSeeds.warcSeeds)
-        this.setState({
-          checkingDone: true,
-          warcSeeds: extractedSeeds.warcSeeds,
-          hadErrors: extractedSeeds.hadErrors,
-          message: this.defaultM
-        })
-      })
-      .catch(error => {
-        console.log('regulare errror')
-        console.error(error)
-      })
+  seedsExtracted (extractedSeeds) {
+    console.log(extractedSeeds.warcSeeds)
+    this.setState({
+      checkingDone: true,
+      warcSeeds: extractedSeeds.warcSeeds,
+      hadErrors: extractedSeeds.hadErrors,
+      message: this.defaultM,
+      wpath: ''
+    })
+  }
+
+  extractSeeds () {
+    doSeedExtraction(this.state.wpath, this.state.mode)
+      .then(this.seedsExtracted)
+      .catch(seedExtractionError)
   }
 
   resetForm () {
@@ -185,23 +197,27 @@ export default class AddFromFs extends Component {
         throw new Error(`${seedName(warcSeeds[0].name)} had no real seed`)
       }
     }
-    console.log('add these seeds ', addToCol, channel)
     ipc.send(channel, addToCol)
     this.setState({
       message: this.defaultM,
       checkingDone: false,
       warcSeeds: [],
       hadErrors: []
-    }, ::this.resetForm)
+    }, this.resetForm)
   }
 
   render () {
     const {checkingDone, message} = this.state
     return (
       <div id='seedListFPContainer' style={{height: '95%'}}>
-        <Card style={{marginLeft: 10, marginRight: 10, minHeight: 400}}>
-          {!checkingDone && <CardHeader style={{height: 400}} title={message} />}
-          {checkingDone && <SelectSeed onSubmit={::this.addWarcWTrueSeeds} {...this.state} />}
+        <Card style={{marginLeft: 10, marginRight: 10, minHeight: 400, overflowY: 'auto'}}>
+          {!checkingDone && <CardHeader style={{height: 400}} title={message}/>}
+          {checkingDone && <SelectSeed
+            onSubmit={this.addWarcWTrueSeeds}
+            warcSeeds={this.state.warcSeeds}
+            hadErrors={this.state.hadErrors}
+            checkingDone={this.state.checkingDone}
+          />}
         </Card>
       </div>
     )

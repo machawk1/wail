@@ -3,6 +3,7 @@ import React from 'react'
 import CardActions from 'material-ui/Card/CardActions'
 import FlatButton from 'material-ui/FlatButton'
 import SeedFormEntry from './seedFormEntry'
+import { addToCollection } from '../../../../constants/uiStrings'
 
 const SeedListFormPage = (props) => {
   const {handleSubmit, pristine, invalid, reset, submitting, containerName, seedName, onSubmit, warcSeeds} = props
@@ -18,7 +19,7 @@ const SeedListFormPage = (props) => {
       />
       <CardActions>
         <FlatButton
-          label='Add (W)arc Seed(s)'
+          label={addToCollection.addWarcOrArcSeedsButton}
           type='submit'
           disabled={invalid || pristine || submitting}
         />

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { onlyUpdateForKeys } from 'recompose'
 import { UIStateRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'

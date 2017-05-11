@@ -213,7 +213,7 @@ export default class ArchiveManager extends EventEmitter {
       console.log('no exist')
       return await this._handleColDirNoExistence(noExist)
     }
-    let {exist, empty, doNotExist} = this._getAllColsWithExistCheck()
+    let {exist, empty, doNotExist} = await this._getAllColsWithExistCheck()
     let colSeeds = await this._colSeeds.wemFindAll('Could not retrieve the seeds from the database')
     if (empty) {
       if (colSeeds.length > 0) {

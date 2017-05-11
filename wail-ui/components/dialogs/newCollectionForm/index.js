@@ -1,9 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { Flex } from 'react-flex'
 import FlatButton from 'material-ui/FlatButton'
 import { TextField } from 'redux-form-material-ui'
 import S from 'string'
+import {newCollectionForm} from '../../../constants/uiStrings'
 
 const validate = values => {
   const errors = {}
@@ -16,7 +18,7 @@ const validate = values => {
     errors.name = 'Required'
   } else {
     if (swapper.setValue(name).trim().contains(' ')) {
-      errors.name = 'Collection names can not contain spaces'
+      errors.name = newCollectionForm.collNameError
     }
   }
 
@@ -24,7 +26,7 @@ const validate = values => {
     errors.description = 'Required'
   } else {
     if (swapper.setValue(description).isEmpty()) {
-      errors.name = 'Collection names can not contain spaces'
+      errors.description = newCollectionForm.collDescriptError
     }
   }
 
@@ -49,15 +51,15 @@ const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, 
             id='newCol-name'
             name='name'
             component={TextField}
-            floatingLabelText='Collection Name'
-            hintText='MyAwesomeCollection'
+            floatingLabelText={newCollectionForm.collName}
+            hintText={newCollectionForm.collNameHint}
           />
           <Field
             id='newCol-title'
             name='title'
             component={TextField}
-            floatingLabelText='Collection Title'
-            hintText='Awesome Collection'
+            floatingLabelText={newCollectionForm.collTitle}
+            hintText={newCollectionForm.collTitleHint}
           />
         </Flex>
       </div>
@@ -66,8 +68,8 @@ const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, 
           id='newCol-decription'
           name='description'
           component={TextField}
-          floatingLabelText='Collection Description'
-          hintText='Really Awesome Collection'
+          floatingLabelText={newCollectionForm.collDescript}
+          hintText={newCollectionForm.collDescriptHint}
           fullWidth
           multiLine
         />
@@ -75,14 +77,14 @@ const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, 
       <div style={{height: '40px'}}>
         <FlatButton
           id='newCol-create'
-          label='Create Collection'
+          label={newCollectionForm.createCollection}
           type='submit'
           disabled={invalid || pristine || submitting}
           primary
         />
         <FlatButton
           id='newCol-cancel'
-          label='Cancel'
+          label={newCollectionForm.cancel}
           onTouchTap={onCancel}
         />
       </div>

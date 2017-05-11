@@ -5,6 +5,7 @@ import {remote} from 'electron'
 import { red500 } from 'material-ui/styles/colors'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
 import { downloadJDK } from '../../../../actions'
+import {firstTimeLoading as ftl} from '../../../../../constants/uiStrings'
 
 class AskDownload extends Component {
   constructor (...args) {
@@ -19,7 +20,7 @@ class AskDownload extends Component {
     const opts = {
       type: 'warning',
       title: 'Required',
-      message: 'Downloading and installing of JDK 1.7 on MacOS is required.\nYou will not be able to use WAIL without it. Are you sure you do not want to download?',
+      message: ftl.askNoDlJavaDialogue,
       cancelId: 666,
       buttons: ['No', 'Yes']
     }
@@ -44,11 +45,7 @@ class AskDownload extends Component {
   render () {
     return (
       <CheckStepContent>
-        <p>
-          Usage of Heritrix through WAIL requires the Java 1.7 JDK (Java Developer Kit)<br />
-          to be installed. This is required and WAIL will guide you through the installation<br />
-          process. Do you wish to download and install this JDK?
-        </p>
+        <p dangerouslySetInnerHTML={{__html: ftl.downloadJDKExplaination()}}></p>
         <RaisedButton
           label='Yes'
           disableTouchRipple

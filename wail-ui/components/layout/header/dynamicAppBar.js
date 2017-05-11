@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import AppBar from 'material-ui/AppBar'
 
 const style = {marginTop: 0, paddingBottom: 0, paddingTop: 0, height: 55}

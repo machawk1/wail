@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { BehaviorSubject } from 'rxjs'
 import Divider from 'material-ui/Divider'
 import IconButton from 'material-ui/IconButton'

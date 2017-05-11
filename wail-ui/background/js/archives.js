@@ -2,6 +2,7 @@ import 'babel-polyfill'
 import { remote, ipcRenderer as ipc } from 'electron'
 import Settings from '../../../wail-core/remoteSettings'
 import ArchiveManager from '../../../wail-core/managers/archiveManager'
+import { ipcMessages } from '../../constants/uiStrings'
 
 const settings = new Settings()
 settings.configure()
@@ -48,13 +49,14 @@ ipc.on('addfs-warcs-to-col', (event, fsAdd) => {
   console.log('archives got addfs warcs', fsAdd)
   archiveMan.addWarcsFromFSToCol(fsAdd)
     .then(update => {
+      let message = ipcMessages.addedToCollectionX(fsAdd.col)
       ipc.send('added-warcs-to-col', update)
       ipc.send('display-message', {
-        title: 'Added (W)arc file from the file system',
+        title: ipcMessages.addedWarcOrArcFromFs,
         level: 'success',
         autoDismiss: 10,
-        message: `Add to the collection ${fsAdd.col}`,
-        uid: `Add to the collection ${fsAdd.col}`
+        message,
+        uid: message
       })
     })
     .catch(error => {
@@ -80,12 +82,12 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
       ipc.send('added-warcs-to-col', update)
       let message
       if (addMe.type && addMe.type === 'twitter') {
-        message = `Saved one tweet for the collection ${addMe.col}`
+        message = ipcMessages.archivedTweetToCollectionX(addMe.col)
       } else {
-        message = `WARC was added to the collection ${addMe.col}`
+        message = ipcMessages.addedWarcToCollectionX(addMe.col)
       }
       ipc.send('display-message', {
-        title: 'Page only crawl finished',
+        title: ipcMessages.pageOnlyCrawlFinished,
         level: 'success',
         autoDismiss: 10,
         message,
@@ -98,7 +100,7 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
 })
 
 ipc.on('create-collection', (event, nc) => {
-  let { mdata } = nc
+  let {mdata} = nc
   archiveMan.createCollection(nc)
     .then((newCol) => {
       console.log('archiveman really did create the new collection', newCol)
@@ -106,31 +108,34 @@ ipc.on('create-collection', (event, nc) => {
       return archiveMan.addInitialMData(nc.col, mdata)
         .then(() => {
           console.log('mdata was successfully added')
+          let message = ipcMessages.addedMetadataToCollectionX(nc.col)
           ipc.send('display-message', {
             title: 'Info',
             level: 'info',
-            message: `Added metadata for ${nc.col}`,
-            uid: `Added metadata for ${nc.col}`
+            message,
+            uid: message
           })
         })
         .catch(error => {
+          let message = ipcMessages.unableToAddMetadataToCollectionX(nc.col, error)
           ipc.send('display-message', {
             title: 'Error',
             level: 'error',
             autoDismiss: 0,
-            message: `Pywb was unable to add metadata for ${nc.col} because ${error}`,
-            uid: `Pywb was unable to add metadata for ${nc.col} because ${error}`
+            message,
+            uid: message
           })
         })
     })
     .catch((error) => {
       console.error(error)
+      let message = ipcMessages.unableToCreateCollection(nc.col, error)
       ipc.send('display-message', {
         title: 'Error',
         level: 'error',
         autoDismiss: 0,
-        message: `Creating new collection ${nc.col} for ${error}`,
-        uid: `Creating new collection ${nc.col} for ${error}`
+        message,
+        uid: message
       })
     })
 })

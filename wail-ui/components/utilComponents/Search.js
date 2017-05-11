@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { BehaviorSubject } from 'rxjs'
 import IconButton from 'material-ui/IconButton'
 import SearchI from 'material-ui/svg-icons/action/search'

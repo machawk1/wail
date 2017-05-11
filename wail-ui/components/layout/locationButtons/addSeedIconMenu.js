@@ -3,10 +3,11 @@ import React, { Component } from 'react'
 import FlatButton from 'material-ui/FlatButton'
 import MenuItem from 'material-ui/MenuItem'
 import Popover from 'material-ui/Popover'
-import {Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { amber500 } from 'material-ui/styles/colors'
 import { dynamicRouteResolvers as drr } from '../../../routes/routeNames'
 import changeLocation from '../../../actions/changeLocation'
+import { addToCollection } from '../../../constants/uiStrings'
 
 class AddSeedIconMenu extends Component {
   static contextTypes = {
@@ -56,7 +57,7 @@ class AddSeedIconMenu extends Component {
     const {match} = this.props
     return (
       <div id='addSeedButton'>
-        <FlatButton label='Add Seed' labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu} />
+        <FlatButton label={addToCollection.addSeed} labelStyle={{color: amber500}} onTouchTap={::this.handleOpenMenu}/>
         <Popover
           anchorEl={this.state.anchorEl}
           anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
@@ -67,13 +68,13 @@ class AddSeedIconMenu extends Component {
           <Link style={this.linkStyle} to={drr.addSeed(match.params.col)} onClick={::this.close}>
             <MenuItem
               style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
-              primaryText={'From Live Web'}
+              primaryText={addToCollection.fromLiveWeb}
             />
           </Link>
           <Link style={this.linkStyle} to={drr.addSeedFs(match.params.col)} onClick={::this.close}>
             <MenuItem
               style={{color: this.context.muiTheme.baseTheme.palette.primary1Color}}
-              primaryText='From File System'
+              primaryText={addToCollection.fromFs}
             />
           </Link>
         </Popover>

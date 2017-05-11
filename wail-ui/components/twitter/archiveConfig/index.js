@@ -37,7 +37,7 @@ const ArchiveTwitter = ({ store }) => {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <div className='wail-container' style={{ marginTop: 15 }}>
-        <Flex row justifyContent='space-between'>
+        <Flex row justifyContent='space-around'>
           <ATwitterUser cols={cols} times={t.atu} onUnMount={onUnMount} clear={clearTwitterUser} />
           <TwitterUserTextSearch cols={cols} times={t.tuts} clear={clearTextSearch} />
         </Flex>

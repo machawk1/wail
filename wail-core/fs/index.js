@@ -1,6 +1,6 @@
 import chokidar from 'chokidar'
 import walk from 'klaw'
-import fsep from './fsePromise'
+import fs from 'fs-extra'
 import directorySize from './directorySize'
 import pathExists from './pathExists'
 import pathIs from './pathIs'
@@ -12,4 +12,4 @@ const base = {
   FSWatcher: chokidar.FSWatcher
 }
 
-export default completeAssign(base, fsep, directorySize, pathExists, pathIs)
+export default completeAssign(base, fs, directorySize, pathExists, pathIs)

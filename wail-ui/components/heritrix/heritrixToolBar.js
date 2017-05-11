@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -7,6 +7,7 @@ import OpenBrowserIcon from 'material-ui/svg-icons/action/open-in-browser'
 import JobScanIcon from 'material-ui/svg-icons/av/playlist-add-check'
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
 import { rescanJobDir, launchWebUI } from '../../actions/heritrix'
+import {heritrix} from '../../constants/uiStrings'
 
 const styles = {
   button: {
@@ -25,7 +26,7 @@ const HeritrixToolBar = enhance(({scanJobDir}) => (
     <ToolbarGroup firstChild>
       <RaisedButton
         icon={<JobScanIcon />}
-        label='Rescan Job Directory'
+        label={heritrix.rescanJobDir}
         labelPosition='before'
         style={styles.button}
         onTouchTap={scanJobDir}
@@ -34,7 +35,7 @@ const HeritrixToolBar = enhance(({scanJobDir}) => (
     <ToolbarGroup lastChild>
       <RaisedButton
         icon={<OpenBrowserIcon />}
-        label='Launch Web UI'
+        label={heritrix.launchWebUi}
         labelPosition='before'
         style={styles.button}
         onTouchTap={launchWebUI}

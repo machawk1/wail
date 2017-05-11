@@ -1,9 +1,8 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Immutable from 'immutable'
 import { BehaviorSubject } from 'rxjs'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
-import SortHeader from '../../sortDirection/sortHeader'
 import SortDirection from '../../sortDirection/sortDirection'
 import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import fuzzyFilter from '../../../util/fuzzyFilter'
@@ -60,7 +59,7 @@ class SelectColTable extends Component {
       let col = cols.get(i)
       let cname = col.get('colName')
       trs.push(
-        <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`} />
+        <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`}/>
       )
     }
 

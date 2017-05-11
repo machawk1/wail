@@ -24,6 +24,11 @@ class CheckSeed extends Component {
     store: PropTypes.object.isRequired
   }
 
+  constructor (...args) {
+    super(...args)
+    this.checkSeed = this.checkSeed.bind(this)
+  }
+
   checkSeed () {
     let url = urlSelector(this.context.store.getState())
     if (isURL(url)) {
@@ -37,7 +42,7 @@ class CheckSeed extends Component {
     return (
       <div style={{position: 'relative', marginRight: 25}}>
         <div style={{position: 'absolute', right: 50, top: -225}}>
-          <RaisedButton id='CheckSeedButton' label='Check Seed' onTouchTap={::this.checkSeed} />
+          <RaisedButton id='CheckSeedButton' label='Check Seed' onTouchTap={this.checkSeed} />
           <CheckResults />
         </div>
       </div>

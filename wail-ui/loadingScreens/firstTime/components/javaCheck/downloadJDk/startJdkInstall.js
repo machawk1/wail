@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import RaisedButton from 'material-ui/RaisedButton'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
+import { firstTimeLoading as ftl } from '../../../../../constants/uiStrings'
 
 class StartJdkInstall extends Component {
   constructor (...args) {
@@ -24,12 +25,7 @@ class StartJdkInstall extends Component {
     }
     return (
       <CheckStepContent>
-        <p>
-          The Java 1.7 JDK download is completed.<br />
-          WAIL will initiate the Java 1.7 JDK install process and <br />
-          exit when it starts.
-          Start this process?
-        </p>
+        <p dangerouslySetInnerHTML={{__html: ftl.jdkDlFinishedAskStartInstall()}}></p>
         <RaisedButton
           label='Yes'
           disableTouchRipple

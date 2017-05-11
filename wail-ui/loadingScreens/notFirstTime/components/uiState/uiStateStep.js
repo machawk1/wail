@@ -6,6 +6,7 @@ import { shouldUpdate } from 'recompose'
 import { UIStateRecord } from '../../../records'
 import { CheckStepLabel } from '../../../shared/checkStepLabels'
 import { notFirstLoadComplete } from '../../../actions'
+import {notFirstTimeLoading as nftl} from '../../../../constants/uiStrings'
 
 const stateToProps = state => ({
   uiStateRec: state.get('uiState'),
@@ -23,7 +24,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     uiStateRec,
     step,
-    label: completed ? 'Loaded Collections and Crawls' : 'Loading Collections and Crawls',
+    label: nftl.crawlsLoaded(completed),
     ownProps: Object.assign({}, ownProps, {completed, active: true, disabled: false}),
     check () {
       if (step === 1 && completed) {

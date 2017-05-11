@@ -1,14 +1,17 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { branch, renderComponent, shouldUpdate } from 'recompose'
 import { Flex } from 'react-flex'
 import { SSRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'
+import {notFirstTimeLoading as nftl} from '../../../../constants/uiStrings'
+
 
 const HeritrixStartError = ({serviceRec}) => {
   const {where, message} = serviceRec.getHeritrixErrorReport('hStartErReport')
   return (
     <p>
-      Heritrix Could Not Be Started <br />
+      {nftl.heritrixNotStart} <br />
       {where} : {message}
     </p>
   )
@@ -27,7 +30,7 @@ const WaybackStartError = ({serviceRec}) => {
   const {where, message} = serviceRec.getWaybackErrorReport('hStartErReport')
   return (
     <p>
-      Wayback Could Not Be Started <br />
+      {nftl.waybackNotStart} <br />
       {where} : {message}
     </p>
   )

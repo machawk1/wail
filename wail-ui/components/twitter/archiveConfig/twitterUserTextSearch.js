@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React,{Component} from 'react'
+import PropTypes from 'prop-types'
 import { Card, CardTitle } from 'material-ui/Card'
 import { Field, reduxForm } from 'redux-form/immutable'
 import { SubmissionError, reset as resetForm } from 'redux-form'
@@ -91,7 +92,7 @@ class TwitterUserTextSearch extends Component {
   render () {
     const {page} = this.state
     return (
-      <div style={{width, height: '100%'}} id='tweetText'>
+      <div style={{height: '100%'}} id='tweetText'>
         <Card style={{height: '100%'}}>
           <CardTitle title={'Terms In Users Tweets'} />
           {page === 1 && <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.nextPage} />}

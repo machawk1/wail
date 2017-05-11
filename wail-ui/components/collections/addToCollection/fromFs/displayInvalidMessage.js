@@ -3,11 +3,13 @@ import CardTitle from 'material-ui/Card/CardTitle'
 import CardHeader from 'material-ui/Card/CardHeader'
 import CardText from 'material-ui/Card/CardText'
 import Divider from 'material-ui/Divider'
+import { addToCollection } from '../../../../constants/uiStrings'
+
 
 const DisplayInvalidMessage = ({hadErrors}) => (
   <div>
     <CardTitle
-      title='(W)arc File Processing Error'
+      title={addToCollection.warcOrArcProcessingError}
     />
     <Divider />
     <CardHeader

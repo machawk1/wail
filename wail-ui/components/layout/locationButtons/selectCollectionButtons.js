@@ -1,9 +1,11 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { Flex } from 'react-flex'
 import FlatButton from 'material-ui/FlatButton'
 import pure from 'recompose/pure'
 import { amber500 } from 'material-ui/styles/colors'
 import ViewWatcher from '../../../../wail-core/util/viewWatcher'
+import {general} from '../../../constants/uiStrings'
 
 const SelectCollectionButtons = ({CrawlIndicator}) => {
   return (
@@ -12,10 +14,8 @@ const SelectCollectionButtons = ({CrawlIndicator}) => {
       <FlatButton
         id='newColButton'
         labelStyle={{color: amber500}}
-        label='New Collection'
-        onTouchTap={() => {
-          ViewWatcher.createCollection()
-        }}
+        label={general.newCol}
+        onTouchTap={ViewWatcher.createCollection.bind(ViewWatcher)}
       />
     </Flex>
   )

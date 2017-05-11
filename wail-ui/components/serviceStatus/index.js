@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys'
@@ -28,7 +29,7 @@ const style = {
   }
 }
 
-const actionMarginLeft = process.platform === 'win32' ? '30px' : '50px'
+const actionMarginLeft = process.platform === 'win32' ? '30px' : '10px'
 const enhance = onlyUpdateForKeys(['serviceStatRec'])
 const stateToProps = state => ({
   serviceStatRec: state.get('serviceStatuses')

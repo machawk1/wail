@@ -22,7 +22,7 @@ class UserBasic extends Component {
   render () {
     const { handleSubmit, previousPage, cols } = this.props
     return (
-      <form onSubmit={handleSubmit} style={{ marginLeft: 16 }}>
+      <form onSubmit={handleSubmit} style={{ marginLeft: 10}}>
         <div style={{height: 72}}>
           <Field
             floatingLabelText='How Long To Monitor'

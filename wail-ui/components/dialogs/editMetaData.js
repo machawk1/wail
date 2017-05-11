@@ -11,7 +11,7 @@ import wc from '../../constants/wail-constants'
 
 const { QUEUE_MESSAGE } = wc.EventTypes
 
-export default class NewCollection extends Component {
+export default class EditMetaData extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
@@ -53,7 +53,6 @@ export default class NewCollection extends Component {
       title,
       forCol
     } = this.state
-    console.log(this.state)
     let swapper = S('')
     let titleEmpty = swapper.setValue(title).isEmpty()
     let descriptEmpty = swapper.setValue(description).isEmpty()

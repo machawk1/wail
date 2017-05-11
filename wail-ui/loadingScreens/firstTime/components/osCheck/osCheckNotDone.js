@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types'
 import React from 'react'
 import { namedPure } from '../../../../util/recomposeHelpers'
 import { CheckStepContent } from '../../../shared/checkStepContents'
+import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
 
 const OsCheckNotDone = () => (
   <CheckStepContent>
-    <p>For WAIL Setup</p>
+    <p>{ftl.forWailSetup}</p>
   </CheckStepContent>
 )
 

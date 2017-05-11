@@ -1,14 +1,17 @@
 const styles = {
   crawlUrlS: {
+    paddingLeft: 5,
     width: '200px',
-    whiteSpace: 'nowrap',
+    wordWrap: 'break-word',
+    textOverflow: 'none',
+    whiteSpace: 'normal',
     overflow: 'hidden',
-    textOverflow: 'ellipsis'
   },
   statusS: {
     width: '50px',
     wordWrap: 'break-word',
     textOverflow: 'none',
+    textAlign: 'center',
     whiteSpace: 'normal',
     cursor: 'default',
     paddingRight: 10,
@@ -18,6 +21,7 @@ const styles = {
     width: '70px',
     wordWrap: 'break-word',
     textOverflow: 'none',
+    textAlign: 'center',
     whiteSpace: 'normal',
     cursor: 'default',
     paddingRight: 10,
@@ -55,6 +59,7 @@ const styles = {
   },
   actionS: {
     width: '30px',
+    textAlign: 'center',
     cursor: 'default',
     paddingRight: 10,
     paddingLeft: 10

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import delay from 'lodash/delay'
@@ -6,6 +7,7 @@ import { compose, shouldUpdate, setDisplayName } from 'recompose'
 import { OsCheckRecord } from '../../../records'
 import { osCheck, nextLoadingStep } from '../../../actions'
 import { CheckStepLabel } from '../../../shared/checkStepLabels'
+import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
 
 const stateToProps = state => ({
   osCheckRec: state.get('osCheck'),
@@ -23,7 +25,7 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
   return {
     step,
     osCheckRec,
-    label: checkDone ? 'Checked Operating System' : 'Checking Operating System',
+    label: ftl.osCheckStepLabel(checkDone),
     ownProps: Object.assign({}, ownProps, {completed: checkDone}),
     check () {
       const {doCheck, nextStep} = dispatchProps

@@ -25,6 +25,30 @@ export class CrawlInfoRecord extends CrawlRecord {
     }
   }
 
+  status () {
+    return this.latestRun.status()
+  }
+
+  timeStamp () {
+    return this.latestRun.tsMoment
+  }
+
+  timeStampFormatted () {
+    return this.latestRun.tsMoment.format('MMM DD YYYY h:mma')
+  }
+
+  discovered () {
+    return this.latestRun.discovered
+  }
+
+  queued () {
+    return this.latestRun.queued
+  }
+
+  downloaded () {
+    return this.latestRun.downloaded
+  }
+
   updateLatestRun (run) {
     if (run.ended) {
       return this.set('latestRun', this.get('latestRun').updateStats(run)).set('running', false)

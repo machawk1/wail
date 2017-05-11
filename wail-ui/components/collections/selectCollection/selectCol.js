@@ -5,7 +5,7 @@ import { Map } from 'immutable'
 import { connect } from 'react-redux'
 import SelectColList from './selectColList'
 
-const stateToProp = state => ({ collections: state.get('collections') })
+const stateToProp = state => ({collections: state.get('collections')})
 
 class SelectCol extends Component {
   static propTypes = {
@@ -15,15 +15,18 @@ class SelectCol extends Component {
 
   constructor (...args) {
     super(...args)
-    this.state = { searchText: '' }
+    this.state = {searchText: ''}
     this.filterSubscription = null
+    this._subNext = this._subNext.bind(this)
+  }
+
+  _subNext (searchText) {
+    this.setState({searchText})
   }
 
   componentDidMount () {
     this.filterSubscription = this.props.filterText.subscribe({
-      next: (searchText) => {
-        this.setState({ searchText })
-      }
+      next: this._subNext
     })
   }
 
@@ -34,7 +37,7 @@ class SelectCol extends Component {
 
   render () {
     return (
-      <SelectColList collections={this.props.collections} filterText={this.state.searchText} />
+      <SelectColList collections={this.props.collections} filterText={this.state.searchText}/>
     )
   }
 }

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Card from 'material-ui/Card/Card'
 import { Map } from 'immutable'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'

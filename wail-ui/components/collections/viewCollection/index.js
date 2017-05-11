@@ -68,7 +68,6 @@ class ViewCollection extends Component {
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
-    console.log('colview combined should component update')
     return this.props.collection !== nextProps.collection
   }
 

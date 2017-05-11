@@ -27,7 +27,7 @@ export default class ErrorList extends Component {
       done &&
       <List style={{marginLeft: 16, overflowY: 'auto', height: '100%', maxHeight: 'calc(100% - 200px)'}}>
         {this.props.hadErrors.length > 0 && this.renderPossibleSeeds()}
-        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determing The Seeds' />}
+        {this.props.hadErrors.length <= 0 && <ListItem primaryText='No Errors When Determining The Seeds' />}
       </List>
     )
   }

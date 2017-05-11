@@ -1,10 +1,12 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { OsCheckRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'
+import { firstTimeLoading as ftl } from '../../../../constants/uiStrings'
 
 const OsCheckDone = ({osCheckRec}) => (
   <CheckStepContent>
-    <p>{`Running ${osCheckRec.get('os')} ${osCheckRec.get('arch')}`}</p>
+    <p>{ftl.osCheckDone(osCheckRec.get('os'), osCheckRec.get('arch'))}</p>
   </CheckStepContent>
 )
 

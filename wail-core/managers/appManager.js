@@ -121,10 +121,8 @@ export default class AppManager2 {
 
     this.winConf = {
       width: this.w,
-      minWidth: this.w,
       // maxWidth: this.w,
       height: this.h,
-      minHeight: this.h,
       // maxHeight: this.h,
       title: 'Web Archiving Integration Layer',
       show: false,

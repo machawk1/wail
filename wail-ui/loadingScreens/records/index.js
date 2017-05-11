@@ -1,4 +1,5 @@
 import Immutable from 'immutable'
+import { loadingRecords as lrec } from '../../constants/uiStrings'
 
 class OsCheckRecord extends Immutable.Record({checkDone: false, os: '', arch: ''}) {
   updateFromAction (action) {
@@ -20,26 +21,22 @@ class JavaCheckRecord extends Immutable.Record({
   }
 
   haveReport () {
-    let have = 'No'
-    if (this.get('haveJava')) {
-      have = `Yes ${this.get('javaV')}`
-    }
-    return `Have Java: ${have}`
+    return lrec.youHaveJavaReport(this.get('haveJava'), this.get('javaV'))
   }
 
   haveCorrectReport () {
-    return `Using 1.7: ${this.get('haveCorrectJava') ? 'Yes' : 'No'}`
+    return lrec.youHaveCorrectJavaReport(this.get('haveCorrectJava'))
   }
 
   downloadReport () {
     if (process.platform !== 'darwin') {
       if (!this.get('haveCorrectJava') || !this.get('haveJava')) {
-        return `Need To Download 1.7: No WAIL Can Use The Packaged OpenJDK`
+        return lrec.needDLJavaNoUseOpenJdk
       } else {
-        return `Need To Download 1.7: No`
+        return lrec.needDLJavaNo
       }
     } else {
-      return `Need To Download 1.7: ${this.get('download') ? 'Yes' : 'No'}`
+      return lrec.needDLJavaDarwin(this.get('download'))
     }
   }
 }
@@ -104,7 +101,6 @@ class SSRecord extends Immutable.Record({
   }
 
   heritrixStarted () {
-    console.log('heritrix was started', this.toJS())
     return this.set('hStarted', true)
   }
 
@@ -113,7 +109,6 @@ class SSRecord extends Immutable.Record({
   }
 
   waybackStarted () {
-    console.log('wayback was started')
     if (this.get('hStarted')) {
       return this.merge({wStarted: true, bothStarted: true})
     }
@@ -126,24 +121,24 @@ class SSRecord extends Immutable.Record({
 
   waybackStatusMessage () {
     if (!this.get('hStarted')) {
-      return 'Wayback is waiting to be started'
+      return lrec.waybackWaitingToStart
     } else {
       if (this.get('wStarted')) {
-        return 'Wayback was started'
+        return lrec.waybackWasStarted
       } else {
-        return 'Wayback was not started'
+        return lrec.waybackWasNotStarted
       }
     }
   }
 
   heritrixStatusMessage () {
     if (!this.get('hStarted')) {
-      return 'Heritrix is being started'
+      return lrec.heritrixWaitingToStart
     } else {
       if (!this.get('hError')) {
-        return 'Heritrix was started'
+        return lrec.heritrixWasStarted
       } else {
-        return 'Heritrix was not started'
+        return lrec.heritrixWasNotStarted
       }
     }
   }
@@ -169,17 +164,17 @@ class UIStateRecord extends Immutable.Record({archivesLoaded: false, crawlsLoade
 
   archiveMessage () {
     if (this.get('archivesLoaded')) {
-      return 'Archives Have Been Loaded'
+      return lrec.archivesLoaded
     } else {
-      return 'Archives Have Not Been Loaded'
+      return lrec.archivesNotLoaded
     }
   }
 
   crawlMessage () {
     if (this.get('crawlsLoaded')) {
-      return 'Crawls Have Been Loaded'
+      return lrec.crawlsLoaded
     } else {
-      return 'Crawls Have Not Been Loaded'
+      return lrec.crawlsNotLoaded
     }
   }
 }

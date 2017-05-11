@@ -1,10 +1,11 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import { remote, ipcRenderer as ipc } from 'electron'
 import Promise from 'bluebird'
 import WarcWriter from './warcWriter'
 import NetworkMonitor from './networkMonitor'
 import moment from 'moment'
 import normalizeUrl from 'normalize-url'
+import {notificationMessages as notifm} from '../../wail-ui/constants/uiStrings'
 
 // /home/john/my-fork-wail/wail-twitter/archive/inject.js
 
@@ -34,13 +35,11 @@ const failUseHeritrix = (config, error) => {
     jobId: jId,
     forCol: config.forCol
   })
-
   let eMessage = error.message || error.m
-  let message = `There was an error while using Wail-WarCreate ${eMessage}. Resorting to using Heritrix`
-
+  let message = notifm.wailWarcreateError(eMessage)
   ipc.send('log-error-display-message', {
     m: {
-      title: 'Wail WarCreate Error',
+      title: notifm.wailWarcreateErrorTitle,
       level: 'error',
       message,
       uid: message,
@@ -153,7 +152,7 @@ export default class ArchiveComponent extends Component {
     console.log('archiving', uri_r)
     let webContents = this.webview.getWebContents()
     this.networkMonitor.attach(webContents)
-    this.webview.loadURL(normalizeUrl(uri_r,{stripFragment: false,stripWWW: false}))
+    this.webview.loadURL(normalizeUrl(uri_r, {stripFragment: false, stripWWW: false}))
   }
 
   maybeMore () {
@@ -232,7 +231,7 @@ export default class ArchiveComponent extends Component {
     console.log(wb)
     return (
       <div style={{width: 'inherit', height: 'inherit'}}>
-        <div dangerouslySetInnerHTML={wb} />
+        <div dangerouslySetInnerHTML={wb}/>
       </div>
     )
   }

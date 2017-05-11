@@ -22,7 +22,7 @@ class UserBasic extends Component {
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid, cols, times} = this.props
     return (
-      <form onSubmit={handleSubmit} style={{marginLeft: 16, height: '100%'}}>
+      <form onSubmit={handleSubmit} style={{marginLeft: 10, height: '100%'}}>
         <div style={{height: 72}}>
           <Field
             hintText='How Long To Monitor'
@@ -33,15 +33,16 @@ class UserBasic extends Component {
             {times}
           </Field>
         </div>
-        <div style={{height: 75}}>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
             name='screenName'
             component={TextField}
+            style={{marginTop: 0}}
           />
         </div>
-        <div style={{height: 75}}>
+        <div style={{height: 72}}>
           <Field
             floatingLabelText='For Collection'
             name='forCol'
@@ -53,11 +54,9 @@ class UserBasic extends Component {
             filter={fuzzyFilter}
           />
         </div>
-        <div style={{height: 75}}>
-          <CardActions>
-            <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
-          </CardActions>
-        </div>
+        <CardActions>
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
+        </CardActions>
       </form>
     )
   }

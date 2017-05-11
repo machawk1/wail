@@ -1,5 +1,4 @@
-import React, {Component, PropTypes} from 'react'
-import Immutable from 'immutable'
+import React from 'react'
 import {Card, CardText, CardTitle} from 'material-ui/Card'
 import moment from 'moment/moment'
 import FlatButton from 'material-ui/FlatButton'

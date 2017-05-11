@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import Card from 'material-ui/Card/Card'
 import { Map } from 'immutable'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
@@ -34,6 +35,7 @@ const MementoCard = ({i, mckey, seed, url, viewingCol, conf, openInWb}) => (
 MementoCard.propTypes = {
   conf: PropTypes.any,
   mckey: PropTypes.string,
+  wbUrl: PropTypes.string,
   url: PropTypes.string,
   viewingCol: PropTypes.string,
   seed: PropTypes.instanceOf(Map),

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { onlyUpdateForKeys } from 'recompose'
 import { connect } from 'react-redux'
 import { CardMedia, CardText } from 'material-ui/Card'
