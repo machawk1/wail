@@ -6,7 +6,6 @@ import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'mate
 import MyAutoSizer from '../utilComponents/myAutoSizer'
 import HJobItemContainer from './hJobItemContainer'
 import HertrixJobItem from './heritrixJobItem'
-import HeritrixJobCard from './heritrixJobCard'
 import HeritrixActionMenu from './heritrixActionMenu'
 import styles from './heritrixInlineStyles'
 import { heritrix, general } from '../../constants/uiStrings'
