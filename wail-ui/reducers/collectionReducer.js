@@ -2,6 +2,8 @@ import Immutable from 'immutable'
 import S from 'string'
 import { CollectionEvents } from '../constants/wail-constants'
 import moment from 'moment'
+import isPlainObject from 'lodash/isPlainObject'
+import * as notify from '../actions/notification-actions'
 const {
   GOT_ALL_COLLECTIONS,
   CREATED_COLLECTION,
@@ -17,16 +19,29 @@ const collectionReducer = (state = Immutable.Map(), action) => {
       window.logger.debug('collection store got all collections')
       let {cols} = action
       let collections = {}
-      cols.forEach(col => {
-        col.lastUpdated = moment(col.lastUpdated)
-        col.created = moment(col.created)
-        col.seeds = col.seeds.map(s => {
+      if (Array.isArray(cols)) {
+        cols.forEach(col => {
+          col.lastUpdated = moment(col.lastUpdated)
+          col.created = moment(col.created)
+          col.seeds = col.seeds.map(s => {
+            s.added = moment(s.added)
+            s.lastUpdated = moment(s.lastUpdated)
+            return s
+          })
+          collections[col.colName] = col
+        })
+      } else if (isPlainObject(cols)) {
+        cols.lastUpdated = moment(cols.lastUpdated)
+        cols.created = moment(cols.created)
+        cols.seeds = cols.seeds.map(s => {
           s.added = moment(s.added)
           s.lastUpdated = moment(s.lastUpdated)
           return s
         })
-        collections[col.colName] = col
-      })
+        collections[cols.colName] = cols
+      } else {
+        notify.notifyError(`WAIL-UI received collections it was not expecting, received ${typeof cols}. Please file a bug report through the help menu of WAIL.`)
+      }
       return state.merge(collections)
     case CREATED_COLLECTION:
       window.logger.debug('collection store got a new collection')

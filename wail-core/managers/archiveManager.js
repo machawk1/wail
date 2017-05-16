@@ -281,7 +281,7 @@ export default class ArchiveManager extends EventEmitter {
       throw error
     }
     newCol.seeds = []
-    return newCol
+    return [newCol]
   }
 
   async createCollection (ncol) {

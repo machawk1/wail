@@ -1,5 +1,6 @@
 import {ipcRenderer as ipc, remote} from 'electron'
 import {CollectionEvents} from '../constants/wail-constants'
+import * as notify from './notification-actions'
 
 const {
   GOT_ALL_COLLECTIONS,
@@ -20,7 +21,7 @@ export function gotAllCollections (event, ac) {
   if (wasError) {
     console.error(wasError)
     window.logger.error({ err: ac.err, msg: 'got all collections error' })
-    // notify.notifyError('Error loading all collections this is fatal')
+    notify.notifyError(`Error loading all collections this is fatal ${ac.err}`)
     return {
       type: GOT_ALL_COLLECTIONS,
       cols: []
