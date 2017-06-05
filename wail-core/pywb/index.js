@@ -1,5 +1,6 @@
 import S from 'string'
 import cp from 'child_process'
+import Promise from 'bluebird'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
