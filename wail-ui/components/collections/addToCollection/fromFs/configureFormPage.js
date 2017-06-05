@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types'
 import React from 'react'
+import Checked from 'material-ui/svg-icons/toggle/check-box'
+import UnChecked from 'material-ui/svg-icons/toggle/check-box-outline-blank'
 import CardHeader from 'material-ui/Card/CardHeader'
 import CardTitle from 'material-ui/Card/CardTitle'
 import Divider from 'material-ui/Divider'
@@ -13,7 +14,7 @@ import { addToCollection } from '../../../../constants/uiStrings'
 const configureFormPage = (onSubmit, warcSeeds) => {
   const formConfig = {
     form: 'fsSeedDiscovery',  // a unique identifier for this form,
-    destroyOnUnmount: false,
+    destroyOnUnmount: true,
     validate (values) {
       const errors = {}
       let name = seedName(warcSeeds[0].name)
@@ -30,7 +31,13 @@ const configureFormPage = (onSubmit, warcSeeds) => {
   }
   const FormPage = reduxForm(formConfig)(SeedListFormPage)
   const seeds = warcSeeds[0].seeds.map((seed, idx) =>
-    <RadioButton key={`${idx}-${seed.url}-rb`} value={seed.url} label={seed.url}/>
+    <RadioButton
+      checkedIcon={<Checked />}
+      uncheckedIcon={<UnChecked/>}
+      key={`${idx}-${seed.url}-rb`}
+      value={seed.url}
+      label={seed.url}
+    />
   )
   return (
     <div style={{width: '100%', height: 'inherit'}}>

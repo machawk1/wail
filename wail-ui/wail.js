@@ -23,10 +23,10 @@ const hashHistory = createHashHist()
 if (process.env.NODE_ENV === 'development') {
   window.Perf = require('react-addons-perf')
   window.__history = hashHistory
-  hashHistory.listen((location, action) => {
-    console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`)
-    console.log(`The last navigation action was ${action}`)
-  })
+  // hashHistory.listen((location, action) => {
+  //   console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`)
+  //   console.log(`The last navigation action was ${action}`)
+  // })
 }
 
 if (process.env.WAILTEST) {

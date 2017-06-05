@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {Card, CardText, CardTitle} from 'material-ui/Card'
 import moment from 'moment/moment'
 import FlatButton from 'material-ui/FlatButton'
@@ -83,9 +83,8 @@ class HashTags extends Component {
   render () {
     const { handleSubmit, pristine, reset, submitting, invalid } = this.props
     return (
-      <div style={{ width: '100%', height: '100%' }} id='twitterArchive'>
-        <Card style={{ width: '100%', height: '100%' }}>
-
+      <div className="widthHeightHundoPercent" id='twitterArchive'>
+        <Card className="widthHeightHundoPercent">
           <form onSubmit={handleSubmit(submit)} style={{ width: 'inherit', height: 'inherit' }}>
             <Field
               name='Until'

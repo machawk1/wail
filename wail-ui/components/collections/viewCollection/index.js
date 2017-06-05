@@ -16,7 +16,6 @@ const depthToConfig = d => {
 }
 
 const stateToProps = (state, ownProps) => {
-  console.log('view col', ownProps)
   const collection = state.get('collections').get(ownProps.viewingCol)
   const colName = collection.get('colName')
   const crawls = state.get('runs').filter((crawl, jid) => crawl.get('forCol') === colName)
@@ -73,7 +72,7 @@ class ViewCollection extends Component {
 
   render () {
     return (
-      <div style={{width: '100%', height: '100%'}}>
+      <div className="widthHeightHundoPercent">
         <CollectionViewHeader filterText={this.filterText} collection={this.props.collection} />
         <SeedTable filterText={this.filterText} collection={this.props.collection} seedConfig={this.props.seedConfig} />
       </div>

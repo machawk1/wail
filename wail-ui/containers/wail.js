@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
-import { darkBlack, lightBlue900, blue500, cyan700, white } from 'material-ui/styles/colors'
+import { darkBlack, lightBlue900, blue500, cyan700, white,amber500 } from 'material-ui/styles/colors'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import routes from '../routes'
@@ -15,12 +15,12 @@ const wailTheme = getMuiTheme({
     primary2Color: blue500
   },
   tabs: {
-    backgroundColor: white,
-    textColor: darkBlack,
-    selectedTextColor: lightBlue900
+    backgroundColor: cyan700,
+    textColor: white,
+    selectedTextColor: amber500
   },
   inkBar: {
-    backgroundColor: lightBlue900
+    backgroundColor: amber500
   },
   overlay: {backgroundColor: 'rgba(0,0,0,0)'},
   userAgent: false

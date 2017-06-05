@@ -5,7 +5,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.7
+    'electron': '1.7.2'
   },
   'debug': true,
   "useBuiltIns": true,

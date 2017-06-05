@@ -169,7 +169,6 @@ export default class AddFromFs extends Component {
     const {warcSeeds} = this.state
     const {col} = this.props
     let realSeeds = values.toJS()
-    console.log('real seeds', values)
     let addToCol = {
       lastUpdated: moment().format(),
       col,

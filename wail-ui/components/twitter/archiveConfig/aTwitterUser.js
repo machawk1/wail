@@ -75,9 +75,8 @@ class ATwitterUser extends Component {
 
   render () {
     return (
-      <div style={{height: '100%' }} id='timelineArchive'>
-        <Card style={{ height: '100%' }}>
-          <CardTitle title={"A User's Timeline"} />
+      <div className="widthHeightHundoPercent" id='timelineArchive'>
+        <Card className="widthHeightHundoPercent">
           <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit} />
         </Card>
       </div>

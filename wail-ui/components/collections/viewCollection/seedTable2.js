@@ -104,8 +104,7 @@ export default class SeedTable extends Component {
   render () {
     let mementoCards = this.builtMementoCards()
     return (
-      <div id='colSeedsList'
-           style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}>
+      <div id='colSeedsList' className="collectionSeedTable">
         <MyAutoSizer findElement='collViewDiv'>
           {this.renderMementoCards.bind(undefined, mementoCards)}
         </MyAutoSizer>

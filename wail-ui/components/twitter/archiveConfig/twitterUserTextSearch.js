@@ -1,7 +1,6 @@
 import React,{Component} from 'react'
 import PropTypes from 'prop-types'
-import { Card, CardTitle } from 'material-ui/Card'
-import { Field, reduxForm } from 'redux-form/immutable'
+import { Card } from 'material-ui/Card'
 import { SubmissionError, reset as resetForm } from 'redux-form'
 import { ipcRenderer as ipc } from 'electron'
 import timeVales from './timeValues'
@@ -30,6 +29,9 @@ class TwitterUserTextSearch extends Component {
     }
 
     window.tutsN = this.nextPage.bind(this)
+    this.nextPage = this.nextPage.bind(this)
+    this.previousPage = this.previousPage.bind(this)
+    this.submit = this.submit.bind(this)
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -92,11 +94,10 @@ class TwitterUserTextSearch extends Component {
   render () {
     const {page} = this.state
     return (
-      <div style={{height: '100%'}} id='tweetText'>
-        <Card style={{height: '100%'}}>
-          <CardTitle title={'Terms In Users Tweets'} />
-          {page === 1 && <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.nextPage} />}
-          {page === 2 && <SearchTerms previousPage={::this.previousPage} onSubmit={::this.submit} />}
+      <div className="widthHeightHundoPercent" id='tweetText'>
+        <Card className="widthHeightHundoPercent">
+          {page === 1 && <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={this.nextPage} />}
+          {page === 2 && <SearchTerms previousPage={this.previousPage} onSubmit={this.submit} />}
         </Card>
       </div>
     )

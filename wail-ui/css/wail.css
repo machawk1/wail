@@ -12,6 +12,72 @@
 .divider-color         { border-color: #BDBDBD; }
 */
 
+.collectionCard {
+    margin-bottom: 10px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.collectionCardBody {
+    height: 100px;
+    overflow-y: auto;
+}
+
+.collectionCardBodyInfo {
+    padding: 10px 10px 16px;
+}
+
+.selectCollectionContainerDiv {
+    height: inherit;
+    margin: auto;
+    padding-top: 5px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.mementoCard {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.inheritThyWidthHeight {
+    width: inherit;
+    height: inherit;
+}
+
+.collectionSeedTable {
+    height: inherit;
+    margin: auto;
+    padding-top: 5px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.widthHeightHundoPercent {
+    width: 100%;
+    height: 100%;
+}
+
+.twitterScreenNameDiv {
+    width: 75%;
+    height: 100px;
+    display: table;
+    margin: 0 auto;
+}
+
+.archiveTwitterButtons {
+    float: right;
+}
+
+.centering-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+
+
 .wail-container {
     margin-right: auto;
     margin-left: auto;
@@ -322,185 +388,4 @@
 
 .stepRefresh {
     display: block;
-}
-
-@keyframes pulse_animation {
-    0% {
-        transform: scale(1);
-    }
-    30% {
-        transform: scale(1);
-    }
-    40% {
-        transform: scale(1.08);
-    }
-    50% {
-        transform: scale(1);
-    }
-    60% {
-        transform: scale(1);
-    }
-    70% {
-        transform: scale(1.05);
-    }
-    80% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-
-.pulse {
-    animation-name: pulse_animation;
-    animation-duration: 5000ms;
-    transform-origin: 70% 70%;
-    animation-iteration-count: infinite;
-    animation-timing-function: linear;
-}
-
-#breathing-spider {
-    border: 1px solid #d1d1d1;
-    -webkit-animation: breathing 7s ease-out infinite normal;
-    animation: breathing 7s ease-out infinite normal;
-    font-size: 24px;
-    background: #5885cb;
-    color: #fff;
-    -webkit-font-smoothing: antialiased;
-    border-radius: 3px;
-    text-align: center;
-}
-
-@-webkit-keyframes breathing {
-    0% {
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-
-    25% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
-
-    60% {
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-
-    100% {
-        -webkit-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-}
-
-@keyframes breathing {
-    0% {
-        -webkit-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-
-    25% {
-        -webkit-transform: scale(1);
-        -ms-transform: scale(1);
-        transform: scale(1);
-    }
-
-    60% {
-        -webkit-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-
-    100% {
-        -webkit-transform: scale(0.9);
-        -ms-transform: scale(0.9);
-        transform: scale(0.9);
-    }
-}
-
-[class^="wtooltip"] {
-    position: relative;
-}
-
-[class^="wtooltip"]:after {
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    content: attr(data-tooltip);
-    padding: 6px 10px;
-    top: 1.4em;
-    left: 50%;
-    -webkit-transform: translateX(-50%) translateY(-2px);
-    transform: translateX(-50%) translateY(-2px);
-    background: grey;
-    color: white;
-    white-space: nowrap;
-    z-index: 3;
-    border-radius: 2px;
-    -webkit-transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-}
-
-[class^="wtooltip"]:hover:after {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    -webkit-transform: translateX(-50%) translateY(0);
-    transform: translateX(-50%) translateY(0);
-}
-
-.wtooltip--left:after {
-    top: -4px;
-    left: 0;
-    -webkit-transform: translateX(-112%) translateY(0);
-    transform: translateX(-112%) translateY(0);
-}
-
-.wtooltip--left:hover:after {
-    -webkit-transform: translateX(-110%) translateY(0);
-    transform: translateX(-110%) translateY(0);
-}
-
-.wtooltip--right:after {
-    top: -4px;
-    left: 100%;
-    -webkit-transform: translateX(12%) translateY(0);
-    transform: translateX(12%) translateY(0);
-}
-
-.wtooltip--right:hover:after {
-    -webkit-transform: translateX(10%) translateY(0);
-    transform: translateX(10%) translateY(0);
-}
-
-.wtooltip--triangle:before {
-    content: '';
-    width: 0;
-    height: 0;
-    border-left: solid 5px transparent;
-    border-right: solid 5px transparent;
-    border-bottom: solid 5px grey;
-    opacity: 0;
-    visibility: hidden;
-    position: absolute;
-    -webkit-transform: translateX(-50%) translateY(-2px);
-    transform: translateX(-50%) translateY(-2px);
-    top: 1.1em;
-    left: 50%;
-    -webkit-transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    transition: opacity 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1), -webkit-transform 0.2s cubic-bezier(0.64, 0.09, 0.08, 1);
-    z-index: 3;
-}
-
-.wtooltip--triangle:hover:before {
-    display: block;
-    opacity: 1;
-    visibility: visible;
-    -webkit-transform: translateX(-50%) translateY(0);
-    transform: translateX(-50%) translateY(0);
 }

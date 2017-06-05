@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import {BehaviorSubject} from 'rxjs'
+import { BehaviorSubject } from 'rxjs'
 import Divider from 'material-ui/Divider'
 import SelectCol from './selectCol'
 import Search from '../../utilComponents/Search'
-import {selectCollection} from '../../../constants/uiStrings'
+import { selectCollection } from '../../../constants/uiStrings'
 
 export default class FilterSelectCol extends Component {
   constructor (...args) {
@@ -19,7 +19,7 @@ export default class FilterSelectCol extends Component {
 
   render () {
     return (
-      <div style={{width: 'inherit', height: 'inherit'}}>
+      <div className="inheritThyWidthHeight">
         <Search
           id='filtercols'
           hintText={selectCollection.filterSelectSearchHint}
@@ -27,11 +27,8 @@ export default class FilterSelectCol extends Component {
           searchSubject={this.filterText}
         />
         <Divider />
-        <div
-          id='selectColList'
-          style={{height: 'inherit', margin: 'auto', paddingTop: '5px', paddingLeft: '35px', paddingRight: '35px'}}
-        >
-          <SelectCol filterText={this.filterText} />
+        <div id='selectColList' className="selectCollectionContainerDiv">
+          <SelectCol filterText={this.filterText}/>
         </div>
       </div>
     )

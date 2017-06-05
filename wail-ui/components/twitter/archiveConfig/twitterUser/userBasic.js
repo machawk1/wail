@@ -3,9 +3,9 @@ import React, { Component } from 'react'
 import { CardActions } from 'material-ui/Card'
 import FlatButton from 'material-ui/FlatButton'
 import { Field, reduxForm } from 'redux-form/immutable'
-import { TextField, AutoComplete, SelectField } from 'redux-form-material-ui'
-import fuzzyFilter from '../../../../util/fuzzyFilter'
+import { TextField } from 'redux-form-material-ui'
 import validate from './validate'
+import ForColAndLength from '../shared/forColAndLength'
 
 const formConfig = {
   form: 'aTwitterUser',  // a unique identifier for this form,
@@ -22,40 +22,19 @@ class UserBasic extends Component {
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid, cols, times} = this.props
     return (
-      <form onSubmit={handleSubmit} style={{marginLeft: 10, height: '100%'}}>
-        <div style={{height: 72}}>
-          <Field
-            hintText='How Long To Monitor'
-            name='length'
-            component={SelectField}
-            maxHeight={200}
-          >
-            {times}
-          </Field>
-        </div>
-        <div style={{height: 72}}>
+      <form onSubmit={handleSubmit} className="widthHeightHundoPercent">
+        <div className="twitterScreenNameDiv">
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
             name='screenName'
             component={TextField}
-            style={{marginTop: 0}}
+            fullWidth={true}
           />
         </div>
-        <div style={{height: 72}}>
-          <Field
-            floatingLabelText='For Collection'
-            name='forCol'
-            component={AutoComplete}
-            dataSource={cols}
-            menuProps={{desktop: true, maxHeight: 110}}
-            openOnFocus
-            maxSearchResults={10}
-            filter={fuzzyFilter}
-          />
-        </div>
-        <CardActions>
-          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
+        <ForColAndLength cols={cols} times={times}/>
+        <CardActions className="archiveTwitterButtons">
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary/>
         </CardActions>
       </form>
     )

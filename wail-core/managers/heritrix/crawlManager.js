@@ -124,8 +124,8 @@ export default class CrawlManager {
         ipc.send('managers-error', {
           title: 'Error',
           level: 'error',
-          message: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the warc(s) produced by this crawl ${update.stats.warcs}.`,
-          uid: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the warc(s) produced by this crawl ${update.stats.warcs}.`,
+          message: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the WARC(s) produced by this crawl ${update.stats.warcs}.`,
+          uid: `There was an error during updating the job ${updated.jobId} for collection ${updated.forCol}. Please manually add the WARC(s) produced by this crawl ${update.stats.warcs}.`,
           autoDismiss: 0
         })
       } else {
