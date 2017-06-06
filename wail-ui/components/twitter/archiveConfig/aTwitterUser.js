@@ -18,6 +18,8 @@ const monitor = (config) => {
 const width = process.platform === 'win32' ? '40%' : '40%'
 const enhance = onlyUpdateForKeys([ 'cols', 'times' ])// namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
 
+
+
 class ATwitterUser extends Component {
   static propTypes = {
     cols: PropTypes.array,

@@ -1,14 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { connect } from 'react-redux'
 import { batchActions } from 'redux-batched-actions'
 import { Tabs, Tab } from 'material-ui/Tabs'
 import { RadioButton } from 'material-ui/RadioButton'
 import { reset as resetForm } from 'redux-form'
 import pure from 'recompose/pure'
 import SwipeableViews from 'react-swipeable-views'
-import MenuItem from 'material-ui/MenuItem'
-import Checked from 'material-ui/svg-icons/toggle/check-box'
-import UnChecked from 'material-ui/svg-icons/toggle/check-box-outline-blank'
 import ATwitterUser from './aTwitterUser'
 import TwitterUserTextSearch from './twitterUserTextSearch'
 import timeValues from './timeValues'
@@ -30,8 +28,6 @@ const colNames = store => Array.from(store.getState().get('collections').values(
     let colName = col.get('colName')
     return (
       <RadioButton
-        checkedIcon={<Checked />}
-        uncheckedIcon={<UnChecked/>}
         key={`${i}-${colName}-rb`}
         value={colName}
         label={colName}
@@ -76,8 +72,6 @@ class ArchiveTwitter extends Component {
     const cols = colNames(store)
     const t = timeValues.times.map((time, i) =>
       <RadioButton
-        checkedIcon={<Checked />}
-        uncheckedIcon={<UnChecked />}
         value={time}
         key={`${i}-${time}-timeVal`}
         label={time}
