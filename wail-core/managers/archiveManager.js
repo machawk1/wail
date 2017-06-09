@@ -61,13 +61,13 @@ export default class ArchiveManager extends EventEmitter {
     this._pywb = new PyWb(settings)
     this._settings = settings
     this._collections = new Db({
-      filename: path.join(this._dbBasePath, '_archives.db'),
+      filename: path.join(this._dbBasePath, 'archives.db'),
       autoload: false,
       dbHumanName: 'Collections Database',
       corruptAlertThreshold: 0
     }, this._dbBasePath)
     this._colSeeds = new Db({
-      filename: path.join(this._dbBasePath, '_archiveSeeds.db'),
+      filename: path.join(this._dbBasePath, 'archiveSeeds.db'),
       autoload: false,
       dbHumanName: 'Seeds Database',
       corruptAlertThreshold: 0

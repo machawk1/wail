@@ -24,7 +24,7 @@ const pathMan = remote.getGlobal('pathMan')
 export default class CrawlManager {
   constructor () {
     this.db = new Db({
-      filename: path.join(settings.get('wailCore.db'), '_crawls.db'),
+      filename: path.join(settings.get('wailCore.db'), 'crawls.db'),
       autoload: true
     })
     this.csMonitor = new CrawlStatsMonitor()
