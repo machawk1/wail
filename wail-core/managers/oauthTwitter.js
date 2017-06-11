@@ -1,6 +1,7 @@
 import assert from 'assert'
 import { BrowserWindow } from 'electron'
 import { OAuth } from 'oauth'
+import {Observable} from 'rxjs'
 
 export default class AuthWindow {
   constructor ({key, secret}) {

@@ -6,6 +6,8 @@ import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
 import S from 'string'
 import OauthTwitter from 'electron-oauth-twitter'
+import TwitterAuthWindow from './oauthTwitter'
+import WindowWithArgs from 'electron-window'
 
 const inpect = partialRight(util.inspect, {depth: 1, colors: true})
 

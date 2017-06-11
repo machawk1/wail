@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          href="../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"/>
+    <link rel="stylesheet" type="text/css" href="../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"/>
+    <style>
+        html, body {
+            font-family: 'Roboto', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .entryContainer {
+            width: inherit;
+            height: inherit;
+        }
+
+        .inheritThyWidthHeight {
+            width: inherit;
+            height: inherit;
+        }
+
+        .loginControlContainer {
+            bottom: 2px;
+            right: 2px;
+            position: fixed;
+        }
+
+        .m12Button {
+            margin: 12px;
+        }
+    </style>
+</head>
+<body>
+<div id="loginControl" class="entryContainer">
+
+</div>
+<script>
+  {
+    const theBody = document.getElementById('theBody')
+    const scriptDeps = document.createElement('script')
+    scriptDeps.src = 'http://localhost:9002/dist/deps.bundle.js'
+    document.write(scriptDeps.outerHTML)
+    const script = document.createElement('script')
+    script.src = 'http://localhost:9002/dist/debugMe.bundle.js'
+    document.write(script.outerHTML)
+  }
+</script>
+</body>
+</html>

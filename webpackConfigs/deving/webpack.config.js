@@ -5,31 +5,26 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.4
+    'electron': '1.7.2'
   },
   'debug': true,
   "useBuiltIns": true,
   'include': [
     'syntax-trailing-function-commas',
-    'transform-es2015-destructuring'
+    'transform-es2015-classes',
+    'transform-es2015-object-super'
   ],
   'exclude': [
-    'transform-async-to-generator'
+    'transform-async-to-generator',
+    'web.timers',
+    'web.immediate'
   ]
 }]
 
 module.exports = {
-  devtool: '#@inline-source-map',
+  devtool: 'inline-source-map',
   entry: {
-    archiveMan: './wail-ui/background/js/archives',
-    // crawlMan: './wail-ui/background/js/crawls',
-    // firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
-    // notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',
-    // newCrawl: './wail-ui/childWindows/newCrawl/newCrawl',
-    // requestD: './wail-ui/background/js/requestDaemon',
-    // twitterM: './wail-ui/background/js/twitterM',
-    // archiver: './wail-ui/background/js/archiver',
-    // settingsW: './wail-ui/childWindows/settings/settingsW',
+    debugMe: './debug/twitterSignIn.js',
   },
   module: {
     noParse: noParseRe,
@@ -91,16 +86,22 @@ module.exports = {
     'fsevents'
   ],
   plugins: [
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.DefinePlugin({
       __DEV__: true,
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'deps',
+      minChunks(module, count) {
+        const context = module.context
+        return context && context.indexOf('node_modules') >= 0
+      },
+    }),
+    new webpack.NamedModulesPlugin(),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].bundle.js',
-    chunkFilename: '[id].chunk.js',
     publicPath: 'http://localhost:9002/dist/'
   },
   // bail: true,
