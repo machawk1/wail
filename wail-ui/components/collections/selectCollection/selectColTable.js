@@ -59,7 +59,7 @@ class SelectColTable extends Component {
       let col = cols.get(i)
       let cname = col.get('colName')
       trs.push(
-        <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`}/>
+        <CollectionCard key={`${i}-${cname}`} col={col} ccKey={`${i}-${cname}-theCC`} />
       )
     }
 

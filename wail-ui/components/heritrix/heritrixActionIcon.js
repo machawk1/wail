@@ -4,7 +4,6 @@ import IconButton from 'material-ui/IconButton'
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert'
 import pure from 'recompose/pure'
 
-
 const HeritrixActionIcon = ({jobId}) => (
   <IconButton
     key={`HJIR-${jobId}-actionButton`}
@@ -13,6 +12,5 @@ const HeritrixActionIcon = ({jobId}) => (
     <MoreVertIcon color={grey400} />
   </IconButton>
 )
-
 
 export default pure(HeritrixActionIcon)

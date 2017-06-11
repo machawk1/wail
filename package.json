@@ -107,14 +107,14 @@
       }
     },
     "dev-only": {
-      "command": "node ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./debug/ --hot --inline",
+      "command": "node ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-twitter/loginWindow/ --hot --inline",
       "env": {
         "NODE_ENV": "development",
         "HOT": 1
       }
     },
     "dev-only-entry": {
-      "command": "electron ./debug/init.js"
+      "command": "electron ./wail-twitter/loginWindow/init.js"
     }
   },
   "dependencies": {

@@ -22,7 +22,7 @@ const babelEnvConfig = ['env', {
 }]
 
 module.exports = {
-  devtool: '#@inline-source-map',
+  devtool: 'inline-source-map',
   entry: {
     archiveMan: './wail-ui/background/js/archives',
     crawlMan: './wail-ui/background/js/crawls',

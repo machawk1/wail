@@ -62,7 +62,7 @@ class SearchTerms extends Component {
         <div style={{ maxHeight: 'calc(100% - 300px)' }}>
           <FieldArray name='searchT' component={searchTermRender} />
         </div>
-        <CardActions className="archiveTwitterButtons">
+        <CardActions className='archiveTwitterButtons'>
           <FlatButton label='Previous' onTouchTap={previousPage} />
           <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         </CardActions>

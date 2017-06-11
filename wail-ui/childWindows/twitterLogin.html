@@ -4,9 +4,14 @@
     <title>Login to Twitter</title>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, height=device-height initial-scale=1">
+    <link rel="stylesheet" type="text/css"
+          href="../../node_modules/material-design-icons-iconfont/dist/material-design-icons.css"/>
+    <link rel="stylesheet" type="text/css" href="../../node_modules/roboto-fontface/css/roboto/roboto-fontface.css"/>
     <style>
         html, body {
+            font-family: 'Roboto', sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             width: 100%;
             height: 100%;
             margin: 0;
@@ -14,79 +19,35 @@
         }
 
         .entryContainer {
-            width: 100%;
-            height: 100%;
+            width: inherit;
+            height: inherit;
         }
 
-        .loverlayc {
-            height: 25%;
-            width: 0;
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            background-color: rgb(0, 0, 0); /* Black fallback color */
-            background-color: rgba(0, 0, 0, 0.9); /* Black w/opacity */
-            overflow-x: hidden; /* Disable horizontal scroll */
-            transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+        .inheritThyWidthHeight {
+            width: inherit;
+            height: inherit;
         }
 
-        .loverlay {
-            height: 25%;
-            width: 100%;
-            position: fixed; /* Stay in place */
-            z-index: 1; /* Sit on top */
-            left: 0;
-            top: 0;
-            background-color: rgb(0, 0, 0); /* Black fallback color */
-            background-color: rgba(0, 0, 0, 0.9); /* Black w/opacity */
-            overflow-x: hidden; /* Disable horizontal scroll */
-            transition: 0.5s; /* 0.5 second transition effect to slide in or slide down the overlay (height or width, depending on reveal) */
+        .loginControlContainer {
+            bottom: 2px;
+            right: 2px;
+            position: fixed;
         }
 
-        .loverlay-content {
-            position: relative;
-            top: 25%; /* 25% from the top */
-            width: 100%; /* 100% width */
-            text-align: center; /* Centered text/links */
-            margin-top: 30px; /* 30px top margin to avoid conflict with the close button on smaller screens */
+        .m12Button {
+            margin: 12px;
         }
-
-        .loverlay a {
-            padding: 8px;
-            text-decoration: none;
-            font-size: 36px;
-            color: #818181;
-            display: block; /* Display block instead of inline */
-            transition: 0.3s; /* Transition effects on hover (color) */
-        }
-
-        .loverlay a:hover, .loverlay a:focus {
-            color: #f1f1f1;
-        }
-
-        .loverlay .closebtn {
-            position: absolute;
-            top: 20px;
-            right: 45px;
-            font-size: 60px;
-        }
-
-        @media screen and (max-height: 450px) {
-            .loverlay a {
-                font-size: 20px
-            }
-
-            .loverlay .closebtn {
-                font-size: 40px;
-                top: 15px;
-                right: 35px;
-            }
+        .windowCentered {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -50px;
+            margin-left: -100px;
         }
     </style>
 </head>
 <body>
-<div id="login" class="entryContainer">
+<div id="loginControl" class="entryContainer">
 
 </div>
 <script>

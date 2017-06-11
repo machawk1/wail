@@ -13,7 +13,6 @@ const formConfig = {
   validate
 }
 
-
 class UserBasic extends Component {
   static propTypes = {
     cols: PropTypes.array.isRequired,
@@ -24,18 +23,18 @@ class UserBasic extends Component {
     const {handleSubmit, previousPage, cols, times} = this.props
     return (
       <form onSubmit={handleSubmit}>
-        <div className="twitterScreenNameDiv">
+        <div className='twitterScreenNameDiv'>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
             name='screenName'
             component={TextField}
-            fullWidth={true}
+            fullWidth
           />
         </div>
-        <ForColAndLength times={times} cols={cols}/>
-        <CardActions className="archiveTwitterButtons">
-          <FlatButton label='Next' type='submit' primary/>
+        <ForColAndLength times={times} cols={cols} />
+        <CardActions className='archiveTwitterButtons'>
+          <FlatButton label='Next' type='submit' primary />
         </CardActions>
       </form>
     )

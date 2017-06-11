@@ -41,7 +41,7 @@ export default class WailAppBar extends Component {
       <DynamicAppBar
         Location={<StaticLocation theLocation={general.collections} {...props} />}
         leftIconTouchTap={this.props.leftIconTouchTap}
-        IconRight={<SelectCollectionButtons CrawlIndicator={this.props.CrawlIndicator}/>}
+        IconRight={<SelectCollectionButtons CrawlIndicator={this.props.CrawlIndicator} />}
       />
     )
   }
@@ -51,7 +51,7 @@ export default class WailAppBar extends Component {
       <DynamicAppBar
         Location={<CollectionViewLocation {...props} />}
         leftIconTouchTap={this.props.leftIconTouchTap}
-        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator}/>}
+        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator} />}
       />
     )
   }
@@ -61,7 +61,7 @@ export default class WailAppBar extends Component {
       <DynamicAppBar
         Location={<AddSeedLocation {...props} />}
         leftIconTouchTap={this.props.leftIconTouchTap}
-        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator}/>}
+        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator} />}
       />
     )
   }
@@ -71,7 +71,7 @@ export default class WailAppBar extends Component {
       <DynamicAppBar
         Location={<AddFromFsLocation {...props} />}
         leftIconTouchTap={this.props.leftIconTouchTap}
-        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator}/>}
+        IconRight={<AddSeedButtons {...props} CrawlIndicator={this.props.CrawlIndicator} />}
       />
     )
   }
@@ -139,18 +139,17 @@ export default class WailAppBar extends Component {
   render () {
     return (
       <Switch>
-        <Route exact path={routeNames.selectCol} render={this.renderSelectCollections}/>
-        <Route path={routeNames.viewCollection} render={this.renderViewCollection}/>
-        <Route path={routeNames.addSeed} render={this.renderAddSeedLiveWeb}/>
-        <Route path={routeNames.addSeedFs} render={this.renderAddSeedFs}/>
-        <Route path={routeNames.viewArchiveConfig} render={this.renderViewArchiveConfig}/>
-        <Route path={routeNames.heritrix} render={this.renderHeritrix}/>
-        <Route path={routeNames.misc} render={this.renderMisc}/>
-        <Route path={routeNames.services} render={this.renderServices}/>
-        <Route path={routeNames.twitter} render={this.renderTwitter}/>
-        <Route path={routeNames.twitterSignIn} render={this.renderTwitterSignIn}/>
+        <Route exact path={routeNames.selectCol} render={this.renderSelectCollections} />
+        <Route path={routeNames.viewCollection} render={this.renderViewCollection} />
+        <Route path={routeNames.addSeed} render={this.renderAddSeedLiveWeb} />
+        <Route path={routeNames.addSeedFs} render={this.renderAddSeedFs} />
+        <Route path={routeNames.viewArchiveConfig} render={this.renderViewArchiveConfig} />
+        <Route path={routeNames.heritrix} render={this.renderHeritrix} />
+        <Route path={routeNames.misc} render={this.renderMisc} />
+        <Route path={routeNames.services} render={this.renderServices} />
+        <Route path={routeNames.twitter} render={this.renderTwitter} />
+        <Route path={routeNames.twitterSignIn} render={this.renderTwitterSignIn} />
       </Switch>
     )
   }
 }
-

@@ -8,8 +8,8 @@ import { general } from '../../../constants/uiStrings'
 
 const CollectionViewLocation = ({match}) => (
   <span id='colViewLoc' style={{margin: 0, padding: 0}}><Link to={routeNames.selectCol}
-                                                              style={linkStyle}>{general.collections}</Link> {
-    <LocationSeparator />} {match.params.col}</span>
+    style={linkStyle}>{general.collections}</Link> {
+      <LocationSeparator />} {match.params.col}</span>
 )
 
 export default CollectionViewLocation

@@ -80,7 +80,7 @@ export default class AddFromFs extends Component {
       warcSeeds: [],
       hadErrors: [],
       wpath: '',
-      mode: 'f',
+      mode: 'f'
     }
     this.resetForm = this.resetForm.bind(this)
     this.fileListener = this.fileListener.bind(this)
@@ -210,7 +210,7 @@ export default class AddFromFs extends Component {
     return (
       <div id='seedListFPContainer' style={{height: '95%'}}>
         <Card style={{marginLeft: 10, marginRight: 10, minHeight: 400, overflowY: 'auto'}}>
-          {!checkingDone && <CardHeader style={{height: 400}} title={message}/>}
+          {!checkingDone && <CardHeader style={{height: 400}} title={message} />}
           {checkingDone && <SelectSeed
             onSubmit={this.addWarcWTrueSeeds}
             warcSeeds={this.state.warcSeeds}

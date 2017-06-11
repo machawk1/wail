@@ -6,7 +6,6 @@ import { SSRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'
 import {notFirstTimeLoading as nftl} from '../../../../constants/uiStrings'
 
-
 const HeritrixStartError = ({serviceRec}) => {
   const {where, message} = serviceRec.getHeritrixErrorReport('hStartErReport')
   return (

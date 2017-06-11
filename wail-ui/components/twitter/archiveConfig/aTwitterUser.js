@@ -1,4 +1,4 @@
-import React,{Component} from 'react'
+import React, {Component} from 'react'
 import PropTypes from 'prop-types'
 import { Card, CardTitle } from 'material-ui/Card'
 import { SubmissionError } from 'redux-form'
@@ -17,8 +17,6 @@ const monitor = (config) => {
 
 const width = process.platform === 'win32' ? '40%' : '40%'
 const enhance = onlyUpdateForKeys([ 'cols', 'times' ])// namedUpdateKeys('ATwitterUser', [ 'cols', 'times' ])
-
-
 
 class ATwitterUser extends Component {
   static propTypes = {
@@ -77,8 +75,8 @@ class ATwitterUser extends Component {
 
   render () {
     return (
-      <div className="widthHeightHundoPercent" id='timelineArchive'>
-        <Card className="widthHeightHundoPercent">
+      <div className='widthHeightHundoPercent' id='timelineArchive'>
+        <Card className='widthHeightHundoPercent'>
           <UserBasic cols={this.props.cols} times={this.props.times} onSubmit={::this.submit} />
         </Card>
       </div>

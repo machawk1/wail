@@ -7,7 +7,7 @@ import Dialog from 'material-ui/Dialog'
 import wc from '../../constants/wail-constants'
 import ViewWatcher from '../../../wail-core/util/viewWatcher'
 import NewCollectionForm from './newCollectionForm'
-import {notificationMessages,general} from '../../constants/uiStrings'
+import {notificationMessages, general} from '../../constants/uiStrings'
 
 const {QUEUE_MESSAGE} = wc.EventTypes
 

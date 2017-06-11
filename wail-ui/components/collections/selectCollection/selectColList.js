@@ -33,12 +33,12 @@ export default class SelectColList extends Component {
         let col = cols.get(i)
         let cname = col.get('colName')
         cards.push(
-          <CollectionCard i={i} key={`${i}-${cname}`} col={col} ccKey={`${i}-theCC`}/>
+          <CollectionCard i={i} key={`${i}-${cname}`} col={col} ccKey={`${i}-theCC`} />
         )
       }
     } else {
       cards.push(
-        <NoCollectionMatches key={'no match'} search={this.props.filterText}/>
+        <NoCollectionMatches key={'no match'} search={this.props.filterText} />
       )
     }
     return cards

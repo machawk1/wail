@@ -19,7 +19,7 @@ export default class FilterSelectCol extends Component {
 
   render () {
     return (
-      <div className="inheritThyWidthHeight">
+      <div className='inheritThyWidthHeight'>
         <Search
           id='filtercols'
           hintText={selectCollection.filterSelectSearchHint}
@@ -27,8 +27,8 @@ export default class FilterSelectCol extends Component {
           searchSubject={this.filterText}
         />
         <Divider />
-        <div id='selectColList' className="selectCollectionContainerDiv">
-          <SelectCol filterText={this.filterText}/>
+        <div id='selectColList' className='selectCollectionContainerDiv'>
+          <SelectCol filterText={this.filterText} />
         </div>
       </div>
     )

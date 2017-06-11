@@ -1,8 +1,7 @@
 import rp from 'request-promise'
-const {STATUS_CODES} = require('http')
+import http from 'http'
 import Promise from 'bluebird'
 import _ from 'lodash'
-import zlib from 'zlib'
 import S from 'string'
 import url from 'url'
 import { cloneWC } from './util'
@@ -13,6 +12,8 @@ const {
   warcResponseHeader,
   recordSeparator
 } = warcFields
+
+const {STATUS_CODES} = http
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 

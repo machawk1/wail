@@ -8,8 +8,6 @@ import { startHeritrix, startWayback, nextLoadingStep } from '../../../actions'
 import { CheckStepLabel, CheckStepWarningLabel } from '../../../shared/checkStepLabels'
 import {notFirstTimeLoading as nftl} from '../../../../constants/uiStrings'
 
-
-
 const stateToProps = state => ({
   step: state.get('loadingStep'),
   serviceRec: state.get('services')

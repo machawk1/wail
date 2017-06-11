@@ -9,6 +9,7 @@ export default keymirror({
   CLIENT_TOKEN_ERROR: null,
   GOT_CLIENT_TOKENS: null,
   NO_OTHER_NAV: null,
+  CANCELLED_LOGIN: null,
   NOOP: null,
   GOTO_LOGIN_INDEX: null,
   LOGED_IN: null

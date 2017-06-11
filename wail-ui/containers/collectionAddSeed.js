@@ -3,7 +3,7 @@ import { Card } from 'material-ui/Card'
 import { CollAddSeedHeader, ArchiveForm, CheckSeed } from '../components/collections/addToCollection'
 
 const CollectionAddSeed = ({match, history, location}) => (
-  <div className="widthHeightHundoPercent">
+  <div className='widthHeightHundoPercent'>
     <Card style={{margin: '0 25px 25px 25px', height: '75%'}} id='addSeedCard'>
       <ArchiveForm col={match.params.col} />
       <CheckSeed col={match.params.col} />

@@ -24,7 +24,7 @@ const babelEnvConfig = ['env', {
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    debugMe: './debug/twitterSignIn.js',
+    debugMe: './wail-twitter/loginWindow/twitterSignIn.js',
   },
   module: {
     noParse: noParseRe,

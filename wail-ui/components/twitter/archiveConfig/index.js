@@ -16,11 +16,11 @@ const styles = {
     fontSize: 24,
     paddingTop: 16,
     marginBottom: 12,
-    fontWeight: 400,
+    fontWeight: 400
   },
   slide: {
-    padding: 10,
-  },
+    padding: 10
+  }
 }
 
 const colNames = store => Array.from(store.getState().get('collections').values())
@@ -55,7 +55,7 @@ class ArchiveTwitter extends Component {
   constructor (...args) {
     super(...args)
     this.state = {
-      slideIndex: 0,
+      slideIndex: 0
     }
 
     this.handleChange = this.handleChange.bind(this)
@@ -63,7 +63,7 @@ class ArchiveTwitter extends Component {
 
   handleChange (value) {
     this.setState({
-      slideIndex: value,
+      slideIndex: value
     })
   }
 
@@ -78,27 +78,26 @@ class ArchiveTwitter extends Component {
       />)
     const {onUnMount, clearTwitterUser, clearTextSearch} = makeFormClears(store)
     return (
-      <div className="widthHeightHundoPercent">
+      <div className='widthHeightHundoPercent'>
         <div className='wail-container' style={{marginTop: 15}}>
           <Tabs
             onChange={this.handleChange}
             value={this.state.slideIndex}
           >
-            <Tab label="Users Timeline" value={0}/>
-            <Tab label="Users Tweet" value={1}/>
+            <Tab label='Users Timeline' value={0} />
+            <Tab label='Users Tweet' value={1} />
           </Tabs>
           <SwipeableViews
             index={this.state.slideIndex}
             onChangeIndex={this.handleChange}
           >
-            <ATwitterUser cols={cols} times={t} onUnMount={onUnMount} clear={clearTwitterUser}/>
-            <TwitterUserTextSearch cols={cols} times={t} clear={clearTextSearch}/>
+            <ATwitterUser cols={cols} times={t} onUnMount={onUnMount} clear={clearTwitterUser} />
+            <TwitterUserTextSearch cols={cols} times={t} clear={clearTextSearch} />
           </SwipeableViews>
         </div>
       </div>
     )
   }
-
 }
 
 export default pure(ArchiveTwitter)

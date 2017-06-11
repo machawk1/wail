@@ -4,7 +4,7 @@ import shallowCompare from 'react-addons-shallow-compare'
 
 export default class MyAutoSizer extends Component {
   static propTypes = {
-    children: PropTypes.oneOfType([PropTypes.func,PropTypes.element]).isRequired,
+    children: PropTypes.oneOfType([PropTypes.func, PropTypes.element]).isRequired,
     findElement: PropTypes.string.isRequired
   }
 

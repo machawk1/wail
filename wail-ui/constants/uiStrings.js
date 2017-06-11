@@ -14,7 +14,7 @@ export const general = {
   restart: 'Restart',
   delete: 'Delete',
   status: 'Status',
-  wayback: 'Wayback',
+  wayback: 'Wayback'
 }
 
 export const ipcMessages = {
@@ -53,19 +53,19 @@ export const notificationMessages = {
   wailWarcreateError (eMessage) {
     return `There was an error while using ${acronyms.wailWarcreate} ${eMessage}. Resorting to using ${general.heritrix}`
   },
-  startingServiceEncounteredError (service,err) {
+  startingServiceEncounteredError (service, err) {
     return `Starting service ${service} encountered an error ${err}`
   },
   startedService (service) {
     return `Started service ${service}`
   },
-  stoppingServiceEncounteredError (service,err) {
+  stoppingServiceEncounteredError (service, err) {
     return `Stopping service ${service} encountered an error ${err}`
   },
   stoppedService (service) {
     return `Stopped service ${service}`
   },
-  buildingHeritrixCrawl (forCol,urls) {
+  buildingHeritrixCrawl (forCol, urls) {
     return `Building ${general.heritrix} crawl for ${forCol} with seeds: ${urls}`
   },
   wailWarcreateErrorTitle: `${acronyms.wailWarcreate} Error`,
@@ -74,7 +74,7 @@ export const notificationMessages = {
   startingHeritrix: `Starting ${general.heritrix}`,
   stoppingHeritrix: `Stopping ${general.heritrix}`,
   errorRestartingWaybacl: `There was error restarting ${general.wayback}`
-  
+
 }
 
 export const addToCollection = {
@@ -119,7 +119,7 @@ export const heritrix = {
 export const selectCollection = {
   filterSelectSearchHint: 'Collection Name',
   filterSelectToolTip: 'Search By Collection Name',
-  filterColTFHint: 'Search',
+  filterColTFHint: 'Search'
 }
 
 export const collectionCard = {
@@ -221,5 +221,5 @@ export const loadingRecords = {
   archivesLoaded: `${general.collections} Have Been Loaded`,
   archivesNotLoaded: `${general.collections} Have Not Been Loaded`,
   crawlsLoaded: `${general.crawls} HaveBeen Loaded`,
-  crawlsNotLoaded: `${general.crawls} Have Not Been Loaded`,
+  crawlsNotLoaded: `${general.crawls} Have Not Been Loaded`
 }

@@ -72,7 +72,7 @@ class ViewCollection extends Component {
 
   render () {
     return (
-      <div className="widthHeightHundoPercent">
+      <div className='widthHeightHundoPercent'>
         <CollectionViewHeader filterText={this.filterText} collection={this.props.collection} />
         <SeedTable filterText={this.filterText} collection={this.props.collection} seedConfig={this.props.seedConfig} />
       </div>

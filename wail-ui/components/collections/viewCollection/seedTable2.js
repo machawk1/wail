@@ -63,7 +63,7 @@ export default class SeedTable extends Component {
     let seeds = this.props.collection.get('seeds').filter(this.seedFilter).sort(this.sortByAdded)
     let len = seeds.size, i = 0
     if (len === 0) {
-      trs.push(<MementoCardEmpty viewingCol={viewingCol} key='mce'/>)
+      trs.push(<MementoCardEmpty viewingCol={viewingCol} key='mce' />)
     } else {
       for (; i < len; ++i) {
         let seed = seeds.get(i)
@@ -72,7 +72,7 @@ export default class SeedTable extends Component {
           conf = []
           for (const aConf of this.props.seedConfig[url]) {
             conf.push(aConf)
-            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`}/>)
+            conf.push(<br key={`${i}-br${aConf}-${viewingCol}-${url}`} />)
           }
         }
         trs.push(
@@ -104,7 +104,7 @@ export default class SeedTable extends Component {
   render () {
     let mementoCards = this.builtMementoCards()
     return (
-      <div id='colSeedsList' className="collectionSeedTable">
+      <div id='colSeedsList' className='collectionSeedTable'>
         <MyAutoSizer findElement='collViewDiv'>
           {this.renderMementoCards.bind(undefined, mementoCards)}
         </MyAutoSizer>

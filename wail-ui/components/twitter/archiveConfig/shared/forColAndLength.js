@@ -11,17 +11,17 @@ class ForColAndLength extends Component {
     lenStyle: PropTypes.object,
     flexOpts: PropTypes.object,
     cols: PropTypes.array.isRequired,
-    times: PropTypes.array.isRequired,
+    times: PropTypes.array.isRequired
   }
 
   static defaultProps = {
     forColStyle: {
       height: 200,
-      overflowY: 'auto',
+      overflowY: 'auto'
     },
     lenStyle: {
       height: 200,
-      overflowY: 'auto',
+      overflowY: 'auto'
     },
     flexOpts: {
       row: true,
@@ -30,7 +30,7 @@ class ForColAndLength extends Component {
   }
 
   render () {
-    let {forColStyle,lenStyle, cols, times, flexOpts} = this.props
+    let {forColStyle, lenStyle, cols, times, flexOpts} = this.props
     return (
       <Flex {...flexOpts}>
         <Field

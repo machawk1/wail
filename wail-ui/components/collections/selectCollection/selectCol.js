@@ -37,7 +37,7 @@ class SelectCol extends Component {
 
   render () {
     return (
-      <SelectColList collections={this.props.collections} filterText={this.state.searchText}/>
+      <SelectColList collections={this.props.collections} filterText={this.state.searchText} />
     )
   }
 }

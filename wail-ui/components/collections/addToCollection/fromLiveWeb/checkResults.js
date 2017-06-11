@@ -10,7 +10,6 @@ const pStyle = {
   fontFamily: 'inherit'
 }
 
-
 class CheckResults extends Component {
   shouldComponentUpdate (nextProps, nextState, nextContext) {
     return shallowCompare(this, nextProps, nextState)
@@ -29,8 +28,8 @@ class CheckResults extends Component {
     let pairs = _.toPairs(result.stats)
     let len = pairs.length
     let i = 0
-    for(; i < len; ++i) {
-      let [k,v] = pairs[i]
+    for (; i < len; ++i) {
+      let [k, v] = pairs[i]
       if (v !== 0) {
         render.push(`${k}: ${v}`)
         render.push('<br/>')

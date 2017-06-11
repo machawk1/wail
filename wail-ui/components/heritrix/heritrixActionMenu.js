@@ -58,20 +58,20 @@ const HeritrixActionMenu = ({jobId, i, viewConf, viewInHeritrix, startJob, resta
         key={`HJIR-${jobId}-actionButton`}
         touch
       >
-        <MoreVertIcon color={grey400}/>
+        <MoreVertIcon color={grey400} />
       </IconButton>
     }
     anchorOrigin={{horizontal: 'right', vertical: 'top'}}
     targetOrigin={{horizontal: 'right', vertical: 'top'}}
   >
     <div id={`hjicm${i}`}>
-      <MenuItem style={style} onTouchTap={viewConf} primaryText={heritrix.viewConf}/>
-      <MenuItem style={style} onTouchTap={viewInHeritrix} primaryText={heritrix.viewInHeritrix}/>
+      <MenuItem style={style} onTouchTap={viewConf} primaryText={heritrix.viewConf} />
+      <MenuItem style={style} onTouchTap={viewInHeritrix} primaryText={heritrix.viewInHeritrix} />
       <Divider />
-      <MenuItem style={style} onTouchTap={startJob} primaryText={general.start}/>
-      <MenuItem style={style} onTouchTap={restartJob} primaryText={general.restart}/>
-      <MenuItem style={style} onTouchTap={terminateJob} primaryText={heritrix.terminateCrawl}/>
-      <MenuItem style={style} onTouchTap={deleteJob} primaryText={general.delete}/>
+      <MenuItem style={style} onTouchTap={startJob} primaryText={general.start} />
+      <MenuItem style={style} onTouchTap={restartJob} primaryText={general.restart} />
+      <MenuItem style={style} onTouchTap={terminateJob} primaryText={heritrix.terminateCrawl} />
+      <MenuItem style={style} onTouchTap={deleteJob} primaryText={general.delete} />
     </div>
   </IconMenu>
 )
@@ -92,12 +92,12 @@ const HeritrixActionMenu2 = ({jobId, i, viewConf, viewInHeritrix, startJob, rest
     id={`hactions${i}`}
     key={`HJIR-${jobId}-actionButton-menu`}
   >
-    <FlatButton onTouchTap={viewConf} label='View Config'/>
-    <FlatButton onTouchTap={viewInHeritrix} label='View In Heritrix'/>
-    <FlatButton onTouchTap={startJob} label='Start'/>
-    <FlatButton onTouchTap={restartJob} label='Restart'/>
-    <FlatButton onTouchTap={terminateJob} label='Terminate Crawl'/>
-    <FlatButton onTouchTap={deleteJob} label='Delete'/>
+    <FlatButton onTouchTap={viewConf} label='View Config' />
+    <FlatButton onTouchTap={viewInHeritrix} label='View In Heritrix' />
+    <FlatButton onTouchTap={startJob} label='Start' />
+    <FlatButton onTouchTap={restartJob} label='Restart' />
+    <FlatButton onTouchTap={terminateJob} label='Terminate Crawl' />
+    <FlatButton onTouchTap={deleteJob} label='Delete' />
   </CardActions>
 )
 
@@ -115,4 +115,3 @@ HeritrixActionMenu2.propTypes = {
 export default connect(null, dispatchBind, mergeProps)(enhance(HeritrixActionMenu))
 
 // export default connect(null, dispatchBind, mergeProps)(enhance(HeritrixActionMenu))
-

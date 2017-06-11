@@ -9,14 +9,14 @@ import { collectionCard} from '../../../../constants/uiStrings'
 const enhance = namedUpdateKeys('CollectionCardBody', ['added', 'mementos', 'conf'])
 
 const CollectionCardBody = ({seeds, lastUpdated, size, description}) => (
-  <div key={`CollectionCardBody-div-${name}`} className="collectionCardBody">
+  <div key={`CollectionCardBody-div-${name}`} className='collectionCardBody'>
     <Flex key={`CollectionCardBody-flex-${name}`} row alignItems='baseline' >
-      <CardHeader titleStyle={{padding: 0}} className="collectionCardBodyInfo" key={`CollectionCardBody-${name}-seeds`}
-                  title={collectionCard.seedCount(seeds)}/>
-      <CardHeader titleStyle={{padding: 0}} className="collectionCardBodyInfo" key={`CollectionCardBody-${name}-size`}
-                  title={collectionCard.collSize(size)}/>
-      <CardHeader titleStyle={{padding: 0}} className="collectionCardBodyInfo" key={`CollectionCardBody-${name}-lastUpdated`}
-                  title={collectionCard.lastArchived(lastUpdated)}/>
+      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-seeds`}
+        title={collectionCard.seedCount(seeds)} />
+      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-size`}
+        title={collectionCard.collSize(size)} />
+      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-lastUpdated`}
+        title={collectionCard.lastArchived(lastUpdated)} />
     </Flex>
     <CardText>
       {description}

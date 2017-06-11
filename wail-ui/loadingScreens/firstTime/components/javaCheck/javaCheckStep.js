@@ -9,7 +9,6 @@ import { checkJava, nextLoadingStep } from '../../../actions'
 import { CheckStepLabel, CheckStepWarningLabel } from '../../../shared/checkStepLabels'
 import {firstTimeLoading as ftl} from '../../../../constants/uiStrings'
 
-
 const stateToProps = state => ({
   javaCheckRec: state.get('javaCheck'),
   step: state.get('loadingStep')
@@ -19,7 +18,6 @@ const dispatchToProps = dispatch => ({
   doCheck: bindActionCreators(checkJava, dispatch),
   nextStep: bindActionCreators(nextLoadingStep, dispatch)
 })
-
 
 const mergeProps = (stateProps, dispatchProps, ownProps) => {
   const {javaCheckRec, step} = stateProps

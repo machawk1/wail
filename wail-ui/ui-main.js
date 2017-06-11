@@ -16,7 +16,9 @@ process.on('uncaughtException', (err) => {
 })
 
 const winMan = new WindowManager()
-const debug = false, notDebugUI = true, openBackGroundWindows = false
+const debug = false
+const notDebugUI = true
+const openBackGroundWindows = false
 const control = global.__wailControl = new AppManager(debug, notDebugUI, openBackGroundWindows)
 
 export function showSettingsWindow (parent) {
@@ -52,12 +54,12 @@ winMan.on('send-failed', (report) => {
 
 app.commandLine.appendSwitch('js-flags', '--harmony')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('disable-http-cache')
 
 app.on('ready', async () => {
   console.log('app ready')
   Menu.setApplicationMenu(Menu.buildFromTemplate(menuTemplate))
   await control.init()
-  console.log(control.winConfigs)
   global.showSettingsMenu = showSettingsWindow
   global.windowMan = winMan
   winMan.init(control.winConfigs)

@@ -5,7 +5,6 @@ import CardText from 'material-ui/Card/CardText'
 import Divider from 'material-ui/Divider'
 import { addToCollection } from '../../../../constants/uiStrings'
 
-
 const DisplayInvalidMessage = ({hadErrors}) => (
   <div>
     <CardTitle

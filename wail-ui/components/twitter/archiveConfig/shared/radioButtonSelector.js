@@ -31,7 +31,7 @@ export default class RadioButtonSelector extends Component {
       <div style={{
         marginLeft: 10
       }}>
-        <CardHeader title={title}/>
+        <CardHeader title={title} />
         <RadioButtonGroup
           style={{width: 200}}
           {...input}

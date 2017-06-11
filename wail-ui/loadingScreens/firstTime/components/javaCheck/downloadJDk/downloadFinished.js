@@ -6,7 +6,6 @@ import { CheckStepContent } from '../../../../shared/checkStepContents'
 import StartJdkInstall from './startJdkInstall'
 import {firstTimeLoading as ftl} from '../../../../../constants/uiStrings'
 
-
 const displayWhich = shouldDisplay =>
   branch(
     props => shouldDisplay(props),

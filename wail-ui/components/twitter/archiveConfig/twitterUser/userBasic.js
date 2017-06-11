@@ -22,19 +22,19 @@ class UserBasic extends Component {
   render () {
     const {handleSubmit, pristine, reset, submitting, invalid, cols, times} = this.props
     return (
-      <form onSubmit={handleSubmit} className="widthHeightHundoPercent">
-        <div className="twitterScreenNameDiv">
+      <form onSubmit={handleSubmit} className='widthHeightHundoPercent'>
+        <div className='twitterScreenNameDiv'>
           <Field
             floatingLabelText='ScreenName'
             hintText='WebSciDl'
             name='screenName'
             component={TextField}
-            fullWidth={true}
+            fullWidth
           />
         </div>
-        <ForColAndLength cols={cols} times={times}/>
-        <CardActions className="archiveTwitterButtons">
-          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary/>
+        <ForColAndLength cols={cols} times={times} />
+        <CardActions className='archiveTwitterButtons'>
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         </CardActions>
       </form>
     )

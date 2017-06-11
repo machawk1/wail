@@ -36,4 +36,3 @@ export default class SeedFormEntry extends Component {
     )
   }
 }
-

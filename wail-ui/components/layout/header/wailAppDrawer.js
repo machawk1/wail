@@ -52,7 +52,7 @@ class WailAppDrawer extends Component {
               id='sidebarCols'
               primaryText={general.collections}
               rightIcon={<Avatar className='img-circle' backgroundColor={'transparent'}
-                                 src={'icons/linux/whale_64.png'}/>}
+                src={'icons/linux/whale_64.png'} />}
             />
           </Link>
           <Divider />
@@ -64,7 +64,7 @@ class WailAppDrawer extends Component {
             <MenuItem
               id='sidebarHeritrix'
               primaryText={general.crawls}
-              rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif'/>}
+              rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
             />
           </Link>
           <Divider />
@@ -105,7 +105,6 @@ class WailAppDrawer extends Component {
       </Drawer>
     )
   }
-
 }
 
 // const WailAppDrawer = ({open, onRequestChange, handleClose}) => (

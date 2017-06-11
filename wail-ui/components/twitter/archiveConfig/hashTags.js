@@ -83,8 +83,8 @@ class HashTags extends Component {
   render () {
     const { handleSubmit, pristine, reset, submitting, invalid } = this.props
     return (
-      <div className="widthHeightHundoPercent" id='twitterArchive'>
-        <Card className="widthHeightHundoPercent">
+      <div className='widthHeightHundoPercent' id='twitterArchive'>
+        <Card className='widthHeightHundoPercent'>
           <form onSubmit={handleSubmit(submit)} style={{ width: 'inherit', height: 'inherit' }}>
             <Field
               name='Until'

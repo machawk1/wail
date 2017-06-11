@@ -10,7 +10,7 @@ export NoCollectionMatches from './noCollectionMatches'
 const enhance = namedUpdateKeys('CollectionCard', ['col', 'i'])
 
 const CollectionCard = ({col, ccKey, i}) => (
-  <Card key={`${ccKey}-collectioncard`} className="collectionCard">
+  <Card key={`${ccKey}-collectioncard`} className='collectionCard'>
     <CollectionCardHeader i={i} key={`${ccKey}-collectioncard-header`} name={col.get('colName')} />
     <CollectionCardBody
       key={`${ccKey}-collectioncard-body`}

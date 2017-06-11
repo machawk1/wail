@@ -5,7 +5,7 @@ const styles = {
     wordWrap: 'break-word',
     textOverflow: 'none',
     whiteSpace: 'normal',
-    overflow: 'hidden',
+    overflow: 'hidden'
   },
   statusS: {
     width: '50px',

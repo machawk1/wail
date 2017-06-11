@@ -45,7 +45,7 @@ class AskDownload extends Component {
   render () {
     return (
       <CheckStepContent>
-        <p dangerouslySetInnerHTML={{__html: ftl.downloadJDKExplaination()}}></p>
+        <p dangerouslySetInnerHTML={{__html: ftl.downloadJDKExplaination()}} />
         <RaisedButton
           label='Yes'
           disableTouchRipple

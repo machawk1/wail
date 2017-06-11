@@ -25,7 +25,7 @@ class StartJdkInstall extends Component {
     }
     return (
       <CheckStepContent>
-        <p dangerouslySetInnerHTML={{__html: ftl.jdkDlFinishedAskStartInstall()}}></p>
+        <p dangerouslySetInnerHTML={{__html: ftl.jdkDlFinishedAskStartInstall()}} />
         <RaisedButton
           label='Yes'
           disableTouchRipple

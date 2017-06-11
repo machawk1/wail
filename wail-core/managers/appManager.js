@@ -1,4 +1,4 @@
-import Promise from 'bluebird'
+import URL from 'url'
 import S from 'string'
 import fs from 'fs-extra'
 import Path from 'path'
@@ -11,8 +11,6 @@ import ContextMenu from '../util/contextMenu'
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
-
-const isDev = process.env.NODE_ENV === 'development'
 
 export default class AppManager2 {
   constructor (debug = false, notDebugUI = false, openBackGroundWindows = false) {
@@ -61,7 +59,9 @@ export default class AppManager2 {
     let loadFrom = `${this.base}/wail-ui`
     this.pathMan = global.pathMan = new Pather(this.base)
     global.basePath = this.base
-    let logPath, dbPath, v = app.getVersion()
+    let logPath
+    let dbPath
+    let v = app.getVersion()
     let settingsPath = dbPath = userData
     if (process.env.NODE_ENV === 'development') {
       settingsPath = Path.join(this.base, 'wail-config')
@@ -71,8 +71,8 @@ export default class AppManager2 {
     } else {
       logPath = Path.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
     }
-    fs.ensureFileSync(Path.join(logPath, 'wail.log'))
-    fs.ensureFileSync(Path.join(logPath, 'wail-ui.log'))
+    await fs.ensureFile(Path.join(logPath, 'wail.log'))
+    await fs.ensureFile(Path.join(logPath, 'wail-ui.log'))
     global.logger = bunyan.createLogger({
       name: 'wail-ui-main',
       streams: [
@@ -84,8 +84,8 @@ export default class AppManager2 {
     })
     this.logPath = logPath
     this.settingsMan = new SettingsManager(this.base, app.getPath('documents'), settingsPath, dbPath, v)
-    this._setupWindowConfigs(loadFrom)
     await this.settingsMan.configure()
+    this._setupWindowConfigs(loadFrom)
     if (!this.settingsMan.get('didFirstLoad')) {
       this.firstLoad = true
     }
@@ -179,7 +179,15 @@ export default class AppManager2 {
           width: 800,
           height: 600
         },
-        url: `file://${loadFrom}/childWindows/twitterLogin.html`,
+        url: URL.format({
+          protocol: 'file',
+          pathname: `${loadFrom}/childWindows/twitterLogin.html`,
+          slashes: true,
+          hash: encodeURIComponent(JSON.stringify({
+            key: this.settingsMan.get('twitter.wailKey'),
+            secret: this.settingsMan.get('twitter.wailSecret')
+          }))
+        }),
         name: 'twitterLoginWindow'
       },
       {

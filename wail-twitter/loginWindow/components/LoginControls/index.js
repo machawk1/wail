@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import constz from '../../constants'
+import constz from '../../constants/index'
 import LoginControlTitleButtons from './LoginControlTitleButtons'
 
 export default class LoginControl extends Component {
@@ -49,10 +49,9 @@ export default class LoginControl extends Component {
 
   render () {
     return (
-      <div className="loginControlContainer">
-        <LoginControlTitleButtons goBack={this.goBack} goToLoginIndex={this.goToLoginIndex}/>
+      <div className='loginControlContainer'>
+        <LoginControlTitleButtons goBack={this.goBack} goToLoginIndex={this.goToLoginIndex} />
       </div>
     )
   }
 }
-

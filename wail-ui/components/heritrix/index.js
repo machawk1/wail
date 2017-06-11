@@ -36,8 +36,8 @@ class Heritrix extends Component {
     for (; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
       trs.push(<HertrixJobItem i={i} key={`${i}-${jobId}`} jobId={jobId} actionMenu={
-        <HeritrixActionMenu jobId={jobId} i={i}/>
-      }/>)
+        <HeritrixActionMenu jobId={jobId} i={i} />
+      } />)
     }
     return trs
   }

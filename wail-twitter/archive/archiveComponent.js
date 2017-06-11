@@ -231,7 +231,7 @@ export default class ArchiveComponent extends Component {
     console.log(wb)
     return (
       <div style={{width: 'inherit', height: 'inherit'}}>
-        <div dangerouslySetInnerHTML={wb}/>
+        <div dangerouslySetInnerHTML={wb} />
       </div>
     )
   }

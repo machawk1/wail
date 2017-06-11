@@ -1,8 +1,8 @@
 import 'babel-polyfill'
 import 'react-flex/index.css'
-import 'react-joyride/lib/react-joyride-compiled.css'
 import './css/wail.css'
 import React from 'react'
+import sms from 'source-map-support'
 import {BehaviorSubject} from 'rxjs'
 import { render } from 'react-dom'
 import createHashHist from 'history/createHashHistory'
@@ -15,12 +15,16 @@ import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
 import RingBuffer from './util/ringBuffer'
 import windowCloseHandler from './windowCloseHandler'
+sms.install({
+  environment: 'node'
+})
 injectTapEventPlugin()
 
 const store = configureStore()
 const hashHistory = createHashHist()
 
 if (process.env.NODE_ENV === 'development') {
+  require('react-joyride/lib/react-joyride-compiled.css')
   window.Perf = require('react-addons-perf')
   window.__history = hashHistory
   // hashHistory.listen((location, action) => {

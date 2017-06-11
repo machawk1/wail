@@ -5,7 +5,7 @@ import { FilterSelectCol } from '../components/collections/selectCollection'
 const enhance = namedPure('SelectColContainer')
 
 const SelectColContainer = () => (
-  <div className="widthHeightHundoPercent" id='cViewContainer'>
+  <div className='widthHeightHundoPercent' id='cViewContainer'>
     <FilterSelectCol />
   </div>
 )

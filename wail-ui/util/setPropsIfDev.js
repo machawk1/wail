@@ -16,7 +16,6 @@ export function setProps (props, Component) {
   return Component
 }
 
-
 export function setPropsCurried (props) {
   return curry(setProps)(props)
 }

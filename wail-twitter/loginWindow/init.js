@@ -20,9 +20,9 @@ app.commandLine.appendSwitch('js-flags', '--harmony')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('disable-http-cache')
 
-// ipcMain.on('archiveMan-initial-load', (event, cols) => {
-//   console.log(cols)
-// })
+ipcMain.on('twitter-signin-window', (event, stuff) => {
+  console.log(stuff)
+})
 
 let m
 

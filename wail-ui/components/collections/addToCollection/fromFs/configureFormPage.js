@@ -33,7 +33,7 @@ const configureFormPage = (onSubmit, warcSeeds) => {
   const seeds = warcSeeds[0].seeds.map((seed, idx) =>
     <RadioButton
       checkedIcon={<Checked />}
-      uncheckedIcon={<UnChecked/>}
+      uncheckedIcon={<UnChecked />}
       key={`${idx}-${seed.url}-rb`}
       value={seed.url}
       label={seed.url}
@@ -41,9 +41,9 @@ const configureFormPage = (onSubmit, warcSeeds) => {
   )
   return (
     <div style={{width: '100%', height: 'inherit'}}>
-      <CardTitle title={addToCollection.selectCorrectSeed}/>
-      <Divider style={{width: '95%'}}/>
-      <CardHeader title={warcSeeds[0].name}/>
+      <CardTitle title={addToCollection.selectCorrectSeed} />
+      <Divider style={{width: '95%'}} />
+      <CardHeader title={warcSeeds[0].name} />
       <FormPage
         containerName={'seedListFPContainer'}
         onSubmit={onSubmit}
