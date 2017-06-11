@@ -52,8 +52,8 @@ app.on('ready', async () => {
     pathname: `${__dirname}/newTwitterSignIn.html`,
     slashes: true,
     hash: encodeURIComponent(JSON.stringify({
-      key: '',
-      secret: ''
+      key: 'K1y1GmSdDfUmBNMJeX1lf8Ono',
+      secret: 'Ksd87lVkQWRVeXUIYjqqPF7mfUZuRq1aU1fgAFJHdDz3AY7NTY'
     }))
   })
   m.loadURL(loadMe)
