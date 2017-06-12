@@ -227,7 +227,7 @@ export default class ArchiveComponent extends Component {
   }
 
   render () {
-    let wb = {__html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} partition="archive" plugins> </webview>`}
+    let wb = {__html: `<webview class="archiveWV"  id="awv" src="about:blank" preload=${remote.getGlobal('settings').get('archivePreload')} disablewebsecurity webpreferences="allowRunningInsecureContent" partition="archive" plugins> </webview>`}
     console.log(wb)
     return (
       <div style={{width: 'inherit', height: 'inherit'}}>

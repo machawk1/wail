@@ -8,7 +8,7 @@ const here = process.cwd()
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.6
+    'electron': '1.7.2'
   },
   "useBuiltIns": true,
   'include': [
@@ -50,7 +50,6 @@ module.exports = {
             'react'
           ],
           plugins: [
-            'transform-react-remove-prop-types',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-destructuring',
@@ -100,9 +99,6 @@ module.exports = {
     __filename: false
   },
   plugins: [
-    new webpack.BannerPlugin(
-      {banner: 'require("source-map-support").install();', raw: true, entryOnly: false}
-    ),
     new CopyWebpackPlugin([{
       from: './wail-twitter/archive/inject.js'
     }]),

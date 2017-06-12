@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
 import { Flex }from 'react-flex'
 import CardTitle from 'material-ui/Card/CardTitle'
-import RaisedButton from 'material-ui/RaisedButton'
+import FAB from 'material-ui/FloatingActionButton'
+import ContentAdd from 'material-ui/svg-icons/content/add'
 import List from 'material-ui/List/List'
 import ASearchTerm from './ASearchTerm'
-import MyAutoSizer from '../../../utilComponents/myAutoSizer'
+import Subheader from 'material-ui/Subheader'
 
 export default class SearchTermList extends Component {
   constructor (...args) {
@@ -43,17 +44,21 @@ export default class SearchTermList extends Component {
           <div style={{width: '50%', height: 175}}>
             <Flex row>
               <CardTitle subtitle='Look For What In The Tweets Text?'/>
-              <RaisedButton
+              <FAB
                 onTouchTap={this.addField}
-                primary label={'Add'}
-                labelPosition={'before'}
-              />
+                mini
+              >
+                <ContentAdd/>
+              </FAB>
             </Flex>
           </div>
-          <div style={{overflowY: 'auto', height: 175, maxHeight: 175, width: '50%'}}>
-            <List >
-              {this.makeLis()}
-            </List>
+          <div style={{width: '50%'}}>
+            <Subheader style={{lineHeight: 0}}>Words To Look For In A Tweet</Subheader>
+            <div style={{overflowY: 'auto', height: 175, maxHeight: 175}}>
+              <List>
+                {this.makeLis()}
+              </List>
+            </div>
           </div>
         </Flex>
       </div>

@@ -7,11 +7,11 @@ const here = process.cwd()
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': 1.6
+    'electron': '1.7.2'
   },
   "useBuiltIns": true,
   'include': [
-    'transform-es2015-destructuring',
+    'syntax-trailing-function-commas',
   ],
   'exclude': [
     'transform-async-to-generator',
@@ -55,7 +55,6 @@ module.exports = {
             'react',
           ],
           plugins: [
-            'transform-react-remove-prop-types',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-destructuring',
@@ -98,9 +97,6 @@ module.exports = {
     }
   },
   plugins: [
-    new webpack.BannerPlugin(
-      {banner: 'require("source-map-support").install();', raw: true, entryOnly: false}
-    ),
     new webpack.ProvidePlugin({
       'Promise': 'bluebird'
     }),

@@ -9,12 +9,13 @@ import cfgUI from './webpackConfigs/ui/webpack.config.production.js'
 import cfgCore from './webpackConfigs/core/webpack.config.production.js'
 import packager from 'electron-packager'
 import pkg from './package.json'
+import cp from 'child_process'
 import { moveThemP } from './tools/moveJDKMemgator'
 
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = process.cwd()
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
-fs.emptyDirSync(path.join(cwd, 'dist'))
+//fs.emptyDirSync(path.join(cwd, 'dist'))
 
 const darwinBuild = {
   icon: 'whale.icns',
@@ -114,18 +115,16 @@ const DEFAULT_OPTS = {
 // OSX
 const darwinSpecificOpts = {
 
-  'app-bundle-id': 'wsdl.cs.odu.edu.wail',
+  'appBundleId': 'wsdl.cs.odu.edu.wail',
 
   // The application category type, as shown in the Finder via 'View' -> 'Arrange by
   // Application Category' when viewing the Applications directory (OS X only).
-  'app-category-type': 'public.app-category.utilities',
+  'appCategoryType': 'public.app-category.utilities',
 
   // // The bundle identifier to use in the application helper's plist (OS X only).
-  'helper-bundle-id': 'wsdl.wail.cs.odu.edu-helper',
+  'helperBundleId': 'wsdl.wail.cs.odu.edu-helper',
 
-  'extend-info': darwinBuild.extendPlist,
-
-  'extra-resource': [darwinBuild.archiveIconPath, darwinBuild.iconPath],
+  'extraResource': [darwinBuild.archiveIconPath, darwinBuild.iconPath],
 
   // Application icon.
   icon: darwinBuild.iconPath
@@ -317,13 +316,13 @@ async function buildForPlatArch (plats, archs) {
 async function doBuild () {
   console.log('Building WAIL')
   console.log('Transpiling and Creating Single File WAIL-Electron-Main')
-  await build(electronCfg)
+//  await build(electronCfg)
   console.log('Transpiling and Creating Single File WAIL-UI')
-  await build(cfgUI)
+//  await build(cfgUI)
   console.log('Transpiling and Creating Single File WAIL-Core')
-  await build(cfgCore)
+//  await build(cfgCore)
   console.log('cleaning previous releases')
-  await emptyRelease()
+//  await emptyRelease()
   if (shouldBuildCurrent) {
     const thePlat = os.platform()
     if (thePlat === 'darwin') {

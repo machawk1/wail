@@ -54,7 +54,7 @@ winMan.on('send-failed', (report) => {
 
 app.commandLine.appendSwitch('js-flags', '--harmony')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
-app.commandLine.appendSwitch('disable-http-cache')
+// app.commandLine.appendSwitch('disable-http-cache')
 
 app.on('ready', async () => {
   console.log('app ready')

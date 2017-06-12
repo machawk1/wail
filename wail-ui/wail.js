@@ -2,7 +2,6 @@ import 'babel-polyfill'
 import 'react-flex/index.css'
 import './css/wail.css'
 import React from 'react'
-import sms from 'source-map-support'
 import {BehaviorSubject} from 'rxjs'
 import { render } from 'react-dom'
 import createHashHist from 'history/createHashHistory'
@@ -15,9 +14,9 @@ import createDetectElementResize from './vendor/detectElementResize'
 import TwitterClient from '../wail-twitter/twitterClient'
 import RingBuffer from './util/ringBuffer'
 import windowCloseHandler from './windowCloseHandler'
-sms.install({
-  environment: 'node'
-})
+// sms.install({
+//   environment: 'node'
+// })
 injectTapEventPlugin()
 
 const store = configureStore()

@@ -1,7 +1,7 @@
 {
   "name": "WAIL",
   "license": "LGPL-3.0",
-  "version": "1.1.0beta2.5",
+  "version": "1.1.0",
   "contributors": [
     {
       "name": "John Berlin",
@@ -23,19 +23,18 @@
     "ava": "node --harmony ./node_modules/.bin/ava"
   },
   "scripts": {
-    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
-    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
-    "build-core": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/webpack.config.production.js --progress --profile --colors",
+    "build-main": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
+    "build-core": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/webpack.config.production.js --progress --profile --colors",
     "build-wail-for-tests": "node --harmony tools/wailBuildTest.js",
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",
-    "dev-core": "bnr dev-core",
+    "dev-core": "HOT=1 NODE_ENV=development node --harmony ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/core/webpack.config.js --port 9001 --content-base ./wail-core/ --hot --inline",
     "dev-core-win": "cross-env HOT=1 NODE_ENV=development node_modules\\.bin\\webpack-dev-server.cmd --config ./webpackConfigs/core/webpack.config.js --port 9001 --content-base ./wail-core/ --hot --inline",
-    "dev-ui": "bnr dev-ui",
+    "dev-ui": "HOT=1 NODE_ENV=development node --harmony ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-win": "cross-env HOT=1 NODE_ENV=development node_modules\\.bin\\webpack-dev-server.cmd --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
-    "dev-ui-electron": "bnr dev-ui-electron",
-    "dev-only": "bnr dev-only",
-    "dev-only-entry": "bnr dev-only-entry",
+    "dev-ui-electron": "HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
+    "dev-only": "cross-env HOT=1 NODE_ENV=development node --max-old-space-size=2024  ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-ui/ --hot --inline",
     "run-tests": "node --harmony --harmony_async_await ./node_modules/.bin/ava -s --verbose",
     "test-aman": "node --harmony --harmony_async_await ./node_modules/.bin/ava --verbose tests/testServiceMan/testServiceManager.js",
     "package": "cross-env NODE_ENV=production node --harmony -r babel-register build-binary.js",
@@ -211,6 +210,7 @@
     "shelljs": "0.7.7",
     "sliced": "^1.0.1",
     "sort-stream2": "^1.0.0",
+    "source-map-support": "^0.4.15",
     "split2": "^2.1.1",
     "stream-each": "^1.2.0",
     "string": "^3.3.3",

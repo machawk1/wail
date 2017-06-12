@@ -11,8 +11,7 @@ import Card from 'material-ui/Card/Card'
 import CardTitle from 'material-ui/Card/CardTitle'
 import { notifyError, notifyInfo } from '../../../actions/notification-actions'
 
-function monitor (config) {
-  let message = `Monitoring ${config.account} for ${config.duration} to ${config.forCol} Now!`
+function monitor (config,message) {
   notifyInfo(message)
   ipc.send('monitor-twitter-account', config)
   window.logger.info(message)
@@ -82,17 +81,46 @@ class ArchiveTwitter extends Component {
             _error: 'Invalid Screen Name'
           })
         }
-        let conf = {
-          account: screenName,
-          dur: timeValues.values[values.get('length')],
-          forCol: values.get('forCol'),
-          taskType: 'UserTimeLine'
+        let config
+        let message
+        let hts = values.get('searchT')
+        if (hts && hts.size > 0) {
+          hts = hts.toJS().filter(it => it !== '')
+          if (hts.length > 0) {
+            config = {
+              account: screenName,
+              dur: timeValues.values[values.get('length')],
+              forCol: values.get('forCol'),
+              lookFor: hts.length > 1 ? hts : hts[0],
+              configOpts: {count: 100},
+              taskType: 'TextSearch'
+            }
+           message = `Monitoring @${config.account} For ${hts.length} ${hts.length > 1 ? 'Words' : 'Word'} In Tweets For ${values.get('length')}. Tweets Added To ${config.forCol}!`
+          } else {
+            config = {
+              account: screenName,
+              dur: timeValues.values[values.get('length')],
+              forCol: values.get('forCol'),
+              taskType: 'UserTimeLine'
+            }
+            message = `You Did Not Specify Words To Look For. Monitoring @${config.account}'s Timeline For ${values.get('length')}. Tweets Added To ${config.forCol}!`
+
+          }
+          // console.log(config)
+        } else {
+          config = {
+            account: screenName,
+            dur: timeValues.values[values.get('length')],
+            forCol: values.get('forCol'),
+            taskType: 'UserTimeLine'
+          }
+          message = `Monitoring @${config.account}'s Timeline For ${values.get('length')}. Tweets Added To ${config.forCol}!`
         }
         if (process.env.NODE_ENV === 'development') {
           // tehehehe sssshhhhh
-          monitor({...conf, oneOff: true})
+          monitor({...config, oneOff: true},message)
         } else {
-          monitor(conf)
+          monitor(config,message)
         }
         this.props.clear()
       })
@@ -103,7 +131,6 @@ class ArchiveTwitter extends Component {
   }
 
   componentWillUnmount () {
-    console.log(this.props)
     this.props.clear()
   }
 
@@ -112,8 +139,8 @@ class ArchiveTwitter extends Component {
     const times = makeTimeValues()
     return (
       <div className='widthHeightHundoPercent'>
-        <div className='wail-container inheritThyWidthHeight' style={{marginTop: 15}}>
-          <Card id='twitterFormCard' style={{height: '45%', width: '100%'}}>
+        <div className='wail-container inheritThyWidthHeight' >
+          <Card id='twitterFormCard' style={{marginTop: 15,height: '55%', }}>
             <CardTitle title='Monitoring &amp; Archiving Configuration' style={{paddingBottom: 0}}/>
             <ArchiveTwitterForm cols={cols} times={times} onSubmit={this.submit}/>
           </Card>
