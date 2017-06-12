@@ -67,7 +67,8 @@
 }
 
 .archiveTwitterButtons {
-    float: right;
+    float: left;
+    position: relative;
 }
 
 .centering-container {

@@ -1,103 +1,127 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { batchActions } from 'redux-batched-actions'
-import { Tabs, Tab } from 'material-ui/Tabs'
-import { RadioButton } from 'material-ui/RadioButton'
-import { reset as resetForm } from 'redux-form'
-import pure from 'recompose/pure'
-import SwipeableViews from 'react-swipeable-views'
-import ATwitterUser from './aTwitterUser'
-import TwitterUserTextSearch from './twitterUserTextSearch'
+import { bindActionCreators } from 'redux/es'
+import { SubmissionError, reset as resetForm } from 'redux-form'
+import { ipcRenderer as ipc } from 'electron'
+import MenuItem from 'material-ui/MenuItem'
 import timeValues from './timeValues'
+import ArchiveTwitterForm from './ArchiveTwitterForm'
+import Card from 'material-ui/Card/Card'
+import CardTitle from 'material-ui/Card/CardTitle'
+import { notifyError, notifyInfo } from '../../../actions/notification-actions'
 
-const styles = {
-  headline: {
-    fontSize: 24,
-    paddingTop: 16,
-    marginBottom: 12,
-    fontWeight: 400
-  },
-  slide: {
-    padding: 10
+function monitor (config) {
+  let message = `Monitoring ${config.account} for ${config.duration} to ${config.forCol} Now!`
+  notifyInfo(message)
+  ipc.send('monitor-twitter-account', config)
+  window.logger.info(message)
+}
+
+function stateToProps (state) {
+  return {
+    cols: state.get('collections')
   }
 }
 
-const colNames = store => Array.from(store.getState().get('collections').values())
-  .map((col, i) => {
-    let colName = col.get('colName')
-    return (
-      <RadioButton
-        key={`${i}-${colName}-rb`}
-        value={colName}
-        label={colName}
-      />
-    )
-  })
+function dispatchToProps (dispatch) {
+  return bindActionCreators({
+    clear(){
+      return resetForm('archiveTwitter')
+    }
+  }, dispatch)
+}
 
-const makeFormClears = store => ({
-  onUnMount () {
-    store.dispatch(batchActions([resetForm('aTwitterUser'), resetForm('twitterTextSearch')]))
-  },
-  clearTwitterUser () {
-    store.dispatch(resetForm('aTwitterUser'))
-  },
-  clearTextSearch () {
-    store.dispatch(resetForm('twitterTextSearch'))
-  }
-})
+function makeTimeValues () {
+  return timeValues.times.map((time, i) =>
+    <MenuItem
+      value={time}
+      key={`${i}-${time}-timeVal`}
+      primaryText={time}
+    />
+  )
+}
 
 class ArchiveTwitter extends Component {
   static propTypes = {
-    store: PropTypes.object.isRequired
+    clear: PropTypes.func.isRequired
   }
 
   constructor (...args) {
     super(...args)
-    this.state = {
-      slideIndex: 0
-    }
-
-    this.handleChange = this.handleChange.bind(this)
+    this.submit = this.submit.bind(this)
   }
 
-  handleChange (value) {
-    this.setState({
-      slideIndex: value
+  makeColNames () {
+    return this.props.cols.keySeq().map((colName, i) => {
+      return (
+        <MenuItem
+          key={`${i}-${colName}-mi`}
+          value={colName}
+          primaryText={colName}
+        />
+      )
     })
   }
 
+  submit (values) {
+    let screenName = values.get('screenName')
+    if (screenName.startsWith('@')) {
+      screenName = screenName.substr(1)
+    }
+    return global.twitterClient.getUserId({screen_name: screenName})
+      .catch(error => {
+        console.error(error)
+        notifyError(`An internal error occurred ${error.message || ''}`, true)
+      })
+      .then(({data, resp}) => {
+        if (data.errors) {
+          notifyError(`Invalid Screen Name: ${values.get('userName')} does not exist`)
+          throw new SubmissionError({
+            userName: `${values.get('userName')} does not exist`,
+            _error: 'Invalid Screen Name'
+          })
+        }
+        let conf = {
+          account: screenName,
+          dur: timeValues.values[values.get('length')],
+          forCol: values.get('forCol'),
+          taskType: 'UserTimeLine'
+        }
+        if (process.env.NODE_ENV === 'development') {
+          // tehehehe sssshhhhh
+          monitor({...conf, oneOff: true})
+        } else {
+          monitor(conf)
+        }
+        this.props.clear()
+      })
+  }
+
+  shouldComponentUpdate (nextProps, nextState, nextContext) {
+    return this.props.cols !== nextProps.cols
+  }
+
+  componentWillUnmount () {
+    console.log(this.props)
+    this.props.clear()
+  }
+
   render () {
-    let {store} = this.props
-    const cols = colNames(store)
-    const t = timeValues.times.map((time, i) =>
-      <RadioButton
-        value={time}
-        key={`${i}-${time}-timeVal`}
-        label={time}
-      />)
-    const {onUnMount, clearTwitterUser, clearTextSearch} = makeFormClears(store)
+    const cols = this.makeColNames()
+    const times = makeTimeValues()
     return (
       <div className='widthHeightHundoPercent'>
-        <div className='wail-container' style={{marginTop: 15}}>
-          <Tabs
-            onChange={this.handleChange}
-            value={this.state.slideIndex}
-          >
-            <Tab label='Users Timeline' value={0} />
-            <Tab label='Users Tweet' value={1} />
-          </Tabs>
-          <SwipeableViews
-            index={this.state.slideIndex}
-            onChangeIndex={this.handleChange}
-          >
-            <ATwitterUser cols={cols} times={t} onUnMount={onUnMount} clear={clearTwitterUser} />
-            <TwitterUserTextSearch cols={cols} times={t} clear={clearTextSearch} />
-          </SwipeableViews>
+        <div className='wail-container inheritThyWidthHeight' style={{marginTop: 15}}>
+          <Card id='twitterFormCard' style={{height: '45%', width: '100%'}}>
+            <CardTitle title='Monitoring &amp; Archiving Configuration' style={{paddingBottom: 0}}/>
+            <ArchiveTwitterForm cols={cols} times={times} onSubmit={this.submit}/>
+          </Card>
         </div>
       </div>
     )
   }
 }
 
-export default pure(ArchiveTwitter)
+export default connect(stateToProps, dispatchToProps)(ArchiveTwitter)
+

@@ -34,7 +34,7 @@ export default class WindowManager extends EventEmitter {
       mainWindow: {window: null, url: null, open: false, conf: null, loadComplete: false},
 
       twitterMonitor: {window: null, url: null, conf: null, open: false, loadComplete: false},
-      twitterLoginWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
+      twitterLoginWindow: null,
       archiverWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
 
       managersWindow: {window: null, url: null, conf: null, open: false, loadComplete: false},
@@ -72,6 +72,7 @@ export default class WindowManager extends EventEmitter {
   }
 
   twitterLoginListener (event, what) {
+    console.log(what)
     if (what.type === 'canceled') {
       this.windows['twitterLoginWindow'].canceled()
       ipcMain.removeListener('twitter-signin-window', this.twitterLoginListener)
@@ -368,7 +369,7 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('sign-in-twitter', () => {
       if (!this.windows['twitterLoginWindow'].open) {
         ipcMain.addListener('twitter-signin-window', this.twitterLoginListener)
-        this.windows['twitterLoginWindow'].showTwitterLoginWindow(control)
+        this.windows['twitterLoginWindow'].showTwitterLoginWindow(this)
       }
     })
 
