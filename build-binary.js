@@ -316,13 +316,13 @@ async function buildForPlatArch (plats, archs) {
 async function doBuild () {
   console.log('Building WAIL')
   console.log('Transpiling and Creating Single File WAIL-Electron-Main')
-//  await build(electronCfg)
+  await build(electronCfg)
   console.log('Transpiling and Creating Single File WAIL-UI')
-//  await build(cfgUI)
+  await build(cfgUI)
   console.log('Transpiling and Creating Single File WAIL-Core')
-//  await build(cfgCore)
+  await build(cfgCore)
   console.log('cleaning previous releases')
-//  await emptyRelease()
+  await emptyRelease()
   if (shouldBuildCurrent) {
     const thePlat = os.platform()
     if (thePlat === 'darwin') {

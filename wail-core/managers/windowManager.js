@@ -685,6 +685,8 @@ export default class WindowManager extends EventEmitter {
           // this.windows['archiverWindow'].window.show()
           this.windows['archiverWindow'].window.webContents.openDevTools()
         }
+        // this.windows['archiverWindow'].window.show()
+        // this.windows['archiverWindow'].window.webContents.openDevTools()
         this.windows['archiverWindow'].open = true
         this.windows['archiverWindow'].loadComplete = true
         resolve()

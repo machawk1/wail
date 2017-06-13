@@ -32,10 +32,10 @@
   {
     if(process.env.HOT) {
       const scriptDeps = document.createElement('script')
-      scriptDeps.src = 'http://localhost:9001/dist/deps.bundle.js'
+      scriptDeps.src = 'http://localhost:9002/dist/deps.bundle.js'
       document.write(scriptDeps.outerHTML)
       const script = document.createElement('script')
-      script.src = 'http://localhost:9001/dist/archiver.bundle.js'
+      script.src = 'http://localhost:9002/dist/archiver.bundle.js'
       document.write(script.outerHTML)
     } else {
       require('../../dist/archiver.bundle.js')

@@ -32,7 +32,6 @@ module.exports = {
     requestD: './wail-ui/background/js/requestDaemon',
     twitterM: './wail-ui/background/js/twitterM',
     twitterLogin: './wail-twitter/loginWindow/index',
-    archiver: './wail-ui/background/js/archiver',
     settingsW: './wail-ui/childWindows/settings/settingsW',
   },
   module: {

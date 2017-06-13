@@ -10,9 +10,7 @@ const babelEnvConfig = ['env', {
   'debug': true,
   "useBuiltIns": true,
   'include': [
-    'syntax-trailing-function-commas',
-    'transform-es2015-classes',
-    'transform-es2015-object-super'
+    'syntax-trailing-function-commas'
   ],
   'exclude': [
     'transform-async-to-generator',
@@ -24,7 +22,7 @@ const babelEnvConfig = ['env', {
 module.exports = {
   devtool: 'inline-source-map',
   entry: {
-    debugMe: './wail-twitter/loginWindow/twitterSignIn.js',
+    archiver: './wail-ui/background/js/archiver',
   },
   module: {
     noParse: noParseRe,
@@ -37,7 +35,7 @@ module.exports = {
             loader: 'babel-loader',
             query: {
               cacheDirectory: true,
-              presets: [babelEnvConfig, 'react-hmre', 'react'],
+              presets: [babelEnvConfig, 'react'],
               plugins: [
                 'transform-decorators-legacy',
                 'transform-class-properties',
