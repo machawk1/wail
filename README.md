@@ -19,7 +19,7 @@ This work is supported by the [National Endowment for the Humanities](https://ww
 ## Wail Electron
 [![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
 
-![Wail Electron Advanced](images/wailHome.png?raw=true "Basic")
+<img src='images/wailHome.png' alt='WAIL Home Screen' style='width: 500px; height: auto;'>
 
 ## Usage
 You can download the latest release [here](https://github.com/N0taN3rd/wail/releases). 
