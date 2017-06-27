@@ -15,7 +15,7 @@ See the <a href="http://machawk1.github.io/wail/#download">download section on t
 <h2>Running WAIL</h2>
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
-End-user execution is meant to be accessed through the binary file, either WAIL.app on MacOS X or WAIL.exe on Windows (7+).
+End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows (7+).
 To run it using Python for testing, run the following from the root of the WAIL source directory:
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
 
@@ -27,9 +27,9 @@ Python is not required to be installed for end-users, just double-click (see abo
 
 <h2>Compiling</h2>
 To compile WAIL to a system-dependent executable, `cd` into the root of the WAIL source directory then:
-<h3>MacOS X</h3>
+<h3>macOS</h3>
 <blockquote>sh ./bundledApps/MAKEFILE.sh</blockquote>
-This will create /Applications/WAIL.app on MacOS X.
+This will create /Applications/WAIL.app on macOS.
 
 <h3>Windows</h3>
 From the Windows shell:
