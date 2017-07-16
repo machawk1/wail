@@ -1,15 +1,20 @@
 import React, { Component } from 'react'
 import { remote, ipcRenderer as ipc } from 'electron'
+import path from 'path'
 import Promise from 'bluebird'
 import moment from 'moment'
 import normalizeUrl from 'normalize-url'
+import filenamifyUrl from 'filenamify-url'
+import S from 'string'
 import ElectronArchiver from './electronArchiver'
 import { notificationMessages as notifm } from '../wail-ui/constants/uiStrings'
+import Settings from '../wail-core/remoteSettings'
+import { archiving, ipcChannels, uiActions } from '../wail-core/globalStrings'
 
-const addWarcToCol = config => {
+function addWarcToCol (config) {
   let type = config.type || 'WC'
   let lastUpdated = moment().format()
-  ipc.send('add-warcs-to-col-wcreate', {
+  ipc.send(ipcChannels.ADD_WARC_TO_COLL_WAIL_ARCHIVED, {
     type,
     col: config.forCol,
     warcs: config.saveTo,
@@ -24,9 +29,9 @@ const addWarcToCol = config => {
   })
 }
 
-const failUseHeritrix = (config, error) => {
+function failUseHeritrix (config, error) {
   let jId = new Date().getTime()
-  ipc.send('makeHeritrixJobConf', {
+  ipc.send(archiving.ARCHIVE_WITH_HERITRIX, {
     urls: config.uri_r,
     depth: 1,
     jobId: jId,
@@ -34,7 +39,7 @@ const failUseHeritrix = (config, error) => {
   })
   let eMessage = error.message || error.m || `${error}`
   let message = notifm.wailWarcreateError(eMessage)
-  ipc.send('log-error-display-message', {
+  ipc.send(ipcChannels.LOG_ERROR_WITH_NOTIFICATION, {
     m: {
       title: notifm.wailWarcreateErrorTitle,
       level: 'error',
@@ -48,28 +53,49 @@ const failUseHeritrix = (config, error) => {
 
 function noop () {}
 
+const Q1 = 'q1'
+const Q2 = 'q2'
+
+/**
+ *
+ */
 export default class WAILArchiver extends Component {
   constructor (...args) {
     super(...args)
     this.webview = null
+    this.loadTimeout = null
+    this._settings = null
+    this._current = null
     this.loaded = false
     this.wbReady = false
     this._attachedArchiver = false
     this.preserving = false
-    this.loadTimeout = null
-    this.didPageLoadTimeoutHappen = false
+    this._swapper = S('')
     this.archiveQ = []
+    this.archiveQ2 = []
+    this._lastQ = Q1
     this.archiver = new ElectronArchiver()
+    this.extractedSeedWarcPath = this.extractedSeedWarcPath.bind(this)
     this.pageLoaded = this.pageLoaded.bind(this)
     this.loadTimedOutCB = this.loadTimedOutCB.bind(this)
     this.archiver.on('error', (report) => {
       console.error('archiver error', report)
     })
     this.archiver.on('warc-gen-finished', () => {
-      let config = this.archiveQ[0]
+      let config = this._current
       console.log('finished', config)
+      let uiCrawlProgress = {
+        type: uiActions.WAIL_CRAWL_Q_DECREASE,
+        forCol: config.forCol,
+        by: 1
+      }
+      if (!this._current.parent) {
+        uiCrawlProgress.uri_r = config.uri_r
+      } else {
+        uiCrawlProgress.parent = config.parent
+      }
+      ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, uiCrawlProgress)
       addWarcToCol(config)
-      this.archiveQ.shift()
       this.maybeMore()
     })
 
@@ -115,9 +141,13 @@ export default class WAILArchiver extends Component {
       this.archiver.setUp(webContents)
         .then(() => {
           this._attachedArchiver = true
+          ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
+            type: uiActions.WAIL_CRAWL_START,
+            forCol: this._current.forCol,
+            uri_r: this._current.uri_r
+          })
           this.archiver.startCapturing()
-          let {uri_r} = this.archiveQ[0]
-          this.webview.loadURL(normalizeUrl(uri_r, {stripFragment: false, stripWWW: false}))
+          this.webview.loadURL(normalizeUrl(this._current.uri_r, {stripFragment: false, stripWWW: false}))
           this.loadTimeout = setTimeout(this.loadTimedOutCB, 15000)
           this.preserving = false
           this.wasLoadError = false
@@ -127,59 +157,128 @@ export default class WAILArchiver extends Component {
           console.error(error)
         })
     } else {
+      if (!this._current.parent) {
+        ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
+          type: uiActions.WAIL_CRAWL_START,
+          forCol: this._current.forCol,
+          uri_r: this._current.uri_r
+        })
+      }
       this.archiver.startCapturing()
-      let {uri_r} = this.archiveQ[0]
-      this.webview.loadURL(normalizeUrl(uri_r, {stripFragment: false, stripWWW: false}))
+      this.webview.loadURL(normalizeUrl(this._current.uri_r, {stripFragment: false, stripWWW: false}))
       this.loadTimeout = setTimeout(this.loadTimedOutCB, 15000)
       this.preserving = false
       this.wasLoadError = false
     }
   }
 
+  /**
+   * Alternate Archiving Queues Until One Or Both Are Exhausted,
+   * when one is exhausted take from the other until either
+   * the one currently being drained is exhausted yielding ```both exhausted```
+   * or the other is filled in this return to alternating otherwise
+   * wait till one or both becomes filled
+   */
   maybeMore () {
-    if (this.archiveQ.length > 0) {
+    let q1l = this.archiveQ.length
+    let q2l = this.archiveQ2.length
+    if (q1l > 0 && q2l > 0) {
+      if (this._lastQ === Q1) {
+        console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+        this._current = this.archiveQ2.shift()
+        this._lastQ = Q2
+      } else {
+        console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+        this._current = this.archiveQ.shift()
+        this._lastQ = Q1
+      }
+      this.startArchiving()
+    } else if (q1l > 0 && q2l === 0) {
+      console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+      this._current = this.archiveQ.shift()
+      this._lastQ = Q1
+      this.startArchiving()
+    } else if (q1l === 0 && q2l > 0) {
+      console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+      this._current = this.archiveQ2.shift()
+      this._lastQ = Q2
       this.startArchiving()
     } else {
       console.log('no more to archive waiting')
     }
   }
 
+  extractedSeedWarcPath (seed, forCol) {
+    return path.join(
+      this._swapper.setValue(this._settings.get('collections.colWarcs')).template({col: forCol}, '{', '}').s,
+      `${filenamifyUrl(seed)}-${forCol}-${new Date().getTime()}.warc`
+    )
+  }
+
   async pageLoaded (fromTimeOut = false) {
     if (!this.preserving) {
-      let arConfig = this.archiveQ[0]
       this.preserving = true
+      let arConfig = this._current
+      let links
+      let outlinks
+      let mdata
+      let mdataError = false
       clearTimeout(this.loadTimeout)
       this.loadTimeout = null
       console.log('page loaded from debugger')
-      let mdata
-      let mdataError = false
       try {
-        mdata = await this.archiver.getMetadataSameD()
+        mdata = await this.archiver.getMetadataBasedOnConfig(arConfig.type)
+        console.log(mdata)
       } catch (error) {
-        console.error('metadata get failed')
+        console.error('metadata get failed', error)
         mdataError = true
       }
-      try {
-        await this.archiver.doScroll()
-      } catch (error) {
-        console.error('scroll error')
-        console.error(error)
+
+      if (arConfig.scroll) {
+        try {
+          await this.archiver.doScroll(arConfig.scroll)
+        } catch (error) {
+          console.error('scroll error')
+          console.error(error)
+        }
       }
+
       if (!fromTimeOut) {
         await Promise.delay(5000)
       }
       // this.webview.stop()
       this.archiver.stopCapturing()
-      console.log('are we crashed', this.webview)
-      let links
-      let outlinks
       if (!mdataError) {
-        outlinks = mdata.result.value.outlinks
-        links = mdata.result.value.links
+        outlinks = mdata.outlinks
+        links = mdata.links || []
       } else {
         outlinks = ''
         links = []
       }
+
+      if (links.length > 0) {
+        console.log('we have links', links)
+        let forCol = arConfig.forCol
+        this.archiveQ2 = this.archiveQ2.concat(links.map(newSeed => ({
+          forCol,
+          parent: arConfig.uri_r,
+          type: archiving.PAGE_ONLY,
+          uri_r: newSeed,
+          saveTo: this.extractedSeedWarcPath(newSeed, forCol),
+          isPartOfV: forCol,
+          description: `Archived by WAIL for ${forCol}`
+        })))
+
+        console.log(this.archiveQ2)
+
+        ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
+          type: uiActions.WAIL_CRAWL_Q_INCREASE,
+          parent: arConfig.uri_r,
+          forCol,
+          by: links.length
+        })
+      }
+
       this.archiver.initWARC(arConfig.saveTo)
 
       this.archiver.genWarc({
@@ -193,7 +292,7 @@ export default class WAILArchiver extends Component {
         seedURL: arConfig.uri_r
       }).then(noop)
         .catch(error => {
-          failUseHeritrix(conf, error)
+          failUseHeritrix(arConfig, error)
           // console.error(error)
         })
     }
@@ -207,6 +306,8 @@ export default class WAILArchiver extends Component {
     this.webview.addEventListener('did-stop-loading', (e) => {
       console.log('it finished loading')
       if (!this.wbReady) {
+        this._settings = new Settings()
+        this._settings.configure()
         this.archiver.on('page-loaded', this.pageLoaded)
         this.wbReady = true
         this.maybeMore()
@@ -222,11 +323,12 @@ export default class WAILArchiver extends Component {
 
   render () {
     return (
-      <div style={{width: 'inherit', height: 'inherit'}}>
-        <div dangerouslySetInnerHTML={{
+      <div
+        style={{width: 'inherit', height: 'inherit'}}
+        dangerouslySetInnerHTML={{
           __html: `<webview class="archiveWV"  id="awv" src="about:blank" disablewebsecurity webpreferences="allowRunningInsecureContent" partition="archive" plugins> </webview>`
         }}
-        />
+      >
       </div>
     )
   }

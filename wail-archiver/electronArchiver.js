@@ -1,15 +1,24 @@
 import EventEmitter from 'eventemitter3'
 import Promise from 'bluebird'
 import isEmpty from 'lodash/isEmpty'
+import { ElectronWARCWriter } from 'node-warc'
 import ElectronRequestMonitor from './electronRequestMonitor'
-import ElectronWARCGenerator from './electronWARCGenerator'
-import * as pageEvals from './utils/pageEvals'
+import * as pageEvals from './pageEvals'
+import { archiving } from '../wail-core/globalStrings'
+
+
+class ArchiverError extends Error {
+  constructor (dError) {
+    super()
+    this.dErorr = dError
+  }
+}
 
 export default class ElectronArchiver extends EventEmitter {
   constructor () {
     super()
     this.requestMonitor = new ElectronRequestMonitor()
-    this._warcGenerator = new ElectronWARCGenerator()
+    this._warcGenerator = new ElectronWARCWriter(true)
     this.pageLoaded = this.pageLoaded.bind(this)
     this._onWARCGenFinished = this._onWARCGenFinished.bind(this)
     this._onWARCGenError = this._onWARCGenError.bind(this)
@@ -24,27 +33,21 @@ export default class ElectronArchiver extends EventEmitter {
         this._wc.debugger.attach('1.2')
         this._wc.debugger.sendCommand('Page.enable', (errP) => {
           if (!isEmpty(errP)) {
-            return reject(errP)
+            return reject(new ArchiverError(errP))
           }
-          this._wc.debugger.sendCommand('DOM.enable', (errD) => {
-            if (!isEmpty(errD)) {
-              return reject(errD)
+          this._wc.debugger.sendCommand('Runtime.enable', (errR) => {
+            if (!isEmpty(errR)) {
+              return reject(new ArchiverError(errR))
             }
-            this._wc.debugger.sendCommand('Runtime.enable', (errR) => {
-              if (!isEmpty(errR)) {
-                return reject(errR)
+            this._wc.debugger.sendCommand('Network.enable', {maxTotalBufferSize: 1000000000}, (errN) => {
+              if (!isEmpty(errN)) {
+                return reject(new ArchiverError(errN))
               }
-              this._wc.debugger.sendCommand('Network.enable', {maxTotalBufferSize: 1000000000}, (errN) => {
-                if (!isEmpty(errN)) {
-                  return reject(errN)
-                }
-                resolve()
-              })
+              resolve()
             })
           })
         })
       } catch (err) {
-        console.error(err)
         reject(err)
       }
     })
@@ -52,9 +55,9 @@ export default class ElectronArchiver extends EventEmitter {
 
   async setUp (wc) {
     await this.attach(wc)
-    this.requestMonitor.attach(this._wc.debugger)
+    // this.requestMonitor.attach(this._wc.debugger)
     try {
-      let nnjs_id = await this._doNoNaughtyJs()
+      await this._doNoNaughtyJs()
       // console.log('no naughty good', nnjs_id)
     } catch (error) {
       console.error('No naughty failed :(')
@@ -64,6 +67,8 @@ export default class ElectronArchiver extends EventEmitter {
       if (method === 'Page.loadEventFired') {
         // Promise.delay(5000).then(this.pageLoaded)
         this.emit('page-loaded')
+      } else {
+        this.requestMonitor.maybeNetworkMessage(method, params)
       }
     })
   }
@@ -113,9 +118,9 @@ export default class ElectronArchiver extends EventEmitter {
     return new Promise((resolve, reject) => {
       this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.metadata, (err, results) => {
         if (!isEmpty(err)) {
-          return reject(err)
+          return reject(new ArchiverError(err))
         }
-        resolve(results)
+        resolve(results.result.value)
       })
     })
   }
@@ -124,18 +129,39 @@ export default class ElectronArchiver extends EventEmitter {
     return new Promise((resolve, reject) => {
       this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.metadataSameD, (err, results) => {
         if (!isEmpty(err)) {
-          return reject(err)
+          return reject(new ArchiverError(err))
         }
-        resolve(results)
+        resolve(results.result.value)
       })
     })
   }
 
-  doScroll () {
+  getMetadataAll () {
     return new Promise((resolve, reject) => {
-      this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.doScroll, (err, results) => {
+      this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.metadataAll, (err, results) => {
         if (!isEmpty(err)) {
-          return reject(err)
+          return reject(new ArchiverError(err))
+        }
+        resolve(results.result.value)
+      })
+    })
+  }
+
+  getMetadataBasedOnConfig (mode) {
+    if (mode === archiving.PAGE_SAME_DOMAIN) {
+      return this.getMetadataSameD()
+    } else if (mode === archiving.PAGE_ALL_LINKS) {
+      return this.getMetadataAll()
+    } else {
+      return this.getMetadata()
+    }
+  }
+
+  doScroll (scroll = 4000) {
+    return new Promise((resolve, reject) => {
+      this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.makeSmoothScroll(scroll), (err, results) => {
+        if (!isEmpty(err)) {
+          return reject(new ArchiverError(err))
         }
         resolve()
       })
@@ -167,7 +193,7 @@ export default class ElectronArchiver extends EventEmitter {
     return new Promise((resolve, reject) => {
       this._wc.debugger.sendCommand('Page.addScriptToEvaluateOnLoad', pageEvals.noNaughtyJS, (err, ret) => {
         if (!isEmpty(err)) {
-          return reject(err)
+          return reject(new ArchiverError(err))
         }
         resolve(ret)
       })

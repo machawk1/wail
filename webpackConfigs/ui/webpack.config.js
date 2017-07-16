@@ -5,10 +5,10 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': '1.7.2'
+    'electron': '1.7.4'
   },
   'debug': true,
-  "useBuiltIns": true,
+  'useBuiltIns': true,
   'include': [
     'syntax-trailing-function-commas',
     'transform-es2015-classes',
@@ -37,6 +37,7 @@ module.exports = {
           cacheDirectory: true,
           presets: [babelEnvConfig, 'react', 'react-hmre'],
           plugins: [
+            'lodash',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-object-super',

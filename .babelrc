@@ -1,7 +1,38 @@
 {
   "plugins": [
-    ["transform-object-rest-spread", {"useBuiltIns": true}],
+    [
+      "transform-object-rest-spread",
+      {
+        "useBuiltIns": true
+      }
+    ],
     "transform-es2015-modules-commonjs",
     "transform-decorators-legacy"
-  ]
+  ],
+  "env": {
+    "development": {
+      "plugins":[
+        "transform-export-extensions"
+      ],
+      "presets": [
+        [
+          "env",
+          {
+            "targets": {
+              "electron": "1.7.4"
+            },
+            "useBuiltIns": true,
+            "include": [
+              "syntax-trailing-function-commas"
+            ],
+            "exclude": [
+              "transform-async-to-generator",
+              "web.timers",
+              "web.immediate"
+            ]
+          }
+        ]
+      ]
+    }
+  }
 }

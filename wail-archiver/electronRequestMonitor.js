@@ -2,6 +2,7 @@ export default class ElectronRequestMonitor extends Map {
   constructor () {
     super()
     this._capture = true
+    this.maybeNetworkMessage = this.maybeNetworkMessage.bind(this)
     this._requestWillBeSent = this._requestWillBeSent.bind(this)
     this._responseReceived = this._responseReceived.bind(this)
     this._set = this.set.bind(this)
@@ -21,15 +22,20 @@ export default class ElectronRequestMonitor extends Map {
     })
   }
 
+  maybeNetworkMessage (method, params) {
+    if (method === 'Network.requestWillBeSent') {
+      this._requestWillBeSent(params)
+    } else if (method === 'Network.responseReceived') {
+      this._responseReceived(params)
+    }
+  }
+
   /**
    * @desc Sets an internal flag to begin capturing network requests
-   * @param {boolean} [clear = true] clear the any previous captured requests
    * defaults to true
    */
-  startCapturing (clear = true) {
-    if (clear) {
-      this.clear()
-    }
+  startCapturing () {
+    this.clear()
     this._capture = true
   }
 

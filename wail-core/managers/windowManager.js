@@ -6,6 +6,7 @@ import makeWindowWArgs from 'electron-window'
 import Promise from 'bluebird'
 import S from 'string'
 import TwitterSigninMan from './twitterSignInMan'
+import { ipcChannels } from '../globalStrings'
 
 const inpect = partialRight(util.inspect, {depth: 1, colors: true})
 
@@ -385,17 +386,21 @@ export default class WindowManager extends EventEmitter {
       }
     })
 
-    /* warcreate wail */
-    ipcMain.on('archive-uri-r', (e, config) => {
+    /* jberlin crawl style */
+    ipcMain.on(ipcChannels.ARCHIVE_WITH_WAIL, (e, config) => {
       if (this.windows['archiverWindow'].open) {
-        this.send('archiverWindow', 'archive-uri-r', config)
+        this.send('archiverWindow', ipcChannels.ARCHIVE_WITH_WAIL, config)
       } else {
         this.createArchiver(control)
           .then(() => {
             console.log('archiverWindow alive')
-            this.send('archiverWindow', 'archive-uri-r', config)
+            this.send('archiverWindow', ipcChannels.ARCHIVE_WITH_WAIL, config)
           })
       }
+    })
+
+    ipcMain.on(ipcChannels.WAIL_CRAWL_UPDATE, (e, update) => {
+      this.send('mainWindow', ipcChannels.WAIL_CRAWL_UPDATE, update)
     })
   }
 
@@ -682,11 +687,11 @@ export default class WindowManager extends EventEmitter {
           if (control.openBackGroundWindows) {
             this.windows['archiverWindow'].window.show()
           }
-          // this.windows['archiverWindow'].window.show()
+          this.windows['archiverWindow'].window.show()
           this.windows['archiverWindow'].window.webContents.openDevTools()
         }
-        // this.windows['archiverWindow'].window.show()
-        // this.windows['archiverWindow'].window.webContents.openDevTools()
+        this.windows['archiverWindow'].window.show()
+        this.windows['archiverWindow'].window.webContents.openDevTools()
         this.windows['archiverWindow'].open = true
         this.windows['archiverWindow'].loadComplete = true
         resolve()

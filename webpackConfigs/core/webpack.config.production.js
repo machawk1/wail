@@ -8,7 +8,7 @@ const here = process.cwd()
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': '1.7.2'
+    'electron': '1.7.4'
   },
   "useBuiltIns": true,
   'include': [

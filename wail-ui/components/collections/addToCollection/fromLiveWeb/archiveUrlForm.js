@@ -7,37 +7,42 @@ import { batchActions } from 'redux-batched-actions'
 import isURL from 'validator/lib/isURL'
 import MenuItem from 'material-ui/MenuItem'
 import FlatButton from 'material-ui/FlatButton'
+import filenamifyUrl from 'filenamify-url'
 import { TextField, SelectField } from 'redux-form-material-ui'
 import * as notify from '../../../../actions/notification-actions'
 import { resetCheckMessage } from '../../../../actions/archival'
 import path from 'path'
 import S from 'string'
 import acronyms from '../../../../constants/acronyms'
+import { archiving, ipcChannels } from '../../../../../wail-core/globalStrings'
+
+const settings = remote.getGlobal('settings')
 
 S.TMPL_OPEN = '{'
 S.TMPL_CLOSE = '}'
 
 const archive = (forCol, config) => {
   let message = `Archiving ${config.get('url')} for ${forCol} Now!`
-  let depth = config.get('config') - 1
-  if (depth === 0) {
-    let saveThisOne = `${forCol}-${new Date().getTime()}.warc`
-    const settings = remote.getGlobal('settings')
-    ipc.send('archive-uri-r', {
+  let conf = config.get('config')
+  if (conf.charAt(0) === 'p') {
+    let saveThisOne = `${filenamifyUrl(config.get('url'))}-${forCol}-${new Date().getTime()}.warc`
+    ipc.send(ipcChannels.ARCHIVE_WITH_WAIL, {
       forCol,
-      type: 'po',
+      type: conf,
       uri_r: config.get('url'),
       saveTo: path.join(S(settings.get('collections.colWarcs')).template({col: forCol}).s, saveThisOne),
-      header: {
-        isPartOfV: forCol,
-        description: `Archived by WAIL for ${forCol}`
-      }
+      isPartOfV: forCol,
+      description: `Archived by WAIL for ${forCol}`
     })
   } else {
-    ipc.send('makeHeritrixJobConf', {urls: config.get('url'), depth, jobId: new Date().getTime(), forCol})
+    ipc.send(ipcChannels.ARCHIVE_WITH_HERITRIX, {
+      urls: config.get('url'),
+      depth: parseInt(conf[1]),
+      jobId: new Date().getTime(),
+      forCol
+    })
   }
-  notify.notifyInfo(message)
-  window.logger.info(message)
+  notify.notifyInfo(message, true)
 }
 
 const validate = values => {
@@ -102,9 +107,12 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem id='ponly' value={1} primaryText='Page Only' />
-              <MenuItem id='p_sdl' value={2} primaryText='Page + Same Domain Links' />
-              <MenuItem id='p_al' value={3} primaryText='Page + All Internal And External Links' />
+              <MenuItem id='po' value={archiving.PAGE_ONLY} primaryText='Page Only'/>
+              <MenuItem id='psd' value={archiving.PAGE_SAME_DOMAIN} primaryText='Page + Same Domain Links'/>
+              <MenuItem id='pal' value={archiving.PAGE_ALL_LINKS} primaryText='Page + All Links'/>
+              <MenuItem id='h0' value={archiving.HERITRIX_DEPTH_1} primaryText='Heritrix Depth 1'/>
+              <MenuItem id='h1' value={archiving.HERITRIX_DEPTH_2} primaryText='Heritrix Depth 2'/>
+              <MenuItem id='h2' value={archiving.HERITRIX_DEPTH_3} primaryText='Heritrix Depth 3'/>
             </Field>
           </div>
           <div id='archiveFormButtons' style={{height: '40px', transform: trans}}>
@@ -115,7 +123,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
           </div>
         </form>
       </div>
