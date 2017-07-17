@@ -33,7 +33,6 @@ import upperFirst from 'lodash/upperFirst'
 import words from 'lodash/words'
 
 export default class StringUtil {
-
   static newS (defaultV = '') {
     return S(defaultV)
   }
@@ -68,9 +67,9 @@ export default class StringUtil {
 
   static capitalize (s) { return capitalize(s) }
 
-  static deburr (s) {return deburr(s)}
+  static deburr (s) { return deburr(s) }
 
-  static endsWith (s, target, position) {return endsWith(s, target, position)}
+  static endsWith (s, target, position) { return endsWith(s, target, position) }
 
   static escape (s) { return escape(s) }
 
@@ -84,7 +83,7 @@ export default class StringUtil {
 
   static pad (string, length, chars) { return pad(string, length, chars) }
 
-  static padEnd (string, length, chars) { return padEnd(string, length, chars)}
+  static padEnd (string, length, chars) { return padEnd(string, length, chars) }
 
   static padStart (string, length, chars) { return padStart(string, length, chars) }
 
@@ -92,7 +91,7 @@ export default class StringUtil {
 
   static repeat (s, n) { return repeat(s, n) }
 
-  static replace (s, pattern, replacement) { return replace(s, pattern, replacement)}
+  static replace (s, pattern, replacement) { return replace(s, pattern, replacement) }
 
   static snakeCase (s) { return snakeCase(s) }
 
@@ -124,6 +123,3 @@ export default class StringUtil {
 
   static words (s, pattern) { return words(s, pattern) }
 }
-
-
-

@@ -3,7 +3,7 @@ import S from 'string'
 import fs from 'fs-extra'
 import Path from 'path'
 import bunyan from 'bunyan'
-import { app } from 'electron'
+import { app, screen } from 'electron'
 import SettingsManager from './settingsManager'
 import ServiceManager from './serviceManager'
 import Pather from '../util/pather'
@@ -119,6 +119,8 @@ export default class AppManager2 {
       this.h = 600
     }
 
+    const {width, height} = screen.getPrimaryDisplay().workAreaSize
+
     this.winConf = {
       width: this.w,
       minWidth: this.w,
@@ -199,6 +201,11 @@ export default class AppManager2 {
       {
         conf: {
           show: false,
+          fullscreen: true,
+          width,
+          height,
+          minWidth: width,
+          minHeight: height,
           webPreferences: {
             webSecurity: false
           }

@@ -11,7 +11,7 @@ import Card from 'material-ui/Card/Card'
 import CardTitle from 'material-ui/Card/CardTitle'
 import { notifyError, notifyInfo } from '../../../actions/notification-actions'
 
-function monitor (config,message) {
+function monitor (config, message) {
   notifyInfo(message)
   ipc.send('monitor-twitter-account', config)
   window.logger.info(message)
@@ -25,7 +25,7 @@ function stateToProps (state) {
 
 function dispatchToProps (dispatch) {
   return bindActionCreators({
-    clear(){
+    clear () {
       return resetForm('archiveTwitter')
     }
   }, dispatch)
@@ -95,7 +95,7 @@ class ArchiveTwitter extends Component {
               configOpts: {count: 100},
               taskType: 'TextSearch'
             }
-           message = `Monitoring @${config.account} For ${hts.length} ${hts.length > 1 ? 'Words' : 'Word'} In Tweets For ${values.get('length')}. Tweets Added To ${config.forCol}!`
+            message = `Monitoring @${config.account} For ${hts.length} ${hts.length > 1 ? 'Words' : 'Word'} In Tweets For ${values.get('length')}. Tweets Added To ${config.forCol}!`
           } else {
             config = {
               account: screenName,
@@ -104,7 +104,6 @@ class ArchiveTwitter extends Component {
               taskType: 'UserTimeLine'
             }
             message = `You Did Not Specify Words To Look For. Monitoring @${config.account}'s Timeline For ${values.get('length')}. Tweets Added To ${config.forCol}!`
-
           }
           // console.log(config)
         } else {
@@ -118,9 +117,9 @@ class ArchiveTwitter extends Component {
         }
         if (process.env.NODE_ENV === 'development') {
           // tehehehe sssshhhhh
-          monitor({...config, oneOff: true},message)
+          monitor({...config, oneOff: true}, message)
         } else {
-          monitor(config,message)
+          monitor(config, message)
         }
         this.props.clear()
       })
@@ -140,9 +139,9 @@ class ArchiveTwitter extends Component {
     return (
       <div className='widthHeightHundoPercent'>
         <div className='wail-container inheritThyWidthHeight' >
-          <Card id='twitterFormCard' style={{marginTop: 15,height: '55%', }}>
-            <CardTitle title='Monitoring &amp; Archiving Configuration' style={{paddingBottom: 0}}/>
-            <ArchiveTwitterForm cols={cols} times={times} onSubmit={this.submit}/>
+          <Card id='twitterFormCard' style={{marginTop: 15, height: '55%' }}>
+            <CardTitle title='Monitoring &amp; Archiving Configuration' style={{paddingBottom: 0}} />
+            <ArchiveTwitterForm cols={cols} times={times} onSubmit={this.submit} />
           </Card>
         </div>
       </div>
@@ -151,4 +150,3 @@ class ArchiveTwitter extends Component {
 }
 
 export default connect(stateToProps, dispatchToProps)(ArchiveTwitter)
-

@@ -1,9 +1,9 @@
 import createIpc from 'redux-electron-ipc'
-import {addedNewCol, addedWarcs, gotAllCollections, crawlToCol} from '../actions/collections'
-import {gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate, handledRequest} from '../actions/heritrix'
-import {serviceStarted, serviceKilled, restartedWayback} from '../actions/services'
-import wailCrawlUpdate from '../actions/wailCrawl'
-import {ipcChannels} from '../../wail-core/globalStrings'
+import { addedNewCol, addedWarcs, gotAllCollections, crawlToCol } from '../actions/collections'
+import { gotAllRuns, madeJobConf, buildDialogueCrawlJob, crawlJobUpdate, handledRequest } from '../actions/heritrix'
+import { serviceStarted, serviceKilled, restartedWayback } from '../actions/services'
+import { wailCrawlUpdate } from '../actions/wailCrawl'
+import { ipcChannels } from '../../wail-core/globalStrings'
 
 export default createIpc({
   /* collection store */

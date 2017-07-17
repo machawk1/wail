@@ -16,16 +16,15 @@ const formConfig = {
 function OptionalFields ({handleSubmit, pristine, previousPage, reset, submitting, invalid}) {
   return (
     <Form onSubmit={handleSubmit} className='inheritThyWidthHeight'>
-      <CardHeader title='Optional'/>
-      <FieldArray name='searchT' component={SearchTermList}/>
+      <CardHeader title='Optional' />
+      <FieldArray name='searchT' component={SearchTermList} />
       <CardActions>
-        <FlatButton label='Previous' onTouchTap={previousPage}/>
-        <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary/>
-        <FlatButton label='Clear' onTouchTap={reset}/>
+        <FlatButton label='Previous' onTouchTap={previousPage} />
+        <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
+        <FlatButton label='Clear' onTouchTap={reset} />
       </CardActions>
     </Form>
   )
 }
 
 export default reduxForm(formConfig)(OptionalFields)
-

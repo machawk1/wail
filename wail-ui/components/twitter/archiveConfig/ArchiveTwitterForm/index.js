@@ -57,21 +57,20 @@ class ArchiveTwitterForm2 extends Component {
       <OptionalFields previousPage={this.previousPage} onSubmit={this.returnSubmit} />
     )
   }
-
 }
 
 function ArchiveTwitterForm ({handleSubmit, pristine, reset, submitting, invalid, cols, times}) {
   return (
     <Form onSubmit={handleSubmit} style={{width: '100%', height: '100%'}}>
-      <CardHeader title='Required' style={{paddingBottom: 0}}/>
+      <CardHeader title='Required' style={{paddingBottom: 0}} />
       <Flex row justifyContent='space-around'>
         <InputName />
-        <SelectForCol cols={cols}/>
-        <MonitorTime times={times}/>
+        <SelectForCol cols={cols} />
+        <MonitorTime times={times} />
       </Flex>
       <CardActions>
-        <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary/>
-        <FlatButton label='Clear' onTouchTap={reset}/>
+        <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
+        <FlatButton label='Clear' onTouchTap={reset} />
       </CardActions>
     </Form>
   )

@@ -6,7 +6,6 @@ import ElectronRequestMonitor from './electronRequestMonitor'
 import * as pageEvals from './pageEvals'
 import { archiving } from '../wail-core/globalStrings'
 
-
 class ArchiverError extends Error {
   constructor (dError) {
     super()
@@ -39,7 +38,7 @@ export default class ElectronArchiver extends EventEmitter {
             if (!isEmpty(errR)) {
               return reject(new ArchiverError(errR))
             }
-            this._wc.debugger.sendCommand('Network.enable', {maxTotalBufferSize: 1000000000}, (errN) => {
+            this._wc.debugger.sendCommand('Network.enable', (errN) => {
               if (!isEmpty(errN)) {
                 return reject(new ArchiverError(errN))
               }
@@ -204,4 +203,3 @@ export default class ElectronArchiver extends EventEmitter {
     this._wc.debugger.detach()
   }
 }
-

@@ -11,7 +11,7 @@ export default class SelectForCol extends Component {
     const {cols} = this.props
     return (
       <Field
-        name="forCol"
+        name='forCol'
         floatingLabelText='For Collection'
         component={SelectField}
         dropDownMenuProps={{
@@ -23,5 +23,4 @@ export default class SelectForCol extends Component {
       </Field>
     )
   }
-
 }

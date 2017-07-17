@@ -15,7 +15,7 @@ import { moveThemP } from './tools/moveJDKMemgator'
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = process.cwd()
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
-//fs.emptyDirSync(path.join(cwd, 'dist'))
+// fs.emptyDirSync(path.join(cwd, 'dist'))
 
 const darwinBuild = {
   icon: 'whale.icns',

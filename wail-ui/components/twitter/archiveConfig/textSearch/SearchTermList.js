@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Flex }from 'react-flex'
+import { Flex } from 'react-flex'
 import CardTitle from 'material-ui/Card/CardTitle'
 import RaisedButton from 'material-ui/RaisedButton'
 import List from 'material-ui/List/List'
@@ -28,7 +28,7 @@ export default class SearchTermList extends Component {
     let ht
     for (; i < len; ++i) {
       ht = this.props.fields[i]
-      lis.push(<ASearchTerm key={`aSearchTerm${i}`} i={i} ht={ht} removeMe={this.removeTerm}/>)
+      lis.push(<ASearchTerm key={`aSearchTerm${i}`} i={i} ht={ht} removeMe={this.removeTerm} />)
     }
     return lis
   }
@@ -37,7 +37,7 @@ export default class SearchTermList extends Component {
     return (
       <div>
         <Flex row alignItems='center'>
-          <CardTitle subtitle='Look For What In The Tweets Text?'/>
+          <CardTitle subtitle='Look For What In The Tweets Text?' />
           <RaisedButton
             onTouchTap={this.addField}
             primary label={'Add'}

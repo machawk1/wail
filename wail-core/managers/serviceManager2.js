@@ -329,7 +329,8 @@ export default class ServiceManager {
           cwd: this._settings.get('pywb.home'),
           detached: true,
           shell: true,
-          stdio: ['ignore', 'ignore', 'ignore']
+          stdio: ['ignore', 'ignore', 'ignore'],
+          env: process.env
         }
         let wayback = cp.spawn(exec, ['-d', this._settings.get('warcs')], opts)
         let pid = wayback.pid
@@ -364,7 +365,8 @@ export default class ServiceManager {
           cwd: this._settings.get('pywb.home'),
           detached: true,
           shell: true,
-          stdio: ['ignore', 'ignore', 'ignore']
+          stdio: ['ignore', 'ignore', 'ignore'],
+          env: process.env
         }
         let wayback
         try {

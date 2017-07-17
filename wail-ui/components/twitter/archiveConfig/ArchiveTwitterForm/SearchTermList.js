@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Flex }from 'react-flex'
+import { Flex } from 'react-flex'
 import CardTitle from 'material-ui/Card/CardTitle'
 import FAB from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
@@ -25,7 +25,7 @@ export default class SearchTermList extends Component {
 
   makeLis () {
     return this.props.fields.map((ht, i, fields) =>
-      <ASearchTerm key={`aSearchTerm${i}`} i={i} ht={ht} removeMe={this.removeTerm}/>
+      <ASearchTerm key={`aSearchTerm${i}`} i={i} ht={ht} removeMe={this.removeTerm} />
     )
   }
 
@@ -39,16 +39,16 @@ export default class SearchTermList extends Component {
 
   render () {
     return (
-      <div id="inTweetTextListContainer" style={{width: '100%', height: 180}}>
+      <div id='inTweetTextListContainer' style={{width: '100%', height: 180}}>
         <Flex row justifyContent='space-around'>
           <div style={{width: '50%', height: 175}}>
             <Flex row>
-              <CardTitle subtitle='Look For What In The Tweets Text?'/>
+              <CardTitle subtitle='Look For What In The Tweets Text?' />
               <FAB
                 onTouchTap={this.addField}
                 mini
               >
-                <ContentAdd/>
+                <ContentAdd />
               </FAB>
             </Flex>
           </div>

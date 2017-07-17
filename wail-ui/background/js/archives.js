@@ -79,20 +79,32 @@ ipc.on('add-warcs-to-col-wcreate', (event, addMe) => {
   console.log('archive man got add warcs to col', addMe)
   archiveMan.addWarcsFromWCreate(addMe)
     .then(update => {
-      ipc.send('added-warcs-to-col', update)
       let message
+      let title
+      let autoDismiss = 10
       if (addMe.type && addMe.type === 'twitter') {
         message = ipcMessages.archivedTweetToCollectionX(addMe.col)
+        title = ipcMessages.wailCrawlFinished('po')
       } else {
         message = ipcMessages.addedWarcToCollectionX(addMe.col)
+        if (addMe.type && addMe.type !== 'po') {
+          message += `
+          The initial seed has been added to your collection and 
+          is ready to be replayed. WAIL will continue 
+          to add additional pages as ${addMe.type} progresses. 
+          `
+          autoDismiss = 0
+        }
+        title = ipcMessages.wailCrawlFinished(addMe.type)
       }
       ipc.send('display-message', {
-        title: ipcMessages.pageOnlyCrawlFinished,
+        title,
         level: 'success',
-        autoDismiss: 10,
+        autoDismiss,
         message,
         uid: message
       })
+      ipc.send('added-warcs-to-col', update)
     })
     .catch(error => {
       ipc.send('display-message', error.m)
@@ -137,6 +149,16 @@ ipc.on('create-collection', (event, nc) => {
         message,
         uid: message
       })
+    })
+})
+
+ipc.on('reindex-collection',(e,whichOne) => {
+  archiveMan.justReindexCol(whichOne)
+    .then(() => {
+      ipc.send('restart-wayback')
+    })
+    .catch(error => {
+
     })
 })
 

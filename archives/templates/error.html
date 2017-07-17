@@ -1,11 +1,45 @@
-<h2>Pywb Error</h2>
-<b>{{ err_msg }}</b>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css'>
+    <link rel="font" href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/fonts/roboto/Roboto-Regular.woff2'>
+    <style>
+        html, body {
+            font-family: 'Roboto', sans-serif;
+        }
 
-{% if err_details %}
-<p>Error Details:</p>
-<p>
-<pre>
-{{ err_details }}
-</pre>
-</p>
-{% endif %}
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+    </style>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper cyan darken-3">
+            <a href="#" class="brand-logo">&nbsp; WAIL's Wayback Machine. Powered By Pywb</a>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <div class="row">
+        <h1 class="center-align">
+            Error
+        </h1>
+        <b class="red-text">{{ err_msg }}</b>
+
+        {% if err_details %}
+        <p class="center-align">Error Details:</p>
+        <pre class="red-text">
+        {{ err_details }}
+    </pre>
+        {% endif %}
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+</body>
+</html>

@@ -36,12 +36,16 @@ export default class CollectionsUtils {
       if (which === 'both') {
         fs.ensureDir(path.join(colPath, 'archive'), errA => {
           fs.ensureFile(path.join(colPath, 'indexes', 'index.cdxj'), errI => {
-            resolve()
+            fs.ensureFile(path.join(colPath, 'indexes', 'all.cdxj'), errI2 => {
+              resolve()
+            })
           })
         })
       } else if (which === 'index') {
         fs.ensureFile(path.join(colPath, 'indexes', 'index.cdxj'), errI => {
-          resolve()
+          fs.ensureFile(path.join(colPath, 'indexes', 'all.cdxj'), errI2 => {
+            resolve()
+          })
         })
       } else {
         fs.ensureDir(path.join(colPath, 'archive'), errA => {

@@ -581,7 +581,8 @@ export default class ArchiveManager extends EventEmitter {
       err.m = err.errorReport(errorMessage)
       throw err
     }
-    let updateWho = {colName: col}, theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
+    let updateWho = {colName: col}
+    let theUpdateCol = {$inc: {numArchives: addedCount}, $set: {size, lastUpdated}}
     let updatedCol
     try {
       updatedCol = await this._collections.update(updateWho, theUpdateCol, updateSingleOpts)
@@ -597,6 +598,10 @@ export default class ArchiveManager extends EventEmitter {
       seeds: updatedCol.seeds,
       lastUpdated: updatedCol.lastUpdated
     }
+  }
+
+  justReindexCol (whichOne) {
+    return this._pywb.reindexColToAddWarc(whichOne)
   }
 
   async _handleColDirNoExistence (errExist) {

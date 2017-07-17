@@ -20,6 +20,17 @@ export const general = {
 export const ipcMessages = {
   addedWarcOrArcFromFs: `Added ${acronyms.warcOrArc} File From The File System`,
   pageOnlyCrawlFinished: 'Page Only Crawl Finished',
+  pageSDCrawlFinished: 'Page + Same Domain Links Crawl Finished',
+  pageALCrawlFinished: 'Page + All Links Crawl Finished',
+  wailCrawlFinished (type) {
+    if (type === 'pal') {
+      return this.pageALCrawlFinished
+    } else if (type === 'psd') {
+      return this.pageSDCrawlFinished
+    } else {
+      return this.pageOnlyCrawlFinished
+    }
+  },
   addedToCollectionX (col) {
     return `Added To The Collection ${col}`
   },

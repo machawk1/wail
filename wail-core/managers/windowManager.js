@@ -225,7 +225,7 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('crawljob-status-update', (event, payload) => {
-      console.log('got crawljob-status-update', payload)
+      // console.log('got crawljob-status-update', payload)
       this.send('mainWindow', 'crawljob-status-update', payload)
     })
 
@@ -401,6 +401,10 @@ export default class WindowManager extends EventEmitter {
 
     ipcMain.on(ipcChannels.WAIL_CRAWL_UPDATE, (e, update) => {
       this.send('mainWindow', ipcChannels.WAIL_CRAWL_UPDATE, update)
+    })
+
+    ipcMain.on('reindex-collection', (e, whichOne) => {
+      this.send('archiveManWindow', 'reindex-collection', whichOne)
     })
   }
 

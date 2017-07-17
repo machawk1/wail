@@ -1,21 +1,53 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css'>
+    <link rel="font" href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/fonts/roboto/Roboto-Regular.woff2'>
+    <style>
+        html,body {
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+
+        .colList {
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+    </style>
+</head>
 <body>
-<h2>pywb Wayback Machine</h2>
-
-This archive contains the following collections:
-
-<ul>
-{% for route in routes %}
-  {% if route | is_wb_handler %}
-    <li>
-    <a href="{{ '/' + route.path }}">{{ '/' + route.path }}</a>
-    {% if route.user_metadata.title is defined %}
-    ({{ route.user_metadata.title }})
-    {% endif %}
-    </li>
-  {% endif %}
-{% endfor %}
-</ul>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper cyan darken-3">
+            <a href="#" class="brand-logo">&nbsp; WAIL's Wayback Machine. Powered By Pywb</a>
+        </div>
+    </nav>
+</div>
+<div class="container">
+    <h4 class="center">Your archive contains the following collections</h4>
+    <div class="collection colList">
+        {% for route in routes %}
+        {% if route | is_wb_handler %}
+        <a class="collection-item" href="{{ '/' + route.path }}">
+            {{ route.path }}
+            {% if route.user_metadata.title is defined %}
+            ({{ route.user_metadata.title }})
+            {% endif %}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
 </body>
 </html>

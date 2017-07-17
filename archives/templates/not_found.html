@@ -1,10 +1,40 @@
-<h2>Url Not Found</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css'>
+    <link rel="font" href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/fonts/roboto/Roboto-Regular.woff2'>
+    <style>
+        html,body {
+            font-family: 'Roboto', sans-serif;
+        }
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
 
-The url <b>{{ url }}</b> could not be found in this collection.
+        main {
+            flex: 1 0 auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2 class="red-text darken-2">Url Not Found</h2>
 
-{% if wbrequest.env.pywb_proxy_magic and url %}
-<p>
-<a href="//select.{{ wbrequest.env.pywb_proxy_magic }}/{{ url }}">Try Different Collection</a>
-</p>
-{% endif %}
+    <p>
+        The url <b class="hoverable red-text">{{ url }}</b> could not be found in this collection.
+    </p>
+
+    {% if wbrequest.env.pywb_proxy_magic and url %}
+    <p>
+        <a href="//select.{{ wbrequest.env.pywb_proxy_magic }}/{{ url }}">Try Different Collection</a>
+    </p>
+    {% endif %}
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+</body>
+</html>
+
 

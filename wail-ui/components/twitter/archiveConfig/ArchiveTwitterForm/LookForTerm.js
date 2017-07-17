@@ -6,4 +6,3 @@ import { Form, FieldArray, reduxForm } from 'redux-form/immutable'
 import CardHeader from 'material-ui/Card/CardHeader'
 import pure from 'recompose/pure'
 import SearchTermList from './SearchTermList'
-

@@ -1,5 +1,5 @@
 import S from 'string'
-import cp from 'child_process'
+import * as cp from 'child_process'
 import Promise from 'bluebird'
 
 S.TMPL_OPEN = '{'
@@ -49,6 +49,10 @@ export default class PyWb {
         }
       })
     })
+  }
+
+  reindexCol2 (col) {
+
   }
 
   reindexCol (templateArgs, exeArgs) {

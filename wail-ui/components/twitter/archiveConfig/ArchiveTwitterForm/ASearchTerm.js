@@ -40,5 +40,4 @@ export default class ASearchTerm extends Component {
       />
     )
   }
-
 }

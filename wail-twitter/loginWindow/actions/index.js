@@ -8,10 +8,10 @@ import constz from '../constants/index'
 
 function getOAuthRequestToken (containerRef) {
   return Rx.Observable.fromPromise(new Promise((resolve, reject) => {
-      const args = JSON.parse(decodeURIComponent(window.location.hash.slice(1)))
-      const force_login = args['force_login'] || false
-      let authUrl = `https://api.twitter.com/oauth/authenticate?force_login=${force_login.toString()};oauth_token=`
-      let oauth = new OAuth(
+    const args = JSON.parse(decodeURIComponent(window.location.hash.slice(1)))
+    const force_login = args['force_login'] || false
+    let authUrl = `https://api.twitter.com/oauth/authenticate?force_login=${force_login.toString()};oauth_token=`
+    let oauth = new OAuth(
         'https://api.twitter.com/oauth/request_token',
         'https://api.twitter.com/oauth/access_token',
         args.key,
@@ -21,21 +21,21 @@ function getOAuthRequestToken (containerRef) {
         'HMAC-SHA1'
       )
 
-      oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
-        if (error) {
-          reject(error)
-          return
-        }
+    oauth.getOAuthRequestToken((error, oauth_token, oauth_token_secret, results) => {
+      if (error) {
+        reject(error)
+        return
+      }
 
-        resolve({
-          containerRef,
-          oauth,
-          oauth_token,
-          oauth_token_secret,
-          loginURL: `${authUrl}${oauth_token}`
-        })
+      resolve({
+        containerRef,
+        oauth,
+        oauth_token,
+        oauth_token_secret,
+        loginURL: `${authUrl}${oauth_token}`
       })
     })
+  })
   )
 }
 

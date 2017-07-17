@@ -1,17 +1,68 @@
-<h2>{{ wbrequest.user_metadata.title if wbrequest.user_metadata.title else wbrequest.coll }} Search Page</h2>
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/css/materialize.min.css'>
+    <link rel="font" href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/fonts/roboto/Roboto-Regular.woff2'>
+    <style>
+        html, body {
+            font-family: 'Roboto', sans-serif;
+        }
 
-<div>
-<table style="text-align: left">
-{% for key, val in wbrequest.user_metadata.items() %}
-<tr><th>{{ key }}:</th><td>{{ val }}</td>
-{% endfor %}
-</table>
+        body {
+            display: flex;
+            min-height: 100vh;
+            flex-direction: column;
+        }
+
+        main {
+            flex: 1 0 auto;
+        }
+    </style>
+    <script>
+      function doIt () {
+        var url = document.getElementById('search').value;
+        if (url !== '') {
+          document.location.href = '{{ wbrequest.wb_prefix }}' + '*/' + url;
+        }
+        return false;
+      }
+    </script>
+</head>
+<body>
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper cyan darken-3">
+            <a href="/" class="brand-logo">&nbsp; WAIL's Wayback Machine. Powered By Pywb</a>
+        </div>
+    </nav>
 </div>
+<div class="container">
+    <div class="row">
+        <h4>Search Page For Collection {{ wbrequest.user_metadata.title if wbrequest.user_metadata.title else
+            wbrequest.coll }}</h4>
 
-<p>
-Search this collection by url:
-<form onsubmit="url = document.getElementById('search').value; if (url != '') { document.location.href = '{{ wbrequest.wb_prefix }}' + '*/' + url; } return false;">
-<input id="search" name="search" placeholder="Enter url to search"/>
-<button type="submit">Search</button>
-</form>
-</p>
+        <table style="text-align: left" class="responsive-table">
+            {% for key, val in wbrequest.user_metadata.items() %}
+            <tr>
+                <th>{{ key }}:</th>
+                <td>{{ val }}</td>
+            </tr>
+                {% endfor %}
+        </table>
+    </div>
+    <div class="row">
+        <form class="col s12"
+              onsubmit="return doIt()">
+            <div class="input-field col s12">
+                <input id="search" name="search" type="text" class="validate">
+                <label for="search">Search this collection by URL</label>
+            </div>
+            <button style="float: right;" class="btn" type="submit">Search</button>
+        </form>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.2/js/materialize.min.js"></script>
+</body>
+</html>
+

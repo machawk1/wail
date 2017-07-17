@@ -486,4 +486,3 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
     await this.writeResponseRecord(nreq.url, responseHeaders)
   }
 }
-

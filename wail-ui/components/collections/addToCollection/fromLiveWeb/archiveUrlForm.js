@@ -13,8 +13,11 @@ import * as notify from '../../../../actions/notification-actions'
 import { resetCheckMessage } from '../../../../actions/archival'
 import path from 'path'
 import S from 'string'
+import uuidv1 from 'uuid/v1'
 import acronyms from '../../../../constants/acronyms'
 import { archiving, ipcChannels } from '../../../../../wail-core/globalStrings'
+import {trackWailCrawl} from '../../../../actions/wailCrawl'
+import isNil from 'lodash/isNil'
 
 const settings = remote.getGlobal('settings')
 
@@ -24,16 +27,19 @@ S.TMPL_CLOSE = '}'
 const archive = (forCol, config) => {
   let message = `Archiving ${config.get('url')} for ${forCol} Now!`
   let conf = config.get('config')
+  let rconf
   if (conf.charAt(0) === 'p') {
     let saveThisOne = `${filenamifyUrl(config.get('url'))}-${forCol}-${new Date().getTime()}.warc`
-    ipc.send(ipcChannels.ARCHIVE_WITH_WAIL, {
+    rconf = {
       forCol,
+      jobId: uuidv1(),
       type: conf,
       uri_r: config.get('url'),
       saveTo: path.join(S(settings.get('collections.colWarcs')).template({col: forCol}).s, saveThisOne),
       isPartOfV: forCol,
       description: `Archived by WAIL for ${forCol}`
-    })
+    }
+    ipc.send(ipcChannels.ARCHIVE_WITH_WAIL, rconf)
   } else {
     ipc.send(ipcChannels.ARCHIVE_WITH_HERITRIX, {
       urls: config.get('url'),
@@ -43,6 +49,7 @@ const archive = (forCol, config) => {
     })
   }
   notify.notifyInfo(message, true)
+  return rconf
 }
 
 const validate = values => {
@@ -77,8 +84,19 @@ class ArchiveUrlForm extends Component {
     if (!values.get('config')) {
       throw new SubmissionError({config: 'Config Not Present', _error: 'Cant Archive'})
     } else {
-      archive(this.props.col, values)
-      this.props.dispatch(batchActions([resetForm(formConfig.form), resetCheckMessage()]))
+      let rconf = archive(this.props.col, values)
+      if (!isNil(rconf)) {
+        this.props.dispatch(batchActions([
+          resetForm(formConfig.form),
+          resetCheckMessage(),
+          trackWailCrawl(rconf)
+        ]))
+      } else {
+        this.props.dispatch(batchActions([
+          resetForm(formConfig.form),
+          resetCheckMessage()
+        ]))
+      }
     }
   }
 
@@ -107,12 +125,12 @@ class ArchiveUrlForm extends Component {
               floatingLabelText='Archive Configuration'
               style={{marginLeft: 25, width: '310px'}}
             >
-              <MenuItem id='po' value={archiving.PAGE_ONLY} primaryText='Page Only'/>
-              <MenuItem id='psd' value={archiving.PAGE_SAME_DOMAIN} primaryText='Page + Same Domain Links'/>
-              <MenuItem id='pal' value={archiving.PAGE_ALL_LINKS} primaryText='Page + All Links'/>
-              <MenuItem id='h0' value={archiving.HERITRIX_DEPTH_1} primaryText='Heritrix Depth 1'/>
-              <MenuItem id='h1' value={archiving.HERITRIX_DEPTH_2} primaryText='Heritrix Depth 2'/>
-              <MenuItem id='h2' value={archiving.HERITRIX_DEPTH_3} primaryText='Heritrix Depth 3'/>
+              <MenuItem id='po' value={archiving.PAGE_ONLY} primaryText='Page Only' />
+              <MenuItem id='psd' value={archiving.PAGE_SAME_DOMAIN} primaryText='Page + Same Domain Links' />
+              <MenuItem id='pal' value={archiving.PAGE_ALL_LINKS} primaryText='Page + All Links' />
+              <MenuItem id='h0' value={archiving.HERITRIX_DEPTH_1} primaryText='Heritrix Depth 1' />
+              <MenuItem id='h1' value={archiving.HERITRIX_DEPTH_2} primaryText='Heritrix Depth 2' />
+              <MenuItem id='h2' value={archiving.HERITRIX_DEPTH_3} primaryText='Heritrix Depth 3' />
             </Field>
           </div>
           <div id='archiveFormButtons' style={{height: '40px', transform: trans}}>
@@ -123,7 +141,7 @@ class ArchiveUrlForm extends Component {
               disabled={invalid || pristine || submitting}
               primary
             />
-            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset}/>
+            <FlatButton label='Cancel' disabled={pristine || submitting} onTouchTap={reset} />
           </div>
         </form>
       </div>

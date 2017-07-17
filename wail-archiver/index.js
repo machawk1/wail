@@ -6,6 +6,7 @@ import moment from 'moment'
 import normalizeUrl from 'normalize-url'
 import filenamifyUrl from 'filenamify-url'
 import S from 'string'
+import uuidv1 from 'uuid/v1'
 import ElectronArchiver from './electronArchiver'
 import { notificationMessages as notifm } from '../wail-ui/constants/uiStrings'
 import Settings from '../wail-core/remoteSettings'
@@ -22,7 +23,7 @@ function addWarcToCol (config) {
     seed: {
       forCol: config.forCol,
       url: config.uri_r,
-      jobId: `${config.forCol}_WAIL_${type}`,
+      jobId: config.jobId,
       lastUpdated,
       added: lastUpdated
     }
@@ -85,17 +86,21 @@ export default class WAILArchiver extends Component {
       let config = this._current
       console.log('finished', config)
       let uiCrawlProgress = {
-        type: uiActions.WAIL_CRAWL_Q_DECREASE,
-        forCol: config.forCol,
-        by: 1
+        type: uiActions.WAIL_CRAWL_FINISHED,
+        update: {
+          forCol: config.forCol,
+          lastUpdated: moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+        }
       }
-      if (!this._current.parent) {
-        uiCrawlProgress.uri_r = config.uri_r
+      if (this._current.parent) {
+        uiCrawlProgress.update.parent = config.parent
+        ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, uiCrawlProgress)
       } else {
-        uiCrawlProgress.parent = config.parent
+        uiCrawlProgress.update.jobId = config.jobId
+        ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, uiCrawlProgress)
+        addWarcToCol(config)
       }
-      ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, uiCrawlProgress)
-      addWarcToCol(config)
+
       this.maybeMore()
     })
 
@@ -141,10 +146,16 @@ export default class WAILArchiver extends Component {
       this.archiver.setUp(webContents)
         .then(() => {
           this._attachedArchiver = true
+          let lastUpdated = moment().format('MMM DD YYYY h:mm:ss.SSSSa')
           ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
             type: uiActions.WAIL_CRAWL_START,
-            forCol: this._current.forCol,
-            uri_r: this._current.uri_r
+            update: {
+              jobId: this._current.jobId,
+              forCol: this._current.forCol,
+              uri_r: this._current.uri_r,
+              started: lastUpdated,
+              lastUpdated
+            }
           })
           this.archiver.startCapturing()
           this.webview.loadURL(normalizeUrl(this._current.uri_r, {stripFragment: false, stripWWW: false}))
@@ -157,13 +168,21 @@ export default class WAILArchiver extends Component {
           console.error(error)
         })
     } else {
-      if (!this._current.parent) {
-        ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
-          type: uiActions.WAIL_CRAWL_START,
+      let started = moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+      let crawlUpdate = {
+        type: uiActions.WAIL_CRAWL_START,
+        update: {
           forCol: this._current.forCol,
-          uri_r: this._current.uri_r
-        })
+          lastUpdated: started,
+          started
+        }
       }
+      if (this._current.parent) {
+        crawlUpdate.update.parent = this._current.parent
+      } else {
+        crawlUpdate.update.jobId = this._current.jobId
+      }
+      ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, crawlUpdate)
       this.archiver.startCapturing()
       this.webview.loadURL(normalizeUrl(this._current.uri_r, {stripFragment: false, stripWWW: false}))
       this.loadTimeout = setTimeout(this.loadTimedOutCB, 15000)
@@ -205,6 +224,8 @@ export default class WAILArchiver extends Component {
       this.startArchiving()
     } else {
       console.log('no more to archive waiting')
+      this._current = null
+      this.webview.stop()
     }
   }
 
@@ -225,7 +246,7 @@ export default class WAILArchiver extends Component {
       let mdataError = false
       clearTimeout(this.loadTimeout)
       this.loadTimeout = null
-      console.log('page loaded from debugger')
+      console.log('page loaded from debugger', arConfig)
       try {
         mdata = await this.archiver.getMetadataBasedOnConfig(arConfig.type)
         console.log(mdata)
@@ -261,7 +282,8 @@ export default class WAILArchiver extends Component {
         let forCol = arConfig.forCol
         this.archiveQ2 = this.archiveQ2.concat(links.map(newSeed => ({
           forCol,
-          parent: arConfig.uri_r,
+          jobId: uuidv1(),
+          parent: arConfig.jobId,
           type: archiving.PAGE_ONLY,
           uri_r: newSeed,
           saveTo: this.extractedSeedWarcPath(newSeed, forCol),
@@ -273,9 +295,12 @@ export default class WAILArchiver extends Component {
 
         ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
           type: uiActions.WAIL_CRAWL_Q_INCREASE,
-          parent: arConfig.uri_r,
-          forCol,
-          by: links.length
+          update: {
+            jobId: arConfig.jobId,
+            forCol,
+            by: links.length,
+            lastUpdated: moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+          }
         })
       }
 
@@ -328,8 +353,7 @@ export default class WAILArchiver extends Component {
         dangerouslySetInnerHTML={{
           __html: `<webview class="archiveWV"  id="awv" src="about:blank" disablewebsecurity webpreferences="allowRunningInsecureContent" partition="archive" plugins> </webview>`
         }}
-      >
-      </div>
+      />
     )
   }
 }

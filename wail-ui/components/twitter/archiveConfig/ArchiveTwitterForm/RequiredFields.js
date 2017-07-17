@@ -19,7 +19,7 @@ const formConfig = {
 function RequiredFields ({handleSubmit, pristine, reset, submitting, invalid, cols, times}) {
   return (
     <Form onSubmit={handleSubmit} className='inheritThyWidthHeight'>
-      <CardHeader title='Required'/>
+      <CardHeader title='Required' />
       <Flex row justifyContent='space-around' style={{height: 152}}>
         <InputName />
         <SelectForCol cols={cols} />

@@ -5,9 +5,8 @@ import SearchTermList from './SearchTermList'
 
 function OptionalSearchTerms () {
   return (
-    <FieldArray name='searchT' component={SearchTermList}/>
+    <FieldArray name='searchT' component={SearchTermList} />
   )
 }
-
 
 export default pure(OptionalSearchTerms)

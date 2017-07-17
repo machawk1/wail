@@ -59,4 +59,3 @@ const warcFields = {
 }
 
 export default warcFields
-

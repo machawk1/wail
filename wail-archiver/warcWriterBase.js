@@ -50,7 +50,7 @@ export default class WARCWriterBase extends EventEmitter {
    */
   writeWarcInfoRecord (version, isPartOfV, warcInfoDescription, ua) {
     this._swapper.setValue(warcHeaderContent)
-    //Buffer.byteLength(str, 'utf8')
+    // Buffer.byteLength(str, 'utf8')
     let whct = this._swapper.template({version, isPartOfV, warcInfoDescription, ua}).s
     let whc = Buffer.from(`${CRLF}${whct}${CRLF}`, 'utf8')
     let t2 = this._swapper.setValue(warcHeader).template({
@@ -184,4 +184,3 @@ export default class WARCWriterBase extends EventEmitter {
     this.emit('error', err)
   }
 }
-

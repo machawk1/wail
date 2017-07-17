@@ -16,7 +16,6 @@ const formConfig = {
   validate
 }
 
-
 class HashTags extends Component {
   constructor (...args) {
     super(...args)
@@ -58,7 +57,7 @@ class HashTags extends Component {
     return (
       <div>
         <Flex row alignItems='center'>
-          <CardTitle subtitle='Look For Hashtags? (optional)'/>
+          <CardTitle subtitle='Look For Hashtags? (optional)' />
           <RaisedButton
             onTouchTap={this.addField}
             primary
@@ -82,11 +81,11 @@ class HashTags extends Component {
     return (
       <form onSubmit={handleSubmit} style={{width: 'inherit', height: 'inherit'}}>
         <div style={{maxHeight: 'calc(100% - 300px)'}}>
-          <FieldArray name='hashtags' component={HashTags}/>
+          <FieldArray name='hashtags' component={HashTags} />
         </div>
         <CardActions>
-          <FlatButton label='Previous' onTouchTap={previousPage}/>
-          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary/>
+          <FlatButton label='Previous' onTouchTap={previousPage} />
+          <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         </CardActions>
       </form>
     )
