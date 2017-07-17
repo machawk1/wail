@@ -11,23 +11,31 @@ import Misc from '../containers/miscellaneous'
 import TwitterView from '../containers/twitterView'
 import TwitterSignIn from '../containers/twitterSignIn'
 import ViewArchiveConfig from '../containers/viewArchiveConfig'
+import WailCrawls from '../containers/wailCrawls'
 import routeNames from './routeNames'
+
+function makeRenderer (Component) {
+  return props => (
+    <Component {...props} />
+  )
+}
 
 export default (
   <div style={{width: 'inherit', height: 'inherit'}}>
     <Header />
     <div className='layoutBody'>
       <Switch>
-        <Route exact path={routeNames.selectCol} component={SelectColContainer} />
-        <Route path={routeNames.viewCollection} component={CollectionView} />
-        <Route path={routeNames.addSeed} component={CollectionAddSeed} />
-        <Route path={routeNames.addSeedFs} component={CollectionAddSeedFs} />
-        <Route path={routeNames.viewArchiveConfig} component={ViewArchiveConfig} />
-        <Route path={routeNames.heritrix} component={HeritrixView} />
-        <Route path={routeNames.misc} component={Misc} />
-        <Route path={routeNames.services} component={ServiceStats} />
-        <Route path={routeNames.twitter} component={TwitterView} />
-        <Route path={routeNames.twitterSignIn} component={TwitterSignIn} />
+        <Route exact path={routeNames.selectCol} render={makeRenderer(SelectColContainer)} />
+        <Route path={routeNames.viewCollection} render={makeRenderer(CollectionView)} />
+        <Route path={routeNames.addSeed} render={makeRenderer(CollectionAddSeed)} />
+        <Route path={routeNames.addSeedFs} render={makeRenderer(CollectionAddSeedFs)} />
+        <Route path={routeNames.viewArchiveConfig} render={makeRenderer(ViewArchiveConfig)} />
+        <Route path={routeNames.heritrix} render={makeRenderer(HeritrixView)} />
+        <Route path={routeNames.wailCrawls} render={makeRenderer(WailCrawls)} />
+        <Route path={routeNames.misc} render={makeRenderer(Misc)} />
+        <Route path={routeNames.services} render={makeRenderer(ServiceStats)} />
+        <Route path={routeNames.twitter} render={makeRenderer(TwitterView)} />
+        <Route path={routeNames.twitterSignIn} render={makeRenderer(TwitterSignIn)} />
       </Switch>
     </div>
   </div>

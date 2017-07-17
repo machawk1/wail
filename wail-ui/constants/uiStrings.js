@@ -4,6 +4,8 @@ export const general = {
   newCol: 'New Collection',
   collections: 'Collections',
   heritrix: 'Heritrix',
+  wailCrawls: 'Wail Crawls',
+  heritrixCrawls: 'Heritrix Crawls',
   crawls: 'Crawls',
   serviceStatuses: 'Service Statuses',
   services: 'Services',

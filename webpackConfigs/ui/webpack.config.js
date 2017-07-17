@@ -37,7 +37,6 @@ module.exports = {
           cacheDirectory: true,
           presets: [babelEnvConfig, 'react', 'react-hmre'],
           plugins: [
-            'lodash',
             'transform-decorators-legacy',
             'transform-class-properties',
             'transform-es2015-object-super',

@@ -8,7 +8,8 @@ const routeNames = {
   misc: '/misc',
   services: '/services',
   twitter: '/twitter',
-  twitterSignIn: '/twitter-signin'
+  twitterSignIn: '/twitter-signin',
+  wailCrawls: '/wailCrawls'
 }
 
 export const dynamicRouteResolvers = {

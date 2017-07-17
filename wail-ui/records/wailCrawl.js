@@ -1,4 +1,4 @@
-import { Record, List } from 'immutable'
+import { Record, List, Map } from 'immutable'
 import { archiving } from '../../wail-core/globalStrings'
 import moment from 'moment'
 
@@ -7,25 +7,25 @@ export class WailCrawlRecord extends Record({
   forCol: 'default',
   uri_r: '',
   queued: 1,
-  started: 'queued',
+  started: 'Queued',
   lastUpdated: 'N/A',
   jobId: ''
 }) {
-  started (update) {
+  didStart (update) {
     return this.merge(update)
   }
 
   qIncrease (update) {
-    return this.withMutations(self => {
-      self.set('queued', this.queued + update.by)
-        .set('lastUpdated', update.lastUpdated)
+    return this.merge({
+      'queued': this.queued + update.by,
+      'lastUpdated': update.lastUpdated
     })
   }
 
   qDecrease (update) {
-    return this.withMutations(self => {
-      self.set('queued', this.queued - 1)
-        .set('lastUpdated', update.lastUpdated)
+    return this.merge({
+      'queued': this.queued - 1,
+      'lastUpdated': update.lastUpdated
     })
   }
 
@@ -33,11 +33,18 @@ export class WailCrawlRecord extends Record({
     return this.queued - 1 === 0
   }
 
+  status () {
+    if (this.started !== 'Queued') {
+      return `Started ${this.started}`
+    }
+    return this.started
+  }
+
 }
 
 export default class WCrawlsRecord extends Record({
   jobIds: List(),
-  jobs: {}
+  jobs: Map()
 }) {
   track (crawl) {
     crawl.type = archiving[crawl.type]
@@ -45,16 +52,13 @@ export default class WCrawlsRecord extends Record({
     delete crawl.isPartOfV
     delete crawl.description
     delete crawl.saveTo
-    this.jobs[crawl.jobId] = new WailCrawlRecord(crawl)
-    console.log(this.jobs[crawl.jobId], crawl.jobId)
-    return this.withMutations(self => {
-      self.set('jobIds', this.jobIds.push(crawl.jobId))
-        .set('jobs', this.jobs)
+    return this.merge({
+      'jobIds': this.jobIds.push(crawl.jobId),
+      'jobs': this.jobs.set(crawl.jobId, new WailCrawlRecord(crawl))
     })
   }
 
   started (update) {
-    console.log(update)
     let rid
     if (update.parent) {
       rid = update.parent
@@ -62,8 +66,9 @@ export default class WCrawlsRecord extends Record({
     } else {
       rid = update.jobId
     }
-    this.jobs[rid] = this.jobs[rid].started(update)
-    return this.set('jobs', this.jobs)
+    let jb = this.getJob(rid)
+    let jrbs = this.get('jobs')
+    return this.set('jobs', jrbs.set(rid, jb.didStart(update)))
   }
 
   qIncrease (update) {
@@ -74,13 +79,12 @@ export default class WCrawlsRecord extends Record({
     } else {
       rid = update.jobId
     }
-    console.log(update)
-    this.jobs[rid] = this.jobs[rid].qIncrease(update)
-    return this.set('jobs', this.jobs)
+    let jb = this.getJob(rid)
+    let jrbs = this.get('jobs')
+    return this.set('jobs', jrbs.set(rid, jb.qIncrease(update)))
   }
 
   aCrawlFinished (update) {
-    console.log(update)
     let rid
     if (update.parent) {
       rid = update.parent
@@ -88,16 +92,19 @@ export default class WCrawlsRecord extends Record({
     } else {
       rid = update.jobId
     }
-    let wcr = this.jobs[rid]
+    let wcr = this.getJob(rid)
     if (wcr.willQDecreaseEqZero()) {
-      delete this.jobs[rid]
-      return this.withMutations(self => {
-        self.set('jobIds', this.jobIds.delete(this.jobIds.indexOf(rid)))
-          .set('jobs', this.jobs)
+      return this.merge({
+        'jobIds': this.jobIds.delete(this.jobIds.indexOf(rid)),
+        'jobs': this.jobs.delete(rid)
       })
     } else {
-      this.jobs[rid] = this.jobs[rid].qDecrease(update)
-      return this.set('jobs', this.jobs)
+      let jrb = this.getJob(rid)
+      return this.set('jobs', this.jobs.set(rid, jrb.qDecrease(update)))
     }
+  }
+
+  getJob (rid) {
+    return this.jobs.get(rid)
   }
 }

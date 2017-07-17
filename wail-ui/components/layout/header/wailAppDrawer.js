@@ -1,8 +1,11 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 import Drawer from 'material-ui/Drawer'
 import Avatar from 'material-ui/Avatar'
-import { Link } from 'react-router-dom'
+import Subheader from 'material-ui/Subheader'
+import List from 'material-ui/List/List'
+import ListItem from 'material-ui/List/ListItem'
 import ServiceIcon from 'material-ui/svg-icons/action/timeline'
 import EventIcon from 'material-ui/svg-icons/action/event'
 import MenuItem from 'material-ui/MenuItem'
@@ -18,6 +21,9 @@ class WailAppDrawer extends Component {
   }
   goToHeritrix = () => {
     this.props.handleClose(general.heritrix, routeNames.heritrix)
+  }
+  goToWailCrawls = () => {
+    this.props.handleClose(general.wailCrawls, routeNames.wailCrawls)
   }
   goToServices = () => {
     this.props.handleClose(general.serviceStatuses, routeNames.services)
@@ -56,6 +62,7 @@ class WailAppDrawer extends Component {
             />
           </Link>
           <Divider />
+          <Subheader>Crawls</Subheader>
           <Link
             style={lStyle}
             to={routeNames.heritrix}
@@ -63,8 +70,18 @@ class WailAppDrawer extends Component {
           >
             <MenuItem
               id='sidebarHeritrix'
-              primaryText={general.crawls}
+              primaryText={general.heritrixCrawls}
               rightIcon={<Avatar size={45} backgroundColor={'transparent'} src='icons/heritrix.gif' />}
+            />
+          </Link>
+          <Link
+            style={lStyle}
+            to={routeNames.wailCrawls}
+            onClick={this.goToWailCrawls}
+          >
+            <MenuItem
+              id='sidebarWailCrawls'
+              primaryText={general.wailCrawls}
             />
           </Link>
           <Divider />

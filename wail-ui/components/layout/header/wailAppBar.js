@@ -30,6 +30,7 @@ export default class WailAppBar extends Component {
     this.renderAddSeedFs = this.renderAddSeedFs.bind(this)
     this.renderViewArchiveConfig = this.renderViewArchiveConfig.bind(this)
     this.renderHeritrix = this.renderHeritrix.bind(this)
+    this.renderWailCrawls = this.renderWailCrawls.bind(this)
     this.renderMisc = this.renderMisc.bind(this)
     this.renderServices = this.renderServices.bind(this)
     this.renderTwitter = this.renderTwitter.bind(this)
@@ -96,6 +97,16 @@ export default class WailAppBar extends Component {
     )
   }
 
+  renderWailCrawls (props) {
+    return (
+      <DynamicAppBar
+        Location={<StaticLocation theLocation={general.wailCrawls} {...props} />}
+        leftIconTouchTap={this.props.leftIconTouchTap}
+        IconRight={this.props.CrawlIndicator}
+      />
+    )
+  }
+
   renderMisc (props) {
     return (
       <DynamicAppBar
@@ -145,6 +156,7 @@ export default class WailAppBar extends Component {
         <Route path={routeNames.addSeedFs} render={this.renderAddSeedFs} />
         <Route path={routeNames.viewArchiveConfig} render={this.renderViewArchiveConfig} />
         <Route path={routeNames.heritrix} render={this.renderHeritrix} />
+        <Route path={routeNames.wailCrawls} render={this.renderWailCrawls} />
         <Route path={routeNames.misc} render={this.renderMisc} />
         <Route path={routeNames.services} render={this.renderServices} />
         <Route path={routeNames.twitter} render={this.renderTwitter} />
