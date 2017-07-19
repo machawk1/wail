@@ -2,9 +2,12 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
+import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 import MyAutoSizer from '../utilComponents/myAutoSizer'
 import WailCralJob from './WailCrawlJob'
+
 
 function stateToProps (state) {
   return {jobIds: state.get('wailCrawls').jobIds}
@@ -34,43 +37,19 @@ class WailCrawls extends Component {
     return trs
   }
 
-  renderWailCrawls (jobItems, {height}) {
-    return (
-      <Table
-        height={`${height - 175}px`}
+  renderWailCrawls (jobItems, {height,width}) {
+    return(
+      <Flexbox
+        maxWidth={`${width}px`}
+        flexGrow={1}
+        maxHeight={`${height - 100}px`}
+        flexWrap='wrap'
+        flexDirection='row'
+        alignItems='baseline'
+        margin='10px'
       >
-        <TableHeader
-          displaySelectAll={false}
-          adjustForCheckbox={false}
-        >
-          <TableRow>
-            <TableHeaderColumn className="wailCrawlUrl">
-              URL
-            </TableHeaderColumn>
-            <TableHeaderColumn className="wailCrawlType">
-              Type
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              Collection
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              Status
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              Pages Left To Preserve
-            </TableHeaderColumn>
-            <TableHeaderColumn>
-              Last Update
-            </TableHeaderColumn>
-          </TableRow>
-        </TableHeader>
-        <TableBody
-          displayRowCheckbox={false}
-          showRowHover
-        >
-          {jobItems}
-        </TableBody>
-      </Table>
+        {jobItems}
+      </Flexbox>
     )
   }
 

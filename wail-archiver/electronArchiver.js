@@ -1,7 +1,7 @@
 import EventEmitter from 'eventemitter3'
 import Promise from 'bluebird'
 import isEmpty from 'lodash/isEmpty'
-import { ElectronWARCWriter } from 'node-warc'
+import ElectronWARCWriter from './electronWARCGenerator'
 import ElectronRequestMonitor from './electronRequestMonitor'
 import * as pageEvals from './pageEvals'
 import { archiving } from '../wail-core/globalStrings'
@@ -62,6 +62,12 @@ export default class ElectronArchiver extends EventEmitter {
       console.error('No naughty failed :(')
       console.error(error)
     }
+    try {
+      await this._updateEmulation()
+    }catch (error) {
+      console.error('updateEmulation failed :(')
+      console.error(error)
+    }
     this._wc.debugger.on('message', (event, method, params) => {
       if (method === 'Page.loadEventFired') {
         // Promise.delay(5000).then(this.pageLoaded)
@@ -79,6 +85,7 @@ export default class ElectronArchiver extends EventEmitter {
   async genWarc ({info, outlinks, UA, seedURL}) {
     await this._warcGenerator.writeWarcInfoRecord(info.v, info.isPartOfV, info.warcInfoDescription, UA)
     await this._warcGenerator.writeWarcMetadataOutlinks(seedURL, outlinks)
+    this.requestMonitor.stopCapturing()
     for (let nreq of this.requestMonitor.values()) {
       try {
         if (nreq.redirectResponse) {
@@ -95,7 +102,16 @@ export default class ElectronArchiver extends EventEmitter {
               await this._warcGenerator.generateOptions(nreq, this._wc.debugger)
               break
             default:
-              console.log(nreq.method)
+              if (
+                (nreq.headers === null || nreq.headers === undefined) &&
+                (nreq.method === null || nreq.method === undefined) &&
+                (nreq.url === null || nreq.url === undefined) &&
+                (nreq.res !== null || nreq.res !== undefined)
+              ) {
+                await this._warcGenerator.generateOnlyRes(nreq, this._wc.debugger)
+              } else {
+                await this._warcGenerator.generateOther(nreq, this._wc.debugger)
+              }
           }
         }
       } catch (error) {
@@ -191,6 +207,25 @@ export default class ElectronArchiver extends EventEmitter {
   _doNoNaughtyJs () {
     return new Promise((resolve, reject) => {
       this._wc.debugger.sendCommand('Page.addScriptToEvaluateOnLoad', pageEvals.noNaughtyJS, (err, ret) => {
+        if (!isEmpty(err)) {
+          return reject(new ArchiverError(err))
+        }
+        resolve(ret)
+      })
+    })
+  }
+
+  _updateEmulation () {
+    return new Promise((resolve, reject) => {
+      this._wc.debugger.sendCommand('Emulation.setDeviceMetricsOverride', {
+        width: 1920,
+        height: 1080,
+        screenWidth: 1920,
+        screenHeight: 1080,
+        deviceScaleFactor: 0,
+        mobile: false,
+        fitWindow: false
+      }, (err, ret) => {
         if (!isEmpty(err)) {
           return reject(new ArchiverError(err))
         }

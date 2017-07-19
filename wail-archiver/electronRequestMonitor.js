@@ -1,3 +1,5 @@
+import uuid from 'uuid/v1'
+
 export default class ElectronRequestMonitor extends Map {
   constructor () {
     super()
@@ -99,7 +101,41 @@ export default class ElectronRequestMonitor extends Map {
             }
           }
         } else {
-          console.log('double request')
+          // was double request currently seems like a bug
+          // only happens when chrome is angry with us
+          // docs state that RequestId is unique and if
+          // redirect response is not on the object
+          // this should never happen or does it ????
+          let maybeRes = this.get(info.requestId)
+          if (
+            (maybeRes.headers === null || maybeRes.headers === undefined) &&
+            (maybeRes.method === null || maybeRes.method === undefined) &&
+            (maybeRes.url === null || maybeRes.url === undefined) &&
+            (maybeRes.res !== null && maybeRes.res !== undefined)
+          ) {
+            // we found you!
+            maybeRes.url = info.request.url
+            maybeRes.headers = info.request.headers
+            maybeRes.method = info.request.method
+            if (info.request.postData !== undefined && info.request.postData !== null) {
+              maybeRes.postData = info.request.postData
+            }
+            this._set(info.requestId, maybeRes)
+          } else {
+            let captured = {
+              requestId: info.requestId,
+              url: info.request.url,
+              headers: info.request.headers,
+              method: info.request.method
+            }
+            if (info.redirectResponse !== undefined && info.redirectResponse !== null) {
+              captured.redirectResponse = info.redirectResponse
+            }
+            if (info.request.postData !== undefined && info.request.postData !== null) {
+              captured.postData = info.request.postData
+            }
+            this._set(`${info.requestId}${uuid()}`, captured)
+          }
         }
       } else {
         let captured = {
@@ -108,8 +144,8 @@ export default class ElectronRequestMonitor extends Map {
           headers: info.request.headers,
           method: info.request.method
         }
-        if (info.redirectResponse) {
-          console.log('first req has redirect res')
+        if (info.redirectResponse !== undefined && info.redirectResponse !== null) {
+          captured.redirectResponse = info.redirectResponse
         }
         if (info.request.postData !== undefined && info.request.postData !== null) {
           captured.postData = info.request.postData
@@ -119,16 +155,42 @@ export default class ElectronRequestMonitor extends Map {
     }
   }
 
+  /**
+   * @desc Handles the Network.responseReceived event
+   * @see https://chromedevtools.github.io/devtools-protocol/tot/Network/#event-responseReceived
+   * @param {Object} info
+   * @private
+   */
   _responseReceived (info) {
     if (this._capture) {
       if (!this.has(info.requestId)) {
-        console.log('booooo no have matching request for', info.requestId)
-        this._set(info.requestId, {
-          res: info.response
-        })
+        let captured = {
+          res: {
+            url: info.response.url,
+            status: info.response.status,
+            statusText: info.response.statusText,
+            headers: info.response.headers,
+            headersText: info.response.headersText,
+            requestHeaders: info.response.requestHeaders,
+            requestHeadersText: info.response.requestHeadersText,
+            protocol: info.response.protocol
+          },
+          requestId: info.requestId
+        }
+        if (captured.res.requestHeaders !== null && captured.res.requestHeaders !== undefined) {
+          let method = captured.res.requestHeaders[':method']
+          if (method && method !== '') {
+            // http2 why you do this to me
+            captured.headers = captured.res.requestHeaders
+            captured.url = captured.res.url
+            captured.method = method
+          }
+        }
+        this._set(info.requestId, captured)
       } else {
-        if (this.get(info.requestId).res) {
-          if (Array.isArray(this.get(info.requestId).res)) {
+        let res = this.get(info.requestId).res
+        if (res) {
+          if (Array.isArray(res)) {
             this.get(info.requestId).res.push({
               url: info.response.url,
               status: info.response.status,
@@ -140,8 +202,7 @@ export default class ElectronRequestMonitor extends Map {
               protocol: info.response.protocol
             })
           } else {
-            let oldRes = this.get(info.requestId).res
-            this.get(info.requestId).res = [oldRes, {
+            this.get(info.requestId).res = [res, {
               url: info.response.url,
               status: info.response.status,
               statusText: info.response.statusText,

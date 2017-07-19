@@ -89,7 +89,7 @@ export default class WAILArchiver extends Component {
         type: uiActions.WAIL_CRAWL_FINISHED,
         update: {
           forCol: config.forCol,
-          lastUpdated: moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+          lastUpdated: moment().format('MMM DD YYYY h:mm:ssa')
         }
       }
       if (this._current.parent) {
@@ -146,7 +146,7 @@ export default class WAILArchiver extends Component {
       this.archiver.setUp(webContents)
         .then(() => {
           this._attachedArchiver = true
-          let lastUpdated = moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+          let lastUpdated = moment().format('MMM DD YYYY h:mm:ssa')
           ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
             type: uiActions.WAIL_CRAWL_START,
             update: {
@@ -168,7 +168,7 @@ export default class WAILArchiver extends Component {
           console.error(error)
         })
     } else {
-      let started = moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+      let started = moment().format('MMM DD YYYY h:mm:ssa')
       let crawlUpdate = {
         type: uiActions.WAIL_CRAWL_START,
         update: {
@@ -203,27 +203,27 @@ export default class WAILArchiver extends Component {
     let q2l = this.archiveQ2.length
     if (q1l > 0 && q2l > 0) {
       if (this._lastQ === Q1) {
-        console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+        // console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
         this._current = this.archiveQ2.shift()
         this._lastQ = Q2
       } else {
-        console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+        // console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
         this._current = this.archiveQ.shift()
         this._lastQ = Q1
       }
       this.startArchiving()
     } else if (q1l > 0 && q2l === 0) {
-      console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+      // console.log(`taking from Q1, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
       this._current = this.archiveQ.shift()
       this._lastQ = Q1
       this.startArchiving()
     } else if (q1l === 0 && q2l > 0) {
-      console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
+      // console.log(`taking from Q2, remaining Q1: ${q1l} remaining Q2: ${q2l} `)
       this._current = this.archiveQ2.shift()
       this._lastQ = Q2
       this.startArchiving()
     } else {
-      console.log('no more to archive waiting')
+      // console.log('no more to archive waiting')
       this._current = null
       this.webview.stop()
     }
@@ -246,10 +246,10 @@ export default class WAILArchiver extends Component {
       let mdataError = false
       clearTimeout(this.loadTimeout)
       this.loadTimeout = null
-      console.log('page loaded from debugger', arConfig)
+      // console.log('page loaded from debugger', arConfig)
       try {
         mdata = await this.archiver.getMetadataBasedOnConfig(arConfig.type)
-        console.log(mdata)
+        // console.log(mdata)
       } catch (error) {
         console.error('metadata get failed', error)
         mdataError = true
@@ -278,7 +278,7 @@ export default class WAILArchiver extends Component {
       }
 
       if (links.length > 0) {
-        console.log('we have links', links)
+        // console.log('we have links', links)
         let forCol = arConfig.forCol
         this.archiveQ2 = this.archiveQ2.concat(links.map(newSeed => ({
           forCol,
@@ -299,7 +299,7 @@ export default class WAILArchiver extends Component {
             jobId: arConfig.jobId,
             forCol,
             by: links.length,
-            lastUpdated: moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+            lastUpdated: moment().format('MMM DD YYYY h:mm:ssa')
           }
         })
       }

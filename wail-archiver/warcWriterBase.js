@@ -21,6 +21,7 @@ export default class WARCWriterBase extends EventEmitter {
     this._swapper = S('')
     this._rid = null
     this._now = null
+    this._noHTTP2 = true
     this._fileName = null
     this._onFinish = this._onFinish.bind(this)
     this._onError = this._onError.bind(this)

@@ -2,7 +2,7 @@ import React from 'react'
 import { namedPure } from '../util/recomposeHelpers'
 import WailCrawls from '../components/wailCrawls'
 
-const enhance = namedPure('HeritrixView')
+const enhance = namedPure('WailCrawlView')
 
 function WailCrawlView () {
   return (

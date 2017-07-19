@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import CardTitle from 'material-ui/Card/CardTitle'
 import { fullWhite, amber500 } from 'material-ui/styles/colors'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 
 const enhance = namedUpdateKeys('MementoCardHeader', ['url', 'lastUpdated'])
@@ -14,10 +14,14 @@ const MementoCardHeader = ({lastUpdated, added, url}, {muiTheme: {baseTheme: {pa
     titleStyle={{fontSize: '15px', color: fullWhite, texOverflow: 'ellipsis'}}
     title={url}
     subtitle={
-      <Flex row alignItems='baseline' justifyContent='space-between'>
+      <Flexbox
+        flexDirection='row'
+        flexWrap='wrap'
+        justifyContent='space-between'
+      >
         <span style={{color: fullWhite}}>Last Archived: {lastUpdated}</span>
         <span style={{color: fullWhite}}>Added: {added}</span>
-      </Flex>
+      </Flexbox>
     }
   />
 )

@@ -2,22 +2,43 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import CardHeader from 'material-ui/Card/CardHeader'
 import CardText from 'material-ui/Card/CardText'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { collectionCard} from '../../../../constants/uiStrings'
 
 const enhance = namedUpdateKeys('CollectionCardBody', ['added', 'mementos', 'conf'])
 
-const CollectionCardBody = ({seeds, lastUpdated, size, description}) => (
+const CollectionCardBody = ({seeds, lastUpdated, size, description, name}) => (
   <div key={`CollectionCardBody-div-${name}`} className='collectionCardBody'>
-    <Flex key={`CollectionCardBody-flex-${name}`} row alignItems='baseline' >
-      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-seeds`}
+    <Flexbox
+      key={`CollectionCardBody-flex-${name}`}
+      flexDirection='row'
+      flexWrap='wrap'
+      alignItems='baseline'
+      justifyContent='space-between'
+    >
+      <CardHeader
+        titleStyle={{padding: 0}}
+        textStyle={{padding: 10}}
+        style={{padding: 5}}
+        className='collectionCardBodyInfo'
+        key={`CollectionCardBody-${name}-seeds`}
         title={collectionCard.seedCount(seeds)} />
-      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-size`}
+      <CardHeader
+        style={{padding: 5}}
+        textStyle={{padding: 10}}
+        titleStyle={{padding: 0}}
+        className='collectionCardBodyInfo'
+        key={`CollectionCardBody-${name}-size`}
         title={collectionCard.collSize(size)} />
-      <CardHeader titleStyle={{padding: 0}} className='collectionCardBodyInfo' key={`CollectionCardBody-${name}-lastUpdated`}
+      <CardHeader
+        style={{padding: 5}}
+        textStyle={{padding: 10}}
+        titleStyle={{padding: 0}}
+        className='collectionCardBodyInfo'
+        key={`CollectionCardBody-${name}-lastUpdated`}
         title={collectionCard.lastArchived(lastUpdated)} />
-    </Flex>
+    </Flexbox>
     <CardText>
       {description}
     </CardText>

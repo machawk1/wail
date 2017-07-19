@@ -1,8 +1,15 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Immutable from 'immutable'
-import { TableRow, TableRowColumn } from 'material-ui/Table'
 import { connect } from 'react-redux'
+import { blueGrey700 as cHeaderTextColor } from 'material-ui/styles/colors'
+import Card from 'material-ui/Card/Card'
+import CardHeader from 'material-ui/Card/CardHeader'
+import CardText from 'material-ui/Card/CardText'
+import Flexbox from 'flexbox-react'
+
+const headTextStyle = {color: cHeaderTextColor, textDecoration: 'none', textAlign: 'center'}
+
 
 function stateToProps (state, ownProps) {
   return {jobRecord: state.get('wailCrawls').getJob(ownProps.jobId)}
@@ -20,28 +27,41 @@ class WailCrawlJob extends Component {
   }
 
   render () {
-    let {jobId, jobRecord} = this.props
+    const {jobId, jobRecord} = this.props
     return (
-      <TableRow id={`wji${this.props.i}`} key={`${jobId}-TableRow`}>
-        <TableRowColumn key={`${jobId}-TRCol-Url`} className="wailCrawlUrl">
-          {jobRecord.uri_r}
-        </TableRowColumn>
-        <TableRowColumn key={`${jobId}-TRCol-Type`}>
-          {jobRecord.type}
-        </TableRowColumn>
-        <TableRowColumn key={`${jobId}-TRCol-ForCol`}>
-          {jobRecord.forCol}
-        </TableRowColumn>
-        <TableRowColumn key={`${jobId}-TRCol-Status`}>
-          {jobRecord.status()}
-        </TableRowColumn>
-        <TableRowColumn key={`${jobId}-TRCol-Queued`}>
-          {jobRecord.queued}
-        </TableRowColumn>
-        <TableRowColumn key={`${jobId}-TRCol-Last-Updated`}>
-          {jobRecord.lastUpdated}
-        </TableRowColumn>
-      </TableRow>
+      <Card
+        id={`wji${this.props.i}`}
+        key={`${jobId}-card-${this.props.i}`}
+        style={{
+          margin: 5
+        }}
+      >
+        <CardHeader
+          title={jobRecord.uri_r}
+          subtitle={jobRecord.type}
+          titleStyle={headTextStyle}
+        />
+        <CardText>
+          <Flexbox
+            flexGrow={1}
+            flexDirection='row'
+            flexWrap='wrap'
+            justifyContent='space-between'
+          >
+            <span style={{marginBottom: 3}}>Collection: {jobRecord.forCol}</span>
+            <span>To Crawl: {jobRecord.queued}</span>
+          </Flexbox>
+          <Flexbox
+            flexGrow={1}
+            flexDirection='row'
+            flexWrap='wrap'
+            justifyContent='space-between'
+          >
+            <span style={{marginBottom: 3}}>{jobRecord.status()}</span>
+            <span>Updated: {jobRecord.lastUpdated}</span>
+          </Flexbox>
+        </CardText>
+      </Card>
     )
   }
 }

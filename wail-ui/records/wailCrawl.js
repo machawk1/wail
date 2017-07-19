@@ -1,6 +1,7 @@
 import { Record, List, Map } from 'immutable'
 import { archiving } from '../../wail-core/globalStrings'
 import moment from 'moment'
+import { ipcRenderer } from 'electron'
 
 export class WailCrawlRecord extends Record({
   type: archiving.PAGE_ONLY,
@@ -35,7 +36,7 @@ export class WailCrawlRecord extends Record({
 
   status () {
     if (this.started !== 'Queued') {
-      return `Started ${this.started}`
+      return `Started: ${this.started}`
     }
     return this.started
   }
@@ -48,7 +49,7 @@ export default class WCrawlsRecord extends Record({
 }) {
   track (crawl) {
     crawl.type = archiving[crawl.type]
-    crawl.lastUpdate = moment().format('MMM DD YYYY h:mm:ss.SSSSa')
+    crawl.lastUpdate = moment().format('MMM DD YYYY h:mm:ssa')
     delete crawl.isPartOfV
     delete crawl.description
     delete crawl.saveTo
@@ -94,12 +95,16 @@ export default class WCrawlsRecord extends Record({
     }
     let wcr = this.getJob(rid)
     if (wcr.willQDecreaseEqZero()) {
+      ipcRenderer.send('reindex-collection', {col: update.forCol})
       return this.merge({
         'jobIds': this.jobIds.delete(this.jobIds.indexOf(rid)),
         'jobs': this.jobs.delete(rid)
       })
     } else {
       let jrb = this.getJob(rid)
+      if (update.started) {
+        delete update.started
+      }
       return this.set('jobs', this.jobs.set(rid, jrb.qDecrease(update)))
     }
   }

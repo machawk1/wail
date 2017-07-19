@@ -13,6 +13,7 @@ const CollectionCard = ({col, ccKey, i}) => (
   <Card key={`${ccKey}-collectioncard`} className='collectionCard'>
     <CollectionCardHeader i={i} key={`${ccKey}-collectioncard-header`} name={col.get('colName')} />
     <CollectionCardBody
+      name={col.get('colName')}
       key={`${ccKey}-collectioncard-body`}
       seeds={col.get('seeds').size}
       lastUpdated={col.get('lastUpdated').format('MMM DD YYYY h:mma')}

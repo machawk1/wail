@@ -51,7 +51,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         if (!(nreq.headers.host || nreq.headers.Host)) {
           nreq.headers['Host'] = purl.host
         }
-        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        if (this._noHTTP2) {
+          requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        } else {
+          requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+        }
         head = nreq.headers
         for (headerKey in head) {
           requestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
@@ -70,7 +74,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       if (res.headersText) {
         responseHeaders = res.headersText
       } else {
-        responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        if (this._noHTTP2) {
+          responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        } else {
+          responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        }
         head = res.headers
         for (headerKey in head) {
           responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
@@ -79,6 +87,8 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       }
 
       // console.log(responseHeaders)
+      // if their is no response body these values are undefined
+      // do not request body if there is none or zero length body
       let resData
       let wasError = false
       try {
@@ -142,8 +152,12 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         if (!(head.host || head.Host)) {
           head['Host'] = purl.host
         }
-        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
-        // no need for hasOwnProperty, https://chromedevtools.github.io/devtools-protocol/tot/wcDebugger/#type-Headers
+        if (this._noHTTP2) {
+          requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        } else {
+          requestHeaders = `${nreq.method} ${purl.path} ${nreq.redirectResponse[0].protocol.toUpperCase()}${CRLF}`
+        }
+        // no need for hasOwnProperty, https://chromedevtools.github.io/devtools-protocol/tot/Network/#type-Headers
         // states headers is a json object
         for (headerKey in head) {
           requestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
@@ -184,7 +198,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       } else {
         head = nreq.redirectResponse[0].headers
         aRedirect = nreq.redirectResponse[0]
-        rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        if (this._noHTTP2) {
+          rderHeaders = `HTTP/1.1 ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        } else {
+          rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        }
         for (headerKey in head) {
           rderHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
         }
@@ -208,7 +226,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
           if (!(head.host || head.Host)) {
             head['Host'] = purl.host
           }
-          requestHeaders = `${nreq.method} ${purl.path} ${aRedirect.protocol.toUpperCase()}${CRLF}`
+          if (this._noHTTP2) {
+            requestHeaders = `HTTP/1.1 ${purl.path} ${aRedirect.protocol.toUpperCase()}${CRLF}`
+          } else {
+            requestHeaders = `${nreq.method} ${purl.path} ${aRedirect.protocol.toUpperCase()}${CRLF}`
+          }
           for (headerKey in head) {
             requestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
           }
@@ -218,7 +240,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         if (aRedirect.headersText) {
           rderHeaders = aRedirect.headersText
         } else {
-          rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+          if (this._noHTTP2) {
+            rderHeaders = `HTTP/1.1 ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+          } else {
+            rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+          }
           head = aRedirect.headers
           for (headerKey in head) {
             rderHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
@@ -237,7 +263,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         rderHeaders = nreq.redirectResponse.headersText
       } else {
         aRedirect = nreq.redirectResponse
-        rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        if (this._noHTTP2) {
+          rderHeaders = `HTTP/1.1 ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        } else {
+          rderHeaders = `${aRedirect.protocol.toUpperCase()} ${aRedirect.status} ${aRedirect.statusText || STATUS_CODES[aRedirect.status]}${CRLF}`
+        }
         head = aRedirect.headers
         for (headerKey in head) {
           rderHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
@@ -252,38 +282,51 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
 
     /* the final response (maybe has body) */
     if (nreq.res) {
+      let isArray = Array.isArray(nreq.res)
       res = nreq.res
-      // request for the final response in redirection / redirection chain
-      if (res.requestHeadersText || res.requestHeaders) {
-        if (res.requestHeadersText) {
-          finalRequestHeaders = res.requestHeadersText
-        } else {
-          head = res.requestHeaders
-          purl = URL.parse(res.url)
-          if (!(head.host || head.Host)) {
-            head['Host'] = purl.host
-          }
-          finalRequestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
-          for (headerKey in head) {
-            finalRequestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
-          }
-          finalRequestHeaders += `${CRLF}`
-        }
-
-        await this.writeRequestRecord(res.url, finalRequestHeaders)
+      if (isArray) {
+        res = res.shift()
       }
+      // request for the final response in redirection / redirection chain
+      if (res.requestHeadersText) {
+        finalRequestHeaders = res.requestHeadersText
+      } else {
+        head = res.requestHeaders || nreq.headers
+        purl = URL.parse(res.url)
+        if (!(head.host || head.Host)) {
+          head['Host'] = purl.host
+        }
+        if (this._noHTTP2) {
+          finalRequestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        } else {
+          finalRequestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+        }
+        for (headerKey in head) {
+          finalRequestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+        }
+        finalRequestHeaders += `${CRLF}`
+      }
+
+      await this.writeRequestRecord(res.url, finalRequestHeaders)
+
       // response for the final request in redirection / redirection chain
       if (res.headersText) {
         finalResponseHeaders = res.headersText
       } else {
         head = res.headers
-        finalResponseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        if (this._noHTTP2) {
+          finalResponseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        } else {
+          finalResponseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        }
         for (headerKey in head) {
           finalResponseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
         }
         finalResponseHeaders += `${CRLF}`
       }
 
+      // if their is no response body these values are undefined
+      // do not request body if there is none or zero length body
       let resData
       let wasError = false
       try {
@@ -303,6 +346,77 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       }
       // console.log(finalResponseHeaders)
       await this.writeResponseRecord(res.url, finalResponseHeaders, resData)
+      if (isArray && nreq.res.length > 0) {
+        let i = 0
+        let len = nreq.res.length
+        let anotherRes
+        for (; i < len; ++i) {
+          anotherRes = nreq.res[i]
+          if (anotherRes.url !== res.url ||
+            anotherRes.requestHeadersText !== res.requestHeadersText
+          ) {
+            if (anotherRes.requestHeadersText) {
+              finalRequestHeaders = anotherRes.requestHeadersText
+            } else {
+              head = anotherRes.requestHeaders || nreq.headers
+              purl = URL.parse(anotherRes.url)
+
+              if (!(head.host || head.Host)) {
+                head['Host'] = purl.host
+              }
+              if (this._noHTTP2) {
+                finalRequestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+              } else {
+                finalRequestHeaders = `${nreq.method} ${purl.path} ${anotherRes.protocol.toUpperCase()}${CRLF}`
+              }
+              for (headerKey in head) {
+                finalRequestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+              }
+              finalRequestHeaders += `${CRLF}`
+            }
+
+            await this.writeRequestRecord(anotherRes.url, finalRequestHeaders)
+
+            // anotherResponse for the final request in redirection / redirection chain
+            if (anotherRes.headersText) {
+              finalResponseHeaders = anotherRes.headersText
+            } else {
+              head = anotherRes.headers
+              if (this._noHTTP2) {
+                finalResponseHeaders = `HTTP/1.1 ${anotherRes.status} ${anotherRes.statusText || STATUS_CODES[anotherRes.status]}${CRLF}`
+              } else {
+                finalResponseHeaders = `${anotherRes.protocol.toUpperCase()} ${anotherRes.status} ${anotherRes.statusText || STATUS_CODES[anotherRes.status]}${CRLF}`
+              }
+              for (headerKey in head) {
+                finalResponseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+              }
+              finalResponseHeaders += `${CRLF}`
+            }
+
+            // if their is no anotherResponse body these values are undefined
+            // do not request body if there is none or zero length body
+            let anotherResData
+            let wasError = false
+            try {
+              let rbody = await getResBodyElectron(nreq.requestId, wcDebugger)
+              if (rbody.base64Encoded) {
+                anotherResData = Buffer.from(rbody.body, 'base64')
+              } else {
+                anotherResData = Buffer.from(rbody.body, 'utf8')
+              }
+            } catch (err) {
+              wasError = true
+            }
+            // console.log(finalResponseHeaders)
+            if (!wasError) {
+              finalResponseHeaders = finalResponseHeaders.replace(noGZ, '')
+              finalResponseHeaders = finalResponseHeaders.replace(replaceContentLen, `Content-Length: ${Buffer.byteLength(anotherResData, 'utf8')}${CRLF}`)
+            }
+            // console.log(finalResponseHeaders)
+            await this.writeResponseRecord(anotherRes.url, finalResponseHeaders, anotherResData)
+          }
+        }
+      }
     }
   }
 
@@ -319,8 +433,8 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
     let purl = URL.parse(nreq.url)
     let headerKey
     let head
-
-    if (Array.isArray(nreq.res)) {
+    let wasResArray = Array.isArray(nreq.res)
+    if (wasResArray) {
       // no idea why this would happen
       res = nreq.res.pop()
     } else {
@@ -355,7 +469,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         requestHeaders = res.requestHeadersText
       } else if (!isEmpty(res.requestHeaders)) {
         // response did not have the full request headers string use object
-        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        if (this._noHTTP2) {
+          requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        } else {
+          requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+        }
         head = res.requestHeaders
         if (!(head.host || head.Host)) {
           head['Host'] = purl.host
@@ -366,7 +484,11 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         requestHeaders += `${CRLF}`
       } else {
         // response has no full request http headers information
-        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        if (this._noHTTP2) {
+          requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+        } else {
+          requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+        }
         if (!isEmpty(nreq.headers)) {
           // the request object has the request http header object
           head = nreq.headers
@@ -385,36 +507,86 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       }
 
       await this.writeRequestRecord(nreq.url, requestHeaders)
-      if (res.headersText || res.headers) {
-        if (res.headersText) {
-          responseHeaders = res.headersText
-        } else if (!isEmpty(res.headers)) {
-          head = res.headers
+      if (res.headersText) {
+        responseHeaders = res.headersText
+      } else if (!isEmpty(res.headers)) {
+        head = res.headers
+        if (this._noHTTP2) {
           responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
-          for (headerKey in head) {
-            responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
-          }
-          responseHeaders += `${CRLF}`
+        } else {
+          responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
         }
+        for (headerKey in head) {
+          responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+        }
+        responseHeaders += `${CRLF}`
+      } else {
+        console.log('the response headers are empty GET')
+        if (this._noHTTP2) {
+          responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        } else {
+          responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+        }
+      }
+      let resData
+      let wasError = false
+      try {
+        let rbody = await getResBodyElectron(nreq.requestId, wcDebugger)
+        if (rbody.base64Encoded) {
+          resData = Buffer.from(rbody.body, 'base64')
+        } else {
+          resData = Buffer.from(rbody.body, 'utf8')
+        }
+      } catch (err) {
+        wasError = true
+      }
 
-        let resData
-        let wasError = false
-        try {
-          let rbody = await getResBodyElectron(nreq.requestId, wcDebugger)
-          if (rbody.base64Encoded) {
-            resData = Buffer.from(rbody.body, 'base64')
+      if (!wasError) {
+        responseHeaders = responseHeaders.replace(noGZ, '')
+        responseHeaders = responseHeaders.replace(replaceContentLen, `Content-Length: ${Buffer.byteLength(resData, 'utf8')}${CRLF}`)
+      }
+      await this.writeResponseRecord(nreq.url, responseHeaders, resData)
+      if (wasResArray && nreq.res.length > 0) {
+        let i = 0
+        let len = nreq.res.length
+        for (; i < len; ++i) {
+          res = nreq.res[i]
+          if (res.headersText) {
+            responseHeaders = res.headersText
+          } else if (!isEmpty(res.headers)) {
+            head = res.headers
+            if (this._noHTTP2) {
+              responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+            } else {
+              responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+            }
+            for (headerKey in head) {
+              responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+            }
+            responseHeaders += `${CRLF}`
           } else {
-            resData = Buffer.from(rbody.body, 'utf8')
+            continue
           }
-        } catch (err) {
-          wasError = true
-        }
 
-        if (!wasError) {
-          responseHeaders = responseHeaders.replace(noGZ, '')
-          responseHeaders = responseHeaders.replace(replaceContentLen, `Content-Length: ${Buffer.byteLength(resData, 'utf8')}${CRLF}`)
+          let resData
+          let wasError = false
+          try {
+            let rbody = await getResBodyElectron(nreq.requestId, wcDebugger)
+            if (rbody.base64Encoded) {
+              resData = Buffer.from(rbody.body, 'base64')
+            } else {
+              resData = Buffer.from(rbody.body, 'utf8')
+            }
+          } catch (err) {
+            wasError = true
+          }
+
+          if (!wasError) {
+            responseHeaders = responseHeaders.replace(noGZ, '')
+            responseHeaders = responseHeaders.replace(replaceContentLen, `Content-Length: ${Buffer.byteLength(resData, 'utf8')}${CRLF}`)
+          }
+          await this.writeResponseRecord(nreq.url, responseHeaders, resData)
         }
-        await this.writeResponseRecord(nreq.url, responseHeaders, resData)
       }
     }
   }
@@ -433,7 +605,7 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
     let headerKey
     let head
 
-    // https://chromedevtools.github.io/devtools-protocol/tot/wcDebugger/#type-RequestId states that
+    // https://chromedevtools.github.io/devtools-protocol/tot/Network/#type-RequestId states that
     // the requestId we use as the key is unique to the request so we take the last element
     // no clue why we have two responses
     if (Array.isArray(nreq.res)) {
@@ -445,7 +617,7 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
     if (res.requestHeadersText) {
       requestHeaders = res.requestHeadersText
     } else if (!isEmpty(res.requestHeaders)) {
-      requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+      requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
       head = res.requestHeaders
       if (!(head.host || head.Host)) {
         head['Host'] = purl.host
@@ -454,7 +626,7 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
         requestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
       }
     } else if (!isEmpty(nreq.headers)) {
-      requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+      requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
       head = nreq.headers
       if (!(head.host || head.Host)) {
         head['Host'] = purl.host
@@ -464,8 +636,9 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       }
       requestHeaders += `${CRLF}`
     } else {
-      console.log('the request headers are both empty')
+      requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
     }
+
     await this.writeRequestRecord(nreq.url, requestHeaders)
 
     if (res.headersText) {
@@ -475,14 +648,131 @@ export default class ElectronWARCGenerator extends WARCWriterBase {
       if (!(head.host || head.Host)) {
         head['Host'] = purl.host
       }
-      responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
       for (headerKey in head) {
         responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
       }
       responseHeaders += `${CRLF}`
     } else {
-      console.log('the response headers are empty')
+      if (this._noHTTP2) {
+        responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      } else {
+        responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      }
     }
     await this.writeResponseRecord(nreq.url, responseHeaders)
+  }
+
+  /**
+   * @desc Handle Non HTTP POST GET OPTIONS request. And yes the live web uses them all
+   * @param {Object} nreq the captured HTTP request/response
+   * @param {Object} wcDebugger the electron webcontents debugger object
+   * @return {Promise.<void>}
+   */
+  async generateOther (nreq, wcDebugger) {
+    // ducktape
+    if (!nreq.postData) {
+      await this.generateGet(nreq, wcDebugger)
+    } else {
+      await this.generatePost(nreq, wcDebugger)
+    }
+  }
+
+  /**
+   * @desc If a stray response comes in without a request HTTP/2 likely preserve it!
+   * @param {Object} nreq the captured HTTP response
+   * @param {Object} wcDebugger the electron webcontents debugger object
+   * @return {Promise.<void>}
+   */
+  async generateOnlyRes (nreq, wcDebugger) {
+    let res = nreq.res
+    let requestHeaders
+    let responseHeaders
+    let purl = URL.parse(res.url)
+    let headerKey
+    let head
+    res.protocol = res.protocol || 'http/1.1'
+    if (res.protocol === 'data') {
+      return
+    }
+
+    if (res.requestHeadersText) {
+      nreq.method = res.requestHeadersText.substring(0, res.requestHeadersText.indexOf(' '))
+    } else {
+      // we handle htt2 :method
+      return
+    }
+
+    if (res.requestHeadersText) {
+      // response has full request headers string
+      requestHeaders = res.requestHeadersText
+    } else if (!isEmpty(res.requestHeaders)) {
+      // response did not have the full request headers string use object
+      if (this._noHTTP2) {
+        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+      } else {
+        requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+      }
+      head = res.requestHeaders
+      if (!(head.host || head.Host)) {
+        head['Host'] = purl.host
+      }
+      for (headerKey in head) {
+        requestHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+      }
+      requestHeaders += `${CRLF}`
+    } else {
+      // response has no full request http headers information
+      if (this._noHTTP2) {
+        requestHeaders = `${nreq.method} ${purl.path} HTTP/1.1${CRLF}`
+      } else {
+        requestHeaders = `${nreq.method} ${purl.path} ${res.protocol.toUpperCase()}${CRLF}`
+      }
+      // the request object does not have the request http header information
+      // recreate with minimal information
+      requestHeaders += `Host: ${purl.host}\r\nUser-Agent: ${UA}${CRLF}`
+    }
+
+    await this.writeRequestRecord(res.url, requestHeaders)
+
+    if (res.headersText) {
+      responseHeaders = res.headersText
+    } else if (!isEmpty(res.headers)) {
+      head = res.headers
+      if (this._noHTTP2) {
+        responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      } else {
+        responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      }
+      for (headerKey in head) {
+        responseHeaders += `${headerKey}: ${head[headerKey]}${CRLF}`
+      }
+      responseHeaders += `${CRLF}`
+    } else {
+      if (this._noHTTP2) {
+        responseHeaders = `HTTP/1.1 ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      } else {
+        responseHeaders = `${res.protocol.toUpperCase()} ${res.status} ${res.statusText || STATUS_CODES[res.status]}${CRLF}`
+      }
+    }
+
+    let resData
+    let wasError = false
+    try {
+      let rbody = await getResBodyElectron(nreq.requestId, wcDebugger)
+      if (rbody.base64Encoded) {
+        resData = Buffer.from(rbody.body, 'base64')
+      } else {
+        resData = Buffer.from(rbody.body, 'utf8')
+      }
+    } catch (err) {
+      wasError = true
+    }
+
+    if (!wasError) {
+      responseHeaders = responseHeaders.replace(noGZ, '')
+      responseHeaders = responseHeaders.replace(replaceContentLen, `Content-Length: ${Buffer.byteLength(resData, 'utf8')}${CRLF}`)
+    }
+    await this.writeResponseRecord(res.url, responseHeaders, resData)
   }
 }

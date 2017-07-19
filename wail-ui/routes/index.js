@@ -11,7 +11,7 @@ import Misc from '../containers/miscellaneous'
 import TwitterView from '../containers/twitterView'
 import TwitterSignIn from '../containers/twitterSignIn'
 import ViewArchiveConfig from '../containers/viewArchiveConfig'
-import WailCrawls from '../containers/wailCrawls'
+import WailCrawlView from '../containers/wailCrawlView'
 import routeNames from './routeNames'
 
 function makeRenderer (Component) {
@@ -31,7 +31,7 @@ export default (
         <Route path={routeNames.addSeedFs} render={makeRenderer(CollectionAddSeedFs)} />
         <Route path={routeNames.viewArchiveConfig} render={makeRenderer(ViewArchiveConfig)} />
         <Route path={routeNames.heritrix} render={makeRenderer(HeritrixView)} />
-        <Route path={routeNames.wailCrawls} render={makeRenderer(WailCrawls)} />
+        <Route path={routeNames.wailCrawls} render={makeRenderer(WailCrawlView)} />
         <Route path={routeNames.misc} render={makeRenderer(Misc)} />
         <Route path={routeNames.services} render={makeRenderer(ServiceStats)} />
         <Route path={routeNames.twitter} render={makeRenderer(TwitterView)} />
