@@ -106,7 +106,7 @@ export const newCollectionForm = {
   createCollection: 'Create Collection',
   collDescript: 'Collection Description',
   collDescriptHint: 'Really Awesome Collection',
-  collTitle: 'Collection Tittle',
+  collTitle: 'Collection Title',
   collTitleHint: 'Awesome Collection',
   collName: 'Collection Name',
   collNameHint: 'MyAwesomeCollection',

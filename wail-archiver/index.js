@@ -257,7 +257,7 @@ export default class WAILArchiver extends Component {
 
       if (arConfig.scroll) {
         try {
-          await this.archiver.doScroll(arConfig.scroll)
+          await this.archiver.doScroll()
         } catch (error) {
           console.error('scroll error')
           console.error(error)
