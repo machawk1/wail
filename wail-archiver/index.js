@@ -255,13 +255,11 @@ export default class WAILArchiver extends Component {
         mdataError = true
       }
 
-      if (arConfig.scroll) {
-        try {
-          await this.archiver.doScroll()
-        } catch (error) {
-          console.error('scroll error')
-          console.error(error)
-        }
+      try {
+        await this.archiver.doScroll()
+      } catch (error) {
+        console.error('scroll error')
+        console.error(error)
       }
 
       if (!fromTimeOut) {
