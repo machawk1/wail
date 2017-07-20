@@ -2,11 +2,10 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import Immutable from 'immutable'
-import { Flex } from 'react-flex'
 import Flexbox from 'flexbox-react'
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow } from 'material-ui/Table'
 import MyAutoSizer from '../utilComponents/myAutoSizer'
 import WailCralJob from './WailCrawlJob'
+import NoWailCrawlJobs from './NoWailCrawlJobs'
 
 
 function stateToProps (state) {
@@ -55,6 +54,11 @@ class WailCrawls extends Component {
 
   render () {
     const jobItems = this.makeWailCralJobItems()
+    if (jobItems.length === 0) {
+      return (
+        <NoWailCrawlJobs/>
+      )
+    }
     return (
       <MyAutoSizer findElement='wViewContainer'>
         {this.renderWailCrawls.bind(undefined, jobItems)}
