@@ -23,6 +23,7 @@ export default class ElectronArchiver extends EventEmitter {
     this._onWARCGenError = this._onWARCGenError.bind(this)
     this._warcGenerator.on('finished', this._onWARCGenFinished)
     this._warcGenerator.on('error', this._onWARCGenError)
+    this._scroll = 5000
   }
 
   attach (wc) {
@@ -62,12 +63,12 @@ export default class ElectronArchiver extends EventEmitter {
       console.error('No naughty failed :(')
       console.error(error)
     }
-    try {
-      await this._updateEmulation()
-    }catch (error) {
-      console.error('updateEmulation failed :(')
-      console.error(error)
-    }
+    // try {
+    //   await this._updateEmulation()
+    // }catch (error) {
+    //   console.error('updateEmulation failed :(')
+    //   console.error(error)
+    // }
     this._wc.debugger.on('message', (event, method, params) => {
       if (method === 'Page.loadEventFired') {
         // Promise.delay(5000).then(this.pageLoaded)
@@ -172,9 +173,9 @@ export default class ElectronArchiver extends EventEmitter {
     }
   }
 
-  doScroll (scroll = 4000) {
+  doScroll () {
     return new Promise((resolve, reject) => {
-      this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.makeSmoothScroll(scroll), (err, results) => {
+      this._wc.debugger.sendCommand('Runtime.evaluate', pageEvals.makeSmoothScroll(this._scroll), (err, results) => {
         if (!isEmpty(err)) {
           return reject(new ArchiverError(err))
         }

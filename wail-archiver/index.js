@@ -265,7 +265,7 @@ export default class WAILArchiver extends Component {
       }
 
       if (!fromTimeOut) {
-        await Promise.delay(5000)
+        await Promise.delay(6000)
       }
       // this.webview.stop()
       this.archiver.stopCapturing()
