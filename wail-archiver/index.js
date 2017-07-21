@@ -84,7 +84,7 @@ export default class WAILArchiver extends Component {
     })
     this.archiver.on('warc-gen-finished', () => {
       let config = this._current
-      console.log('finished', config)
+      // console.log('finished', config)
       let uiCrawlProgress = {
         type: uiActions.WAIL_CRAWL_FINISHED,
         update: {
@@ -120,18 +120,19 @@ export default class WAILArchiver extends Component {
   }
 
   archiveUriR (arConfig) {
+    // console.log(arConfig)
     if (this.archiveQ.length > 0) {
       this.addArcConfig(arConfig)
     } else {
       this.addArcConfig(arConfig)
       if (this.wbReady) {
-        this.startArchiving()
+        this.maybeMore()
       }
     }
   }
 
   loadTimedOutCB () {
-    console.log('timed out')
+    // console.log('timed out')
     this.pageLoaded(true)
       .then(noop)
       .catch(error => {
@@ -143,6 +144,7 @@ export default class WAILArchiver extends Component {
     // will-download
     if (!this._attachedArchiver) {
       let webContents = this.webview.getWebContents()
+      this.webview.setAudioMuted(true)
       this.archiver.setUp(webContents)
         .then(() => {
           this._attachedArchiver = true
@@ -289,8 +291,6 @@ export default class WAILArchiver extends Component {
           description: `Archived by WAIL for ${forCol}`
         })))
 
-        console.log(this.archiveQ2)
-
         ipc.send(ipcChannels.WAIL_CRAWL_UPDATE, {
           type: uiActions.WAIL_CRAWL_Q_INCREASE,
           update: {
@@ -327,7 +327,6 @@ export default class WAILArchiver extends Component {
     this.loaded = true
     this.webview = document.getElementById('awv')
     this.webview.addEventListener('did-stop-loading', (e) => {
-      console.log('it finished loading')
       if (!this.wbReady) {
         this._settings = new Settings()
         this._settings.configure()
@@ -336,12 +335,6 @@ export default class WAILArchiver extends Component {
         this.maybeMore()
       }
     })
-
-    if (process.env.NODE_ENV === 'development') {
-      this.webview.addEventListener('console-message', (e) => {
-        console.log('Guest page logged a message:', e.message)
-      })
-    }
   }
 
   render () {

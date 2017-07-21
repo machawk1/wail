@@ -1,16 +1,16 @@
-import * as fs from 'fs-extra'
-import Promise from 'bluebird'
-import path from 'path'
-import os from 'os'
-import webpack from 'webpack'
-import zip from 'cross-zip'
-import electronCfg from './webpackConfigs/ui/webpack.config.electron.js'
-import cfgUI from './webpackConfigs/ui/webpack.config.production.js'
-import cfgCore from './webpackConfigs/core/webpack.config.production.js'
-import packager from 'electron-packager'
-import pkg from './package.json'
-import cp from 'child_process'
-import { moveThemP } from './tools/moveJDKMemgator'
+const fs = require('fs-extra')
+const path = require('path')
+const os = require('os')
+const Promise = require('bluebird')
+const webpack = require('webpack')
+const zip = require('cross-zip')
+const cp = require('child_process')
+const electronCfg = require('./webpackConfigs/ui/webpack.config.electron.js')
+const cfgUI = require('./webpackConfigs/ui/webpack.config.production.js')
+const cfgCore = require('./webpackConfigs/core/webpack.config.production.js')
+const packager = require('electron-packager')
+const pkg = require('./package.json')
+const moveThemP = require('./tools/noImportMoveJdkMemgator').moveThemP
 
 const argv = require('minimist')(process.argv.slice(2))
 const cwd = process.cwd()
@@ -34,7 +34,6 @@ const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
-// /Users/jberlin/WebstormProjects/wail/archives/collections/Wail/archive
 const ignore = [
   '^/archiveIndexes($|/)',
   '^/archives2($|/)',

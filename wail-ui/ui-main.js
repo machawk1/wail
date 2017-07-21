@@ -1,5 +1,6 @@
 import 'babel-polyfill'
 import { app, Menu, dialog } from 'electron'
+import Path from 'path'
 import menuTemplate from './menu/mainMenu'
 import AppManager from '../wail-core/managers/appManager'
 import WindowManager from '../wail-core/managers/windowManager'
@@ -14,6 +15,41 @@ process.on('uncaughtException', (err) => {
   // logger.log('error', 'electron-main error message[ %s ], stack[ %s ]', err.message, err.stack)
   app.quit()
 })
+
+app.commandLine.appendSwitch('js-flags', '--harmony')
+app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('disable-http-cache')
+
+let flashDir
+if (process.env.NODE_ENV === 'production') {
+  flashDir = app.getAppPath()
+} else {
+  flashDir = __dirname
+}
+
+switch (process.platform) {
+  case 'win32':
+    // console.log('Flash path', Path.join(flashDir, 'flashPlugin', 'pepflashplayer.dll'))
+    app.commandLine.appendSwitch(
+      'ppapi-flash-path',
+      Path.join(flashDir, 'flashPlugin', 'libpepflashplayer.so')
+    )
+    break
+  case 'darwin':
+    // console.log('Flash path', Path.join(flashDir, 'flashPlugin', 'PepperFlashPlayer.plugin'))
+    app.commandLine.appendSwitch(
+      'ppapi-flash-path',
+      Path.join(flashDir, 'flashPlugin', 'PepperFlashPlayer.plugin')
+    )
+    break
+  case 'linux':
+    // console.log('Flash path', Path.join(flashDir, 'flashPlugin', 'libpepflashplayer.so'))
+    app.commandLine.appendSwitch(
+      'ppapi-flash-path',
+      Path.join(flashDir, 'flashPlugin', 'libpepflashplayer.so')
+    )
+    break
+}
 
 const winMan = new WindowManager()
 const debug = false
@@ -51,10 +87,6 @@ winMan.on('send-failed', (report) => {
   console.log('send failed')
   console.log(report)
 })
-
-app.commandLine.appendSwitch('js-flags', '--harmony')
-app.commandLine.appendSwitch('disable-renderer-backgrounding')
-// app.commandLine.appendSwitch('disable-http-cache')
 
 app.on('ready', async () => {
   console.log('app ready')

@@ -213,6 +213,8 @@ export default class AppManager2 {
       {
         conf: {
           show: false,
+          width: 1920,
+          height: 1080,
           webPreferences: {
             webSecurity: false
           }

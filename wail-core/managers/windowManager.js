@@ -73,7 +73,6 @@ export default class WindowManager extends EventEmitter {
   }
 
   twitterLoginListener (event, what) {
-    console.log(what)
     if (what.type === 'canceled') {
       this.windows['twitterLoginWindow'].canceled()
       ipcMain.removeListener('twitter-signin-window', this.twitterLoginListener)
@@ -155,12 +154,10 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('get-all-runs', (event) => {
-      console.log('got get-all-runs')
       this.windows['crawlManWindow'].window.webContents.send('get-all-runs')
     })
 
     ipcMain.on('got-all-runs', (event, runs) => {
-      console.log('got get-all-runs')
       this.windows['mainWindow'].window.webContents.send('got-all-runs', runs)
       if (this.windows['loadingWindow'].open) {
         this.windows['loadingWindow'].window.webContents.send('got-all-runs')
@@ -184,25 +181,6 @@ export default class WindowManager extends EventEmitter {
       // this.windows[ 'loadingWindow' ].window.close()
     })
 
-    /* Settings NewCrawlWindow */
-    ipcMain.on('open-settings-window', (e) => {
-      this.showSettingsWindow(control)
-    })
-
-    ipcMain.on('open-newCrawl-window', (e, colNames) => {
-      console.log('got open newCrawl window')
-      this.showNewCrawlWindow(control, colNames)
-    })
-
-    ipcMain.on('setting-hard-reset', (event, payload) => {
-      console.log('got settings-hard-reset')
-      control.settings.resetToDefault()
-    })
-
-    ipcMain.on('set-heritrix-usrpwd', (event, payload) => {
-      console.log('got set heritrix usrpwd', payload)
-      control.settings.rewriteHeritrixAuth(payload.usr, payload.pwd)
-    })
 
     /* Heritrix */
 
@@ -216,7 +194,6 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('crawl-started', (event, jobId) => {
-      console.log('got crawl-started')
       this.send('crawlManWindow', 'crawl-started', jobId)
     })
 
@@ -230,7 +207,6 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('yes-crawls-running', () => {
-      console.log('yes-crawls are running')
       control.serviceMan.killService('wayback')
         .then(() => {
           this.emit('killed-services')
@@ -238,7 +214,6 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('no-crawls-running', () => {
-      console.log('no-crawls are running')
       control.serviceMan.killService('all')
         .then(() => {
           this.emit('killed-services')
@@ -269,17 +244,14 @@ export default class WindowManager extends EventEmitter {
     })
 
     ipcMain.on('create-collection-failed', (event, fail) => {
-      console.log('create-collection-failed', fail)
       this.send('mainWindow', 'create-collection-failed', fail)
     })
 
     ipcMain.on('update-metadata', (e, update) => {
-      console.log('update-metadata', update)
       this.send('archiveManWindow', 'update-metadata', update)
     })
 
     ipcMain.on('updated-metadata', (e, update) => {
-      console.log('updated-metadata', update)
       this.send('mainWindow', 'updated-metadata', update)
     })
 
@@ -290,8 +262,12 @@ export default class WindowManager extends EventEmitter {
     ipcMain.on('added-warcs-to-col', (e, update) => {
       this.send('mainWindow', 'added-warcs-to-col', update)
       control.serviceMan.restartWayback()
-        .then(() => this.send('mainWindow', 'restarted-wayback', {wasError: false}))
-        .catch((err) => this.send('mainWindow', 'restarted-wayback', {wasError: true, err}))
+        .then(() => {
+          this.send('mainWindow', 'restarted-wayback', {wasError: false})
+        })
+        .catch((err) => {
+          this.send('mainWindow', 'restarted-wayback', {wasError: true, err})
+        })
     })
 
     ipcMain.on('add-multi-warcs-to-col', (e, multi) => {
@@ -380,7 +356,6 @@ export default class WindowManager extends EventEmitter {
       } else {
         this.createTwitterM(control)
           .then(() => {
-            console.log('twitter monitor alive')
             this.send('twitterMonitor', 'monitor-twitter-account', config)
           })
       }
@@ -409,7 +384,6 @@ export default class WindowManager extends EventEmitter {
   }
 
   loadComplete (where) {
-    console.log(`Load complete ${where}`)
     let lwin = this.windows['loadingWindow'].window
     if (this.windows['loadingWindow'].window) {
       lwin.close()
@@ -423,7 +397,6 @@ export default class WindowManager extends EventEmitter {
 
   async initWail (control) {
     this.initIpc(control)
-    console.log('init wail')
     if (process.env.NODE_ENV === 'development') {
       await dlExtensions()
     }
@@ -432,7 +405,6 @@ export default class WindowManager extends EventEmitter {
     await this.createArchiveMan(control)
     await this.createCrawlMan(control)
     await this.createRequestD(control)
-    console.log('all windows loaded')
   }
 
   didCoreLoad () {
@@ -509,7 +481,6 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows['newCrawlWindow'].window.on('closed', () => {
-        console.log('new crawl window is closed')
         this.windows['newCrawlWindow'].window = null
         this.windows['newCrawlWindow'].open = false
       })
@@ -524,7 +495,6 @@ export default class WindowManager extends EventEmitter {
       this.windows['twitterLoginWindow'].window = new BrowserWindow(conf)
       this.windows['twitterLoginWindow'].window.loadURL(url)
       this.windows['twitterLoginWindow'].window.on('ready-to-show', () => {
-        console.log('twitterLoginWindow is ready to show')
         this.windows['twitterLoginWindow'].open = true
         this.windows['twitterLoginWindow'].window.show()
         this.windows['twitterLoginWindow'].window.focus()
@@ -539,7 +509,6 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows['twitterLoginWindow'].window.on('closed', () => {
-        console.log('twitterLoginWindow is closed')
         this.windows['twitterLoginWindow'].window = null
         this.windows['twitterLoginWindow'].open = false
       })
@@ -577,7 +546,6 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows['settingsWindow'].window.on('closed', () => {
-        console.log('settings window is closed')
         this.windows['settingsWindow'].window = null
         this.windows['settingsWindow'].open = false
       })
@@ -590,7 +558,6 @@ export default class WindowManager extends EventEmitter {
       this.windows['loadingWindow'].window = new BrowserWindow(conf)
       let loadUrl  // windows.settingsWindowURL windows.mWindowURL*
       if (control.loading && control.firstLoad) {
-        console.log('first load')
         loadUrl = urls.firstLoad
       } else {
         loadUrl = urls.notFirstLoad
@@ -613,7 +580,6 @@ export default class WindowManager extends EventEmitter {
 
       this.windows['loadingWindow'].window.loadURL(loadUrl)
       this.windows['loadingWindow'].window.on('ready-to-show', () => {
-        console.log('loadingWindow is ready to show')
         this.windows['loadingWindow'].open = true
         this.windows['loadingWindow'].window.show()
         // this.windows['loadingWindow'].window.webContents.openDevTools()
@@ -624,7 +590,6 @@ export default class WindowManager extends EventEmitter {
 
   createTwitterM (control) {
     return new Promise((resolve) => {
-      console.log('creating twitterMonitor')
       let {conf, url} = this.windows['twitterMonitor']
       this.windows['twitterMonitor'].window = new BrowserWindow(conf)
       this.windows['twitterMonitor'].window.loadURL(url)
@@ -636,18 +601,13 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'twitterMonitor')
       })
       this.windows['twitterMonitor'].window.on('closed', () => {
-        console.log('twitterMonitor is closed')
         this.windows['twitterMonitor'].window = null
         this.windows['twitterMonitor'].open = false
         if (this.allWindowsClosed()) {
           this.emit('all-windows-closed')
         }
       })
-      this.windows['twitterMonitor'].window.on('show', () => {
-        console.log('twitterMonitor is showing')
-      })
       this.windows['twitterMonitor'].window.on('ready-to-show', () => {
-        console.log('twitterMonitor is ready to show')
         if (control.debug) {
           if (control.openBackGroundWindows) {
             this.windows['twitterMonitor'].window.show()
@@ -663,7 +623,6 @@ export default class WindowManager extends EventEmitter {
 
   createArchiver (control) {
     return new Promise((resolve) => {
-      console.log('creating archiverWindow')
       let {conf, url} = this.windows['archiverWindow']
       this.windows['archiverWindow'].window = new BrowserWindow(conf)
       this.windows['archiverWindow'].window.loadURL(url)
@@ -675,15 +634,11 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'archiverWindow')
       })
       this.windows['archiverWindow'].window.on('closed', () => {
-        console.log('archiverWindow is closed')
         this.windows['archiverWindow'].window = null
         this.windows['archiverWindow'].open = false
         if (this.allWindowsClosed()) {
           this.emit('all-windows-closed')
         }
-      })
-      this.windows['archiverWindow'].window.on('show', () => {
-        console.log('archiverWindow is showing')
       })
       this.windows['archiverWindow'].window.on('ready-to-show', () => {
         console.log('archiverWindow is ready to show')
@@ -705,7 +660,6 @@ export default class WindowManager extends EventEmitter {
 
   createRequestD (control) {
     return new Promise((resolve) => {
-      console.log('creating request daemon')
       let {conf, url} = this.windows['reqDaemonWindow']
       this.windows['reqDaemonWindow'].window = new BrowserWindow(conf)
       this.windows['reqDaemonWindow'].window.loadURL(url)
@@ -717,18 +671,14 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'reqDaemonWindow')
       })
       this.windows['reqDaemonWindow'].window.on('closed', () => {
-        console.log('settings window is closed')
         this.windows['reqDaemonWindow'].window = null
         this.windows['reqDaemonWindow'].open = false
         if (this.allWindowsClosed()) {
           this.emit('all-windows-closed')
         }
       })
-      this.windows['reqDaemonWindow'].window.on('show', () => {
-        console.log('reqDaemonWindow is showing')
-      })
+
       this.windows['reqDaemonWindow'].window.on('ready-to-show', () => {
-        console.log('reqDaemonWindow is ready to show')
         if (control.debug) {
           if (control.openBackGroundWindows) {
             this.windows['reqDaemonWindow'].window.show()
@@ -746,7 +696,6 @@ export default class WindowManager extends EventEmitter {
 
   createCrawlMan (control) {
     return new Promise((resolve) => {
-      console.log('creating crawl manager')
       let {conf, url} = this.windows['crawlManWindow']
       this.windows['crawlManWindow'].window = new BrowserWindow(conf)
       this.windows['crawlManWindow'].window.loadURL(url)
@@ -758,7 +707,6 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'crawlManWindow')
       })
       this.windows['crawlManWindow'].window.on('closed', () => {
-        console.log('crawlManWindow is closed')
         this.windows['crawlManWindow'].window = null
         this.windows['crawlManWindow'].open = false
         if (this.allWindowsClosed()) {
@@ -766,7 +714,6 @@ export default class WindowManager extends EventEmitter {
         }
       })
       this.windows['crawlManWindow'].window.on('ready-to-show', () => {
-        console.log('crawlManWindow is ready to show')
         this.windows['crawlManWindow'].loadComplete = true
         this.windows['crawlManWindow'].open = true
         if (control.debug) {
@@ -783,7 +730,6 @@ export default class WindowManager extends EventEmitter {
 
   createArchiveMan (control) {
     return new Promise((resolve) => {
-      console.log('creating creating archive manager')
       let {conf, url} = this.windows['archiveManWindow']
       this.windows['archiveManWindow'].window = new BrowserWindow(conf)
       this.windows['archiveManWindow'].window.loadURL(url)
@@ -795,7 +741,6 @@ export default class WindowManager extends EventEmitter {
         this.emit('window-crashed', 'archiveManWindow')
       })
       this.windows['archiveManWindow'].window.on('closed', () => {
-        console.log('settings window is closed')
         this.windows['archiveManWindow'].window.destroy()
         this.windows['archiveManWindow'].window = null
         this.windows['archiveManWindow'].open = false
@@ -805,7 +750,6 @@ export default class WindowManager extends EventEmitter {
       })
 
       this.windows['archiveManWindow'].window.on('ready-to-show', () => {
-        console.log('archiveManWindow is ready to show')
         this.windows['archiveManWindow'].open = true
         this.windows['archiveManWindow'].loadComplete = true
         if (control.debug) {
@@ -832,10 +776,7 @@ export default class WindowManager extends EventEmitter {
           e.preventDefault()
           control.contextMenu.maybeShow(props, this.windows['mainWindow'].window)
         })
-        // destroyed
-        this.windows['mainWindow'].window.webContents.on('destroyed', () => {
-          console.log('current wbc is destroyed')
-        })
+
         this.windows['mainWindow'].window.webContents.on('did-finish-load', () => {
           if (this.windows['mainWindow'].open) {
             let tm = setTimeout(() => {
