@@ -43,7 +43,7 @@ const memgatorNames = [
   'memgator',
 ]
 
-async function moveThemP (opts) {
+function moveThemP (opts) {
   return new Promise((resolve, reject) => {
     if (!opts) {
       opts = {
