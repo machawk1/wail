@@ -23,9 +23,9 @@
     "ava": "node --harmony ./node_modules/.bin/ava"
   },
   "scripts": {
-    "build-main": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
-    "build-renderer": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
-    "build-core": "export NODE_ENV=production; node -r babel-register ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/webpack.config.production.js --progress --profile --colors",
+    "build-main": "export NODE_ENV=production; node ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "export NODE_ENV=production; node ./node_modules/webpack/bin/webpack --config ./webpackConfigs/ui/webpack.config.production.js --progress --profile --colors",
+    "build-core": "export NODE_ENV=production; node ./node_modules/webpack/bin/webpack --config ./webpackConfigs/core/webpack.config.production.js --progress --profile --colors",
     "build-wail-for-tests": "node --harmony tools/wailBuildTest.js",
     "download-externals": "babel-node tools/downloadExternals",
     "download-externals-all": "babel-node tools/downloadExternals --all",

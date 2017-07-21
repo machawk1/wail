@@ -213,9 +213,8 @@ export default class AppManager2 {
       {
         conf: {
           show: false,
-          webPreferences: {
-            webSecurity: false
-          }
+          width: 1920,
+          height: 1080
         },
         url: `file://${loadFrom}/background/archiver.html`,
         name: 'archiverWindow'
