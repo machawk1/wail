@@ -1,4 +1,4 @@
-import ElectronSettings from 'electron-settings'
+import settings from 'electron-settings'
 import path from 'path'
 import fs from 'fs-extra'
 import S from 'string'
@@ -44,15 +44,8 @@ export default class SettingsManager {
     this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
     global.settingsDir = this._settingsDir
     return new Promise((resolve, reject) => {
-      try {
-        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
-      } catch (e) {
-        // if something went terrible wrong during a config the json becomes malformed
-        // electron settings throws an error in this case
-        fs.removeSync(this._settingsDir)
-        this._settings = new ElectronSettings({configDirPath: this._settingsDir})
-      }
-
+      settings.setPath(path.join(this._settingsDir, 'settings.json'))
+      this._settings = settings
       if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
         console.log('We are not configured')
         let didFirstLoad = this._settings.get('didFirstLoad')
@@ -86,20 +79,20 @@ export default class SettingsManager {
         // console.log('We are configured')
       }
 
-      this._settings.watch('heritrix.port', change => {
-        console.log('heritrix.port changed ', change)
-        this.rewriteHeritrixPort(change.was, change.now)
-      })
-
-      this._settings.watch('wayback.port', change => {
-        let wb = _.cloneDeep(this._settings.get('wayback'))
-        wb.port = change.now
-        let uriTomcat = S(wb.uri_tomcat)
-        wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
-        let uriWB = S(wb.uri_wayback)
-        wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
-        this._settings.set('wayback', wb)
-      })
+      // this._settings.watch('heritrix.port', change => {
+      //   console.log('heritrix.port changed ', change)
+      //   this.rewriteHeritrixPort(change.was, change.now)
+      // })
+      //
+      // this._settings.watch('wayback.port', change => {
+      //   let wb = _.cloneDeep(this._settings.get('wayback'))
+      //   wb.port = change.now
+      //   let uriTomcat = S(wb.uri_tomcat)
+      //   wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
+      //   let uriWB = S(wb.uri_wayback)
+      //   wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+      //   this._settings.set('wayback', wb)
+      // })
       return resolve()
     })
   }
@@ -110,7 +103,7 @@ export default class SettingsManager {
   }
 
   _writeSettings (pathMan, didFirstLoad) {
-    this._settings.clear()
+    this._settings.deleteAll()
     this._settings.set('version', this._version)
     let isWindows = os.platform() === 'win32'
     this._settings.set('configured', true)
