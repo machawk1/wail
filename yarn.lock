@@ -4348,7 +4348,7 @@ fs-extra@^2.0.0:
     graceful-fs "^4.1.2"
     jsonfile "^2.1.0"
 
-fs-extra@^3.0.0, fs-extra@^3.0.1:
+fs-extra@^3.0.0:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/fs-extra/-/fs-extra-3.0.1.tgz#3794f378c58b342ea7dbbb23095109c4b3b62291"
   dependencies:
@@ -6519,19 +6519,20 @@ node-source-walk@^3.0.0, node-source-walk@^3.2.0:
   dependencies:
     babylon "^6.17.0"
 
-node-warc@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/node-warc/-/node-warc-1.0.1.tgz#7deb0a0be406bf677e7f75e5e78bb515b1171697"
+node-warc@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/node-warc/-/node-warc-1.1.1.tgz#712fed32b2229b0757efdaa4fadd5e138eefdc0f"
   dependencies:
     binary-split "^1.0.3"
     bluebird "^3.5.0"
     eventemitter3 "^2.0.3"
-    fs-extra "^3.0.1"
+    fs-extra "^4.0.0"
     lodash.isempty "^4.4.0"
     moment "^2.18.1"
     string "^3.3.3"
     through2 "^2.0.3"
     untildify "^3.0.2"
+    uuid "^3.1.0"
 
 "nopt@2 || 3", nopt@^3.0.1, nopt@~3.0.1:
   version "3.0.6"

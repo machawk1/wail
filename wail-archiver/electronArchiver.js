@@ -1,8 +1,7 @@
 import EventEmitter from 'eventemitter3'
 import Promise from 'bluebird'
 import isEmpty from 'lodash/isEmpty'
-import ElectronWARCWriter from './electronWARCGenerator'
-import ElectronRequestMonitor from './electronRequestMonitor'
+import { ElectronWARCWriter, ElectronRequestCap } from 'node-warc'
 import * as pageEvals from './pageEvals'
 import { archiving } from '../wail-core/globalStrings'
 
@@ -16,7 +15,7 @@ class ArchiverError extends Error {
 export default class ElectronArchiver extends EventEmitter {
   constructor () {
     super()
-    this.requestMonitor = new ElectronRequestMonitor()
+    this.requestMonitor = new ElectronRequestCap()
     this._warcGenerator = new ElectronWARCWriter(true)
     this.pageLoaded = this.pageLoaded.bind(this)
     this._onWARCGenFinished = this._onWARCGenFinished.bind(this)
@@ -84,7 +83,7 @@ export default class ElectronArchiver extends EventEmitter {
   }
 
   async genWarc ({info, outlinks, UA, seedURL}) {
-    await this._warcGenerator.writeWarcInfoRecord(info.v, info.isPartOfV, info.warcInfoDescription, UA)
+    await this._warcGenerator.writeWarcInfoRecord(info.isPartOfV, info.warcInfoDescription, UA)
     await this._warcGenerator.writeWarcMetadataOutlinks(seedURL, outlinks)
     this.requestMonitor.stopCapturing()
     for (let nreq of this.requestMonitor.values()) {

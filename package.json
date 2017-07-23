@@ -168,7 +168,7 @@
     "ncp": "^2.0.0",
     "nedb": "^1.8.0",
     "node-schedule": "^1.2.3",
-    "node-warc": "^1.0.1",
+    "node-warc": "^1.1.1",
     "normalize-url": "^1.9.1",
     "normalizr": "^3.2.3",
     "oauth": "^0.9.15",

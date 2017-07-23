@@ -14,14 +14,14 @@ const {
 } = warcFields
 
 export default class WARCWriterBase extends EventEmitter {
-  constructor () {
+  constructor (noHTTP2 = true) {
     super()
     this._warcOutStream = null
     this._lastError = null
     this._swapper = S('')
     this._rid = null
     this._now = null
-    this._noHTTP2 = true
+    this._noHTTP2 = noHTTP2
     this._fileName = null
     this._onFinish = this._onFinish.bind(this)
     this._onError = this._onError.bind(this)
