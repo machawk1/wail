@@ -403,7 +403,7 @@ class WAILGUIFrame_Basic(wx.Panel):
           self.setMessage('Initializing Crawl Job...');
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
-          self.setMessage('Crawl of ' + self.uri.GetValue() + ' Started!');
+          self.setMessage('Crawl of ' + self.uri.GetValue()[0:41] + '... started!');
           wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
           #if sys.platform.startswith('darwin'): #show a notification of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
