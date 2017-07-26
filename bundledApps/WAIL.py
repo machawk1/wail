@@ -159,7 +159,7 @@ tomcatPathStart = ""
 tomcatPathStop = ""
 wailPath = os.path.dirname(os.path.realpath(__file__))
 fontSize = 8
-wailWindowSize = (400,250)
+wailWindowSize = (400, 250)
 
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
@@ -175,7 +175,7 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    memGatorPath = wailPath + "/bundledApps/memgator"
+    memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
     archivesJSON = wailPath + "/config/archives.json"
     
     # Fix tomcat control scripts' permissions
@@ -227,7 +227,7 @@ class TabController(wx.Frame):
         self.Notebook.AddPage(self.advConfig, tabLabel_advanced)
         self.createMenu()
 
-        self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
+        self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS, Wayback().index)
         self.indexingTimer.daemon = True
         self.indexingTimer.start()
     def createMenu(self):
@@ -275,7 +275,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.uriLabel = wx.StaticText(self, -1, buttonLabel_uri, pos=(0, 5))
-        self.uri = wx.TextCtrl(self, -1, pos=(30, 0), value=textLabel_defaultURI, size=(350, 25))
+        self.uri = wx.TextCtrl(self, -1, pos=(32, 0), value=textLabel_defaultURI, size=(350, 25))
         self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(0, 30))
         self.checkArchiveStatus = wx.Button(self,  -1, buttonLabel_checkStatus, pos=(105, 30))
         self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(270, 30))
