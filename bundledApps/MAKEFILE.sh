@@ -1,28 +1,7 @@
 #!/bin/bash
 
-# This is the Makefile for WAIL for MacOS X
+# This is the Makefile for WAIL for macOS
 # http://matkelly.com/wail/
-
-#cd /Applications/WAIL
-
-# You need python to execute it
-
-#if [ ! -z "$1" -a "$1" = "clean"  ]; then
-#  if [ -e tomcat/webapps/ROOT/file-db ]; then
-#    rm -r tomcat/webapps/ROOT/file-db
-#  fi
-#  if [ -e tomcat/webapps/ROOT/index ]; then
-#   rm -r tomcat/webapps/ROOT/index
-#  fi
-#  if [ -e tomcat/webapps/ROOT/index-data ]; then
-#   rm -r tomcat/webapps/ROOT/index-data
-#  fi
-#  rm -r heritrix-3.2.0/jobs/*
-#  rm tomcat/webapps/ROOT/files1/*
-#fi
-
-
-#pyVersion=$(python -c 'import sys; print(sys.version_info[:])')
 
 DIRECTORY="/Applications/WAIL.app/"
 
@@ -39,7 +18,7 @@ if [ -d "$DIRECTORY" ]; then
   done
 fi
 
-read -p "Would you like to install binary, create dmg, or both? (i/d/b) " ans
+read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
 
 case "$ans" in
   i|d|b)
@@ -54,7 +33,8 @@ esac
 
 installRequirements ()
 {
-  pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
+  #pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
+  pip install --upgrade wxPython
   pip install -r requirements.txt
 }
 
