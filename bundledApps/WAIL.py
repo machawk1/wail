@@ -129,6 +129,9 @@ buttonLabel_heritrix_newCrawl = "New Crawl"
 
 groupLabel_window = "Web Archiving Integration Layer"
 
+ui_justButtons_Position_1 = (0, 2)
+ui_justButtons_Position_2 = (0, 27)
+
 menuTitle_about = "&About WAIL"
 menuTitle_help = "&Help"
 menu_destroyJob = "Destroy Job (Does not delete archive)"
@@ -275,10 +278,10 @@ class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.uriLabel = wx.StaticText(self, -1, buttonLabel_uri, pos=(0, 5))
-        self.uri = wx.TextCtrl(self, -1, pos=(32, 0), value=textLabel_defaultURI, size=(350, 25))
-        self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(0, 30))
-        self.checkArchiveStatus = wx.Button(self,  -1, buttonLabel_checkStatus, pos=(105, 30))
-        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(270, 30))
+        self.uri = wx.TextCtrl(self, -1, pos=(34, 0), value=textLabel_defaultURI, size=(343, 25))
+        self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(280, 30))
+        self.checkArchiveStatus = wx.Button(self,  -1, buttonLabel_checkStatus, pos=(110, 30))
+        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(0,30))
 
         self.archiveNowButton.SetDefault()
 
@@ -677,8 +680,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             #wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
             #wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
             #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
-            self.viewWaybackInBrowserButton = wx.Button(self, 1, buttonLabel_wayback,   (0, 0), bsize)
-            self.editWaybackConfiguration = wx.Button(self, 1, buttonLabel_editWaybackConfig,   (0, 25), bsize)
+            self.viewWaybackInBrowserButton = wx.Button(self, 1, buttonLabel_wayback, ui_justButtons_Position_1, bsize)
+            self.editWaybackConfiguration = wx.Button(self, 1, buttonLabel_editWaybackConfig, ui_justButtons_Position_2, bsize)
             #self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
 
             self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON, self.openWaybackInBrowser)
@@ -903,11 +906,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles,   (0, 0), bsize)
+            viewArchivesFolderButtonButton = wx.Button(self, 1, buttonLabel_viewArchiveFiles, ui_justButtons_Position_1, bsize)
             #wx.Button(self, 1, "Control Other Tools",   (0,50), bsize)
 
             viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
-            self.testUpdate = wx.Button(self, 1, "Check for Updates",   (0, 25), bsize)
+            self.testUpdate = wx.Button(self, 1, "Check for Updates", ui_justButtons_Position_2, bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
 
