@@ -202,7 +202,7 @@ elif sys.platform.startswith('win32'):
     heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     tomcatPath = "C:/WAIL/bundledApps/tomcat"
-    warcsFolder = wailPathPath + "archives"
+    warcsFolder = wailPath + "archives"
     tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
 ###############################
@@ -361,13 +361,24 @@ class WAILGUIFrame_Basic(wx.Panel):
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
         JRE_HOME_defined = 'JRE_HOME' in os.environ
         if not JAVA_HOME_defined or not JRE_HOME_defined:
+          jreHome = ''
+          javaHome = ''
+          jdkPath = ''
+          if 'darwin' in sys.platform:
+            jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
+            jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+            javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+          else: #Win, incomplete
+            os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
+            
+          
           # Find java 1.7
           #/usr/libexec/java_home -v 1.7
-          jdkInstalled = os.path.isdir("/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk")
+          jdkInstalled = os.path.isdir(jdkPath)
 
           if jdkInstalled:
-            os.environ["JAVA_HOME"] = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
-            os.environ["JRE_HOME"] = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+            os.environ["JAVA_HOME"] = javaHome
+            os.environ["JRE_HOME"] = jreHome
             self.ensureEnvironmentVariablesAreSet()
           else:
             d = wx.MessageDialog(self, 'Java needs to be installed for Heritrix and Wayback', "Install now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
