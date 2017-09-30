@@ -31,17 +31,14 @@ const CollectionCardBody = ({seeds, lastUpdated, size, description, name}) => (
         className='collectionCardBodyInfo'
         key={`CollectionCardBody-${name}-size`}
         title={collectionCard.collSize(size)} />
-      <CardHeader
-        style={{padding: 5}}
-        textStyle={{padding: 10}}
-        titleStyle={{padding: 0}}
-        className='collectionCardBodyInfo'
-        key={`CollectionCardBody-${name}-lastUpdated`}
-        title={collectionCard.lastArchived(lastUpdated)} />
     </Flexbox>
-    <CardText>
-      {description}
-    </CardText>
+    <CardHeader
+      style={{padding: 5}}
+      textStyle={{padding: 10}}
+      titleStyle={{padding: 0}}
+      className='collectionCardBodyInfo'
+      key={`CollectionCardBody-${name}-lastUpdated`}
+      title={collectionCard.lastArchived(lastUpdated)} />
   </div>
 )
 

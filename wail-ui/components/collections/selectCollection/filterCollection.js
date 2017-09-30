@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import Rx from 'rxjs/Rx'
+import { BehaviorSubject } from 'rxjs'
 import TextField from 'material-ui/TextField'
 import Search from 'material-ui/svg-icons/action/search'
 import { Card, CardText } from 'material-ui/Card'
@@ -8,7 +8,7 @@ import {selectCollection} from '../../../constants/uiStrings'
 
 export default class FilterCollection extends Component {
   static propTypes = {
-    filterText: PropTypes.instanceOf(Rx.BehaviorSubject).isRequired
+    filterText: PropTypes.instanceOf(BehaviorSubject).isRequired
   }
 
   constructor (...args) {

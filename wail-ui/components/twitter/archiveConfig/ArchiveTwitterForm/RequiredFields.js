@@ -6,7 +6,7 @@ import CardHeader from 'material-ui/Card/CardHeader'
 import validate from './validate'
 import SelectForCol from './SelectForCol'
 import InputName from './InputName'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import MonitorTime from './MonitorTime'
 
 const formConfig = {
@@ -20,11 +20,13 @@ function RequiredFields ({handleSubmit, pristine, reset, submitting, invalid, co
   return (
     <Form onSubmit={handleSubmit} className='inheritThyWidthHeight'>
       <CardHeader title='Required' />
-      <Flex row justifyContent='space-around' style={{height: 152}}>
+      <Flexbox
+        flexDirection='row'
+        flexWrap='wrap' justifyContent='space-around' style={{height: 152}}>
         <InputName />
         <SelectForCol cols={cols} />
         <MonitorTime times={times} />
-      </Flex>
+      </Flexbox>
       <CardActions className='archiveTwitterButtons'>
         <FlatButton label='Next' type='submit' primary />
       </CardActions>

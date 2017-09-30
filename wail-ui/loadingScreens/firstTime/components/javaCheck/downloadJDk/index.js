@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose, branch, shouldUpdate, renderComponent, setDisplayName, renderNothing } from 'recompose'
 import { JdkDlRecord } from '../../../../records'
@@ -20,7 +21,7 @@ const updateWhen = (props, nextProps) => props.step === 1 || nextProps.step === 
 const enhance = displayWhich(props => !props.jdkDlRec.get('started'))
 
 const DownloadJdk = enhance(({jdkDlRec}) => (
-  <DownloadDarwinJdk jdkDlRec={jdkDlRec} />
+  <DownloadDarwinJdk jdkDlRec={jdkDlRec}/>
 ))
 
 DownloadJdk.propTypes = {

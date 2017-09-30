@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import LinearProgress from 'material-ui/LinearProgress'
 import { branch, renderComponent } from 'recompose'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { namedUpdateKeys } from '../../../../../util/recomposeHelpers'
 import { JdkDlRecord } from '../../../../records'
 import { CheckStepContent } from '../../../../shared/checkStepContents'
@@ -33,11 +33,13 @@ const enhance2 = namedUpdateKeys('DownloadDarwinJdk', ['jdkDlRec'])
 const DownloadDarwinJdk = enhance2(({jdkDlRec}) => (
   <CheckStepContent>
     <p>Downloading The Java 1.7 JDK</p>
-    <Flex row alignItems='center' justifyContent='space-between'>
+    <Flexbox
+      flexDirection='row'
+      flexWrap='wrap' row alignItems='center' justifyContent='space-between'>
       <span>Time Elapse: {jdkDlRec.get('elapsed')}</span>
       <span>Time Remaining: {jdkDlRec.get('remaining')}</span>
       <span>Download Speed: {jdkDlRec.get('speed')}</span>
-    </Flex>
+    </Flexbox>
     <LinearProgress mode='determinate' value={jdkDlRec.get('percent')} />
   </CheckStepContent>
 ))

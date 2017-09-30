@@ -34,7 +34,6 @@
 .collectionCard {
     margin-bottom: 10px;
     margin-top: 10px;
-    margin-right: 0;
 }
 
 .collectionCardBody {
@@ -50,8 +49,8 @@
     height: inherit;
     margin: auto;
     padding-top: 5px;
-    padding-left: 35px;
-    padding-right: 35px;
+    padding-left: 25px;
+    padding-right: 25px;
 }
 
 .mementoCard {

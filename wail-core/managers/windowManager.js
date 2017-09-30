@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain } from 'electron'
+import { BrowserWindow, ipcMain, app } from 'electron'
 import util from 'util'
 import partialRight from 'lodash/partialRight'
 import EventEmitter from 'eventemitter3'
@@ -12,12 +12,23 @@ const inpect = partialRight(util.inspect, {depth: 1, colors: true})
 
 async function dlExtensions (update = false) {
   if (update) {
-    const installExtension = require('electron-devtools-installer')
-    await Promise.all([
-      installExtension.default(installExtension['REACT_DEVELOPER_TOOLS'], update),
-      installExtension.default(installExtension['REDUX_DEVTOOLS'], update),
-      installExtension.default(installExtension['REACT_PERF'], update)
-    ])
+    const {default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-installer')
+    try {
+      await installExtension(REACT_DEVELOPER_TOOLS)
+    } catch (error) {
+      console.error(error)
+    }
+    try {
+      await installExtension(REDUX_DEVTOOLS)
+    } catch (error) {
+      console.error(error)
+    }
+  } else {
+    const path = require('path')
+    const udata = app.getPath('userData')
+    const {REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS} = require('electron-devtools-installer')
+    BrowserWindow.addDevToolsExtension(path.join(udata, 'extensions', REACT_DEVELOPER_TOOLS.id))
+    BrowserWindow.addDevToolsExtension(path.join(udata, 'extensions', REDUX_DEVTOOLS.id))
   }
 }
 
@@ -180,7 +191,6 @@ export default class WindowManager extends EventEmitter {
       this.loadComplete('@loadCompleteAndWAILGood')
       // this.windows[ 'loadingWindow' ].window.close()
     })
-
 
     /* Heritrix */
 
@@ -398,7 +408,7 @@ export default class WindowManager extends EventEmitter {
   async initWail (control) {
     this.initIpc(control)
     if (process.env.NODE_ENV === 'development') {
-      await dlExtensions()
+      await dlExtensions(true)
     }
     await this.showLoadingWindow(control)
     await this.createWail(control)
@@ -625,7 +635,7 @@ export default class WindowManager extends EventEmitter {
     return new Promise((resolve) => {
       let {conf, url} = this.windows['archiverWindow']
       this.windows['archiverWindow'].window = new BrowserWindow(conf)
-      this.windows['archiverWindow'].window.loadURL(url)
+      this.windows['archiverWindow'].window.loadURL('about:blank')
       this.windows['archiverWindow'].window.on('unresponsive', () => {
         this.emit('window-unresponsive', 'archiverWindow')
       })
@@ -647,12 +657,13 @@ export default class WindowManager extends EventEmitter {
             this.windows['archiverWindow'].window.show()
           }
           this.windows['archiverWindow'].window.show()
-          this.windows['archiverWindow'].window.webContents.openDevTools()
+          // this.windows['archiverWindow'].window.webContents.openDevTools()
         }
         // this.windows['archiverWindow'].window.show()
         // this.windows['archiverWindow'].window.webContents.openDevTools()
         this.windows['archiverWindow'].open = true
         this.windows['archiverWindow'].loadComplete = true
+        console.log(this.windows['archiverWindow'].window.id)
         resolve()
       })
     })
@@ -769,99 +780,99 @@ export default class WindowManager extends EventEmitter {
     console.log('creating wail window')
     control.didClose = false
     return new Promise((resolve) => {
-        let {conf, url} = this.windows['mainWindow']
-        this.windows['mainWindow'].window = new BrowserWindow(conf)
-        this.windows['mainWindow'].window.loadURL(url)
-        this.windows['mainWindow'].window.webContents.on('context-menu', (e, props) => {
-          e.preventDefault()
-          control.contextMenu.maybeShow(props, this.windows['mainWindow'].window)
-        })
+      let {conf, url} = this.windows['mainWindow']
+      this.windows['mainWindow'].window = new BrowserWindow(conf)
+      this.windows['mainWindow'].window.loadURL(url)
+      this.windows['mainWindow'].window.webContents.on('context-menu', (e, props) => {
+        e.preventDefault()
+        control.contextMenu.maybeShow(props, this.windows['mainWindow'].window)
+      })
 
-        this.windows['mainWindow'].window.webContents.on('did-finish-load', () => {
-          if (this.windows['mainWindow'].open) {
-            let tm = setTimeout(() => {
-              this.send('archiveManWindow', 'get-all-collections')
-              this.send('crawlManWindow', 'get-all-runs')
-              clearTimeout(tm)
-            }, 2000)
-          }
-        })
+      this.windows['mainWindow'].window.webContents.on('did-finish-load', () => {
+        if (this.windows['mainWindow'].open) {
+          let tm = setTimeout(() => {
+            this.send('archiveManWindow', 'get-all-collections')
+            this.send('crawlManWindow', 'get-all-runs')
+            clearTimeout(tm)
+          }, 2000)
+        }
+      })
 
-        this.windows['mainWindow'].window.webContents.on('unresponsive', () => {
-          this.emit('window-unresponsive', 'mainWindow')
-        })
+      this.windows['mainWindow'].window.webContents.on('unresponsive', () => {
+        this.emit('window-unresponsive', 'mainWindow')
+      })
 
-        this.windows['mainWindow'].window.on('unresponsive', () => {
-          this.emit('window-unresponsive', 'mainWindow')
-        })
+      this.windows['mainWindow'].window.on('unresponsive', () => {
+        this.emit('window-unresponsive', 'mainWindow')
+      })
 
-        this.windows['mainWindow'].window.webContents.on('crashed', () => {
-          this.emit('window-crashed', 'mainWindow')
-        })
+      this.windows['mainWindow'].window.webContents.on('crashed', () => {
+        this.emit('window-crashed', 'mainWindow')
+      })
 
-        this.windows['mainWindow'].window.webContents.on('will-navigate', (event, url) => {
-          if (!S(url).contains('wail.html')) {
-            event.preventDefault()
-          }
-          console.log('mainWindow will navigate to', url)
-        })
+      this.windows['mainWindow'].window.webContents.on('will-navigate', (event, url) => {
+        if (!S(url).contains('wail.html')) {
+          event.preventDefault()
+        }
+        console.log('mainWindow will navigate to', url)
+      })
 
-        this.windows['mainWindow'].window.on('close', (e) => {
-          console.log('window man mainWindow close')
-          if (this.windows['reqDaemonWindow'].open) {
-            this.send('reqDaemonWindow', 'stop', '')
-          }
-          this.closeAllWindows()
+      this.windows['mainWindow'].window.on('close', (e) => {
+        console.log('window man mainWindow close')
+        if (this.windows['reqDaemonWindow'].open) {
+          this.send('reqDaemonWindow', 'stop', '')
+        }
+        this.closeAllWindows()
           // this.send('crawlManWindow', 'are-crawls-running', '')
-        })
+      })
 
-        this.windows['mainWindow'].window.on('closed', () => {
-          console.log('mainWindow is closed')
-          control.resetLoadinState()
-          control.didClose = true
-          this.windows['mainWindow'].window = null
-          this.windows['mainWindow'].loadComplete = false
-          this.windows['mainWindow'].open = false
-        })
+      this.windows['mainWindow'].window.on('closed', () => {
+        console.log('mainWindow is closed')
+        control.resetLoadinState()
+        control.didClose = true
+        this.windows['mainWindow'].window = null
+        this.windows['mainWindow'].loadComplete = false
+        this.windows['mainWindow'].open = false
+      })
 
-        this.windows['mainWindow'].window.on('show', () => {
-          console.log('mainWindow is showing')
-          this.windows['mainWindow'].open = true
-        })
-        this.windows['mainWindow'].window.on('ready-to-show', () => {
-          this.windows['mainWindow'].loadComplete = true
+      this.windows['mainWindow'].window.on('show', () => {
+        console.log('mainWindow is showing')
+        this.windows['mainWindow'].open = true
+      })
+      this.windows['mainWindow'].window.on('ready-to-show', () => {
+        this.windows['mainWindow'].loadComplete = true
           // this.windows[ 'mainWindow' ].window.focus()
-          console.log('mainWindow is ready to show')
-          if (this.windows['loadingWindow'].window) {
-            this.windows['loadingWindow'].window.webContents.send('ui-ready')
-          }
+        console.log('mainWindow is ready to show')
+        if (this.windows['loadingWindow'].window) {
+          this.windows['loadingWindow'].window.webContents.send('ui-ready')
+        }
 
-          if (control.bothLoadingStatesGotten()) {
-            console.log('mainWindow loaded and we have gotten both the loading states')
-            let {archiveManWindow, crawlManWindow} = control.loadingState
-            control.uiLoadedFast()
-            this.send('mainWindow', 'got-all-collections', archiveManWindow)
-            this.send('mainWindow', 'got-all-runs', crawlManWindow)
-            this.send('loadingWindow', 'initial-load', 'both-loaded')
+        if (control.bothLoadingStatesGotten()) {
+          console.log('mainWindow loaded and we have gotten both the loading states')
+          let {archiveManWindow, crawlManWindow} = control.loadingState
+          control.uiLoadedFast()
+          this.send('mainWindow', 'got-all-collections', archiveManWindow)
+          this.send('mainWindow', 'got-all-runs', crawlManWindow)
+          this.send('loadingWindow', 'initial-load', 'both-loaded')
             // this.loadComplete('@mainWindow-ready-to-show')
-          } else {
-            let {archiveManWindow, crawlManWindow} = control.loadingState
-            if (crawlManWindow) {
-              console.log('mainWindow loaded and we have crawlMan state')
-              control.wailHasLoadState('crawlManWindow')
-              this.send('mainWindow', 'got-all-runs', crawlManWindow)
-              this.send('loadingWindow', 'initial-load', 'Archives have loaded')
-            }
-            if (archiveManWindow) {
-              console.log('mainWindow loaded and we have archiveMan state')
-              control.wailHasLoadState('archiveManWindow')
-              this.send('mainWindow', 'got-all-collections', archiveManWindow)
-              this.send('loadingWindow', 'initial-load', 'Crawls have been loaded')
-            }
+        } else {
+          let {archiveManWindow, crawlManWindow} = control.loadingState
+          if (crawlManWindow) {
+            console.log('mainWindow loaded and we have crawlMan state')
+            control.wailHasLoadState('crawlManWindow')
+            this.send('mainWindow', 'got-all-runs', crawlManWindow)
+            this.send('loadingWindow', 'initial-load', 'Archives have loaded')
           }
-          resolve()
-        })
-      }
+          if (archiveManWindow) {
+            console.log('mainWindow loaded and we have archiveMan state')
+            control.wailHasLoadState('archiveManWindow')
+            this.send('mainWindow', 'got-all-collections', archiveManWindow)
+            this.send('loadingWindow', 'initial-load', 'Crawls have been loaded')
+          }
+        }
+        resolve()
+      })
+    }
     )
   }
 

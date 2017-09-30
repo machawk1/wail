@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import CardTitle from 'material-ui/Card/CardTitle'
 import {Link} from 'react-router-dom'
 import FlatButton from 'material-ui/FlatButton'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { resetCheckMessage } from '../../../../actions/archival'
 import { connect } from 'react-redux'
 
@@ -24,12 +24,17 @@ const CollAddSeedHeader = ({col, nukeCheckUrl}, context) => {
     onClick={nukeCheckUrl}
     to={`/Collections/${col}`}>{col}</Link> > Add Seed</span>
   return (
-    <Flex row alignItems='center' justifyContent='space-between'>
+    <Flexbox
+      flexDirection='row'
+      flexWrap='wrap'
+      alignItems='center'
+      justifyContent='space-between'
+    >
       <CardTitle
         title={title}
       />
       <Link id='addFromFs' to={`/Collections/${col}/addSeed/fs`}><FlatButton primary label='From Filesystem' /></Link>
-    </Flex>
+    </Flexbox>
   )
 }
 CollAddSeedHeader.propTypes = {

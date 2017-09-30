@@ -40,7 +40,6 @@ export class WailCrawlRecord extends Record({
     }
     return this.started
   }
-
 }
 
 export default class WCrawlsRecord extends Record({

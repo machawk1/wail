@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import FlatButton from 'material-ui/FlatButton'
 import pure from 'recompose/pure'
 import { amber500 } from 'material-ui/styles/colors'
@@ -9,7 +9,12 @@ import {general} from '../../../constants/uiStrings'
 
 const SelectCollectionButtons = ({CrawlIndicator}) => {
   return (
-    <Flex row alignItems='center' justifyContent='space-between'>
+    <Flexbox
+      flexDirection='row'
+      flexWrap='wrap'
+      alignItems='center'
+      justifyContent='space-between'
+    >
       {CrawlIndicator}
       <FlatButton
         id='newColButton'
@@ -17,7 +22,7 @@ const SelectCollectionButtons = ({CrawlIndicator}) => {
         label={general.newCol}
         onTouchTap={ViewWatcher.createCollection.bind(ViewWatcher)}
       />
-    </Flex>
+    </Flexbox>
   )
 }
 

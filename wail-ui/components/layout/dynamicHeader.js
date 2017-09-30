@@ -56,15 +56,16 @@ export default class DynamicHeader extends Component {
 
   render () {
     console.log('dynamic header', this.props)
-    return (
-      <div>
+    return [
         <AppBar
+          key='wailAppBarInstance'
           id='wailAppBar'
           title={<Location />}
           onLeftIconButtonTouchTap={::this.handleToggle}
           iconElementRight={<CrawlIndicator />}
-        />
+        />,
         <Drawer
+          key='wailAppBarDrawerInstance'
           docked={false}
           width={200}
           open={this.state.open}
@@ -97,7 +98,6 @@ export default class DynamicHeader extends Component {
             primaryText={'Twitter Archive'}
             onTouchTap={(e) => this.handleClose('Twitter Archive', '/twitter')} />
         </Drawer>
-      </div>
-    )
+    ]
   }
 }

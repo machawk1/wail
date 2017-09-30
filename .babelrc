@@ -1,13 +1,14 @@
 {
   "plugins": [
     [
+      "transform-decorators-legacy",
       "transform-object-rest-spread",
       {
         "useBuiltIns": true
       }
     ],
-    "transform-es2015-modules-commonjs",
-    "transform-decorators-legacy"
+    "transform-export-extensions",
+    "transform-es2015-modules-commonjs"
   ],
   "env": {
     "development": {
@@ -19,7 +20,7 @@
           "env",
           {
             "targets": {
-              "electron": "1.7.4"
+              "electron": "1.8.1"
             },
             "useBuiltIns": true,
             "include": [

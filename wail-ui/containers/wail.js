@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Provider } from 'react-redux'
 import { Router } from 'react-router-dom'
@@ -28,22 +28,30 @@ const wailTheme = getMuiTheme({
 
 // <JoyRider />
 
-const Wail = ({store, history}) => (
-  <Provider store={store}>
-    <MuiThemeProvider muiTheme={wailTheme}>
-      <div style={{width: '100%', height: '100%', position: 'fixed'}}>
-        <Router history={history}>
-          {routes}
-        </Router>
-        <Footer />
-      </div>
-    </MuiThemeProvider>
-  </Provider>
-)
+export default class Wail extends Component {
+  static propTypes = {
+    store: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired
+  }
 
-Wail.propTypes = {
-  store: PropTypes.object.isRequired,
-  history: PropTypes.object.isRequired
+  componentDidCatch (error, info) {
+    console.log(error, info)
+  }
+
+  render () {
+    const {store, history} = this.props
+    return (
+      <Provider store={store}>
+        <MuiThemeProvider muiTheme={wailTheme}>
+          <div style={{width: '100%', height: '100%', position: 'fixed'}}>
+            <Router history={history}>
+              {routes}
+            </Router>
+            <Footer/>
+          </div>
+        </MuiThemeProvider>
+      </Provider>
+    )
+  }
 }
 
-export default Wail

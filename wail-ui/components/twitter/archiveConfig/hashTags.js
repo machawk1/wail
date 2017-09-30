@@ -3,11 +3,8 @@ import {Card, CardText, CardTitle} from 'material-ui/Card'
 import moment from 'moment/moment'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
-import IconButton from 'material-ui/IconButton'
 import {List, ListItem} from 'material-ui/List'
-import AddIcon from 'material-ui/svg-icons/content/add'
 import {Field, FieldArray, reduxForm} from 'redux-form/immutable'
-import {Flex, Item} from 'react-flex'
 import {
   TimePicker,
   TextField

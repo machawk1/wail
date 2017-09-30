@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { compose, branch, setDisplayName, renderComponent, shouldUpdate } from 'recompose'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import { SSRecord } from '../../../records'
 import { CheckStepContent } from '../../../shared/checkStepContents'
 
@@ -63,10 +63,12 @@ const enhance = compose(
 
 const ServiceCheckMessage = ({serviceRec}) => (
   <CheckStepContent>
-    <Flex row alignItems='center' justifyContent='space-between'>
+    <Flexbox
+      flexDirection='row'
+      flexWrap='wrap' row alignItems='center' justifyContent='space-between'>
       <HeritrixStartM serviceRec={serviceRec} />
       <WaybackStartM serviceRec={serviceRec} />
-    </Flex>
+    </Flexbox>
   </CheckStepContent>
 )
 

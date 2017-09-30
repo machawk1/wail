@@ -3,10 +3,14 @@ const path = require('path')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
+
+const uiPath = path.join(__dirname,'../../wail-ui')
+
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': '1.7.4'
+    'electron': '1.8.0'
   },
+  "modules": false,
   'debug': true,
   'useBuiltIns': true,
   'include': [
@@ -85,14 +89,16 @@ module.exports = {
       __DEV__: true,
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'deps',
-      minChunks(module, count) {
-        const context = module.context
-        return context && context.indexOf('node_modules') >= 0
-      },
-    }),
     new webpack.NamedModulesPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    // new webpack.optimize.CommonsChunkPlugin({
+    //   name: 'deps',
+    //   minChunks(module, count) {
+    //     const context = module.context
+    //     return context && context.indexOf('node_modules') >= 0
+    //   },
+    // }),
   ],
   output: {
     path: path.join(__dirname, 'dist'),
@@ -101,6 +107,5 @@ module.exports = {
     publicPath: 'http://localhost:9000/dist/'
   },
   // bail: true,
-  target: 'electron-renderer',
-
+  target: 'electron-renderer'
 }

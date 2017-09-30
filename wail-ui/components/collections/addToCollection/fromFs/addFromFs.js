@@ -91,10 +91,7 @@ export default class AddFromFs extends Component {
 
   componentDidMount () {
     if (!this.removeWarcAdder) {
-      console.log('attaching warc adder on live dom')
       this.removeWarcAdder = BeamMeUpScotty('#warcUpload', this.fileListener)
-    } else {
-      console.log('we mounted but already have the warc upload listener attached')
     }
   }
 
@@ -104,7 +101,6 @@ export default class AddFromFs extends Component {
   }
 
   fileListener (files) {
-    console.log(`adding warcs maybe to col ${this.props.col}`, files)
     let addMe = []
     let badFiles = new Set()
     let len = files.length

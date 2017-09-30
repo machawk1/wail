@@ -10,7 +10,6 @@ import Flexbox from 'flexbox-react'
 
 const headTextStyle = {color: cHeaderTextColor, textDecoration: 'none', textAlign: 'center'}
 
-
 function stateToProps (state, ownProps) {
   return {jobRecord: state.get('wailCrawls').getJob(ownProps.jobId)}
 }
@@ -19,7 +18,7 @@ class WailCrawlJob extends Component {
   static propTypes = {
     jobId: PropTypes.string.isRequired,
     i: PropTypes.number.isRequired,
-    jobRecord: PropTypes.instanceOf(Immutable.Record).isRequired,
+    jobRecord: PropTypes.instanceOf(Immutable.Record).isRequired
   }
 
   shouldComponentUpdate (nextProps, nextState, nextContext) {
@@ -67,4 +66,3 @@ class WailCrawlJob extends Component {
 }
 
 export default connect(stateToProps)(WailCrawlJob)
-

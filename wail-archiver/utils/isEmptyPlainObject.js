@@ -10,4 +10,3 @@ export default function isEmptyPlainObject (object) {
   }
   return isEmpty(object)
 }
-

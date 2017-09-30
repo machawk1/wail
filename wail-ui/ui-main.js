@@ -18,7 +18,10 @@ process.on('uncaughtException', (err) => {
 
 app.commandLine.appendSwitch('js-flags', '--harmony')
 app.commandLine.appendSwitch('disable-renderer-backgrounding')
+app.commandLine.appendSwitch('disable-background-timer-throttling')
 app.commandLine.appendSwitch('disable-http-cache')
+app.commandLine.appendSwitch('mute-audio')
+app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 let flashDir
 if (process.env.NODE_ENV === 'production') {

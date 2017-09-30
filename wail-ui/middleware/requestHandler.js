@@ -3,7 +3,6 @@ import { checkDone, checkDoneError, checkingUrl } from '../actions/archival'
 import { CheckUrlEvents, EventTypes, LocationChange, AddSeedFromFsEvents } from '../constants/wail-constants'
 import heritrixRequestHandler from './heritrixRequestHandler'
 
-
 const { CHECK_URL } = CheckUrlEvents
 
 // curried the living daylights out of this

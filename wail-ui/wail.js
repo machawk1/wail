@@ -2,8 +2,8 @@ import 'babel-polyfill'
 import 'react-flex/index.css'
 import './css/wail.css'
 import React from 'react'
-import {BehaviorSubject} from 'rxjs'
-import { render } from 'react-dom'
+import ReactDOM from 'react-dom'
+import { BehaviorSubject } from 'rxjs'
 import createHashHist from 'history/createHashHistory'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 import { remote } from 'electron'
@@ -23,8 +23,7 @@ const store = configureStore()
 const hashHistory = createHashHist()
 
 if (process.env.NODE_ENV === 'development') {
-  require('react-joyride/lib/react-joyride-compiled.css')
-  window.Perf = require('react-addons-perf')
+  // require('react-joyride/lib/react-joyride-compiled.css')
   window.__history = hashHistory
   // hashHistory.listen((location, action) => {
   //   console.log(`The current URL is ${location.pathname}${location.search}${location.hash}`)
@@ -58,4 +57,4 @@ window.logger = bunyan.createLogger({
 })
 window.onbeforeunload = windowCloseHandler(store)
 
-render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))
+ReactDOM.render(<Wail store={store} history={hashHistory} />, document.getElementById('wail'))

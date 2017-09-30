@@ -1,4 +1,5 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import { List, ListItem } from 'material-ui/List'
@@ -6,7 +7,7 @@ import { CardActions, CardTitle } from 'material-ui/Card'
 import { Field, FieldArray, reduxForm } from 'redux-form/immutable'
 import { TextField } from 'redux-form-material-ui'
 import IconButton from 'material-ui/IconButton'
-import { Flex, Item } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import Remove from 'material-ui/svg-icons/content/remove-circle'
 import validate from './validate'
 
@@ -56,7 +57,9 @@ class HashTags extends Component {
   render () {
     return (
       <div>
-        <Flex row alignItems='center'>
+        <Flexbox
+          flexDirection='row'
+          flexWrap='wrap' alignItems='center'>
           <CardTitle subtitle='Look For Hashtags? (optional)' />
           <RaisedButton
             onTouchTap={this.addField}
@@ -64,7 +67,7 @@ class HashTags extends Component {
             label={'#Add'}
             labelPosition={'before'}
           />
-        </Flex>
+        </Flexbox>
         <div style={{overflowY: 'auto', maxHeight: 'calc(100% - 300px)'}}>
           <List style={{height: 300, maxHeight: 300}}>
             {this.makeLis()}

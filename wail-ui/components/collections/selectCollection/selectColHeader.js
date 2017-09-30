@@ -1,12 +1,17 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
-import { Flex, Item } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import FlatButton from 'material-ui/FlatButton'
 import ViewWatcher from '../../../../wail-core/util/viewWatcher'
 import CardTitle from 'material-ui/Card/CardTitle'
 
 const SelectColHeader = () => (
-  <Flex row alignItems='center' justifyContent='space-between'>
+  <Flexbox
+    flexDirection='row'
+    flexWrap='wrap'
+    alignItems='center'
+    justifyContent='space-between'
+  >
     <CardTitle
       title='Collections'
     />
@@ -16,7 +21,7 @@ const SelectColHeader = () => (
       label='New Collection'
       onTouchTap={() => ViewWatcher.createCollection()}
     />
-  </Flex>
+  </Flexbox>
 )
 
 export default SelectColHeader

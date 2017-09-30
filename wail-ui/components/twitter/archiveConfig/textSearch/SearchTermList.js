@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import CardTitle from 'material-ui/Card/CardTitle'
 import RaisedButton from 'material-ui/RaisedButton'
 import List from 'material-ui/List/List'
@@ -36,14 +36,16 @@ export default class SearchTermList extends Component {
   render () {
     return (
       <div>
-        <Flex row alignItems='center'>
+        <Flexbox
+          flexDirection='row'
+          flexWrap='wrap' alignItems='center'>
           <CardTitle subtitle='Look For What In The Tweets Text?' />
           <RaisedButton
             onTouchTap={this.addField}
             primary label={'Add'}
             labelPosition={'before'}
           />
-        </Flex>
+        </Flexbox>
         <div style={{overflowY: 'scroll', maxHeight: 'calc(100% - 300px)'}}>
           <List style={{height: 300, maxHeight: 300, overFlowY: 'auto'}}>
             {this.makeLis()}

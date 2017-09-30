@@ -12,5 +12,4 @@ function WailCrawlView () {
   )
 }
 
-
 export default enhance(WailCrawlView)

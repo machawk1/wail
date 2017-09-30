@@ -7,7 +7,7 @@ import CardHeader from 'material-ui/Card/CardHeader'
 import validate from './validate'
 import SelectForCol from './SelectForCol'
 import InputName from './InputName'
-import { Flex, Item } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import OptionalFields from './OptionalFields'
 import RequiredFields from './RequiredFields'
 import MonitorTime from './MonitorTime'
@@ -25,9 +25,10 @@ class ArchiveTwitterForm2 extends Component {
     times: PropTypes.array.isRequired,
     submit: PropTypes.func.isRequired
   }
+
   constructor (...args) {
     super(...args)
-    this.state = { page: 1 }
+    this.state = {page: 1}
     this.nextPage = this.nextPage.bind(this)
     this.previousPage = this.previousPage.bind(this)
     this.returnSubmit = this.returnSubmit.bind(this)
@@ -63,11 +64,13 @@ function ArchiveTwitterForm ({handleSubmit, pristine, reset, submitting, invalid
   return (
     <Form onSubmit={handleSubmit} style={{width: '100%', height: '100%'}}>
       <CardHeader title='Required' style={{paddingBottom: 0}} />
-      <Flex row justifyContent='space-around'>
+      <Flexbox flexDirection='row'
+        flexWrap='wrap'
+        justifyContent='space-around'>
         <InputName />
         <SelectForCol cols={cols} />
         <MonitorTime times={times} />
-      </Flex>
+      </Flexbox>
       <CardActions>
         <FlatButton label='Start' type='submit' disabled={invalid || pristine || submitting} primary />
         <FlatButton label='Clear' onTouchTap={reset} />

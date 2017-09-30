@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { Field } from 'redux-form/immutable'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import pure from 'recompose/pure'
 import RadioButtonSelector from './radioButtonSelector'
 
@@ -24,7 +24,8 @@ class ForColAndLength extends Component {
       overflowY: 'auto'
     },
     flexOpts: {
-      row: true,
+      flexDirection: 'row',
+      flexWrap: 'wrap',
       justifyContent: 'space-around'
     }
   }
@@ -32,7 +33,7 @@ class ForColAndLength extends Component {
   render () {
     let {forColStyle, lenStyle, cols, times, flexOpts} = this.props
     return (
-      <Flex {...flexOpts}>
+      <Flexbox {...flexOpts}>
         <Field
           style={forColStyle}
           name='forCol'
@@ -49,7 +50,7 @@ class ForColAndLength extends Component {
         >
           {times}
         </Field>
-      </Flex>
+      </Flexbox>
     )
   }
 }

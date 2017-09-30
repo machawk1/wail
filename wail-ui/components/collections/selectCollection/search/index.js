@@ -8,11 +8,13 @@ import Card from 'material-ui/Card/Card'
 import CardText from 'material-ui/Card/CardText'
 import SearchInput from '../../../utilComponents/searchInput'
 import OrderBy from './OrderBy'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 
 const SearchCollections = ({filterText, orderSubject, hintText, cardStyle, cardTextStyle, inputStyle, tooltip}) => (
   <Card style={cardStyle}>
-    <Flex row alignItems='baseline' justifyContent='space-between'>
+    <Flexbox
+      flexDirection='row'
+      flexWrap='wrap' alignItems='baseline' justifyContent='space-between'>
       <div style={{width: '75%'}}>
         <SearchInput inputStyle={inputStyle} hintText={hintText} searchSubject={filterText} />
         <IconButton tooltip={tooltip}>
@@ -20,7 +22,7 @@ const SearchCollections = ({filterText, orderSubject, hintText, cardStyle, cardT
         </IconButton>
       </div>
       <OrderBy orderSubject={orderSubject} />
-    </Flex>
+    </Flexbox>
   </Card>
 )
 

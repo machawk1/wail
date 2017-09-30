@@ -17,12 +17,10 @@ export default class AutoIndexer extends EventEmitter {
     this._update = this._update.bind(this)
     this._doIndex = this._doIndex.bind(this)
     this._addToIndexQ = this._addToIndexQ.bind(this)
-
   }
 
   init () {
     this._watcher = chokidar.watch(Path.join(this._wailColsP, '**', 'archive', '*'), {ignoreInitial: true})
-
   }
 
   _update (filePath) {
@@ -78,7 +76,6 @@ export default class AutoIndexer extends EventEmitter {
       this._maybeWork()
     })
   }
-
 }
 
 class AutoIndexer2 {

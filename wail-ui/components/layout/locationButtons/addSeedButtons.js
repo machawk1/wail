@@ -1,13 +1,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import AddSeedIconMenu from './addSeedIconMenu'
 
 const CollectionViewButtons = ({CrawlIndicator, match}) => (
-  <Flex row alignItems='center' justifyContent='space-between'>
+  <Flexbox
+    flexDirection='row'
+    flexWrap='wrap'
+    alignItems='center'
+    justifyContent='space-between'
+  >
     {CrawlIndicator}
     <AddSeedIconMenu match={match} />
-  </Flex>
+  </Flexbox>
 )
 
 CollectionViewButtons.propTypes = {

@@ -10,7 +10,6 @@ export default class MyAutoSizer extends Component {
 
   constructor (...args) {
     super(...args)
-    this.me = null
     this.state = {
       width: 0,
       height: 0

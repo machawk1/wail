@@ -7,7 +7,6 @@ import MyAutoSizer from '../utilComponents/myAutoSizer'
 import WailCralJob from './WailCrawlJob'
 import NoWailCrawlJobs from './NoWailCrawlJobs'
 
-
 function stateToProps (state) {
   return {jobIds: state.get('wailCrawls').jobIds}
 }
@@ -31,13 +30,13 @@ class WailCrawls extends Component {
     let i = 0
     for (; i < len; ++i) {
       let jobId = this.props.jobIds.get(i)
-      trs.push(<WailCralJob i={i} key={`${i}-${jobId}`} jobId={jobId}/>)
+      trs.push(<WailCralJob i={i} key={`${i}-${jobId}`} jobId={jobId} />)
     }
     return trs
   }
 
-  renderWailCrawls (jobItems, {height,width}) {
-    return(
+  renderWailCrawls (jobItems, {height, width}) {
+    return (
       <Flexbox
         maxWidth={`${width}px`}
         flexGrow={1}
@@ -56,7 +55,7 @@ class WailCrawls extends Component {
     const jobItems = this.makeWailCralJobItems()
     if (jobItems.length === 0) {
       return (
-        <NoWailCrawlJobs/>
+        <NoWailCrawlJobs />
       )
     }
     return (

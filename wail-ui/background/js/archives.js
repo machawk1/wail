@@ -152,7 +152,7 @@ ipc.on('create-collection', (event, nc) => {
     })
 })
 
-ipc.on('reindex-collection',(e,whichOne) => {
+ipc.on('reindex-collection', (e, whichOne) => {
   archiveMan.justReindexCol(whichOne)
     .then(() => {
       ipc.send('restart-wayback')

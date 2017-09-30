@@ -29,6 +29,8 @@ export default class Header extends Component {
         this.setState({open: !this.state.open}, cb)
       }
     }
+    this.handleToggle = this.handleToggle.bind(this)
+    this.handleClose = this.handleClose.bind(this)
   }
 
   handleToggle () {
@@ -45,18 +47,18 @@ export default class Header extends Component {
   }
 
   render () {
-    return (
-      <div>
-        <WailAppBar
-          CrawlIndicator={<CrawlIndicator />}
-          leftIconTouchTap={::this.handleToggle}
-        />
-        <WailAppDrawer
-          open={this.state.open}
-          handleClose={::this.handleClose}
-          onRequestChange={::this.handleToggle}
-        />
-      </div>
-    )
+    return [
+      <WailAppBar
+        key='wailAppBar'
+        CrawlIndicator={<CrawlIndicator/>}
+        leftIconTouchTap={this.handleToggle}
+      />,
+      <WailAppDrawer
+        key='wailAppBarDrawer'
+        open={this.state.open}
+        handleClose={this.handleClose}
+        onRequestChange={this.handleToggle}
+      />
+    ]
   }
 }

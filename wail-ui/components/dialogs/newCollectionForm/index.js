@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Field, reduxForm } from 'redux-form/immutable'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import FlatButton from 'material-ui/FlatButton'
 import { TextField } from 'redux-form-material-ui'
 import S from 'string'
@@ -46,7 +46,9 @@ const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, 
   <div style={{width: 'inherit', height: 'inherit'}}>
     <form id='newcolform' onSubmit={handleSubmit(onSubmit)} style={{height: '100%'}}>
       <div>
-        <Flex row alignContent='center' justifyContent='space-between'>
+        <Flexbox
+          flexDirection='row'
+          flexWrap='wrap' alignContent='center' justifyContent='space-between'>
           <Field
             id='newCol-name'
             name='name'
@@ -61,7 +63,7 @@ const NewCollectionForm = ({handleSubmit, pristine, reset, submitting, invalid, 
             floatingLabelText={newCollectionForm.collTitle}
             hintText={newCollectionForm.collTitleHint}
           />
-        </Flex>
+        </Flexbox>
       </div>
       <div>
         <Field

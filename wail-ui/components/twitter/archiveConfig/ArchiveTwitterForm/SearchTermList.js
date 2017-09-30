@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Flex } from 'react-flex'
+import Flexbox from 'flexbox-react'
 import CardTitle from 'material-ui/Card/CardTitle'
 import FAB from 'material-ui/FloatingActionButton'
 import ContentAdd from 'material-ui/svg-icons/content/add'
@@ -40,9 +40,13 @@ export default class SearchTermList extends Component {
   render () {
     return (
       <div id='inTweetTextListContainer' style={{width: '100%', height: 180}}>
-        <Flex row justifyContent='space-around'>
+        <Flexbox
+          flexDirection='row'
+          flexWrap='wrap' justifyContent='space-around'>
           <div style={{width: '50%', height: 175}}>
-            <Flex row>
+            <Flexbox
+              flexDirection='row'
+              flexWrap='wrap'>
               <CardTitle subtitle='Look For What In The Tweets Text?' />
               <FAB
                 onTouchTap={this.addField}
@@ -50,7 +54,7 @@ export default class SearchTermList extends Component {
               >
                 <ContentAdd />
               </FAB>
-            </Flex>
+            </Flexbox>
           </div>
           <div style={{width: '50%'}}>
             <Subheader style={{lineHeight: 0}}>Words To Look For In A Tweet</Subheader>
@@ -60,7 +64,7 @@ export default class SearchTermList extends Component {
               </List>
             </div>
           </div>
-        </Flex>
+        </Flexbox>
       </div>
     )
   }
