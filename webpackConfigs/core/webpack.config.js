@@ -25,6 +25,7 @@ module.exports = {
   devtool: 'inline-source-map',
   entry: {
     archiveMan: './wail-ui/background/js/archives',
+    archiver: './wail-ui/background/js/archiver',
     crawlMan: './wail-ui/background/js/crawls',
     firstLoad: './wail-ui/loadingScreens/firstTime/loadingScreen',
     notFirstLoad: './wail-ui/loadingScreens/notFirstTime/notFirstLoad',

@@ -635,7 +635,7 @@ export default class WindowManager extends EventEmitter {
     return new Promise((resolve) => {
       let {conf, url} = this.windows['archiverWindow']
       this.windows['archiverWindow'].window = new BrowserWindow(conf)
-      this.windows['archiverWindow'].window.loadURL('about:blank')
+      this.windows['archiverWindow'].window.loadURL(url)
       this.windows['archiverWindow'].window.on('unresponsive', () => {
         this.emit('window-unresponsive', 'archiverWindow')
       })
