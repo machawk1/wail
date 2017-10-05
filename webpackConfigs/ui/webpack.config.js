@@ -3,12 +3,9 @@ const path = require('path')
 
 const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib\\validate\.js/ : /node_modules\/json-schema\/lib\/validate\.js/
 
-
-const uiPath = path.join(__dirname,'../../wail-ui')
-
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': '1.8.0'
+    'electron': '1.8.1'
   },
   "modules": false,
   'debug': true,

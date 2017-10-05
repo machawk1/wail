@@ -9,13 +9,15 @@ const linkStyle = {color: amber500, textDecoration: 'none', textAlign: 'center'}
 
 const enhance = namedUpdateKeys('CollectionCardHeader', ['name', 'i'])
 
-const CollectionCardHeader = ({name, i}, {muiTheme: {baseTheme: {palette: {primary1Color}}}}) => (
-  <CardTitle
-    key={`CollectionCardHeader-${name}`}
-    style={{backgroundColor: primary1Color, marginTop: 0, marginBottom: 0, padding: 10}}
-    title={<Link id={`colto${i}`} to={drr.viewCollection(name)} style={linkStyle}>{name}</Link>}
-  />
-)
+function CollectionCardHeader ({name, i}, {muiTheme: {baseTheme: {palette: {primary1Color}}}}) {
+  return (
+    <CardTitle
+      key={`CollectionCardHeader-${name}`}
+      style={{backgroundColor: primary1Color, marginTop: 0, marginBottom: 0, padding: 10}}
+      title={<Link id={`colto${i}`} to={drr.viewCollection(name)} style={linkStyle}>{name}</Link>}
+    />
+  )
+}
 
 CollectionCardHeader.propTypes = {
   name: PropTypes.string.isRequired,

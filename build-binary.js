@@ -108,7 +108,7 @@ const DEFAULT_OPTS = {
   ignore,
   overwrite: true,
   out: path.normalize(path.join(cwd, 'release')),
-  electronVersion: require('electron/package.json').version
+  electronVersion: '1.8.1'
 }
 
 // OSX

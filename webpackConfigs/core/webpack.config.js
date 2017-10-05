@@ -5,7 +5,7 @@ const noParseRe = process.platform === 'win32' ? /node_modules\\json-schema\\lib
 
 const babelEnvConfig = ['env', {
   'targets': {
-    'electron': '1.7.4'
+    'electron': '1.8.1'
   },
   'debug': true,
   "useBuiltIns": true,
@@ -99,14 +99,8 @@ module.exports = {
       __DEV__: true,
       'process.env.NODE_ENV': JSON.stringify('development'),
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'deps',
-      minChunks(module, count) {
-        const context = module.context
-        return context && context.indexOf('node_modules') >= 0
-      },
-    }),
     new webpack.NamedModulesPlugin(),
+    new webpack.optimize.OccurrenceOrderPlugin()
   ],
   output: {
     path: path.join(__dirname, 'dist'),

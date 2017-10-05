@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import CardHeader from 'material-ui/Card/CardHeader'
-import CardText from 'material-ui/Card/CardText'
 import Flexbox from 'flexbox-react'
 import { namedUpdateKeys } from '../../../../util/recomposeHelpers'
 import { collectionCard} from '../../../../constants/uiStrings'

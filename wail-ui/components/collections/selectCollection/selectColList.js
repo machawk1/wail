@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Map } from 'immutable'
-import Flexbox from 'flexbox-react'
 import MyAutoSizer from '../../utilComponents/myAutoSizer'
 import fuzzyFilter from '../../../util/fuzzyFilter'
 import CollectionCard, { NoCollectionMatches } from './collectionCard'
@@ -64,13 +63,7 @@ export default class SelectColList extends Component {
       <div
         style={{height, maxHeight: `${height - 165}px`, overflowY: 'auto'}}
       >
-        <Flexbox
-          flexDirection='row'
-          flexWrap='wrap'
-          justifyContent='space-around'
-        >
-          {filterCols}
-        </Flexbox>
+        {filterCols}
       </div>
     )
   }

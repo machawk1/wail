@@ -5,27 +5,33 @@ import Header from '../../shared/header'
 import { Card, CardHeader, CardMedia, CardText } from 'material-ui/Card'
 import ProgressSteps from '../components/progress/progressSteps'
 import ProgressMessage from '../components/progress/progressMessage'
-import {firstTimeLoading} from '../../../constants/uiStrings'
+import { firstTimeLoading } from '../../../constants/uiStrings'
 
 const enhance = namedPure('Layout')
 
-const Layout = () => (
-  <div>
-    <Header title={firstTimeLoading.title} />
-    <div style={{transform: 'translateY(10px)'}}>
+function Layout () {
+  return [
+    <Header
+      key='firsttime-layout-header'
+      title={firstTimeLoading.title}
+    />,
+    <div
+      key='firsttime-layout-contentBody'
+      style={{ transform: 'translateY(10px)' }}
+    >
       <div className='wail-container'>
-        <Card style={{minHeight: '350px'}}>
+        <Card style={{ minHeight: '350px' }}>
           <CardHeader
             title={firstTimeLoading.autoConfigSteps}
           />
-          <CardMedia style={{minHeight: '300px'}}>
-            <ProgressSteps />
-            <ProgressMessage />
+          <CardMedia style={{ minHeight: '300px' }}>
+            <ProgressSteps/>
+            <ProgressMessage/>
           </CardMedia>
         </Card>
       </div>
     </div>
-  </div>
-)
+  ]
+}
 
 export default enhance(Layout)
