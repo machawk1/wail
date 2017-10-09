@@ -4,7 +4,6 @@ import fs from 'fs-extra'
 import S from 'string'
 import _ from 'lodash'
 import os from 'os'
-import Promise from 'bluebird'
 import managed from './settingsManValues'
 
 S.TMPL_OPEN = '{'
@@ -39,62 +38,60 @@ export default class SettingsManager {
     this._dbParentPath = dbParentPath
   }
 
-  configure () {
+  async configure () {
     let {pathMan} = global
     this._settingsDir = pathMan.join(this._settingsDir, 'wail-settings')
     global.settingsDir = this._settingsDir
-    return new Promise((resolve, reject) => {
-      settings.setPath(path.join(this._settingsDir, 'settings.json'))
-      this._settings = settings
-      if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
-        console.log('We are not configured')
+    await fs.ensureDir(this._settingsDir)
+    settings.setPath(path.join(this._settingsDir, 'settings.json'))
+    this._settings = settings
+    if (!this._settings.get('configured') || this._settings.get('version') !== this._version) {
+      console.log('We are not configured')
+      let didFirstLoad = this._settings.get('didFirstLoad')
+      if (didFirstLoad === null || didFirstLoad === undefined) {
+        didFirstLoad = false
+      }
+
+      // console.log('We are not configured due to binary directory being moved')
+      this._writeSettings(pathMan, didFirstLoad)
+      console.log(didFirstLoad)
+      // console.log(base, settings)
+    } else {
+      if (this._settings.get('base') !== this._base) {
+        /*
+         If the user moves the application directory the settings will
+         will not be correct since I use absolute paths.
+         I did this to myself....
+         */
         let didFirstLoad = this._settings.get('didFirstLoad')
         if (didFirstLoad === null || didFirstLoad === undefined) {
           didFirstLoad = false
         }
 
+        // if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
+        //   didFirstLoad = false
+        // }
+
         // console.log('We are not configured due to binary directory being moved')
         this._writeSettings(pathMan, didFirstLoad)
-        console.log(didFirstLoad)
-        // console.log(base, settings)
-      } else {
-        if (this._settings.get('base') !== this._base) {
-          /*
-           If the user moves the application directory the settings will
-           will not be correct since I use absolute paths.
-           I did this to myself....
-           */
-          let didFirstLoad = this._settings.get('didFirstLoad')
-          if (didFirstLoad === null || didFirstLoad === undefined) {
-            didFirstLoad = false
-          }
-
-          // if (this._version === '1.0.0-rc.3.0.1s' && !this._settings.get('didRedoFl')) {
-          //   didFirstLoad = false
-          // }
-
-          // console.log('We are not configured due to binary directory being moved')
-          this._writeSettings(pathMan, didFirstLoad)
-        }
-        // console.log('We are configured')
       }
+      // console.log('We are configured')
+    }
 
-      // this._settings.watch('heritrix.port', change => {
-      //   console.log('heritrix.port changed ', change)
-      //   this.rewriteHeritrixPort(change.was, change.now)
-      // })
-      //
-      // this._settings.watch('wayback.port', change => {
-      //   let wb = _.cloneDeep(this._settings.get('wayback'))
-      //   wb.port = change.now
-      //   let uriTomcat = S(wb.uri_tomcat)
-      //   wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
-      //   let uriWB = S(wb.uri_wayback)
-      //   wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
-      //   this._settings.set('wayback', wb)
-      // })
-      return resolve()
-    })
+    // this._settings.watch('heritrix.port', change => {
+    //   console.log('heritrix.port changed ', change)
+    //   this.rewriteHeritrixPort(change.was, change.now)
+    // })
+    //
+    // this._settings.watch('wayback.port', change => {
+    //   let wb = _.cloneDeep(this._settings.get('wayback'))
+    //   wb.port = change.now
+    //   let uriTomcat = S(wb.uri_tomcat)
+    //   wb.uri_tomcat = uriTomcat.replaceAll(`${change.was}`, `${change.now}`).s
+    //   let uriWB = S(wb.uri_wayback)
+    //   wb.uri_wayback = uriWB.replaceAll(`${change.was}`, `${change.now}`).s
+    //   this._settings.set('wayback', wb)
+    // })
   }
 
   writeSettings () {
