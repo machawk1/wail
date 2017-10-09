@@ -327,17 +327,17 @@ export default class ArchiveManager extends EventEmitter {
       await CollectionsUtils.checkCollDirExistence(this._colsBasePath)
     } catch (noExist) {
       console.log('no exist')
-      return await this._handleColDirNoExistence(noExist)
+      return this._handleColDirNoExistence(noExist)
     }
     let {exist, empty, doNotExist} = await this._getAllColsWithExistCheck()
     let colSeeds = await this._colSeeds.wemFindAll('Could not retrieve the seeds from the database')
     if (empty) {
       if (colSeeds.length > 0) {
         console.log('recreate cols from seeds')
-        return await this._recreateColsFromSeeds(colSeeds)
+        return this._recreateColsFromSeeds(colSeeds)
       } else {
         console.log('fall back created default col')
-        return await this._fallBackCreateDefaultCol()
+        return this._fallBackCreateDefaultCol()
       }
     } else {
       colSeeds = transSeeds(colSeeds)
@@ -609,7 +609,9 @@ export default class ArchiveManager extends EventEmitter {
       await this.init()
     }
     let cols = await this._collections.findAll()
-    let seeds = await this._colSeeds.findAll(), hadToBkup = false, bkupM = ''
+    let seeds = await this._colSeeds.findAll()
+    let hadToBkup = false
+    let bkupM = ''
 
     if (cols.length !== 0) {
       hadToBkup = true
@@ -641,7 +643,7 @@ export default class ArchiveManager extends EventEmitter {
     } catch (error) {
 
     }
-    return await this.createDefaultCol()
+    return this.createDefaultCol()
   }
 
   async _handleTrackedNotExisting (cols, seeds) {
@@ -743,7 +745,9 @@ export default class ArchiveManager extends EventEmitter {
       await this.init()
     }
     const collectionsPath = path.join(this._colsBasePath, 'collections')
-    const recreatedCols = [], oldColSeeds = transSeeds(seeds), couldNotRecreate = []
+    const recreatedCols = []
+    const oldColSeeds = transSeeds(seeds)
+    const couldNotRecreate = []
     for (const col of Object.keys(oldColSeeds)) {
       const colPath = path.join(collectionsPath, col)
       let recreatedCol
@@ -769,7 +773,7 @@ export default class ArchiveManager extends EventEmitter {
         return col
       })
     } else {
-      return await this._fallBackCreateDefaultCol()
+      return this._fallBackCreateDefaultCol()
     }
   }
 
@@ -783,7 +787,8 @@ export default class ArchiveManager extends EventEmitter {
       existCheck.empty = true
       return existCheck
     } else {
-      let len = collections.length, i = 0
+      let len = collections.length
+      let i = 0
       for (; i < len; ++i) {
         if (await checkPathExists(collections[i].colpath)) {
           existCheck.exist.push(collections[i])
@@ -796,7 +801,8 @@ export default class ArchiveManager extends EventEmitter {
   }
 
   async _copyMaybeNormalizeDb (db, backupName) {
-    let copyGood = true, normalizeGood = true
+    let copyGood = true
+    let normalizeGood = true
     try {
       await db.copyDbTo(backupName)
     } catch (error) {
