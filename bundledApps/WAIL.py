@@ -53,8 +53,16 @@ ssl._create_default_https_context = ssl._create_unverified_context
 WAIL_VERSION = "-1"
 INDEX_TIMER_SECONDS = 10.0
 
+wailPath = os.path.dirname(os.path.realpath(__file__))
+infoPlistPath = ""
+if 'darwin' in sys.platform:
+    infoPlistPath = "/Applications/WAIL.app/Contents/Info.plist"
+else:
+    infoPlistPath = wailPath + "\\build\\Info.plist"
+
+
 try:
-  with open ("/Applications/WAIL.app/Contents/Info.plist", "r") as myfile:
+  with open (infoPlistPath, "r") as myfile:
     data=myfile.read()
     m = re.search(r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>",
       data)
@@ -160,7 +168,8 @@ warcsFolder = ""
 tomcatPath = ""
 tomcatPathStart = ""
 tomcatPathStop = ""
-wailPath = os.path.dirname(os.path.realpath(__file__))
+memGatorPath = ""
+archivesJSON = ""
 fontSize = 8
 wailWindowSize = (400, 250)
 
@@ -203,6 +212,8 @@ elif sys.platform.startswith('win32'):
     heritrixJobPath = "C:\\WAIL\\jobs\\"
     tomcatPath = "C:/WAIL/bundledApps/tomcat"
     warcsFolder = wailPath + "archives"
+    memGatorPath = wailPath + "\\bundledApps\\memgator-windows-amd64.exe"
+    archivesJSON = wailPath + "\\config\\archives.json"
     tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
 ###############################
@@ -358,6 +369,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         print "callback executed!"
 
     def ensureEnvironmentVariablesAreSet(self):
+        if 'darwin' not in sys.platform:
+            return # Allow windows to proceed w/o java checks for now.
+
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
         JRE_HOME_defined = 'JRE_HOME' in os.environ
         if not JAVA_HOME_defined or not JRE_HOME_defined:
@@ -595,21 +609,30 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.status_wayback = wx.StaticText(self, 100, status,       (col1,    rowHeight*1),      cellSize)
         
         def getHeritrixVersion(self, abbr=True):
-            for file in os.listdir(heritrixPath + "lib/"):
+            htrixLibPath = heritrixPath + "lib/"
+            if 'darwin' not in sys.platform:
+                htrixLibPath = htrixLibPath.replace('/','\\')
+            for file in os.listdir(htrixLibPath):
               if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
                 return regex.findall(file)[0]
 
         def getWaybackVersion(self):
-            for file in os.listdir(tomcatPath + "/webapps/lib/"):
+            tomcatLibPath = tomcatPath + "/webapps/lib/"
+            if 'darwin' not in sys.platform:
+                tomcatLibPath = tomcatLibPath.replace('/','\\')
+            for file in os.listdir(tomcatLibPath):
               if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
 
         def getTomcatVersion(self):
         #Apache Tomcat Version 7.0.30
-            if not os.path.exists(tomcatPath+"/RELEASE-NOTES"): return "?"
-            f = open(tomcatPath+"/RELEASE-NOTES",'r')
+            releaseNotesPath = tomcatPath + '/RELEASE-NOTES'
+            if 'darwin' not in sys.platform:
+                releaseNotesPath = releaseNotesPath.replace('/','\\')
+            if not os.path.exists(releaseNotesPath): return "?"
+            f = open(releaseNotesPath,'r')
             version = ""
             for line in f.readlines():
                 if "Apache Tomcat Version " in line:
@@ -716,10 +739,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     #time.sleep(3)
                     #self.openWaybackInBrowser(None)
         def openWaybackConfiguration(self,button):
-            filepath = tomcatPath+"/webapps/ROOT/WEB-INF/wayback.xml"
+            filepath = tomcatPath + "/webapps/ROOT/WEB-INF/wayback.xml"
             if sys.platform.startswith('darwin'):
              subprocess.call(('open', filepath))
             elif os.name == 'nt':
+             filepath = filepath.replace('/','\\')
              os.startfile(filepath)
             elif os.name == 'posix':
              subprocess.call(('xdg-open', filepath))
@@ -841,6 +865,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', file))
             elif os.name == 'nt':
+                file = file.replace('/','\\')
                 os.startfile(file)
             elif os.name == 'posix':
                 subprocess.call(('xdg-open', file))
@@ -1106,7 +1131,7 @@ class Service():
                 return True
            # if hasattr(e, 
 
-            print "Failed to access " + self.__class__.__name__+" service at " + self.uri
+            print "Failed to access " + self.__class__.__name__  +" service at " + self.uri
             return False
         except:
             print "Some other error occurred in trying to check service accessibility."
@@ -1120,7 +1145,7 @@ class Wayback(Service):
 
     def fixAsync(self, cb=None):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
-        cmd = tomcatPathStart;
+        cmd = tomcatPathStart
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
@@ -1144,8 +1169,15 @@ class Wayback(Service):
         self.generateCDX()
 
     def generatePathIndex(self):
-        dest = "/Applications/WAIL.app/config/path-index.txt"
-        warcsPath = "/Applications/WAIL.app/archives/"
+        wailPath = '/Applications/WAIL.app'
+        if 'darwin' not in sys.platform:
+            wailPath = 'C:\wail'
+
+        dest = wailPath + "/config/path-index.txt"
+        warcsPath = wailPath + "/archives/"
+        if 'darwin' not in sys.platform:
+            dest = dest.replace('/','\\')
+            warcsPath = warcsPath.replace('/','\\')
         
         outputContents = ""
         for file in listdir(warcsPath):
@@ -1160,21 +1192,40 @@ class Wayback(Service):
     
     def generateCDX(self):
         #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
-        dest = "/Applications/WAIL.app/config/path-index.txt"
-        warcsPath = "/Applications/WAIL.app/archives/"
+        wailRoot = '/Applications/WAIL.app'
+        if 'darwin' not in sys.platform:
+            wailRoot = 'C:\wail'
+        dest = wailRoot + "/config/path-index.txt"
+        warcsPath = wailRoot + "/archives/"
+        cdxFilePathPre = wailRoot + "/archiveIndexes/"
+        cdxIndexerPath = wailRoot +  "/bundledApps/tomcat/webapps/bin/cdx-indexer"
+
+        if 'darwin' not in sys.platform:
+            dest = dest.replace('/','\\')
+            warcsPath = warcsPath.replace('/','\\')
+            cdxFilePathPre = cdxFilePathPre.replace('/','\\')
+            cdxIndexerPath = cdxIndexerPath.replace('/','\\')
         
         outputContents = ""
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
-              cdxFilePath = "/Applications/WAIL.app/archiveIndexes/" + file.replace('.warc','.cdx')
-              process = subprocess.Popen(["/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer",join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
+              cdxFilePath = cdxFilePathPre + file.replace('.warc','.cdx')
+              process = subprocess.Popen([cdxIndexerPath,join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
               stdout, stderr = process.communicate()
         
         # Combine CDX files
-        filenames = glob.glob("/Applications/WAIL.app/archiveIndexes/*.cdx")
+        allCDXesPath = wailRoot + "/archiveIndexes/*.cdx"
+        if 'darwin' not in sys.platform:
+            allCDXesPath = allCDXesPath.replace('/','\\')
+
+        filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
         print "CDX files generated for each WARC, merging..."
-        with open('/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt', 'w') as outfile:
+        unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt' # Is cdxt the right filename?
+        if 'darwin' not in sys.platform:
+            unsortedPath = unsortedPath.replace('/','\\')
+
+        with open(unsortedPath, 'w') as outfile:
             for fname in filenames:
                 with open(fname) as infile:
                     for i,line in enumerate(infile):
@@ -1184,16 +1235,18 @@ class Wayback(Service):
                         outfile.write(line)
                         cdxHeaderIncluded = True
         print "Done merging CDX files, removing old source CDX files."
-        filelist = glob.glob("/Applications/WAIL.app/archiveIndexes/*.cdx")
+        filelist = glob.glob(allCDXesPath)
         for f in filelist:
             os.remove(f)
+
+        # TODO: fix cdx sorting in Windows
+        if 'darwin' in sys.platform:
+          print "Sorting CDX entries"
+          os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
+          print "Removing unsorted temp file"
+          os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
         
-        print "Sorting CDX entries"
-        os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
-        print "Removing unsorted temp file"
-        os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
-        
-        print "Done creating sorted CDX file!"
+          print "Done creating sorted CDX file!"
         
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
@@ -1230,7 +1283,11 @@ class Heritrix(Service):
         for launch in launches:
             #print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
             print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
-            lastLine = tail(heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log")
+            progressLogFilePath = heritrixJobPath + jobId + "/" + launch + "/logs/progress-statistics.log"
+            if 'darwin' not in sys.platform:
+                progressLogFilePath = progressLogFilePath.replace('/','\\')
+
+            lastLine = tail(progressLogFilePath)
 
             ll = lastLine[0].replace(" ","|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
@@ -1273,7 +1330,7 @@ class HeritrixJob:
             beansFilePath += "\\"
         else:
             beansFilePath += "/"
-        with open(beansFilePath+"crawler-beans.cxml","w") as f:
+        with open(beansFilePath + "crawler-beans.cxml","w") as f:
             f.write(self.sampleXML)
             #print beansFilePath+"crawler-beans.cxml"
 
@@ -2063,7 +2120,7 @@ class UpdateSoftwareWindow(wx.Frame):
         self.currentVersion_heritrix = self.getHeritrixVersion()
         self.currentVersion_wayback = self.getWaybackVersion()
         
-        packages = self.updateJSONData['packages'];
+        packages = self.updateJSONData['packages']
         for package in packages:
           if package['name'] == 'heritrix-wail':
             self.latestVersion_heritrix = package['version']
