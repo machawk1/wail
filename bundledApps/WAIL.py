@@ -54,6 +54,8 @@ WAIL_VERSION = "-1"
 INDEX_TIMER_SECONDS = 10.0
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
+wailPath = wailPath.replace('\\bundledApps', '') # Fix for dev mode
+
 infoPlistPath = ""
 if 'darwin' in sys.platform:
     infoPlistPath = "/Applications/WAIL.app/Contents/Info.plist"
@@ -207,15 +209,15 @@ elif sys.platform.startswith('win32'):
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    heritrixPath = "C:/WAIL/bundledApps/heritrix-3.2.0/"
-    heritrixBinPath = heritrixPath+"bin/heritrix.cmd"
-    heritrixJobPath = "C:\\WAIL\\jobs\\"
-    tomcatPath = "C:/WAIL/bundledApps/tomcat"
-    warcsFolder = wailPath + "archives"
+    heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
+    heritrixBinPath = heritrixPath + "\\bin\\heritrix.cmd"
+    heritrixJobPath = heritrixPath + "\\jobs\\"
+    tomcatPath = wailPath + "\\bundledApps\\tomcat"
+    warcsFolder = wailPath + "\\archives"
     memGatorPath = wailPath + "\\bundledApps\\memgator-windows-amd64.exe"
     archivesJSON = wailPath + "\\config\\archives.json"
-    tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
-    tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
+    tomcatPathStart = wailPath + "\\support\\catalina_start.bat"
+    tomcatPathStop = wailPath + "\\support\\catalina_stop.bat"
 ###############################
 # Tab Controller (Notebook)
 ###############################
@@ -317,15 +319,16 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
     
     def setMementoCount(self, count):
-        if hasattr(self,'mementoStatus'):
+        if hasattr(self, 'mementoStatus'):
           self.mementoStatus.Destroy()
           self.mementoStatusPublicArchives.Destroy()
-          
+
         if count:
           memCountMsg = str(count) + " mementos available"
-          self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(105, 85), size=(150,20))
+          self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(105, 85), size=(150,20)) # Not updating UI on Windows
         else:
           self.mementoStatus = wx.StaticText(self, -1, label=msg_fetchingMementos, pos=(105, 85), size=(150,20))
+          print 'not setting count'
           #italicFont = self.mementoStatus.GetFont().SetStyle(wx.ITALIC)
           #self.mementoStatus.SetFont(italicFont)
           
@@ -342,12 +345,13 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: Use CDXJ for counting the mementos
         out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
         print "memgator command:"
-        print memGatorPath+" -a " + archivesJSON + self.uri.GetValue()
+        print memGatorPath + " -a " + archivesJSON + ' ' + self.uri.GetValue()
         
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which results in 0 mementos, which MemGator throws exception
         
         # TODO: Once we are using the local web service, we can curl -I to get a 
-        self.setMementoCount(out.count("memento"))
+        self.setMementoCount(out.count("memento")) # UI not updated on Windows
+        print 'Setting memgator count to {0}'.format(out.count("memento"))
         # TODO: cache the TM
     def uriChanged(self, event):
        self.setMementoCount(None)
