@@ -290,6 +290,7 @@ class TabController(wx.Frame):
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        self.SetDoubleBuffered(True) # Forces Windows into composite mode for drawing
         self.uriLabel = wx.StaticText(self, -1, buttonLabel_uri, pos=(0, 5))
         self.uri = wx.TextCtrl(self, -1, pos=(34, 0), value=textLabel_defaultURI, size=(343, 25))
         self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(280, 30))
@@ -328,7 +329,6 @@ class WAILGUIFrame_Basic(wx.Panel):
           self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg, pos=(105, 85), size=(150,20)) # Not updating UI on Windows
         else:
           self.mementoStatus = wx.StaticText(self, -1, label=msg_fetchingMementos, pos=(105, 85), size=(150,20))
-          print 'not setting count'
           #italicFont = self.mementoStatus.GetFont().SetStyle(wx.ITALIC)
           #self.mementoStatus.SetFont(italicFont)
           
