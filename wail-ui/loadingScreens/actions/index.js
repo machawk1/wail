@@ -28,7 +28,7 @@ const whichOS = os => {
       return 'MacOS'
     case 'linux':
       return 'Linux'
-    case 'win':
+    case 'win32':
       return 'Windows'
   }
 }

@@ -1,7 +1,7 @@
 {
   "name": "WAIL",
   "license": "LGPL-3.0",
-  "version": "1.2.0-beta3",
+  "version": "1.2.0-beta3.5",
   "contributors": [
     {
       "name": "John Berlin",
@@ -34,6 +34,7 @@
     "dev-ui": "NODE_ENV=development node --harmony ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-win": "cross-env HOT=1 NODE_ENV=development node_modules\\.bin\\webpack-dev-server.cmd --config ./webpackConfigs/ui/webpack.config.js --port 9000 --content-base ./wail-ui/ --hot --inline",
     "dev-ui-electron": "HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
+    "dev-ui-electron-win": "cross-env HOT=1 NODE_ENV=development electron -r babel-register ./wail-ui/ui-main.js",
     "dev-only": "HOT=1 NODE_ENV=development node ./node_modules/.bin/webpack-dev-server --config ./webpackConfigs/deving/webpack.config.js --port 9002 --content-base ./wail-archiver/ --hot --inline",
     "run-tests": "node --harmony --harmony_async_await ./node_modules/.bin/ava -s --verbose",
     "test-aman": "node --harmony --harmony_async_await ./node_modules/.bin/ava --verbose tests/testServiceMan/testServiceManager.js",

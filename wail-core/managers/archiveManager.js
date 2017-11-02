@@ -731,7 +731,7 @@ export default class ArchiveManager extends EventEmitter {
     }
     if (createdFailed) {
       try {
-        await CollectionsUtils.manualCreateCol(defaultCol.colpath)
+        await CollectionsUtils.manualCreateCol(defaultCol[0].colpath)
       } catch (error) {
         error.m = error.errorReport('Recreating the default collection uing PyWb and manual creation failed')
         throw error

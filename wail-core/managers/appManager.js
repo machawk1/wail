@@ -67,7 +67,7 @@ export default class AppManager2 {
       settingsPath = Path.join(this.base, 'wail-config')
       logPath = Path.join(this.base, 'wail-config', 'waillogs')// path.join(control.base, 'waillogs')
       dbPath = Path.join(this.base, 'wail-config')
-      v = '1.1.0beta'
+      v = '1.2.0-beta3.5'
     } else {
       logPath = Path.join(settingsPath, 'waillogs')// path.join(app.getPath('userData'), 'waillogs')
     }

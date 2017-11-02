@@ -52,7 +52,9 @@ const ServiceCheckMessage = enhance(({serviceRec}) => (
   <CheckStepContent>
     <Flexbox
       flexDirection='row'
-      flexWrap='wrap' row alignItems='center' justifyContent='space-between'>
+      flexWrap='wrap'
+      alignItems='center'
+      justifyContent='space-between'>
       <HeritrixStartM serviceRec={serviceRec} />
       <WaybackStartM serviceRec={serviceRec} />
     </Flexbox>

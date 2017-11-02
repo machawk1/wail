@@ -1,4 +1,3 @@
-import 'babel-polyfill'
 import { app, Menu, dialog } from 'electron'
 import Path from 'path'
 import menuTemplate from './menu/mainMenu'
@@ -21,7 +20,6 @@ app.commandLine.appendSwitch('disable-renderer-backgrounding')
 app.commandLine.appendSwitch('disable-background-timer-throttling')
 app.commandLine.appendSwitch('disable-http-cache')
 app.commandLine.appendSwitch('mute-audio')
-app.commandLine.appendSwitch('remote-debugging-port', '9222')
 
 let flashDir
 if (process.env.NODE_ENV === 'production') {
@@ -35,7 +33,7 @@ switch (process.platform) {
     // console.log('Flash path', Path.join(flashDir, 'flashPlugin', 'pepflashplayer.dll'))
     app.commandLine.appendSwitch(
       'ppapi-flash-path',
-      Path.join(flashDir, 'flashPlugin', 'libpepflashplayer.so')
+      Path.join(flashDir, 'flashPlugin', 'pepflashplayer.dll')
     )
     break
   case 'darwin':
