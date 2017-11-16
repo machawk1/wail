@@ -2216,6 +2216,8 @@ if __name__ == "__main__":
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
+    with open("/Users/machawk1/Downloads/wail.log", "w") as f:
+        f.write(str(sys.argv))
 
     # Start indexer
     #Wayback().index()
