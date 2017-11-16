@@ -209,6 +209,22 @@ elif sys.platform.startswith('win32'):
 # Tab Controller (Notebook)
 ###############################
 
+class FileDropper(wx.FileDropTarget):
+    def __init__(self, obj):
+        wx.FileDropTarget.__init__(self)
+        self.obj = obj
+
+    def OnDropFiles(self, xMouseCoord, yMouseCoord, filepaths):
+        print('These files should be added to WAIL:')
+        for filepath in filepaths:
+            print('> ' + filepath)
+
+        dial = wx.MessageDialog(None, 'What would you like WAIL to do?', 'Question',
+            wx.YES_NO | wx.NO_DEFAULT | wx.ICON_QUESTION)
+        dial.ShowModal()
+        return True
+
+
 
 class TabController(wx.Frame):
     def __init__(self):
@@ -233,6 +249,9 @@ class TabController(wx.Frame):
         self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS, Wayback().index)
         self.indexingTimer.daemon = True
         self.indexingTimer.start()
+
+        dt3 = FileDropper(self)
+        self.SetDropTarget(dt3)
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
