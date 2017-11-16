@@ -15,7 +15,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>WAIL</string>
 	<key>CFBundleIconFile</key>
-	<string>whale_1024.icns</string>
+	<string>wail_blue.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleDocumentTypes</key>
