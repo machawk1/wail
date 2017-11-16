@@ -134,6 +134,28 @@ ui_justButtons_Position_2 = (0, 27)
 
 menuTitle_about = "&About WAIL"
 menuTitle_help = "&Help"
+menuTitle_file = "&File"
+menuTitle_edit = "&Edit"
+menuTitle_archive = "&Archive"
+menuTitle_services = "&Services"
+menuTitle_window = "&Window"
+
+menuTitle_file_open = "&Open"
+
+menuTitle_archive_capture = "Capture"
+menuTitle_archive_singleURL = "> A URL"
+menuTitle_archive_multipleURLs = "> Multiple URLs"
+menuTitle_archive_view = "View"
+menuTitle_archive_view_inBrowser = "> in web browser"
+menuTitle_archive_view_inFileSystem = "> on file system"
+
+menuTitle_services_restartAllServices = "Restart all services"
+menuTitle_services_FixWayback = "Fix Wayback Service"
+menuTitle_services_FixHeritrix = "Fix Heritrix Service"
+
+menuTitle_window_startBasicCrawl = "Start basic crawl"
+menuTitle_window_advanced_showServiceStatus = "Show service statuses"
+
 menu_destroyJob = "Destroy Job (Does not delete archive)"
 menu_forceCrawlFinish = "Force crawl to finish"
 menu_viewJobInWebBrowser = "View job in web browser"
@@ -180,12 +202,14 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
 
     memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
     archivesJSON = wailPath + "/config/archives.json"
-    
+
     # Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart, 0744)
     os.chmod(tomcatPathStop, 0744)
     os.chmod(tomcatPath + "/bin/catalina.sh", 0744)
     # TODO, variable encode paths, ^ needed for startup.sh to execute
+
+    menuTitle_archive_view_inFileSystem = "> in Finder"
 
     # Change all permissions within the app bundle (a big hammer)
     for r, d, f in os.walk(wailPath):
@@ -205,6 +229,8 @@ elif sys.platform.startswith('win32'):
     warcsFolder = wailPathPath + "archives"
     tomcatPathStart = "C:/WAIL/support/catalina_start.bat"
     tomcatPathStop = "C:/WAIL/support/catalina_stop.bat"
+
+    menuTitle_archive_view_inFileSystem = "> in Windows Explorer"
 ###############################
 # Tab Controller (Notebook)
 ###############################
@@ -255,14 +281,59 @@ class TabController(wx.Frame):
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
+        self.file_menu = wx.Menu()
+        self.edit_menu = wx.Menu()
+        self.archive_menu = wx.Menu()
+        self.services_menu = wx.Menu()
+        self.window_menu = wx.Menu()
+
+        self.file_menu.Append(wx.ID_OPEN, menuTitle_file_open)
+
+        capture = self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_capture)
+        capture.Enable(False)
+
+        self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_singleURL)
+        self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_multipleURLs)
+        self.archive_menu.AppendSeparator()
+        view = self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_view)
+        view.Enable(False)
+
+        self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_view_inBrowser)
+        self.archive_menu.Append(wx.ID_ANY, menuTitle_archive_view_inFileSystem)
+
+        menu_services_restartServices = self.services_menu.Append(wx.ID_ANY, menuTitle_services_restartAllServices)
+        menu_services_fixWayback = self.services_menu.Append(wx.ID_ANY, menuTitle_services_FixWayback)
+        menu_services_fixHeritrix = self.services_menu.Append(wx.ID_ANY, menuTitle_services_FixHeritrix)
+
+        # Bind Services menu
+        self.Bind(wx.EVT_MENU, Wayback().fix, menu_services_fixWayback)
+        self.Bind(wx.EVT_MENU, Heritrix().fix, menu_services_fixHeritrix)
+        self.Bind(wx.EVT_MENU, self.restartAllServices, menu_services_restartServices)
 
         self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT,   "&QUIT")
+
+        self.window_menu.Append(wx.ID_ANY, menuTitle_window_startBasicCrawl)
+        self.window_menu.Append(wx.ID_ANY, menuTitle_window_advanced_showServiceStatus)
+
+        self.menu_bar.Append(self.file_menu, menuTitle_file)
+        self.menu_bar.Append(self.edit_menu, menuTitle_edit)
+        self.menu_bar.Append(self.archive_menu, menuTitle_archive)
+        self.menu_bar.Append(self.services_menu, menuTitle_services)
+        self.menu_bar.Append(self.window_menu, menuTitle_window)
+
         self.menu_bar.Append(self.help_menu, menuTitle_help)
+
+
+
 
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
         self.SetMenuBar(self.menu_bar)
+
+    def restartAllServices(self, buttonId):
+        Wayback().fix(None)
+        Heritrix().fix(None)
 
     def displayAboutMenu(self, button):
         info = wx.AboutDialogInfo()
