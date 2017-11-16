@@ -154,6 +154,7 @@ menuTitle_services_FixWayback = "Fix Wayback Service"
 menuTitle_services_FixHeritrix = "Fix Heritrix Service"
 
 menuTitle_window_startBasicCrawl = "Start basic crawl"
+menuTitle_window_advanced = "Advanced"
 menuTitle_window_advanced_showServiceStatus = "Show service statuses"
 
 menu_destroyJob = "Destroy Job (Does not delete archive)"
@@ -313,8 +314,13 @@ class TabController(wx.Frame):
         self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT,   "&QUIT")
 
-        self.window_menu.Append(wx.ID_ANY, menuTitle_window_startBasicCrawl)
-        self.window_menu.Append(wx.ID_ANY, menuTitle_window_advanced_showServiceStatus)
+        basic = self.window_menu.AppendCheckItem(wx.ID_ANY, menuTitle_window_startBasicCrawl)
+        self.archive_menu.AppendSeparator()
+        advanced = self.window_menu.Append(wx.ID_ANY, menuTitle_window_advanced)
+        advanced.Enable(False)
+        advanced_showServices = self.window_menu.AppendCheckItem(wx.ID_ANY, menuTitle_window_advanced_showServiceStatus)
+        basic.Check() # Check menu item as default active view
+        advanced_showServices.Check(False)
 
         self.menu_bar.Append(self.file_menu, menuTitle_file)
         self.menu_bar.Append(self.edit_menu, menuTitle_edit)
