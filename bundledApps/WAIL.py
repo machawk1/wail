@@ -17,8 +17,18 @@ import schedule
 import time
 import sys
 import datetime
-import urllib
-import urllib2
+
+try: # Py3
+  from urllib.request import urlopen
+  from urllib.request import urlparse
+  from urllib import request
+  from urllib.error import HTTPError
+except ImportError: # Py2
+  from urllib2 import urlopen
+  from urllib2 import Request as request
+  from urllib2 import HTTPError
+  from urlparse import urlparse
+
 import base64
 import glob
 import re
@@ -26,7 +36,7 @@ import ssl
 import shutil
 import errno
 import json
-from urlparse import urlparse
+
 
 # from wx import *
 import waybackConfigWriter
@@ -195,14 +205,14 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
     archivesJSON = wailPath + "/config/archives.json"
     
     # Fix tomcat control scripts' permissions
-    os.chmod(tomcatPathStart, 0744)
-    os.chmod(tomcatPathStop, 0744)
-    os.chmod(tomcatPath + "/bin/catalina.sh", 0744)
+    os.chmod(tomcatPathStart, 0o744)
+    os.chmod(tomcatPathStop, 0o744)
+    os.chmod(tomcatPath + "/bin/catalina.sh", 0o744)
     # TODO, variable encode paths, ^ needed for startup.sh to execute
 
     # Change all permissions within the app bundle (a big hammer)
     for r, d, f in os.walk(wailPath):
-        os.chmod(r, 0777)
+        os.chmod(r, 0o777)
 elif sys.platform.startswith('linux'):
     '''Linux Specific Code here'''
 elif sys.platform.startswith('win32'):
@@ -494,12 +504,12 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def checkIfURLIsInArchive(self, button):
         url = "http://localhost:8080/wayback/*/" + self.uri.GetValue()
-        req = urllib2.Request(url)
+        req = request(url)
         statusCode = None
         try:
-            resp = urllib2.urlopen(req)
+            resp = urlopen(req)
             statusCode = resp.getcode()
-        except urllib2.HTTPError, e:
+        except HTTPError as e:
             statusCode = e.code
         except: # When the server is unavailable, keep the default. This is necessary, as unavailability will still cause an exception
             ''''''
@@ -1074,7 +1084,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         mainAppWindow.SetSize((mainAppWindow.GetSize().x, 400))
 
     def setupOneOffCrawl(self, button):
-        if(self.uriListBox <> None): return #this function has already been done
+        if self.uriListBox is not None:
+            return # This function has already been done
         self.createListBox()
 
         #This should say, "Commence Crawl" but it currently only writes the config file
@@ -1117,10 +1128,10 @@ class Service():
     def accessible(self):
         try:
             print('Trying to access ' + self.__class__.__name__ + ' service at ' + self.uri)
-            handle = urllib2.urlopen(self.uri, None, 3)
+            handle = urlopen(self.uri, None, 3)
             print(self.__class__.__name__ + ' is a go! ')
             return True
-        except IOError, e:
+        except IOError as e:
             if hasattr(e, 'code'): # HTTPError
                 print('Pseudo-Success in accessing ' + self.uri)
                 return True
@@ -2083,7 +2094,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
     def updateWAIL(self, button):
         print('Downloading ' + self.updateJSONData['wail-core']['uri'])
-        wailcorefile = urllib2.urlopen(self.updateJSONData['wail-core']['uri'])
+        wailcorefile = urlopen(self.updateJSONData['wail-core']['uri'])
         output = open('/Applications/WAIL.app/support/temp.tar.gz','wb')
         output.write(wailcorefile.read())
         output.close()
@@ -2105,7 +2116,7 @@ class UpdateSoftwareWindow(wx.Frame):
         #TODO: flush Info.plist cache (cmd involving defaults within this py script)
     def fetchCurrentVersionsFile(self):
         self.srcURI = "http://matkelly.com/wail/update.json"
-        f = urllib2.urlopen(self.srcURI).read()
+        f = urlopen(self.srcURI).read()
         data = f
         self.updateJSONData = json.loads(data)
     
