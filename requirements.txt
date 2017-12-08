@@ -2,9 +2,6 @@ biplist
 dmgbuild
 ds-store
 mac-alias
-pyobjc-core
-pyobjc-framework-Cocoa
-pyobjc-framework-Quartz
 pystache
 requests
 schedule

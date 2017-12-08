@@ -14,4 +14,10 @@ WAIL.spec
 
 # Mac meta
 .DS_Store
+
 .idea
+bundledApps/tomcat/logs
+config/path-index.txt
+bundledApps/tomcat/work
+jobs/
+!bundledApps/memgator*
