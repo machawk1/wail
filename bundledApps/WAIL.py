@@ -6,6 +6,8 @@
 #   Heritrix, and Tomcat.
 #  Mat Kelly <wail@matkelly.com> 2013
 
+from __future__ import print_function
+
 import wx
 import subprocess
 import shlex
@@ -70,7 +72,7 @@ try:
       data)
     WAIL_VERSION =  m.groups()[0].strip()
 except:
-  print "User likely has the binary in the wrong location."
+  print('User likely has the binary in the wrong location.')
 
 osx_java7DMG = "http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg"
 
@@ -276,11 +278,11 @@ class TabController(wx.Frame):
         if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
             # Alert the user to move the file. Exit the program
             wx.MessageBox(msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)), msg_wrongLocation_title,)
-            print msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__))
+            print(msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)))
             #sys.exit()
 
     def quit(self, button):
-        print "Quitting!"
+        print('Quitting!')
         if mainAppWindow.indexingTimer:
           mainAppWindow.indexingTimer.cancel()
         #os._exit(0) #Quit without buffer cleanup
@@ -344,14 +346,14 @@ class WAILGUIFrame_Basic(wx.Panel):
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
-        print "memgator command:"
-        print memGatorPath + " -a " + archivesJSON + ' ' + self.uri.GetValue()
+        print('MemGator command:')
+        print(memGatorPath + ' -a ' + archivesJSON + ' ' + self.uri.GetValue())
         
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which results in 0 mementos, which MemGator throws exception
         
         # TODO: Once we are using the local web service, we can curl -I to get a 
         self.setMementoCount(out.count("memento")) # UI not updated on Windows
-        print 'Setting memgator count to {0}'.format(out.count("memento"))
+        print('Setting memgator count to {0}'.format(out.count('memento')))
         # TODO: cache the TM
     def uriChanged(self, event):
        self.setMementoCount(None)
@@ -370,7 +372,7 @@ class WAILGUIFrame_Basic(wx.Panel):
        
     
     def testCallback(self):
-        print "callback executed!"
+        print('callback executed!')
 
     def ensureEnvironmentVariablesAreSet(self):
         if 'darwin' not in sys.platform:
@@ -440,13 +442,12 @@ class WAILGUIFrame_Basic(wx.Panel):
           #if sys.platform.startswith('darwin'): #show a notification of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
         else:
-          print "Java SE 6 needs to be installed. WAIL should invoke the installer here."
+          print('Java SE 6 needs to be installed. WAIL should invoke the installer here.')
           self.setMessage('Archive Now failed due to Java JRE Requirements');
           
         wx.CallAfter(self.onLongRunDone)
 
     def onLongRunDone(self):
-        print "DONE!"
         self.archiveNowButton.SetLabel(buttonLabel_archiveNow)
         self.archiveNowButton.Enable()
 
@@ -474,27 +475,19 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def launchHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
-        print "Launching heririx job"
+        print('Launching Heririx job')
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/' + self.hJob.jobNumber,
             auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),
             data=data,headers=headers,verify=False,stream=True)
 
-        print r
-        print r.headers
-        print r.text
-
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
-        print "Building heririx job"
+        print('Building Heririx job')
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
-
-        print r
-        print r.headers
-        print r.text
 
         #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
@@ -510,8 +503,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             statusCode = e.code
         except: # When the server is unavailable, keep the default. This is necessary, as unavailability will still cause an exception
             ''''''
-        #print statusCode
-        print statusCode
+
         if statusCode is None:
             launchWaybackDialog = wx.MessageDialog(None, msg_waybackNotStarted_body, msg_waybackNotStarted_title, wx.YES_NO|wx.YES_DEFAULT)
             launchWayback = launchWaybackDialog.ShowModal()
@@ -673,7 +665,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.setHeritrixStatus(transitionalStatus)
                 return
               else:
-                print "Invalid transitional service id specified. Updating status per usual."
+                print('Invalid transitional service id specified. Updating status per usual.')
             
 
             if not hasattr(self,'stateLabel'):
@@ -691,7 +683,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 #bmapBtn.SetBackgroundColour('RED')
 
             if not hasattr(self,'fix_heritrix'):
-                print "First call, UI has not been setup"
+                print('First call, UI has not been setup')
                 return #initial setup call will return here, ui elements haven't been created
 
              #enable/disable FIX buttons based on service status
@@ -783,7 +775,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.statusMsg.Show()
 
             active = self.listbox.GetString(self.listbox.GetSelection())
-            print tail(heritrixJobPath + active + "/job.log")
+            print(tail(heritrixJobPath + active + '/job.log'))
             jobLaunches = Heritrix().getJobLaunches(active)
             if self.panelUpdater: # Kill any currently running timer
                self.panelUpdater.cancel()
@@ -854,7 +846,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def deleteHeritrixJob(self, evt):
             jobPath = heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
-            print "Deleting Job at "+jobPath
+            print('Deleting Job at ' + jobPath)
             shutil.rmtree(jobPath)
             self.populateListboxWithJobs()
 
@@ -875,12 +867,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
-            print "Restarting job"
+            print('Restarting job')
 
         def setupNewCrawl(self, evt):
             # TODO: check if the UI elements already exist before adding them
             if hasattr(self, 'newCrawlTextCtrlLabel'):
-                print "The UI has already been setup."
+                print('The UI has already been setup.')
                 return
             
             self.statusMsg.Hide()
@@ -911,9 +903,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                   event.Skip()
 
         def validateCrawlDepth(self, event):
-            print len(self.newCrawlDepthTextCtrl.GetValue())
             if len(self.newCrawlDepthTextCtrl.GetValue()) == 0:
-              self.newCrawlDepthTextCtrl.SetValue("1")
+              self.newCrawlDepthTextCtrl.SetValue('1')
             event.Skip()
         def hideNewCrawlUIElements(self):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
@@ -1125,20 +1116,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
 class Service():
     def accessible(self):
         try:
-            print "Trying to access " + self.__class__.__name__ + " service at " + self.uri
+            print('Trying to access ' + self.__class__.__name__ + ' service at ' + self.uri)
             handle = urllib2.urlopen(self.uri, None, 3)
-            print self.__class__.__name__ + " is a go! "
+            print(self.__class__.__name__ + ' is a go! ')
             return True
         except IOError, e:
             if hasattr(e, 'code'): # HTTPError
-                print "Pseudo-Success in accessing " + self.uri
+                print('Pseudo-Success in accessing ' + self.uri)
                 return True
            # if hasattr(e, 
 
-            print "Failed to access " + self.__class__.__name__  +" service at " + self.uri
+            print('Failed to access ' + self.__class__.__name__  + ' service at ' + self.uri)
             return False
         except:
-            print "Some other error occurred in trying to check service accessibility."
+            print('Some other error occurred in trying to check service accessibility.')
             return False
 
 class Wayback(Service):
@@ -1188,11 +1179,11 @@ class Wayback(Service):
             if file.endswith(".warc"):
               outputContents += file + "\t" + join(warcsPath,file) + "\n"
 
-        print "Writing path-index.txt file"
+        print('Writing path-index.txt file')
         pathIndexFile = open(dest, "w")
         pathIndexFile.write(outputContents)
         pathIndexFile.close()
-        print "Done writing path-index.txt file"
+        print('Done writing path-index.txt file')
     
     def generateCDX(self):
         #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
@@ -1224,7 +1215,7 @@ class Wayback(Service):
 
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
-        print "CDX files generated for each WARC, merging..."
+        print('CDX files generated for each WARC, merging...')
         unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt' # Is cdxt the right filename?
         if 'darwin' not in sys.platform:
             unsortedPath = unsortedPath.replace('/','\\')
@@ -1238,19 +1229,19 @@ class Wayback(Service):
                       elif not cdxHeaderIncluded: #Only include first CDX header
                         outfile.write(line)
                         cdxHeaderIncluded = True
-        print "Done merging CDX files, removing old source CDX files."
+        print('Done merging CDX files, removing old source CDX files.')
         filelist = glob.glob(allCDXesPath)
         for f in filelist:
             os.remove(f)
 
         # TODO: fix cdx sorting in Windows
         if 'darwin' in sys.platform:
-          print "Sorting CDX entries"
+          print('Sorting CDX entries')
           os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
-          print "Removing unsorted temp file"
+          print('Removing unsorted temp file')
           os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
         
-          print "Done creating sorted CDX file!"
+          print('Done creating sorted CDX file!')
         
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
@@ -1286,8 +1277,8 @@ class Heritrix(Service):
         ret = ""
         for launch in launches:
             #print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
-            print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
-            progressLogFilePath = heritrixJobPath + jobId + "/" + launch + "/logs/progress-statistics.log"
+            print(heritrixJobPath + jobId + '/' + launch + '/logs/progress-statistics.log')
+            progressLogFilePath = heritrixJobPath + jobId + '/' + launch + "/logs/progress-statistics.log"
             if 'darwin' not in sys.platform:
                 progressLogFilePath = progressLogFilePath.replace('/','\\')
 
@@ -1318,7 +1309,7 @@ class Heritrix(Service):
         mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix", "KILLING")
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
-        print "Trying to kill Heritrix..."
+        print('Trying to kill Heritrix...')
         ret = subprocess.Popen(cmd,stderr=subprocess.STDOUT,shell=True)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
@@ -1340,14 +1331,14 @@ class HeritrixJob:
 
     def launchHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
-        print "Launching heririx job"
+        print('Launching Heritrix job')
         data = {"action":"launch"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
-        print "Building heririx job"
+        print('Building Heritrix job')
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
@@ -2091,25 +2082,25 @@ class UpdateSoftwareWindow(wx.Frame):
     latestVersion_wayback = ""
 
     def updateWAIL(self, button):
-        print "Downloading " + self.updateJSONData['wail-core']['uri']
+        print('Downloading ' + self.updateJSONData['wail-core']['uri'])
         wailcorefile = urllib2.urlopen(self.updateJSONData['wail-core']['uri'])
         output = open('/Applications/WAIL.app/support/temp.tar.gz','wb')
         output.write(wailcorefile.read())
         output.close()
-        print "Done downloading WAIL update, backing up."
+        print('Done downloading WAIL update, backing up.')
         
         try:
           copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
-          print "Done backing up. Nuking obsolete version."
+          print('Done backing up. Nuking obsolete version.')
         except:
-          print "Back up previously done, continuing."
+          print('Back up previously done, continuing.')
         shutil.rmtree("/Applications/WAIL.app/Contents/")
-        print "Done nuking, decompressing update."
+        print('Done nuking, decompressing update.')
         
         tar = tarfile.open("/Applications/WAIL.app/support/temp.tar.gz")
         tar.extractall('/Applications/WAIL.app/')
         tar.close()
-        print "Done, restart now."
+        print('Done, restart now.')
         os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
         #TODO: flush Info.plist cache (cmd involving defaults within this py script)
     def fetchCurrentVersionsFile(self):
@@ -2288,8 +2279,6 @@ if __name__ == "__main__":
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()
     mainAppWindow.Show()
-    with open("/Users/machawk1/Downloads/wail.log", "w") as f:
-        f.write(str(sys.argv))
 
     # Start indexer
     #Wayback().index()
