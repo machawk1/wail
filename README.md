@@ -27,7 +27,7 @@ You may need to install other dependencies on your system to compile from source
 Python is not required to be installed for end-users, just double-click (see above) and go!
 
 <h2>Compiling</h2>
-To compile WAIL to a system-dependent executable, `cd` into the root of the WAIL source directory then:
+To compile WAIL to a system-dependent executable, open a terminal or console session and move into the root of the WAIL source directory then:
 <h3>macOS</h3>
 <blockquote>sh bundledApps/MAKEFILE.sh</blockquote>
 This will create /Applications/WAIL.app on macOS.
