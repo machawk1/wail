@@ -1,6 +1,7 @@
 <h3 align="center">
  <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
 <p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
+<hr style="height: 1px; border: none;" />
 
 Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web pages.
 
