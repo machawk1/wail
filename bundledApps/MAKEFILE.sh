@@ -5,6 +5,22 @@
 
 DIRECTORY="/Applications/WAIL.app/"
 
+# Check if WAIL processes are running and offer to kill them
+wailProcessesRunning=$(ps -A | grep '[/]WAIL.app/' | wc -l)
+if (($wailProcessesRunning > 0)); then
+  while true; do
+    read -p "Kill currently running WAIL processes (y/n)?" yn
+    case $yn in
+        [Yy]* ) 
+            pkill -f '[/]WAIL.app/'
+            break;;
+        [Nn]* )
+            break;;
+        * ) echo "Please answer y or n.";;
+    esac
+  done
+fi
+
 # Check if WAIL.app exists. Ask the user whether to nuke old binary. Exit if 'no'
 if [ -d "$DIRECTORY" ]; then
   echo $DIRECTORY" already exists!"
@@ -40,7 +56,7 @@ installRequirements ()
 
 createBinary ()
 {
-  pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/whale_1024.icns"
+  pyinstaller ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
