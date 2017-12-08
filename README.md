@@ -28,12 +28,12 @@ Python is not required to be installed for end-users, just double-click (see abo
 <h2>Compiling</h2>
 To compile WAIL to a system-dependent executable, `cd` into the root of the WAIL source directory then:
 <h3>macOS</h3>
-<blockquote>sh bundledApps\MAKEFILE.sh</blockquote>
+<blockquote>sh bundledApps/MAKEFILE.sh</blockquote>
 This will create /Applications/WAIL.app on macOS.
 
 <h3>Windows</h3>
 From the Windows shell:
-<blockquote>"./bundledApps/MAKEFILE.bat"</blockquote>
+<blockquote>bundledApps\MAKEFILE.bat</blockquote>
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
 <h2>Problems? Questions?</h2>
