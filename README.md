@@ -6,7 +6,7 @@ Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop 
 
 Tools included and accessible through the GUI are <a href="https://github.com/internetarchive/heritrix3">Heritrix 3.2.0</a> and <a href="https://github.com/iipc/openwayback">OpenWayback 2.3.0</a>. Support packages include Apache Tomcat, <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>, and <a href="https://github.com/oduwsdl/memgator">MemGator</a>.
 
-WAIL is written in Python and compiled to a native executable using `pyInstaller`.
+WAIL is written in Python and compiled to a native executable using `PyInstaller`.
 
 <h2>Installing WAIL</h2>
 
