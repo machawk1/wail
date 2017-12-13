@@ -14,6 +14,9 @@ WAIL is written in Python and compiled to a native executable using <a href="htt
 See the <a href="http://machawk1.github.io/wail/#download">download section on the WAIL homepage</a> to download the application, install it, and for basic usage.
 
 <h2>Running WAIL</h2>
+
+<img src="https://github.com/machawk1/wail/blob/osagnostic/images/screenshot_mac_20171212.png">
+
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
 End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows (7+).
