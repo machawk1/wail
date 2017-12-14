@@ -341,7 +341,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         memCountMsg = ''
         if count:
-            memCountMsg = str(count) + " mementos available"
+            memCountMsg = str(count) + ' mementos available'
         else:
             memCountMsg = msg_fetchingMementos
 
@@ -353,11 +353,13 @@ class WAILGUIFrame_Basic(wx.Panel):
           #italicFont = self.mementoStatus.GetFont().SetStyle(wx.ITALIC)
           #self.mementoStatus.SetFont(italicFont)
           
-        self.mementoStatusPublicArchives = wx.StaticText(self, -1, label="Public archives: ", pos=(5, 85), size=(100,20))
+        self.mementoStatusPublicArchives = \
+            wx.StaticText(self, -1,label="Public archives: ",
+                          pos=(5, 85), size=(100,20))
     
     
     def setMessage(self, msg):
-        if hasattr(self,'status'):
+        if hasattr(self, 'status'):
           self.status.Destroy()
         self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300,20))
     
@@ -374,21 +376,21 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.setMementoCount(mCount) # UI not updated on Windows
         print('MEMGATOR  counted {0} {1}'.format(currentURIValue, mCount))
         # TODO: cache the TM
+
     def uriChanged(self, event):
-       self.setMementoCount(None)
+        self.setMementoCount(None)
        
-       if self.memgatorDelayTimer: # Kill any currently running timer
-           self.memgatorDelayTimer.cancel()
-           self.memgatorDelayTimer = None
+        if self.memgatorDelayTimer: # Kill any currently running timer
+            self.memgatorDelayTimer.cancel()
+            self.memgatorDelayTimer = None
        
-       self.memgatorDelayTimer = threading.Timer(1.0, thread.start_new_thread, [self.fetchMementos, ()])
-       self.memgatorDelayTimer.daemon = True
-       self.memgatorDelayTimer.start()
+        self.memgatorDelayTimer = threading.Timer(1.0, thread.start_new_thread, [self.fetchMementos, ()])
+        self.memgatorDelayTimer.daemon = True
+        self.memgatorDelayTimer.start()
             
-       # TODO: start timer on below, kill if another key is hit
-       #thread.start_new_thread(self.fetchMementos,())
-       event.Skip()
-       
+        # TODO: start timer on below, kill if another key is hit
+        #thread.start_new_thread(self.fetchMementos,())
+        event.Skip()
     
     def testCallback(self):
         print('callback executed!')
@@ -444,9 +446,6 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.setMessage('Starting Archiving Process...')
         self.archiveNowButton.Disable()
         thread.start_new_thread(self.archiveNow2Async,())
-
-        # ntfy test
-        notify('DUKES', 'RADON')
 
     def archiveNow2Async(self):
         self.setMessage('Writing Crawl Configuration...')
