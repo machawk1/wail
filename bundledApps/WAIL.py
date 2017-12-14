@@ -99,7 +99,7 @@ msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
 msg_uriInArchives_body = ("This URL is currently in the archives!"
                           " Hit the \"View Archive\" Button")
-msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch.\n\nCurrent Location: "
+msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch. \n* Current Location: "
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
@@ -355,15 +355,16 @@ class WAILGUIFrame_Basic(wx.Panel):
     
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
-        out = check_output([memGatorPath, "-a", archivesJSON, self.uri.GetValue()])
-        print('MemGator command:')
-        print(memGatorPath + ' -a ' + archivesJSON + ' ' + self.uri.GetValue())
+        currentURIValue = self.uri.GetValue()
+        out = check_output([memGatorPath, "-a", archivesJSON, currentURIValue])
+        print('MEMGATOR checking {0}'.format(currentURIValue))
         
-        # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which results in 0 mementos, which MemGator throws exception
-        
-        # TODO: Once we are using the local web service, we can curl -I to get a 
-        self.setMementoCount(out.count("memento")) # UI not updated on Windows
-        print('Setting memgator count to {0}'.format(out.count('memento')))
+        # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
+        # results in 0 mementos, for which MemGator throws exception
+
+        mCount = out.count("memento")
+        self.setMementoCount(mCount) # UI not updated on Windows
+        print('MEMGATOR  counted {0} {1}'.format(currentURIValue, mCount))
         # TODO: cache the TM
     def uriChanged(self, event):
        self.setMementoCount(None)
@@ -1125,9 +1126,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
 
 class Service():
+    uri = None  # TODO: update to use @abstractmethod + @property
+
     def accessible(self):
+        chkMsg = 'Checking access to {0} at {1}: '.format(
+            self.__class__.__name__, self.uri)
+        print(chkMsg)#, end='')
+
         try:
-            print('Trying to access ' + self.__class__.__name__ + ' service at ' + self.uri)
             handle = urlopen(self.uri, None, 3)
             print(self.__class__.__name__ + ' is a go! ')
             return True
@@ -1137,7 +1143,9 @@ class Service():
                 return True
            # if hasattr(e, 
 
-            print('Failed to access ' + self.__class__.__name__  + ' service at ' + self.uri)
+            print('Failed to access {0} service at {1}'.format(
+                self.__class__.__name__, self.uri
+            ))
             return False
         except:
             print('Some other error occurred in trying to check service accessibility.')
@@ -1190,13 +1198,14 @@ class Wayback(Service):
             if file.endswith(".warc"):
               outputContents += file + "\t" + join(warcsPath,file) + "\n"
 
-        print('Writing path-index.txt file')
+        print('Writing path-index.txt file...', end='')
         pathIndexFile = open(dest, "w")
         pathIndexFile.write(outputContents)
         pathIndexFile.close()
-        print('Done writing path-index.txt file')
+        print('COMPLETE')
     
     def generateCDX(self):
+        print('CDX: ', end='')
         #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
         wailRoot = '/Applications/WAIL.app'
         if 'darwin' not in sys.platform:
@@ -1213,6 +1222,7 @@ class Wayback(Service):
             cdxIndexerPath = cdxIndexerPath.replace('/','\\')
         
         outputContents = ""
+        print('generating ', end='')
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
               cdxFilePath = cdxFilePathPre + file.replace('.warc','.cdx')
@@ -1220,13 +1230,14 @@ class Wayback(Service):
               stdout, stderr = process.communicate()
         
         # Combine CDX files
+        print('combining ', end='')
         allCDXesPath = wailRoot + "/archiveIndexes/*.cdx"
         if 'darwin' not in sys.platform:
             allCDXesPath = allCDXesPath.replace('/','\\')
 
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
-        print('CDX files generated for each WARC, merging...')
+        print('merging ', end='')
         unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt' # Is cdxt the right filename?
         if 'darwin' not in sys.platform:
             unsortedPath = unsortedPath.replace('/','\\')
@@ -1240,19 +1251,17 @@ class Wayback(Service):
                       elif not cdxHeaderIncluded: #Only include first CDX header
                         outfile.write(line)
                         cdxHeaderIncluded = True
-        print('Done merging CDX files, removing old source CDX files.')
+        print('cleaning ', end='')
         filelist = glob.glob(allCDXesPath)
         for f in filelist:
             os.remove(f)
 
         # TODO: fix cdx sorting in Windows
         if 'darwin' in sys.platform:
-          print('Sorting CDX entries')
+          print('sorting ', end='')
           os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
-          print('Removing unsorted temp file')
           os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
-        
-          print('Done creating sorted CDX file!')
+          print('DONE!')
         
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
