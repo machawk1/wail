@@ -17,7 +17,7 @@ import schedule
 import time
 import sys
 import datetime
-from ntfy.backends.default import notify
+#from ntfy.backends.default import notify
 
 try: # Py3
   from urllib.request import urlopen
@@ -2190,16 +2190,16 @@ class UpdateSoftwareWindow(wx.Frame):
         panelPosition = ()
         panelLogoPath = ''
         def __init__(self, parent, panelI, indexInPanel=0, panelTitle=''):
-           self.panelPosition = (5, 10*85*panelI)
-           self.panelTitle = panelTitle
-           self.parent = parent
-           ''' '''
+            self.panelPosition = (5, 10*85*panelI)
+            self.panelTitle = panelTitle
+            self.parent = parent
+
         def draw(self):
-           #TODO: draw icon
-           
-           
-           self.panel = wx.StaticBox(self.parent, -1, self.panelTitle, size=self.panelSize, pos=self.panelPosition)
-           box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
+            #TODO: draw icon
+            pass
+
+            self.panel = wx.StaticBox(self.parent, -1, self.panelTitle, size=self.panelSize, pos=self.panelPosition)
+            box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
         
     def __init__(self,parent,id):
         self.fetchCurrentVersionsFile()
@@ -2207,7 +2207,7 @@ class UpdateSoftwareWindow(wx.Frame):
         
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
-        #self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
+        # self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
         
         updateFrameIcons_pos_left = 15
         updateFrameIcons_pos_top = (25, 110, 195)
@@ -2245,29 +2245,63 @@ class UpdateSoftwareWindow(wx.Frame):
         box3 = wx.StaticBoxSizer(self.panel_replay, wx.VERTICAL)
         
         # Panel 1
-        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos1[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos1[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Current Version:",
+                      updateFrameText_version_title_pos1[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:",
+                      updateFrameText_version_title_pos1[1],
+                      updateFrameText_version_size)
 
-        wx.StaticText(self, 100, self.currentVersion_wail, updateFrameText_version_value_pos1[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, self.latestVersion_wail, updateFrameText_version_value_pos1[1], updateFrameText_version_size)
+        wx.StaticText(self, 100,
+                      self.currentVersion_wail,
+                      updateFrameText_version_value_pos1[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_wail,
+                      updateFrameText_version_value_pos1[1],
+                      updateFrameText_version_size)
 
         # Panel 2
-        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos2[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos2[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Current Version:",
+                      updateFrameText_version_title_pos2[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:",
+                      updateFrameText_version_title_pos2[1],
+                      updateFrameText_version_size)
 
-        wx.StaticText(self, 100, self.currentVersion_heritrix, updateFrameText_version_value_pos2[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, self.latestVersion_heritrix, updateFrameText_version_value_pos2[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.currentVersion_heritrix,
+                      updateFrameText_version_value_pos2[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_heritrix,
+                      updateFrameText_version_value_pos2[1],
+                      updateFrameText_version_size)
 
         # Panel 3
-        wx.StaticText(self, 100, "Current Version:", updateFrameText_version_title_pos3[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, "Latest Version:", updateFrameText_version_title_pos3[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, "Current Version:",
+                      updateFrameText_version_title_pos3[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, "Latest Version:",
+                      updateFrameText_version_title_pos3[1],
+                      updateFrameText_version_size)
 
-        wx.StaticText(self, 100, self.currentVersion_wayback, updateFrameText_version_value_pos3[0], updateFrameText_version_size)
-        wx.StaticText(self, 100, self.latestVersion_wayback, updateFrameText_version_value_pos3[1], updateFrameText_version_size)
+        wx.StaticText(self, 100, self.currentVersion_wayback,
+                      updateFrameText_version_value_pos3[0],
+                      updateFrameText_version_size)
+        wx.StaticText(self, 100, self.latestVersion_wayback,
+                      updateFrameText_version_value_pos3[1],
+                      updateFrameText_version_size)
 
-        self.updateButton_wail = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[0]), size=(75,20))
-        self.updateButton_heritrix = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[1]), size=(75,20))
-        self.updateButton_wayback = wx.Button(self, 3, "Update", pos=(305, updateFrameIcons_pos_top[2]), size=(75,20))
+        self.updateButton_wail = \
+            wx.Button(self, 3, "Update",
+                      pos=(305, updateFrameIcons_pos_top[0]),
+                      size=(75,20))
+        self.updateButton_heritrix = \
+            wx.Button(self, 3, "Update",
+                      pos=(305, updateFrameIcons_pos_top[1]),
+                      size=(75,20))
+        self.updateButton_wayback = \
+            wx.Button(self, 3, "Update",
+                      pos=(305, updateFrameIcons_pos_top[2]),
+                      size=(75,20))
 
         self.updateButton_wail.Bind(wx.EVT_BUTTON, self.updateWAIL)
 
@@ -2288,31 +2322,6 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.StaticBitmap(self, -1, openwayback_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[2]), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
-        return
-
-        self.panelLabel2 = wx.StaticBox(self, 1, "XX", size=(400,90))
-        dategraphSizer.Add(self.panelLabel2, 0, wx.ALL|wx.LEFT, 5)
-        
-        
-        #self.panelLabel2 = wx.StaticBox(self, -1, "OpenWayback", size=(400,90))
-        #self.dategraphSizer2 = wx.BoxSizer(wx.VERTICAL)
-        #self.dategraphSizer.Add(self.panelLabel2, 0, wx.ALL|wx.LEFT, 5)
-        
-        #wx.StaticText(self, 100, "Current Version:", (75,15), (100,100))
-        #wx.StaticText(self, 100, "Latest Version:", (75,35), (100,100))
-
-        #wx.StaticText(self, 100, "0.2015.10.11", (175,15), (100,100))
-        #wx.StaticText(self, 100, "0.2015.12.25", (175,35), (100,100))
-        
-        #img = wx.Image('./build/icons/whale_64.png', wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        #wx.StaticBitmap(self, -1, img, (5, 45), (img.GetWidth(), img.GetHeight()))
-        
-        #self.updateButton_wail = wx.Button(self, 3, "Update", pos=(310, 15), size=(75,20))
-
-        
-        
-        #self.Show(False)
-
 mainAppWindow = None
 
 if __name__ == "__main__":
@@ -2321,7 +2330,7 @@ if __name__ == "__main__":
     #  print "WAIL was launched with file parameters."
     #else:
     #  print "WAIL was launched without any file parameters."
-    requests.packages. urllib3.disable_warnings()
+    #requests.packages. urllib3.disable_warnings()
 
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
