@@ -1129,7 +1129,7 @@ class Service():
     uri = None  # TODO: update to use @abstractmethod + @property
 
     def accessible(self):
-        chkMsg = 'Checking access to {0} at {1}: '.format(
+        chkMsg = 'Checking access to {0} at {1}'.format(
             self.__class__.__name__, self.uri)
         print(chkMsg)#, end='')
 
