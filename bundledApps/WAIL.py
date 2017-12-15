@@ -388,7 +388,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             l = line.strip()
             if l[:1].isdigit():
                 mCount += 1
-                archHosts.add(l.split('/')[2])
+                archHosts.add(l.split('/', 3)[2])
 
         self.setMementoCount(mCount, len(archHosts)) # UI not updated on Windows
 
