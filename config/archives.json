@@ -15,14 +15,14 @@
     "id": "pastpages",
     "name": "PastPages Web Archive",
     "timemap": "http://www.pastpages.org/timemap/link/",
-    "timegate": "http://www.pastpages.org/timegate/" 
+    "timegate": "http://www.pastpages.org/timegate/",
     "ignore": true
   },
   {
     "id": "ba",
     "name": "Bibliotheca Alexandrina Web Archive",
     "timemap": "http://web.archive.bibalex.org/web/timemap/link/",
-    "timegate": "http://web.archive.bibalex.org/web/" 
+    "timegate": "http://web.archive.bibalex.org/web/",
     "ignore": true
   },
   {
