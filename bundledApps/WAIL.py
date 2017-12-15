@@ -384,12 +384,12 @@ class WAILGUIFrame_Basic(wx.Panel):
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
+        print('MEMGATOR checking {0}'.format(currentURIValue))
         out = check_output([memGatorPath, "-a", archivesJSON,
                             '--restimeout', '0m3s',
                             '--hdrtimeout', '3s',
                             '--contimeout', '3s',
                             currentURIValue])
-        print('MEMGATOR checking {0}'.format(currentURIValue))
         
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
