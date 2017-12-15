@@ -42,7 +42,6 @@ import json
 # from wx import *
 import waybackConfigWriter
 from subprocess import Popen, PIPE
-from subprocess import check_output
 
 # For a more asynchronous UI, esp with accessible()s
 from multiprocessing import Pool as Thread
@@ -334,19 +333,6 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
 
 
-    def getHosts(self, tm):
-        matches = re.findall(r'\<(.*)\>; rel=.*memento\"', tm)
-
-        hosts = {}
-        for match in matches:
-            host = urlparse(match).netloc
-            if host not in hosts:
-                hosts[host] = 1
-            else:
-                hosts[host] += 1
-        return hosts
-
-
     def setMementoCount(self, mCount, aCount=''):
         ui_mementoCountMessage_pos = (105, 85)
         ui_mementoCountMessage_size = (150, 20)
@@ -385,19 +371,26 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
         print('MEMGATOR checking {0}'.format(currentURIValue))
-        out = check_output([memGatorPath, "-a", archivesJSON,
+        mg = Popen([memGatorPath,
+                            '--arcs', archivesJSON,
+                            '--format', 'cdxj',
                             '--restimeout', '0m3s',
                             '--hdrtimeout', '3s',
                             '--contimeout', '3s',
-                            currentURIValue])
+                            currentURIValue], stdout=PIPE)
         
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
 
-        mCount = out.count("memento")
-        aCount = len(self.getHosts(out))
+        mCount = 0
+        archHosts = set()
+        for line in mg.stdout:
+            l = line.strip()
+            if l[:1].isdigit():
+                mCount += 1
+                archHosts.add(l.split('/')[2])
 
-        self.setMementoCount(mCount, aCount) # UI not updated on Windows
+        self.setMementoCount(mCount, len(archHosts)) # UI not updated on Windows
 
         print('MEMGATOR  counted {0} {1}'.format(currentURIValue, mCount))
         # TODO: cache the TM
