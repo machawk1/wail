@@ -332,8 +332,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         thread.start_new_thread(self.fetchMementos,())
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
 
-
-    def setMementoCount(self, mCount, aCount=''):
+    def setMementoCount(self, mCount, aCount=0):
         ui_mementoCountMessage_pos = (105, 85)
         ui_mementoCountMessage_size = (150, 20)
         if hasattr(self, 'mementoStatus'):
@@ -341,13 +340,15 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.mementoStatusPublicArchives.Destroy()
 
         memCountMsg = ''
-        if mCount:
+        if mCount > 0:
             plurality = 's'
             if aCount == 1:
                 plurality = ''
             memCountMsg = '{0} mementos available from {1} archive{2}'.format(
                 mCount, aCount, plurality
             )
+        elif mCount == 0:
+            memCountMsg = "No mementos available."
         else:
             memCountMsg = msg_fetchingMementos
 
@@ -356,7 +357,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                                              pos=ui_mementoCountMessage_pos,
                                              size=ui_mementoCountMessage_size)
 
-          
+
         self.mementoStatusPublicArchives = \
             wx.StaticText(self, -1,label="Public archives: ",
                           pos=(5, 85), size=(100,20))
@@ -392,7 +393,11 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.setMementoCount(mCount, len(archHosts)) # UI not updated on Windows
 
-        print('MEMGATOR  counted {0} {1}'.format(currentURIValue, mCount))
+        print('MEMGATOR  counted {0} {1} {2}'.format(
+            currentURIValue,
+            mCount,
+            len(archHosts)
+        ))
         # TODO: cache the TM
 
     def uriChanged(self, event):
