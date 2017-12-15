@@ -78,9 +78,9 @@ else:
 
 try:
   with open (infoPlistPath, "r") as myfile:
-    data=myfile.read()
-    m = re.search(r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>",
-      data)
+    data = myfile.read()
+    vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
+    m = re.search(vsXML, data)
     WAIL_VERSION =  m.groups()[0].strip()
 except:
   print('User likely has the binary in the wrong location.')
@@ -98,9 +98,10 @@ msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
-msg_uriInArchives_body = ("This URL is currently in the archives!"
+msg_uriInArchives_body = ("This URL is currently in your archive!"
                           " Hit the \"View Archive\" Button")
-msg_wrongLocation_body = "WAIL must reside in your Applications directory. Move it there then relaunch. \n* Current Location: "
+msg_wrongLocation_body = ("WAIL must reside in your Applications directory. "
+"Move it there then relaunch. \n* Current Location: ")
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
@@ -331,8 +332,22 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         thread.start_new_thread(self.fetchMementos,())
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
-    
-    def setMementoCount(self, count):
+
+
+    def getHosts(self, tm):
+        matches = re.findall(r'\<(.*)\>; rel=.*memento\"', tm)
+
+        hosts = {}
+        for match in matches:
+            host = urlparse(match).netloc
+            if host not in hosts:
+                hosts[host] = 1
+            else:
+                hosts[host] += 1
+        return hosts
+
+
+    def setMementoCount(self, mCount, aCount=''):
         ui_mementoCountMessage_pos = (105, 85)
         ui_mementoCountMessage_size = (150, 20)
         if hasattr(self, 'mementoStatus'):
@@ -340,8 +355,13 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.mementoStatusPublicArchives.Destroy()
 
         memCountMsg = ''
-        if count:
-            memCountMsg = str(count) + ' mementos available'
+        if mCount:
+            plurality = 's'
+            if aCount == 1:
+                plurality = ''
+            memCountMsg = '{0} mementos available from {1} archive{2}'.format(
+                mCount, aCount, plurality
+            )
         else:
             memCountMsg = msg_fetchingMementos
 
@@ -350,8 +370,6 @@ class WAILGUIFrame_Basic(wx.Panel):
                                              pos=ui_mementoCountMessage_pos,
                                              size=ui_mementoCountMessage_size)
 
-          #italicFont = self.mementoStatus.GetFont().SetStyle(wx.ITALIC)
-          #self.mementoStatus.SetFont(italicFont)
           
         self.mementoStatusPublicArchives = \
             wx.StaticText(self, -1,label="Public archives: ",
@@ -366,14 +384,21 @@ class WAILGUIFrame_Basic(wx.Panel):
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
-        out = check_output([memGatorPath, "-a", archivesJSON, currentURIValue])
+        out = check_output([memGatorPath, "-a", archivesJSON,
+                            '--restimeout', '0m3s',
+                            '--hdrtimeout', '3s',
+                            '--contimeout', '3s',
+                            currentURIValue])
         print('MEMGATOR checking {0}'.format(currentURIValue))
         
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
 
         mCount = out.count("memento")
-        self.setMementoCount(mCount) # UI not updated on Windows
+        aCount = len(self.getHosts(out))
+
+        self.setMementoCount(mCount, aCount) # UI not updated on Windows
+
         print('MEMGATOR  counted {0} {1}'.format(currentURIValue, mCount))
         # TODO: cache the TM
 
@@ -540,7 +565,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             wx.MessageBox(msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
             mb = wx.MessageBox(msg_uriInArchives_body,msg_uriInArchives_title)
-            mb.AddButton(wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(10,85), size=(25,15)))
+            b = wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(10,85),
+                          size=(25,15))
+            mb.AddButton(b)  # Will not work in wxPython >4
 
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
