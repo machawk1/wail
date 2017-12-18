@@ -1,4 +1,4 @@
-pyinstaller --onefile --windowed --version-file=build/version.txt --icon=build/icons/whale_1024.ico bundledApps/WAIL.py
+pyinstaller --onefile --windowed --version-file=build/version.txt --icon=build/icons/wail_blue.ico bundledApps/WAIL.py
 
 ::Windows shell (CMD.exe)
 move /Y ".\dist\WAIL.exe" ".\WAIL.exe"
