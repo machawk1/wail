@@ -1308,12 +1308,14 @@ class Wayback(Service):
         for f in filelist:
             os.remove(f)
 
-        # TODO: fix cdx sorting in Windows
-        if 'darwin' in sys.platform:
-          print('sorting ', end='')
-          os.system("export LC_ALL=C; sort -u /Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt > /Applications/WAIL.app/archiveIndexes/index.cdx")
-          os.remove("/Applications/WAIL.app/archiveIndexes/combined_unsorted.cdxt")
-          print('DONE!')
+        cdxTemp = wailRoot + "/archiveIndexes/combined_unsorted.cdxt"
+        cdxFinal = wailRoot + "/archiveIndexes/index.cdx"
+        # TODO: fix cdx sorting in Windows #281
+        # if 'darwin' in sys.platform:
+        print('sorting ', end='')
+        os.system("export LC_ALL=C; sort -u " + cdxTemp + " > " + cdxFinal)
+        os.remove(cdxTemp)
+        print('DONE!')
         
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
