@@ -2,6 +2,7 @@ biplist
 dmgbuild
 ds-store
 mac-alias
+pyinstaller
 pystache
 requests
 schedule
