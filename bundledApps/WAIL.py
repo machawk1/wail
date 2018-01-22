@@ -341,11 +341,14 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         memCountMsg = ''
         if mCount > 0:
-            plurality = 's'
+            mPlurality = 's'
+            aPlurality = 's'
+            if mCount == 1:
+                mPlurality = ''
             if aCount == 1:
-                plurality = ''
-            memCountMsg = '{0} mementos available from {1} archive{2}'.format(
-                mCount, aCount, plurality
+                aPlurality = ''
+            memCountMsg = '{0} memento{1} available from {2} archive{3}'.format(
+                mCount, mPlurality, aCount, aPlurality
             )
         elif mCount == 0:
             memCountMsg = "No mementos available."
