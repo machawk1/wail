@@ -40,6 +40,7 @@ import json
 
 
 # from wx import *
+import wx.adv
 import waybackConfigWriter
 from subprocess import Popen, PIPE
 
@@ -272,7 +273,7 @@ class TabController(wx.Frame):
         self.SetMenuBar(self.menu_bar)
 
     def displayAboutMenu(self, button):
-        info = wx.AboutDialogInfo()
+        info = wx.adv.AboutDialogInfo()
         info.Name = aboutWindow_appName
         info.Version = "v. " + WAIL_VERSION
         info.Copyright = aboutWindow_author
@@ -281,7 +282,7 @@ class TabController(wx.Frame):
         # info.Developers = ["Mat Kelly"]
         # info.License = "lic info"
         info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
-        wx.AboutBox(info)
+        wx.adv.AboutBox(info)
 
     def ensureCorrectInstallation(self):
         # TODO: properly implement this
