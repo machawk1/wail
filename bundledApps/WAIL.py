@@ -134,7 +134,7 @@ textLabel_defaultURI_title = "WAIL homepage"
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
-aboutWindow_iconPath = "/build/icons/whale.ico"
+aboutWindow_iconPath = "/build/icons/wail_blue.ico"
 aboutWindow_iconWidth = 128
 aboutWindow_iconHeight = 128
 
@@ -274,14 +274,13 @@ class TabController(wx.Frame):
 
     def displayAboutMenu(self, button):
         info = wx.adv.AboutDialogInfo()
-        info.Name = aboutWindow_appName
-        info.Version = "v. " + WAIL_VERSION
-        info.Copyright = aboutWindow_author
-        # info.Description = "foo"
-        info.WebSite = (textLabel_defaultURI, textLabel_defaultURI_title)
-        # info.Developers = ["Mat Kelly"]
-        # info.License = "lic info"
-        info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
+        info.SetName(aboutWindow_appName)
+        info.SetVersion("v. " + WAIL_VERSION)
+        info.SetCopyright(aboutWindow_author)
+        #info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
+        #info.SetDevelopers(["Mat Kelly"])
+        #info.SetLicense("MIT")
+        # info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
         wx.adv.AboutBox(info)
 
     def ensureCorrectInstallation(self):
@@ -2253,6 +2252,9 @@ class UpdateSoftwareWindow(wx.Frame):
         updateFrameText_version_value_pos3 = ((180, updateFrameText_version_pos_tops3[0]), (180, updateFrameText_version_pos_tops3[1]))
  
         updateFrameText_version_size = (100,100)
+
+        # TODO: Akin to #293, update this icon w/ new version
+        #  Need to generate a 64px version for this.
         updateFrame_panels_icons = (wailPath + '/build/icons/whaleLogo_64.png',
                              wailPath + '/build/icons/heritrixLogo_64.png',
                              wailPath + '/build/icons/openWaybackLogo_64.png')
