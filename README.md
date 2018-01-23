@@ -23,7 +23,7 @@ End-user execution is meant to be accessed through the binary file, either WAIL.
 To run it using Python for testing, run the following from the root of the WAIL source directory:
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
 
-Since Wayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g. WAIL.app)currently exists in directory specific to your operating system (see below).
+Since Wayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g., WAIL.app) currently exists in directory specific to your operating system (see below).
 
 You may need to install other dependencies on your system to compile from source like <a href="http://www.wxwidgets.org/">wxWidgets</a> depending on your local python configuration.
 
