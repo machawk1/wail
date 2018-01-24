@@ -19,16 +19,16 @@ import sys
 import datetime
 #from ntfy.backends.default import notify
 
-try: # Py3
-  from urllib.request import urlopen
-  from urllib.request import urlparse
-  from urllib import request
-  from urllib.error import HTTPError
-except ImportError: # Py2
-  from urllib2 import urlopen
-  from urllib2 import Request as request
-  from urllib2 import HTTPError
-  from urlparse import urlparse
+try:  # Py3
+    from urllib.request import urlopen
+    from urllib.request import urlparse
+    from urllib import request
+    from urllib.error import HTTPError
+except ImportError:  # Py2
+    from urllib2 import urlopen
+    from urllib2 import Request as request
+    from urllib2 import HTTPError
+    from urlparse import urlparse
 
 import base64
 import glob
@@ -55,7 +55,7 @@ from requests.auth import HTTPDigestAuth
 from os import listdir
 from os.path import isfile, join
 
-#import wxversion
+# import wxversion
 
 import tarfile  # For updater
 
@@ -77,13 +77,13 @@ else:
 
 
 try:
-  with open (infoPlistPath, "r") as myfile:
-    data = myfile.read()
-    vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
-    m = re.search(vsXML, data)
-    WAIL_VERSION =  m.groups()[0].strip()
+    with open(infoPlistPath, "r") as myfile:
+        data = myfile.read()
+        vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
+        m = re.search(vsXML, data)
+        WAIL_VERSION =  m.groups()[0].strip()
 except:
-  print('User likely has the binary in the wrong location.')
+    print('User likely has the binary in the wrong location.')
 
 osx_java7DMG = "http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg"
 
@@ -100,8 +100,9 @@ msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
 msg_uriInArchives_body = ("This URL is currently in your archive!"
                           " Hit the \"View Archive\" Button")
-msg_wrongLocation_body = ("WAIL must reside in your Applications directory. "
-"Move it there then relaunch. \n* Current Location: ")
+msg_wrongLocation_body = (
+    "WAIL must reside in your Applications directory. "
+    "Move it there then relaunch. \n* Current Location: ")
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
@@ -205,7 +206,7 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
 
     memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
     archivesJSON = wailPath + "/config/archives.json"
-    
+
     # Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart, 0o744)
     os.chmod(tomcatPathStop, 0o744)
@@ -260,12 +261,13 @@ class TabController(wx.Frame):
         self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS, Wayback().index)
         self.indexingTimer.daemon = True
         self.indexingTimer.start()
+
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
         self.help_menu = wx.Menu()
 
-        self.help_menu.Append(wx.ID_ABOUT,   menuTitle_about)
-        self.help_menu.Append(wx.ID_EXIT,   "&QUIT")
+        self.help_menu.Append(wx.ID_ABOUT, menuTitle_about)
+        self.help_menu.Append(wx.ID_EXIT, "&QUIT")
         self.menu_bar.Append(self.help_menu, menuTitle_help)
 
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
@@ -277,9 +279,9 @@ class TabController(wx.Frame):
         info.SetName(aboutWindow_appName)
         info.SetVersion("v. " + WAIL_VERSION)
         info.SetCopyright(aboutWindow_author)
-        #info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
-        #info.SetDevelopers(["Mat Kelly"])
-        #info.SetLicense("MIT")
+        # info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
+        # info.SetDevelopers(["Mat Kelly"])
+        # info.SetLicense("MIT")
         # info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
         wx.adv.AboutBox(info)
 
@@ -290,47 +292,48 @@ class TabController(wx.Frame):
             # Alert the user to move the file. Exit the program
             wx.MessageBox(msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)), msg_wrongLocation_title,)
             print(msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)))
-            #sys.exit()
+            # sys.exit()
 
     def quit(self, button):
         print('Quitting!')
         if mainAppWindow.indexingTimer:
-          mainAppWindow.indexingTimer.cancel()
-        #os._exit(0) #Quit without buffer cleanup
-        sys.exit(1) #Be a good citizen. Cleanup your memory footprint
+            mainAppWindow.indexingTimer.cancel()
+        # os._exit(0) # Quit without buffer cleanup
+        sys.exit(1)  # Be a good citizen. Cleanup your memory footprint
 
 
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.SetDoubleBuffered(True) # Forces Windows into composite mode for drawing
+        self.SetDoubleBuffered(True)  # Forces Windows into composite mode for drawing
         self.uriLabel = wx.StaticText(self, -1, buttonLabel_uri, pos=(0, 5))
         self.uri = wx.TextCtrl(self, -1, pos=(34, 0), value=textLabel_defaultURI, size=(343, 25))
         self.archiveNowButton = wx.Button(self, -1, buttonLabel_archiveNow, pos=(280, 30))
         self.checkArchiveStatus = wx.Button(self,  -1, buttonLabel_checkStatus, pos=(110, 30))
-        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(0,30))
+        self.viewArchive = wx.Button(self, -1, buttonLabel_viewArchive, pos=(0, 30))
 
         self.archiveNowButton.SetDefault()
 
-        #self.mementoCountInfo = wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(270,85), size=(25,15))
+        # self.mementoCountInfo = wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(270,85), size=(25,15))
 
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
         # hJob = HeritrixJob([self.uri.GetValue()])
-        
+
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
-        
+
         self.setMementoCount(None)
-        #self.setMessage("Type a URL and click \"Archive Now!\" to begin archiving");
-        
+        # self.setMessage("Type a URL and click \"Archive Now!\" to begin archiving");
+
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
 
-        thread.start_new_thread(self.fetchMementos,())
-        self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged) # Call memgator on URI change
+        thread.start_new_thread(self.fetchMementos, ())
+        # Call MemGator on URI change
+        self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
     def setMementoCount(self, mCount, aCount=0):
         ui_mementoCountMessage_pos = (105, 85)
@@ -362,15 +365,15 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
         self.mementoStatusPublicArchives = \
-            wx.StaticText(self, -1,label="Public archives: ",
-                          pos=(5, 85), size=(100,20))
-    
-    
+            wx.StaticText(self,  -1, label="Public archives: ",
+                          pos=(5, 85), size=(100, 20))
+
+
     def setMessage(self, msg):
         if hasattr(self, 'status'):
-          self.status.Destroy()
-        self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300,20))
-    
+            self.status.Destroy()
+        self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300, 20))
+
     def fetchMementos(self):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
@@ -382,17 +385,17 @@ class WAILGUIFrame_Basic(wx.Panel):
                             '--hdrtimeout', '3s',
                             '--contimeout', '3s',
                             currentURIValue], stdout=PIPE)
-        
+
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
 
         mCount = 0
         archHosts = set()
         for line in mg.stdout:
-            l = line.strip()
-            if l[:1].isdigit():
+            cleanedLine = line.strip()
+            if cleanedLine[:1].isdigit():
                 mCount += 1
-                archHosts.add(l.split('/', 3)[2])
+                archHosts.add(cleanedLine.split('/', 3)[2])
 
         self.setMementoCount(mCount, len(archHosts)) # UI not updated on Windows
 
@@ -405,25 +408,25 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def uriChanged(self, event):
         self.setMementoCount(None)
-       
+
         if self.memgatorDelayTimer: # Kill any currently running timer
             self.memgatorDelayTimer.cancel()
             self.memgatorDelayTimer = None
-       
+
         self.memgatorDelayTimer = threading.Timer(1.0, thread.start_new_thread, [self.fetchMementos, ()])
         self.memgatorDelayTimer.daemon = True
         self.memgatorDelayTimer.start()
             
         # TODO: start timer on below, kill if another key is hit
-        #thread.start_new_thread(self.fetchMementos,())
+        # thread.start_new_thread(self.fetchMementos,())
         event.Skip()
-    
+
     def testCallback(self):
         print('callback executed!')
 
     def ensureEnvironmentVariablesAreSet(self):
         if 'darwin' not in sys.platform:
-            return # Allow windows to proceed w/o java checks for now.
+            return  # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
         JRE_HOME_defined = 'JRE_HOME' in os.environ
@@ -435,12 +438,11 @@ class WAILGUIFrame_Basic(wx.Panel):
                 jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
                 jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
                 javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
-            else: #Win, incomplete
+            else:  # Win, incomplete
                 pass #os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
-            
-          
+
             # Find java 1.7
-            #/usr/libexec/java_home -v 1.7
+            # /usr/libexec/java_home -v 1.7
             jdkInstalled = os.path.isdir(jdkPath)
 
             if jdkInstalled:
@@ -456,7 +458,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                 else:
                   #self.javaInstalled()
                   self.installJava()
-    
+
     def installJava(self):
         urllib.urlretrieve(osx_java7DMG, '/tmp/java7.dmg');
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
@@ -879,11 +881,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 return
             
             # Start of fix for #233
-            #print evt.GetPosition()
-            #print self.listbox.GetPosition().x
-            #print self.listbox.GetPosition().y
-            # Require right button mouseup to be performed on WAIL UI
-            #if evt.GetPosition()[0] < 0 or evt.GetPosition()[0] > wailWindowSize[0] or \
+            # print evt.GetPosition()
+            # print self.listbox.GetPosition().x
+            # print self.listbox.GetPosition().y
+            #  Require right button mouseup to be performed on WAIL UI
+            # if evt.GetPosition()[0] < 0 or evt.GetPosition()[0] > wailWindowSize[0] or \
             #   evt.GetPosition()[1] < 0 or evt.GetPosition()[1] > wailWindowSize[1]:
             #    return
             
@@ -1133,19 +1135,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.uriListBoxTitle = wx.StaticText(self, 7, 'URIs to Crawl:',  (self.x, 5+self.height*7+30))
         self.uriListBox = wx.ListBox(self, 99, (self.x, 5+self.height*8+25), (400-50, 100), [""])
-        #self.uriListBox.Bind(wx.EVT_LISTBOX_DCLICK,self.addURI)
+        # self.uriListBox.Bind(wx.EVT_LISTBOX_DCLICK,self.addURI)
         self.uriListBox.Bind(wx.EVT_LISTBOX, self.addURI)
         self.SetSize((self.GetSize().x, self.GetSize().y+300))
-        #self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x,100))
+        # self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x,100))
         self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x, 235))
         mainAppWindow.SetSize((mainAppWindow.GetSize().x, 400))
 
     def setupOneOffCrawl(self, button):
         if self.uriListBox is not None:
-            return # This function has already been done
+            return  # This function has already been done
         self.createListBox()
 
-        #This should say, "Commence Crawl" but it currently only writes the config file
+        # This should say, "Commence Crawl" but it currently only writes the config file
         self.writeConfig = wx.Button(self, 33, "Write Heritrix Config",   (self.GetSize().x-175, 280), (self.width, self.height))
         self.writeConfig.SetFont(wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL))
         self.writeConfig.Bind(wx.EVT_BUTTON, self.crawlURIs)
@@ -1220,7 +1222,7 @@ class Wayback(Service):
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
         if cb:
           wx.CallAfter(cb)
-# mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
@@ -1247,7 +1249,7 @@ class Wayback(Service):
         if 'darwin' not in sys.platform:
             dest = dest.replace('/','\\')
             warcsPath = warcsPath.replace('/','\\')
-        
+
         outputContents = ""
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
@@ -1258,7 +1260,7 @@ class Wayback(Service):
         pathIndexFile.write(outputContents)
         pathIndexFile.close()
         print('COMPLETE')
-    
+
     def generateCDX(self):
         print('CDX: ', end='')
         #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
@@ -1283,7 +1285,7 @@ class Wayback(Service):
               cdxFilePath = cdxFilePathPre + file.replace('.warc','.cdx')
               process = subprocess.Popen([cdxIndexerPath,join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
               stdout, stderr = process.communicate()
-        
+
         # Combine CDX files
         print('combining ', end='')
         allCDXesPath = wailRoot + "/archiveIndexes/*.cdx"
@@ -1319,7 +1321,7 @@ class Wayback(Service):
         os.system("export LC_ALL=C; sort -u " + cdxTemp + " > " + cdxFinal)
         os.remove(cdxTemp)
         print('DONE!')
-        
+
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
           mainAppWindow.indexingTimer.cancel()
@@ -1378,7 +1380,7 @@ class Heritrix(Service):
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
         if cb:
           wx.CallAfter(cb)
-        
+
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
 
@@ -2140,6 +2142,7 @@ def tail(filename, lines=1, _buffer=4098):
         block_counter -= 1
     return lines_found[-lines:]
 
+
 def copyanything(src, dst):
     try:
         shutil.copytree(src, dst)
@@ -2147,6 +2150,7 @@ def copyanything(src, dst):
         if exc.errno == errno.ENOTDIR:
             shutil.copy(src, dst)
         else: raise
+
 
 class UpdateSoftwareWindow(wx.Frame):
     panels = ()
@@ -2165,7 +2169,7 @@ class UpdateSoftwareWindow(wx.Frame):
         output.write(wailcorefile.read())
         output.close()
         print('Done downloading WAIL update, backing up.')
-        
+
         try:
           copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
           print('Done backing up. Nuking obsolete version.')
@@ -2173,7 +2177,7 @@ class UpdateSoftwareWindow(wx.Frame):
           print('Back up previously done, continuing.')
         shutil.rmtree("/Applications/WAIL.app/Contents/")
         print('Done nuking, decompressing update.')
-        
+
         tar = tarfile.open("/Applications/WAIL.app/support/temp.tar.gz")
         tar.extractall('/Applications/WAIL.app/')
         tar.close()
@@ -2191,7 +2195,7 @@ class UpdateSoftwareWindow(wx.Frame):
         self.latestVersion_wail = self.updateJSONData['wail-core']['version']
         self.currentVersion_heritrix = self.getHeritrixVersion()
         self.currentVersion_wayback = self.getWaybackVersion()
-        
+
         packages = self.updateJSONData['packages']
         for package in packages:
           if package['name'] == 'heritrix-wail':
@@ -2212,7 +2216,7 @@ class UpdateSoftwareWindow(wx.Frame):
               if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
-    
+
     # TODO: move layout management to responsibility of sub-panels, UNUSED now
     class UpdateSoftwarePanel(wx.Frame):
         panelTitle = ''
@@ -2230,18 +2234,18 @@ class UpdateSoftwareWindow(wx.Frame):
 
             self.panel = wx.StaticBox(self.parent, -1, self.panelTitle, size=self.panelSize, pos=self.panelPosition)
             box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
-        
+
     def __init__(self,parent,id):
         self.fetchCurrentVersionsFile()
         self.setVersionsInPanel()
-        
+
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
         # self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
-        
+
         updateFrameIcons_pos_left = 15
         updateFrameIcons_pos_top = (25, 110, 195)
-        
+
         updateFrameText_version_pos_tops1 = (updateFrameIcons_pos_top[0] + 5, updateFrameIcons_pos_top[0] + 22)
         updateFrameText_version_title_pos1 = ((80, updateFrameText_version_pos_tops1[0]), (80, updateFrameText_version_pos_tops1[1]))
         updateFrameText_version_value_pos1 = ((180, updateFrameText_version_pos_tops1[0]), (180, updateFrameText_version_pos_tops1[1]))
@@ -2249,8 +2253,8 @@ class UpdateSoftwareWindow(wx.Frame):
         updateFrameText_version_pos_tops2 = (updateFrameIcons_pos_top[1], updateFrameIcons_pos_top[1] + 17)
         updateFrameText_version_title_pos2 = ((80, updateFrameText_version_pos_tops2[0]), (80, updateFrameText_version_pos_tops2[1]))
         updateFrameText_version_value_pos2 = ((180, updateFrameText_version_pos_tops2[0]), (180, updateFrameText_version_pos_tops2[1]))
-        
-        updateFrameText_version_pos_tops3 = (updateFrameIcons_pos_top[2] , updateFrameIcons_pos_top[2] + 17)
+
+        updateFrameText_version_pos_tops3 = (updateFrameIcons_pos_top[2], updateFrameIcons_pos_top[2] + 17)
         updateFrameText_version_title_pos3 = ((80, updateFrameText_version_pos_tops3[0]), (80, updateFrameText_version_pos_tops3[1]))
         updateFrameText_version_value_pos3 = ((180, updateFrameText_version_pos_tops3[0]), (180, updateFrameText_version_pos_tops3[1]))
  
@@ -2263,14 +2267,14 @@ class UpdateSoftwareWindow(wx.Frame):
                              wailPath + '/build/icons/openWaybackLogo_64.png')
         updateFrame_panels_titles = ('WAIL Core', 'Preservation', 'Replay')
         updateFrame_panels_size = (390, 90)
-        
-        updateFrame_panels_pos = ((5,10), (5,95), (5,180))
-        
-        #wailPanel = self.UpdateSoftwarePanel(self, 0, 0, 'WAIL')
-        #wailPanel.draw()
+
+        updateFrame_panels_pos = ((5, 10), (5, 95), (5, 180))
+
+        # wailPanel = self.UpdateSoftwarePanel(self, 0, 0, 'WAIL')
+        # wailPanel.draw()
         self.panel_wail = wx.StaticBox(self, 1, updateFrame_panels_titles[0], size=updateFrame_panels_size, pos=updateFrame_panels_pos[0])
         box1 = wx.StaticBoxSizer(self.panel_wail, wx.VERTICAL)
-        
+
         self.panel_preservation = wx.StaticBox(self, 1, updateFrame_panels_titles[1], size=updateFrame_panels_size, pos=updateFrame_panels_pos[1])
         box2 = wx.StaticBoxSizer(self.panel_preservation, wx.VERTICAL)
 
@@ -2326,24 +2330,24 @@ class UpdateSoftwareWindow(wx.Frame):
         self.updateButton_wail = \
             wx.Button(self, 3, "Update",
                       pos=(305, updateFrameIcons_pos_top[0]),
-                      size=(75,20))
+                      size=(75, 20))
         self.updateButton_heritrix = \
             wx.Button(self, 3, "Update",
                       pos=(305, updateFrameIcons_pos_top[1]),
-                      size=(75,20))
+                      size=(75, 20))
         self.updateButton_wayback = \
             wx.Button(self, 3, "Update",
                       pos=(305, updateFrameIcons_pos_top[2]),
-                      size=(75,20))
+                      size=(75, 20))
 
         self.updateButton_wail.Bind(wx.EVT_BUTTON, self.updateWAIL)
 
         if self.currentVersion_wail == self.latestVersion_wail:
-          self.updateButton_wail.Disable()
+            self.updateButton_wail.Disable()
         if self.currentVersion_wayback == self.latestVersion_wayback:
-          self.updateButton_wayback.Disable()
+            self.updateButton_wayback.Disable()
         if self.currentVersion_heritrix == self.latestVersion_heritrix:
-          self.updateButton_heritrix.Disable()
+            self.updateButton_heritrix.Disable()
 
         img = wx.Image(updateFrame_panels_icons[0], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(self, -1, img, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]), (img.GetWidth(), img.GetHeight()))
@@ -2352,18 +2356,18 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.StaticBitmap(self, -1, heritrix_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[1]), (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
 
         openwayback_64 = wx.Image(updateFrame_panels_icons[2], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, openwayback_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[2]), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
+        wx.StaticBitmap(self, -1, openwayback_64, (updateFrameIcons_pos_left,updateFrameIcons_pos_top[2]), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
 mainAppWindow = None
 
 if __name__ == "__main__":
-    #if len(sys.argv) > 1:
-    #  '''A WARC file was drag-and-dropped onto WAIL'''
-    #  print "WAIL was launched with file parameters."
-    #else:
-    #  print "WAIL was launched without any file parameters."
-    #requests.packages. urllib3.disable_warnings()
+    # if len(sys.argv) > 1:
+    #   '''A WARC file was drag-and-dropped onto WAIL'''
+    #   print "WAIL was launched with file parameters."
+    # else:
+    #   print "WAIL was launched without any file parameters."
+    # requests.packages. urllib3.disable_warnings()
 
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
@@ -2371,6 +2375,6 @@ if __name__ == "__main__":
     mainAppWindow.Show()
 
     # Start indexer
-    #Wayback().index()
+    # Wayback().index()
 
     app.MainLoop()
