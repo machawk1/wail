@@ -5,6 +5,8 @@
 
 DIRECTORY="/Applications/WAIL.app/"
 
+trap exit INT
+
 # Check if WAIL processes are running and offer to kill them
 wailProcessesRunning=$(ps -A | grep '[/]WAIL.app/' | wc -l)
 if (($wailProcessesRunning > 0)); then
