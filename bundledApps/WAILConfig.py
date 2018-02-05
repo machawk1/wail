@@ -4,6 +4,7 @@
 import os
 import sys
 import re
+import wx
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
 wailPath = wailPath.replace('\\bundledApps', '') # Fix for dev mode
@@ -50,6 +51,11 @@ msg_crawlStatus_writingConfig = 'Writing Crawl Configuration...'
 msg_crawlStatus_launchingCrawler = 'Launching Crawler...'
 msg_crawlStatus_launchingWayback = 'Launching Wayback...'
 msg_crawlStatus_initializingCrawlJob = 'Initializing Crawl Job...'
+
+msg_installJava = 'Java needs to be installed for Heritrix and Wayback'
+msg_java6Required = '{0}{1}'.format('Java SE 6 needs to be installed. ',
+                                    'WAIL should invoke the installer here.')
+msg_archiveFailed_java = 'Archive Now failed due to Java JRE Requirements'
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -127,6 +133,10 @@ uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
     host_crawler, port_crawler)
 uri_heritrixJob = uri_heritrix + '/engine/job/'
 
+jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
+jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+
 ###############################
 # Platform-specific paths
 ###############################
@@ -142,6 +152,10 @@ memGatorPath = ""
 archivesJSON = ""
 fontSize = 8
 wailWindowSize = (400, 250)
+wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
+wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
+wail_style_button_font = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
+wail_style_button_font_small = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
