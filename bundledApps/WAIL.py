@@ -118,7 +118,7 @@ class TabController(wx.Frame):
         # info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
         # info.SetDevelopers(["Mat Kelly"])
         # info.SetLicense("MIT")
-        #info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO,
+        # info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO,
         #                     aboutWindow_iconWidth, aboutWindow_iconHeight))
         wx.adv.AboutBox(info)
 
@@ -211,14 +211,12 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         # Bug: Does not update UI on Windows
         self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg,
-                                             pos=ui_mementoCountMessage_pos,
-                                             size=ui_mementoCountMessage_size)
-
+                                           pos=ui_mementoCountMessage_pos,
+                                           size=ui_mementoCountMessage_size)
 
         self.mementoStatusPublicArchives = \
             wx.StaticText(self,  -1, label="Public archives: ",
                           pos=(5, 85), size=(100, 20))
-
 
     def setMessage(self, msg):
         if hasattr(self, 'status'):
@@ -248,7 +246,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 mCount += 1
                 archHosts.add(cleanedLine.split('/', 3)[2])
 
-        self.setMementoCount(mCount, len(archHosts)) # UI not updated on Windows
+        # UI not updated on Windows
+        self.setMementoCount(mCount, len(archHosts))
 
         print('MEMGATOR  counted {0} {1} {2}'.format(
             currentURIValue,
@@ -292,7 +291,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 jreHome = config.jreHome
                 javaHome = config.javaHome
             else:  # Win, incomplete
-                pass #os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
+                # os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
+                pass
 
             # Find java 1.7
             # /usr/libexec/java_home -v 1.7
@@ -324,7 +324,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         sys.exit()
 
     def archiveNow(self, button):
-        self.archiveNowButton.SetLabel(config.buttonLabel_archiveNow_initializing)
+        self.archiveNowButton.SetLabel(
+            config.buttonLabel_archiveNow_initializing)
         self.setMessage('Starting Archiving Process...')
         self.archiveNowButton.Disable()
         thread.start_new_thread(self.archiveNow2Async,())
@@ -343,10 +344,13 @@ class WAILGUIFrame_Basic(wx.Panel):
           self.setMessage(config.msg_crawlStatus_initializingCrawlJob)
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
-          self.setMessage('Crawl of ' + self.uri.GetValue()[0:41] + '... started!')
+          self.setMessage(
+              'Crawl of {0}... started!'.format(self.uri.GetValue()[0:41]))
           wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-          #if sys.platform.startswith('darwin'): #show a notification of success in OS X
-          #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
+          #if sys.platform.startswith('darwin'): #show a notification
+          #... of success in OS X
+          #  Notifier.notify('Archival process successfully initiated.',
+          # ...title="WAIL")
         else:
           print(config.msg_java6Required)
           self.setMessage(config.msg_archiveFailed_java)
@@ -362,14 +366,18 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.hJob.write()
 
     def javaInstalled(self):
-        # First check to be sure Java SE is installed. Move this logic elsewhere in production
+        # First check to be sure Java SE is installed.
+        # Move this logic elsewhere in production
         noJava = config.msg_noJavaRuntime
         p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         return (noJava not in stdout) and (noJava not in stderr)
 
     def launchHeritrix(self):
-        cmd = config.heritrixBinPath + " -a " + config.heritrixCredentials_username + ":" + config.heritrixCredentials_password
+        cmd = '{0} -a {1}:{2}'.format(
+            config.heritrixBinPath,config.heritrixCredentials_username,
+            config.heritrixCredentials_password)
+
         # TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
@@ -444,7 +452,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
-            webbrowser.open_new_tab(config.uri_wayback_allMementos + self.uri.GetValue())
+            webbrowser.open_new_tab(
+                config.uri_wayback_allMementos + self.uri.GetValue())
         else:
             d = wx.MessageDialog(self, "Launch now?",
               "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
@@ -490,20 +499,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col3 = col2+colWidth
             buttonSize = (50, rowHeight - 6)
-            # Redefining for Windows, needs regression testing on OS X:
+            # Redefining for Windows, needs regression testing on macOS:
             buttonSize = (50, rowHeight)
-            smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
+
             self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix,
                                          (col3, rowHeight*1),
                                          buttonSize,wx.BU_EXACTFIT)
-            self.fix_wayback.SetFont(smallFont)
+            self.fix_wayback.SetFont(config.wail_style_button_font_small)
             self.fix_heritrix = wx.Button(self, 1, config.buttonLabel_fix,
                                           (col3, rowHeight*2),
                                           buttonSize,wx.BU_EXACTFIT)
-            self.fix_heritrix.SetFont(smallFont)
-
-            # self.stopAllServices = wx.Button(self, 1, "Stop All Services",
-            # (col2,     rowHeight*4+10),     (150,rowHeight))
+            self.fix_heritrix.SetFont(config.wail_style_button_font_small)
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
@@ -513,11 +519,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback = wx.Button(self, 1, config.buttonLabel_kill,
                                           (col4, rowHeight*1),
                                           buttonSize, wx.BU_EXACTFIT)
-            self.kill_wayback.SetFont(smallFont)
+            self.kill_wayback.SetFont(config.wail_style_button_font_small)
             self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill,
                                            (col4, rowHeight*2),
                                            buttonSize, wx.BU_EXACTFIT)
-            self.kill_heritrix.SetFont(smallFont)
+            self.kill_heritrix.SetFont(config.wail_style_button_font_small)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
@@ -612,23 +618,22 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.setHeritrixStatus(transitionalStatus)
                 return
               else:
-                print('Invalid transitional service id specified. Updating status per usual.')
+                print('{0}{1}'.format(
+                    'Invalid transitional service id specified. ',
+                    'Updating status per usual.'))
 
             if not hasattr(self, 'stateLabel'):
-                self.stateLabel = wx.StaticText(self, 100, "STATE",          (col1,    rowHeight*0),      cellSize)
+                self.stateLabel = wx.StaticText(
+                    self, 100, "STATE", (col1, rowHeight * 0), cellSize)
 
             self.setHeritrixStatus(heritrixAccessible)
             self.setWaybackStatus(tomcatAccessible)
 
-                #For eventual icons instead of text
-                #bmp = wx.Bitmap("./build/icons/famYes.png", wx.BITMAP_TYPE_ANY)
-                #bmapBtn = wx.BitmapButton(self, id=wx.ID_ANY, bitmap=bmp,pos=(col1,    rowHeight*3),size=(bmp.GetWidth()+14, bmp.GetHeight()+14),style=wx.BU_EXACTFIT)
-                #bmapBtn.SetMargins(0,0)
-                #bmapBtn.SetBackgroundColour('RED')
-
             if not hasattr(self,'fix_heritrix'):
                 print('First call, UI has not been setup')
-                return #initial setup call will return here, ui elements haven't been created
+                # Initial setup call will return here, ui elements
+                # ...have not been created
+                return
 
              #enable/disable FIX buttons based on service status
             if heritrixAccessible is config.serviceEnabledLabel_YES:
@@ -651,16 +656,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            #wx.Button(self, 1, "Show All Archived URIs",   (0,0),bsize)
-            #wx.Button(self, 1, "Setup Options (e.g. port), modify wayback.xml, reboot tomcat",   (0,25),bsize)
-            #wx.Button(self, 1, "Control Tomcat",   (0,50),bsize)
-            self.viewWaybackInBrowserButton = wx.Button(self, 1, config.buttonLabel_wayback, config.ui_justButtons_Position_1, bsize)
-            self.editWaybackConfiguration = wx.Button(self, 1, config.buttonLabel_editWaybackConfig, config.ui_justButtons_Position_2, bsize)
-            #self.resetWaybackConfiguration = wx.Button(self, 1, buttonLabel_resetWaybackConfig,   (0, 50), bsize)
 
-            self.viewWaybackInBrowserButton.Bind(wx.EVT_BUTTON, self.openWaybackInBrowser)
-            self.editWaybackConfiguration.Bind(wx.EVT_BUTTON, self.openWaybackConfiguration)
-            #self.resetWaybackConfiguration.Bind(wx.EVT_BUTTON, waybackConfigWriter.writeConfig)
+            self.viewWaybackInBrowserButton = wx.Button(
+                self, 1, config.buttonLabel_wayback,
+                config.ui_justButtons_Position_1, bsize)
+            self.editWaybackConfiguration = wx.Button(
+                self, 1, config.buttonLabel_editWaybackConfig,
+                config.ui_justButtons_Position_2, bsize)
+            self.viewWaybackInBrowserButton.Bind(
+                wx.EVT_BUTTON, self.openWaybackInBrowser)
+            self.editWaybackConfiguration.Bind(
+                wx.EVT_BUTTON, self.openWaybackConfiguration)
 
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
@@ -668,13 +674,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.viewWaybackInBrowserButton.SetLabel(config.buttonLabel_wayback)
                 self.viewWaybackInBrowserButton.Enable()
             else:
-                d = wx.MessageDialog(self, "Launch now?",
-                                      "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                d = wx.MessageDialog(
+                    self, "Launch now?", "Wayback is not running",
+                    config.wail_style_yesNo)
                 result = d.ShowModal()
                 d.Destroy()
                 if result == wx.ID_YES: # Launch Wayback
                     Wayback().fix(None, lambda: self.openWaybackInBrowser(None))
-                    self.viewWaybackInBrowserButton.SetLabel(config.buttonLabel_wayback_launching)
+                    self.viewWaybackInBrowserButton.SetLabel(
+                        config.buttonLabel_wayback_launching)
                     self.viewWaybackInBrowserButton.Disable()
                     #time.sleep(3)
                     #self.openWaybackInBrowser(None)
@@ -700,9 +708,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
 
             #Button layout
-            bsize = self.width, self.height = (125, 25*.75)
-            self.setupNewCrawlButton = wx.Button(self, 1, config.buttonLabel_heritrix_newCrawl,   (0, 70), bsize)
-            self.launchWebUIButton = wx.Button(self, 1, config.buttonLabel_heritrix_launchWebUI,   (0, 92), bsize)
+            bsize = self.width, self.height = (125, 25 * .75)
+            self.setupNewCrawlButton = wx.Button(
+                self, 1, config.buttonLabel_heritrix_newCrawl, (0, 70), bsize)
+            self.launchWebUIButton = wx.Button(
+                self, 1, config.buttonLabel_heritrix_launchWebUI,
+                (0, 92), bsize)
 
             #Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
@@ -711,7 +722,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.panelUpdater = None # For updating stats UI
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
-            list.reverse() # set to reverse chronological so newest jobs are at the top
+
+            # Set to reverse chronological so newest jobs are at the top
+            list.reverse()
             self.listbox.Set(list)
 
         def clickedListboxItem(self, event):
@@ -727,12 +740,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.updateInfoPanel(active)
         def updateInfoPanel(self, active):
             self.statusMsg.SetLabel(Heritrix().getCurrentStats(active))
-            self.panelUpdater = threading.Timer(1.0, self.updateInfoPanel, [active])
+            self.panelUpdater = threading.Timer(
+                1.0, self.updateInfoPanel, [active])
             self.panelUpdater.daemon = True
             self.panelUpdater.start()
             
         def launchWebUI(self, button):
-            self.launchWebUIButton.SetLabel(config.buttonLabel_heritrix_launchWebUI_launching)
+            self.launchWebUIButton.SetLabel(
+                config.buttonLabel_heritrix_launchWebUI_launching)
             self.launchWebUIButton.Disable()
             thread.start_new_thread(self.launchWebUIAsync,())
 
@@ -740,7 +755,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if not Heritrix().accessible():
                 mainAppWindow.basicConfig.launchHeritrix()
             webbrowser.open_new_tab(config.uri_heritrix)
-            self.launchWebUIButton.SetLabel(config.buttonLabel_heritrix_launchWebUI)
+            self.launchWebUIButton.SetLabel(
+                config.buttonLabel_heritrix_launchWebUI)
             self.launchWebUIButton.Enable()
 
         def launchHeritrixProcess(self, button):
@@ -749,7 +765,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             mainAppWindow.basicConfig.launchHeritrix()
 
         def manageJobs(self, evt):
-            if self.listbox.GetCount() == 0: # Do not show context menu without context
+            # Do not show context menu without context
+            if self.listbox.GetCount() == 0:
                 return
             
             # Start of fix for #233
@@ -757,25 +774,28 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # print self.listbox.GetPosition().x
             # print self.listbox.GetPosition().y
             #  Require right button mouseup to be performed on WAIL UI
-            # if evt.GetPosition()[0] < 0 or evt.GetPosition()[0] > wailWindowSize[0] or \
-            #   evt.GetPosition()[1] < 0 or evt.GetPosition()[1] > wailWindowSize[1]:
+            # if evt.GetPosition()[0] < 0 or
+            #   evt.GetPosition()[0] > wailWindowSize[0] or \
+            #   evt.GetPosition()[1] < 0 or
+            #   evt.GetPosition()[1] > wailWindowSize[1]:
             #    return
             
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             self.clickedListboxItem(None)
             
             menu = wx.Menu()
-            #menu.Append( 1, "Restart Job" ) #TODO
-            #menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
+            # menu.Append( 1, "Restart Job" ) #TODO
+            # menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 1, config.menu_forceCrawlFinish )
             menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
             menu.Append( 2, config.menu_destroyJob )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
-            #menu.Append( 3, "Open crawl configuration" )
-            #menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
+            # menu.Append( 3, "Open crawl configuration" )
+            # menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
             menu.Append( 3, config.menu_viewJobInWebBrowser )
             menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)
-            mainAppWindow.PopupMenu( menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()) )
+            mainAppWindow.PopupMenu(
+                menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()))
             menu.Destroy()
 
         def forceCrawlFinish(self, evt):
@@ -795,7 +815,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                              verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
-            jobPath = config.heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
+            jobPath = config.heritrixJobPath +\
+                      str(self.listbox.GetString(self.listbox.GetSelection()))
             print('Deleting Job at ' + jobPath)
             try:
                 shutil.rmtree(jobPath)
@@ -808,9 +829,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             webbrowser.open_new_tab(config.uri_heritrixJob + jobId)
 
         def openConfigInTextEditor(self, evt):
-            #TODO, most systems don't know how to open a cxml file. Is there a way to create a system mapping from python?        
+            # TODO, most systems don't know how to open a cxml file.
+            # ...Is there a way to create a system mapping from python?
+
             # Issue #22 prevents the context of the right-click item from being obtained and used here.
-            file = config.heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection())) + "/crawler-beans.cxml"
+            file = '{0}{1}/crawler-beans.cxml'.format(
+                config.heritrixJobPath,
+                str(self.listbox.GetString(self.listbox.GetSelection())))
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', file))
             elif os.name == 'nt':
@@ -830,18 +855,26 @@ class WAILGUIFrame_Advanced(wx.Panel):
             
             self.statusMsg.Hide()
 
-            self.newCrawlTextCtrlLabel = wx.StaticText(self, -1, "Enter one URI per line to crawl", pos=(135, 0))
+            self.newCrawlTextCtrlLabel = wx.StaticText(
+                self, -1, "Enter one URI per line to crawl", pos=(135, 0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
-            self.newCrawlTextCtrl = wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90), style=multiLineAndNoWrapStyle)
+            self.newCrawlTextCtrl = \
+                wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90),
+                            style=multiLineAndNoWrapStyle)
             
-            self.newCrawlDepthTextCtrlLabel = wx.StaticText(self, -1, "Depth", pos=(135, 112))
-            self.newCrawlDepthTextCtrl = wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
+            self.newCrawlDepthTextCtrlLabel = \
+                wx.StaticText(self, -1, "Depth", pos=(135, 112))
+            self.newCrawlDepthTextCtrl = \
+                wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
             self.newCrawlDepthTextCtrl.SetValue("1")
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_CHAR, self.handleCrawlDepthKeypress)
+            self.newCrawlDepthTextCtrl.Bind(
+                wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
+            self.newCrawlDepthTextCtrl.Bind(
+                wx.EVT_CHAR, self.handleCrawlDepthKeypress)
             
             #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))
-            self.startCrawlButton = wx.Button(self, -1, "Start Crawl",  pos=(265, 110))
+            self.startCrawlButton = wx.Button(
+                self, -1, "Start Crawl",  pos=(265, 110))
             self.startCrawlButton.SetDefault()
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
@@ -890,15 +923,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             bsize = self.width, self.height = (340, 25*.75)
-            viewArchivesFolderButtonButton = wx.Button(self, 1, config.buttonLabel_viewArchiveFiles, config.ui_justButtons_Position_1, bsize)
+            viewArchivesFolderButtonButton = wx.Button(
+                self, 1, config.buttonLabel_viewArchiveFiles,
+                config.ui_justButtons_Position_1, bsize)
 
-            viewArchivesFolderButtonButton.Bind(wx.EVT_BUTTON, self.openArchivesFolder)
-            self.testUpdate = wx.Button(self, 1, "Check for Updates", config.ui_justButtons_Position_2, bsize)
+            viewArchivesFolderButtonButton.Bind(
+                wx.EVT_BUTTON, self.openArchivesFolder)
+            self.testUpdate = wx.Button(
+                self, 1, "Check for Updates",
+                config.ui_justButtons_Position_2, bsize)
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
 
         def openArchivesFolder(self, button):
-            if not os.path.exists(config.warcsFolder): os.makedirs(config.warcsFolder)
+            if not os.path.exists(config.warcsFolder):
+                os.makedirs(config.warcsFolder)
 
             if sys.platform.startswith('win32'):
                  os.startfile(config.warcsFolder)
@@ -935,23 +974,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
 
-        smallFont = wx.Font(config.fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
-
 ##################################
 # "View Archive" Group
 ##################################
     def tomcatMessageOff(self):
-        #self.tomcatStatus.SetLabel(msg_waybackDisabled)
+        # self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
         self.startTomcatButton.SetLabel(self.startTomcatLabel)
 
     def tomcatMessageOn(self):
-        #self.tomcatStatus.SetLabel(msg_waybackEnabled)
+        # self.tomcatStatus.SetLabel(msg_waybackEnabled)
         self.tomcatStatus.SetForegroundColour((0, 200, 0))
         self.startTomcatButton.SetLabel(self.stopTomcatLabel)
 
     def startTomcat(self, button):
-        #self.tomcatStatus.SetLabel(msg_startingTomcat)
+        # self.tomcatStatus.SetLabel(msg_startingTomcat)
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         waitingForTomcat = True
@@ -960,8 +997,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             time.sleep(2)
 
         self.waybackPanel.viewWaybackInBrowserButton.Enable() #TODO: error here
-        #self.tomcatMessageOn()
-    # toggleTomcat needs to be broken up into start and stop Tomcat function, already done above
+        # self.tomcatMessageOn()
+
+    # toggleTomcat needs to be broken up into start and stop Tomcat function,
+    # ...already done above
 
     def toggleTomcat(self, button, suppressAlert=False): #Optimize me, Seymour
         cmd = ""
@@ -975,7 +1014,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 if Wayback.accessible(): waitingForTomcat = False
                 time.sleep(2)
             self.viewWaybackInBrowserButton.Enable()
-            #self.tomcatMessageOn()
+            # self.tomcatMessageOn()
         else:
             self.tomcatStatus.SetLabel(config.msg_stoppingTomcat)
             cmd = config.tomcatPathStop
@@ -996,12 +1035,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.tomcatMessageOff()
             else:
                 if not suppressAlert: message = wx.MessageBox("Tomcat could not be stopped", "Command Failed")
-                #self.tomcatMessageOn()
+                # self.tomcatMessageOn()
 
     def launchHeritrix(self, button):
-        #self.heritrixStatus.SetLabel("Launching Heritrix")
-        cmd = config.heritrixBinPath + " -a " + config.heritrixCredentials_username + ":" + config.heritrixCredentials_password
-        #TODO: shell=True was added for OS X, verify that functionality persists on Win64
+        # self.heritrixStatus.SetLabel("Launching Heritrix")
+        cmd = '{0} -a {1}:{2}'.format(
+            config.heritrixBinPath,config.heritrixCredentials_username,
+            config.heritrixCredentials_password)
+
+        # TODO: shell=True was added for OS X
+        # ...verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat
         self.viewHeritrixButton.Enable()
@@ -1014,8 +1057,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
     def createListBox(self):
 
-        self.uriListBoxTitle = wx.StaticText(self, 7, 'URIs to Crawl:',  (self.x, 5+self.height*7+30))
-        self.uriListBox = wx.ListBox(self, 99, (self.x, 5+self.height*8+25), (400-50, 100), [""])
+        self.uriListBoxTitle = wx.StaticText(
+            self, 7, 'URIs to Crawl:', (self.x, 5 + self.height * 7 + 30))
+        self.uriListBox = wx.ListBox(self, 99,
+                                     (self.x, 5 + self.height * 8 + 25),
+                                     (400 - 50, 100), [""])
         # self.uriListBox.Bind(wx.EVT_LISTBOX_DCLICK,self.addURI)
         self.uriListBox.Bind(wx.EVT_LISTBOX, self.addURI)
         self.SetSize((self.GetSize().x, self.GetSize().y+300))
@@ -1028,13 +1074,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
             return  # This function has already been done
         self.createListBox()
 
-        # This should say, "Commence Crawl" but it currently only writes the config file
-        self.writeConfig = wx.Button(self, 33, "Write Heritrix Config",   (self.GetSize().x-175, 280), (self.width, self.height))
-        self.writeConfig.SetFont(wx.Font(config.fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        # This should say, "Commence Crawl" but it currently only
+        # writes the config file
+        self.writeConfig = wx.Button(self, 33, "Write Heritrix Config",
+                                     (self.GetSize().x-175, 280),
+                                     (self.width, self.height))
+
+        self.writeConfig.SetFont(config.wail_style_button_font)
         self.writeConfig.Bind(wx.EVT_BUTTON, self.crawlURIs)
         self.writeConfig.Disable()
-        self.launchCrawlButton = wx.Button(self, 33, "Launch Crawl",   (self.GetSize().x-175, 305), (self.width, self.height))
-        self.launchCrawlButton.SetFont(wx.Font(config.fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        self.launchCrawlButton = wx.Button(self, 33, "Launch Crawl",
+                                           (self.GetSize().x-175, 305),
+                                           (self.width, self.height))
+        self.launchCrawlButton.SetFont(config.wail_style_button_font)
         self.launchCrawlButton.Bind(wx.EVT_BUTTON, self.launchCrawl)
         self.launchCrawlButton.Disable()
 
@@ -1054,10 +1106,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
     def addURI(self, listbox):
         defaultMessage = ""
         try:
-            defaultMessage = self.uriListBox.GetString(self.uriListBox.GetSelection())
+            defaultMessage = self.uriListBox.GetString(
+                self.uriListBox.GetSelection())
         except:
             defaultMessage = ""
-        message = wx.GetTextFromUser("Enter a URI to be crawled", default_value=defaultMessage)
+        message = wx.GetTextFromUser("Enter a URI to be crawled",
+                                     default_value=defaultMessage)
         if message == "" and message == defaultMessage: return
         url = urlparse(message)
         self.uriListBox.InsertItems([url.geturl()], 0)
@@ -1114,7 +1168,7 @@ class Wayback(Service):
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def index(self):
         self.generatePathIndex()
@@ -1144,7 +1198,6 @@ class Wayback(Service):
 
     def generateCDX(self):
         print('CDX: ', end='')
-        #/Applications/WAIL.app/bundledApps/tomcat/webapps/bin/cdx-indexer (file) (file.cdx)
         wailRoot = '/Applications/WAIL.app'
         if 'darwin' not in sys.platform:
             wailRoot = 'C:\wail'
@@ -1164,7 +1217,9 @@ class Wayback(Service):
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
               cdxFilePath = cdxFilePathPre + file.replace('.warc','.cdx')
-              process = subprocess.Popen([cdxIndexerPath,join(warcsPath,file),cdxFilePath], stdout=PIPE, stderr=PIPE)
+              process = subprocess.Popen(
+                  [cdxIndexerPath,join(warcsPath,file),cdxFilePath],
+                  stdout=PIPE, stderr=PIPE)
               stdout, stderr = process.communicate()
 
         # Combine CDX files
@@ -1176,7 +1231,9 @@ class Wayback(Service):
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
         print('merging ', end='')
-        unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt' # Is cdxt the right filename?
+
+        # Is cdxt the right filename?
+        unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt'
         if 'darwin' not in sys.platform:
             unsortedPath = unsortedPath.replace('/','\\')
 
@@ -1184,11 +1241,11 @@ class Wayback(Service):
             for fname in filenames:
                 with open(fname) as infile:
                     for i,line in enumerate(infile):
-                      if i>0:
-                        outfile.write(line)
-                      elif not cdxHeaderIncluded: #Only include first CDX header
-                        outfile.write(line)
-                        cdxHeaderIncluded = True
+                        if i>0:
+                            outfile.write(line)
+                        elif not cdxHeaderIncluded: #Only include first CDX header
+                            outfile.write(line)
+                            cdxHeaderIncluded = True
         print('cleaning ', end='')
         filelist = glob.glob(allCDXesPath)
         for f in filelist:
@@ -1205,7 +1262,7 @@ class Wayback(Service):
 
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
-          mainAppWindow.indexingTimer.cancel()
+            mainAppWindow.indexingTimer.cancel()
         mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
         mainAppWindow.indexingTimer.daemon = True
         mainAppWindow.indexingTimer.start()
@@ -1215,17 +1272,17 @@ class Tomcat(Service):
 
 
 class Heritrix(Service):
-    #uri = uri_heritrix_accessiblityURI
-    uri = "https://127.0.0.1:8443" #TODO: remove magic hard-coded Heritrix address/port
+    uri = "https://{0}:{1}".format(config.host_crawler,config.port_crawler)
 
     def getListOfJobs(self):
         def justFile(fullPath):
             return os.path.basename(fullPath)
-        #str = '\n'.join(map(justFile,glob.glob(os.path.join(heritrixJobPath, '*'))))
+
         return map(justFile, glob.glob(os.path.join(config.heritrixJobPath, '*')))
     ''' # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
         -H "Accept: application/xml"
-        # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://0.0.0.0:8443/engine
+        # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth 
+        --location -H "Accept: application/xml" https://0.0.0.0:8443/engine
     '''
 
     def getJobLaunches(self, jobId):
@@ -1326,10 +1383,12 @@ class UpdateSoftwareWindow(wx.Frame):
         print('Done downloading WAIL update, backing up.')
 
         try:
-          copyanything("/Applications/WAIL.app/Contents/","/Applications/WAIL.app/Contents_bkp/")
-          print('Done backing up. Nuking obsolete version.')
+            copyanything("/Applications/WAIL.app/Contents/",
+                       "/Applications/WAIL.app/Contents_bkp/")
+            print('Done backing up. Nuking obsolete version.')
         except:
-          print('Back up previously done, continuing.')
+            print('Back up previously done, continuing.')
+
         shutil.rmtree("/Applications/WAIL.app/Contents/")
         print('Done nuking, decompressing update.')
 
@@ -1339,6 +1398,7 @@ class UpdateSoftwareWindow(wx.Frame):
         print('Done, restart now.')
         os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
         #TODO: flush Info.plist cache (cmd involving defaults within this py script)
+
     def fetchCurrentVersionsFile(self):
         self.srcURI = "http://matkelly.com/wail/update.json"
         f = urlopen(self.srcURI).read()
@@ -1387,31 +1447,49 @@ class UpdateSoftwareWindow(wx.Frame):
             #TODO: draw icon
             pass
 
-            self.panel = wx.StaticBox(self.parent, -1, self.panelTitle, size=self.panelSize, pos=self.panelPosition)
+            self.panel = wx.StaticBox(
+                self.parent, -1, self.panelTitle,
+                size=self.panelSize, pos=self.panelPosition)
             box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
 
     def __init__(self,parent,id):
         self.fetchCurrentVersionsFile()
         self.setVersionsInPanel()
 
-        wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300), style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
+        wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400,300),
+                          style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
         # self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
 
         updateFrameIcons_pos_left = 15
         updateFrameIcons_pos_top = (25, 110, 195)
 
-        updateFrameText_version_pos_tops1 = (updateFrameIcons_pos_top[0] + 5, updateFrameIcons_pos_top[0] + 22)
-        updateFrameText_version_title_pos1 = ((80, updateFrameText_version_pos_tops1[0]), (80, updateFrameText_version_pos_tops1[1]))
-        updateFrameText_version_value_pos1 = ((180, updateFrameText_version_pos_tops1[0]), (180, updateFrameText_version_pos_tops1[1]))
+        updateFrameText_version_pos_tops1 = (updateFrameIcons_pos_top[0] + 5,
+                                             updateFrameIcons_pos_top[0] + 22)
+        updateFrameText_version_title_pos1 = (
+            (80, updateFrameText_version_pos_tops1[0]),
+            (80, updateFrameText_version_pos_tops1[1]))
+        updateFrameText_version_value_pos1 = (
+            (180, updateFrameText_version_pos_tops1[0]),
+            (180, updateFrameText_version_pos_tops1[1]))
         
-        updateFrameText_version_pos_tops2 = (updateFrameIcons_pos_top[1], updateFrameIcons_pos_top[1] + 17)
-        updateFrameText_version_title_pos2 = ((80, updateFrameText_version_pos_tops2[0]), (80, updateFrameText_version_pos_tops2[1]))
-        updateFrameText_version_value_pos2 = ((180, updateFrameText_version_pos_tops2[0]), (180, updateFrameText_version_pos_tops2[1]))
+        updateFrameText_version_pos_tops2 = (updateFrameIcons_pos_top[1],
+                                             updateFrameIcons_pos_top[1] + 17)
+        updateFrameText_version_title_pos2 = (
+            (80, updateFrameText_version_pos_tops2[0]),
+            (80, updateFrameText_version_pos_tops2[1]))
+        updateFrameText_version_value_pos2 = (
+            (180, updateFrameText_version_pos_tops2[0]),
+            (180, updateFrameText_version_pos_tops2[1]))
 
-        updateFrameText_version_pos_tops3 = (updateFrameIcons_pos_top[2], updateFrameIcons_pos_top[2] + 17)
-        updateFrameText_version_title_pos3 = ((80, updateFrameText_version_pos_tops3[0]), (80, updateFrameText_version_pos_tops3[1]))
-        updateFrameText_version_value_pos3 = ((180, updateFrameText_version_pos_tops3[0]), (180, updateFrameText_version_pos_tops3[1]))
+        updateFrameText_version_pos_tops3 = (updateFrameIcons_pos_top[2],
+                                             updateFrameIcons_pos_top[2] + 17)
+        updateFrameText_version_title_pos3 = (
+            (80, updateFrameText_version_pos_tops3[0]),
+            (80, updateFrameText_version_pos_tops3[1]))
+        updateFrameText_version_value_pos3 = (
+            (180, updateFrameText_version_pos_tops3[0]),
+            (180, updateFrameText_version_pos_tops3[1]))
  
         updateFrameText_version_size = (100,100)
 
@@ -1427,13 +1505,19 @@ class UpdateSoftwareWindow(wx.Frame):
 
         # wailPanel = self.UpdateSoftwarePanel(self, 0, 0, 'WAIL')
         # wailPanel.draw()
-        self.panel_wail = wx.StaticBox(self, 1, updateFrame_panels_titles[0], size=updateFrame_panels_size, pos=updateFrame_panels_pos[0])
+        self.panel_wail = wx.StaticBox(
+            self, 1, updateFrame_panels_titles[0],
+            size=updateFrame_panels_size, pos=updateFrame_panels_pos[0])
         box1 = wx.StaticBoxSizer(self.panel_wail, wx.VERTICAL)
 
-        self.panel_preservation = wx.StaticBox(self, 1, updateFrame_panels_titles[1], size=updateFrame_panels_size, pos=updateFrame_panels_pos[1])
+        self.panel_preservation = wx.StaticBox(
+            self, 1, updateFrame_panels_titles[1],
+            size=updateFrame_panels_size, pos=updateFrame_panels_pos[1])
         box2 = wx.StaticBoxSizer(self.panel_preservation, wx.VERTICAL)
 
-        self.panel_replay = wx.StaticBox(self, 1, updateFrame_panels_titles[2], size=updateFrame_panels_size, pos=updateFrame_panels_pos[2])
+        self.panel_replay = wx.StaticBox(self, 1, updateFrame_panels_titles[2],
+                                         size=updateFrame_panels_size,
+                                         pos=updateFrame_panels_pos[2])
         box3 = wx.StaticBoxSizer(self.panel_replay, wx.VERTICAL)
         
         # Panel 1
@@ -1504,14 +1588,24 @@ class UpdateSoftwareWindow(wx.Frame):
         if self.currentVersion_heritrix == self.latestVersion_heritrix:
             self.updateButton_heritrix.Disable()
 
-        img = wx.Image(updateFrame_panels_icons[0], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, img, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]), (img.GetWidth(), img.GetHeight()))
+        img = wx.Image(updateFrame_panels_icons[0],
+                       wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        wx.StaticBitmap(
+            self, -1, img,
+            (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]),
+            (img.GetWidth(), img.GetHeight()))
         
         heritrix_64 = wx.Image(updateFrame_panels_icons[1], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, heritrix_64, (updateFrameIcons_pos_left, updateFrameIcons_pos_top[1]), (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
+        wx.StaticBitmap(
+            self, -1, heritrix_64,
+            (updateFrameIcons_pos_left, updateFrameIcons_pos_top[1]),
+            (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
 
         openwayback_64 = wx.Image(updateFrame_panels_icons[2], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
-        wx.StaticBitmap(self, -1, openwayback_64, (updateFrameIcons_pos_left,updateFrameIcons_pos_top[2]), (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
+        wx.StaticBitmap(
+            self, -1, openwayback_64,
+            (updateFrameIcons_pos_left,updateFrameIcons_pos_top[2]),
+            (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
 mainAppWindow = None

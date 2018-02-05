@@ -154,6 +154,8 @@ fontSize = 8
 wailWindowSize = (400, 250)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
+wail_style_button_font = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
+wail_style_button_font_small = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
