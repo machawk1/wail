@@ -134,7 +134,7 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
     wailPath = "/Applications/WAIL.app"
     heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
     heritrixBinPath = "sh " + heritrixPath+"bin/heritrix"
-    heritrixJobPath = heritrixPath+"jobs/"
+    heritrixJobPath = heritrixPath + "jobs/"
     fontSize = 10
     tomcatPath = wailPath + "/bundledApps/tomcat"
     warcsFolder = wailPath + "/archives"

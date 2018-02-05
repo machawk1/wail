@@ -510,7 +510,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                                 (col1, rowHeight*1), cellSize)
         
         def getHeritrixVersion(self, abbr=True):
-            htrixLibPath = heritrixPath + "lib/"
+            htrixLibPath = config.heritrixPath + "lib/"
             if 'darwin' not in sys.platform:
                 htrixLibPath = htrixLibPath.replace('/','\\')
             for file in os.listdir(htrixLibPath):
@@ -884,7 +884,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
 
-        smallFont = wx.Font(fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
+        smallFont = wx.Font(config.fontSize, wx.SWISS, wx.NORMAL, wx.NORMAL)
 
 ##################################
 # "View Archive" Group
@@ -1171,7 +1171,7 @@ class Heritrix(Service):
         def justFile(fullPath):
             return os.path.basename(fullPath)
         #str = '\n'.join(map(justFile,glob.glob(os.path.join(heritrixJobPath, '*'))))
-        return map(justFile, glob.glob(os.path.join(heritrixJobPath, '*')))
+        return map(justFile, glob.glob(os.path.join(config.heritrixJobPath, '*')))
     ''' # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
         -H "Accept: application/xml"
         # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://localhost:8443/engine
