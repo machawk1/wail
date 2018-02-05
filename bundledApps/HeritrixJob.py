@@ -17,7 +17,7 @@ class HeritrixJob:
             beansFilePath += "\\"
         else:
             beansFilePath += "/"
-        with open(beansFilePath + "crawler-beans.cxml","w") as f:
+        with open(beansFilePath + "crawler-beans.cxml", "w") as f:
             f.write(self.sampleXML)
             #print beansFilePath+"crawler-beans.cxml"
 
@@ -27,15 +27,24 @@ class HeritrixJob:
         data = {"action":"launch"}
         headers = {"Accept":"application/xml",
                    "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/' + self.jobNumber,
-                         auth=HTTPDigestAuth(config.heritrixCredentials_username,config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post(
+            '{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
+            auth=HTTPDigestAuth(
+                config.heritrixCredentials_username,
+                config.heritrixCredentials_password),
+            data=data, headers=headers, verify=False, stream=True)
 
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
         data = {"action":"build"}
-        headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        headers = {"Accept": "application/xml",
+                   "Content-type" :"application/x-www-form-urlencoded"}
+        r =requests.post('{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
+                         auth=HTTPDigestAuth(
+                             config.heritrixCredentials_username,
+                             config.heritrixCredentials_password),
+                         data=data, headers=headers, verify=False,stream=True)
 
     def __init__(self, hJobPath, uris, depth=1):
         self.jobPath = hJobPath

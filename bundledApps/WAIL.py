@@ -364,23 +364,31 @@ class WAILGUIFrame_Basic(wx.Panel):
         data = {"action":"launch"}
         headers = {"Accept":"application/xml",
                    "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/' + self.hJob.jobNumber,
-            auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),
-            data=data,headers=headers,verify=False,stream=True)
+        r =requests.post(
+            '{0}{1}'.format(config.uri_heritrixJob, self.hJob.jobNumber),
+            auth=HTTPDigestAuth(
+                config.heritrixCredentials_username,
+                config.heritrixCredentials_password),
+            data=data, headers=headers, verify=False, stream=True)
 
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
-        print('Building Heririx job')
-        data = {"action":"build"}
-        headers = {"Accept":"application/xml",
-                   "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        print('Building Heritrix job')
+        data = {"action": "build"}
+        headers = {"Accept": "application/xml",
+                   "Content-type": "application/x-www-form-urlencoded"}
+        r =requests.post(
+            '{0}{1}'.format(config.uri_heritrixJob,self.hJob.jobNumber),
+            auth=HTTPDigestAuth(
+                config.heritrixCredentials_username,
+                config.heritrixCredentials_password),
+            data=data, headers=headers, verify=False, stream=True)
 
         # curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
 
     def checkIfURLIsInArchive(self, button):
-        url = "http://localhost:8080/wayback/*/" + self.uri.GetValue()
+        url = config.uri_wayback_allMementos + self.uri.GetValue()
         req = request(url)
         statusCode = None
         try:
@@ -392,17 +400,21 @@ class WAILGUIFrame_Basic(wx.Panel):
             ''''''
 
         if statusCode is None:
-            launchWaybackDialog = wx.MessageDialog(None, config.msg_waybackNotStarted_body, config.msg_waybackNotStarted_title, wx.YES_NO|wx.YES_DEFAULT)
+            launchWaybackDialog = wx.MessageDialog(
+                None, config.msg_waybackNotStarted_body,
+                config.msg_waybackNotStarted_title, wx.YES_NO|wx.YES_DEFAULT)
             launchWayback = launchWaybackDialog.ShowModal()
             if launchWayback == wx.ID_YES:
                 Wayback().fix(None)
                 self.checkIfURLIsInArchive(button)
         elif 200 != statusCode:
-            wx.MessageBox(config.msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
+            wx.MessageBox(config.msg_uriNotInArchives,
+                          "Checking for " + self.uri.GetValue())
         else:
-            mb = wx.MessageBox(config.msg_uriInArchives_body, config.msg_uriInArchives_title)
-            b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo, pos=(10,85),
-                          size=(25,15))
+            mb = wx.MessageBox(config.msg_uriInArchives_body,
+                               config.msg_uriInArchives_title)
+            b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo,
+                          pos=(10,85), size=(25,15))
             mb.AddButton(b)  # Will not work in wxPython >4
 
     def viewArchiveInBrowser(self, button):
@@ -743,13 +755,22 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def sendActionToHeritrix(self, action, jobId):
             data = {"action": action}
-            headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-            r =requests.post(config.uri_heritrixJob + jobId, auth = HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password), data=data, headers=headers, verify=False, stream=True)
+            headers = {"Accept":"application/xml",
+                       "Content-type":"application/x-www-form-urlencoded"}
+            r =requests.post(config.uri_heritrixJob + jobId,
+                             auth = HTTPDigestAuth(
+                                 config.heritrixCredentials_username,
+                                 config.heritrixCredentials_password),
+                             data=data, headers=headers,
+                             verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
             jobPath = config.heritrixJobPath + str(self.listbox.GetString(self.listbox.GetSelection()))
             print('Deleting Job at ' + jobPath)
-            shutil.rmtree(jobPath)
+            try:
+                shutil.rmtree(jobPath)
+            except OSError as e:
+                print('Job deletion failed.')
             self.populateListboxWithJobs()
 
         def viewJobInWebBrowser(self, evt):
@@ -1174,7 +1195,7 @@ class Heritrix(Service):
         return map(justFile, glob.glob(os.path.join(config.heritrixJobPath, '*')))
     ''' # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
         -H "Accept: application/xml"
-        # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://localhost:8443/engine
+        # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://0.0.0.0:8443/engine
     '''
 
     def getJobLaunches(self, jobId):
