@@ -8,7 +8,6 @@ import WAILConfig as config
 from requests.auth import HTTPDigestAuth
 
 class HeritrixJob:
-    jobPath = ''
     def write(self):
         self.jobNumber = str(int(time.time()))
         path = self.jobPath + self.jobNumber
@@ -39,7 +38,7 @@ class HeritrixJob:
         r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def __init__(self, hJobPath, uris, depth=1):
-        self.jobpath = hJobPath
+        self.jobPath = hJobPath
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE

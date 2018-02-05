@@ -376,7 +376,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                    "Content-type":"application/x-www-form-urlencoded"}
         r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
-        #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
+        # curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
 
     def checkIfURLIsInArchive(self, button):
