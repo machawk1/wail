@@ -37,7 +37,7 @@ import ssl
 import shutil
 import errno
 import json
-import HeritrixJob
+from HeritrixJob import HeritrixJob
 import WAILConfig as config # Need to distinguish this from built-in, relative?
 
 
@@ -374,7 +374,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         data = {"action":"build"}
         headers = {"Accept":"application/xml",
                    "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username,heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.hJob.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
         #curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
         return
@@ -847,7 +847,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.testUpdate.Disable()
 
         def openArchivesFolder(self, button):
-            if not os.path.exists(warcsFolder): os.makedirs(config.warcsFolder)
+            if not os.path.exists(config.warcsFolder): os.makedirs(config.warcsFolder)
 
             if sys.platform.startswith('win32'):
                  os.startfile(config.warcsFolder)

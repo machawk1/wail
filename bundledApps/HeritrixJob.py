@@ -3,9 +3,12 @@ import os
 import sys
 import logging
 import requests
+import WAILConfig as config
+
 from requests.auth import HTTPDigestAuth
 
 class HeritrixJob:
+    jobPath = ''
     def write(self):
         self.jobNumber = str(int(time.time()))
         path = self.jobPath + self.jobNumber
@@ -23,15 +26,17 @@ class HeritrixJob:
         logging.basicConfig(level=logging.DEBUG)
         print('Launching Heritrix job')
         data = {"action":"launch"}
-        headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        headers = {"Accept":"application/xml",
+                   "Content-type":"application/x-www-form-urlencoded"}
+        r =requests.post('https://localhost:8443/engine/job/' + self.jobNumber,
+                         auth=HTTPDigestAuth(config.heritrixCredentials_username,config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
         data = {"action":"build"}
         headers = {"Accept":"application/xml","Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(heritrixCredentials_username, heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
+        r =requests.post('https://localhost:8443/engine/job/'+self.jobNumber,auth=HTTPDigestAuth(config.heritrixCredentials_username, config.heritrixCredentials_password),data=data,headers=headers,verify=False,stream=True)
 
     def __init__(self, hJobPath, uris, depth=1):
         self.jobpath = hJobPath
@@ -380,7 +385,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="directory" value="C:\\WAIL\\tomcat\\webapps\\ROOT\\" /> -->
    <property name="storePaths">
         <list>
-         <value>''' + warcsFolder + '''</value>
+         <value>''' + config.warcsFolder + '''</value>
         </list>
        </property>
   <!-- <property name="writeRequests" value="true" /> -->
