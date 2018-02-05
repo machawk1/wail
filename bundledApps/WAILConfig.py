@@ -96,26 +96,36 @@ buttonLabel_heritrix_launchWebUI = "Launch WebUI"
 buttonLabel_heritrix_launchWebUI_launching = "Launching..."
 buttonLabel_heritrix_newCrawl = "New Crawl"
 
-groupLabel_window = "Web Archiving Integration Layer"
+groupLabel_window = 'Web Archiving Integration Layer'
 
 ui_justButtons_Position_1 = (0, 2)
 ui_justButtons_Position_2 = (0, 27)
 
-menuTitle_about = "&About WAIL"
-menuTitle_help = "&Help"
-menu_destroyJob = "Destroy Job (Does not delete archive)"
-menu_forceCrawlFinish = "Force crawl to finish"
-menu_viewJobInWebBrowser = "View job in web browser"
+menuTitle_about = '&About WAIL'
+menuTitle_help = '&Help'
+menu_destroyJob = 'Destroy Job (Does not delete archive)'
+menu_forceCrawlFinish = 'Force crawl to finish'
+menu_viewJobInWebBrowser = 'View job in web browser'
 
-heritrixCredentials_username = "lorem"
-heritrixCredentials_password = "ipsum"
+heritrixCredentials_username = 'lorem'
+heritrixCredentials_password = 'ipsum'
 
-uri_tomcat = "http://0.0.0.0:8080/"
-uri_wayback = "http://0.0.0.0:8080/wayback/"
-uri_wayback_allMementos = uri_wayback + "*/"
-uri_heritrix = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@0.0.0.0:8443"
-uri_heritrix_accessiblityURI = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@0.0.0.0:8443"
-uri_heritrixJob = uri_heritrix + "/engine/job/"
+host_crawler = '0.0.0.0'
+host_replay = '0.0.0.0'
+
+port_crawler = '8443'
+port_replay = '8080'
+
+uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
+uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
+uri_wayback_allMementos = uri_wayback + '*/'
+uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrixJob = uri_heritrix + '/engine/job/'
 
 ###############################
 # Platform-specific paths
