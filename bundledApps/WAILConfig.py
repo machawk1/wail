@@ -110,11 +110,11 @@ menu_viewJobInWebBrowser = "View job in web browser"
 heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
 
-uri_tomcat = "http://localhost:8080/"
-uri_wayback = "http://localhost:8080/wayback/"
+uri_tomcat = "http://0.0.0.0:8080/"
+uri_wayback = "http://0.0.0.0:8080/wayback/"
 uri_wayback_allMementos = uri_wayback + "*/"
-uri_heritrix = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@localhost:8443"
-uri_heritrix_accessiblityURI = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@localhost:8443"
+uri_heritrix = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@0.0.0.0:8443"
+uri_heritrix_accessiblityURI = "https://" + heritrixCredentials_username + ":" + heritrixCredentials_password + "@0.0.0.0:8443"
 uri_heritrixJob = uri_heritrix + "/engine/job/"
 
 ###############################

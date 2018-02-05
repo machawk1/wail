@@ -400,7 +400,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         elif 200 != statusCode:
             wx.MessageBox(config.msg_uriNotInArchives,"Checking for " + self.uri.GetValue())
         else:
-            mb = wx.MessageBox(config.msg_uriInArchives_body,msg_uriInArchives_title)
+            mb = wx.MessageBox(config.msg_uriInArchives_body, config.msg_uriInArchives_title)
             b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo, pos=(10,85),
                           size=(25,15))
             mb.AddButton(b)  # Will not work in wxPython >4
@@ -1019,7 +1019,7 @@ class Service():
     def accessible(self):
         chkMsg = 'Checking access to {0} at {1}'.format(
             self.__class__.__name__, self.uri)
-        print(chkMsg)#, end='')
+        print(chkMsg)
 
         try:
             handle = urlopen(self.uri, None, 3)
@@ -1178,8 +1178,8 @@ class Heritrix(Service):
     '''
 
     def getJobLaunches(self, jobId):
-        jobPath = config.heritrixJobPath+jobId
-        return [f for f in os.listdir(config.heritrixJobPath+jobId) if re.search(r'^[0-9]+$', f)]
+        jobPath = config.heritrixJobPath + jobId
+        return [f for f in os.listdir(config.heritrixJobPath + jobId) if re.search(r'^[0-9]+$', f)]
 
     def getCurrentStats(self, jobId):
         launches = self.getJobLaunches(jobId)
