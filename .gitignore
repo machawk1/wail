@@ -7,6 +7,7 @@
 #ignore build remnants
 build/*
 !build/icons*
+*.pyc
 !build/version.txt
 !build/Info.plist
 bundledApps/waybackConfigWriter.pyc
