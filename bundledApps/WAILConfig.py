@@ -46,6 +46,11 @@ msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = "No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
 
+msg_crawlStatus_writingConfig = 'Writing Crawl Configuration...'
+msg_crawlStatus_launchingCrawler = 'Launching Crawler...'
+msg_crawlStatus_launchingWayback = 'Launching Wayback...'
+msg_crawlStatus_initializingCrawlJob = 'Initializing Crawl Job...'
+
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
 
@@ -104,7 +109,6 @@ menu_viewJobInWebBrowser = "View job in web browser"
 
 heritrixCredentials_username = "lorem"
 heritrixCredentials_password = "ipsum"
-
 
 uri_tomcat = "http://localhost:8080/"
 uri_wayback = "http://localhost:8080/wayback/"

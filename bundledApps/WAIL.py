@@ -309,17 +309,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         thread.start_new_thread(self.archiveNow2Async,())
 
     def archiveNow2Async(self):
-        self.setMessage('Writing Crawl Configuration...')
+        self.setMessage(config.msg_crawlStatus_writingConfig)
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
         if self.javaInstalled():
-          self.setMessage('Launching Crawler...')
+          self.setMessage(config.msg_crawlStatus_launchingCrawler)
           if not Heritrix().accessible():
             self.launchHeritrix()
-          self.setMessage('Launching Wayback...')
+          self.setMessage(config.msg_crawlStatus_launchingWayback)
           mainAppWindow.advConfig.startTomcat(None)
           # time.sleep(4)
-          self.setMessage('Initializing Crawl Job...')
+          self.setMessage(config.msg_crawlStatus_initializingCrawlJob)
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
           self.setMessage('Crawl of ' + self.uri.GetValue()[0:41] + '... started!')
