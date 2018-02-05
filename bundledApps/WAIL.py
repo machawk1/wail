@@ -17,7 +17,7 @@ import schedule
 import time
 import sys
 import datetime
-#from ntfy.backends.default import notify
+# from ntfy.backends.default import notify
 
 try:  # Py3
     from urllib.request import urlopen
@@ -38,7 +38,7 @@ import shutil
 import errno
 import json
 from HeritrixJob import HeritrixJob
-import WAILConfig as config # Need to distinguish this from built-in, relative?
+import WAILConfig as config
 
 
 # from wx import *
@@ -73,7 +73,9 @@ INDEX_TIMER_SECONDS = 10.0
 
 class TabController(wx.Frame):
     def __init__(self):
-        wx.Frame.__init__(self, None, title=config.groupLabel_window, size=config.wailWindowSize, style=wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX))
+        wx.Frame.__init__(self, None, title=config.groupLabel_window,
+                          size=config.wailWindowSize,
+                          style=config.wailWindowStyle)
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
 
@@ -91,7 +93,8 @@ class TabController(wx.Frame):
         self.Notebook.AddPage(self.advConfig, config.tabLabel_advanced)
         self.createMenu()
 
-        self.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS, Wayback().index)
+        self.indexingTimer = threading.Timer(
+            INDEX_TIMER_SECONDS, Wayback().index)
         self.indexingTimer.daemon = True
         self.indexingTimer.start()
 
@@ -115,16 +118,19 @@ class TabController(wx.Frame):
         # info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
         # info.SetDevelopers(["Mat Kelly"])
         # info.SetLicense("MIT")
-        # info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO, aboutWindow_iconWidth, aboutWindow_iconHeight))
+        #info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO,
+        #                     aboutWindow_iconWidth, aboutWindow_iconHeight))
         wx.adv.AboutBox(info)
 
     def ensureCorrectInstallation(self):
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
-        if 'darwin' in sys.platform and os.path.dirname(os.path.abspath(__file__)) != "/Applications":
+        currentPath = os.path.dirname(os.path.abspath(__file__))
+        if 'darwin' in sys.platform and currentPath != "/Applications":
             # Alert the user to move the file. Exit the program
-            wx.MessageBox(config.msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)), config.msg_wrongLocation_title,)
-            print(config.msg_wrongLocation_body + os.path.dirname(os.path.abspath(__file__)))
+            wx.MessageBox(config.msg_wrongLocation_body + currentPath,
+                          config.msg_wrongLocation_title)
+            print(config.msg_wrongLocation_body + currentPath)
             # sys.exit()
 
     def quit(self, button):
@@ -138,16 +144,27 @@ class TabController(wx.Frame):
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        self.SetDoubleBuffered(True)  # Forces Windows into composite mode for drawing
-        self.uriLabel = wx.StaticText(self, -1, config.buttonLabel_uri, pos=(0, 5))
-        self.uri = wx.TextCtrl(self, -1, pos=(34, 0), value=config.textLabel_defaultURI, size=(343, 25))
-        self.archiveNowButton = wx.Button(self, -1, config.buttonLabel_archiveNow, pos=(280, 30))
-        self.checkArchiveStatus = wx.Button(self,  -1, config.buttonLabel_checkStatus, pos=(110, 30))
-        self.viewArchive = wx.Button(self, -1, config.buttonLabel_viewArchive, pos=(0, 30))
+        # Forces Windows into composite mode for drawing
+        self.SetDoubleBuffered(True)
+        self.uriLabel = wx.StaticText(self, -1,
+                                      config.buttonLabel_uri, pos=(0, 5))
+        self.uri = wx.TextCtrl(self, -1, pos=(34, 0),
+                               value=config.textLabel_defaultURI,
+                               size=(343, 25))
+        self.archiveNowButton = wx.Button(self, -1,
+                                          config.buttonLabel_archiveNow,
+                                          pos=(280, 30))
+        self.checkArchiveStatus = wx.Button(self,  -1,
+                                            config.buttonLabel_checkStatus,
+                                            pos=(110, 30))
+        self.viewArchive = wx.Button(self, -1, config.buttonLabel_viewArchive,
+                                     pos=(0, 30))
 
         self.archiveNowButton.SetDefault()
 
-        # self.mementoCountInfo = wx.Button(self, -1, buttonLabel_mementoCountInfo, pos=(270,85), size=(25,15))
+        # self.mementoCountInfo = wx.Button(self, -1,
+        #                                  buttonLabel_mementoCountInfo,
+        #                                  pos=(270,85), size=(25,15))
 
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
@@ -159,7 +176,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.ensureEnvironmentVariablesAreSet()
 
         self.setMementoCount(None)
-        # self.setMessage("Type a URL and click \"Archive Now!\" to begin archiving");
+        # self.setMessage(
+        #   "Type a URL and click \"Archive Now!\" to begin archiving");
 
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
@@ -246,7 +264,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.memgatorDelayTimer.cancel()
             self.memgatorDelayTimer = None
 
-        self.memgatorDelayTimer = threading.Timer(1.0, thread.start_new_thread, [self.fetchMementos, ()])
+        self.memgatorDelayTimer = threading.Timer(1.0,
+                                                  thread.start_new_thread,
+                                                  [self.fetchMementos, ()])
         self.memgatorDelayTimer.daemon = True
         self.memgatorDelayTimer.start()
             
@@ -268,9 +288,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             javaHome = ''
             jdkPath = ''
             if 'darwin' in sys.platform:
-                jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
-                jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
-                javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+                jdkPath = config.jdkPath
+                jreHome = config.jreHome
+                javaHome = config.javaHome
             else:  # Win, incomplete
                 pass #os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
 
@@ -283,7 +303,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 os.environ["JRE_HOME"] = jreHome
                 self.ensureEnvironmentVariablesAreSet()
             else:
-                d = wx.MessageDialog(self, 'Java needs to be installed for Heritrix and Wayback', "Install now?", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+                d = wx.MessageDialog(self, config.msg_installJava,
+                                     "Install now?", config.wail_style_yesNo)
                 result = d.ShowModal()
                 d.Destroy()
                 if result == wx.ID_NO:
@@ -293,7 +314,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                   self.installJava()
 
     def installJava(self):
-        urllib.urlretrieve(config.osx_java7DMG, '/tmp/java7.dmg');
+        urllib.urlretrieve(config.osx_java7DMG, '/tmp/java7.dmg')
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
                   stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
@@ -327,8 +348,8 @@ class WAILGUIFrame_Basic(wx.Panel):
           #if sys.platform.startswith('darwin'): #show a notification of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',title="WAIL")
         else:
-          print('Java SE 6 needs to be installed. WAIL should invoke the installer here.')
-          self.setMessage('Archive Now failed due to Java JRE Requirements')
+          print(config.msg_java6Required)
+          self.setMessage(config.msg_archiveFailed_java)
           
         wx.CallAfter(self.onLongRunDone)
 
@@ -343,7 +364,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def javaInstalled(self):
         # First check to be sure Java SE is installed. Move this logic elsewhere in production
         noJava = config.msg_noJavaRuntime
-        p = Popen(["java","-version"], stdout=PIPE, stderr=PIPE)
+        p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         return (noJava not in stdout) and (noJava not in stderr)
 
@@ -384,7 +405,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 config.heritrixCredentials_password),
             data=data, headers=headers, verify=False, stream=True)
 
-        # curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/1425431848
+        # curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location
+        # -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/142..
         return
 
     def checkIfURLIsInArchive(self, button):
@@ -396,7 +418,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             statusCode = resp.getcode()
         except HTTPError as e:
             statusCode = e.code
-        except: # When the server is unavailable, keep the default. This is necessary, as unavailability will still cause an exception
+        except:
+            # When the server is unavailable, keep the default.
+            # This is necessary, as unavailability will still cause an
+            # exception
             ''''''
 
         if statusCode is None:
@@ -442,7 +467,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             cellSize = (150, rowHeight)
 
             col0 = colWidth * 0 + 10
-            wx.StaticText(self, 100, config.tabLabel_advanced_general_serviceStatus,
+            wx.StaticText(self, 100,
+                          config.tabLabel_advanced_general_serviceStatus,
                           (col0 - 10, rowHeight * 0), cellSize)
             wx.StaticText(self, 100, config.tabLabel_advanced_wayback,
                           (col0, rowHeight*1), cellSize)
@@ -464,7 +490,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col3 = col2+colWidth
             buttonSize = (50, rowHeight - 6)
-            buttonSize = (50, rowHeight) #redefining for Windows, needs regression testing on OS X
+            # Redefining for Windows, needs regression testing on OS X:
+            buttonSize = (50, rowHeight)
             smallFont = wx.Font(10, wx.SWISS, wx.NORMAL, wx.NORMAL)
             self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix,
                                          (col3, rowHeight*1),
@@ -475,7 +502,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                           buttonSize,wx.BU_EXACTFIT)
             self.fix_heritrix.SetFont(smallFont)
 
-            #self.stopAllServices = wx.Button(self, 1, "Stop All Services",                (col2,     rowHeight*4+10),     (150,rowHeight))
+            # self.stopAllServices = wx.Button(self, 1, "Stop All Services",
+            # (col2,     rowHeight*4+10),     (150,rowHeight))
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
@@ -556,14 +584,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def updateServiceStatuses(self, serviceId=None, transitionalStatus=None):
             ##################################
-            # Check if each service is enabled and set the GUI elements accordingly
+            # Check if each service is enabled
+            # and set the GUI elements accordingly
             ##################################
 
             colWidth = 60
             rowHeight = 20
-            col1 = 65+colWidth*1
+            col1 = 65 + colWidth * 1
             cellSize = (40, rowHeight)
-            serviceEnabled = {True: config.serviceEnabledLabel_YES, False: config.serviceEnabledLabel_NO}
+            serviceEnabled = {True: config.serviceEnabledLabel_YES,
+                              False: config.serviceEnabledLabel_NO}
 
             heritrixAccessible = serviceEnabled[Heritrix().accessible()]
             waybackAccessible = serviceEnabled[Wayback().accessible()]
