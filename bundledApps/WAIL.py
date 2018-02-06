@@ -657,18 +657,23 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            bsize = self.width, self.height = (340, 25*.75)
 
             self.viewWaybackInBrowserButton = wx.Button(
-                self, 1, config.buttonLabel_wayback,
-                config.ui_justButtons_Position_1, bsize)
+                self, -1, config.buttonLabel_wayback)
             self.editWaybackConfiguration = wx.Button(
-                self, 1, config.buttonLabel_editWaybackConfig,
-                config.ui_justButtons_Position_2, bsize)
+                self, -1, config.buttonLabel_editWaybackConfig)
             self.viewWaybackInBrowserButton.Bind(
                 wx.EVT_BUTTON, self.openWaybackInBrowser)
             self.editWaybackConfiguration.Bind(
                 wx.EVT_BUTTON, self.openWaybackConfiguration)
+
+            box = wx.BoxSizer(wx.VERTICAL)
+            box.Add(self.viewWaybackInBrowserButton, 0, wx.EXPAND, 0)
+            box.Add(self.editWaybackConfiguration, 0, wx.EXPAND, 0)
+
+            self.SetAutoLayout(True)
+            self.SetSizer(box)
+            self.Layout()
 
         def openWaybackInBrowser(self, button):
             if Wayback().accessible():
@@ -686,8 +691,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     self.viewWaybackInBrowserButton.SetLabel(
                         config.buttonLabel_wayback_launching)
                     self.viewWaybackInBrowserButton.Disable()
-                    #time.sleep(3)
-                    #self.openWaybackInBrowser(None)
+
         def openWaybackConfiguration(self,button):
             filepath = config.tomcatPath + "/webapps/ROOT/WEB-INF/wayback.xml"
             if sys.platform.startswith('darwin'):
@@ -908,16 +912,24 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            bsize = self.width, self.height = (340, 25*.75)
             viewArchivesFolderButtonButton = wx.Button(
-                self, 1, config.buttonLabel_viewArchiveFiles,
-                config.ui_justButtons_Position_1, bsize)
+                self, 1, config.buttonLabel_viewArchiveFiles)
 
             viewArchivesFolderButtonButton.Bind(
                 wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(
-                self, 1, "Check for Updates",
-                config.ui_justButtons_Position_2, bsize)
+                self, 1, "Check for Updates")
+
+            box = wx.BoxSizer(wx.VERTICAL)
+            box.Add(viewArchivesFolderButtonButton, 0, wx.EXPAND, 0)
+            box.Add(self.testUpdate, 0, wx.EXPAND, 0)
+
+            self.SetAutoLayout(True)
+            self.SetSizer(box)
+            self.Layout()
+
+
+
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
 
