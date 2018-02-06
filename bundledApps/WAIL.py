@@ -345,7 +345,7 @@ class WAILGUIFrame_Basic(wx.Panel):
           self.startHeritrixJob()
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
           self.setMessage(
-              'Crawl of {0}... started!'.format(self.uri.GetValue()[0:41]))
+              'Crawl of {0} started!'.format(self.uri.GetValue()[0:41]))
           wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
           #if sys.platform.startswith('darwin'): #show a notification
           #... of success in OS X
@@ -447,7 +447,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             mb = wx.MessageBox(config.msg_uriInArchives_body,
                                config.msg_uriInArchives_title)
             b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo,
-                          pos=(10,85), size=(25,15))
+                          pos=(10, 85), size=(25, 15))
             mb.AddButton(b)  # Will not work in wxPython >4
 
     def viewArchiveInBrowser(self, button):
@@ -456,12 +456,13 @@ class WAILGUIFrame_Basic(wx.Panel):
                 config.uri_wayback_allMementos + self.uri.GetValue())
         else:
             d = wx.MessageDialog(self, "Launch now?",
-              "Wayback is not running", wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION)
+              "Wayback is not running", config.wail_style_yesNo)
             result = d.ShowModal()
             d.Destroy()
             if result == wx.ID_YES: # Launch Wayback
                 Wayback().fix(None)
-                # TODO: artificial delay here while we wait for Wayback to launch
+                # TODO: artificial delay here while we wait for
+                # ...Wayback to launch
                 # TODO: change button to fixing
                 self.archiveNowButton.SetLabel("Initializing Wayback...")
                 #self.viewArchiveInBrowser(None)
@@ -531,9 +532,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
 
-
-            #wx.CallLater(2000, self.updateServiceStatuses)
-            #pool.apply_async(self.updateServiceStatuses)
             thread.start_new_thread(self.updateServiceStatuses,())
 
         def setHeritrixStatus(self, status):
@@ -582,7 +580,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if 'darwin' not in sys.platform:
                 releaseNotesPath = releaseNotesPath.replace('/','\\')
             if not os.path.exists(releaseNotesPath): return "?"
-            f = open(releaseNotesPath,'r')
+            f = open(releaseNotesPath, 'r')
             version = ""
             for line in f.readlines():
                 if "Apache Tomcat Version " in line:
