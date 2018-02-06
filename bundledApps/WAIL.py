@@ -669,9 +669,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(self.viewWaybackInBrowserButton, 0, wx.EXPAND, 0)
-            box.Add(self.editWaybackConfiguration,0, wx.EXPAND, 0)
-            self.SetAutoLayout(True)
+            box.Add(self.editWaybackConfiguration, 0, wx.EXPAND, 0)
 
+            self.SetAutoLayout(True)
             self.SetSizer(box)
             self.Layout()
 
@@ -912,16 +912,24 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            bsize = self.width, self.height = (340, 25*.75)
             viewArchivesFolderButtonButton = wx.Button(
-                self, 1, config.buttonLabel_viewArchiveFiles,
-                config.ui_justButtons_Position_1, bsize)
+                self, 1, config.buttonLabel_viewArchiveFiles)
 
             viewArchivesFolderButtonButton.Bind(
                 wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(
-                self, 1, "Check for Updates",
-                config.ui_justButtons_Position_2, bsize)
+                self, 1, "Check for Updates")
+
+            box = wx.BoxSizer(wx.VERTICAL)
+            box.Add(viewArchivesFolderButtonButton, 0, wx.EXPAND, 0)
+            box.Add(self.testUpdate, 0, wx.EXPAND, 0)
+
+            self.SetAutoLayout(True)
+            self.SetSizer(box)
+            self.Layout()
+
+
+
             self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
             self.testUpdate.Disable()
 
