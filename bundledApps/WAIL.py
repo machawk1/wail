@@ -35,7 +35,7 @@ import glob
 import re
 import ssl
 import shutil
-import errno
+
 import json
 from HeritrixJob import HeritrixJob
 import WAILConfig as config
@@ -311,7 +311,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                 if result == wx.ID_NO:
                    sys.exit()
                 else:
-                  #self.javaInstalled()
+                  # self.javaInstalled()
                   self.installJava()
 
     def installJava(self):
@@ -1125,7 +1125,8 @@ class Service():
             ))
             return False
         except:
-            print('Some other error occurred in trying to check service accessibility.')
+            print(('Some other error occurred trying ' 
+                   'to check service accessibility.'))
             return False
 
 class Wayback(Service):
@@ -1147,7 +1148,8 @@ class Wayback(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","KILLING")
+        mainAppWindow.advConfig.generalPanel.updateServiceStatuses(
+            "wayback", "KILLING")
         cmd = config.tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -1187,7 +1189,8 @@ class Wayback(Service):
         dest = wailRoot + "/config/path-index.txt"
         warcsPath = wailRoot + "/archives/"
         cdxFilePathPre = wailRoot + "/archiveIndexes/"
-        cdxIndexerPath = wailRoot +  "/bundledApps/tomcat/webapps/bin/cdx-indexer"
+        cdxIndexerPath = '{0}{1}'.format(
+            wailRoot, "/bundledApps/tomcat/webapps/bin/cdx-indexer")
 
         if 'darwin' not in sys.platform:
             dest = dest.replace('/','\\')
@@ -1251,6 +1254,7 @@ class Wayback(Service):
         mainAppWindow.indexingTimer.daemon = True
         mainAppWindow.indexingTimer.start()
 
+
 class Tomcat(Service):
     uri = config.uri_wayback
 
@@ -1277,9 +1281,11 @@ class Heritrix(Service):
         launches = self.getJobLaunches(jobId)
         ret = ""
         for launch in launches:
-            #print heritrixJobPath+jobId+"/"+launch+"/logs/progress-statistics.log"
-            print(config.heritrixJobPath + jobId + '/' + launch + '/logs/progress-statistics.log')
-            progressLogFilePath = config.heritrixJobPath + jobId + '/' + launch + "/logs/progress-statistics.log"
+            progressLogFilePath = "{0}{1}/{2}/{3}".format(
+                config.heritrixJobPath, jobId, launch,
+                "logs/progress-statistics.log")
+            print(progressLogFilePath)
+
             if 'darwin' not in sys.platform:
                 progressLogFilePath = progressLogFilePath.replace('/','\\')
 
@@ -1288,8 +1294,9 @@ class Heritrix(Service):
             ll = lastLine[0].replace(" ","|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
-            ret = ret + "JobID: "+jobId+"\n   Discovered: "+discovered+"\n   Queued: "+queued+"\n   Downloaded: "+downloaded+"\n"
-
+            ret = ("{0}JobID:{1}\n   Discovered: {2}\n   "
+                   "Queued: {3}\n   Downloaded: {4}\n").format(
+                ret, jobId, discovered, queued, downloaded)
         return ret
 
     def fix(self, button, *cb):
@@ -1311,7 +1318,7 @@ class Heritrix(Service):
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print('Trying to kill Heritrix...')
-        ret = subprocess.Popen(cmd,stderr=subprocess.STDOUT,shell=True)
+        ret = subprocess.Popen(cmd, stderr=subprocess.STDOUT, shell=True)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
 
@@ -1547,16 +1554,20 @@ class UpdateSoftwareWindow(wx.Frame):
             (updateFrameIcons_pos_left, updateFrameIcons_pos_top[0]),
             (img.GetWidth(), img.GetHeight()))
         
-        heritrix_64 = wx.Image(updateFrame_panels_icons[1], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        heritrix_64 = wx.Image(
+            updateFrame_panels_icons[1],
+            wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(
             self, -1, heritrix_64,
             (updateFrameIcons_pos_left, updateFrameIcons_pos_top[1]),
             (heritrix_64.GetWidth(), heritrix_64.GetHeight()))
 
-        openwayback_64 = wx.Image(updateFrame_panels_icons[2], wx.BITMAP_TYPE_ANY).ConvertToBitmap()
+        openwayback_64 = wx.Image(
+            updateFrame_panels_icons[2],
+            wx.BITMAP_TYPE_ANY).ConvertToBitmap()
         wx.StaticBitmap(
             self, -1, openwayback_64,
-            (updateFrameIcons_pos_left,updateFrameIcons_pos_top[2]),
+            (updateFrameIcons_pos_left, updateFrameIcons_pos_top[2]),
             (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
 
