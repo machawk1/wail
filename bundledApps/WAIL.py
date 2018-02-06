@@ -39,6 +39,7 @@ import errno
 import json
 from HeritrixJob import HeritrixJob
 import WAILConfig as config
+import wailUtil as util
 
 
 # from wx import *
@@ -733,7 +734,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.statusMsg.Show()
 
             active = self.listbox.GetString(self.listbox.GetSelection())
-            print(tail(config.heritrixJobPath + active + '/job.log'))
+            print(util.tail(config.heritrixJobPath + active + '/job.log'))
             jobLaunches = Heritrix().getJobLaunches(active)
             if self.panelUpdater: # Kill any currently running timer
                self.panelUpdater.cancel()
@@ -770,29 +771,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if self.listbox.GetCount() == 0:
                 return
             
-            # Start of fix for #233
-            # print evt.GetPosition()
-            # print self.listbox.GetPosition().x
-            # print self.listbox.GetPosition().y
-            #  Require right button mouseup to be performed on WAIL UI
-            # if evt.GetPosition()[0] < 0 or
-            #   evt.GetPosition()[0] > wailWindowSize[0] or \
-            #   evt.GetPosition()[1] < 0 or
-            #   evt.GetPosition()[1] > wailWindowSize[1]:
-            #    return
-            
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             self.clickedListboxItem(None)
             
             menu = wx.Menu()
-            # menu.Append( 1, "Restart Job" ) #TODO
-            # menu.Bind(wx.EVT_MENU, self.restartJob, id=1)
             menu.Append( 1, config.menu_forceCrawlFinish )
             menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
             menu.Append( 2, config.menu_destroyJob )
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
-            # menu.Append( 3, "Open crawl configuration" )
-            # menu.Bind(wx.EVT_MENU, self.openConfigInTextEditor, id=3)
             menu.Append( 3, config.menu_viewJobInWebBrowser )
             menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)
             mainAppWindow.PopupMenu(
@@ -833,7 +819,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # TODO, most systems don't know how to open a cxml file.
             # ...Is there a way to create a system mapping from python?
 
-            # Issue #22 prevents the context of the right-click item from being obtained and used here.
+            # Issue #22 prevents the context of the right-click item from
+            # ...being obtained and used here.
             file = '{0}{1}/crawler-beans.cxml'.format(
                 config.heritrixJobPath,
                 str(self.listbox.GetString(self.listbox.GetSelection())))
@@ -897,13 +884,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if not hasattr(self,'newCrawlTextCtrlLabel'): return
             self.newCrawlTextCtrlLabel.Hide()
             self.newCrawlTextCtrl.Hide()
-            #self.crawlOptionsButton.Hide()
             self.startCrawlButton.Hide()
 
         def showNewCrawlUIElements(self):
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
-            #self.crawlOptionsButton.Show()
             self.startCrawlButton.Show()
 
         def crawlURIsListed(self, evt):
@@ -948,10 +933,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def checkForUpdates(self, button):
             updateWindow = UpdateSoftwareWindow(parent=self, id=-1)
             updateWindow.Show()
-            #return
+            # return
             # check if an updates version is available
 
-            # if an updated version is available and the user wants it, copy the /Application/WAIL.app/Contents folder
+            # if an updated version is available and the user wants it,
+            # ...copy the /Application/WAIL.app/Contents folder
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
@@ -975,9 +961,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
 
-##################################
-# "View Archive" Group
-##################################
     def tomcatMessageOff(self):
         # self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
@@ -1047,7 +1030,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
         # TODO: shell=True was added for OS X
         # ...verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
-        time.sleep(6)             #urlib won't respond to https, hard-coded sleep until I can ping like Tomcat
+        # urlib won't respond to https, hard-coded sleep until I
+        # ...can ping like Tomcat
+        time.sleep(6)
         self.viewHeritrixButton.Enable()
 
     def viewWayback(self, button):
@@ -1063,10 +1048,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uriListBox = wx.ListBox(self, 99,
                                      (self.x, 5 + self.height * 8 + 25),
                                      (400 - 50, 100), [""])
-        # self.uriListBox.Bind(wx.EVT_LISTBOX_DCLICK,self.addURI)
         self.uriListBox.Bind(wx.EVT_LISTBOX, self.addURI)
         self.SetSize((self.GetSize().x, self.GetSize().y+300))
-        # self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x,100))
         self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x, 235))
         mainAppWindow.SetSize((mainAppWindow.GetSize().x, 400))
 
@@ -1075,8 +1058,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             return  # This function has already been done
         self.createListBox()
 
-        # This should say, "Commence Crawl" but it currently only
-        # writes the config file
         self.writeConfig = wx.Button(self, 33, "Write Heritrix Config",
                                      (self.GetSize().x-175, 280),
                                      (self.width, self.height))
@@ -1161,7 +1142,6 @@ class Wayback(Service):
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
         if cb:
           wx.CallAfter(cb)
-        # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def kill(self,button):
         thread.start_new_thread(self.killAsync,())
@@ -1172,7 +1152,6 @@ class Wayback(Service):
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
-        # mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
 
     def index(self):
         self.generatePathIndex()
@@ -1247,7 +1226,8 @@ class Wayback(Service):
                     for i,line in enumerate(infile):
                         if i>0:
                             outfile.write(line)
-                        elif not cdxHeaderIncluded: #Only include first CDX header
+                        elif not cdxHeaderIncluded:
+                            # Only include first CDX header
                             outfile.write(line)
                             cdxHeaderIncluded = True
         print('cleaning ', end='')
@@ -1303,7 +1283,7 @@ class Heritrix(Service):
             if 'darwin' not in sys.platform:
                 progressLogFilePath = progressLogFilePath.replace('/','\\')
 
-            lastLine = tail(progressLogFilePath)
+            lastLine = util.tail(progressLogFilePath)
 
             ll = lastLine[0].replace(" ","|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
@@ -1336,38 +1316,6 @@ class Heritrix(Service):
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
 
 
-#from http://stackoverflow.com/questions/136168/get-last-n-lines-of-a-file-with-python-similar-to-tail
-def tail(filename, lines=1, _buffer=4098):
-    try:
-        f = open(filename,"r")
-    except:
-        return "No job info yet\nYou must run a job before stats can be shown here"
-    lines_found = []
-    block_counter = -1
-    while len(lines_found) < lines:
-        try:
-            f.seek(block_counter * _buffer, os.SEEK_END)
-        except IOError:  # either file is too small, or too many lines requested
-            f.seek(0)
-            lines_found = f.readlines()
-            break
-
-        lines_found = f.readlines()
-        if len(lines_found) > lines:
-            break
-        block_counter -= 1
-    return lines_found[-lines:]
-
-
-def copyanything(src, dst):
-    try:
-        shutil.copytree(src, dst)
-    except OSError as exc: # python >2.5
-        if exc.errno == errno.ENOTDIR:
-            shutil.copy(src, dst)
-        else: raise
-
-
 class UpdateSoftwareWindow(wx.Frame):
     panels = ()
     updateJSONData = ''
@@ -1387,7 +1335,7 @@ class UpdateSoftwareWindow(wx.Frame):
         print('Done downloading WAIL update, backing up.')
 
         try:
-            copyanything("/Applications/WAIL.app/Contents/",
+            util.copyanything("/Applications/WAIL.app/Contents/",
                        "/Applications/WAIL.app/Contents_bkp/")
             print('Done backing up. Nuking obsolete version.')
         except:
