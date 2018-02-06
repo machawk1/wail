@@ -502,14 +502,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Redefining for Windows, needs regression testing on macOS:
             buttonSize = (50, rowHeight)
 
+            wail_style_button_font_small = wx.Font(10, wx.SWISS, wx.NORMAL,
+                                                   wx.NORMAL)
+
             self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix,
                                          (col3, rowHeight*1),
                                          buttonSize,wx.BU_EXACTFIT)
-            self.fix_wayback.SetFont(config.wail_style_button_font_small)
+            self.fix_wayback.SetFont(wail_style_button_font_small)
             self.fix_heritrix = wx.Button(self, 1, config.buttonLabel_fix,
                                           (col3, rowHeight*2),
                                           buttonSize,wx.BU_EXACTFIT)
-            self.fix_heritrix.SetFont(config.wail_style_button_font_small)
+            self.fix_heritrix.SetFont(wail_style_button_font_small)
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
@@ -519,11 +522,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback = wx.Button(self, 1, config.buttonLabel_kill,
                                           (col4, rowHeight*1),
                                           buttonSize, wx.BU_EXACTFIT)
-            self.kill_wayback.SetFont(config.wail_style_button_font_small)
+            self.kill_wayback.SetFont(wail_style_button_font_small)
             self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill,
                                            (col4, rowHeight*2),
                                            buttonSize, wx.BU_EXACTFIT)
-            self.kill_heritrix.SetFont(config.wail_style_button_font_small)
+            self.kill_heritrix.SetFont(wail_style_button_font_small)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
@@ -1080,13 +1083,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                      (self.GetSize().x-175, 280),
                                      (self.width, self.height))
 
-        self.writeConfig.SetFont(config.wail_style_button_font)
+        wail_style_button_font = wx.Font(config.fontSize, wx.SWISS,
+                                         wx.NORMAL, wx.NORMAL)
+
+        self.writeConfig.SetFont(wail_style_button_font)
         self.writeConfig.Bind(wx.EVT_BUTTON, self.crawlURIs)
         self.writeConfig.Disable()
         self.launchCrawlButton = wx.Button(self, 33, "Launch Crawl",
                                            (self.GetSize().x-175, 305),
                                            (self.width, self.height))
-        self.launchCrawlButton.SetFont(config.wail_style_button_font)
+        self.launchCrawlButton.SetFont(wail_style_button_font)
         self.launchCrawlButton.Bind(wx.EVT_BUTTON, self.launchCrawl)
         self.launchCrawlButton.Disable()
 
