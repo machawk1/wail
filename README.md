@@ -15,7 +15,7 @@ See the <a href="http://machawk1.github.io/wail/#download">download section on t
 
 <h2>Running WAIL</h2>
 
-<img src="https://github.com/machawk1/wail/blob/osagnostic/images/screenshot_mac_20171212.png">
+<img src="https://github.com/machawk1/wail/blob/osagnostic/images/screenshot_mac_20180205.png">
 
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
