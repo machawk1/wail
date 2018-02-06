@@ -668,9 +668,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 wx.EVT_BUTTON, self.openWaybackConfiguration)
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(self.viewWaybackInBrowserButton, 1, wx.SHAPED)
-            box.Add(self.editWaybackConfiguration, 2, wx.SHAPED)
+            box.Add(self.viewWaybackInBrowserButton, 0, wx.EXPAND, 0)
+            box.Add(self.editWaybackConfiguration,0, wx.EXPAND, 0)
             self.SetAutoLayout(True)
+
             self.SetSizer(box)
             self.Layout()
 
