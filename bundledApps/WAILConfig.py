@@ -6,6 +6,8 @@ import sys
 import re
 import wx
 
+WAIL_VERSION = "-1"
+
 wailPath = os.path.dirname(os.path.realpath(__file__))
 wailPath = wailPath.replace('\\bundledApps', '') # Fix for dev mode
 

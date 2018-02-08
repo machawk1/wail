@@ -63,7 +63,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 #  from pync import Notifier # OS X notifications
 
-WAIL_VERSION = "-1"
 INDEX_TIMER_SECONDS = 10.0
 
 
@@ -114,13 +113,9 @@ class TabController(wx.Frame):
     def displayAboutMenu(self, button):
         info = wx.adv.AboutDialogInfo()
         info.SetName(config.aboutWindow_appName)
-        info.SetVersion("v. " + WAIL_VERSION)
+        info.SetVersion("v. " + config.WAIL_VERSION)
         info.SetCopyright(config.aboutWindow_author)
-        # info.SetWebSite(textLabel_defaultURI, textLabel_defaultURI_title)
-        # info.SetDevelopers(["Mat Kelly"])
-        # info.SetLicense("MIT")
-        # info.SetIcon(wx.Icon(aboutWindow_iconPath, wx.BITMAP_TYPE_ICO,
-        #                     aboutWindow_iconWidth, aboutWindow_iconHeight))
+
         wx.adv.AboutBox(info)
 
     def ensureCorrectInstallation(self):
@@ -1377,7 +1372,7 @@ class UpdateSoftwareWindow(wx.Frame):
         self.updateJSONData = json.loads(data)
     
     def setVersionsInPanel(self):
-        self.currentVersion_wail = WAIL_VERSION
+        self.currentVersion_wail = config.WAIL_VERSION
         self.latestVersion_wail = self.updateJSONData['wail-core']['version']
         self.currentVersion_heritrix = self.getHeritrixVersion()
         self.currentVersion_wayback = self.getWaybackVersion()
