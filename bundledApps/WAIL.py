@@ -16,6 +16,7 @@ import os
 import schedule
 import time
 import sys
+import locale
 import datetime
 # from ntfy.backends.default import notify
 
@@ -192,6 +193,9 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         memCountMsg = ''
         if mCount > 0:
+            locale.setlocale(locale.LC_ALL, '')
+
+            mCount = locale.format("%d", mCount, grouping=True)
             mPlurality = 's'
             aPlurality = 's'
             if mCount == 1:
