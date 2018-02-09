@@ -198,7 +198,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 mPlurality = ''
             if aCount == 1:
                 aPlurality = ''
-            memCountMsg = '{0} memento{1} available from {2} archive{3}'.format(
+            memCountMsg = ('{0} memento{1} available '
+                           'from {2} archive{3}').format(
                 mCount, mPlurality, aCount, aPlurality
             )
         elif mCount == 0:
