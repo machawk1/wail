@@ -140,6 +140,7 @@ class TabController(wx.Frame):
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+
         # Forces Windows into composite mode for drawing
         self.SetDoubleBuffered(True)
         self.uriLabel = wx.StaticText(self, -1,
@@ -310,7 +311,10 @@ class WAILGUIFrame_Basic(wx.Panel):
                   self.installJava()
 
     def installJava(self):
-        urllib.urlretrieve(config.osx_java7DMG, '/tmp/java7.dmg')
+        resp = requests.get(config.osx_java7DMG)
+        with open('/tmp/java7.pdf', 'wb') as f:
+            f.write(resp.content)
+
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
                   stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
