@@ -11,7 +11,7 @@ WAIL is written in Python and compiled to a native executable using <a href="htt
 
 <h2>Installing WAIL</h2>
 
-See the <a href="http://machawk1.github.io/wail/#download">download section on the WAIL homepage</a> to download the application, install it, and for basic usage.
+WAIL is an application that runs either on your macOS (.app) or Windows (.exe) system. To install WAIL, first <a href="http://machawk1.github.io/wail/#download">download</a> the appropriate package for your file system (.dmg for macOS or .zip for Windows), open the package, and follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
 
 <h2>Running WAIL</h2>
 
