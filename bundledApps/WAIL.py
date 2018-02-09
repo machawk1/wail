@@ -193,7 +193,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         memCountMsg = ''
         if mCount > 0:
-            locale.setlocale(locale.LC_ALL, 'en_US')
+            locale.setlocale(locale.LC_ALL, '')
+
             mCount = locale.format("%d", mCount, grouping=True)
             mPlurality = 's'
             aPlurality = 's'
