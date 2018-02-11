@@ -1259,7 +1259,18 @@ class Wayback(Service):
         # TODO: fix cdx sorting in Windows #281
         # if 'darwin' in sys.platform:
         print('sorting ', end='')
-        os.system("export LC_ALL=C; sort -u " + cdxTemp + " > " + cdxFinal)
+        # os.system("export LC_ALL=C; sort -u " + cdxTemp + " > " + cdxFinal)
+
+        with open(cdxTemp, 'r') as tempFile:
+            with open(cdxFinal, 'w') as finalFile:
+                locale.setlocale(locale.LC_ALL, "C")
+                entries = tempFile.readlines()
+                entries = list(set(entries))  # uniq
+                entries.sort(cmp=locale.strcoll)
+                for entry in entries:
+                    finalFile.write(entry)
+
+
         os.remove(cdxTemp)
         print('DONE!')
 
