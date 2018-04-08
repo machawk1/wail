@@ -46,7 +46,7 @@ msg_wrongLocation_body = (
     "WAIL must reside in your Applications directory. "
     "Move it there then relaunch. \n* Current Location: ")
 msg_wrongLocation_title = "Wrong Location"
-msg_noJavaRuntime = "No Java runtime present, requesting install."
+msg_noJavaRuntime = b"No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
 
 msg_crawlStatus_writingConfig = 'Writing Crawl Configuration...'
