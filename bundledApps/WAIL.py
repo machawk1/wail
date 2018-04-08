@@ -25,11 +25,13 @@ try:  # Py3
     from urllib.request import urlparse
     from urllib import request
     from urllib.error import HTTPError
+    import _thread as thread  # For a more responsive UI
 except ImportError:  # Py2
     from urllib2 import urlopen
     from urllib2 import Request as request
     from urllib2 import HTTPError
     from urlparse import urlparse
+    import thread  # For a more responsive UI
 
 import base64
 import glob
@@ -53,7 +55,7 @@ from multiprocessing import Pool as Thread
 import logging
 import requests
 import threading  # Necessary for polling/indexing
-import thread  # For a more responsive UI
+
 from requests.auth import HTTPDigestAuth
 
 from os import listdir
@@ -192,7 +194,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.mementoStatusPublicArchives.Destroy()
 
         memCountMsg = ''
-        if mCount > 0:
+        if mCount is None:
+            config.msg_fetchingMementos
+        elif mCount > 0:
             locale.setlocale(locale.LC_ALL, '')
 
             mCount = locale.format("%d", mCount, grouping=True)
@@ -209,7 +213,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         elif mCount == 0:
             memCountMsg = "No mementos available."
         else:
-            memCountMsg = config.msg_fetchingMementos
+            ''' '''
 
         # Bug: Does not update UI on Windows
         self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg,
@@ -246,7 +250,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             cleanedLine = line.strip()
             if cleanedLine[:1].isdigit():
                 mCount += 1
-                archHosts.add(cleanedLine.split('/', 3)[2])
+                archHosts.add(cleanedLine.split(b'/', 3)[2])
 
         # UI not updated on Windows
         self.setMementoCount(mCount, len(archHosts))
@@ -1294,7 +1298,7 @@ class Heritrix(Service):
         def justFile(fullPath):
             return os.path.basename(fullPath)
 
-        return map(justFile, glob.glob(os.path.join(config.heritrixJobPath, '*')))
+        return list(map(justFile, glob.glob(os.path.join(config.heritrixJobPath, '*'))))
     ''' # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
         -H "Accept: application/xml"
         # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth 
