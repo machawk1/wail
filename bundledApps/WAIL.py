@@ -18,6 +18,7 @@ import time
 import sys
 import locale
 import datetime
+import functools
 # from ntfy.backends.default import notify
 
 try:  # Py3
@@ -1271,7 +1272,7 @@ class Wayback(Service):
                 locale.setlocale(locale.LC_ALL, "C")
                 entries = tempFile.readlines()
                 entries = list(set(entries))  # uniq
-                entries.sort(cmp=locale.strcoll)
+                entries.sort(key=functools.cmp_to_key(locale.strcoll))
                 for entry in entries:
                     finalFile.write(entry)
 
