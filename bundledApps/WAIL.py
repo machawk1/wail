@@ -453,7 +453,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                                config.msg_uriInArchives_title)
             b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo,
                           pos=(10, 85), size=(25, 15))
-            mb.AddButton(b)  # Will not work in wxPython >4
+            # Disabled until we tie more functionality to the button
+            # mb.AddButton(b)  # Will not work in wxPython >4
 
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
