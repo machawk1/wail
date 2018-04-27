@@ -19,19 +19,17 @@ import sys
 import locale
 import datetime
 import functools
+import six
 # from ntfy.backends.default import notify
 
+from six.moves.urllib.request import urlopen
+from six.moves.urllib.parse import urlparse
+from six.moves.urllib import request
+from six.moves.urllib.error import HTTPError
+
 try:  # Py3
-    from urllib.request import urlopen
-    from urllib.request import urlparse
-    from urllib import request
-    from urllib.error import HTTPError
     import _thread as thread  # For a more responsive UI
 except ImportError:  # Py2
-    from urllib2 import urlopen
-    from urllib2 import Request as request
-    from urllib2 import HTTPError
-    from urlparse import urlparse
     import thread  # For a more responsive UI
 
 import base64
@@ -196,7 +194,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         memCountMsg = ''
         if mCount is None:
-            config.msg_fetchingMementos
+            memCountMsg = config.msg_fetchingMementos
         elif mCount > 0:
             locale.setlocale(locale.LC_ALL, '')
 
@@ -723,7 +721,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
 
-            #Button layout
+            # Button layout
             bsize = self.width, self.height = (125, 25 * .75)
             self.setupNewCrawlButton = wx.Button(
                 self, 1, config.buttonLabel_heritrix_newCrawl, (0, 70), bsize)
@@ -731,7 +729,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self, 1, config.buttonLabel_heritrix_launchWebUI,
                 (0, 92), bsize)
 
-            #Button functionality
+            # Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
@@ -853,7 +851,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # TODO: check if the UI elements already exist before adding them
             if hasattr(self, 'newCrawlTextCtrlLabel'):
                 print('The UI has already been setup.')
-                return
+                #return
             
             self.statusMsg.Hide()
 
@@ -874,7 +872,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_CHAR, self.handleCrawlDepthKeypress)
             
-            #self.crawlOptionsButton = wx.Button(self, -1, "More options",  pos=(150,125))
+            # self.crawlOptionsButton = wx.Button(self, -1, "More options",
+            # ...pos=(150,125))
             self.startCrawlButton = wx.Button(
                 self, -1, "Start Crawl",  pos=(265, 110))
             self.startCrawlButton.SetDefault()
@@ -1150,6 +1149,7 @@ class Service():
             print(('Some other error occurred trying ' 
                    'to check service accessibility.'))
             return False
+
 
 class Wayback(Service):
     uri = config.uri_wayback
