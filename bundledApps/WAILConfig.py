@@ -48,6 +48,7 @@ msg_wrongLocation_body = (
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = b"No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
+msg_noMementosAvailable = "No mementos available."
 
 msg_crawlStatus_writingConfig = 'Writing Crawl Configuration...'
 msg_crawlStatus_launchingCrawler = 'Launching Crawler...'

@@ -192,25 +192,32 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.mementoStatus.Destroy()
             self.mementoStatusPublicArchives.Destroy()
 
+        # Ensure mCount is an int, convert if not, allow None
+        if mCount is not None and not isinstance(mCount, int):
+            mCount = int(mCount)
+        if mCount is not None and (mCount < 0 or aCount < 0):
+            raise ValueError('Invalid memento or archive count specified')
+
         memCountMsg = ''
         if mCount is None:
             memCountMsg = config.msg_fetchingMementos
         elif mCount > 0:
             locale.setlocale(locale.LC_ALL, '')
 
-            mCount = locale.format("%d", mCount, grouping=True)
             mPlurality = 's'
             aPlurality = 's'
+
             if mCount == 1:
                 mPlurality = ''
             if aCount == 1:
                 aPlurality = ''
+            mCount = locale.format("%d", mCount, grouping=True)
             memCountMsg = ('{0} memento{1} available '
                            'from {2} archive{3}').format(
                 mCount, mPlurality, aCount, aPlurality
             )
         elif mCount == 0:
-            memCountMsg = "No mementos available."
+            memCountMsg = config.msg_noMementosAvailable
         else:
             ''' '''
 
