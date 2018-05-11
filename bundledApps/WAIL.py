@@ -22,6 +22,8 @@ import functools
 import six
 # from ntfy.backends.default import notify
 
+from wx.lib.pubsub import pub # For indexer
+
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib import request
@@ -39,9 +41,9 @@ import ssl
 import shutil
 
 import json
-from HeritrixJob import HeritrixJob
-import WAILConfig as config
-import wailUtil as util
+from .HeritrixJob import HeritrixJob
+from . import WAILConfig as config
+from . import wailUtil as util
 
 
 # from wx import *
@@ -95,10 +97,8 @@ class TabController(wx.Frame):
         self.Notebook.AddPage(self.advConfig, config.tabLabel_advanced)
         self.createMenu()
 
-        self.indexingTimer = threading.Timer(
-            INDEX_TIMER_SECONDS, Wayback().index)
-        self.indexingTimer.daemon = True
-        self.indexingTimer.start()
+        self.indexer = Indexer()
+        pub.sendMessage("indexerStart")
 
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
@@ -133,10 +133,27 @@ class TabController(wx.Frame):
 
     def quit(self, button):
         print('Quitting!')
-        if mainAppWindow.indexingTimer:
-            mainAppWindow.indexingTimer.cancel()
+        pub.sendMessage('indexerCancel')
         # os._exit(0) # Quit without buffer cleanup
         sys.exit(1)  # Be a good citizen. Cleanup your memory footprint
+
+
+class Indexer():
+    def __init__(self):
+        pub.subscribe(self.start, "indexerStart")
+        pub.subscribe(self.start, "indexerStop")
+        pub.subscribe(self.start, "indexerCancel")
+
+    def start(self):
+        self.indexingTimer = threading.Timer(
+            INDEX_TIMER_SECONDS, Wayback().index)
+        self.indexingTimer.daemon = True
+        self.indexingTimer.start()
+
+    def cancel(self):
+        if self.indexingTimer:
+            self.indexingTimer.cancel()
+
 
 
 class WAILGUIFrame_Basic(wx.Panel):
@@ -184,6 +201,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         thread.start_new_thread(self.fetchMementos, ())
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
+
+        pub.subscribe(self.updateUI, "basic")
+
+    def updateUI(self, message, arg2=None):
+        print('ACK')
 
     def setMementoCount(self, mCount, aCount=0):
         ui_mementoCountMessage_pos = (105, 85)
@@ -354,7 +376,8 @@ class WAILGUIFrame_Basic(wx.Panel):
           if not Heritrix().accessible():
             self.launchHeritrix()
           self.setMessage(config.msg_crawlStatus_launchingWayback)
-          mainAppWindow.advConfig.startTomcat(None)
+          pub.sendMessage('tomcat', 'start')
+          #mainAppWindow.advConfig.startTomcat(None)
           # time.sleep(4)
           self.setMessage(config.msg_crawlStatus_initializingCrawlJob)
           self.startHeritrixJob()
@@ -396,7 +419,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        pub.sendMessage('updateServiceStatuses')
 
     def startHeritrixJob(self):
         self.buildHeritrixJob()
@@ -433,11 +457,12 @@ class WAILGUIFrame_Basic(wx.Panel):
         return
 
     def checkIfURLIsInArchive(self, button):
+        pub.sendMessage("basic", message='radon')
         url = config.uri_wayback_allMementos + self.uri.GetValue()
-        req = request(url)
+        #req = request.urlopen(url)
         statusCode = None
         try:
-            resp = urlopen(req)
+            resp = request.urlopen(url)
             statusCode = resp.getcode()
         except HTTPError as e:
             statusCode = e.code
@@ -813,7 +838,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             data = {"action": action}
             headers = {"Accept":"application/xml",
                        "Content-type":"application/x-www-form-urlencoded"}
-            r =requests.post(config.uri_heritrixJob + jobId,
+            r = requests.post(config.uri_heritrixJob + jobId,
                              auth = HTTPDigestAuth(
                                  config.heritrixCredentials_username,
                                  config.heritrixCredentials_password),
@@ -989,6 +1014,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
 
+        self.createUIPubSubs()
+
+    def createUIPubSubs(self):
+        pub.subscribe(self.startTomcat, "startTomcat")
+        #pub.subscribe(self.stopTomcat, "stopTomcat")
+        pub.subscribe(self.generalPanel.updateServiceStatuses, 'updateServiceStatuses')
+
     def tomcatMessageOff(self):
         # self.tomcatStatus.SetLabel(msg_waybackDisabled)
         self.tomcatStatus.SetForegroundColour((255, 0, 0))
@@ -1005,7 +1037,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         ret = subprocess.Popen(cmd)
         waitingForTomcat = True
         while waitingForTomcat:
-            if Wayback().accessible(): waitingForTomcat = False
+            if Wayback().accessible():
+                waitingForTomcat = False
             time.sleep(2)
 
         self.waybackPanel.viewWaybackInBrowserButton.Enable() #TODO: error here
@@ -1165,7 +1198,8 @@ class Wayback(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
+        pub.sendMessage('updateServiceStatuses', 'wayback', 'FIXING')
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -1177,8 +1211,9 @@ class Wayback(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses(
-            "wayback", "KILLING")
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses(
+        #    "wayback", "KILLING")
+        pub.sendMessage('updateServiceStatuses', 'wayback', 'KILLING')
         cmd = config.tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -1288,11 +1323,11 @@ class Wayback(Service):
         print('DONE!')
 
         # Queue next iteration of indexing
-        if mainAppWindow.indexingTimer:
-            mainAppWindow.indexingTimer.cancel()
-        mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
-        mainAppWindow.indexingTimer.daemon = True
-        mainAppWindow.indexingTimer.start()
+        #if tc.indexingTimer:
+        #    tc.indexingTimer.cancel()
+        #tc.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,Wayback().index)
+        #tc.indexingTimer.daemon = True
+        #tc.indexingTimer.start()
 
 
 class Tomcat(Service):
@@ -1343,7 +1378,8 @@ class Heritrix(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
+        pub.sendMessage('updateServiceStatuses', 'heritrix', 'FIXING')
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
@@ -1354,7 +1390,8 @@ class Heritrix(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix", "KILLING")
+        #mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix", "KILLING")
+        pub.sendMessage('updateServiceStatuses', 'heritrix', 'KILLING')
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print('Trying to kill Heritrix...')
