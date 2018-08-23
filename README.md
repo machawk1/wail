@@ -44,6 +44,6 @@ then move the WAIL source directory to the root of your C drive (thus making C:\
 <p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
 
 <h2>Contact</h2>
-<p>WAIL is a project of the Web Science and Digital Libraries (WS-DL) research group at Old Dominion University (ODU), created by Mat Kelly.</p>
+<p>WAIL is a project of the [Web Science and Digital Libraries (WS-DL) Research Group](https://ws-dl.cs.odu.edu/) at [Old Dominion University (ODU)](https://odu.edu/), created by [Mat Kelly](https://www.cs.odu.edu/~mkelly/) with additional extensive contributions by [John Berlin](https://github.com/n0tan3rd).</p>
 
 <p>For support e-mail wail@matkelly.com or tweet to us at <a href="https://twitter.com/machawk1">@machawk1</a> and/or <a href="https://twitter.com/WebSciDL">@WebSciDL</a>.</p>
