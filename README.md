@@ -9,6 +9,10 @@ Tools included and accessible through the GUI are <a href="https://github.com/in
 
 WAIL is written in Python and compiled to a native executable using <a href="http://www.pyinstaller.org/">PyInstaller</a>.
 
+<blockquote>
+ <b>NOTE:</b> WAIL has <em>also</em> been reimagined in <a href="https://github.com/n0tan3rd/wail">WAIL-Electron</a>. The reimagined version enables high fidelity web archiving using modern capture and replay tools as well as collection-based archive organization. For natively using conventional institutional-grade Web archiving tools like OpenWayback and Heritrix, the repo where you reside is the place to be.
+</blockquote>
+
 <h2>Installing WAIL</h2>
 
 WAIL is an application that runs either on your macOS (.app) or Windows (.exe) system. To install WAIL, first <a href="http://machawk1.github.io/wail/#download">download</a> the appropriate package for your file system (.dmg for macOS or .zip for Windows), open the package, and follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
