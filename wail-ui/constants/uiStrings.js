@@ -233,6 +233,6 @@ export const loadingRecords = {
   heritrixWasNotStarted: `${general.heritrix} was not started`,
   archivesLoaded: `${general.collections} Have Been Loaded`,
   archivesNotLoaded: `${general.collections} Have Not Been Loaded`,
-  crawlsLoaded: `${general.crawls} HaveBeen Loaded`,
+  crawlsLoaded: `${general.crawls} Have Been Loaded`,
   crawlsNotLoaded: `${general.crawls} Have Not Been Loaded`
 }
