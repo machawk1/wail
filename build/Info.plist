@@ -63,8 +63,6 @@
 	</array>
 	<key>LSApplicationCategoryType</key>
 	<string>public.app-category.utilities</string>
-	<key>LSBackgroundOnly</key>
-	<string>1</string>
 	<key>CFBundleSignature</key>
 	<string>WAIL</string>
 	<key>CFBundleIdentifier</key>

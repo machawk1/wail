@@ -60,7 +60,7 @@ createBinary ()
 {
   pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
-  # See #319 # cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
+  cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
   cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
   #pkgbuild --install-location=/Applications --component ./dist/WAIL.app ~/Downloads/WAIL.pkg
