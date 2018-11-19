@@ -434,10 +434,9 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def checkIfURLIsInArchive(self, button):
         url = config.uri_wayback_allMementos + self.uri.GetValue()
-        req = request(url)
         statusCode = None
         try:
-            resp = urlopen(req)
+            resp = urlopen(url)
             statusCode = resp.getcode()
         except HTTPError as e:
             statusCode = e.code
