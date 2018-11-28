@@ -466,6 +466,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             # Disabled until we tie more functionality to the button
             # mb.AddButton(b)  # Will not work in wxPython >4
 
+    def resetArchiveNowButton(self):
+        self.archiveNowButton.SetLabel(config.buttonLabel_archiveNow_initializing)
+
+
     def viewArchiveInBrowser(self, button):
         if Wayback().accessible():
             webbrowser.open_new_tab(
@@ -476,11 +480,17 @@ class WAILGUIFrame_Basic(wx.Panel):
             result = d.ShowModal()
             d.Destroy()
             if result == wx.ID_YES: # Launch Wayback
-                Wayback().fix(None)
+                Wayback().fix(self.resetArchiveNowButton)
                 # TODO: artificial delay here while we wait for
                 # ...Wayback to launch
                 # TODO: change button to fixing
-                self.archiveNowButton.SetLabel("Initializing Wayback...")
+                self.archiveNowButton.SetLabel("Initializing...")
+
+                # Adds image, but won't animate with wxPython
+                #img = wx.EmptyBitmap( 1, 1 )
+                #img.LoadFile('/Users/machawk1/Downloads/Spinner.gif', wx.BITMAP_TYPE_ANY)
+                #self.archiveNowButton.SetBitmap(img)
+                
                 #self.viewArchiveInBrowser(None)
 
 
