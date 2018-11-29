@@ -584,8 +584,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         
         def getHeritrixVersion(self, abbr=True):
             htrixLibPath = config.heritrixPath + "lib/"
-            if 'darwin' not in sys.platform:
-                htrixLibPath = htrixLibPath.replace('/',r'\')
+
             for file in os.listdir(htrixLibPath):
               if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
@@ -593,8 +592,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def getWaybackVersion(self):
             tomcatLibPath = config.tomcatPath + "/webapps/lib/"
-            if 'darwin' not in sys.platform:
-                tomcatLibPath = tomcatLibPath.replace('/',r'\')
+
             for file in os.listdir(tomcatLibPath):
               if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
@@ -603,8 +601,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def getTomcatVersion(self):
         #Apache Tomcat Version 7.0.30
             releaseNotesPath = config.tomcatPath + '/RELEASE-NOTES'
-            if 'darwin' not in sys.platform:
-                releaseNotesPath = releaseNotesPath.replace('/',r'\')
+
             if not os.path.exists(releaseNotesPath): return "?"
             f = open(releaseNotesPath, 'r')
             version = ""
@@ -722,7 +719,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if sys.platform.startswith('darwin'):
              subprocess.call(('open', filepath))
             elif os.name == 'nt':
-             filepath = filepath.replace('/',r'\')
              os.startfile(filepath)
             elif os.name == 'posix':
              subprocess.call(('xdg-open', filepath))
@@ -856,7 +852,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if sys.platform.startswith('darwin'):
                 subprocess.call(('open', file))
             elif os.name == 'nt':
-                file = file.replace('/',r'\')
                 os.startfile(file)
             elif os.name == 'posix':
                 subprocess.call(('xdg-open', file))
@@ -1205,9 +1200,6 @@ class Wayback(Service):
 
         dest = wailPath + "/config/path-index.txt"
         warcsPath = wailPath + "/archives/"
-        if 'darwin' not in sys.platform:
-            dest = dest.replace('/',r'\')
-            warcsPath = warcsPath.replace('/',r'\')
 
         outputContents = ""
         for file in listdir(warcsPath):
@@ -1230,12 +1222,6 @@ class Wayback(Service):
         cdxFilePathPre = wailRoot + "/archiveIndexes/"
         cdxIndexerPath = '{0}{1}'.format(
             wailRoot, "/bundledApps/tomcat/webapps/bin/cdx-indexer")
-
-        if 'darwin' not in sys.platform:
-            dest = dest.replace('/',r'\')
-            warcsPath = warcsPath.replace('/',r'\')
-            cdxFilePathPre = cdxFilePathPre.replace('/',r'\')
-            cdxIndexerPath = cdxIndexerPath.replace('/',r'\')
         
         outputContents = ""
         print('generating ', end='')
@@ -1250,8 +1236,6 @@ class Wayback(Service):
         # Combine CDX files
         print('combining ', end='')
         allCDXesPath = wailRoot + "/archiveIndexes/*.cdx"
-        if 'darwin' not in sys.platform:
-            allCDXesPath = allCDXesPath.replace('/',r'\')
 
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
@@ -1259,8 +1243,6 @@ class Wayback(Service):
 
         # Is cdxt the right filename?
         unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt'
-        if 'darwin' not in sys.platform:
-            unsortedPath = unsortedPath.replace('/',r'\')
 
         with open(unsortedPath, 'w') as outfile:
             for fname in filenames:
@@ -1335,9 +1317,6 @@ class Heritrix(Service):
                 config.heritrixJobPath, jobId, launch,
                 "logs/progress-statistics.log")
             print(progressLogFilePath)
-
-            if 'darwin' not in sys.platform:
-                progressLogFilePath = progressLogFilePath.replace('/',r'\')
 
             lastLine = util.tail(progressLogFilePath)
 
