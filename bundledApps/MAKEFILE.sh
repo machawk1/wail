@@ -27,7 +27,7 @@ fi
 if [ -d "$DIRECTORY" ]; then
   echo $DIRECTORY" already exists!"
   while true; do
-    read -p "Do you want me to delete the old app and continue (y/n)?" yn
+    read -p "Do you want me to delete the old app and continue (y/n)? " yn
     case $yn in
         [Yy]* ) echo "Continuing to build"; break;;
         [Nn]* ) exit;;
