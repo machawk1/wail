@@ -190,6 +190,7 @@ elif sys.platform.startswith('win32'):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
+    wailPath = "C:\wail"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
