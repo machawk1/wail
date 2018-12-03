@@ -1,7 +1,7 @@
 pip install --upgrade wxPython
 pip install -r requirements.txt
 
-pyinstaller --onefile --windowed --version-file=build/version.txt --icon=build/icons/wail_blue.ico bundledApps/WAIL.py
+pyinstaller -p bundledApps --onefile --windowed --clean --version-file=build/version.txt --icon=build/icons/wail_blue.ico bundledApps/WAIL.py
 
 ::Windows shell (CMD.exe)
 move /Y ".\dist\WAIL.exe" ".\WAIL.exe"
