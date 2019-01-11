@@ -862,9 +862,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def setupNewCrawl(self, evt):
             # TODO: check if the UI elements already exist before adding them
             if hasattr(self, 'newCrawlTextCtrlLabel'):
-                print('The UI has already been setup.')
-                #return
-            
+                self.newCrawlTextCtrlLabel.Destroy()
+                self.newCrawlTextCtrl.Destroy()
+                self.newCrawlDepthTextCtrlLabel.Destroy()
+                self.newCrawlDepthTextCtrl.Destroy()
+                self.startCrawlButton.Destroy()
+
             self.statusMsg.Hide()
 
             self.newCrawlTextCtrlLabel = wx.StaticText(
