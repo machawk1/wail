@@ -211,7 +211,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                 mPlurality = ''
             if aCount == 1:
                 aPlurality = ''
-            mCount = locale.format("%d", mCount, grouping=True)
+            mCount = locale.format_string("%d", mCount, grouping=True)
             memCountMsg = ('{0} memento{1} available '
                            'from {2} archive{3}').format(
                 mCount, mPlurality, aCount, aPlurality
