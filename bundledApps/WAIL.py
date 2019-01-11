@@ -910,6 +910,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrlLabel.Hide()
             self.newCrawlTextCtrl.Hide()
             self.startCrawlButton.Hide()
+            self.newCrawlDepthTextCtrl.Hide()
+            self.newCrawlDepthTextCtrlLabel.Hide()
 
         def showNewCrawlUIElements(self):
             self.newCrawlTextCtrlLabel.Show()
