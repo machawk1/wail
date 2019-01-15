@@ -4,6 +4,7 @@ import requests
 
 host = 'localhost'
 waybackPort = '8080'
+# Use a separate JSON file that only queries the local WAIL instance for MemGator
 archiveConfigFile = '/Applications/WAIL.app/config/archive.json'
 
 class MainHandler(tornado.web.RequestHandler):
