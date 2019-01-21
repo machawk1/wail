@@ -102,10 +102,32 @@ class TabController(wx.Frame):
 
     def createMenu(self):
         self.menu_bar = wx.MenuBar()
+
+        self.file_menu = wx.Menu()
+        self.edit_menu = wx.Menu()
+        self.view_menu = wx.Menu()
+        self.window_menu = wx.Menu()
         self.help_menu = wx.Menu()
+
+        self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl)
+
+        self.view_menu.Append(4, config.menuTitle_view_viewBasic)
+        self.view_menu.Append(4, '', '', wx.ITEM_SEPARATOR)
+        adv = self.view_menu.Append(4, config.menuTitle_view_viewAdvanced)
+        adv.Enable(0)
+        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_services)
+        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_wayback)
+        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_heritrix)
+        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_miscellaneous)
+
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT, "&QUIT")
+
+        self.menu_bar.Append(self.file_menu, config.menuTitle_file)
+        self.menu_bar.Append(self.edit_menu, config.menuTitle_edit)
+        self.menu_bar.Append(self.view_menu, config.menuTitle_view)
+        self.menu_bar.Append(self.window_menu, config.menuTitle_window)
         self.menu_bar.Append(self.help_menu, config.menuTitle_help)
 
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
@@ -361,7 +383,7 @@ class WAILGUIFrame_Basic(wx.Panel):
           mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
           self.setMessage(
               'Crawl of {0} started!'.format(self.uri.GetValue()[0:41]))
-          wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+          wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
           #if sys.platform.startswith('darwin'): #show a notification
           #... of success in OS X
           #  Notifier.notify('Archival process successfully initiated.',
@@ -396,7 +418,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: shell=True was added for OS X, verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses()
+        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses()
 
     def startHeritrixJob(self):
         self.buildHeritrixJob()
@@ -495,7 +517,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
-    class GeneralPanel(wx.Panel, threading.Thread):
+    class ServicesPanel(wx.Panel, threading.Thread):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
             colWidth = 60
@@ -504,7 +526,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             col0 = colWidth * 0 + 10
             wx.StaticText(self, 100,
-                          config.tabLabel_advanced_general_serviceStatus,
+                          config.tabLabel_advanced_services_serviceStatus,
                           (col0 - 10, rowHeight * 0), cellSize)
             wx.StaticText(self, 100, config.tabLabel_advanced_wayback,
                           (col0, rowHeight*1), cellSize)
@@ -986,12 +1008,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.SetSizer(vbox)
 
-        self.generalPanel = WAILGUIFrame_Advanced.GeneralPanel(self.Notebook)
+        self.servicesPanel = WAILGUIFrame_Advanced.ServicesPanel(self.Notebook)
         self.waybackPanel = WAILGUIFrame_Advanced.WaybackPanel(self.Notebook)
         self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.Notebook)
         self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(self.Notebook)
 
-        self.Notebook.AddPage(self.generalPanel, config.tabLabel_advanced_general)
+        self.Notebook.AddPage(self.servicesPanel, config.tabLabel_advanced_services)
         self.Notebook.AddPage(self.waybackPanel, config.tabLabel_advanced_wayback)
         self.Notebook.AddPage(self.heritrixPanel, config.tabLabel_advanced_heritrix)
         self.Notebook.AddPage(self.miscellaneousPanel, config.tabLabel_advanced_miscellaneous)
@@ -1175,11 +1197,11 @@ class Wayback(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("wayback","FIXING")
+        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("wayback","FIXING")
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
         if cb:
           wx.CallAfter(cb)
 
@@ -1187,12 +1209,12 @@ class Wayback(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses(
+        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses(
             "wayback", "KILLING")
         cmd = config.tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
 
     def index(self):
         self.generatePathIndex()
@@ -1337,10 +1359,10 @@ class Heritrix(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix","FIXING")
+        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("heritrix","FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
-        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
         if cb:
           wx.CallAfter(cb)
 
@@ -1348,13 +1370,13 @@ class Heritrix(Service):
         thread.start_new_thread(self.killAsync,())
 
     def killAsync(self):
-        mainAppWindow.advConfig.generalPanel.updateServiceStatuses("heritrix", "KILLING")
+        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("heritrix", "KILLING")
         #Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print('Trying to kill Heritrix...')
         ret = subprocess.Popen(cmd, stderr=subprocess.STDOUT, shell=True)
         time.sleep(3)
-        wx.CallAfter(mainAppWindow.advConfig.generalPanel.updateServiceStatuses)
+        wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
 
 
 class UpdateSoftwareWindow(wx.Frame):
