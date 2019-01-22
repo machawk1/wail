@@ -112,14 +112,13 @@ class TabController(wx.Frame):
         self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl)
 
         self.view_menu.Append(4, config.menuTitle_view_viewBasic)
-        self.view_menu.Append(4, '', '', wx.ITEM_SEPARATOR)
+        self.view_menu.AppendSeparator()
         adv = self.view_menu.Append(4, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
-        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_services)
+        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_services+ '\tCtrl+QS')
         self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_wayback)
         self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_heritrix)
         self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_miscellaneous)
-
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT, "&QUIT")
@@ -283,7 +282,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # UI not updated on Windows
         self.setMementoCount(mCount, len(archHosts))
 
-        print('MEMGATOR  counted {0} {1} {2}'.format(
+        print('MEMGATOR\n* URI-R: {0}\n* URI-Ms {1}\n* Archives: {2}'.format(
             currentURIValue,
             mCount,
             len(archHosts)
