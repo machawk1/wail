@@ -111,14 +111,14 @@ class TabController(wx.Frame):
 
         self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl)
 
-        self.view_menu.Append(4, config.menuTitle_view_viewBasic)
+        self.view_menu.Append(10, config.menuTitle_view_viewBasic)
         self.view_menu.AppendSeparator()
-        adv = self.view_menu.Append(4, config.menuTitle_view_viewAdvanced)
+        adv = self.view_menu.Append(20, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
-        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_services+ '\tCtrl+QS')
-        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_wayback)
-        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_heritrix)
-        self.view_menu.Append(4, config.menuTitle_view_viewAdvanced_miscellaneous)
+        self.view_menu.Append(21, config.menuTitle_view_viewAdvanced_services+ '\tCtrl+QS')
+        self.view_menu.Append(22, config.menuTitle_view_viewAdvanced_wayback)
+        self.view_menu.Append(23, config.menuTitle_view_viewAdvanced_heritrix)
+        self.view_menu.Append(24, config.menuTitle_view_viewAdvanced_miscellaneous)
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
         self.help_menu.Append(wx.ID_EXIT, "&QUIT")
@@ -131,7 +131,35 @@ class TabController(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
+
+        # Menu events
+        self.Bind(wx.EVT_MENU,
+                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), id=10)
+
+        self.Bind(wx.EVT_MENU,
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle), id=21)
+        self.Bind(wx.EVT_MENU,
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle), id=22)
+        self.Bind(wx.EVT_MENU,
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle), id=23)
+        self.Bind(wx.EVT_MENU,
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), id=24)
+
         self.SetMenuBar(self.menu_bar)
+
+    def displayTab(self, tableTitle='Basic', basicTab=False):
+        if basicTab:
+            self.Notebook.SetSelection(0)
+            return
+
+        self.Notebook.SetSelection(1)
+
+        pages = {config.menuTitle_view_viewAdvanced_services: 0,
+                 config.menuTitle_view_viewAdvanced_wayback: 1,
+                 config.menuTitle_view_viewAdvanced_heritrix: 2,
+                 config.menuTitle_view_viewAdvanced_miscellaneous: 3}
+        self.advConfig.Notebook.SetSelection(pages[tableTitle])
+
 
     def displayAboutMenu(self, button):
         info = wx.adv.AboutDialogInfo()
