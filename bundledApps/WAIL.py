@@ -146,13 +146,6 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU,
                   lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), id=24)
 
-        print(self.menu_bar.GetMenuCount())
-        print(self.menu_bar.GetMenu(0).GetTitle())
-        print(self.menu_bar.GetMenu(1).GetTitle())
-        print(self.menu_bar.GetMenu(2).GetTitle())
-        print(self.menu_bar.GetMenu(3).GetTitle())
-        print(self.menu_bar.GetMenu(4).GetTitle())
-
         # Fix Quit menuitem capitalization
         wailMenu = self.menu_bar.OSXGetAppleMenu()
         for m in wailMenu.GetMenuItems():
