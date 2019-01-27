@@ -109,18 +109,19 @@ class TabController(wx.Frame):
         self.window_menu = wx.Menu()
         self.help_menu = wx.Menu()
 
-        self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl)
+        self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl + '\tCTRL+N')
 
-        self.view_menu.Append(10, config.menuTitle_view_viewBasic)
+        self.view_menu.Append(10, config.menuTitle_view_viewBasic + '\tCTRL+0')
         self.view_menu.AppendSeparator()
         adv = self.view_menu.Append(20, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
-        self.view_menu.Append(21, config.menuTitle_view_viewAdvanced_services+ '\tCtrl+QS')
-        self.view_menu.Append(22, config.menuTitle_view_viewAdvanced_wayback)
-        self.view_menu.Append(23, config.menuTitle_view_viewAdvanced_heritrix)
-        self.view_menu.Append(24, config.menuTitle_view_viewAdvanced_miscellaneous)
+        self.view_menu.Append(21, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
+        self.view_menu.Append(22, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
+        self.view_menu.Append(23, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
+        self.view_menu.Append(24, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
+        self.help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
         self.help_menu.Append(wx.ID_EXIT, "&QUIT")
 
         self.menu_bar.Append(self.file_menu, config.menuTitle_file)
