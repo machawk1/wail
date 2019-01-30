@@ -109,7 +109,8 @@ class TabController(wx.Frame):
         self.window_menu = wx.Menu()
         self.help_menu = wx.Menu()
 
-        self.file_menu.Append(wx.ID_NEW, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        self.file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, id=1)
 
         self.view_menu.Append(10, config.menuTitle_view_viewBasic + '\tCTRL+0')
         self.view_menu.AppendSeparator()
@@ -119,6 +120,11 @@ class TabController(wx.Frame):
         self.view_menu.Append(22, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
         self.view_menu.Append(23, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
         self.view_menu.Append(24, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
+
+        self.window_menu.AppendCheckItem(41, config.menuTitle_window_wail)
+        self.window_menu.Check(41, True)
+        self.Bind(wx.EVT_MENU, lambda evt: self.Check(True), id=41)
+
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
         self.help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
@@ -152,7 +158,6 @@ class TabController(wx.Frame):
             if m.GetId() ==  wx.ID_EXIT:
               m.SetText("Quit WAIL\tCTRL+Q")
 
-
         self.SetMenuBar(self.menu_bar)
 
     def displayTab(self, tableTitle='Basic', basicTab=False):
@@ -168,6 +173,10 @@ class TabController(wx.Frame):
                  config.menuTitle_view_viewAdvanced_miscellaneous: 3}
         self.advConfig.Notebook.SetSelection(pages[tableTitle])
 
+
+    def setupNewCrawlFromMenu(self, menu):
+        self.displayTab(config.menuTitle_view_viewAdvanced_heritrix)
+        self.advConfig.heritrixPanel.setupNewCrawl(None)
 
     def displayAboutMenu(self, button):
         info = wx.adv.AboutDialogInfo()
