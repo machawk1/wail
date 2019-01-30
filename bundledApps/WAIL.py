@@ -926,7 +926,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print('Restarting job')
 
         def setupNewCrawl(self, evt):
-            # TODO: check if the UI elements already exist before adding them
+            # Check if the UI elements already exist before adding them
             if hasattr(self, 'newCrawlTextCtrlLabel'):
                 self.newCrawlTextCtrlLabel.Destroy()
                 self.newCrawlTextCtrl.Destroy()
@@ -942,7 +942,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrl = \
                 wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90),
                             style=multiLineAndNoWrapStyle)
-            
+
             self.newCrawlDepthTextCtrlLabel = \
                 wx.StaticText(self, -1, "Depth", pos=(135, 112))
             self.newCrawlDepthTextCtrl = \
@@ -961,6 +961,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
             self.showNewCrawlUIElements()
+            self.newCrawlTextCtrl.SetFocus()
 
         def handleCrawlDepthKeypress(self, event):
           keycode = event.GetKeyCode()
