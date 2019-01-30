@@ -63,11 +63,11 @@ msg_archiveFailed_java = 'Archive Now failed due to Java JRE Requirements'
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
 
-tabLabel_advanced_general = "General"
+tabLabel_advanced_services = "Services"
 tabLabel_advanced_wayback = "Wayback"
 tabLabel_advanced_heritrix = "Heritrix"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
-tabLabel_advanced_general_serviceStatus = "SERVICE STATUS"
+tabLabel_advanced_services_serviceStatus = "SERVICE STATUS"
 
 serviceEnabledLabel_YES = "OK"  # "✓"
 serviceEnabledLabel_NO = "X"  # "✗"
@@ -111,7 +111,22 @@ ui_justButtons_Position_1 = (0, 2)
 ui_justButtons_Position_2 = (0, 27)
 
 menuTitle_about = '&About WAIL'
+menuTitle_file = '&File'
+menuTitle_edit = '&Edit'
+menuTitle_view = '&View'
+menuTitle_window = '&Window'
 menuTitle_help = '&Help'
+menuTitle_file_newCrawl = '&New Crawl'
+
+menuTitle_view_viewBasic = 'Basic Interface'
+menuTitle_view_viewAdvanced = 'Advanced Interface'
+menuTitle_view_viewAdvanced_services = 'Services'
+menuTitle_view_viewAdvanced_wayback = 'Wayback'
+menuTitle_view_viewAdvanced_heritrix = 'Heritrix'
+menuTitle_view_viewAdvanced_miscellaneous = 'Miscelleanous'
+
+menuTitle_window_wail = 'Web Archiving Integration Layer'
+
 menu_destroyJob = 'Destroy Job (Does not delete archive)'
 menu_forceCrawlFinish = 'Force crawl to finish'
 menu_viewJobInWebBrowser = 'View job in web browser'
