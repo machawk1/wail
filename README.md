@@ -44,6 +44,16 @@ From the Windows shell:
 <blockquote>bundledApps\MAKEFILE.bat</blockquote>
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
+<h3>Generating App Icons</h3>
+
+On macOS, application icons are stored in a `.icns` file. To generate this:
+
+1. Create a directory to store images: `mkdir wail_blue.iconset`
+1. Create 11 .pngs of your high resolution (≥ 1024x1024) image, semantically scaled and named: `icon_16x16.png`, `icon_16x16@2x.png` (copy of the the 32x32 icon renamed), `icon_32x32.png`, `icon_32x32@2x.png`, `icon_128x128.png`, `icon_128x128@2x.png`, `icon_256x256.png`, `icon_256x256@2x.png`, `icon_512x512.png`, `icon_512x512@2x.png`, `icon_1024x1024.png`.
+1. Place the 11 images into the wail.iconset directory.
+1. Run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
+1. Store `wail_blue.icns` in `WAIL/build/icons/` when running building WAIL using `MAKEFILE.sh` on macOS.</li>
+
 <h2>Problems? Questions?</h2>
 <p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
 
