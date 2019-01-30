@@ -109,21 +109,22 @@ class TabController(wx.Frame):
         self.window_menu = wx.Menu()
         self.help_menu = wx.Menu()
 
-        self.file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
-        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, id=1)
+        self.fileNewCrawl = self.file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, self.fileNewCrawl)
 
-        self.view_menu.Append(10, config.menuTitle_view_viewBasic + '\tCTRL+0')
+        self.viewBasic = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
         self.view_menu.AppendSeparator()
-        adv = self.view_menu.Append(20, config.menuTitle_view_viewAdvanced)
+        adv = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
-        self.view_menu.Append(21, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
-        self.view_menu.Append(22, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
-        self.view_menu.Append(23, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
-        self.view_menu.Append(24, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
 
-        self.window_menu.AppendCheckItem(41, config.menuTitle_window_wail)
-        self.window_menu.Check(41, True)
-        self.Bind(wx.EVT_MENU, lambda evt: self.Check(True), id=41)
+        self.viewServices = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
+        self.viewWayback = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
+        self.viewHeritrix = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
+        self.viewMiscellaneous = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
+
+        self.windowWail = self.window_menu.AppendCheckItem(wx.ID_ANY, config.menuTitle_window_wail)
+        self.windowWail.Check()  # Initially check menu item
+        self.Bind(wx.EVT_MENU, lambda evt: self.windowWail.Check(True), self.windowWail) # Prevent from being unchecked
 
 
         self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
@@ -141,16 +142,16 @@ class TabController(wx.Frame):
 
         # Menu events
         self.Bind(wx.EVT_MENU,
-                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), id=10)
+                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), self.viewBasic)
 
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle), id=21)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle), self.viewServices)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle), id=22)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle), self.viewWayback)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle), id=23)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle), self.viewHeritrix)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), id=24)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), self.viewMiscellaneous)
 
         # Fix Quit menuitem capitalization
         wailMenu = self.menu_bar.OSXGetAppleMenu()
