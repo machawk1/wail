@@ -154,9 +154,10 @@ class TabController(wx.Frame):
 
         # Fix Quit menuitem capitalization
         wailMenu = self.menu_bar.OSXGetAppleMenu()
-        for m in wailMenu.GetMenuItems():
-            if m.GetId() == wx.ID_EXIT:
-                m.SetText("Quit WAIL\tCTRL+Q")
+        if wailMenu is not None:
+            for m in wailMenu.GetMenuItems():
+                if m.GetId() == wx.ID_EXIT:
+                    m.SetText("Quit WAIL\tCTRL+Q")
 
         self.SetMenuBar(self.menu_bar)
 
