@@ -9,7 +9,7 @@ _"One-Click User Instigated Preservation"_
 Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools 
 intended to be used as an easy way for anyone to preserve and replay web pages. 
 Tools included and accessible through the GUI are [Heritrix 3.2.0](https://github.com/internetarchive/heritrix3) 
-and [PyWb 0.33.0](https://github.com/ikreymer/pywb).
+and [PyWb 0.33.0](https://github.com/webrecorder/pywb).
 
 More information about the motivations behind WAIL see the [Motivations](https://github.com/N0taN3rd/wail/wiki/Why-Wail%3F) section in the projects wiki.
 
