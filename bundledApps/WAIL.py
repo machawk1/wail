@@ -305,8 +305,13 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
         print('MEMGATOR checking {0}'.format(currentURIValue))
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
+        startupinfo = None
+        # Fixes issue of Popen on Windows
+        if sys.platform.startswith('win32'):
+            startupinfo = subprocess.STARTUPINFO()
+            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+
         mg = Popen([config.memGatorPath,
                     '--arcs', config.archivesJSON,
                     '--format', 'cdxj',
