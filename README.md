@@ -25,7 +25,7 @@ This work is supported by the [National Endowment for the Humanities](https://ww
 ## Usage
 You can download the latest release [here](https://github.com/N0taN3rd/wail/releases). 
 
-For information on using WAIL please consult the [wiki](https://github.com/N0taN3rd/wail/wiki)
+For information on using WAIL please consult the [wiki](https://github.com/N0taN3rd/wail/wiki).
 
 To get up and running from source consult the Development section in this projects wiki.
 
