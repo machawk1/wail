@@ -143,7 +143,7 @@ function downloadMemgator (uri) {
     }
     let req = request(opts)
     req.on('response', function (res) {
-      let namrex = /['a-zA-z;\s]+=([a-zA-z0-9.-]+)/g
+      let namrex = /['a-zA-z;\s]+=(["a-zA-z0-9.-]+)/g
       if (res.statusCode !== 200) throw new Error('Status not 200')
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
