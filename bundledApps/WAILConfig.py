@@ -122,6 +122,7 @@ menuTitle_file_allCrawls = 'All Crawls'
 menuTitle_file_allCrawls_finish = 'Finish'
 menuTitle_file_allCrawls_pause = 'Pause'
 menuTitle_file_allCrawls_restart = 'Restart'
+menuTitle_file_allCrawls_destroy = "Destroy (does not delete archive)"
 
 menuTitle_view_viewBasic = 'Basic Interface'
 menuTitle_view_viewAdvanced = 'Advanced Interface'

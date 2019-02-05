@@ -116,6 +116,9 @@ class TabController(wx.Frame):
         self.file_allCrawls_finish = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
         self.file_allCrawls_pauseUnpause = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
         self.file_allCrawls_restart = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
+        self.file_allCrawls.AppendSeparator()
+        self.file_allCrawls_destroy = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
+
         self.file_menu.AppendSeparator()
         self.file_menu.AppendSubMenu(self.file_allCrawls, config.menuTitle_file_allCrawls)
 
