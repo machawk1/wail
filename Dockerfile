@@ -4,10 +4,13 @@ FROM ubuntu:18.10
 RUN apt update && apt install -y \
  apt-file \
  libsdl1.2debian \
+ libgtk-3-0 \
+ libxxf86vm1 \
+ libsm6 \
+ libnotify4 \
  python2 \
  python-pip \
- git && \
- apt-file update && apt-file search libSDL-1.2.so.0 
+ git
 
 RUN pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython && \
     pip install pyinstaller && \
@@ -16,3 +19,4 @@ RUN pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ub
     pip install -r requirements.txt && \
     pyinstaller -p bundledApps bundledApps/WAIL.py --onefile --windowed --clean
 
+RUN chmod a+x /wail/dist/WAIL
