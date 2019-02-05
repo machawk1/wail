@@ -39,12 +39,7 @@ To build WAIL from source to a native system executable (.app or .exe), open a t
 <blockquote>sh bundledApps/MAKEFILE.sh</blockquote>
 This will create /Applications/WAIL.app on macOS.
 
-<h3>Windows</h3>
-From the Windows shell:
-<blockquote>bundledApps\MAKEFILE.bat</blockquote>
-then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
-
-<h3>Generating App Icons</h3>
+<h4>Generating App Icons</h4>
 
 On macOS, application icons are stored in a `.icns` file. To generate this:
 
@@ -53,6 +48,22 @@ On macOS, application icons are stored in a `.icns` file. To generate this:
 1. Place the 11 images into the wail.iconset directory.
 1. Run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
 1. Store `wail_blue.icns` in `WAIL/build/icons/` when running building WAIL using `MAKEFILE.sh` on macOS.</li>
+
+
+<h3>Windows</h3>
+From the Windows shell:
+<blockquote>bundledApps\MAKEFILE.bat</blockquote>
+then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
+
+<h3>Linux</h3>
+Building for Linux is problematic due to wxPython but a solution is in-the-works using Docker (see #340). From the root of the WAIL source working directory, run:
+<code>docker build . -t wail:latest</code>
+then
+<code>docker container run -d -it --rm -p 5920:5920 wail</code>
+To log into the container and view the WAIL GUI built, run:
+<code>docker exec -it (containername) /bin/bash</code>
+TODO: figure out why the tag specified above cannot be used for this last command.
+
 
 <h2>Problems? Questions?</h2>
 <p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
