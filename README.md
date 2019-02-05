@@ -57,13 +57,21 @@ then move the WAIL source directory to the root of your C drive (thus making C:\
 
 <h3>Linux</h3>
 Building for Linux is problematic due to wxPython but a solution is in-the-works using Docker (see #340). From the root of the WAIL source working directory, run:
+
 <code>docker build -t machawk1/wail .</code>
+
 then
+
 <code>docker container run -d -it --rm -p 5920:5920 --name wail machawk1/wail</code>
+
 To log into the container and view the WAIL GUI built, run:
+
 <code>docker exec -it wail /bin/bash</code>
+
 Once in the container, run the WAIL executable with:
+
 <code>/wail/dist/WAIL</code>
+
 and take note of the plethora of errors that still need to be resolved for #2.
 
 
