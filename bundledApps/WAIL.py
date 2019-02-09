@@ -112,6 +112,18 @@ class TabController(wx.Frame):
         self.fileNewCrawl = self.file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
         self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, self.fileNewCrawl)
 
+        self.file_allCrawls = wx.Menu()
+        self.file_allCrawls_finish = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
+        self.file_allCrawls_pauseUnpause = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
+        self.file_allCrawls_restart = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
+        self.file_allCrawls.AppendSeparator()
+        self.file_allCrawls_destroy = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
+
+        self.file_menu.AppendSeparator()
+        self.file_menu.AppendSubMenu(self.file_allCrawls, config.menuTitle_file_allCrawls)
+
+        self.Bind(wx.EVT_MENU, self.advConfig.heritrixPanel.finishAllCrawls, self.file_allCrawls_finish)
+
         self.viewBasic = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
         self.view_menu.AppendSeparator()
         adv = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
@@ -881,10 +893,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()))
             menu.Destroy()
 
-        def forceCrawlFinish(self, evt):
-            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+        def finishAllCrawls(self, evt):
+            for crawlId in self.listbox.GetItems():
+                self.finishCrawl(crawlId)
+
+        def finishCrawl(self, jobId):
             self.sendActionToHeritrix("terminate", jobId)
             self.sendActionToHeritrix("teardown", jobId)
+
+        def forceCrawlFinish(self, evt):
+            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+            self.finishCrawl(jobId)
 
         def sendActionToHeritrix(self, action, jobId):
             data = {"action": action}
