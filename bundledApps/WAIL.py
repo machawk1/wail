@@ -280,7 +280,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         if mCount is None:
             memCountMsg = config.msg_fetchingMementos
         elif mCount > 0:
-            locale.setlocale(locale.LC_ALL, '')
+            locale.setlocale(locale.LC_ALL, 'en_US')
 
             mPlurality = 's'
             aPlurality = 's'
