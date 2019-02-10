@@ -49,36 +49,36 @@ class HeritrixJob:
     def __init__(self, hJobPath, uris, depth=1):
         self.jobPath = hJobPath
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<!-- 
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE
-
+  
    This is a relatively minimal configuration suitable for many crawls.
-
+   
    Commented-out beans and properties are provided as an example; values
    shown in comments reflect the actual defaults which are in effect
-   if not otherwise specified specification. (To change from the default
-   behavior, uncomment AND alter the shown values.)
+   if not otherwise specified specification. (To change from the default 
+   behavior, uncomment AND alter the shown values.)   
  -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:context="http://www.springframework.org/schema/context"
-	     xmlns:aop="http://www.springframework.org/schema/aop"
-	     xmlns:tx="http://www.springframework.org/schema/tx"
-	     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:context="http://www.springframework.org/schema/context"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
            http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
+ 
  <context:annotation-config/>
 
-<!--
+<!-- 
   OVERRIDES
-   Values elsewhere in the configuration may be replaced ('overridden')
-   by a Properties map declared in a PropertiesOverrideConfigurer,
-   using a dotted-bean-path to address individual bean properties.
+   Values elsewhere in the configuration may be replaced ('overridden') 
+   by a Properties map declared in a PropertiesOverrideConfigurer, 
+   using a dotted-bean-path to address individual bean properties. 
    This allows us to collect a few of the most-often changed values
    in an easy-to-edit format here at the beginning of the model
-   configuration.
+   configuration.    
  -->
  <!-- overrides from a text property list -->
  <bean id="simpleOverrides" class="org.springframework.beans.factory.config.PropertyOverrideConfigurer">
@@ -105,6 +105,7 @@ metadata.description=Basic crawl starting with useful defaults
 
 # URLS HERE
 ''' +  "\r\n".join(uris) + '''
+
     </prop>
    </props>
   </property>
@@ -112,20 +113,20 @@ metadata.description=Basic crawl starting with useful defaults
 
  <!-- CRAWL METADATA: including identification of crawler/operator -->
  <bean id="metadata" class="org.archive.modules.CrawlMetadata" autowire="byName">
-       <property name="operatorContactUrl" value="YOURCONTACTINFOHERE"/>
-       <property name="jobName" value="MyWAILBasedHeritrixCrawl"/>
-       <property name="description" value="SampleCrawl"/>
-  <property name="robotsPolicyName" value="ignore"/>
+       <property name="operatorContactUrl" value="[see override above]"/>
+       <property name="jobName" value="[see override above]"/>
+       <property name="description" value="[see override above]"/>
+  <!-- <property name="robotsPolicyName" value="obey"/> -->
   <!-- <property name="operator" value=""/> -->
   <!-- <property name="operatorFrom" value=""/> -->
   <!-- <property name="organization" value=""/> -->
   <!-- <property name="audience" value=""/> -->
-   <property name="userAgentTemplate"
-         value="Mozilla/5.0 (compatible; heritrix/@VERSION@ +@OPERATOR_CONTACT_URL@)"/>
-
+  <!-- <property name="userAgentTemplate" 
+         value="Mozilla/5.0 (compatible; heritrix/@VERSION@ +@OPERATOR_CONTACT_URL@)"/> -->
+       
  </bean>
-
- <!-- SEEDS: crawl starting points
+ 
+ <!-- SEEDS: crawl starting points 
       ConfigString allows simple, inline specification of a moderate
       number of seeds; see below comment for example of using an
       arbitrarily-large external file. -->
@@ -142,11 +143,11 @@ metadata.description=Basic crawl starting with useful defaults
 <!-- <property name='sourceTagSeeds' value='false'/> -->
 <!-- <property name='blockAwaitingSeedLines' value='-1'/> -->
  </bean>
-
+ 
  <!-- SEEDS ALTERNATE APPROACH: specifying external seeds.txt file in
-      the job directory, similar to the H1 approach.
+      the job directory, similar to the H1 approach. 
       Use either the above, or this, but not both. -->
- <!--
+ <!-- 
  <bean id="seeds" class="org.archive.modules.seeds.TextSeedModule">
   <property name="textSource">
    <bean class="org.archive.spring.ConfigFile">
@@ -157,37 +158,39 @@ metadata.description=Basic crawl starting with useful defaults
   <property name='blockAwaitingSeedLines' value='-1'/>
  </bean>
   -->
+ 
+ <bean id="acceptSurts" class="org.archive.modules.deciderules.surt.SurtPrefixedDecideRule">
+  <!-- <property name="decision" value="ACCEPT"/> -->
+  <!-- <property name="seedsAsSurtPrefixes" value="true" /> -->
+  <!-- <property name="alsoCheckVia" value="false" /> -->
+  <!-- <property name="surtsSourceFile" value="" /> -->
+  <!-- <property name="surtsDumpFile" value="${launchId}/surts.dump" /> -->
+  <!-- <property name="surtsSource">
+        <bean class="org.archive.spring.ConfigString">
+         <property name="value">
+          <value>
+           # example.com
+           # http://www.example.edu/path1/
+           # +http://(org,example,
+          </value>
+         </property> 
+        </bean>
+       </property> -->
+ </bean>
 
- <!-- SCOPE: rules for which discovered URIs to crawl; order is very
+ <!-- SCOPE: rules for which discovered URIs to crawl; order is very 
       important because last decision returned other than 'NONE' wins. -->
  <bean id="scope" class="org.archive.modules.deciderules.DecideRuleSequence">
   <!-- <property name="logToFile" value="false" /> -->
   <property name="rules">
    <list>
     <!-- Begin by REJECTing all... -->
-    <bean class="org.archive.modules.deciderules.RejectDecideRule">
-    </bean>
+    <bean class="org.archive.modules.deciderules.RejectDecideRule" />
     <!-- ...then ACCEPT those within configured/seed-implied SURT prefixes... -->
-    <bean class="org.archive.modules.deciderules.surt.SurtPrefixedDecideRule">
-     <!-- <property name="seedsAsSurtPrefixes" value="true" /> -->
-     <!-- <property name="alsoCheckVia" value="false" /> -->
-     <!-- <property name="surtsSourceFile" value="" /> -->
-     <!-- <property name="surtsDumpFile" value="${launchId}/surts.dump" /> -->
-     <!-- <property name="surtsSource">
-           <bean class="org.archive.spring.ConfigString">
-            <property name="value">
-             <value>
-              # example.com
-              # http://www.example.edu/path1/
-              # +http://(org,example,
-             </value>
-            </property>
-           </bean>
-          </property> -->
-    </bean>
+    <ref bean="acceptSurts" />
     <!-- ...but REJECT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TooManyHopsDecideRule">
-       <property name="maxHops" value="''' + str(depth) + '''" />
+     <property name="maxHops" value="''' + str(depth) + '''" />
     </bean>
     <!-- ...but ACCEPT those more than a configured link-hop-count from start... -->
     <bean class="org.archive.modules.deciderules.TransclusionDecideRule">
@@ -198,7 +201,7 @@ metadata.description=Basic crawl starting with useful defaults
     <bean class="org.archive.modules.deciderules.surt.SurtPrefixedDecideRule">
           <property name="decision" value="REJECT"/>
           <property name="seedsAsSurtPrefixes" value="false"/>
-          <property name="surtsDumpFile" value="${launchId}/negative-surts.dump" />
+          <property name="surtsDumpFile" value="${launchId}/negative-surts.dump" /> 
      <!-- <property name="surtsSource">
            <bean class="org.archive.spring.ConfigFile">
             <property name="path" value="negative-surts.txt" />
@@ -231,35 +234,35 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-
- <!--
+ 
+ <!-- 
    PROCESSING CHAINS
-    Much of the crawler's work is specified by the sequential
+    Much of the crawler's work is specified by the sequential 
     application of swappable Processor modules. These Processors
-    are collected into three 'chains'. The CandidateChain is applied
+    are collected into three 'chains'. The CandidateChain is applied 
     to URIs being considered for inclusion, before a URI is enqueued
-    for collection. The FetchChain is applied to URIs when their
-    turn for collection comes up. The DispositionChain is applied
+    for collection. The FetchChain is applied to URIs when their 
+    turn for collection comes up. The DispositionChain is applied 
     after a URI is fetched and analyzed/link-extracted.
   -->
-
- <!-- CANDIDATE CHAIN -->
+  
+ <!-- CANDIDATE CHAIN --> 
  <!-- first, processors are declared as top-level named beans -->
  <bean id="candidateScoper" class="org.archive.crawler.prefetch.CandidateScoper">
  </bean>
  <bean id="preparer" class="org.archive.crawler.prefetch.FrontierPreparer">
   <!-- <property name="preferenceDepthHops" value="-1" /> -->
   <!-- <property name="preferenceEmbedHops" value="1" /> -->
-  <!-- <property name="canonicalizationPolicy">
+  <!-- <property name="canonicalizationPolicy"> 
         <ref bean="canonicalizationPolicy" />
        </property> -->
-  <!-- <property name="queueAssignmentPolicy">
+  <!-- <property name="queueAssignmentPolicy"> 
         <ref bean="queueAssignmentPolicy" />
        </property> -->
-  <!-- <property name="uriPrecedencePolicy">
+  <!-- <property name="uriPrecedencePolicy"> 
         <ref bean="uriPrecedencePolicy" />
        </property> -->
-  <!-- <property name="costAssignmentPolicy">
+  <!-- <property name="costAssignmentPolicy"> 
         <ref bean="costAssignmentPolicy" />
        </property> -->
  </bean>
@@ -274,8 +277,8 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-
- <!-- FETCH CHAIN -->
+  
+ <!-- FETCH CHAIN --> 
  <!-- first, processors are declared as top-level named beans -->
  <bean id="preselector" class="org.archive.crawler.prefetch.Preselector">
   <!-- <property name="recheckScope" value="false" /> -->
@@ -300,7 +303,7 @@ metadata.description=Basic crawl starting with useful defaults
          <entry key="whois.arin.net" value="z + %s" />
          <entry key="whois.denic.de" value="-T dn %s" />
         </map>
-       </property>
+       </property> 
       </bean> -->
  <bean id="fetchHttp" class="org.archive.modules.fetcher.FetchHTTP">
   <!-- <property name="useHTTP11" value="false" /> -->
@@ -308,7 +311,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="timeoutSeconds" value="1200" /> -->
   <!-- <property name="maxFetchKBSec" value="0" /> -->
   <!-- <property name="defaultEncoding" value="ISO-8859-1" /> -->
-  <!-- <property name="shouldFetchBodyRule">
+  <!-- <property name="shouldFetchBodyRule"> 
         <bean class="org.archive.modules.deciderules.AcceptDecideRule"/>
        </property> -->
   <!-- <property name="soTimeoutMs" value="20000" /> -->
@@ -319,7 +322,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="sendRange" value="false" /> -->
   <!-- <property name="ignoreCookies" value="false" /> -->
   <!-- <property name="sslTrustLevel" value="OPEN" /> -->
-  <!-- <property name="acceptHeaders">
+  <!-- <property name="acceptHeaders"> 
         <list>
          <value>Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8</value>
         </list>
@@ -347,11 +350,11 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="maxAttributeValueLength" value="16384" /> -->
  </bean>
  <bean id="extractorCss" class="org.archive.modules.extractor.ExtractorCSS">
- </bean>
+ </bean> 
  <bean id="extractorJs" class="org.archive.modules.extractor.ExtractorJS">
  </bean>
  <bean id="extractorSwf" class="org.archive.modules.extractor.ExtractorSWF">
- </bean>
+ </bean>    
  <!-- now, processors are assembled into ordered FetchChain bean -->
  <bean id="fetchProcessors" class="org.archive.modules.FetchChain">
   <property name="processors">
@@ -378,12 +381,12 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-
+  
  <!-- DISPOSITION CHAIN -->
  <!-- first, processors are declared as top-level named beans  -->
  <bean id="warcWriter" class="org.archive.modules.writer.WARCWriterProcessor">
-  <property name="compress" value="false" />
-  <property name="prefix" value="MAT" />
+  <!-- <property name="compress" value="false" /> -->
+  <!-- <property name="prefix" value="MAT" /> -->
   <!-- <property name="suffix" value="${HOSTNAME}" /> -->
   <!-- <property name="maxFileSizeBytes" value="1000000000" /> -->
   <!-- <property name="poolMaxActive" value="1" /> -->
@@ -397,12 +400,16 @@ metadata.description=Basic crawl starting with useful defaults
         </list>
        </property>
   <!-- <property name="writeRequests" value="true" /> -->
+  <!-- <property name="template" value="${prefix}-${timestamp17}-${serialno}-${heritrix.pid}~${heritrix.hostname}~${heritrix.port}" /> -->
+  <!-- <property name="writeRequests" value="true" /> -->
   <!-- <property name="writeMetadata" value="true" /> -->
   <!-- <property name="writeRevisitForIdenticalDigests" value="true" /> -->
   <!-- <property name="writeRevisitForNotModified" value="true" /> -->
+  <!-- <property name="startNewFilesOnCheckpoint" value="true" /> -->
  </bean>
  <bean id="candidates" class="org.archive.crawler.postprocessor.CandidatesProcessor">
   <!-- <property name="seedsRedirectNewSeeds" value="true" /> -->
+  <!-- <property name="processErrorOutlinks" value="false" /> -->
  </bean>
  <bean id="disposition" class="org.archive.crawler.postprocessor.DispositionProcessor">
   <!-- <property name="delayFactor" value="5.0" /> -->
@@ -420,7 +427,7 @@ metadata.description=Basic crawl starting with useful defaults
    <list>
     <!-- write to aggregate archival files... -->
     <ref bean="warcWriter"/>
-    <!-- ...send each outlink candidate URI to CandidateChain,
+    <!-- ...send each outlink candidate URI to CandidateChain, 
          and enqueue those ACCEPTed to the frontier... -->
     <ref bean="candidates"/>
     <!-- ...then update stats, shared-structures, frontier decisions -->
@@ -429,9 +436,9 @@ metadata.description=Basic crawl starting with useful defaults
    </list>
   </property>
  </bean>
-
+ 
  <!-- CRAWLCONTROLLER: Control interface, unifying context -->
- <bean id="crawlController"
+ <bean id="crawlController" 
    class="org.archive.crawler.framework.CrawlController">
   <!-- <property name="maxToeThreads" value="25" /> -->
   <property name="pauseAtStart" value="false" />
@@ -440,9 +447,9 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="recorderOutBufferBytes" value="16384" /> -->
   <!-- <property name="scratchDir" value="scratch" /> -->
  </bean>
-
+ 
  <!-- FRONTIER: Record of all URIs discovered and queued-for-collection -->
- <bean id="frontier"
+ <bean id="frontier" 
    class="org.archive.crawler.frontier.BdbFrontier">
   <!-- <property name="queueTotalBudget" value="-1" /> -->
   <!-- <property name="balanceReplenishAmount" value="3000" /> -->
@@ -471,23 +478,23 @@ metadata.description=Basic crawl starting with useful defaults
        </property> -->
   <!-- <property name="dumpPendingAtClose" value="false" /> -->
  </bean>
-
- <!-- URI UNIQ FILTER: Used by frontier to remember already-included URIs -->
- <bean id="uriUniqFilter"
+ 
+ <!-- URI UNIQ FILTER: Used by frontier to remember already-included URIs --> 
+ <bean id="uriUniqFilter" 
    class="org.archive.crawler.util.BdbUriUniqFilter">
  </bean>
-
+ 
  <!--
    EXAMPLE SETTINGS OVERLAY SHEETS
    Sheets allow some settings to vary by context - usually by URI context,
-   so that different sites or sections of sites can be treated differently.
+   so that different sites or sections of sites can be treated differently. 
    Here are some example Sheets for common purposes. The SheetOverlaysManager
-   (below) automatically collects all Sheet instances declared among the
-   original beans, but others can be added during the crawl via the scripting
+   (below) automatically collects all Sheet instances declared among the 
+   original beans, but others can be added during the crawl via the scripting 
    interface.
   -->
 
-<!-- forceRetire: any URI to which this sheet's settings are applied
+<!-- forceRetire: any URI to which this sheet's settings are applied 
      will force its containing queue to 'retired' status. -->
 <bean id='forceRetire' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -497,10 +504,10 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- smallBudget: any URI to which this sheet's settings are applied
-     will give its containing queue small values for balanceReplenishAmount
-     (causing it to have shorter 'active' periods while other queues are
-     waiting) and queueTotalBudget (causing the queue to enter 'retired'
+<!-- smallBudget: any URI to which this sheet's settings are applied 
+     will give its containing queue small values for balanceReplenishAmount 
+     (causing it to have shorter 'active' periods while other queues are 
+     waiting) and queueTotalBudget (causing the queue to enter 'retired' 
      status once that expenditure is reached by URI attempts and errors) -->
 <bean id='smallBudget' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -511,7 +518,7 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- veryPolite: any URI to which this sheet's settings are applied
+<!-- veryPolite: any URI to which this sheet's settings are applied 
      will cause its queue to take extra-long politeness snoozes -->
 <bean id='veryPolite' class='org.archive.spring.Sheet'>
  <property name='map'>
@@ -524,9 +531,9 @@ metadata.description=Basic crawl starting with useful defaults
  </property>
 </bean>
 
-<!-- highPrecedence: any URI to which this sheet's settings are applied
-     will give its containing queue a slightly-higher than default
-     queue precedence value. That queue will then be preferred over
+<!-- highPrecedence: any URI to which this sheet's settings are applied 
+     will give its containing queue a slightly-higher than default 
+     queue precedence value. That queue will then be preferred over 
      other queues for active crawling, never waiting behind lower-
      precedence queues. -->
 <bean id='highPrecedence' class='org.archive.spring.Sheet'>
@@ -562,43 +569,44 @@ metadata.description=Basic crawl starting with useful defaults
 </bean>
 -->
 
- <!--
+ <!-- 
    OPTIONAL BUT RECOMMENDED BEANS
   -->
-
+  
  <!-- ACTIONDIRECTORY: disk directory for mid-crawl operations
-      Running job will watch directory for new files with URIs,
+      Running job will watch directory for new files with URIs, 
       scripts, and other data to be processed during a crawl. -->
  <bean id="actionDirectory" class="org.archive.crawler.framework.ActionDirectory">
   <!-- <property name="actionDir" value="action" /> -->
   <!-- <property name="doneDir" value="${launchId}/actions-done" /> -->
   <!-- <property name="initialDelaySeconds" value="10" /> -->
   <!-- <property name="delaySeconds" value="30" /> -->
- </bean>
-
+ </bean> 
+ 
  <!--  CRAWLLIMITENFORCER: stops crawl when it reaches configured limits -->
  <bean id="crawlLimiter" class="org.archive.crawler.framework.CrawlLimitEnforcer">
   <!-- <property name="maxBytesDownload" value="0" /> -->
   <!-- <property name="maxDocumentsDownload" value="0" /> -->
   <!-- <property name="maxTimeSeconds" value="0" /> -->
  </bean>
-
+ 
  <!-- CHECKPOINTSERVICE: checkpointing assistance -->
- <bean id="checkpointService"
+ <bean id="checkpointService" 
    class="org.archive.crawler.framework.CheckpointService">
   <!-- <property name="checkpointIntervalMinutes" value="-1"/> -->
   <!-- <property name="checkpointsDir" value="checkpoints"/> -->
+  <!-- <property name="forgetAllButLatest" value="true"/> -->
  </bean>
-
- <!--
+ 
+ <!-- 
    OPTIONAL BEANS
-    Uncomment and expand as needed, or if non-default alternate
+    Uncomment and expand as needed, or if non-default alternate 
     implementations are preferred.
   -->
-
+  
  <!-- CANONICALIZATION POLICY -->
  <!--
- <bean id="canonicalizationPolicy"
+ <bean id="canonicalizationPolicy" 
    class="org.archive.modules.canonicalize.RulesCanonicalizationPolicy">
    <property name="rules">
     <list>
@@ -612,42 +620,42 @@ metadata.description=Basic crawl starting with useful defaults
   </property>
  </bean>
  -->
-
+ 
 
  <!-- QUEUE ASSIGNMENT POLICY -->
  <!--
- <bean id="queueAssignmentPolicy"
+ <bean id="queueAssignmentPolicy" 
    class="org.archive.crawler.frontier.SurtAuthorityQueueAssignmentPolicy">
   <property name="forceQueueAssignment" value="" />
   <property name="deferToPrevious" value="true" />
   <property name="parallelQueues" value="1" />
  </bean>
  -->
-
+ 
  <!-- URI PRECEDENCE POLICY -->
  <!--
- <bean id="uriPrecedencePolicy"
+ <bean id="uriPrecedencePolicy" 
    class="org.archive.crawler.frontier.precedence.CostUriPrecedencePolicy">
  </bean>
  -->
-
+ 
  <!-- COST ASSIGNMENT POLICY -->
  <!--
- <bean id="costAssignmentPolicy"
+ <bean id="costAssignmentPolicy" 
    class="org.archive.crawler.frontier.UnitCostAssignmentPolicy">
  </bean>
  -->
-
+ 
  <!-- CREDENTIAL STORE: HTTP authentication or FORM POST credentials -->
- <!--
- <bean id="credentialStore"
+ <!-- 
+ <bean id="credentialStore" 
    class="org.archive.modules.credential.CredentialStore">
  </bean>
  -->
-
- <!-- DISK SPACE MONITOR:
+ 
+ <!-- DISK SPACE MONITOR: 
       Pauses the crawl if disk space at monitored paths falls below minimum threshold -->
- <!--
+ <!-- 
  <bean id="diskSpaceMonitor" class="org.archive.crawler.monitor.DiskSpaceMonitor">
    <property name="pauseThresholdMiB" value="500" />
    <property name="monitorConfigPaths" value="true" />
@@ -658,20 +666,23 @@ metadata.description=Basic crawl starting with useful defaults
    </property>
  </bean>
  -->
-
- <!--
+ 
+ <!-- 
    REQUIRED STANDARD BEANS
     It will be very rare to replace or reconfigure the following beans.
   -->
 
  <!-- STATISTICSTRACKER: standard stats/reporting collector -->
- <bean id="statisticsTracker"
+ <bean id="statisticsTracker" 
    class="org.archive.crawler.reporting.StatisticsTracker" autowire="byName">
   <!-- <property name="reports">
         <list>
          <bean id="crawlSummaryReport" class="org.archive.crawler.reporting.CrawlSummaryReport" />
          <bean id="seedsReport" class="org.archive.crawler.reporting.SeedsReport" />
-         <bean id="hostsReport" class="org.archive.crawler.reporting.HostsReport" />
+         <bean id="hostsReport" class="org.archive.crawler.reporting.HostsReport">
+     		<property name="maxSortSize" value="-1" />
+     		<property name="suppressEmptyHosts" value="false" />
+         </bean>
          <bean id="sourceTagsReport" class="org.archive.crawler.reporting.SourceTagsReport" />
          <bean id="mimetypesReport" class="org.archive.crawler.reporting.MimetypesReport" />
          <bean id="responseCodeReport" class="org.archive.crawler.reporting.ResponseCodeReport" />
@@ -687,9 +698,9 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="keepSnapshotsCount" value="5" /> -->
   <!-- <property name="liveHostReportSize" value="20" /> -->
  </bean>
-
+ 
  <!-- CRAWLERLOGGERMODULE: shared logging facility -->
- <bean id="loggerModule"
+ <bean id="loggerModule" 
    class="org.archive.crawler.reporting.CrawlerLoggerModule">
   <!-- <property name="path" value="${launchId}/logs" /> -->
   <!-- <property name="crawlLogPath" value="crawl.log" /> -->
@@ -700,35 +711,38 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="nonfatalErrorsLogPath" value="nonfatal-errors.log" /> -->
   <!-- <property name="logExtraInfo" value="false" /> -->
  </bean>
-
+ 
  <!-- SHEETOVERLAYMANAGER: manager of sheets of contextual overlays
-      Autowired to include any SheetForSurtPrefix or
+      Autowired to include any SheetForSurtPrefix or 
       SheetForDecideRuled beans -->
  <bean id="sheetOverlaysManager" autowire="byType"
    class="org.archive.crawler.spring.SheetOverlaysManager">
  </bean>
 
  <!-- BDBMODULE: shared BDB-JE disk persistence manager -->
- <bean id="bdb"
+ <bean id="bdb" 
   class="org.archive.bdb.BdbModule">
   <!-- <property name="dir" value="state" /> -->
-  <!-- <property name="cachePercent" value="60" /> -->
+  <!-- if neither cachePercent or cacheSize are specified (the default), bdb
+       uses its own default of 60% -->
+  <!-- <property name="cachePercent" value="0" /> -->
+  <!-- <property name="cacheSize" value="0" /> -->
   <!-- <property name="useSharedCache" value="true" /> -->
   <!-- <property name="expectedConcurrency" value="25" /> -->
  </bean>
-
- <!-- BDBCOOKIESTORAGE: disk-based cookie storage for FetchHTTP -->
- <bean id="cookieStorage"
-   class="org.archive.modules.fetcher.BdbCookieStorage">
+ 
+ <!-- BDBCOOKIESTORE: disk-based cookie storage for FetchHTTP -->
+ <bean id="cookieStore" 
+  class="org.archive.modules.fetcher.BdbCookieStore">
   <!-- <property name="cookiesLoadFile"><null/></property> -->
   <!-- <property name="cookiesSaveFile"><null/></property> -->
-  <!-- <property name="bdb">
+  <!-- <property name="bdbModule">
         <ref bean="bdb"/>
        </property> -->
  </bean>
-
+ 
  <!-- SERVERCACHE: shared cache of server/host info -->
- <bean id="serverCache"
+ <bean id="serverCache" 
    class="org.archive.modules.net.BdbServerCache">
   <!-- <property name="bdb">
         <ref bean="bdb"/>
@@ -737,9 +751,9 @@ metadata.description=Basic crawl starting with useful defaults
 
  <!-- CONFIG PATH CONFIGURER: required helper making crawl paths relative
       to crawler-beans.cxml file, and tracking crawl files for web UI -->
- <bean id="configPathConfigurer"
+ <bean id="configPathConfigurer" 
    class="org.archive.spring.ConfigPathConfigurer">
  </bean>
-
+ 
 </beans>
-'''
+'''        

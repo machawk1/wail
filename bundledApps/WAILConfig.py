@@ -182,7 +182,7 @@ wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
 if 'darwin' in sys.platform:  # OS X Specific Code here
     # This should be dynamic but doesn't work with WAIL binary
     wailPath = "/Applications/WAIL.app"
-    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
+    heritrixPath = wailPath + "/bundledApps/heritrix-3.4.0-20190207/"
     heritrixBinPath = "sh " + heritrixPath+"bin/heritrix"
     heritrixJobPath = heritrixPath + "jobs/"
     fontSize = 10
@@ -215,7 +215,7 @@ elif sys.platform.startswith('win32'):
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
+    heritrixPath = wailPath + "\\bundledApps\\heritrix-3.4.0-20190207\\"
     heritrixBinPath = heritrixPath + "\\bin\\heritrix.cmd"
     heritrixJobPath = heritrixPath + "\\jobs\\"
     tomcatPath = wailPath + "\\bundledApps\\tomcat"
