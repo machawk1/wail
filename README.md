@@ -15,7 +15,16 @@ WAIL is written in Python and compiled to a native executable using <a href="htt
 
 <h2>Installing WAIL</h2>
 
-WAIL is an application that runs either on your macOS (.app) or Windows (.exe) system. To install WAIL, first <a href="http://machawk1.github.io/wail/#download">download</a> the appropriate package for your file system (.dmg for macOS or .zip for Windows), open the package, and follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
+WAIL is an application that runs either on your macOS (`.app`) or Windows (`.exe`) system.
+
+To install WAIL:
+1. <a href="http://machawk1.github.io/wail/#download">Download</a> the appropriate package for your file system (`.dmg` for macOS or `.zip` for Windows) or see [more releases](https://github.com/machawk1/wail/releases).
+2. Open the package (`.dmg` or `.zip`).
+3. Follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
+
+Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
+
+`𝚋𝚛𝚎𝚠 𝚌𝚊𝚜𝚔 𝚒𝚗𝚜𝚝𝚊𝚕𝚕 wail`
 
 <h2>Running WAIL</h2>
 
@@ -23,7 +32,7 @@ WAIL is an application that runs either on your macOS (.app) or Windows (.exe) s
 
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
-End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows (7+).
+End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows.
 To run it using Python for testing, run the following from the root of the WAIL source directory:
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
 
