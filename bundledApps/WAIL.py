@@ -678,9 +678,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             tomcatLibPath = config.tomcatPath + "/webapps/lib/"
 
             for file in os.listdir(tomcatLibPath):
-              if file.startswith("openwayback-core"):
-                regex = re.compile("core-(.*)\.")
-                return regex.findall(file)[0]
+                if file.startswith("openwayback-core"):
+                    regex = re.compile("core-(.*)\.")
+                    return regex.findall(file)[0]
 
         def getTomcatVersion(self):
             # Apache Tomcat Version 7.0.30
@@ -720,16 +720,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Update a transitional status and short circuit
             if serviceId and transitionalStatus:
-              if serviceId is "wayback":
-                self.setWaybackStatus(transitionalStatus)
-                return
-              elif serviceId is "heritrix":
-                self.setHeritrixStatus(transitionalStatus)
-                return
-              else:
-                print('{0}{1}'.format(
-                    'Invalid transitional service id specified. ',
-                    'Updating status per usual.'))
+                if serviceId is "wayback":
+                    self.setWaybackStatus(transitionalStatus)
+                    return
+                elif serviceId is "heritrix":
+                    self.setHeritrixStatus(transitionalStatus)
+                    return
+                else:
+                    print('{0}{1}'.format(
+                        'Invalid transitional service id specified. ',
+                        'Updating status per usual.'))
 
             if not hasattr(self, 'stateLabel'):
                 self.stateLabel = wx.StaticText(
@@ -759,7 +759,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.fix_wayback.Enable()
                 self.kill_wayback.Disable()
 
-             ##################################
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
@@ -914,7 +913,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             headers = {"Accept": "application/xml",
                        "Content-type": "application/x-www-form-urlencoded"}
             r =requests.post(config.uri_heritrixJob + jobId,
-                             auth = HTTPDigestAuth(
+                             auth=HTTPDigestAuth(
                                  config.heritrixCredentials_username,
                                  config.heritrixCredentials_password),
                              data=data, headers=headers,
@@ -1252,10 +1251,10 @@ class Service():
             return True
         except IOError as e:
             if hasattr(e, 'code'):  # HTTPError
-                print('Pseudo-Success in accessing ' + self.uri)
+                print(self.__class__.__name__ + ' Pseudo-Success in accessing ' + self.uri)
                 return True
 
-            print('Failed to access {0} service at {1}'.format(
+            print('Service: Failed to access {0} service at {1}'.format(
                 self.__class__.__name__, self.uri
             ))
             return False
@@ -1270,6 +1269,25 @@ class Wayback(Service):
 
     def fix(self, button, *cb):
         thread.start_new_thread(self.fixAsync, cb)
+
+    def accessible(self):
+        try:
+            handle = urlopen(self.uri, None, 3)
+
+            accessible = 'http://mementoweb.org/terms/donotnegotiate' in handle.info().dict['link']
+            if accessible:
+                print(self.__class__.__name__ + ' is a go! ')
+            else:
+                print('Unable to access {0}, something else is running on port 8080'.format(
+                    self.__class__.__name__))
+
+            return accessible
+
+        except Exception as e:
+            print('Wayback(): Failed to access {0} service at {1}'.format(
+                self.__class__.__name__, self.uri
+            ))
+            return False
 
     def fixAsync(self, cb=None):
         mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("wayback", "FIXING")
@@ -1390,6 +1408,9 @@ class Wayback(Service):
 
 class Tomcat(Service):
     uri = config.uri_wayback
+
+    def accessible(self):
+        return Wayback().accessible()
 
 
 class Heritrix(Service):
