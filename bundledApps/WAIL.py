@@ -265,7 +265,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def setMementoCount(self, mCount, aCount=0):
         ui_mementoCountMessage_pos = (105, 85)
-        ui_mementoCountMessage_size = (150, 20)
+        ui_mementoCountMessage_size = (250, 20)
         if hasattr(self, 'mementoStatus'):
             self.mementoStatus.Destroy()
             self.mementoStatusPublicArchives.Destroy()
