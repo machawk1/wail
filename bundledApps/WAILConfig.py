@@ -27,7 +27,7 @@ try:
 except:
     print('User likely has the binary in the wrong location.')
 
-osx_java7DMG = "http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg"
+osx_java7DMG = "https://matkelly.com/wail_old/support/jdk-7u79-macosx-x64.dmg"
 
 ###############################
 # Platform independent Messages

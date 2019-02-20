@@ -408,16 +408,31 @@ class WAILGUIFrame_Basic(wx.Panel):
                                      "Install now?", config.wail_style_yesNo)
                 result = d.ShowModal()
                 d.Destroy()
+
                 if result == wx.ID_NO:
                     sys.exit()
-                else:
-                    # self.javaInstalled()
-                    self.installJava()
 
-    def installJava(self):
-        resp = requests.get(config.osx_java7DMG)
-        with open('/tmp/java7.pdf', 'wb') as f:
-            f.write(resp.content)
+                prog = wx.ProgressDialog("Resolving Java Dependency", "Downloading Java 7 DMG", maximum=100)
+                prog.Pulse()
+                prog.Show()
+
+                thread.start_new_thread(self.installJava, (prog,))
+
+    def installJava(self, prog):
+        print('Downloading Java 7 DMG from {}'.format(config.osx_java7DMG))
+
+        with open('/tmp/java7.dmg', 'wb') as f:
+            resp = requests.get(config.osx_java7DMG, stream=True)
+
+            total_length = resp.headers.get('Content-Length')
+            dl = 0
+            total_length = int(total_length)
+
+            for data in resp.iter_content(chunk_size=4096):
+                dl += len(data)
+                f.write(data)
+                done = int(100 * dl / total_length)
+                thread.start_new_thread(prog.Update, (done,))
 
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
                   stdout=PIPE, stderr=PIPE)
