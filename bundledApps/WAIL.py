@@ -22,6 +22,8 @@ import functools
 import six
 # from ntfy.backends.default import notify
 
+from string import Template # Py3.6+
+
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib import request
@@ -847,13 +849,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
 
-            active = self.listbox.GetString(self.listbox.GetSelection())
-            print(util.tail(config.heritrixJobPath + active + '/job.log'))
-            jobLaunches = Heritrix().getJobLaunches(active)
+            crawlId = self.listbox.GetString(self.listbox.GetSelection())
+
+            jobLaunches = Heritrix().getJobLaunches(crawlId)
             if self.panelUpdater:  # Kill any currently running timer
                 self.panelUpdater.cancel()
                 self.panelUpdater = None
-            self.updateInfoPanel(active)
+            self.updateInfoPanel(crawlId)
 
         def updateInfoPanel(self, active):
             self.statusMsg.SetLabel(Heritrix().getCurrentStats(active))
@@ -916,12 +918,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             data = {"action": action}
             headers = {"Accept": "application/xml",
                        "Content-type": "application/x-www-form-urlencoded"}
-            r =requests.post(config.uri_heritrixJob + jobId,
-                             auth=HTTPDigestAuth(
-                                 config.heritrixCredentials_username,
-                                 config.heritrixCredentials_password),
-                             data=data, headers=headers,
-                             verify=False, stream=True)
+            r = requests.post(config.uri_heritrixJob + jobId,
+                              auth=HTTPDigestAuth(
+                                  config.heritrixCredentials_username,
+                                  config.heritrixCredentials_password),
+                              data=data, headers=headers,
+                              verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
             jobPath = config.heritrixJobPath +\
@@ -954,6 +956,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
+            # TODO: send request to API to restart job, perhaps send ID to this function
             print('Restarting job')
 
         def setupNewCrawl(self, evt):
@@ -1438,21 +1441,42 @@ class Heritrix(Service):
     def getCurrentStats(self, jobId):
         launches = self.getJobLaunches(jobId)
         ret = ""
+        status = ""
+        statusTemplate = Template('JobID: $jobId\n$status')
+
+        if len(launches) == 0:
+            status = "   NOT BUILT"
+
         for launch in launches:
             progressLogFilePath = "{0}{1}/{2}/{3}".format(
                 config.heritrixJobPath, jobId, launch,
                 "logs/progress-statistics.log")
-            print(progressLogFilePath)
-
             lastLine = util.tail(progressLogFilePath)
 
             ll = lastLine[0].replace(" ", "|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
-            ret = ("{0}JobID:{1}\n   Discovered: {2}\n   "
-                   "Queued: {3}\n   Downloaded: {4}\n").format(
-                ret, jobId, discovered, queued, downloaded)
-        return ret
+
+            try:  # Check if crawl is running by assuming scraped stats are ints
+                int(discovered)
+                status="   Discovered: {}\n   Queued: {}\n   Downloaded   {}\n".format(
+                    discovered, queued, downloaded)
+            except ValueError:
+                # Job is being built or completed
+                # TODO: Show more stats
+                if discovered == "CRAWL":
+                    if queued == "ENDED":
+                        status = "   ENDED"
+                    elif queued == "RUNNING":
+                        status = "   INITIALIZING"
+                    elif queued == "ENDING":
+                        status = "   ENDING"
+                    elif queued == "EMPTY":
+                        status = "   EMPTY, ENDING"
+                else:  # Show unknown status for debugging
+                    status = "   UNKNOWN" + discovered + queued
+
+        return statusTemplate.safe_substitute(jobId=jobId, status=status)
 
     def fix(self, button, *cb):
         thread.start_new_thread(self.fixAsync, cb)
