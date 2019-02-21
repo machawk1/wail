@@ -169,7 +169,7 @@ class TabController(wx.Frame):
         if wailMenu is not None:
             for m in wailMenu.GetMenuItems():
                 if m.GetId() == wx.ID_EXIT:
-                    m.SetText("Quit WAIL\tCTRL+Q")
+                    m.SetItemLabel("Quit WAIL\tCTRL+Q")
 
         self.SetMenuBar(self.menu_bar)
 
