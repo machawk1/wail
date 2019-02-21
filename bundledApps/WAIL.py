@@ -834,7 +834,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
+            runningCount = self.getCurrentlyRunningCount()
+
+            self.currentlyRunningCrawls = wx.StaticText(self, -1,
+                                                        label="Running: {}".format(runningCount),
+                                                        pos=(0,115),
+                                                        size=(100, 100))
+
             self.panelUpdater = None  # For updating stats UI
+
+        def getCurrentlyRunningCount(self):
+            # TODO: implement crawl running count based on jobs in UI
+            runningCount = 0
+            for crawlId in self.listbox.GetItems():
+                '''Increment running count'''
+            return runningCount
 
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
