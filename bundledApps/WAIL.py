@@ -22,6 +22,9 @@ import functools
 import six
 # from ntfy.backends.default import notify
 
+import hashlib
+import pathlib
+
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
 from six.moves.urllib import request
@@ -412,7 +415,10 @@ class WAILGUIFrame_Basic(wx.Panel):
                 if result == wx.ID_NO:
                     sys.exit()
 
-                prog = wx.ProgressDialog("Resolving Java Dependency", "Downloading Java 7 DMG", maximum=100, style=wx.PD_SMOOTH|wx.PD_CAN_ABORT)
+                prog = wx.ProgressDialog("Resolving Java Dependency",
+                                         "Downloading Java 7 DMG",
+                                         maximum=100,
+                                         style=wx.PD_APP_MODAL|wx.PD_SMOOTH|wx.PD_CAN_ABORT|wx.PD_AUTO_HIDE)
                 prog.Pulse()
                 prog.Show()
 
@@ -422,31 +428,48 @@ class WAILGUIFrame_Basic(wx.Panel):
         return True
 
     def installJava(self, prog):
-        print('Downloading Java 7 DMG from {}'.format(config.osx_java7DMG))
+        print('Downloading Java 7 DMG from {}'.format(config.osx_java7DMG_URI))
 
-        with open('/tmp/java7.dmg', 'wb') as f:
-            resp = requests.get(config.osx_java7DMG, stream=True)
+        java7DMG_localPath = pathlib.Path('/tmp/java7.dmg')
 
-            total_length = resp.headers.get('Content-Length')
-            dl = 0
-            total_length = int(total_length)
+        if java7DMG_localPath.is_file():
+            java7DMG_localPath.unlink()
 
-            for data in resp.iter_content(chunk_size=4096):
-                dl += len(data)
-                f.write(data)
-                done = int(100 * dl / total_length)
-                thread.start_new_thread(prog.Update, (done,))
-                if prog.WasCancelled():
-                    prog.Destroy()
-                    return
+        with requests.get(config.osx_java7DMG_URI, stream=True) as resp:
+            with open(java7DMG_localPath, 'wb') as f:
+                total_length = resp.headers.get('Content-Length')
+                dl = 0
+                total_length = int(total_length)
+
+                for data in resp.iter_content(chunk_size=4096):
+                    dl += len(data)
+                    f.write(data)
+                    done = int(100 * dl / total_length)
+                    thread.start_new_thread(prog.Update, (done,))
+                    if prog.WasCancelled():
+                        prog.Destroy()
+                        return
+
+        # Hash .pkg downloaded
+        print('Done downloading java 7 DMG, verifying hash')
+        if not self.verifyHash(str(java7DMG_localPath), config.osx_java7DMG_hash):
+            # TODO: Add further guidance if hashes do not match
+            return
 
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
                   stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
+
         q = Popen(["open", "JDK 7 Update 79.pkg"],
                   cwd=r'/Volumes/JDK 7 Update 79/', stdout=PIPE, stderr=PIPE)
         stdout, stderr = q.communicate()
         sys.exit()
+
+    def verifyHash(self, filePath, expectedHash):
+        expectedHash = b'\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2'
+        calculatedHash = util.hash_bytestr_iter(util.file_as_blockiter(open(filePath, 'rb')), hashlib.sha256())
+
+        return expectedHash == calculatedHash
 
     def archiveNow(self, button):
         self.archiveNowButton.SetLabel(
