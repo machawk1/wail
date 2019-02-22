@@ -412,11 +412,14 @@ class WAILGUIFrame_Basic(wx.Panel):
                 if result == wx.ID_NO:
                     sys.exit()
 
-                prog = wx.ProgressDialog("Resolving Java Dependency", "Downloading Java 7 DMG", maximum=100)
+                prog = wx.ProgressDialog("Resolving Java Dependency", "Downloading Java 7 DMG", maximum=100, style=wx.PD_SMOOTH|wx.PD_CAN_ABORT)
                 prog.Pulse()
                 prog.Show()
 
                 thread.start_new_thread(self.installJava, (prog,))
+
+            return False
+        return True
 
     def installJava(self, prog):
         print('Downloading Java 7 DMG from {}'.format(config.osx_java7DMG))
@@ -433,6 +436,9 @@ class WAILGUIFrame_Basic(wx.Panel):
                 f.write(data)
                 done = int(100 * dl / total_length)
                 thread.start_new_thread(prog.Update, (done,))
+                if prog.WasCancelled():
+                    prog.Destroy()
+                    return
 
         p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"],
                   stdout=PIPE, stderr=PIPE)
@@ -1288,6 +1294,7 @@ class Wayback(Service):
     uri = config.uri_wayback
 
     def fix(self, button, *cb):
+        mainAppWindow.basicConfig.ensureEnvironmentVariablesAreSet()
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
