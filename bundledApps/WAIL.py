@@ -935,6 +935,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 print('Job deletion failed.')
             self.populateListboxWithJobs()
 
+            # Blanks details if no job entries remain in UI
+            if self.listbox.GetCount() == 0:
+                self.statusMsg.SetLabel("")
+
         def viewJobInWebBrowser(self, evt):
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
             webbrowser.open_new_tab(config.uri_heritrixJob + jobId)
@@ -1459,8 +1463,10 @@ class Heritrix(Service):
 
             try:  # Check if crawl is running by assuming scraped stats are ints
                 int(discovered)
-                status="   Discovered: {}\n   Queued: {}\n   Downloaded   {}\n".format(
-                    discovered, queued, downloaded)
+                status = "   {}: {}\n   {}: {}\n   {}: {}\n".format(
+                    'Discovered', discovered,
+                    'Queued', queued,
+                    'Downloaded', downloaded)
             except ValueError:
                 # Job is being built or completed
                 # TODO: Show more stats
@@ -1535,7 +1541,8 @@ class UpdateSoftwareWindow(wx.Frame):
         tar.close()
         print('Done, restart now.')
         os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
-        # TODO: flush Info.plist cache (cmd involving defaults within this py script)
+        # TODO: flush Info.plist cache
+        # (cmd involving defaults within this py script)
 
     def fetchCurrentVersionsFile(self):
         self.srcURI = "http://matkelly.com/wail/update.json"
@@ -1598,7 +1605,8 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400, 300),
                           style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
-        # self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
+        # self.refresh = wx.Button(self, -1, buttonLabel_refresh,
+        # pos=(0, 0), size=(0,20))
 
         updateFrameIcons_pos_left = 15
         updateFrameIcons_pos_top = (25, 110, 195)
@@ -1634,9 +1642,10 @@ class UpdateSoftwareWindow(wx.Frame):
 
         # TODO: Akin to #293, update this icon w/ new version
         #  Need to generate a 64px version for this.
-        updateFrame_panels_icons = (config.wailPath + '/build/icons/whaleLogo_64.png',
-                                    config.wailPath + '/build/icons/heritrixLogo_64.png',
-                                    config.wailPath + '/build/icons/openWaybackLogo_64.png')
+        iconPath = config.wailPath + '/build/icons/'
+        updateFrame_panels_icons = (iconPath + 'whaleLogo_64.png',
+                                    iconPath + 'heritrixLogo_64.png',
+                                    icongPath + 'openWaybackLogo_64.png')
         updateFrame_panels_titles = ('WAIL Core', 'Preservation', 'Replay')
         updateFrame_panels_size = (390, 90)
 
