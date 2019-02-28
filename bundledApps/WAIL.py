@@ -24,6 +24,7 @@ import six
 
 import hashlib
 import pathlib
+from string import Template # Py3.6+
 
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
@@ -172,7 +173,7 @@ class TabController(wx.Frame):
         if wailMenu is not None:
             for m in wailMenu.GetMenuItems():
                 if m.GetId() == wx.ID_EXIT:
-                    m.SetText("Quit WAIL\tCTRL+Q")
+                    m.SetItemLabel("Quit WAIL\tCTRL+Q")
 
         self.SetMenuBar(self.menu_bar)
 
@@ -726,9 +727,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             tomcatLibPath = config.tomcatPath + "/webapps/lib/"
 
             for file in os.listdir(tomcatLibPath):
-              if file.startswith("openwayback-core"):
-                regex = re.compile("core-(.*)\.")
-                return regex.findall(file)[0]
+                if file.startswith("openwayback-core"):
+                    regex = re.compile("core-(.*)\.")
+                    return regex.findall(file)[0]
 
         def getTomcatVersion(self):
             # Apache Tomcat Version 7.0.30
@@ -768,16 +769,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Update a transitional status and short circuit
             if serviceId and transitionalStatus:
-              if serviceId is "wayback":
-                self.setWaybackStatus(transitionalStatus)
-                return
-              elif serviceId is "heritrix":
-                self.setHeritrixStatus(transitionalStatus)
-                return
-              else:
-                print('{0}{1}'.format(
-                    'Invalid transitional service id specified. ',
-                    'Updating status per usual.'))
+                if serviceId is "wayback":
+                    self.setWaybackStatus(transitionalStatus)
+                    return
+                elif serviceId is "heritrix":
+                    self.setHeritrixStatus(transitionalStatus)
+                    return
+                else:
+                    print('{0}{1}'.format(
+                        'Invalid transitional service id specified. ',
+                        'Updating status per usual.'))
 
             if not hasattr(self, 'stateLabel'):
                 self.stateLabel = wx.StaticText(
@@ -807,7 +808,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.fix_wayback.Enable()
                 self.kill_wayback.Disable()
 
-             ##################################
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
@@ -892,13 +892,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
 
-            active = self.listbox.GetString(self.listbox.GetSelection())
-            print(util.tail(config.heritrixJobPath + active + '/job.log'))
-            jobLaunches = Heritrix().getJobLaunches(active)
+            crawlId = self.listbox.GetString(self.listbox.GetSelection())
+
+            jobLaunches = Heritrix().getJobLaunches(crawlId)
             if self.panelUpdater:  # Kill any currently running timer
                 self.panelUpdater.cancel()
                 self.panelUpdater = None
-            self.updateInfoPanel(active)
+            self.updateInfoPanel(crawlId)
 
         def updateInfoPanel(self, active):
             self.statusMsg.SetLabel(Heritrix().getCurrentStats(active))
@@ -961,12 +961,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             data = {"action": action}
             headers = {"Accept": "application/xml",
                        "Content-type": "application/x-www-form-urlencoded"}
-            r =requests.post(config.uri_heritrixJob + jobId,
-                             auth = HTTPDigestAuth(
-                                 config.heritrixCredentials_username,
-                                 config.heritrixCredentials_password),
-                             data=data, headers=headers,
-                             verify=False, stream=True)
+            r = requests.post(config.uri_heritrixJob + jobId,
+                              auth=HTTPDigestAuth(
+                                  config.heritrixCredentials_username,
+                                  config.heritrixCredentials_password),
+                              data=data, headers=headers,
+                              verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
             jobPath = config.heritrixJobPath +\
@@ -977,6 +977,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             except OSError as e:
                 print('Job deletion failed.')
             self.populateListboxWithJobs()
+
+            # Blanks details if no job entries remain in UI
+            if self.listbox.GetCount() == 0:
+                self.statusMsg.SetLabel("")
 
         def viewJobInWebBrowser(self, evt):
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -999,6 +1003,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
+            # TODO: send request to API to restart job, perhaps send ID to this function
             print('Restarting job')
 
         def setupNewCrawl(self, evt):
@@ -1300,10 +1305,10 @@ class Service():
             return True
         except IOError as e:
             if hasattr(e, 'code'):  # HTTPError
-                print('Pseudo-Success in accessing ' + self.uri)
+                print(self.__class__.__name__ + ' Pseudo-Success in accessing ' + self.uri)
                 return True
 
-            print('Failed to access {0} service at {1}'.format(
+            print('Service: Failed to access {0} service at {1}'.format(
                 self.__class__.__name__, self.uri
             ))
             return False
@@ -1319,6 +1324,25 @@ class Wayback(Service):
     def fix(self, button, *cb):
         mainAppWindow.basicConfig.ensureEnvironmentVariablesAreSet()
         thread.start_new_thread(self.fixAsync, cb)
+
+    def accessible(self):
+        try:
+            handle = urlopen(self.uri, None, 3)
+
+            accessible = 'http://mementoweb.org/terms/donotnegotiate' in handle.info().dict['link']
+            if accessible:
+                print(self.__class__.__name__ + ' is a go! ')
+            else:
+                print('Unable to access {0}, something else is running on port 8080'.format(
+                    self.__class__.__name__))
+
+            return accessible
+
+        except Exception as e:
+            print('Wayback(): Failed to access {0} service at {1}'.format(
+                self.__class__.__name__, self.uri
+            ))
+            return False
 
     def fixAsync(self, cb=None):
         mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("wayback", "FIXING")
@@ -1440,6 +1464,9 @@ class Wayback(Service):
 class Tomcat(Service):
     uri = config.uri_wayback
 
+    def accessible(self):
+        return Wayback().accessible()
+
 
 class Heritrix(Service):
     uri = "https://{0}:{1}".format(config.host_crawler, config.port_crawler)
@@ -1462,21 +1489,44 @@ class Heritrix(Service):
     def getCurrentStats(self, jobId):
         launches = self.getJobLaunches(jobId)
         ret = ""
+        status = ""
+        statusTemplate = Template('JobID: $jobId\n$status')
+
+        if len(launches) == 0:
+            status = "   NOT BUILT"
+
         for launch in launches:
             progressLogFilePath = "{0}{1}/{2}/{3}".format(
                 config.heritrixJobPath, jobId, launch,
                 "logs/progress-statistics.log")
-            print(progressLogFilePath)
-
             lastLine = util.tail(progressLogFilePath)
 
             ll = lastLine[0].replace(" ", "|")
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
-            ret = ("{0}JobID:{1}\n   Discovered: {2}\n   "
-                   "Queued: {3}\n   Downloaded: {4}\n").format(
-                ret, jobId, discovered, queued, downloaded)
-        return ret
+
+            try:  # Check if crawl is running by assuming scraped stats are ints
+                int(discovered)
+                status = "   {}: {}\n   {}: {}\n   {}: {}\n".format(
+                    'Discovered', discovered,
+                    'Queued', queued,
+                    'Downloaded', downloaded)
+            except ValueError:
+                # Job is being built or completed
+                # TODO: Show more stats
+                if discovered == "CRAWL":
+                    if queued == "ENDED":
+                        status = "   ENDED"
+                    elif queued == "RUNNING":
+                        status = "   INITIALIZING"
+                    elif queued == "ENDING":
+                        status = "   ENDING"
+                    elif queued == "EMPTY":
+                        status = "   EMPTY, ENDING"
+                else:  # Show unknown status for debugging
+                    status = "   UNKNOWN" + discovered + queued
+
+        return statusTemplate.safe_substitute(jobId=jobId, status=status)
 
     def fix(self, button, *cb):
         thread.start_new_thread(self.fixAsync, cb)
@@ -1535,7 +1585,8 @@ class UpdateSoftwareWindow(wx.Frame):
         tar.close()
         print('Done, restart now.')
         os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
-        # TODO: flush Info.plist cache (cmd involving defaults within this py script)
+        # TODO: flush Info.plist cache
+        # (cmd involving defaults within this py script)
 
     def fetchCurrentVersionsFile(self):
         self.srcURI = "http://matkelly.com/wail/update.json"
@@ -1598,7 +1649,8 @@ class UpdateSoftwareWindow(wx.Frame):
         wx.Frame.__init__(self, parent, id, 'Update WAIL', size=(400, 300),
                           style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX))
         wx.Frame.CenterOnScreen(self)
-        # self.refresh = wx.Button(self, -1, buttonLabel_refresh, pos=(0, 0), size=(0,20))
+        # self.refresh = wx.Button(self, -1, buttonLabel_refresh,
+        # pos=(0, 0), size=(0,20))
 
         updateFrameIcons_pos_left = 15
         updateFrameIcons_pos_top = (25, 110, 195)
@@ -1634,9 +1686,10 @@ class UpdateSoftwareWindow(wx.Frame):
 
         # TODO: Akin to #293, update this icon w/ new version
         #  Need to generate a 64px version for this.
-        updateFrame_panels_icons = (config.wailPath + '/build/icons/whaleLogo_64.png',
-                                    config.wailPath + '/build/icons/heritrixLogo_64.png',
-                                    config.wailPath + '/build/icons/openWaybackLogo_64.png')
+        iconPath = config.wailPath + '/build/icons/'
+        updateFrame_panels_icons = (iconPath + 'whaleLogo_64.png',
+                                    iconPath + 'heritrixLogo_64.png',
+                                    icongPath + 'openWaybackLogo_64.png')
         updateFrame_panels_titles = ('WAIL Core', 'Preservation', 'Replay')
         updateFrame_panels_size = (390, 90)
 
