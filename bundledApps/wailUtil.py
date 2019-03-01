@@ -1,6 +1,7 @@
 import shutil
 import errno
 import os
+import sys
 
 
 def tail(filename, lines=1, _buffer=4098):
@@ -49,3 +50,12 @@ def file_as_blockiter(afile, blocksize=65536):
         while len(block) > 0:
             yield block
             block = afile.read(blocksize)
+
+def is_macOS():
+    return 'darwin' in sys.platform
+
+def is_linux():
+    return sys.platform.startswith('linux')
+
+def is_windows():
+    return sys.platform.startswith('win32')

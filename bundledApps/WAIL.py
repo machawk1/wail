@@ -142,9 +142,18 @@ class TabController(wx.Frame):
         self.windowWail.Check()  # Initially check menu item
         self.Bind(wx.EVT_MENU, lambda evt: self.windowWail.Check(True), self.windowWail)  # Prevent from being unchecked
 
-        self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
         self.help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
-        self.help_menu.Append(wx.ID_EXIT, "&QUIT")
+
+        if util.is_macOS():  # About at top
+            self.help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
+        elif util.is_windows():  # About as last entry
+            self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
+
+
+        if util.is_macOS():
+            self.help_menu.Append(wx.ID_EXIT, "&QUIT")
+        elif util.is_windows():
+            self.file_menu.Append(wx.ID_EXIT, "&Exit")
 
         self.menu_bar.Append(self.file_menu, config.menuTitle_file)
         self.menu_bar.Append(self.edit_menu, config.menuTitle_edit)
