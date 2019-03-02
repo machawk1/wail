@@ -1,15 +1,62 @@
-body{font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif; margin-bottom: 2500px;}
+body {
+    font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
+    text-align: center;
+}
 
-h1,h2,h3 {margin: 0; padding: 0;}
-h3 {clear: both;}
-div#head {text-align: center;}
-img#logo {width: 100px;}
+h1,h2,h3 {
+    margin: 0;
+    padding: 0;
+}
+h3 {
+    clear: both;
+    font-size: 2.0em;
+}
+div#head {
+    text-align: center;
+}
+img#logo {
+    width: 30%;
+    margin-bottom: 1.0em;
+}
+ul, li {
+    text-align: left;
+}
 
-.flexy {display: flex; margin: 0 0 3.0em 0; vertical-align: bottom;}
-.flexy figure {margin: 0; flex-grow: 1; flex-shrink: 1; max-width: 100%; display: inline-block;}
-.flexy figure figcaption {position: sticky; top: 600px; vertical-align: bottom;}
-figure img {max-width: 100%;}
+a#fork img {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+}
 
-div#vid {text-align: center; margin: auto; clear: both;}
+.flexy {
+    display: flex;
+    margin: 0 0 3.0em 0;
+    vertical-align: bottom;
+}
+.flexy figure {
+    margin: 0;
+    flex-grow: 1;
+    flex-shrink: 1;
+    max-width: 100%;
+    display: inline-block;
+}
+.flexy figure figcaption {
+    position: sticky;
+    top: 600px;
+    vertical-align: bottom;
+}
+figure img {
+    max-width: 100%;
+}
 
-.center {text-align: center;}
+div#vid {
+    text-align: center;
+    margin: auto;
+    clear: both;
+    margin-bottom: 2.0em;
+}
+
+.center {
+    text-align: center;
+}
