@@ -1725,7 +1725,7 @@ class UpdateSoftwareWindow(wx.Frame):
         iconPath = config.wailPath + '/build/icons/'
         updateFrame_panels_icons = (iconPath + 'whaleLogo_64.png',
                                     iconPath + 'heritrixLogo_64.png',
-                                    icongPath + 'openWaybackLogo_64.png')
+                                    iconPath + 'openWaybackLogo_64.png')
         updateFrame_panels_titles = ('WAIL Core', 'Preservation', 'Replay')
         updateFrame_panels_size = (390, 90)
 
