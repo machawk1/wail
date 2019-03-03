@@ -371,6 +371,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: cache the TM
 
     def uriChanged(self, event):
+        if event.GetUnicodeKey() == wx.WXK_NONE:
+            return  # Prevent modifiers from causing MemGator query
+
         self.setMementoCount(None)
 
         if self.memgatorDelayTimer:  # Kill any currently running timer
