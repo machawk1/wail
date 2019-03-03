@@ -164,7 +164,7 @@ class TabController(wx.Frame):
 
         windowWail = window_menu.AppendCheckItem(wx.ID_ANY, config.menuTitle_window_wail)
         windowWail.Check()  # Initially check menu item
-        self.Bind(wx.EVT_MENU, lambda evt: self.windowWail.Check(True), windowWail)  # Prevent from being unchecked
+        self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)  # Prevent from being unchecked
 
         help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
 
@@ -193,11 +193,14 @@ class TabController(wx.Frame):
                   lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), viewBasic)
 
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle), viewServices)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle),
+                  viewServices)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle), viewWayback)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle),
+                  viewWayback)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle), viewHeritrix)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle),
+                  viewHeritrix)
         self.Bind(wx.EVT_MENU,
                   lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), viewMiscellaneous)
 
