@@ -166,7 +166,8 @@ class TabController(wx.Frame):
         windowWail.Check()  # Initially check menu item
         self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)  # Prevent from being unchecked
 
-        help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
+        helpPreferences = help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
+        helpPreferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
             help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
@@ -174,7 +175,7 @@ class TabController(wx.Frame):
             help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
 
 
-        if util.is_macOS():
+        if util.is_macOS():  # TODO: verify if wx.ID_EXIT would work better
             help_menu.Append(wx.ID_EXIT, "&QUIT")
         elif util.is_windows():
             file_menu.Append(wx.ID_EXIT, "&Exit")
