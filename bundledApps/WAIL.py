@@ -105,45 +105,45 @@ class TabController(wx.Frame):
         self.indexingTimer.start()
 
     def createMenu(self):
-        self.menu_bar = wx.MenuBar()
+        menu_bar = wx.MenuBar()
 
-        self.file_menu = wx.Menu()
-        self.edit_menu = wx.Menu()
-        self.view_menu = wx.Menu()
-        self.window_menu = wx.Menu()
-        self.help_menu = wx.Menu()
+        file_menu = wx.Menu()
+        edit_menu = wx.Menu()
+        view_menu = wx.Menu()
+        window_menu = wx.Menu()
+        help_menu = wx.Menu()
 
-        self.fileNewCrawl = self.file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
-        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, self.fileNewCrawl)
+        fileNewCrawl = file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, fileNewCrawl)
 
-        self.file_allCrawls = wx.Menu()
-        self.file_allCrawls_finish = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
-        self.file_allCrawls_pauseUnpause = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
-        self.file_allCrawls_restart = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
-        self.file_allCrawls.AppendSeparator()
-        self.file_allCrawls_destroy = self.file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
+        file_allCrawls = wx.Menu()
+        file_allCrawls_finish = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
+        file_allCrawls_pauseUnpause = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
+        file_allCrawls_restart = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
+        file_allCrawls.AppendSeparator()
+        file_allCrawls_destroy = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
 
-        self.file_menu.AppendSeparator()
-        self.file_menu.AppendSubMenu(self.file_allCrawls, config.menuTitle_file_allCrawls)
+        file_menu.AppendSeparator()
+        file_menu.AppendSubMenu(file_allCrawls, config.menuTitle_file_allCrawls)
 
-        self.Bind(wx.EVT_MENU, self.advConfig.heritrixPanel.finishAllCrawls, self.file_allCrawls_finish)
+        self.Bind(wx.EVT_MENU, self.advConfig.heritrixPanel.finishAllCrawls, file_allCrawls_finish)
 
-        self.editUndo = self.edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
-        self.editRedo = self.edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
-        self.edit_menu.AppendSeparator()
-        self.editCut = self.edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
-        self.editCopy = self.edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
-        self.editPaste = self.edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
-        self.editSelectAll = self.edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
+        editUndo = edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
+        editRedo = edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
+        edit_menu.AppendSeparator()
+        editCut = edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
+        editCopy = edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
+        editPaste = edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
+        editSelectAll = edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
 
         # Disable Edit menu items until implemented
-        self.editUndo.Enable(0)
-        self.editRedo.Enable(0)
-        self.editCut.Enable(0)
-        self.editCopy.Enable(0)
-        self.editPaste.Enable(0)
-        self.editSelectAll.Enable(0)
-        self.editUndo.Enable(0)
+        editUndo.Enable(0)
+        editRedo.Enable(0)
+        editCut.Enable(0)
+        editCopy.Enable(0)
+        editPaste.Enable(0)
+        editSelectAll.Enable(0)
+        editUndo.Enable(0)
 
         # self.Bind(wx.EVT_MENU, self.undo, self.editUndo)
         # self.Bind(wx.EVT_MENU, self.redo, self.editRedo)
@@ -152,63 +152,67 @@ class TabController(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.paste, self.editPaste)
         # self.Bind(wx.EVT_MENU, self.selectAll, self.editSelectAll)
 
-        self.viewBasic = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
-        self.view_menu.AppendSeparator()
-        adv = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
+        viewBasic = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
+        view_menu.AppendSeparator()
+        adv = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
 
-        self.viewServices = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
-        self.viewWayback = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
-        self.viewHeritrix = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
-        self.viewMiscellaneous = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
+        viewServices = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
+        viewWayback = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
+        viewHeritrix = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
+        viewMiscellaneous = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
 
-        self.windowWail = self.window_menu.AppendCheckItem(wx.ID_ANY, config.menuTitle_window_wail)
-        self.windowWail.Check()  # Initially check menu item
-        self.Bind(wx.EVT_MENU, lambda evt: self.windowWail.Check(True), self.windowWail)  # Prevent from being unchecked
+        windowWail = window_menu.AppendCheckItem(wx.ID_ANY, config.menuTitle_window_wail)
+        windowWail.Check()  # Initially check menu item
+        self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)  # Prevent from being unchecked
 
-        self.help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
+        helpPreferences = help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
+        helpPreferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
-            self.help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
+            help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
         elif util.is_windows():  # About as last entry
-            self.help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
+            help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
 
 
-        if util.is_macOS():
-            self.help_menu.Append(wx.ID_EXIT, "&QUIT")
+        if util.is_macOS():  # TODO: verify if wx.ID_EXIT would work better
+            help_menu.Append(wx.ID_EXIT, "&QUIT")
         elif util.is_windows():
-            self.file_menu.Append(wx.ID_EXIT, "&Exit")
+            file_menu.Append(wx.ID_EXIT, "&Exit")
 
-        self.menu_bar.Append(self.file_menu, config.menuTitle_file)
-        self.menu_bar.Append(self.edit_menu, config.menuTitle_edit)
-        self.menu_bar.Append(self.view_menu, config.menuTitle_view)
-        self.menu_bar.Append(self.window_menu, config.menuTitle_window)
-        self.menu_bar.Append(self.help_menu, config.menuTitle_help)
+        menu_bar.Append(file_menu, config.menuTitle_file)
+        menu_bar.Append(edit_menu, config.menuTitle_edit)
+        menu_bar.Append(view_menu, config.menuTitle_view)
+        menu_bar.Append(window_menu, config.menuTitle_window)
+        menu_bar.Append(help_menu, config.menuTitle_help)
 
         self.Bind(wx.EVT_MENU, self.displayAboutMenu, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.quit, id=wx.ID_EXIT)
 
         # Menu events
         self.Bind(wx.EVT_MENU,
-                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), self.viewBasic)
+                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), viewBasic)
 
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle), self.viewServices)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle),
+                  viewServices)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle), self.viewWayback)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle),
+                  viewWayback)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle), self.viewHeritrix)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle),
+                  viewHeritrix)
         self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), self.viewMiscellaneous)
+                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), viewMiscellaneous)
 
         # Fix Quit menuitem capitalization
-        wailMenu = self.menu_bar.OSXGetAppleMenu()
+        wailMenu = menu_bar.OSXGetAppleMenu()
         if wailMenu is not None:
             for m in wailMenu.GetMenuItems():
                 if m.GetId() == wx.ID_EXIT:
                     m.SetItemLabel("Quit WAIL\tCTRL+Q")
 
-        self.SetMenuBar(self.menu_bar)
+        self.SetMenuBar(menu_bar)
 
     def displayTab(self, tableTitle='Basic', basicTab=False):
         if basicTab:
@@ -239,7 +243,7 @@ class TabController(wx.Frame):
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
         currentPath = os.path.dirname(os.path.abspath(__file__))
-        if 'darwin' in sys.platform and currentPath != "/Applications":
+        if util.is_macOS() and currentPath != "/Applications":
             # Alert the user to move the file. Exit the program
             wx.MessageBox(config.msg_wrongLocation_body + currentPath,
                           config.msg_wrongLocation_title)
@@ -418,7 +422,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print('callback executed!')
 
     def ensureEnvironmentVariablesAreSet(self):
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             return  # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
@@ -427,7 +431,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             jreHome = ''
             javaHome = ''
             jdkPath = ''
-            if 'darwin' in sys.platform:
+            if util.is_macOS():
                 jdkPath = config.jdkPath
                 jreHome = config.jreHome
                 javaHome = config.javaHome
@@ -884,11 +888,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def openWaybackConfiguration(self, button):
             filepath = config.tomcatPath + "/webapps/ROOT/WEB-INF/wayback.xml"
-            if sys.platform.startswith('darwin'):
+            if util.is_macOS():
                 subprocess.call(('open', filepath))
-            elif os.name == 'nt':
+            elif util.is_windows():
                 os.startfile(filepath)
-            elif os.name == 'posix':
+            elif util.is_linux():
                 subprocess.call(('xdg-open', filepath))
 
     class HeritrixPanel(wx.Panel):
@@ -1031,11 +1035,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             file = '{0}{1}/crawler-beans.cxml'.format(
                 config.heritrixJobPath,
                 str(self.listbox.GetString(self.listbox.GetSelection())))
-            if sys.platform.startswith('darwin'):
+            if util.is_macOS():
                 subprocess.call(('open', file))
-            elif os.name == 'nt':
+            elif util.is_windows():
                 os.startfile(file)
-            elif os.name == 'posix':
+            elif util.is_linux():
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
@@ -1181,6 +1185,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
+
+        # Inits for 'self' references uses in methods
+        self.writeConfig = None
+        self.hJob = None
 
     def tomcatMessageOff(self):
         # self.tomcatStatus.SetLabel(msg_waybackDisabled)
@@ -1406,7 +1414,7 @@ class Wayback(Service):
 
     def generatePathIndex(self):
         wailPath = '/Applications/WAIL.app'
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             wailPath = 'C:\wail'
 
         dest = wailPath + "/config/path-index.txt"
@@ -1426,7 +1434,7 @@ class Wayback(Service):
     def generateCDX(self):
         print('CDX: ', end='')
         wailRoot = '/Applications/WAIL.app'
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             wailRoot = 'C:\wail'
         dest = wailRoot + "/config/path-index.txt"
         warcsPath = wailRoot + "/archives/"
