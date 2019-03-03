@@ -242,7 +242,7 @@ class TabController(wx.Frame):
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
         currentPath = os.path.dirname(os.path.abspath(__file__))
-        if 'darwin' in sys.platform and currentPath != "/Applications":
+        if util.is_macOS() and currentPath != "/Applications":
             # Alert the user to move the file. Exit the program
             wx.MessageBox(config.msg_wrongLocation_body + currentPath,
                           config.msg_wrongLocation_title)
@@ -421,7 +421,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         print('callback executed!')
 
     def ensureEnvironmentVariablesAreSet(self):
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             return  # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
@@ -430,7 +430,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             jreHome = ''
             javaHome = ''
             jdkPath = ''
-            if 'darwin' in sys.platform:
+            if util.is_macOS():
                 jdkPath = config.jdkPath
                 jreHome = config.jreHome
                 javaHome = config.javaHome
@@ -887,11 +887,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def openWaybackConfiguration(self, button):
             filepath = config.tomcatPath + "/webapps/ROOT/WEB-INF/wayback.xml"
-            if sys.platform.startswith('darwin'):
+            if util.is_macOS():
                 subprocess.call(('open', filepath))
-            elif os.name == 'nt':
+            elif util.is_windows():
                 os.startfile(filepath)
-            elif os.name == 'posix':
+            elif util.is_linux():
                 subprocess.call(('xdg-open', filepath))
 
     class HeritrixPanel(wx.Panel):
@@ -1034,11 +1034,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             file = '{0}{1}/crawler-beans.cxml'.format(
                 config.heritrixJobPath,
                 str(self.listbox.GetString(self.listbox.GetSelection())))
-            if sys.platform.startswith('darwin'):
+            if util.is_macOS():
                 subprocess.call(('open', file))
-            elif os.name == 'nt':
+            elif util.is_windows():
                 os.startfile(file)
-            elif os.name == 'posix':
+            elif util.is_linux():
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
@@ -1184,6 +1184,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.x, self.y = (15, 5)
         bsize = self.width, self.height = (150, 25*.80)
+
+        # Inits for 'self' references uses in methods
+        self.writeConfig = None
+        self.hJob = None
 
     def tomcatMessageOff(self):
         # self.tomcatStatus.SetLabel(msg_waybackDisabled)
@@ -1409,7 +1413,7 @@ class Wayback(Service):
 
     def generatePathIndex(self):
         wailPath = '/Applications/WAIL.app'
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             wailPath = 'C:\wail'
 
         dest = wailPath + "/config/path-index.txt"
@@ -1429,7 +1433,7 @@ class Wayback(Service):
     def generateCDX(self):
         print('CDX: ', end='')
         wailRoot = '/Applications/WAIL.app'
-        if 'darwin' not in sys.platform:
+        if util.is_windows():
             wailRoot = 'C:\wail'
         dest = wailRoot + "/config/path-index.txt"
         warcsPath = wailRoot + "/archives/"
