@@ -128,6 +128,30 @@ class TabController(wx.Frame):
 
         self.Bind(wx.EVT_MENU, self.advConfig.heritrixPanel.finishAllCrawls, self.file_allCrawls_finish)
 
+        self.editUndo = self.edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
+        self.editRedo = self.edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
+        self.edit_menu.AppendSeparator()
+        self.editCut = self.edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
+        self.editCopy = self.edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
+        self.editPaste = self.edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
+        self.editSelectAll = self.edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
+
+        # Disable Edit menu items until implemented
+        self.editUndo.Enable(0)
+        self.editRedo.Enable(0)
+        self.editCut.Enable(0)
+        self.editCopy.Enable(0)
+        self.editPaste.Enable(0)
+        self.editSelectAll.Enable(0)
+        self.editUndo.Enable(0)
+
+        # self.Bind(wx.EVT_MENU, self.undo, self.editUndo)
+        # self.Bind(wx.EVT_MENU, self.redo, self.editRedo)
+        # self.Bind(wx.EVT_MENU, self.cut, self.editCut)
+        # self.Bind(wx.EVT_MENU, self.copy, self.editCopy)
+        # self.Bind(wx.EVT_MENU, self.paste, self.editPaste)
+        # self.Bind(wx.EVT_MENU, self.selectAll, self.editSelectAll)
+
         self.viewBasic = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
         self.view_menu.AppendSeparator()
         adv = self.view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
