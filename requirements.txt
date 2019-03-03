@@ -9,3 +9,4 @@ schedule
 six
 wheel
 wxPython
+pathlib; python_version <= '2.7'
