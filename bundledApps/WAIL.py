@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
+# coding: utf-8
 
 # Web Archiving Integration Layer (WAIL)
 #  This tool ties together web archiving applications including Wayback,
@@ -107,67 +107,88 @@ class TabController(wx.Frame):
         window_menu = wx.Menu()
         help_menu = wx.Menu()
 
-        fileNewCrawl = file_menu.Append(1, config.menuTitle_file_newCrawl + '\tCTRL+N')
-        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, fileNewCrawl)
+        file_newcrawl = file_menu.Append(
+            wx.ID_ANY, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, file_newcrawl)
 
-        file_allCrawls = wx.Menu()
-        file_allCrawls_finish = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
-        file_allCrawls_pauseUnpause = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
-        file_allCrawls_restart = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
-        file_allCrawls.AppendSeparator()
-        file_allCrawls_destroy = file_allCrawls.Append(wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
+        file_allcrawls = wx.Menu()
+        file_allcrawls_finish = file_allcrawls.Append(
+            wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
+        file_allcrawls_pauseUnpause = file_allcrawls.Append(
+            wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
+        file_allcrawls_restart = file_allcrawls.Append(
+            wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
+        file_allcrawls.AppendSeparator()
+        file_allcrawls_destroy = file_allcrawls.Append(
+            wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
 
         file_menu.AppendSeparator()
-        file_menu.AppendSubMenu(file_allCrawls, config.menuTitle_file_allCrawls)
+        file_menu.AppendSubMenu(
+            file_allcrawls, config.menuTitle_file_allCrawls)
 
-        self.Bind(wx.EVT_MENU, self.advConfig.heritrixPanel.finishAllCrawls, file_allCrawls_finish)
+        self.Bind(wx.EVT_MENU,
+                  self.advConfig.heritrixPanel.finishAllCrawls,
+                  file_allcrawls_finish)
 
-        editUndo = edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
-        editRedo = edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
+        edit_undo = edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
+        edit_redo = edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
         edit_menu.AppendSeparator()
-        editCut = edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
-        editCopy = edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
-        editPaste = edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
-        editSelectAll = edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
+        edit_cut = edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
+        edit_copy = edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
+        edit_paste = edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
+        edit_selectall = edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
 
         # Disable Edit menu items until implemented
-        editUndo.Enable(0)
-        editRedo.Enable(0)
-        editCut.Enable(0)
-        editCopy.Enable(0)
-        editPaste.Enable(0)
-        editSelectAll.Enable(0)
-        editUndo.Enable(0)
+        edit_undo.Enable(0)
+        edit_redo.Enable(0)
+        edit_cut.Enable(0)
+        edit_copy.Enable(0)
+        edit_paste.Enable(0)
+        edit_selectall.Enable(0)
 
-        # self.Bind(wx.EVT_MENU, self.undo, self.editUndo)
-        # self.Bind(wx.EVT_MENU, self.redo, self.editRedo)
-        # self.Bind(wx.EVT_MENU, self.cut, self.editCut)
-        # self.Bind(wx.EVT_MENU, self.copy, self.editCopy)
-        # self.Bind(wx.EVT_MENU, self.paste, self.editPaste)
-        # self.Bind(wx.EVT_MENU, self.selectAll, self.editSelectAll)
+        edit_undo.Enable(0)
 
-        viewBasic = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
+        # self.Bind(wx.EVT_MENU, self.undo, self.edit_undo)
+        # self.Bind(wx.EVT_MENU, self.redo, self.edit_redo)
+        # self.Bind(wx.EVT_MENU, self.cut, self.edit_cut)
+        # self.Bind(wx.EVT_MENU, self.copy, self.edit_copy)
+        # self.Bind(wx.EVT_MENU, self.paste, self.edit_paste)
+        # self.Bind(wx.EVT_MENU, self.selectall, self.edit_selectall)
+
+        viewBasic = view_menu.Append(
+            wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
         view_menu.AppendSeparator()
         adv = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
 
-        viewServices = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
-        viewWayback = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
-        viewHeritrix = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
-        viewMiscellaneous = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
+        viewServices = view_menu.Append(
+            wx.ID_ANY,
+            config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
+        viewWayback = view_menu.Append(
+            wx.ID_ANY,
+            config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
+        viewHeritrix = view_menu.Append(
+            wx.ID_ANY,
+            config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
+        viewMiscellaneous = view_menu.Append(
+            wx.ID_ANY,
+            config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
 
-        windowWail = window_menu.AppendCheckItem(wx.ID_ANY, config.menuTitle_window_wail)
+        windowWail = window_menu.AppendCheckItem(
+            wx.ID_ANY, config.menuTitle_window_wail)
         windowWail.Check()  # Initially check menu item
-        self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)  # Prevent from being unchecked
 
-        helpPreferences = help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
+        # Prevent from being unchecked
+        self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)
+
+        helpPreferences = help_menu.Append(
+            wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
         helpPreferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
             help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
         elif util.is_windows():  # About as last entry
             help_menu.Append(wx.ID_ABOUT, config.menuTitle_about)
-
 
         if util.is_macOS():  # TODO: verify if wx.ID_EXIT would work better
             help_menu.Append(wx.ID_EXIT, "&QUIT")
@@ -185,7 +206,9 @@ class TabController(wx.Frame):
 
         # Menu events
         self.Bind(wx.EVT_MENU,
-                  lambda evt, basicTab=True: self.displayTab(basicTab=basicTab), viewBasic)
+                  lambda evt,
+                  basicTab=True: self.displayTab(basicTab=basicTab),
+                  viewBasic)
 
         self.Bind(wx.EVT_MENU,
                   lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle),
@@ -298,7 +321,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
-    def setMementoCount(self, mCount, aCount=0):
+    def setMementoCount(self, m_count, a_count=0):
         ui_mementoCountMessage_pos = (105, 85)
         ui_mementoCountMessage_size = (250, 20)
         if hasattr(self, 'mementoStatus'):
@@ -306,34 +329,34 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.mementoStatusPublicArchives.Destroy()
 
         # Ensure mCount is an int, convert if not, allow None
-        if mCount is not None and not isinstance(mCount, int):
-            mCount = int(mCount)
-        if mCount is not None and (mCount < 0 or aCount < 0):
+        if m_count is not None and not isinstance(m_count, int):
+            mCount = int(m_count)
+        if m_count is not None and (m_count < 0 or a_count < 0):
             raise ValueError('Invalid memento or archive count specified')
 
         memCountMsg = ''
-        if mCount is None:
+        if m_count is None:
             memCountMsg = config.msg_fetchingMementos
-        elif mCount > 0:
+        elif m_count > 0:
             localeToSet = 'en_US'
             if sys.platform.startswith('win32'):
                 localeToSet = ''
 
             locale.setlocale(locale.LC_ALL, localeToSet)
 
-            mPlurality = 's'
-            aPlurality = 's'
+            m_plurality = 's'
+            a_plurality = 's'
 
-            if mCount == 1:
+            if m_count == 1:
                 mPlurality = ''
-            if aCount == 1:
+            if a_count == 1:
                 aPlurality = ''
-            mCount = locale.format_string("%d", mCount, grouping=True)
+            mCount = locale.format_string("%d", m_count, grouping=True)
             memCountMsg = ('{0} memento{1} available '
                            'from {2} archive{3}').format(
-                mCount, mPlurality, aCount, aPlurality
+                m_count, m_plurality, a_count, a_plurality
             )
-        elif mCount == 0:
+        elif m_count == 0:
             memCountMsg = config.msg_noMementosAvailable
         else:
             ''' '''
@@ -369,7 +392,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                     '--restimeout', '0m3s',
                     '--hdrtimeout', '3s',
                     '--contimeout', '3s',
-                    currentURIValue], stdout=PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE, startupinfo=startupinfo)
+                    currentURIValue], stdout=PIPE, stdin=subprocess.PIPE,
+                   stderr=subprocess.PIPE, startupinfo=startupinfo)
 
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
@@ -450,10 +474,12 @@ class WAILGUIFrame_Basic(wx.Panel):
                 if result == wx.ID_NO:
                     sys.exit()
 
-                prog = wx.ProgressDialog("Resolving Java Dependency",
-                                         "Downloading Java 7 DMG",
-                                         maximum=100,
-                                         style=wx.PD_APP_MODAL|wx.PD_SMOOTH|wx.PD_CAN_ABORT|wx.PD_AUTO_HIDE)
+                prog = wx.ProgressDialog(
+                    util.msg_java_resolving,
+                    util.msg_java7_downloading,
+                    maximum=100,
+                    style=wx.PD_APP_MODAL|wx.PD_SMOOTH|wx.PD_CAN_ABORT|wx.PD_AUTO_HIDE)
+
                 prog.Pulse()
                 prog.Show()
 
@@ -529,7 +555,8 @@ class WAILGUIFrame_Basic(wx.Panel):
             mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
             self.setMessage(
                 'Crawl of {0} started!'.format(self.uri.GetValue()[0:41]))
-            wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
+            wx.CallAfter(
+                mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
             # if sys.platform.startswith('darwin'): #show a notification
             # ... of success in OS X
             #  Notifier.notify('Archival process successfully initiated.',
@@ -561,7 +588,8 @@ class WAILGUIFrame_Basic(wx.Panel):
             config.heritrixBinPath, config.heritrixCredentials_username,
             config.heritrixCredentials_password)
 
-        # TODO: shell=True was added for OS X, verify that functionality persists on Win64
+        # TODO: shell=True was added for OS X
+        # TODO: verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         time.sleep(3)
         mainAppWindow.advConfig.servicesPanel.updateServiceStatuses()
@@ -648,17 +676,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             d.Destroy()
             if result == wx.ID_YES:  # Launch Wayback
                 Wayback().fix(self.resetArchiveNowButton)
-                # TODO: artificial delay here while we wait for
-                # ...Wayback to launch
-                # TODO: change button to fixing
                 self.archiveNowButton.SetLabel("Initializing...")
-
-                # Adds image, but won't animate with wxPython
-                # img = wx.EmptyBitmap( 1, 1 )
-                # img.LoadFile('/Users/machawk1/Downloads/Spinner.gif', wx.BITMAP_TYPE_ANY)
-                # self.archiveNowButton.SetBitmap(img)
-
-                # self.viewArchiveInBrowser(None)
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
@@ -696,8 +714,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Redefining for Windows, needs regression testing on macOS:
             buttonSize = (50, rowHeight)
 
-            wail_style_button_font_small = wx.Font(10, wx.SWISS, wx.NORMAL,
-                                                   wx.NORMAL)
+            wail_style_button_font_small = wx.Font(10, wx.FONTFAMILY_SWISS,
+                                                   wx.FONTSTYLE_NORMAL,
+                                                   wx.FONTWEIGHT_NORMAL)
 
             self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix,
                                          (col3, rowHeight*1),
@@ -743,7 +762,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             rowHeight = 20
             col1 = 65+colWidth*1
             cellSize = (40, rowHeight)
-            
+
             if hasattr(self, 'status_wayback'):
                 self.status_wayback.Destroy()
             self.status_wayback = wx.StaticText(self, 100, status,
@@ -1144,7 +1163,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if not os.path.exists(config.warcsFolder):
                 os.makedirs(config.warcsFolder)
 
-            if sys.platform.startswith('win32'):
+            if util.is_windows():
                 os.startfile(config.warcsFolder)
             else:
                 subprocess.call(["open", config.warcsFolder])
@@ -1243,7 +1262,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.tomcatMessageOff()
             else:
                 if not suppressAlert:
-                    message = wx.MessageBox("Tomcat could not be stopped", "Command Failed")
+                    message = wx.MessageBox(util.msg_error_tomcat_noStop,
+                                            util.msg_error_tomcat_failed)
                 # self.tomcatMessageOn()
 
     def launchHeritrix(self, button):
@@ -1287,8 +1307,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                      (self.GetSize().x-175, 280),
                                      (self.width, self.height))
 
-        wail_style_button_font = wx.Font(config.fontSize, wx.SWISS,
-                                         wx.NORMAL, wx.NORMAL)
+        wail_style_button_font = wx.Font(config.fontSize,
+                                         wx.FONTFAMILY_SWISS,
+                                         wx.FONTSTYLE_NORMAL,
+                                         wx.FONTWEIGHT_NORMAL)
 
         self.writeConfig.SetFont(wail_style_button_font)
         self.writeConfig.Bind(wx.EVT_BUTTON, self.crawlURIs)
@@ -1314,15 +1336,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
         mainAppWindow.basicConfig.startHeritrixJob()
 
     def addURI(self, listbox):
-        defaultMessage = ""
+        default_message = ""
         try:
-            defaultMessage = self.uriListBox.GetString(
+            default_message = self.uriListBox.GetString(
                 self.uriListBox.GetSelection())
         except:
-            defaultMessage = ""
+            default_message = ""
         message = wx.GetTextFromUser("Enter a URI to be crawled",
-                                     default_value=defaultMessage)
-        if message == "" and message == defaultMessage:
+                                     default_value=default_message)
+        if message == "" and message == default_message:
             return
         url = urlparse(message)
         self.uriListBox.InsertItems([url.geturl()], 0)
@@ -1494,7 +1516,8 @@ class Wayback(Service):
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
             mainAppWindow.indexingTimer.cancel()
-        mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS, Wayback().index)
+        mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,
+                                                      Wayback().index)
         mainAppWindow.indexingTimer.daemon = True
         mainAppWindow.indexingTimer.start()
 
