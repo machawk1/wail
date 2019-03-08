@@ -1,0 +1,1758 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><title>Apache Tomcat 7 Configuration Reference (7.0.93) - Container Provided Filters</title><style type="text/css" media="print">
+    .noPrint {display: none;}
+    td#mainBody {width: 100%;}
+</style><style type="text/css">
+code {background-color:rgb(224,255,255);padding:0 0.1em;}
+code.attributeName, code.propertyName {background-color:transparent;}
+
+
+table {
+  border-collapse: collapse;
+  text-align: left;
+}
+table *:not(table) {
+  /* Prevent border-collapsing for table child elements like <div> */
+  border-collapse: separate;
+}
+
+th {
+  text-align: left;
+}
+
+
+div.codeBox pre code, code.attributeName, code.propertyName, code.noHighlight, .noHighlight code {
+  background-color: transparent;
+}
+div.codeBox {
+  overflow: auto;
+  margin: 1em 0;
+}
+div.codeBox pre {
+  margin: 0;
+  padding: 4px;
+  border: 1px solid #999;
+  border-radius: 5px;
+  background-color: #eff8ff;
+  display: table; /* To prevent <pre>s from taking the complete available width. */
+  /*
+  When it is officially supported, use the following CSS instead of display: table
+  to prevent big <pre>s from exceeding the browser window:
+  max-width: available;
+  width: min-content;
+  */
+}
+
+div.codeBox pre.wrap {
+  white-space: pre-wrap;
+}
+
+
+table.defaultTable tr, table.detail-table tr {
+    border: 1px solid #CCC;
+}
+
+table.defaultTable tr:nth-child(even), table.detail-table tr:nth-child(even) {
+    background-color: #FAFBFF;
+}
+
+table.defaultTable tr:nth-child(odd), table.detail-table tr:nth-child(odd) {
+    background-color: #EEEFFF;
+}
+
+table.defaultTable th, table.detail-table th {
+  background-color: #88b;
+  color: #fff;
+}
+
+table.defaultTable th, table.defaultTable td, table.detail-table th, table.detail-table td {
+  padding: 5px 8px;
+}
+
+
+p.notice {
+    border: 1px solid rgb(255, 0, 0);
+    background-color: rgb(238, 238, 238);
+    color: rgb(0, 51, 102);
+    padding: 0.5em;
+    margin: 1em 2em 1em 1em;
+}
+</style></head><body bgcolor="#ffffff" text="#000000" link="#525D76" alink="#525D76" vlink="#525D76"><table border="0" width="100%" cellspacing="0"><!--PAGE HEADER--><tr><td><!--PROJECT LOGO--><a href="https://tomcat.apache.org/"><img src="../images/tomcat.gif" align="right" alt="
+    The Apache Tomcat Servlet/JSP Container
+  " border="0"></a></td><td><h1><font face="arial,helvetica,sanserif">Apache Tomcat 7</font></h1><font face="arial,helvetica,sanserif">Version 7.0.93, Feb 16 2019</font></td><td><!--APACHE LOGO--><a href="http://www.apache.org/"><img src="../images/asf-logo.svg" align="right" alt="Apache Logo" border="0" style="width: 266px;height: 83px;"></a></td></tr></table><table border="0" width="100%" cellspacing="4"><!--HEADER SEPARATOR--><tr><td colspan="2"><hr noshade size="1"></td></tr><tr><!--LEFT SIDE NAVIGATION--><td width="20%" valign="top" nowrap class="noPrint"><p><strong>Links</strong></p><ul><li><a href="../index.html">Docs Home</a></li><li><a href="index.html">Config Ref. Home</a></li><li><a href="https://wiki.apache.org/tomcat/FAQ">FAQ</a></li><li><a href="#comments_section">User Comments</a></li></ul><p><strong>Top Level Elements</strong></p><ul><li><a href="server.html">Server</a></li><li><a href="service.html">Service</a></li></ul><p><strong>Executors</strong></p><ul><li><a href="executor.html">Executor</a></li></ul><p><strong>Connectors</strong></p><ul><li><a href="http.html">HTTP</a></li><li><a href="ajp.html">AJP</a></li></ul><p><strong>Containers</strong></p><ul><li><a href="context.html">Context</a></li><li><a href="engine.html">Engine</a></li><li><a href="host.html">Host</a></li><li><a href="cluster.html">Cluster</a></li></ul><p><strong>Nested Components</strong></p><ul><li><a href="globalresources.html">Global Resources</a></li><li><a href="jar-scanner.html">JarScanner</a></li><li><a href="listeners.html">Listeners</a></li><li><a href="loader.html">Loader</a></li><li><a href="manager.html">Manager</a></li><li><a href="realm.html">Realm</a></li><li><a href="resources.html">Resources</a></li><li><a href="sessionidgenerator.html">SessionIdGenerator</a></li><li><a href="valve.html">Valve</a></li></ul><p><strong>Cluster Elements</strong></p><ul><li><a href="cluster.html">Cluster</a></li><li><a href="cluster-manager.html">Manager</a></li><li><a href="cluster-channel.html">Channel</a></li><li><a href="cluster-membership.html">Channel/Membership</a></li><li><a href="cluster-sender.html">Channel/Sender</a></li><li><a href="cluster-receiver.html">Channel/Receiver</a></li><li><a href="cluster-interceptor.html">Channel/Interceptor</a></li><li><a href="cluster-valve.html">Valve</a></li><li><a href="cluster-deployer.html">Deployer</a></li><li><a href="cluster-listener.html">ClusterListener</a></li></ul><p><strong>web.xml</strong></p><ul><li><a href="filter.html">Filter</a></li></ul><p><strong>Other</strong></p><ul><li><a href="systemprops.html">System properties</a></li></ul></td><!--RIGHT SIDE MAIN BODY--><td width="80%" valign="top" align="left" id="mainBody"><h1>Container Provided Filters</h1><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Table of Contents"><!--()--></a><a name="Table_of_Contents"><strong>Table of Contents</strong></a></font></td></tr><tr><td><blockquote>
+<ul><li><a href="#Introduction">Introduction</a></li><li><a href="#Add_Default_Character_Set_Filter">Add Default Character Set Filter</a><ol><li><a href="#Add_Default_Character_Set_Filter/Introduction">Introduction</a></li><li><a href="#Add_Default_Character_Set_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Add_Default_Character_Set_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#CORS_Filter">CORS Filter</a><ol><li><a href="#CORS_Filter/Introduction">Introduction</a></li><li><a href="#CORS_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#CORS_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#CORS_Filter_and_HttpServletRequest_attributes">CORS Filter and HttpServletRequest attributes</a></li></ol></li><li><a href="#CSRF_Prevention_Filter">CSRF Prevention Filter</a><ol><li><a href="#CSRF_Prevention_Filter/Introduction">Introduction</a></li><li><a href="#CSRF_Prevention_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#CSRF_Prevention_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#CSRF_Prevention_Filter_for_REST_APIs">CSRF Prevention Filter for REST APIs</a><ol><li><a href="#CSRF_Prevention_Filter_for_REST_APIs/Introduction">Introduction</a></li><li><a href="#CSRF_Prevention_Filter_for_REST_APIs/Basic_configuration_sample">Basic configuration sample</a></li><li><a href="#RestCsrfPreventionFilter_and_HttpServletRequest_parameters">RestCsrfPreventionFilter and HttpServletRequest parameters</a></li><li><a href="#CSRF_Prevention_Filter_for_REST_APIs/Filter_Class_Name">Filter Class Name</a></li><li><a href="#CSRF_Prevention_Filter_for_REST_APIs/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#Expires_Filter">Expires Filter</a><ol><li><a href="#Expires_Filter/Introduction">Introduction</a></li><li><a href="#Expires_Filter/Basic_configuration_sample">Basic configuration sample</a></li><li><a href="#Alternate_Syntax">Alternate Syntax</a></li><li><a href="#Expiration_headers_generation_eligibility">Expiration headers generation eligibility</a></li><li><a href="#Expiration_configuration_selection">Expiration configuration selection</a></li><li><a href="#Expires_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Expires_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#Troubleshooting">Troubleshooting</a></li></ol></li><li><a href="#Failed_Request_Filter">Failed Request Filter</a><ol><li><a href="#Failed_Request_Filter/Introduction">Introduction</a></li><li><a href="#Failed_Request_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Failed_Request_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#HTTP_Header_Security_Filter">HTTP Header Security Filter</a><ol><li><a href="#HTTP_Header_Security_Filter/Introduction">Introduction</a></li><li><a href="#HTTP_Header_Security_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#HTTP_Header_Security_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#Remote_Address_Filter">Remote Address Filter</a><ol><li><a href="#Remote_Address_Filter/Introduction">Introduction</a></li><li><a href="#Remote_Address_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Remote_Address_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#Remote_Address_Filter/Example">Example</a></li></ol></li><li><a href="#Remote_Host_Filter">Remote Host Filter</a><ol><li><a href="#Remote_Host_Filter/Introduction">Introduction</a></li><li><a href="#Remote_Host_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Remote_Host_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#Remote_CIDR_Filter">Remote CIDR Filter</a><ol><li><a href="#Remote_CIDR_Filter/Introduction">Introduction</a></li><li><a href="#Remote_CIDR_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Remote_CIDR_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#Remote_CIDR_Filter/Example">Example</a></li></ol></li><li><a href="#Remote_IP_Filter">Remote IP Filter</a><ol><li><a href="#Remote_IP_Filter/Introduction">Introduction</a></li><li><a href="#Remote_IP_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Basic_configuration_to_handle_'x-forwarded-for'">Basic configuration to handle 'x-forwarded-for'</a></li><li><a href="#Basic_configuration_to_handle_'x-forwarded-for'_and_'x-forwarded-proto'">Basic configuration to handle 'x-forwarded-for' and 'x-forwarded-proto'</a></li><li><a href="#Advanced_configuration_with_internal_proxies">Advanced configuration with internal proxies</a></li><li><a href="#Advanced_configuration_with_trusted_proxies">Advanced configuration with trusted proxies</a></li><li><a href="#Advanced_configuration_with_internal_and_trusted_proxies">Advanced configuration with internal and trusted proxies</a></li><li><a href="#Advanced_configuration_with_an_untrusted_proxy">Advanced configuration with an untrusted proxy</a></li><li><a href="#Remote_IP_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#Request_Dumper_Filter">Request Dumper Filter</a><ol><li><a href="#Request_Dumper_Filter/Introduction">Introduction</a></li><li><a href="#Request_Dumper_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Request_Dumper_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#Request_Dumper_Filter/Sample_Configuration">Sample Configuration</a></li></ol></li><li><a href="#Session_Initializer_Filter">Session Initializer Filter</a><ol><li><a href="#Session_Initializer_Filter/Introduction">Introduction</a></li><li><a href="#Session_Initializer_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Session_Initializer_Filter/Initialisation_parameters">Initialisation parameters</a></li><li><a href="#Session_Initializer_Filter/Sample_Configuration">Sample Configuration</a></li></ol></li><li><a href="#Set_Character_Encoding_Filter">Set Character Encoding Filter</a><ol><li><a href="#Set_Character_Encoding_Filter/Introduction">Introduction</a></li><li><a href="#Set_Character_Encoding_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#Set_Character_Encoding_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li><li><a href="#WebDAV_Fix_Filter">WebDAV Fix Filter</a><ol><li><a href="#WebDAV_Fix_Filter/Introduction">Introduction</a></li><li><a href="#WebDAV_Fix_Filter/Filter_Class_Name">Filter Class Name</a></li><li><a href="#WebDAV_Fix_Filter/Initialisation_parameters">Initialisation parameters</a></li></ol></li></ul>
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+  <p>Tomcat provides a number of <strong>Filters</strong> which may be
+  configured for use with all web applications using
+  <code>$CATALINA_BASE/conf/web.xml</code> or may be configured for individual
+  web applications by configuring them in the application's
+  <code>WEB-INF/web.xml</code>. Each filter is described below.</p>
+
+    <p><em>This description uses the variable name $CATALINA_BASE to refer the
+    base directory against which most relative paths are resolved. If you have
+    not configured Tomcat for multiple instances by setting a CATALINA_BASE
+    directory, then $CATALINA_BASE will be set to the value of $CATALINA_HOME,
+    the directory into which you have installed Tomcat.</em></p>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Add Default Character Set Filter"><!--()--></a><a name="Add_Default_Character_Set_Filter"><strong>Add Default Character Set Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Add Default Character Set Filter/Introduction"><!--()--></a><a name="Add_Default_Character_Set_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The HTTP specification is clear that if no character set is specified for
+    media sub-types of the "text" media type, the ISO-8859-1 character set must
+    be used. However, browsers may attempt to auto-detect the character set.
+    This may be exploited by an attacker to perform an XSS attack. Internet
+    Explorer has this behaviour by default. Other browsers have an option to
+    enable it.</p>
+
+    <p>This filter prevents the attack by explicitly setting a character set.
+    Unless the provided character set is explicitly overridden by the user the
+    browser will adhere to the explicitly set character set, thus preventing the
+    XSS attack.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Add Default Character Set Filter/Filter Class Name"><!--()--></a><a name="Add_Default_Character_Set_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Add Default Character Set Filter is
+    <strong><code>org.apache.catalina.filters.AddDefaultCharsetFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Add Default Character Set Filter/Initialisation parameters"><!--()--></a><a name="Add_Default_Character_Set_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The Add Default Character Set Filter supports the following initialization
+    parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">encoding</code></td><td align="left" valign="center">
+        <p>Name of the character set which should be set, if no other character set
+        was set explicitly by a Servlet. This parameter has two special values
+        <code>default</code> and <code>system</code>. A value of <code>system</code>
+        uses the JVM wide default character set, which is usually set by locale.
+        A value of <code>default</code> will use <strong>ISO-8859-1</strong>.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CORS Filter"><!--()--></a><a name="CORS_Filter"><strong>CORS Filter</strong></a></font></td></tr><tr><td><blockquote>
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CORS Filter/Introduction"><!--()--></a><a name="CORS_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+    <p>This filter is an implementation of W3C's CORS (Cross-Origin Resource
+    Sharing) <a href="https://www.w3.org/TR/cors/">specification</a>, which is a
+    mechanism that enables cross-origin requests.</p>
+    <p>The filter works by adding required <code>Access-Control-*</code> headers
+    to HttpServletResponse object. The filter also protects against HTTP
+    response splitting. If request is invalid, or is not permitted, then request
+    is rejected with HTTP status code 403 (Forbidden). A
+    <a href="../images/cors-flowchart.png">flowchart</a> that
+    demonstrates request processing by this filter is available.</p>
+    <p>The minimal configuration required to use this filter is:</p>
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+  &lt;filter-name&gt;CorsFilter&lt;/filter-name&gt;
+  &lt;filter-class&gt;org.apache.catalina.filters.CorsFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;CorsFilter&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+    <p>The above configuration enables the filter but does not relax the
+    cross-origin policy. As a minimum, you will need to add a
+    <strong>cors.allowed.origins</strong> initialisation parameter as described
+    below to enable cross-origin requests. Depending on your requirements, you
+    may need to provide additional configuration.</p>
+    <p>An instance of this filter can only implement one policy. If you want to
+    apply different policies (e.g. different allowed origins) to different URLs
+    or sets of URLs within your web application you will need to configure a
+    separate instance of this filter for each policy you wish to configure.</p>
+  </blockquote></td></tr></table>
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CORS Filter/Filter Class Name"><!--()--></a><a name="CORS_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The filter class name for the CORS Filter is
+    <strong><code>org.apache.catalina.filters.CorsFilter</code></strong>.</p>
+  </blockquote></td></tr></table>
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CORS Filter/Initialisation parameters"><!--()--></a><a name="CORS_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The CORS Filter supports following initialisation parameters:</p>
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">cors.allowed.origins</code></td><td align="left" valign="center">
+        <p>A list of <a href="https://tools.ietf.org/html/rfc6454">origins</a>
+        that are allowed to access the resource. A <code>*</code> can be
+        specified to enable access to resource from any origin. Otherwise, a
+        whitelist of comma separated origins can be provided. Eg: <code>
+        https://www.w3.org, https://www.apache.org</code>.
+        <strong>Defaults:</strong> The empty String. (No origin is allowed to
+        access the resource).</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.allowed.methods</code></td><td align="left" valign="center">
+        <p>A comma separated list of HTTP methods that can be used to access the
+        resource, using cross-origin requests. These are the methods which will
+        also be included as part of <code>Access-Control-Allow-Methods</code> 
+        header in pre-flight response. Eg: <code>GET, POST</code>.
+        <strong>Defaults:</strong> <code>GET, POST, HEAD, OPTIONS</code></p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.allowed.headers</code></td><td align="left" valign="center">
+        <p>A comma separated list of request headers that can be used when
+        making an actual request. These headers will also be returned as part 
+        of <code>Access-Control-Allow-Headers</code> header in a pre-flight
+        response. Eg: <code>Origin,Accept</code>. <strong>Defaults:</strong>
+        <code>Origin, Accept, X-Requested-With, Content-Type,
+        Access-Control-Request-Method, Access-Control-Request-Headers</code></p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.exposed.headers</code></td><td align="left" valign="center">
+        <p>A comma separated list of headers other than simple response headers
+        that browsers are allowed to access. These are the headers which will 
+        also be included as part of <code>Access-Control-Expose-Headers</code> 
+        header in the pre-flight response. Eg:
+        <code>X-CUSTOM-HEADER-PING,X-CUSTOM-HEADER-PONG</code>.
+        <strong>Default:</strong> None. Non-simple headers are not exposed by
+        default.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.preflight.maxage</code></td><td align="left" valign="center">
+        <p>The amount of seconds, browser is allowed to cache the result of the
+        pre-flight request. This will be included as part of
+        <code>Access-Control-Max-Age</code> header in the pre-flight response.
+        A negative value will prevent CORS Filter from adding this response
+        header to pre-flight response. <strong>Defaults:</strong>
+        <code>1800</code></p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.support.credentials</code></td><td align="left" valign="center">
+        <p>A flag that indicates whether the resource supports user credentials.
+        This flag is exposed as part of
+        <code>Access-Control-Allow-Credentials</code> header in a pre-flight
+        response. It helps browser determine whether or not an actual request
+        can be made using credentials. <strong>Defaults:</strong>
+        <code>false</code></p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">cors.request.decorate</code></td><td align="left" valign="center">
+        <p>A flag to control if CORS specific attributes should be added to
+        HttpServletRequest object or not. <strong>Defaults:</strong>
+        <code>true</code></p>
+      </td></tr></table>
+    <p>Here's an example of a more advanced configuration, that overrides
+    defaults:</p>
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+  &lt;filter-name&gt;CorsFilter&lt;/filter-name&gt;
+  &lt;filter-class&gt;org.apache.catalina.filters.CorsFilter&lt;/filter-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.allowed.origins&lt;/param-name&gt;
+    &lt;param-value&gt;https://www.apache.org&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.allowed.methods&lt;/param-name&gt;
+    &lt;param-value&gt;GET,POST,HEAD,OPTIONS,PUT&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.allowed.headers&lt;/param-name&gt;
+    &lt;param-value&gt;Content-Type,X-Requested-With,accept,Origin,Access-Control-Request-Method,Access-Control-Request-Headers&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.exposed.headers&lt;/param-name&gt;
+    &lt;param-value&gt;Access-Control-Allow-Origin,Access-Control-Allow-Credentials&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.support.credentials&lt;/param-name&gt;
+    &lt;param-value&gt;true&lt;/param-value&gt;
+  &lt;/init-param&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;cors.preflight.maxage&lt;/param-name&gt;
+    &lt;param-value&gt;10&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;CorsFilter&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+  </blockquote></td></tr></table>
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CORS Filter and HttpServletRequest attributes"><!--()--></a><a name="CORS_Filter_and_HttpServletRequest_attributes"><strong>CORS Filter and HttpServletRequest attributes</strong></a></font></td></tr><tr><td><blockquote>
+    <p>CORS Filter adds information about the request, in HttpServletRequest
+    object, for consumption downstream. Following attributes are set, if
+    <code>cors.request.decorate</code> initialisation parameter is
+    <code>true</code>:</p>
+    <ul>
+      <li><strong>cors.isCorsRequest:</strong> Flag to determine if request is
+          a CORS request.</li>
+      <li><strong>cors.request.origin:</strong> The Origin URL, i.e. the URL of
+          the page from where the request originated.</li>
+      <li><strong>cors.request.type:</strong> Type of CORS request. Possible
+          values:
+        <ul>
+          <li><code>SIMPLE</code>: A request which is not preceded by a
+              pre-flight request.</li>
+          <li><code>ACTUAL</code>: A request which is preceded by a pre-flight
+              request.</li>
+          <li><code>PRE_FLIGHT</code>: A pre-flight request.</li>
+          <li><code>NOT_CORS</code>: A normal same-origin request.</li>
+          <li><code>INVALID_CORS</code>: A cross-origin request, which is
+              invalid.</li>
+        </ul>
+      </li>
+      <li><strong>cors.request.headers:</strong> Request headers sent as
+          <code>Access-Control-Request-Headers</code> header, for a pre-flight 
+          request.
+      </li>
+    </ul>
+  </blockquote></td></tr></table>
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter"><!--()--></a><a name="CSRF_Prevention_Filter"><strong>CSRF Prevention Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter/Introduction"><!--()--></a><a name="CSRF_Prevention_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>This filter provides basic CSRF protection for a web application. The
+    filter assumes that it is mapped to <code>/*</code> and that all URLs
+    returned to the client are encoded via a call to
+    <code>HttpServletResponse#encodeRedirectURL(String)</code> or
+    <code>HttpServletResponse#encodeURL(String)</code>.</p>
+
+    <p>This filter prevents CSRF by generating a nonce and storing it in the
+    session. URLs are also encoded with the same nonce. When the next request is
+    received the nonce in the request is compared to the nonce in the session
+    and only if they are the same is the request allowed to continue.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter/Filter Class Name"><!--()--></a><a name="CSRF_Prevention_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the CSRF Prevention Filter is
+    <strong><code>org.apache.catalina.filters.CsrfPreventionFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter/Initialisation parameters"><!--()--></a><a name="CSRF_Prevention_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The CSRF Prevention Filter supports the following initialisation
+    parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">denyStatus</code></td><td align="left" valign="center">
+        <p>HTTP response status code that is used when rejecting denied
+        request. The default value is <code>403</code>.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">entryPoints</code></td><td align="left" valign="center">
+        <p>A comma separated list of URLs that will not be tested for the
+        presence of a valid nonce. They are used to provide a way to navigate
+        back to a protected application after having navigated away from it.
+        Entry points will be limited to HTTP GET requests and should not trigger
+        any security sensitive actions.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">nonceCacheSize</code></td><td align="left" valign="center">
+        <p>The number of previously issued nonces that will be cached on a LRU
+        basis to support parallel requests, limited use of the refresh and back
+        in the browser and similar behaviors that may result in the submission
+        of a previous nonce rather than the current one. If not set, the default
+        value of 5 will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">randomClass</code></td><td align="left" valign="center">
+        <p>The name of the class to use to generate nonces. The class must be an
+        instance of <code>java.util.Random</code>. If not set, the default value
+        of <code>java.security.SecureRandom</code> will be used.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter for REST APIs"><!--()--></a><a name="CSRF_Prevention_Filter_for_REST_APIs"><strong>CSRF Prevention Filter for REST APIs</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter for REST APIs/Introduction"><!--()--></a><a name="CSRF_Prevention_Filter_for_REST_APIs/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>This filter provides basic CSRF protection for REST APIs. The CSRF
+    protection is applied only for modifying HTTP requests (different from GET,
+    HEAD, OPTIONS) to protected resources. It is based on a custom header
+    <code>X-CSRF-Token</code> that provides a valid nonce.</p>
+
+    <p>CSRF protection mechanism for REST APIs consists of the following steps:
+      <ul>
+        <li>Client asks for a valid nonce. This is performed with a
+            non-modifying "Fetch" request to protected resource.</li>
+        <li>Server responds with a valid nonce mapped to the current user
+            session.</li>
+        <li>Client provides this nonce in the subsequent modifying requests in
+            the frame of the same user session.</li>
+        <li>Server rejects all modifying requests to protected resources that
+            do not contain a valid nonce.</li>
+      </ul>
+    </p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter for REST APIs/Basic configuration sample"><!--()--></a><a name="CSRF_Prevention_Filter_for_REST_APIs/Basic_configuration_sample"><strong>Basic configuration sample</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>On the server side</p>
+
+    <ul>
+      <li>All CSRF protected REST APIs should be protected with an authentication
+          mechanism.</li>
+      <li>Protect modifying REST APIs with this filter.</li>
+      <li>Provide at least one non-modifying operation.</li>
+    </ul>
+      <div class="codeBox"><pre><code>&lt;filter&gt;
+  &lt;filter-name&gt;RestCSRF&lt;/filter-name&gt;
+  &lt;filter-class&gt;org.apache.catalina.filters.RestCsrfPreventionFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;RestCSRF&lt;/filter-name&gt;
+  &lt;!-- Modifying operations --&gt;
+  &lt;url-pattern&gt;/resources/removeResource&lt;/url-pattern&gt;
+  &lt;url-pattern&gt;/resources/addResource&lt;/url-pattern&gt;
+  &lt;!-- Non-modifying operations --&gt;
+  &lt;url-pattern&gt;/resources/listResources&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+
+    <p>On the client side</p>
+
+    <ul>
+      <li>Make a non-modifying "Fetch" request in order to obtain a valid nonce.
+          This can be done with sending additional header
+          <code>X-CSRF-Token: Fetch</code></li>
+      <li>Cache the returned session id and nonce in order to provide them in
+          the subsequent modifying requests to protected resources.</li>
+      <li>Modifying requests can be denied and header
+          <code>X-CSRF-Token: Required</code> will be returned in case of
+          invalid or missing nonce, expired session or in case the session
+          id is changed by the server.</li>
+    </ul>
+      <div class="codeBox"><pre><code>Client Request:
+GET /rest/resources/listResources HTTP/1.1
+X-CSRF-Token: Fetch
+Authorization: Basic ...
+Host: localhost:8080
+...
+
+Server Response:
+HTTP/1.1 200 OK
+Set-Cookie: JSESSIONID=...; Path=/rest; HttpOnly
+X-CSRF-Token: ...
+...
+
+Client Request:
+POST /rest/resources/addResource HTTP/1.1
+Cookie: JSESSIONID=...
+X-CSRF-Token: ...
+Authorization: Basic ...
+Host: localhost:8080
+...
+
+Server Response:
+HTTP/1.1 200 OK
+...</code></pre></div>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="RestCsrfPreventionFilter and HttpServletRequest parameters"><!--()--></a><a name="RestCsrfPreventionFilter_and_HttpServletRequest_parameters"><strong>RestCsrfPreventionFilter and HttpServletRequest parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>When the client is not able to insert custom headers in its calls to
+       REST APIs there is additional capability to configure URLs for which a
+       valid nonce will be accepted as a request parameter.</p>
+
+    <p>Note: If there is a <code>X-CSRF-Token</code> header, it will be taken
+       with preference over any parameter with the same name in the request.
+       Request parameters cannot be used to fetch new nonce, only header can be
+       used to request a new nonce.</p>
+
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+  &lt;filter-name&gt;RestCSRF&lt;/filter-name&gt;
+  &lt;filter-class&gt;org.apache.catalina.filters.RestCsrfPreventionFilter&lt;/filter-class&gt;
+  &lt;init-param&gt;
+    &lt;param-name&gt;pathsAcceptingParams&lt;/param-name&gt;
+    &lt;param-value&gt;/resources/removeResource,/resources/addResource&lt;/param-value&gt;
+  &lt;/init-param&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+  &lt;filter-name&gt;RestCSRF&lt;/filter-name&gt;
+  &lt;url-pattern&gt;/resources/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter for REST APIs/Filter Class Name"><!--()--></a><a name="CSRF_Prevention_Filter_for_REST_APIs/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the CSRF Prevention Filter for REST APIs is
+    <strong><code>org.apache.catalina.filters.RestCsrfPreventionFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="CSRF Prevention Filter for REST APIs/Initialisation parameters"><!--()--></a><a name="CSRF_Prevention_Filter_for_REST_APIs/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The CSRF Prevention Filter for REST APIs supports the following
+    initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">denyStatus</code></td><td align="left" valign="center">
+        <p>HTTP response status code that is used when rejecting denied
+        request. The default value is <code>403</code>.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">pathsAcceptingParams</code></td><td align="left" valign="center">
+        <p>A comma separated list of URLs that can accept nonces via request
+        parameter <code>X-CSRF-Token</code>. For use cases when a nonce information cannot
+        be provided via header, one can provide it via request parameters. If
+        there is a <code>X-CSRF-Token</code> header, it will be taken with preference over
+        any parameter with the same name in the request. Request parameters
+        cannot be used to fetch new nonce, only header can be used to request a
+        new nonce.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">randomClass</code></td><td align="left" valign="center">
+        <p>The name of the class to use to generate nonces. The class must be an
+        instance of <code>java.util.Random</code>. If not set, the default value
+        of <code>java.security.SecureRandom</code> will be used.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expires Filter"><!--()--></a><a name="Expires_Filter"><strong>Expires Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expires Filter/Introduction"><!--()--></a><a name="Expires_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>
+    ExpiresFilter is a Java Servlet API port of <a href="https://httpd.apache.org/docs/2.2/mod/mod_expires.html">Apache
+    mod_expires</a>.
+    This filter controls the setting of the <code>Expires</code> HTTP header and the
+    <code>max-age</code> directive of the <code>Cache-Control</code> HTTP header in
+    server responses. The expiration date can set to be relative to either the
+    time the source file was last modified, or to the time of the client access.
+    </p>
+
+    <p>
+    These HTTP headers are an instruction to the client about the document's
+    validity and persistence. If cached, the document may be fetched from the
+    cache rather than from the source until this time has passed. After that, the
+    cache copy is considered "expired" and invalid, and a new copy must
+    be obtained from the source.
+    </p>
+    <p>
+    To modify <code>Cache-Control</code> directives other than <code>max-age</code> (see
+    <a href="https://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9">RFC
+    2616 section 14.9</a>), you can use other servlet filters or <a href="https://httpd.apache.org/docs/2.2/mod/mod_headers.html">Apache Httpd
+    mod_headers</a> module.
+    </p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expires Filter/Basic configuration sample"><!--()--></a><a name="Expires_Filter/Basic_configuration_sample"><strong>Basic configuration sample</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    Basic configuration to add '<code>Expires</code>' and '<code>Cache-Control: max-age=</code>'
+    headers to images, css and javascript.
+    </p>
+
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+ &lt;filter-name&gt;ExpiresFilter&lt;/filter-name&gt;
+ &lt;filter-class&gt;org.apache.catalina.filters.ExpiresFilter&lt;/filter-class&gt;
+ &lt;init-param&gt;
+    &lt;param-name&gt;ExpiresByType image&lt;/param-name&gt;
+    &lt;param-value&gt;access plus 10 minutes&lt;/param-value&gt;
+ &lt;/init-param&gt;
+ &lt;init-param&gt;
+    &lt;param-name&gt;ExpiresByType text/css&lt;/param-name&gt;
+    &lt;param-value&gt;access plus 10 minutes&lt;/param-value&gt;
+ &lt;/init-param&gt;
+ &lt;init-param&gt;
+    &lt;param-name&gt;ExpiresByType application/javascript&lt;/param-name&gt;
+    &lt;param-value&gt;access plus 10 minutes&lt;/param-value&gt;
+ &lt;/init-param&gt;
+&lt;/filter&gt;
+...
+&lt;filter-mapping&gt;
+ &lt;filter-name&gt;ExpiresFilter&lt;/filter-name&gt;
+ &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+ &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Alternate Syntax"><!--()--></a><a name="Alternate_Syntax"><strong>Alternate Syntax</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    The <code>ExpiresDefault</code> and <code>ExpiresByType</code> directives can also be
+    defined in a more readable syntax of the form:
+    </p>
+
+    <div class="codeBox"><pre><code>&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresDefault&lt;/param-name&gt;
+ &lt;param-value&gt;&lt;base&gt; [plus] {&lt;num&gt; &lt;type&gt;}*&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresByType type&lt;/param-name&gt;
+ &lt;param-value&gt;&lt;base&gt; [plus] {&lt;num&gt; &lt;type&gt;}*&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresByType type;encoding&lt;/param-name&gt;
+ &lt;param-value&gt;&lt;base&gt; [plus] {&lt;num&gt; &lt;type&gt;}*&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre></div>
+    <p>
+    where <code>&lt;base&gt;</code> is one of:
+    </p>
+    <ul>
+    <li><code>access</code></li>
+    <li><code>now</code> (equivalent to '<code>access</code>')</li>
+    <li><code>modification</code></li>
+    </ul>
+
+    <p>
+    The <code>plus</code> keyword is optional. <code>&lt;num&gt;</code> should be an
+    integer value (acceptable to <code>Integer.parseInt()</code>), and
+    <code>&lt;type&gt;</code> is one of:
+    </p>
+    <ul>
+    <li><code>year</code>, <code>years</code></li>
+    <li><code>month</code>, <code>months</code></li>
+    <li><code>week</code>, <code>weeks</code></li>
+    <li><code>day</code>, <code>days</code></li>
+    <li><code>hour</code>, <code>hours</code></li>
+    <li><code>minute</code>, <code>minutes</code></li>
+    <li><code>second</code>, <code>seconds</code></li>
+    </ul>
+    <p>
+    For example, any of the following directives can be used to make documents
+    expire 1 month after being accessed, by default:
+    </p>
+
+    <div class="codeBox"><pre><code>&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresDefault&lt;/param-name&gt;
+ &lt;param-value&gt;access plus 1 month&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresDefault&lt;/param-name&gt;
+ &lt;param-value&gt;access plus 4 weeks&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresDefault&lt;/param-name&gt;
+ &lt;param-value&gt;access plus 30 days&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre></div>
+<p>
+The expiry time can be fine-tuned by adding several
+'<code>&lt;num&gt; &lt;type&gt;</code>' clauses:
+</p>
+
+<div class="codeBox"><pre><code>&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresByType text/html&lt;/param-name&gt;
+ &lt;param-value&gt;access plus 1 month 15 days 2 hours&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresByType image/gif&lt;/param-name&gt;
+ &lt;param-value&gt;modification plus 5 hours 3 minutes&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre></div>
+    <p>
+    Note that if you use a modification date based setting, the <code>Expires</code>
+    header will <strong>not</strong> be added to content that does not come from
+    a file on disk. This is due to the fact that there is no modification time
+    for such content.
+    </p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expiration headers generation eligibility"><!--()--></a><a name="Expiration_headers_generation_eligibility"><strong>Expiration headers generation eligibility</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    A response is eligible to be enriched by <code>ExpiresFilter</code> if :
+    </p>
+    <ol>
+    <li>no expiration header is defined (<code>Expires</code> header or the
+    <code>max-age</code> directive of the <code>Cache-Control</code> header),</li>
+    <li>the response status code is not excluded by the directive
+    <code>ExpiresExcludedResponseStatusCodes</code>,</li>
+    <li>the <code>Content-Type</code> of the response matches one of the types
+    defined the in <code>ExpiresByType</code> directives or the
+    <code>ExpiresDefault</code> directive is defined.</li>
+    </ol>
+
+    <p>
+    Note : If <code>Cache-Control</code> header contains other directives than
+    <code>max-age</code>, they are concatenated with the <code>max-age</code> directive
+    that is added by the <code>ExpiresFilter</code>.
+    </p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expiration configuration selection"><!--()--></a><a name="Expiration_configuration_selection"><strong>Expiration configuration selection</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    The expiration configuration if elected according to the following algorithm:
+    </p>
+    <ol>
+    <li><code>ExpiresByType</code> matching the exact content-type returned by
+    <code>HttpServletResponse.getContentType()</code> possibly including the charset
+    (e.g. '<code>text/xml;charset=UTF-8</code>'),</li>
+    <li><code>ExpiresByType</code> matching the content-type without the charset if
+    <code>HttpServletResponse.getContentType()</code> contains a charset (e.g.
+    '<code>text/xml;charset=UTF-8</code>' -&gt; '<code>text/xml</code>'),</li>
+    <li><code>ExpiresByType</code> matching the major type (e.g. substring before
+    '<code>/</code>') of <code>HttpServletResponse.getContentType()</code>
+    (e.g. '<code>text/xml;charset=UTF-8</code>' -&gt; '<code>text</code>'),</li>
+    <li><code>ExpiresDefault</code></li>
+    </ol>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expires Filter/Filter Class Name"><!--()--></a><a name="Expires_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Expires Filter is
+    <strong><code>org.apache.catalina.filters.ExpiresFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Expires Filter/Initialisation parameters"><!--()--></a><a name="Expires_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Expires Filter</strong> supports the following
+    initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">ExpiresExcludedResponseStatusCodes</code></td><td align="left" valign="center">
+         <p>
+         This directive defines the http response status codes for which the
+         <code>ExpiresFilter</code> will not generate expiration headers. By default, the
+         <code>304</code> status code ("<code>Not modified</code>") is skipped. The
+         value is a comma separated list of http status codes.
+         </p>
+         <p>
+         This directive is useful to ease usage of <code>ExpiresDefault</code> directive.
+         Indeed, the behavior of <code>304 Not modified</code> (which does specify a
+         <code>Content-Type</code> header) combined with <code>Expires</code> and
+         <code>Cache-Control:max-age=</code> headers can be unnecessarily tricky to
+         understand.
+         </p>
+         <p><i>See sample below the table</i></p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">ExpiresByType &lt;content-type&gt;</code></td><td align="left" valign="center">
+         <p>
+         This directive defines the value of the <code>Expires</code> header and the
+         <code>max-age</code> directive of the <code>Cache-Control</code> header generated for
+         documents of the specified type (<i>e.g.</i>, <code>text/html</code>). The second
+         argument sets the number of seconds that will be added to a base time to
+         construct the expiration date. The <code>Cache-Control: max-age</code> is
+         calculated by subtracting the request time from the expiration date and
+         expressing the result in seconds.
+         </p>
+         <p>
+         The base time is either the last modification time of the file, or the time
+         of the client's access to the document. Which should be used is
+         specified by the <code>&lt;code&gt;</code> field; <code>M</code> means that the
+         file's last modification time should be used as the base time, and
+         <code>A</code> means the client's access time should be used. The duration
+         is expressed in seconds. <code>A2592000</code> stands for
+         <code>access plus 30 days</code> in alternate syntax.
+         </p>
+         <p>
+         The difference in effect is subtle. If <code>M</code> (<code>modification</code> in
+         alternate syntax) is used, all current copies of the document in all caches
+         will expire at the same time, which can be good for something like a weekly
+         notice that's always found at the same URL. If <code>A</code> (
+         <code>access</code> or <code>now</code> in alternate syntax) is used, the date of
+         expiration is different for each client; this can be good for image files
+         that don't change very often, particularly for a set of related
+         documents that all refer to the same images (<i>i.e.</i>, the images will be
+         accessed repeatedly within a relatively short timespan).
+         </p>
+         <p>
+         <strong>Note:</strong> When the content type includes a charset (e.g.
+         <code>'ExpiresByType text/xml;charset=utf-8'</code>), Tomcat removes blank chars
+         between the '<code>;</code>' and the '<code>charset</code>' keyword. Due to this,
+         configuration of an expiration with a charset must <strong>not</strong> include
+         such a space character.
+         </p>
+         <p><i>See sample below the table</i></p>
+         <p>
+         It overrides, for the specified MIME type <i>only</i>, any
+         expiration date set by the <code>ExpiresDefault</code> directive.
+         </p>
+         <p>
+         You can also specify the expiration time calculation using an alternate
+         syntax, described earlier in this document.
+         </p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">ExpiresDefault</code></td><td align="left" valign="center">
+         <p>
+         This directive sets the default algorithm for calculating the
+         expiration time for all documents in the affected realm. It can be
+         overridden on a type-by-type basis by the <code>ExpiresByType</code> directive. See the
+         description of that directive for details about the syntax of the
+         argument, and the "alternate syntax"
+         description as well.
+         </p>
+      </td></tr></table>
+
+    <p><i>Sample: exclude response status codes 302, 500 and 503</i></p>
+
+<div class="codeBox"><pre><code>&lt;init-param&gt;
+ &lt;param-name&gt;ExpiresExcludedResponseStatusCodes&lt;/param-name&gt;
+ &lt;param-value&gt;302, 500, 503&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre></div>
+
+    <p><i>Sample for ExpiresByType initialization parameter</i></p>
+
+         <div class="codeBox"><pre><code>&lt;init-param&gt;
+   &lt;param-name&gt;ExpiresByType text/html&lt;/param-name&gt;
+   &lt;param-value&gt;access plus 1 month 15   days 2 hours&lt;/param-value&gt;
+&lt;/init-param&gt;
+
+&lt;init-param&gt;
+   &lt;!-- 2592000 seconds = 30 days --&gt;
+   &lt;param-name&gt;ExpiresByType image/gif&lt;/param-name&gt;
+   &lt;param-value&gt;A2592000&lt;/param-value&gt;
+&lt;/init-param&gt;</code></pre></div>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Troubleshooting"><strong>Troubleshooting</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    To troubleshoot, enable logging on the
+    <code>org.apache.catalina.filters.ExpiresFilter</code>.
+    </p>
+    <p>
+    Extract of logging.properties
+    </p>
+
+    <div class="codeBox"><pre><code>org.apache.catalina.filters.ExpiresFilter.level = FINE    </code></pre></div>
+    <p>
+    Sample of initialization log message:
+    </p>
+
+    <div class="codeBox"><pre><code>Mar 26, 2010 2:01:41 PM org.apache.catalina.filters.ExpiresFilter init
+FINE: Filter initialized with configuration ExpiresFilter[
+ excludedResponseStatusCode=[304],
+ default=null,
+ byType={
+    image=ExpiresConfiguration[startingPoint=ACCESS_TIME, duration=[10 MINUTE]],
+    text/css=ExpiresConfiguration[startingPoint=ACCESS_TIME, duration=[10 MINUTE]],
+    text/javascript=ExpiresConfiguration[startingPoint=ACCESS_TIME, duration=[10 MINUTE]]}]</code></pre></div>
+    <p>
+    Sample of per-request log message where <code>ExpiresFilter</code> adds an
+    expiration date is below. The message is on one line and is wrapped here
+    for better readability.
+    </p>
+
+    <div class="codeBox"><pre><code>Mar 26, 2010 2:09:47 PM org.apache.catalina.filters.ExpiresFilter onBeforeWriteResponseBody
+FINE: Request "/tomcat.gif" with response status "200"
+ content-type "image/gif", set expiration date 3/26/10 2:19 PM</code></pre></div>
+    <p>
+    Sample of per-request log message where <code>ExpiresFilter</code> does not add
+    an expiration date:
+    </p>
+
+    <div class="codeBox"><pre><code>Mar 26, 2010 2:10:27 PM org.apache.catalina.filters.ExpiresFilter onBeforeWriteResponseBody
+FINE: Request "/docs/config/manager.html" with response status "200"
+ content-type "text/html", no expiration configured</code></pre></div>
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Failed Request Filter"><!--()--></a><a name="Failed_Request_Filter"><strong>Failed Request Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Failed Request Filter/Introduction"><!--()--></a><a name="Failed_Request_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>This filter triggers parameters parsing in a request and rejects the
+    request if some parameters were skipped during parameter parsing because
+    of parsing errors or request size limitations (such as
+    <code>maxParameterCount</code> attribute in a
+    <a href="http.html">Connector</a>).
+    This filter can be used to ensure that none parameter values submitted by
+    client are lost.</p>
+
+    <p>Note that parameter parsing may consume the body of an HTTP request, so
+    caution is needed if the servlet protected by this filter uses
+    <code>request.getInputStream()</code> or <code>request.getReader()</code>
+    calls. In general the risk of breaking a web application by adding this
+    filter is not so high, because parameter parsing does check content type
+    of the request before consuming the request body.</p>
+
+    <p>Note, that for the POST requests to be parsed correctly, a
+    <code>SetCharacterEncodingFilter</code> filter must be configured above
+    this one. See CharacterEncoding page in the FAQ for details.</p>
+
+    <p>The request is rejected with HTTP status code 400 (Bad Request).</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Failed Request Filter/Filter Class Name"><!--()--></a><a name="Failed_Request_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Failed Request Filter is
+    <strong><code>org.apache.catalina.filters.FailedRequestFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Failed Request Filter/Initialisation parameters"><!--()--></a><a name="Failed_Request_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The Failed Request Filter does not support any initialization parameters.</p>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="HTTP Header Security Filter"><!--()--></a><a name="HTTP_Header_Security_Filter"><strong>HTTP Header Security Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="HTTP Header Security Filter/Introduction"><!--()--></a><a name="HTTP_Header_Security_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>There are a number of HTTP headers that can be added to the response to
+    improve the security of the connection. This filter provides a mechanism for
+    adding those headers. Note that security related headers with more complex
+    requirements, like CORS, are implemented as separate Filters.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="HTTP Header Security Filter/Filter Class Name"><!--()--></a><a name="HTTP_Header_Security_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the HTTP Header Security Filter is
+    <strong><code>org.apache.catalina.filters.HttpHeaderSecurityFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="HTTP Header Security Filter/Initialisation parameters"><!--()--></a><a name="HTTP_Header_Security_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The HTTP Header Security Filter supports the following initialization
+    parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">hstsEnabled</code></td><td align="left" valign="center">
+        <p>Will an HTTP Strict Transport Security (HSTS) header
+        (<code>Strict-Transport-Security</code>) be set on the response for
+        secure requests. Any HSTS header already present will be replaced. See
+        <a href="https://tools.ietf.org/html/rfc6797">RFC 6797</a> for further
+        details of HSTS. If not specified, the default value of
+        <code>true</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">hstsMaxAgeSeconds</code></td><td align="left" valign="center">
+        <p>The max age value that should be used in the HSTS header. Negative
+        values will be treated as zero. If not specified, the default value of
+        <code>0</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">hstsIncludeSubDomains</code></td><td align="left" valign="center">
+        <p>Should the includeSubDomains parameter be included in the HSTS
+        header. If not specified, the default value of <code>false</code> will
+        be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">hstsPreload</code></td><td align="left" valign="center">
+        <p>Should the preload parameter be included in the HSTS header. If not
+        specified, the default value of <code>false</code> will be used. See
+        <a href="https://hstspreload.org/">https://hstspreload.org</a> for
+        important information about this parameter.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">antiClickJackingEnabled</code></td><td align="left" valign="center">
+        <p>Should the anti click-jacking header (<code>X-Frame-Options</code>)
+        be set on the response. Any anti click-jacking header already present
+        will be replaced. If not specified, the default value of
+        <code>true</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">antiClickJackingOption</code></td><td align="left" valign="center">
+        <p>What value should be used for the ant click-jacking header? Must be
+        one of <code>DENY</code>, <code>SAMEORIGIN</code>,
+        <code>ALLOW-FROM </code> (case-insensitive). If not specified, the
+        default value of <code>DENY</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">antiClickJackingUri</code></td><td align="left" valign="center">
+        <p>If ALLOW-FROM is used for <strong>antiClickJackingOption</strong>,
+        what URI should be allowed? If not specified, the default value of an
+        empty string will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">blockContentTypeSniffingEnabled</code></td><td align="left" valign="center">
+        <p>Should the header that blocks content type sniffing
+        (<code>X-Content-Type-Options</code>) be set on every response. If
+        already present, the header will be replaced. If not specified, the
+        default value of <code>true</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">xssProtectionEnabled</code></td><td align="left" valign="center">
+        <p>Should the header that enables the browser's cross-site scripting
+        filter protection (<code>X-XSS-Protection: 1; mode=block</code>)
+        be set on every response. If already present, the header
+        will be replaced. If not specified, the default value of
+        <code>true</code> will be used.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Address Filter"><!--()--></a><a name="Remote_Address_Filter"><strong>Remote Address Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Address Filter/Introduction"><!--()--></a><a name="Remote_Address_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote Address Filter</strong> allows you to compare the
+    IP address of the client that submitted this request against one or more
+    <em>regular expressions</em>, and either allow the request to continue
+    or refuse to process the request from this client. </p>
+
+    <p>The syntax for <em>regular expressions</em> is different than that for
+    'standard' wildcard matching. Tomcat uses the <code>java.util.regex</code>
+    package. Please consult the Java documentation for details of the
+    expressions supported.</p>
+
+    <p><strong>Note:</strong> There is a caveat when using this filter with
+    IPv6 addresses. Format of the IP address that this valve is processing
+    depends on the API that was used to obtain it. If the address was obtained
+    from Java socket using Inet6Address class, its format will be
+    <code>x:x:x:x:x:x:x:x</code>. That is, the IP address for localhost
+    will be <code>0:0:0:0:0:0:0:1</code> instead of the more widely used
+    <code>::1</code>. Consult your access logs for the actual value.</p>
+
+    <p>See also: <a href="#Remote_Host_Filter">Remote Host Filter</a>.</p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Address Filter/Filter Class Name"><!--()--></a><a name="Remote_Address_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Remote Address Filter is
+    <strong><code>org.apache.catalina.filters.RemoteAddrFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Address Filter/Initialisation parameters"><!--()--></a><a name="Remote_Address_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote Address Filter</strong> supports the following
+    initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">allow</code></td><td align="left" valign="center">
+        <p>A regular expression (using <code>java.util.regex</code>) that the
+        remote client's IP address is compared to.  If this attribute
+        is specified, the remote address MUST match for this request to be
+        accepted.  If this attribute is not specified, all requests will be
+        accepted UNLESS the remote address matches a <code>deny</code>
+        pattern.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">deny</code></td><td align="left" valign="center">
+        <p>A regular expression (using <code>java.util.regex</code>) that the
+        remote client's IP address is compared to.  If this attribute
+        is specified, the remote address MUST NOT match for this request to be
+        accepted.  If this attribute is not specified, request acceptance is
+        governed solely by the <code>accept</code> attribute.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">denyStatus</code></td><td align="left" valign="center">
+        <p>HTTP response status code that is used when rejecting denied
+        request. The default value is <code>403</code>. For example,
+        it can be set to the value <code>404</code>.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Address Filter/Example"><!--()--></a><a name="Remote_Address_Filter/Example"><strong>Example</strong></a></font></td></tr><tr><td><blockquote>
+    <p>To allow access only for the clients connecting from localhost:</p>
+<div class="codeBox"><pre><code>    &lt;filter&gt;
+      &lt;filter-name&gt;Remote Address Filter&lt;/filter-name&gt;
+      &lt;filter-class&gt;org.apache.catalina.filters.RemoteAddrFilter&lt;/filter-class&gt;
+      &lt;init-param&gt;
+        &lt;param-name&gt;allow&lt;/param-name&gt;
+        &lt;param-value&gt;127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1&lt;/param-value&gt;
+      &lt;/init-param&gt;
+    &lt;/filter&gt;
+    &lt;filter-mapping&gt;
+      &lt;filter-name&gt;Remote Address Filter&lt;/filter-name&gt;
+      &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+    &lt;/filter-mapping&gt;</code></pre></div>
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Host Filter"><!--()--></a><a name="Remote_Host_Filter"><strong>Remote Host Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Host Filter/Introduction"><!--()--></a><a name="Remote_Host_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote Host Filter</strong> allows you to compare the
+    hostname of the client that submitted this request against one or more
+    <em>regular expressions</em>, and either allow the request to continue
+    or refuse to process the request from this client. </p>
+
+    <p>The syntax for <em>regular expressions</em> is different than that for
+    'standard' wildcard matching. Tomcat uses the <code>java.util.regex</code>
+    package. Please consult the Java documentation for details of the
+    expressions supported.</p>
+
+    <p><strong>Note:</strong> This filter processes the value returned by
+    method <code>ServletRequest.getRemoteHost()</code>. To allow the method
+    to return proper host names, you have to enable "DNS lookups" feature on
+    a <strong>Connector</strong>.</p>
+
+    <p>See also: <a href="#Remote_Address_Filter">Remote Address Filter</a>,
+    <a href="http.html">HTTP Connector</a> configuration.</p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Host Filter/Filter Class Name"><!--()--></a><a name="Remote_Host_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Remote Address Filter is
+    <strong><code>org.apache.catalina.filters.RemoteHostFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote Host Filter/Initialisation parameters"><!--()--></a><a name="Remote_Host_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote Host Filter</strong> supports the following
+    initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">allow</code></td><td align="left" valign="center">
+        <p>A regular expression (using <code>java.util.regex</code>) that the
+        remote client's hostname is compared to.  If this attribute
+        is specified, the remote hostname MUST match for this request to be
+        accepted.  If this attribute is not specified, all requests will be
+        accepted UNLESS the remote hostname matches a <code>deny</code>
+        pattern.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">deny</code></td><td align="left" valign="center">
+        <p>A regular expression (using <code>java.util.regex</code>) that the
+        remote client's hostname is compared to.  If this attribute
+        is specified, the remote hostname MUST NOT match for this request to be
+        accepted.  If this attribute is not specified, request acceptance is
+        governed solely by the <code>accept</code> attribute.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">denyStatus</code></td><td align="left" valign="center">
+        <p>HTTP response status code that is used when rejecting denied
+        request. The default value is <code>403</code>. For example,
+        it can be set to the value <code>404</code>.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote CIDR Filter"><!--()--></a><a name="Remote_CIDR_Filter"><strong>Remote CIDR Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote CIDR Filter/Introduction"><!--()--></a><a name="Remote_CIDR_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote CIDR Filter</strong> allows you to compare the
+      IP address of the client that submitted this request against one or more
+      netmasks following the CIDR notation, and either allow the request to
+      continue or refuse to process the request from this client. IPv4 and
+      IPv6 are both fully supported.
+    </p>
+
+    <p>This filter mimicks Apache httpd's <code>Order</code>,
+      <code>Allow from</code> and <code>Deny from</code> directives,
+      with the following limitations:
+    </p>
+
+    <ul>
+      <li><code>Order</code> will always be <code>allow, deny</code>;</li>
+      <li>dotted quad notations for netmasks are not supported (that is, you
+        cannot write <code>192.168.1.0/255.255.255.0</code>, you must write
+        <code>192.168.1.0/24</code>;
+      </li>
+      <li>shortcuts, like <code>10.10.</code>, which is equivalent to
+        <code>10.10.0.0/16</code>, are not supported;
+      </li>
+      <li>as the filter name says, this is a CIDR only filter,
+        therefore subdomain notations like <code>.mydomain.com</code> are not
+        supported either.
+      </li>
+    </ul>
+
+    <p>Some more features of this filter are:
+    </p>
+
+    <ul>
+      <li>if you omit the CIDR prefix, this filter becomes a single IP
+      filter;</li>
+      <li>unlike the <a href="#Remote_Host_Filter">Remote Host Filter</a>,
+      it can handle IPv6 addresses in condensed form (<code>::1</code>,
+      <code>fe80::/71</code>, etc).</li>
+    </ul>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote CIDR Filter/Filter Class Name"><!--()--></a><a name="Remote_CIDR_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Remote Address Filter is
+      <strong><code>org.apache.catalina.filters.RemoteCIDRFilter</code>
+      </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote CIDR Filter/Initialisation parameters"><!--()--></a><a name="Remote_CIDR_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote CIDR Filter</strong> supports the following
+      initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">allow</code></td><td align="left" valign="center">
+        <p>A comma-separated list of IPv4 or IPv6 netmasks or addresses
+          that the remote client's IP address is matched against.
+          If this attribute is specified, the remote address MUST match
+          for this request to be accepted. If this attribute is not specified,
+          all requests will be accepted UNLESS the remote IP is matched by a
+          netmask in the <code>deny</code> attribute.
+        </p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">deny</code></td><td align="left" valign="center">
+        <p>A comma-separated list of IPv4 or IPv6 netmasks or addresses
+          that the remote client's IP address is matched against.
+          If this attribute is specified, the remote address MUST NOT match
+          for this request to be accepted. If this attribute is not specified,
+          request acceptance is governed solely by the <code>accept</code>
+          attribute.
+        </p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote CIDR Filter/Example"><!--()--></a><a name="Remote_CIDR_Filter/Example"><strong>Example</strong></a></font></td></tr><tr><td><blockquote>
+    <p>To allow access only for the clients connecting from localhost:</p>
+    <pre>
+      &lt;filter&gt;
+      &lt;filter-name&gt;Remote CIDR Filter&lt;/filter-name&gt;
+      &lt;filter-class&gt;org.apache.catalina.filters.RemoteCIDRFilter&lt;/filter-class&gt;
+      &lt;init-param&gt;
+      &lt;param-name&gt;allow&lt;/param-name&gt;
+      &lt;param-value&gt;127.0.0.0/8, ::1&lt;/param-value&gt;
+      &lt;/init-param&gt;
+      &lt;/filter&gt;
+      &lt;filter-mapping&gt;
+      &lt;filter-name&gt;Remote CIDR Filter&lt;/filter-name&gt;
+      &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+      &lt;/filter-mapping&gt;
+    </pre>
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote IP Filter"><!--()--></a><a name="Remote_IP_Filter"><strong>Remote IP Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote IP Filter/Introduction"><!--()--></a><a name="Remote_IP_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>Tomcat port of
+    <a href="https://httpd.apache.org/docs/trunk/mod/mod_remoteip.html">mod_remoteip</a>,
+    this filter replaces the apparent client remote IP address and hostname for
+    the request with the IP address list presented by a proxy or a load balancer
+    via a request headers (e.g. "X-Forwarded-For").</p>
+
+    <p>Another feature of this filter is to replace the apparent scheme
+    (http/https), server port and <code>request.secure</code> with the scheme presented
+    by a proxy or a load balancer via a request header
+    (e.g. "X-Forwarded-Proto").</p>
+
+    <p>If used in conjunction with Remote Address/Host filters then this filter
+    should be defined first to ensure that the correct client IP address is
+    presented to the Remote Address/Host filters.</p>
+
+    <p><strong>Note:</strong> By default this filter has no effect on the
+    values that are written into access log. The original values are restored
+    when request processing leaves the filter and that always happens earlier
+    than access logging. To pass the remote address, remote host, server port
+    and protocol values set by this filter to the access log,
+    they are put into request attributes. Publishing these values here
+    is enabled by default, but <code>AccessLogValve</code> should be explicitly
+    configured to use them. See documentation for
+    <code>requestAttributesEnabled</code> attribute of
+    <code>AccessLogValve</code>.</p>
+
+    <p>The names of request attributes that are set by this filter
+    and can be used by access logging are the following:</p>
+
+    <ul>
+      <li><code>org.apache.catalina.AccessLog.RemoteAddr</code></li>
+      <li><code>org.apache.catalina.AccessLog.RemoteHost</code></li>
+      <li><code>org.apache.catalina.AccessLog.Protocol</code></li>
+      <li><code>org.apache.catalina.AccessLog.ServerPort</code></li>
+      <li><code>org.apache.tomcat.remoteAddr</code></li>
+    </ul>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote IP Filter/Filter Class Name"><!--()--></a><a name="Remote_IP_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Remote IP Filter is
+    <strong><code>org.apache.catalina.filters.RemoteIpFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Basic configuration to handle 'x-forwarded-for'"><!--()--></a><a name="Basic_configuration_to_handle_'x-forwarded-for'"><strong>Basic configuration to handle 'x-forwarded-for'</strong></a></font></td></tr><tr><td><blockquote>
+    <p>
+    The filter will process the <code>x-forwarded-for</code> http header.
+    </p>
+    <div class="codeBox"><pre><code>      &lt;filter&gt;
+        &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+      &lt;/filter&gt;
+
+      &lt;filter-mapping&gt;
+        &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+        &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+      &lt;/filter-mapping&gt;</code></pre></div>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Basic configuration to handle 'x-forwarded-for' and 'x-forwarded-proto'"><!--()--></a><a name="Basic_configuration_to_handle_'x-forwarded-for'_and_'x-forwarded-proto'"><strong>Basic configuration to handle 'x-forwarded-for' and 'x-forwarded-proto'</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>
+    The filter will process <code>x-forwarded-for</code> and
+    <code>x-forwarded-proto</code> http headers. Expected value for the
+    <code>x-forwarded-proto</code> header in case of SSL connections is
+    <code>https</code> (case insensitive). </p>
+    <div class="codeBox"><pre><code>      &lt;filter&gt;
+        &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+        &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+        &lt;init-param&gt;
+          &lt;param-name&gt;protocolHeader&lt;/param-name&gt;
+          &lt;param-value&gt;x-forwarded-proto&lt;/param-value&gt;
+        &lt;/init-param&gt;
+      &lt;/filter&gt;
+
+      &lt;filter-mapping&gt;
+        &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+        &lt;url-pattern&gt;/*&lt;/url-pattern&gt;
+        &lt;dispatcher&gt;REQUEST&lt;/dispatcher&gt;
+      &lt;/filter-mapping&gt;</code></pre></div>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Advanced configuration with internal proxies"><!--()--></a><a name="Advanced_configuration_with_internal_proxies"><strong>Advanced configuration with internal proxies</strong></a></font></td></tr><tr><td><blockquote>
+    <p>RemoteIpFilter configuration: </p>
+    <div class="codeBox"><pre><code>     &lt;filter&gt;
+       &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+       &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;allowedInternalProxies&lt;/param-name&gt;
+         &lt;param-value&gt;192\.168\.0\.10|192\.168\.0\.11&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-for&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpProxiesHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-by&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;protocolHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-proto&lt;/param-value&gt;
+       &lt;/init-param&gt;
+     &lt;/filter&gt;</code></pre></div>
+    <p>Request values:</p>
+    <table class="defaultTable">
+      <tr>
+        <th>Property</th>
+        <th>Value Before RemoteIpFilter</th>
+        <th>Value After RemoteIpFilter</th>
+      </tr>
+      <tr>
+        <td> request.remoteAddr </td>
+        <td> 192.168.0.10 </td>
+        <td> 140.211.11.130 </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-for'<code>]</code> </td>
+        <td> 140.211.11.130, 192.168.0.10 </td>
+        <td> null </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-by'<code>]</code> </td>
+        <td> null </td>
+        <td> null </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-proto'<code>]</code> </td>
+        <td> https </td>
+        <td> https </td>
+      </tr>
+      <tr>
+        <td> request.scheme </td>
+        <td> http </td>
+        <td> https </td>
+      </tr>
+      <tr>
+        <td> request.secure </td>
+        <td> false </td>
+        <td> true </td>
+      </tr>
+      <tr>
+        <td> request.serverPort </td>
+        <td> 80 </td>
+        <td> 443 </td>
+      </tr>
+    </table>
+
+    <p>
+    Note : <code>x-forwarded-by</code> header is <code>null</code> because only
+    internal proxies has been traversed by the request.
+    <code>x-forwarded-for</code> is <code>null</code> because all the proxies are
+    trusted or internal.
+    </p>
+  </blockquote></td></tr></table>
+
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Advanced configuration with trusted proxies"><!--()--></a><a name="Advanced_configuration_with_trusted_proxies"><strong>Advanced configuration with trusted proxies</strong></a></font></td></tr><tr><td><blockquote>
+    <p>RemoteIpFilter configuration: </p>
+    <div class="codeBox"><pre><code>     &lt;filter&gt;
+       &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+       &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;allowedInternalProxies&lt;/param-name&gt;
+         &lt;param-value&gt;192\.168\.0\.10|192\.168\.0\.11&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-for&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpProxiesHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-by&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;trustedProxies&lt;/param-name&gt;
+         &lt;param-value&gt;proxy1|proxy2&lt;/param-value&gt;
+       &lt;/init-param&gt;
+     &lt;/filter&gt;</code></pre></div>
+    <p>Request values:</p>
+    <table class="defaultTable">
+      <tr>
+        <th>Property</th>
+        <th>Value Before RemoteIpFilter</th>
+        <th>Value After RemoteIpFilter</th>
+      </tr>
+      <tr>
+        <td> request.remoteAddr </td>
+        <td> 192.168.0.10 </td>
+        <td> 140.211.11.130 </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-for'<code>]</code> </td>
+        <td> 140.211.11.130, proxy1, proxy2 </td>
+        <td> null </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-by'<code>]</code> </td>
+        <td> null </td>
+        <td> proxy1, proxy2 </td>
+      </tr>
+    </table>
+
+    <p>
+    Note : <code>proxy1</code> and <code>proxy2</code> are both trusted proxies that
+    come in <code>x-forwarded-for</code> header, they both are migrated in
+    <code>x-forwarded-by</code> header. <code>x-forwarded-for</code> is <code>null</code>
+    because all the proxies are trusted or internal.
+    </p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Advanced configuration with internal and trusted proxies"><!--()--></a><a name="Advanced_configuration_with_internal_and_trusted_proxies"><strong>Advanced configuration with internal and trusted proxies</strong></a></font></td></tr><tr><td><blockquote>
+    <p>RemoteIpFilter configuration: </p>
+    <div class="codeBox"><pre><code>     &lt;filter&gt;
+       &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+       &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;allowedInternalProxies&lt;/param-name&gt;
+         &lt;param-value&gt;192\.168\.0\.10|192\.168\.0\.11&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-for&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpProxiesHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-by&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;trustedProxies&lt;/param-name&gt;
+         &lt;param-value&gt;proxy1|proxy2&lt;/param-value&gt;
+       &lt;/init-param&gt;
+     &lt;/filter&gt;</code></pre></div>
+    <p>Request values:</p>
+    <table class="defaultTable">
+      <tr>
+        <th>Property</th>
+        <th>Value Before RemoteIpFilter</th>
+        <th>Value After RemoteIpFilter</th>
+      </tr>
+      <tr>
+        <td> request.remoteAddr </td>
+        <td> 192.168.0.10 </td>
+        <td> 140.211.11.130 </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-for'<code>]</code> </td>
+        <td> 140.211.11.130, proxy1, proxy2, 192.168.0.10 </td>
+        <td> null </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-by'<code>]</code> </td>
+        <td> null </td>
+        <td> proxy1, proxy2 </td>
+      </tr>
+    </table>
+
+    <p>
+    Note : <code>proxy1</code> and <code>proxy2</code> are both trusted proxies that
+    come in <code>x-forwarded-for</code> header, they both are migrated in
+    <code>x-forwarded-by</code> header. As <code>192.168.0.10</code> is an internal
+    proxy, it does not appear in <code>x-forwarded-by</code>.
+    <code>x-forwarded-for</code> is <code>null</code> because all the proxies are
+    trusted or internal.
+    </p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Advanced configuration with an untrusted proxy"><!--()--></a><a name="Advanced_configuration_with_an_untrusted_proxy"><strong>Advanced configuration with an untrusted proxy</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>RemoteIpFilter configuration: </p>
+    <div class="codeBox"><pre><code>     &lt;filter&gt;
+       &lt;filter-name&gt;RemoteIpFilter&lt;/filter-name&gt;
+       &lt;filter-class&gt;org.apache.catalina.filters.RemoteIpFilter&lt;/filter-class&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;allowedInternalProxies&lt;/param-name&gt;
+         &lt;param-value&gt;192\.168\.0\.10|192\.168\.0\.11&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-for&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;remoteIpProxiesHeader&lt;/param-name&gt;
+         &lt;param-value&gt;x-forwarded-by&lt;/param-value&gt;
+       &lt;/init-param&gt;
+       &lt;init-param&gt;
+         &lt;param-name&gt;trustedProxies&lt;/param-name&gt;
+         &lt;param-value&gt;proxy1|proxy2&lt;/param-value&gt;
+       &lt;/init-param&gt;
+     &lt;/filter&gt;</code></pre></div>
+    <p>Request values:</p>
+    <table class="defaultTable">
+      <tr>
+        <th>Property</th>
+        <th>Value Before RemoteIpFilter</th>
+        <th>Value After RemoteIpFilter</th>
+      </tr>
+      <tr>
+        <td> request.remoteAddr </td>
+        <td> 192.168.0.10 </td>
+        <td> untrusted-proxy </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-for'<code>]</code> </td>
+        <td> 140.211.11.130, untrusted-proxy, proxy1 </td>
+        <td> 140.211.11.130 </td>
+      </tr>
+      <tr>
+        <td> request.header<code>[</code>'x-forwarded-by'<code>]</code> </td>
+        <td> null </td>
+        <td> proxy1 </td>
+      </tr>
+    </table>
+
+    <p>
+    Note : <code>x-forwarded-by</code> holds the trusted proxy <code>proxy1</code>.
+    <code>x-forwarded-by</code> holds <code>140.211.11.130</code> because
+    <code>untrusted-proxy</code> is not trusted and thus, we can not trust that
+    <code>untrusted-proxy</code> is the actual remote ip.
+    <code>request.remoteAddr</code> is <code>untrusted-proxy</code> that is an IP
+    verified by <code>proxy1</code>.
+    </p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Remote IP Filter/Initialisation parameters"><!--()--></a><a name="Remote_IP_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The <strong>Remote IP Filter</strong> supports the
+    following initialisation parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><code class="attributeName">remoteIpHeader</code></td><td align="left" valign="center">
+        <p>Name of the HTTP Header read by this valve that holds the list of
+        traversed IP addresses starting from the requesting client. If not
+        specified, the default of <code>x-forwarded-for</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">internalProxies</code></td><td align="left" valign="center">
+        <p>Regular expression (using <code>java.util.regex</code>) that a
+        proxy's IP address must match to be considered an internal proxy.
+        Internal proxies that appear in the <strong>remoteIpHeader</strong> will
+        be trusted and will not appear in the <strong>proxiesHeader</strong>
+        value. If not specified the default value of <code>
+        10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|169\.254\.\d{1,3}\.\d{1,3}|127\.\d{1,3}\.\d{1,3}\.\d{1,3}|0:0:0:0:0:0:0:1
+        </code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">proxiesHeader</code></td><td align="left" valign="center">
+        <p>Name of the HTTP header created by this valve to hold the list of
+        proxies that have been processed in the incoming
+        <strong>remoteIpHeader</strong>. If not specified, the default of
+        <code>x-forwarded-by</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">requestAttributesEnabled</code></td><td align="left" valign="center">
+        <p>Set to <code>true</code> to set the request attributes used by
+        AccessLog implementations to override the values returned by the
+        request for remote address, remote host, server port and protocol.
+        Request attributes are also used to enable the forwarded remote address
+        to be displayed on the status page of the Manager web application.
+        If not set, the default value of <code>true</code> will be used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">trustedProxies</code></td><td align="left" valign="center">
+        <p>Regular expression (using <code>java.util.regex</code>) that a
+        proxy's IP address must match to be considered an trusted proxy.
+        Trusted proxies that appear in the <strong>remoteIpHeader</strong> will
+        be trusted and will appear in the <strong>proxiesHeader</strong> value.
+        If not specified, no proxies will be trusted.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">protocolHeader</code></td><td align="left" valign="center">
+        <p>Name of the HTTP Header read by this valve that holds the protocol
+        used by the client to connect to the proxy. If not specified, the
+        default of <code>null</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">portHeader</code></td><td align="left" valign="center">
+        <p>Name of the HTTP Header read by this valve that holds the port
+        used by the client to connect to the proxy. If not specified, the
+        default of <code>null</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">protocolHeaderHttpsValue</code></td><td align="left" valign="center">
+        <p>Value of the <strong>protocolHeader</strong> to indicate that it is
+        an HTTPS request. If not specified, the default of <code>https</code> is
+        used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">httpServerPort</code></td><td align="left" valign="center">
+        <p>Value returned by <code>ServletRequest.getServerPort()</code>
+        when the <strong>protocolHeader</strong> indicates <code>http</code>
+        protocol and no <strong>portHeader</strong> is present. If not
+        specified, the default of <code>80</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">httpsServerPort</code></td><td align="left" valign="center">
+        <p>Value returned by <code>ServletRequest.getServerPort()</code>
+        when the <strong>protocolHeader</strong> indicates <code>https</code>
+        protocol and no <strong>portHeader</strong> is present. If not
+        specified, the default of <code>443</code> is used.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">changeLocalPort</code></td><td align="left" valign="center">
+        <p>If <code>true</code>, the value returned by
+        <code>ServletRequest.getLocalPort()</code> and
+        <code>ServletRequest.getServerPort()</code> is modified by the this
+        filter. If not specified, the default of <code>false</code> is used.</p>
+      </td></tr></table>
+
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Request Dumper Filter"><!--()--></a><a name="Request_Dumper_Filter"><strong>Request Dumper Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Request Dumper Filter/Introduction"><!--()--></a><a name="Request_Dumper_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The Request Dumper Filter logs information from the request and response
+    objects and is intended to be used for debugging purposes. When using this
+    Filter, it is recommended that the
+    <code>org.apache.catalina.filter.RequestDumperFilter</code> logger is
+    directed to a dedicated file and that the
+    <code>org.apache.juli.VerbatimFormatter</code> is used.</p>
+
+    <p><strong>WARNING: Using this filter has side-effects.</strong>  The
+    output from this filter includes any parameters included with the request.
+    The parameters will be decoded using the default platform encoding. Any
+    subsequent calls to <code>request.setCharacterEncoding()</code> within
+    the web application will have no effect.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Request Dumper Filter/Filter Class Name"><!--()--></a><a name="Request_Dumper_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Request Dumper Filter is
+    <strong><code>org.apache.catalina.filters.RequestDumperFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Request Dumper Filter/Initialisation parameters"><!--()--></a><a name="Request_Dumper_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The Request Dumper Filter does not support any initialization
+    parameters.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Request Dumper Filter/Sample Configuration"><!--()--></a><a name="Request_Dumper_Filter/Sample_Configuration"><strong>Sample Configuration</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The following entries in a web application's web.xml would enable the
+    Request Dumper filter for all requests for that web application. If the
+    entries were added to <code>CATALINA_BASE/conf/web.xml</code>, the Request
+    Dumper Filter would be enabled for all web applications.</p>
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+    &lt;filter-name&gt;requestdumper&lt;/filter-name&gt;
+    &lt;filter-class&gt;
+        org.apache.catalina.filters.RequestDumperFilter
+    &lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;requestdumper&lt;/filter-name&gt;
+    &lt;url-pattern&gt;*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+
+    <p>The following entries in CATALINA_BASE/conf/logging.properties would
+    create a separate log file for the Request Dumper Filter output.</p>
+    <div class="codeBox"><pre><code># To this configuration below, 1request-dumper.org.apache.juli.FileHandler
+# also needs to be added to the handlers property near the top of the file
+1request-dumper.org.apache.juli.FileHandler.level = INFO
+1request-dumper.org.apache.juli.FileHandler.directory = ${catalina.base}/logs
+1request-dumper.org.apache.juli.FileHandler.prefix = request-dumper.
+1request-dumper.org.apache.juli.FileHandler.encoding = UTF-8
+1request-dumper.org.apache.juli.FileHandler.formatter = org.apache.juli.VerbatimFormatter
+org.apache.catalina.filters.RequestDumperFilter.level = INFO
+org.apache.catalina.filters.RequestDumperFilter.handlers = \
+  1request-dumper.org.apache.juli.FileHandler</code></pre></div>
+  </blockquote></td></tr></table>
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Session Initializer Filter"><!--()--></a><a name="Session_Initializer_Filter"><strong>Session Initializer Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Session Initializer Filter/Introduction"><!--()--></a><a name="Session_Initializer_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The Session Initializer Filter initializes the <code>javax.servlet.http.HttpSession</code>
+    before the Request is processed.  This is required for JSR-356 compliant WebSocket implementations,
+    if the <code>HttpSession</code> is needed during the HandShake phase.</p>
+
+    <p>The Java API for WebSocket does not mandate that an <code>HttpSession</code> would
+    be initialized upon request, and thus <code>javax.servlet.http.HttpServletRequest</code>'s
+    <code>getSession()</code> returns <code>null</code> if the <code>HttpSession</code> was not
+    initialized in advance.</p>
+
+    <p>This filter solves that problem by initializing the HttpSession for any <code>HttpServletRequest</code>
+    that matches its <code>url-pattern</code>.</p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Session Initializer Filter/Filter Class Name"><!--()--></a><a name="Session_Initializer_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The filter class name for the Session Initializer Filter is
+    <strong><code>org.apache.catalina.filters.SessionInitializerFilter</code></strong>.</p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Session Initializer Filter/Initialisation parameters"><!--()--></a><a name="Session_Initializer_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The Session Initializer Filter does not support any initialization parameters.</p>
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Session Initializer Filter/Sample Configuration"><!--()--></a><a name="Session_Initializer_Filter/Sample_Configuration"><strong>Sample Configuration</strong></a></font></td></tr><tr><td><blockquote>
+    <p>The following entries in the Web Application Deployment Descriptor, <strong>web.xml</strong>,
+    would enable the Session Initializer Filter for requests that match the given URL pattern
+    (in this example, "/ws/*").</p>
+
+    <div class="codeBox"><pre><code>&lt;filter&gt;
+    &lt;filter-name&gt;SessionInitializer&lt;/filter-name&gt;
+    &lt;filter-class&gt;org.apache.catalina.filters.SessionInitializerFilter&lt;/filter-class&gt;
+&lt;/filter&gt;
+&lt;filter-mapping&gt;
+    &lt;filter-name&gt;SessionInitializer&lt;/filter-name&gt;
+    &lt;url-pattern&gt;/ws/*&lt;/url-pattern&gt;
+&lt;/filter-mapping&gt;</code></pre></div>
+    </blockquote></td></tr></table>
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Set Character Encoding Filter"><!--()--></a><a name="Set_Character_Encoding_Filter"><strong>Set Character Encoding Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Set Character Encoding Filter/Introduction"><!--()--></a><a name="Set_Character_Encoding_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>User agents don't always include character encoding information in
+    requests. Depending on the how the request is processed, usually the
+    default encoding of ISO-8859-1 is used. This is not always
+    desirable. This filter provides options for setting that encoding or
+    forcing it to a particular value. Essentially this filter calls
+    <code>ServletRequest.setCharacterEncoding()</code> method.</p>
+
+    <p>Effectively the value set by this filter is used when parsing parameters
+    in a POST request, if parameter parsing occurs later than this filter. Thus
+    the order of filter mappings is important. Note that the encoding for GET
+    requests is not set here, but on a <b>Connector</b>. See
+    CharacterEncoding page in the FAQ for details.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Set Character Encoding Filter/Filter Class Name"><!--()--></a><a name="Set_Character_Encoding_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the Set Character Encoding Filter is
+    <strong><code>org.apache.catalina.filters.SetCharacterEncodingFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="Set Character Encoding Filter/Initialisation parameters"><!--()--></a><a name="Set_Character_Encoding_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The Set Character Encoding Filter supports the following initialization
+    parameters:</p>
+
+    <table border="1" cellpadding="5"><tr><th width="15%" bgcolor="#023264"><font color="#ffffff">Attribute</font></th><th width="85%" bgcolor="#023264"><font color="#ffffff">Description</font></th></tr><tr><td align="left" valign="center"><strong><code class="attributeName">encoding</code></strong></td><td align="left" valign="center">
+        <p>Name of the character encoding which should be set.</p>
+      </td></tr><tr><td align="left" valign="center"><code class="attributeName">ignore</code></td><td align="left" valign="center">
+        <p>Determines if any character encoding specified by the user agent is
+        ignored. If this attribute is <code>true</code>, any value provided by
+        the user agent is ignored. If <code>false</code>, the encoding is only
+        set if the user agent did not specify an encoding. The default value
+        is <code>false</code>.</p>
+      </td></tr></table>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="WebDAV Fix Filter"><!--()--></a><a name="WebDAV_Fix_Filter"><strong>WebDAV Fix Filter</strong></a></font></td></tr><tr><td><blockquote>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="WebDAV Fix Filter/Introduction"><!--()--></a><a name="WebDAV_Fix_Filter/Introduction"><strong>Introduction</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>Microsoft operating systems have two WebDAV clients. One is used with
+    port 80, the other is used for all other ports. The implementation used with
+    port 80 does not adhere to the WebDAV specification and fails when trying to
+    communicate with the Tomcat WebDAV Servlet. This Filter provides a fix for
+    this by forcing the use of the WebDAV implementation that works, even when
+    connecting via port 80.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="WebDAV Fix Filter/Filter Class Name"><!--()--></a><a name="WebDAV_Fix_Filter/Filter_Class_Name"><strong>Filter Class Name</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The filter class name for the WebDAV Fix Filter is
+    <strong><code>org.apache.catalina.filters.WebdavFixFilter</code>
+    </strong>.</p>
+
+  </blockquote></td></tr></table>
+
+  <table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#828DA6"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="WebDAV Fix Filter/Initialisation parameters"><!--()--></a><a name="WebDAV_Fix_Filter/Initialisation_parameters"><strong>Initialisation parameters</strong></a></font></td></tr><tr><td><blockquote>
+
+    <p>The WebDAV Fix Filter does not support any initialization parameters.</p>
+
+  </blockquote></td></tr></table>
+
+</blockquote></td></tr></table></td></tr><tr class="noPrint"><td width="20%" valign="top" nowrap class="noPrint"></td><td width="80%" valign="top" align="left"><table border="0" cellspacing="0" cellpadding="2"><tr><td bgcolor="#525D76"><font color="#ffffff" face="arial,helvetica.sanserif"><a name="comments_section" id="comments_section"><strong>Comments</strong></a></font></td></tr><tr><td><blockquote><p class="notice"><strong>Notice:</strong> This comments section collects your suggestions
+              on improving documentation for Apache Tomcat.<br><br>
+              If you have trouble and need help, read
+              <a href="http://tomcat.apache.org/findhelp.html">Find Help</a> page
+              and ask your question on the tomcat-users
+              <a href="http://tomcat.apache.org/lists.html">mailing list</a>.
+              Do not ask such questions here. This is not a Q&amp;A section.<br><br>
+              The Apache Comments System is explained <a href="../comments.html">here</a>.
+              Comments may be removed by our moderators if they are either
+              implemented or considered invalid/off-topic.</p><script type="text/javascript"><!--//--><![CDATA[//><!--
+              var comments_shortname = 'tomcat';
+              var comments_identifier = 'http://tomcat.apache.org/tomcat-7.0-doc/config/filter.html';
+              (function(w, d) {
+                  if (w.location.hostname.toLowerCase() == "tomcat.apache.org") {
+                      d.write('<div id="comments_thread"><\/div>');
+                      var s = d.createElement('script');
+                      s.type = 'text/javascript';
+                      s.async = true;
+                      s.src = 'https://comments.apache.org/show_comments.lua?site=' + comments_shortname + '&page=' + comments_identifier;
+                      (d.getElementsByTagName('head')[0] || d.getElementsByTagName('body')[0]).appendChild(s);
+                  }
+                  else {
+                      d.write('<div id="comments_thread"><strong>Comments are disabled for this page at the moment.<\/strong><\/div>');
+                  }
+              })(window, document);
+              //--><!]]></script></blockquote></td></tr></table></td></tr><!--FOOTER SEPARATOR--><tr><td colspan="2"><hr noshade size="1"></td></tr><!--PAGE FOOTER--><tr><td colspan="2"><div align="center"><font color="#525D76" size="-1"><em>
+        Copyright &copy; 1999-2019, Apache Software Foundation
+        </em></font></div></td></tr></table></body></html>

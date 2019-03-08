@@ -23,8 +23,6 @@
 //
 // * Read access to the web application's document root directory
 // * Read, write and delete access to the web application's working directory
-//
-// $Id: catalina.policy 1347048 2012-06-06 18:47:00Z markt $
 // ============================================================================
 
 
@@ -74,7 +72,7 @@ grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
         permission java.io.FilePermission
          "${catalina.base}${file.separator}logs", "read, write";
         permission java.io.FilePermission
-         "${catalina.base}${file.separator}logs${file.separator}*", "read, write";
+         "${catalina.base}${file.separator}logs${file.separator}*", "read, write, delete";
 
         permission java.lang.RuntimePermission "shutdownHooks";
         permission java.lang.RuntimePermission "getClassLoader";
@@ -84,11 +82,8 @@ grant codeBase "file:${catalina.home}/bin/tomcat-juli.jar" {
 
         permission java.util.PropertyPermission "java.util.logging.config.class", "read";
         permission java.util.PropertyPermission "java.util.logging.config.file", "read";
+        permission java.util.PropertyPermission "org.apache.juli.ClassLoaderLogManager.debug", "read";
         permission java.util.PropertyPermission "catalina.base", "read";
-        permission java.util.PropertyPermission
-         "org.apache.juli.logging.UserDataHelper.CONFIG", "read";
-        permission java.util.PropertyPermission
-         "org.apache.juli.logging.UserDataHelper.SUPPRESSION_TIME", "read";
 
         // Note: To enable per context logging configuration, permit read access to
         // the appropriate file. Be sure that the logging configuration is
@@ -173,6 +168,9 @@ grant {
      "accessClassInPackage.org.apache.jasper.runtime.*";
 
     // Precompiled JSPs need access to these system properties.
+
+    // The following two permissions are no longer needed since Tomcat 7.0.88
+    // They are here for historic reasons. There is no harm in keeping them.
     permission java.util.PropertyPermission
      "org.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER", "read";
     permission java.util.PropertyPermission
@@ -189,14 +187,19 @@ grant {
     // Applications using Comet need to be able to access this package
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.comet";
 
-    // Applications using WebSocket need to be able to access this package
+    // Applications using the legacy WebSocket implementation need to be able to access this package
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.websocket";
+
+    // Applications using the JSR-356 WebSocket implementation need to be able to access these packages
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket";
+    permission java.lang.RuntimePermission "accessClassInPackage.org.apache.tomcat.websocket.server";
 };
 
 
 // The Manager application needs access to the following packages to support the
-// session display functionality. These settings support the following
-// configurations:
+// session display functionality. It also requires the custom Tomcat
+// DeployXmlPermission to enable the use of META-INF/context.xml
+// These settings support the following configurations:
 // - default CATALINA_HOME == CATALINA_BASE
 // - CATALINA_HOME != CATALINA_BASE, per instance Manager in CATALINA_BASE
 // - CATALINA_HOME != CATALINA_BASE, shared Manager in CATALINA_HOME
@@ -206,6 +209,7 @@ grant codeBase "file:${catalina.base}/webapps/manager/-" {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.manager";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.manager.util";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.util";
+    permission org.apache.catalina.security.DeployXmlPermission "manager";
 };
 grant codeBase "file:${catalina.home}/webapps/manager/-" {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina";
@@ -213,7 +217,22 @@ grant codeBase "file:${catalina.home}/webapps/manager/-" {
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.manager";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.manager.util";
     permission java.lang.RuntimePermission "accessClassInPackage.org.apache.catalina.util";
+    permission org.apache.catalina.security.DeployXmlPermission "manager";
 };
+
+// The Host Manager application needs the custom Tomcat DeployXmlPermission to
+// enable the use of META-INF/context.xml
+// These settings support the following configurations:
+// - default CATALINA_HOME == CATALINA_BASE
+// - CATALINA_HOME != CATALINA_BASE, per instance Host Manager in CATALINA_BASE
+// - CATALINA_HOME != CATALINA_BASE, shared Host Manager in CATALINA_HOME
+grant codeBase "file:${catalina.base}/webapps/host-manager/-" {
+    permission org.apache.catalina.security.DeployXmlPermission "host-manager";
+};
+grant codeBase "file:${catalina.home}/webapps/host-manager/-" {
+    permission org.apache.catalina.security.DeployXmlPermission "host-manager";
+};
+
 
 // You can assign additional permissions to particular web applications by
 // adding additional "grant" entries here, based on the code base for that

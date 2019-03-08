@@ -44,6 +44,9 @@
 
   <xsl:template match="jvm">
    <xsl:apply-templates select="memory"/>
+   <b>Memory Pools</b><br />
+   <xsl:apply-templates select="memorypool"/>
+   <hr />
   </xsl:template>
 
   <xsl:template match="memory">
@@ -56,6 +59,18 @@
     </table><hr />
   </xsl:template>
 
+  <xsl:template match="memorypool">
+    <table><tr>
+             <td><b>Name:</b> <xsl:value-of select="@name"/></td>
+             <td><b>Type:</b> <xsl:value-of select="@type"/></td>
+             <td><b>Initial:</b> <xsl:value-of select="@usageInit"/></td>
+             <td><b>Committed:</b> <xsl:value-of select="@usageCommitted"/></td>
+             <td><b>Maximum:</b> <xsl:value-of select="@usageMax"/></td>
+             <td><b>Used:</b> <xsl:value-of select="@usageUsed"/></td>
+           </tr>
+    </table>
+  </xsl:template>
+
   <xsl:template match="connector">
      <b>Connector -- </b> <xsl:value-of select="@name"/><br />
 
@@ -66,9 +81,8 @@
 
   <xsl:template match="threadInfo">
     <table><tr>
-             <td><b>threadInfo </b></td>
+             <td><b>threadInfo</b></td>
              <td><b>maxThreads:</b> <xsl:value-of select="@maxThreads"/></td>
-             <td><b>minSpareThreads:</b> <xsl:value-of select="@minSpareThreads"/></td>
              <td><b>currentThreadCount:</b> <xsl:value-of select="@currentThreadCount"/></td>
              <td><b>currentThreadsBusy:</b> <xsl:value-of select="@currentThreadsBusy"/></td>
            </tr>

@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page session="false" trimDirectiveWhitespaces="true" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
  <head>
@@ -40,7 +41,7 @@
     will need to reset this protection by returning to the
     <a href="<%=request.getContextPath()%>/html">main Manager page</a>. Once you
     return to this page, you will be able to continue using the Manager
-    appliction's HTML interface normally. If you continue to see this access
+    application's HTML interface normally. If you continue to see this access
     denied message, check that you have the necessary permissions to access this
     application.
    </p>
@@ -87,7 +88,7 @@
    </ul>
    <p>
     For more information - please see the
-    <a href="/docs/manager-howto.html">Manager App HOW-TO</a>.
+    <a href="/docs/manager-howto.html" rel="noopener noreferrer">Manager App How-To</a>.
    </p>
  </body>
 
