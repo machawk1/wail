@@ -10,21 +10,17 @@ from __future__ import print_function
 
 import wx
 import subprocess
-import shlex
 import webbrowser
 import os
-import schedule
 import time
 import sys
 import locale
-import datetime
 import functools
-import six
 # from ntfy.backends.default import notify
 
 import hashlib
 import pathlib
-from string import Template # Py3.6+
+from string import Template  # Py3.6+
 
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
@@ -36,7 +32,6 @@ try:  # Py3
 except ImportError:  # Py2
     import thread  # For a more responsive UI
 
-import base64
 import glob
 import re
 import ssl
@@ -50,7 +45,6 @@ import wailUtil as util
 
 # from wx import *
 import wx.adv
-import waybackConfigWriter
 from subprocess import Popen, PIPE
 
 # For a more asynchronous UI, esp with accessible()s
