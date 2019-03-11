@@ -146,7 +146,7 @@ menuTitle_view_viewAdvanced = 'Advanced Interface'
 menuTitle_view_viewAdvanced_services = 'Services'
 menuTitle_view_viewAdvanced_wayback = 'Wayback'
 menuTitle_view_viewAdvanced_heritrix = 'Heritrix'
-menuTitle_view_viewAdvanced_miscellaneous = 'Miscelleanous'
+menuTitle_view_viewAdvanced_miscellaneous = 'Miscellaneous'
 
 menuTitle_window_wail = 'Web Archiving Integration Layer'
 
@@ -196,11 +196,11 @@ wailWindowSize = (400, 250)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
 
-if 'darwin' in sys.platform:  # OS X Specific Code here
+if 'darwin' in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
     wailPath = "/Applications/WAIL.app"
     heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
-    heritrixBinPath = "sh " + heritrixPath+"bin/heritrix"
+    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
     heritrixJobPath = heritrixPath + "jobs/"
     fontSize = 10
     tomcatPath = wailPath + "/bundledApps/tomcat"
