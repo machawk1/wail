@@ -99,9 +99,7 @@ class TabController(wx.Frame):
         self.indexingTimer.start()
 
     def createMenu(self):
-        """
-
-        """
+        """Configure, initialize, and attach application menus"""
         menu_bar = wx.MenuBar()
 
         file_menu = wx.Menu()
@@ -110,20 +108,20 @@ class TabController(wx.Frame):
         window_menu = wx.Menu()
         help_menu = wx.Menu()
 
-        file_newcrawl = file_menu.Append(
-            wx.ID_ANY, config.menuTitle_file_newCrawl + '\tCTRL+N')
+        file_newcrawl = self.addMenuItem(
+            file_menu, config.menuTitle_file_newCrawl, 'CTRL+N')
         self.Bind(wx.EVT_MENU, self.setupNewCrawlFromMenu, file_newcrawl)
 
         file_allcrawls = wx.Menu()
-        file_allcrawls_finish = file_allcrawls.Append(
-            wx.ID_ANY, config.menuTitle_file_allCrawls_finish)
-        file_allcrawls_pauseUnpause = file_allcrawls.Append(
-            wx.ID_ANY, config.menuTitle_file_allCrawls_pause)
-        file_allcrawls_restart = file_allcrawls.Append(
-            wx.ID_ANY, config.menuTitle_file_allCrawls_restart)
+        file_allcrawls_finish = self.addMenuItem(
+            file_allcrawls, config.menuTitle_file_allCrawls_finish)
+        file_allcrawls_pauseUnpause = self.addMenuItem(
+            file_allcrawls, config.menuTitle_file_allCrawls_pause)
+        file_allcrawls_restart = self.addMenuItem(
+            file_allcrawls, config.menuTitle_file_allCrawls_restart)
         file_allcrawls.AppendSeparator()
-        file_allcrawls_destroy = file_allcrawls.Append(
-            wx.ID_ANY, config.menuTitle_file_allCrawls_destroy)
+        file_allcrawls_destroy = self.addMenuItem(
+            file_allcrawls, config.menuTitle_file_allCrawls_destroy)
 
         file_menu.AppendSeparator()
         file_menu.AppendSubMenu(
@@ -133,13 +131,19 @@ class TabController(wx.Frame):
                   self.advConfig.heritrixPanel.finishAllCrawls,
                   file_allcrawls_finish)
 
-        edit_undo = edit_menu.Append(wx.ID_ANY, "Undo\tCtrl+Z")
-        edit_redo = edit_menu.Append(wx.ID_ANY, "Redo\tCtrl+Y")
+        edit_undo = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_undo, 'CTRL+Z')
+        edit_redo = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_redo, 'CTRL+Y')
         edit_menu.AppendSeparator()
-        edit_cut = edit_menu.Append(wx.ID_ANY, "Cut\tCtrl+X")
-        edit_copy = edit_menu.Append(wx.ID_ANY, "Copy\tCtrl+C")
-        edit_paste = edit_menu.Append(wx.ID_ANY, "Paste\tCtrl+V")
-        edit_selectall = edit_menu.Append(wx.ID_ANY, "Select All\tCtrl+A")
+        edit_cut = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_cut, 'CTRL+X')
+        edit_copy = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_copy, 'CTRL+C')
+        edit_paste = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_paste, 'CTRL+V')
+        edit_selectall = self.addMenuItem(
+            edit_menu, config.menuTitle_edit_selectAll, 'CTRL+A')
 
         # Disable Edit menu items until implemented
         edit_undo.Enable(0)
@@ -158,24 +162,20 @@ class TabController(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.paste, self.edit_paste)
         # self.Bind(wx.EVT_MENU, self.selectall, self.edit_selectall)
 
-        viewBasic = view_menu.Append(
-            wx.ID_ANY, config.menuTitle_view_viewBasic + '\tCTRL+0')
+        viewBasic = self.addMenuItem(
+            view_menu, config.menuTitle_view_viewBasic, 'CTRL+0')
         view_menu.AppendSeparator()
-        adv = view_menu.Append(wx.ID_ANY, config.menuTitle_view_viewAdvanced)
+        adv = self.addMenuItem(view_menu, config.menuTitle_view_viewAdvanced)
         adv.Enable(0)
 
-        viewServices = view_menu.Append(
-            wx.ID_ANY,
-            config.menuTitle_view_viewAdvanced_services + '\tCTRL+1')
-        viewWayback = view_menu.Append(
-            wx.ID_ANY,
-            config.menuTitle_view_viewAdvanced_wayback + '\tCTRL+2')
-        viewHeritrix = view_menu.Append(
-            wx.ID_ANY,
-            config.menuTitle_view_viewAdvanced_heritrix + '\tCTRL+3')
-        viewMiscellaneous = view_menu.Append(
-            wx.ID_ANY,
-            config.menuTitle_view_viewAdvanced_miscellaneous + '\tCTRL+4')
+        viewServices = self.addMenuItem(
+            view_menu, config.menuTitle_view_viewAdvanced_services, 'CTRL+1')
+        viewWayback = self.addMenuItem(
+            view_menu, config.menuTitle_view_viewAdvanced_wayback, 'CTRL+2')
+        viewHeritrix = self.addMenuItem(
+            view_menu, config.menuTitle_view_viewAdvanced_heritrix, 'CTRL+3')
+        viewMiscellaneous = self.addMenuItem(
+            view_menu, config.menuTitle_view_viewAdvanced_miscellaneous, 'CTRL+4')
 
         windowWail = window_menu.AppendCheckItem(
             wx.ID_ANY, config.menuTitle_window_wail)
@@ -213,17 +213,10 @@ class TabController(wx.Frame):
                   basicTab=True: self.displayTab(basicTab=basicTab),
                   viewBasic)
 
-        self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_services: self.displayTab(tabTitle),
-                  viewServices)
-        self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_wayback: self.displayTab(tabTitle),
-                  viewWayback)
-        self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_heritrix: self.displayTab(tabTitle),
-                  viewHeritrix)
-        self.Bind(wx.EVT_MENU,
-                  lambda evt, tabTitle=config.menuTitle_view_viewAdvanced_miscellaneous: self.displayTab(tabTitle), viewMiscellaneous)
+        self.bindMenu(config.menuTitle_view_viewAdvanced_services, viewServices)
+        self.bindMenu(config.menuTitle_view_viewAdvanced_wayback, viewWayback)
+        self.bindMenu(config.menuTitle_view_viewAdvanced_heritrix, viewHeritrix)
+        self.bindMenu(config.menuTitle_view_viewAdvanced_miscellaneous, viewMiscellaneous)
 
         # Fix Quit menuitem capitalization
         wailMenu = menu_bar.OSXGetAppleMenu()
@@ -233,6 +226,17 @@ class TabController(wx.Frame):
                     m.SetItemLabel("Quit WAIL\tCTRL+Q")
 
         self.SetMenuBar(menu_bar)
+
+    def addMenuItem(self, parentMenu, itemText, shortCut=""):
+        sep = "\t"
+        if shortCut == "":
+            sep = ""
+        return parentMenu.Append(
+            wx.ID_ANY,
+            '{0}{1}{2}'.format(itemText, sep, shortCut))
+
+    def bindMenu(self, title, menu):
+        self.Bind(wx.EVT_MENU, lambda evt, t=title: self.displayTab(t), menu)
 
     def displayTab(self, tableTitle='Basic', basicTab=False):
         """Change tab currently shown in the UI"""
@@ -1086,9 +1090,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             configuration files from the file system.
 
             """
-            jobPath = config.heritrixJobPath +\
-                      str(self.listbox.GetString(self.listbox.GetSelection()))
-            print('Deleting Job at ' + jobPath)
+            jobPath = '{}{}'.format(
+                config.heritrixJobPath,
+                str(self.listbox.GetString(self.listbox.GetSelection())))
+            print('Deleting Job at {}'.format(jobPath))
             try:
                 shutil.rmtree(jobPath)
             except OSError as e:
@@ -1144,17 +1149,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.statusMsg.Hide()
 
             self.newCrawlTextCtrlLabel = wx.StaticText(
-                self, -1, "Enter one URI per line to crawl", pos=(135, 0))
+                self, -1, config.textLabel_uriEntry, pos=(135, 0))
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
             self.newCrawlTextCtrl = \
                 wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90),
                             style=multiLineAndNoWrapStyle)
 
             self.newCrawlDepthTextCtrlLabel = \
-                wx.StaticText(self, -1, "Depth", pos=(135, 112))
+                wx.StaticText(self, -1, config.textLabel_depth, pos=(135, 112))
             self.newCrawlDepthTextCtrl = \
                 wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
-            self.newCrawlDepthTextCtrl.SetValue("1")
+            self.newCrawlDepthTextCtrl.SetValue(config.textLabel_depth_default)
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
             self.newCrawlDepthTextCtrl.Bind(
@@ -1163,7 +1168,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # self.crawlOptionsButton = wx.Button(self, -1, "More options",
             # ...pos=(150,125))
             self.startCrawlButton = wx.Button(
-                self, -1, "Start Crawl",  pos=(265, 110))
+                self, -1, config.buttonLabel_starCrawl, pos=(265, 110))
             self.startCrawlButton.SetDefault()
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
@@ -1234,7 +1239,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             viewArchivesFolderButtonButton.Bind(
                 wx.EVT_BUTTON, self.openArchivesFolder)
             self.testUpdate = wx.Button(
-                self, 1, "Check for Updates")
+                self, 1, config.buttonLabel_checkForUpdates)
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(viewArchivesFolderButtonButton, 0, wx.EXPAND, 0)
@@ -1367,7 +1372,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             config.heritrixBinPath, config.heritrixCredentials_username,
             config.heritrixCredentials_password)
 
-        # TODO: shell=True was added for OS X
+        # TODO: shell=True was added for macOS
         # ...verify that functionality persists on Win64
         ret = subprocess.Popen(cmd, shell=True)
         # urlib won't respond to https, hard-coded sleep until I
