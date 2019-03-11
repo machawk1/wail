@@ -99,6 +99,9 @@ class TabController(wx.Frame):
         self.indexingTimer.start()
 
     def createMenu(self):
+        """
+
+        """
         menu_bar = wx.MenuBar()
 
         file_menu = wx.Menu()
@@ -232,6 +235,7 @@ class TabController(wx.Frame):
         self.SetMenuBar(menu_bar)
 
     def displayTab(self, tableTitle='Basic', basicTab=False):
+        """Change tab currently shown in the UI"""
         if basicTab:
             self.Notebook.SetSelection(0)
             return
@@ -245,10 +249,12 @@ class TabController(wx.Frame):
         self.advConfig.Notebook.SetSelection(pages[tableTitle])
 
     def setupNewCrawlFromMenu(self, menu):
+        """Change view to Advanced Crawl, display URI textbox"""
         self.displayTab(config.menuTitle_view_viewAdvanced_heritrix)
         self.advConfig.heritrixPanel.setupNewCrawl(None)
 
     def displayAboutMenu(self, button):
+        """Show new window with application information"""
         info = wx.adv.AboutDialogInfo()
         info.SetName(config.aboutWindow_appName)
         info.SetVersion("v. " + config.WAIL_VERSION)
@@ -257,6 +263,7 @@ class TabController(wx.Frame):
         wx.adv.AboutBox(info)
 
     def ensureCorrectInstallation(self):
+        """Verify installation location"""
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
         currentPath = os.path.dirname(os.path.abspath(__file__))
@@ -265,13 +272,11 @@ class TabController(wx.Frame):
             wx.MessageBox(config.msg_wrongLocation_body + currentPath,
                           config.msg_wrongLocation_title)
             print(config.msg_wrongLocation_body + currentPath)
-            # sys.exit()
 
     def quit(self, button):
-        print('Quitting!')
+        """Exit the application"""
         if mainAppWindow.indexingTimer:
             mainAppWindow.indexingTimer.cancel()
-        # os._exit(0) # Quit without buffer cleanup
         sys.exit(1)  # Be a good citizen. Cleanup your memory footprint
 
 
@@ -322,6 +327,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
     def setMementoCount(self, m_count, a_count=0):
+        """Display the number of mementos in the interface based on the
+        results returned from MemGator
+        """
         ui_mementoCountMessage_pos = (105, 85)
         ui_mementoCountMessage_size = (250, 20)
         if hasattr(self, 'mementoStatus'):
@@ -376,6 +384,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300, 20))
 
     def fetchMementos(self):
+        """Request memento count from MemGator based on URI currently
+        displayed in the Basic interface
+        """
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
         print('MEMGATOR checking {0}'.format(currentURIValue))
@@ -417,6 +428,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # TODO: cache the TM
 
     def uriChanged(self, event):
+        """React when the URI has changed in the interface, call MemGator"""
         if event.GetUnicodeKey() == wx.WXK_NONE:
             return  # Prevent modifiers from causing MemGator query
 
@@ -440,6 +452,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         print('callback executed!')
 
     def ensureEnvironmentVariablesAreSet(self):
+        """Check system to verify that Java variables have been set.
+        Notify the user if not and initialize the Java installation process.
+        """
         if util.is_windows():
             return  # Allow windows to proceed w/o java checks for now.
 
@@ -489,6 +504,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         return True
 
     def installJava(self, prog):
+        """Start the Java installation process"""
         print('Downloading Java 7 DMG from {}'.format(config.osx_java7DMG_URI))
 
         java7DMG_localPath = pathlib.Path('/tmp/java7.dmg')
@@ -527,12 +543,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         sys.exit()
 
     def verifyHash(self, filePath, expectedHash):
+        """Compare the Java download to verify file validity"""
         expectedHash = b'\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2'
         calculatedHash = util.hash_bytestr_iter(util.file_as_blockiter(open(filePath, 'rb')), hashlib.sha256())
 
         return expectedHash == calculatedHash
 
     def archiveNow(self, button):
+        """Call asynchronous version of archiving process to prevent
+        the UI from locking up
+
+        """
         self.archiveNowButton.SetLabel(
             config.buttonLabel_archiveNow_initializing)
         self.setMessage('Starting Archiving Process...')
@@ -540,6 +561,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         thread.start_new_thread(self.archiveNow2Async, ())
 
     def archiveNow2Async(self):
+        """Create Heritrix crawl job, execute job, and update WAIL UI
+        to indicate that a crawl has been initialized
+        """
         self.setMessage(config.msg_crawlStatus_writingConfig)
         self.writeHeritrixLogWithURI()
         # First check to be sure Java SE is installed.
@@ -568,14 +592,20 @@ class WAILGUIFrame_Basic(wx.Panel):
         wx.CallAfter(self.onLongRunDone)
 
     def onLongRunDone(self):
+        """Re-enable archive now UI once the previous process is
+        done being initialized and executed
+
+        """
         self.archiveNowButton.SetLabel(config.buttonLabel_archiveNow)
         self.archiveNowButton.Enable()
 
     def writeHeritrixLogWithURI(self):
+        """Create crawl job files with URI currently in Basic interface"""
         self.hJob = HeritrixJob(config.heritrixJobPath, [self.uri.GetValue()])
         self.hJob.write()
 
     def javaInstalled(self):
+        """Check that a java binary is available"""
         # First check to be sure Java SE is installed.
         # Move this logic elsewhere in production
         noJava = config.msg_noJavaRuntime
@@ -584,6 +614,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         return (noJava not in stdout) and (noJava not in stderr)
 
     def launchHeritrix(self):
+        """Execute Heritrix binary to allow jobs to be submitted"""
         cmd = '{0} -a {1}:{2}'.format(
             config.heritrixBinPath, config.heritrixCredentials_username,
             config.heritrixCredentials_password)
@@ -595,10 +626,14 @@ class WAILGUIFrame_Basic(wx.Panel):
         mainAppWindow.advConfig.servicesPanel.updateServiceStatuses()
 
     def startHeritrixJob(self):
+        """Build a previously created Heritrix job file and start the
+        Heritrix binary process to begin processing job
+        """
         self.buildHeritrixJob()
         self.launchHeritrixJob()
 
     def launchHeritrixJob(self):
+        """ Launch Heritrix job after building"""
         logging.basicConfig(level=logging.DEBUG)
         print('Launching Heririx job')
         data = {"action": "launch"}
@@ -612,6 +647,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             data=data, headers=headers, verify=False, stream=True)
 
     def buildHeritrixJob(self):
+        """Instruct the Heritrix binary to build the previously created
+        job file
+
+        """
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
         data = {"action": "build"}
@@ -629,6 +668,12 @@ class WAILGUIFrame_Basic(wx.Panel):
         return
 
     def checkIfURLIsInArchive(self, button):
+        """Send a request to the local Wayback instance and check if a
+        Memento exists, inferring that a capture has been generated by
+        Heritrix and an index generated from a WARC and the memento replayable
+
+
+        """
         url = config.uri_wayback_allMementos + self.uri.GetValue()
         statusCode = None
         try:
@@ -663,9 +708,18 @@ class WAILGUIFrame_Basic(wx.Panel):
             # mb.AddButton(b)  # Will not work in wxPython >4
 
     def resetArchiveNowButton(self):
-        self.archiveNowButton.SetLabel(config.buttonLabel_archiveNow_initializing)
+        """Update the Archive Now button in the UI to be in its initial
+        state
+
+        """
+        self.archiveNowButton.SetLabel(
+            config.buttonLabel_archiveNow_initializing)
 
     def viewArchiveInBrowser(self, button):
+        """Open the OS's default browser to display the locally running
+        Wayback instance
+
+        """
         if Wayback().accessible():
             webbrowser.open_new_tab(
                 config.uri_wayback_allMementos + self.uri.GetValue())
@@ -1003,14 +1057,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.finishCrawl(crawlId)
 
         def finishCrawl(self, jobId):
+            """Cleanup Heritrix job after finishing"""
             self.sendActionToHeritrix("terminate", jobId)
             self.sendActionToHeritrix("teardown", jobId)
 
         def forceCrawlFinish(self, evt):
+            """Read currently selected crawlID and instruct Heritrix
+            to finish the job.
+
+            """
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.finishCrawl(jobId)
 
         def sendActionToHeritrix(self, action, jobId):
+            """Communicate with the local Heritrix binary via its HTTP API"""
             data = {"action": action}
             headers = {"Accept": "application/xml",
                        "Content-type": "application/x-www-form-urlencoded"}
@@ -1022,6 +1082,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                               verify=False, stream=True)
 
         def deleteHeritrixJob(self, evt):
+            """Read the currently selected crawlID and delete its
+            configuration files from the file system.
+
+            """
             jobPath = config.heritrixJobPath +\
                       str(self.listbox.GetString(self.listbox.GetSelection()))
             print('Deleting Job at ' + jobPath)
@@ -1036,6 +1100,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.statusMsg.SetLabel("")
 
         def viewJobInWebBrowser(self, evt):
+            """Display crawl information in the Heritrix web interface
+            based on the currently selected crawlID.
+
+            """
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
             webbrowser.open_new_tab(config.uri_heritrixJob + jobId)
 
@@ -1056,10 +1124,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 subprocess.call(('xdg-open', file))
 
         def restartJob(self, evt):
-            # TODO: send request to API to restart job, perhaps send ID to this function
+            # TODO: send request to API to restart job, perhaps send ID to
+            # this function
             print('Restarting job')
 
         def setupNewCrawl(self, evt):
+            """Create UI elements for user to specify the URIs and other
+            attributes for a new Heritrix crawl.
+
+            """
             # Check if the UI elements already exist before adding them
             if hasattr(self, 'newCrawlTextCtrlLabel'):
                 self.newCrawlTextCtrlLabel.Destroy()
@@ -1098,6 +1171,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlTextCtrl.SetFocus()
 
         def handleCrawlDepthKeypress(self, event):
+            """Ensure that values for the crawl depth text input field
+            are numerical.
+
+            """
             keycode = event.GetKeyCode()
             if keycode < 255:
                 # valid ASCII
@@ -1106,11 +1183,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     event.Skip()
 
         def validateCrawlDepth(self, event):
+            """Verify that the value supplied for the crawl depth text
+            field is numerical.
+
+            """
             if len(self.newCrawlDepthTextCtrl.GetValue()) == 0:
                 self.newCrawlDepthTextCtrl.SetValue('1')
             event.Skip()
 
         def hideNewCrawlUIElements(self):
+            """Hide UI elements related to a new Heritrix crawl."""
+
             if not hasattr(self, 'newCrawlTextCtrlLabel'):
                 return
             self.newCrawlTextCtrlLabel.Hide()
@@ -1120,11 +1203,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlDepthTextCtrlLabel.Hide()
 
         def showNewCrawlUIElements(self):
+            """Display UI elements related to a new Heritrix crawl."""
             self.newCrawlTextCtrlLabel.Show()
             self.newCrawlTextCtrl.Show()
             self.startCrawlButton.Show()
 
         def crawlURIsListed(self, evt):
+            """Build and initialize a new Heritrix crawl based on the
+            list of URIs specified in the WAIL UI.
+
+            """
             uris = self.newCrawlTextCtrl.GetValue().split("\n")
             depth = self.newCrawlDepthTextCtrl.GetValue()
             self.hJob = HeritrixJob(config.heritrixJobPath, uris, depth)
@@ -1160,6 +1248,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.testUpdate.Disable()
 
         def openArchivesFolder(self, button):
+            """Display the folder in which generated WARCs reside in the
+            operating system's file manager.
+
+            """
             if not os.path.exists(config.warcsFolder):
                 os.makedirs(config.warcsFolder)
 
@@ -1169,6 +1261,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 subprocess.call(["open", config.warcsFolder])
 
         def checkForUpdates(self, button):
+            """Display the window for updating WAIL."""
+
             updateWindow = UpdateSoftwareWindow(parent=self, id=-1)
             updateWindow.Show()
             # return
@@ -1238,7 +1332,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             ret = subprocess.Popen(cmd)
             waitingForTomcat = True
             while waitingForTomcat:
-                if Wayback.accessible(): waitingForTomcat = False
+                if Wayback.accessible():
+                    waitingForTomcat = False
                 time.sleep(2)
             self.viewWaybackInBrowserButton.Enable()
             # self.tomcatMessageOn()
