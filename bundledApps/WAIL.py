@@ -942,17 +942,32 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Button layout
             bsize = self.width, self.height = (125, 25 * .75)
+
             self.setupNewCrawlButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_newCrawl, (0, 70), bsize)
+                self, 1, config.buttonLabel_heritrix_newCrawl)
             self.launchWebUIButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_launchWebUI,
-                (0, 92), bsize)
+                self, 1, config.buttonLabel_heritrix_launchWebUI)
 
             # Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
             self.panelUpdater = None  # For updating stats UI
+            self.sizer = wx.BoxSizer(wx.VERTICAL)
+            gs = wx.FlexGridSizer(1, 2, 10, 10)
+            gs2 = wx.FlexGridSizer(3, 1, 2, 2)
+
+            gs2.AddMany([
+                self.listbox,
+                (self.setupNewCrawlButton, 0, wx.EXPAND),
+                (self.launchWebUIButton, 0, wx.EXPAND)
+            ])
+
+            gs.Add(gs2)
+
+            self.sizer.Add(gs, proportion=1)
+            self.SetSizer(self.sizer)
+
 
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
