@@ -87,9 +87,13 @@ buttonLabel_uri = "URL:"
 buttonLabel_fix = "Fix"
 buttonLabel_kill = "Kill"
 buttonLabel_refresh = "Refresh"
+buttonLabel_starCrawl = "Start Crawl"
 
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
+textLabel_uriEntry = "Enter one URI per line to crawl"
+textLabel_depth = "Depth"
+textLabel_depth_default = "1"
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
@@ -106,6 +110,7 @@ buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
 buttonLabel_viewArchiveFiles = "View Archive Files"
+buttonLabel_checkForUpdates = "Check for Updates"
 buttonLabel_heritrix_launchWebUI = "Launch WebUI"
 buttonLabel_heritrix_launchWebUI_launching = "Launching..."
 buttonLabel_heritrix_newCrawl = "New Crawl"
@@ -128,6 +133,13 @@ menuTitle_file_allCrawls_finish = 'Finish'
 menuTitle_file_allCrawls_pause = 'Pause'
 menuTitle_file_allCrawls_restart = 'Restart'
 menuTitle_file_allCrawls_destroy = "Destroy (does not delete archive)"
+
+menuTitle_edit_undo = "Undo"
+menuTitle_edit_redo = "Redo"
+menuTitle_edit_cut = "Cut"
+menuTitle_edit_copy = "Copy"
+menuTitle_edit_paste = "Paste"
+menuTitle_edit_selectAll = "Select All"
 
 menuTitle_view_viewBasic = 'Basic Interface'
 menuTitle_view_viewAdvanced = 'Advanced Interface'
