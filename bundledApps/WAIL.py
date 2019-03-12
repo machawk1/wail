@@ -290,36 +290,54 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         # Forces Windows into composite mode for drawing
         self.SetDoubleBuffered(True)
-        self.uriLabel = wx.StaticText(self, -1,
-                                      config.buttonLabel_uri, pos=(0, 5))
-        self.uri = wx.TextCtrl(self, -1, pos=(34, 0),
-                               value=config.textLabel_defaultURI,
-                               size=(343, 25))
-        self.archiveNowButton = wx.Button(self, -1,
-                                          config.buttonLabel_archiveNow,
-                                          pos=(280, 30))
-        self.checkArchiveStatus = wx.Button(self,  -1,
-                                            config.buttonLabel_checkStatus,
-                                            pos=(110, 30))
-        self.viewArchive = wx.Button(self, -1, config.buttonLabel_viewArchive,
-                                     pos=(0, 30))
 
+        self.uri = wx.TextCtrl(self, wx.ID_ANY, value=config.textLabel_defaultURI)
+
+        basicGridSizer = wx.BoxSizer(wx.VERTICAL)
+        basicGS_URI = wx.BoxSizer()
+        basicGS_buttons = wx.BoxSizer()
+        basicGS_messages = wx.BoxSizer()
+
+        basicGS_URI.Add(wx.StaticText(self, wx.ID_ANY, config.buttonLabel_uri), flag=wx.CENTER)
+        basicGS_URI.Add(self.uri, proportion=1, flag=wx.CENTER)
+
+        self.archiveNowButton = wx.Button(self, wx.ID_ANY, config.buttonLabel_archiveNow)
+        self.checkArchiveStatus = wx.Button(self,  wx.ID_ANY,
+                                            config.buttonLabel_checkStatus)
+        self.viewArchive = wx.Button(self, wx.ID_ANY, config.buttonLabel_viewArchive)
+
+        basicGS_buttons.Add(self.viewArchive, proportion=1, flag=wx.CENTER)
+        basicGS_buttons.AddStretchSpacer()
+        basicGS_buttons.Add(self.checkArchiveStatus, proportion=1, flag=wx.CENTER)
+        basicGS_buttons.AddStretchSpacer()
+        basicGS_buttons.Add(self.archiveNowButton, proportion=1, flag=wx.CENTER)
+
+        self.mementoStatusPublicArchives = wx.StaticText(self, wx.ID_ANY, '')
+        self.mementoStatus = wx.StaticText(self, wx.ID_ANY, '')
+        basicGS_messages.Add(self.mementoStatusPublicArchives, flag=wx.CENTER)
+        basicGS_messages.Add(self.mementoStatus, flag=wx.CENTER)
+
+
+        basicGridSizer.Add(basicGS_URI, proportion=0, flag=wx.EXPAND)
+        basicGridSizer.AddSpacer(3)
+        basicGridSizer.Add(basicGS_buttons, proportion=0, flag=wx.EXPAND)
+        basicGridSizer.AddSpacer(3)
+        basicGridSizer.Add(basicGS_messages, proportion=0, flag=wx.EXPAND)
+
+
+        self.SetSizerAndFit(basicGridSizer)
         self.archiveNowButton.SetDefault()
-
-        # self.mementoCountInfo = wx.Button(self, -1,
-        #                                  buttonLabel_mementoCountInfo,
-        #                                  pos=(270,85), size=(25,15))
 
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
-        # hJob = HeritrixJob([self.uri.GetValue()])
 
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
 
         self.setMementoCount(None)
+
         # self.setMessage(
         #   "Type a URL and click \"Archive Now!\" to begin archiving");
 
@@ -334,15 +352,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
-        ui_mementoCountMessage_pos = (105, 85)
-        ui_mementoCountMessage_size = (250, 20)
-        if hasattr(self, 'mementoStatus'):
-            self.mementoStatus.Destroy()
-            self.mementoStatusPublicArchives.Destroy()
 
         # Ensure mCount is an int, convert if not, allow None
         if m_count is not None and not isinstance(m_count, int):
-            mCount = int(m_count)
+            m_count = int(m_count)
         if m_count is not None and (m_count < 0 or a_count < 0):
             raise ValueError('Invalid memento or archive count specified')
 
@@ -360,10 +373,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             a_plurality = 's'
 
             if m_count == 1:
-                mPlurality = ''
+                m_plurality = ''
             if a_count == 1:
-                aPlurality = ''
-            mCount = locale.format_string("%d", m_count, grouping=True)
+                a_plurality = ''
+            m_count = locale.format_string("%d", m_count, grouping=True)
             memCountMsg = ('{0} memento{1} available '
                            'from {2} archive{3}').format(
                 m_count, m_plurality, a_count, a_plurality
@@ -374,13 +387,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             ''' '''
 
         # Bug: Does not update UI on Windows
-        self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg,
-                                           pos=ui_mementoCountMessage_pos,
-                                           size=ui_mementoCountMessage_size)
-
-        self.mementoStatusPublicArchives = \
-            wx.StaticText(self,  -1, label="Public archives: ",
-                          pos=(5, 85), size=(100, 20))
+        self.mementoStatus.SetLabel(memCountMsg)
+        self.mementoStatusPublicArchives.SetLabel("Public archives: ")
+        self.Layout()
 
     def setMessage(self, msg):
         if hasattr(self, 'status'):
