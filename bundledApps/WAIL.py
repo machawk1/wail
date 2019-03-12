@@ -1451,13 +1451,20 @@ class Wayback(Service):
     def accessible(self):
         try:
             handle = urlopen(self.uri, None, 3)
+            headers = handle.getheaders()
 
-            accessible = 'http://mementoweb.org/terms/donotnegotiate' in handle.info().dict['link']
+            linkHeader = ''
+            for h in headers:
+                if h[0] == 'Link':
+                    linkHeader = h[1]
+
+            accessible = 'http://mementoweb.org/terms/donotnegotiate' in linkHeader
             if accessible:
                 print(self.__class__.__name__ + ' is a go! ')
             else:
-                print('Unable to access {0}, something else is running on port 8080'.format(
-                    self.__class__.__name__))
+                print(
+                    'Unable to access {0}, something else is running on port 8080'.format(
+                        self.__class__.__name__))
 
             return accessible
 
