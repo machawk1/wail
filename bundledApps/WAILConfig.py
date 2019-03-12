@@ -74,8 +74,8 @@ tabLabel_advanced_heritrix = "Heritrix"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
 tabLabel_advanced_services_serviceStatus = "SERVICE STATUS"
 
-serviceEnabledLabel_YES = "OK"  # "✓"
-serviceEnabledLabel_NO = "X"  # "✗"
+serviceEnabledLabel_YES = "  OK  "  # "✓"
+serviceEnabledLabel_NO = "   X  "  # "✗"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
@@ -94,6 +94,10 @@ textLabel_defaultURI_title = "WAIL homepage"
 textLabel_uriEntry = "Enter one URI per line to crawl"
 textLabel_depth = "Depth"
 textLabel_depth_default = "1"
+textLabel_launchCrawl = "Launch Crawl"
+textLabel_urisToCrawl = 'URIs to Crawl:'
+textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
+                        'to begin archiving.')
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"

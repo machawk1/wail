@@ -290,38 +290,55 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         # Forces Windows into composite mode for drawing
         self.SetDoubleBuffered(True)
-        self.uriLabel = wx.StaticText(self, -1,
-                                      config.buttonLabel_uri, pos=(0, 5))
-        self.uri = wx.TextCtrl(self, -1, pos=(34, 0),
-                               value=config.textLabel_defaultURI,
-                               size=(343, 25))
-        self.archiveNowButton = wx.Button(self, -1,
-                                          config.buttonLabel_archiveNow,
-                                          pos=(280, 30))
-        self.checkArchiveStatus = wx.Button(self,  -1,
-                                            config.buttonLabel_checkStatus,
-                                            pos=(110, 30))
-        self.viewArchive = wx.Button(self, -1, config.buttonLabel_viewArchive,
-                                     pos=(0, 30))
 
+        self.uri = wx.TextCtrl(self, wx.ID_ANY, value=config.textLabel_defaultURI)
+
+        basicSizer = wx.BoxSizer(wx.VERTICAL)
+        basicSizer_URI = wx.BoxSizer()
+        basicSizer_buttons = wx.BoxSizer()
+        basicSizer_messages = wx.BoxSizer()
+
+        basicSizer_URI.Add(wx.StaticText(self, wx.ID_ANY, config.buttonLabel_uri), flag=wx.CENTER)
+        basicSizer_URI.Add(self.uri, proportion=1, flag=wx.CENTER)
+
+        self.archiveNowButton = wx.Button(self, wx.ID_ANY, config.buttonLabel_archiveNow)
+        self.checkArchiveStatus = wx.Button(self,  wx.ID_ANY,
+                                            config.buttonLabel_checkStatus)
+        self.viewArchive = wx.Button(self, wx.ID_ANY, config.buttonLabel_viewArchive)
+
+        basicSizer_buttons.Add(self.viewArchive, proportion=1, flag=wx.CENTER)
+        basicSizer_buttons.AddStretchSpacer()
+        basicSizer_buttons.Add(self.checkArchiveStatus, proportion=1, flag=wx.CENTER)
+        basicSizer_buttons.AddStretchSpacer()
+        basicSizer_buttons.Add(self.archiveNowButton, proportion=1, flag=wx.CENTER)
+
+        self.status = wx.StaticText(self, wx.ID_ANY, config.textLabel_statusInit)
+
+        self.mementoStatusPublicArchives = wx.StaticText(self, wx.ID_ANY, '')
+        self.mementoStatus = wx.StaticText(self, wx.ID_ANY, '')
+        basicSizer_messages.Add(self.mementoStatusPublicArchives, flag=wx.CENTER)
+        basicSizer_messages.Add(self.mementoStatus, flag=wx.CENTER)
+
+        basicSizer.Add(basicSizer_URI, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddSpacer(3)
+        basicSizer.Add(basicSizer_buttons, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddSpacer(3)
+        basicSizer.Add(self.status, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddStretchSpacer()
+        basicSizer.Add(basicSizer_messages, proportion=1)
+
+        self.SetSizerAndFit(basicSizer)
         self.archiveNowButton.SetDefault()
-
-        # self.mementoCountInfo = wx.Button(self, -1,
-        #                                  buttonLabel_mementoCountInfo,
-        #                                  pos=(270,85), size=(25,15))
 
         # Basic interface button actions
         self.archiveNowButton.Bind(wx.EVT_BUTTON, self.archiveNow)
         self.checkArchiveStatus.Bind(wx.EVT_BUTTON, self.checkIfURLIsInArchive)
         self.viewArchive.Bind(wx.EVT_BUTTON, self.viewArchiveInBrowser)
-        # hJob = HeritrixJob([self.uri.GetValue()])
 
         # TODO: check environment variables
         self.ensureEnvironmentVariablesAreSet()
 
         self.setMementoCount(None)
-        # self.setMessage(
-        #   "Type a URL and click \"Archive Now!\" to begin archiving");
 
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
@@ -334,15 +351,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
-        ui_mementoCountMessage_pos = (105, 85)
-        ui_mementoCountMessage_size = (250, 20)
-        if hasattr(self, 'mementoStatus'):
-            self.mementoStatus.Destroy()
-            self.mementoStatusPublicArchives.Destroy()
 
         # Ensure mCount is an int, convert if not, allow None
         if m_count is not None and not isinstance(m_count, int):
-            mCount = int(m_count)
+            m_count = int(m_count)
         if m_count is not None and (m_count < 0 or a_count < 0):
             raise ValueError('Invalid memento or archive count specified')
 
@@ -360,10 +372,10 @@ class WAILGUIFrame_Basic(wx.Panel):
             a_plurality = 's'
 
             if m_count == 1:
-                mPlurality = ''
+                m_plurality = ''
             if a_count == 1:
-                aPlurality = ''
-            mCount = locale.format_string("%d", m_count, grouping=True)
+                a_plurality = ''
+            m_count = locale.format_string("%d", m_count, grouping=True)
             memCountMsg = ('{0} memento{1} available '
                            'from {2} archive{3}').format(
                 m_count, m_plurality, a_count, a_plurality
@@ -374,18 +386,12 @@ class WAILGUIFrame_Basic(wx.Panel):
             ''' '''
 
         # Bug: Does not update UI on Windows
-        self.mementoStatus = wx.StaticText(self, -1, label=memCountMsg,
-                                           pos=ui_mementoCountMessage_pos,
-                                           size=ui_mementoCountMessage_size)
-
-        self.mementoStatusPublicArchives = \
-            wx.StaticText(self,  -1, label="Public archives: ",
-                          pos=(5, 85), size=(100, 20))
+        self.mementoStatus.SetLabel(memCountMsg)
+        self.mementoStatusPublicArchives.SetLabel("Public archives: ")
+        self.Layout()
 
     def setMessage(self, msg):
-        if hasattr(self, 'status'):
-            self.status.Destroy()
-        self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300, 20))
+        self.status.SetLabel(msg)
 
     def fetchMementos(self):
         """Request memento count from MemGator based on URI currently
@@ -741,90 +747,61 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            colWidth = 60
-            rowHeight = 20  # 18
-            cellSize = (150, rowHeight)
 
-            col0 = colWidth * 0 + 10
-            wx.StaticText(self, 100,
-                          config.tabLabel_advanced_services_serviceStatus,
-                          (col0 - 10, rowHeight * 0), cellSize)
-            wx.StaticText(self, 100, config.tabLabel_advanced_wayback,
-                          (col0, rowHeight*1), cellSize)
-            wx.StaticText(self, 100, config.tabLabel_advanced_heritrix,
-                          (col0, rowHeight*2), cellSize)
 
-            col1 = 65 + colWidth * 1
+            self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix, style=wx.BU_EXACTFIT)
+            self.fix_heritrix = wx.Button(self, 1, config.buttonLabel_fix, style=wx.BU_EXACTFIT)
 
+            self.kill_wayback = wx.Button(self, 1, config.buttonLabel_kill, style=wx.BU_EXACTFIT)
+            self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill, style=wx.BU_EXACTFIT)
+
+            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "    X    ")
+            self.status_heritrix= wx.StaticText(self, wx.ID_ANY, "    X    ")
+
+            self.draw()
             thread.start_new_thread(self.updateServiceStatuses, ())
-
-            col2 = col1 + colWidth
-            cellSize_versionFix = (50, rowHeight)
-            wx.StaticText(self, 100, 'VERSION',
-                          (col2, rowHeight * 0), cellSize_versionFix)
-            wx.StaticText(self, 100, self.getWaybackVersion(),
-                          (col2, rowHeight*1), cellSize_versionFix)
-            wx.StaticText(self, 100, self.getHeritrixVersion(True),
-                          (col2, rowHeight*2), cellSize_versionFix)
-
-            col3 = col2+colWidth
-            buttonSize = (50, rowHeight - 6)
-            # Redefining for Windows, needs regression testing on macOS:
-            buttonSize = (50, rowHeight)
-
-            wail_style_button_font_small = wx.Font(10, wx.FONTFAMILY_SWISS,
-                                                   wx.FONTSTYLE_NORMAL,
-                                                   wx.FONTWEIGHT_NORMAL)
-
-            self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix,
-                                         (col3, rowHeight*1),
-                                         buttonSize, wx.BU_EXACTFIT)
-            self.fix_wayback.SetFont(wail_style_button_font_small)
-            self.fix_heritrix = wx.Button(self, 1, config.buttonLabel_fix,
-                                          (col3, rowHeight*2),
-                                          buttonSize, wx.BU_EXACTFIT)
-            self.fix_heritrix.SetFont(wail_style_button_font_small)
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
-
-            col4 = col3+colWidth
-
-            self.kill_wayback = wx.Button(self, 1, config.buttonLabel_kill,
-                                          (col4, rowHeight*1),
-                                          buttonSize, wx.BU_EXACTFIT)
-            self.kill_wayback.SetFont(wail_style_button_font_small)
-            self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill,
-                                           (col4, rowHeight*2),
-                                           buttonSize, wx.BU_EXACTFIT)
-            self.kill_heritrix.SetFont(wail_style_button_font_small)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
 
             thread.start_new_thread(self.updateServiceStatuses, ())
 
-        def setHeritrixStatus(self, status):
-            colWidth = 60
-            rowHeight = 20
-            col1 = 65+colWidth*1
-            cellSize = (40, rowHeight)
+        def draw(self):
+            self.sizer = wx.BoxSizer(wx.VERTICAL)
 
-            if hasattr(self, 'status_heritrix'):
-                self.status_heritrix.Destroy()
-            self.status_heritrix = wx.StaticText(self, 100, status,
-                                                 (col1, rowHeight*2), cellSize)
+            gs = wx.FlexGridSizer(3, 5, 0, 0)
+            gs.SetFlexibleDirection(wx.HORIZONTAL)
+
+            gs.AddMany([
+                wx.StaticText(self, wx.ID_ANY,
+                              config.tabLabel_advanced_services_serviceStatus),
+                wx.StaticText(self, wx.ID_ANY, "STATE"),
+                wx.StaticText(self, wx.ID_ANY, "VERSION"),
+                wx.StaticText(self, wx.ID_ANY, ""), # button col 1
+                wx.StaticText(self, wx.ID_ANY, ""), # button col 2
+                wx.StaticText(self, wx.ID_ANY, "Wayback"),
+                self.status_wayback,
+                wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()),
+                self.fix_wayback,
+                self.kill_wayback,
+                wx.StaticText(self, wx.ID_ANY, "Heritrix"),
+                self.status_heritrix,
+                wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()),
+                self.fix_heritrix,
+                self.kill_heritrix
+            ])
+
+            self.sizer.Add(gs, proportion=1)
+            self.SetSizer(self.sizer)
+
+        def setHeritrixStatus(self, status):
+            self.status_heritrix.SetLabel(status)
 
         def setWaybackStatus(self, status):
-            colWidth = 60
-            rowHeight = 20
-            col1 = 65+colWidth*1
-            cellSize = (40, rowHeight)
-
-            if hasattr(self, 'status_wayback'):
-                self.status_wayback.Destroy()
-            self.status_wayback = wx.StaticText(self, 100, status,
-                                                (col1, rowHeight*1), cellSize)
+            self.status_wayback.SetLabel(status)
 
         def getHeritrixVersion(self, abbr=True):
             htrixLibPath = config.heritrixPath + "lib/"
@@ -858,15 +835,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             return version
 
         def updateServiceStatuses(self, serviceId=None, transitionalStatus=None):
-            ##################################
-            # Check if each service is enabled
-            # and set the GUI elements accordingly
-            ##################################
+            '''Check if each service is enabled and set the GUI elements
+            accordingly
 
-            colWidth = 60
-            rowHeight = 20
-            col1 = 65 + colWidth * 1
-            cellSize = (40, rowHeight)
+            '''
             serviceEnabled = {True: config.serviceEnabledLabel_YES,
                               False: config.serviceEnabledLabel_NO}
 
@@ -890,10 +862,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     print('{0}{1}'.format(
                         'Invalid transitional service id specified. ',
                         'Updating status per usual.'))
-
-            if not hasattr(self, 'stateLabel'):
-                self.stateLabel = wx.StaticText(
-                    self, 100, "STATE", (col1, rowHeight * 0), cellSize)
 
             self.setHeritrixStatus(heritrixAccessible)
             self.setWaybackStatus(tomcatAccessible)
@@ -980,17 +948,29 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Button layout
             bsize = self.width, self.height = (125, 25 * .75)
+
             self.setupNewCrawlButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_newCrawl, (0, 70), bsize)
+                self, 1, config.buttonLabel_heritrix_newCrawl)
             self.launchWebUIButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_launchWebUI,
-                (0, 92), bsize)
+                self, 1, config.buttonLabel_heritrix_launchWebUI)
 
             # Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
             self.panelUpdater = None  # For updating stats UI
+
+            panelSizer = wx.FlexGridSizer(1, 2, 3, 3)
+            leftColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+
+            leftColSizer.AddMany([
+                self.listbox,
+                (self.setupNewCrawlButton, 0, wx.EXPAND),
+                (self.launchWebUIButton, 0, wx.EXPAND)
+            ])
+
+            panelSizer.Add(leftColSizer)
+            self.SetSizer(panelSizer)
 
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
@@ -1133,46 +1113,64 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # this function
             print('Restarting job')
 
-        def setupNewCrawl(self, evt):
-            """Create UI elements for user to specify the URIs and other
-            attributes for a new Heritrix crawl.
+        def removeNewCrawlUI(self):
+            chil = self.Sizer.GetChildren()
+            if len(chil) > 1:
+                self.Sizer.Hide(len(chil)-1)
+                self.Sizer.Remove(len(chil)-1)
 
-            """
-            # Check if the UI elements already exist before adding them
-            if hasattr(self, 'newCrawlTextCtrlLabel'):
-                self.newCrawlTextCtrlLabel.Destroy()
-                self.newCrawlTextCtrl.Destroy()
-                self.newCrawlDepthTextCtrlLabel.Destroy()
-                self.newCrawlDepthTextCtrl.Destroy()
-                self.startCrawlButton.Destroy()
+                self.Layout()
 
+        def addNewCrawlUI(self):
             self.statusMsg.Hide()
+            chil = self.Sizer.GetChildren()
+            if len(chil) > 1:
+                self.removeNewCrawlUI()
 
             self.newCrawlTextCtrlLabel = wx.StaticText(
-                self, -1, config.textLabel_uriEntry, pos=(135, 0))
+                self, wx.ID_ANY, config.textLabel_uriEntry)
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
             self.newCrawlTextCtrl = \
-                wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90),
+                wx.TextCtrl(self, wx.ID_ANY, size=(220, 90),
                             style=multiLineAndNoWrapStyle)
 
-            self.newCrawlDepthTextCtrlLabel = \
-                wx.StaticText(self, -1, config.textLabel_depth, pos=(135, 112))
-            self.newCrawlDepthTextCtrl = \
-                wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
-            self.newCrawlDepthTextCtrl.SetValue(config.textLabel_depth_default)
+            rightColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+
+            rightColSizer.AddMany([
+                self.newCrawlTextCtrlLabel,
+                self.newCrawlTextCtrl
+            ])
+
+            depthSizer = wx.FlexGridSizer(1, 3, 0, 0)
+            self.newCrawlDepthTextCtrl = wx.TextCtrl(self, wx.ID_ANY)
+            self.newCrawlDepthTextCtrl.SetValue(
+                config.textLabel_depth_default)
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_CHAR, self.handleCrawlDepthKeypress)
 
-            # self.crawlOptionsButton = wx.Button(self, -1, "More options",
-            # ...pos=(150,125))
             self.startCrawlButton = wx.Button(
-                self, -1, config.buttonLabel_starCrawl, pos=(265, 110))
+                self, wx.ID_ANY, config.buttonLabel_starCrawl)
             self.startCrawlButton.SetDefault()
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
-            self.showNewCrawlUIElements()
+            depthSizer.AddMany([
+                wx.StaticText(self, wx.ID_ANY, config.textLabel_depth),
+                self.newCrawlDepthTextCtrl,
+                self.startCrawlButton
+            ])
+            rightColSizer.Add(depthSizer)
+
+            self.Sizer.Add(rightColSizer)
+            self.Layout()
+
+        def setupNewCrawl(self, evt):
+            """Create UI elements for user to specify the URIs and other
+            attributes for a new Heritrix crawl.
+
+            """
+            self.addNewCrawlUI()
             self.newCrawlTextCtrl.SetFocus()
 
         def handleCrawlDepthKeypress(self, event):
@@ -1199,13 +1197,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def hideNewCrawlUIElements(self):
             """Hide UI elements related to a new Heritrix crawl."""
 
-            if not hasattr(self, 'newCrawlTextCtrlLabel'):
-                return
-            self.newCrawlTextCtrlLabel.Hide()
-            self.newCrawlTextCtrl.Hide()
-            self.startCrawlButton.Hide()
-            self.newCrawlDepthTextCtrl.Hide()
-            self.newCrawlDepthTextCtrlLabel.Hide()
+            self.removeNewCrawlUI()
 
         def showNewCrawlUIElements(self):
             """Display UI elements related to a new Heritrix crawl."""
@@ -1313,7 +1305,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.startTomcatButton.SetLabel(self.stopTomcatLabel)
 
     def startTomcat(self, button):
-        # self.tomcatStatus.SetLabel(msg_startingTomcat)
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         waitingForTomcat = True
@@ -1323,48 +1314,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             time.sleep(2)
 
         self.waybackPanel.viewWaybackInBrowserButton.Enable()  # TODO: error here
-        # self.tomcatMessageOn()
-
-    # toggleTomcat needs to be broken up into start and stop Tomcat function,
-    # ...already done above
-
-    def toggleTomcat(self, button, suppressAlert=False):  # Optimize me, Seymour
-        cmd = ""
-
-        if self.startTomcatButton.GetLabel() == self.startTomcatLabel:
-            self.tomcatStatus.SetLabel(config.msg_startingTomcat)
-            cmd = config.tomcatPathStart
-            ret = subprocess.Popen(cmd)
-            waitingForTomcat = True
-            while waitingForTomcat:
-                if Wayback.accessible():
-                    waitingForTomcat = False
-                time.sleep(2)
-            self.viewWaybackInBrowserButton.Enable()
-            # self.tomcatMessageOn()
-        else:
-            self.tomcatStatus.SetLabel(config.msg_stoppingTomcat)
-            cmd = config.tomcatPathStop
-            ret = subprocess.Popen(cmd)
-            waitingForTomcat = True
-
-            tomcatChecks = 0
-            tomcatStopped = False
-            while waitingForTomcat and tomcatChecks < 6:
-                if Wayback.accessible():
-                    tomcatChecks += 1
-                else:
-                    waitingForTomcat = False
-                    tomcatStopped = True
-                time.sleep(2)
-            if tomcatStopped:
-                self.viewWaybackInBrowserButton.Disable()
-                self.tomcatMessageOff()
-            else:
-                if not suppressAlert:
-                    message = wx.MessageBox(util.msg_error_tomcat_noStop,
-                                            util.msg_error_tomcat_failed)
-                # self.tomcatMessageOn()
 
     def launchHeritrix(self, button):
         # self.heritrixStatus.SetLabel("Launching Heritrix")
@@ -1378,7 +1327,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         # urlib won't respond to https, hard-coded sleep until I
         # ...can ping like Tomcat
         time.sleep(6)
-        self.viewHeritrixButton.Enable()
+        # self.viewHeritrixButton.Enable()
 
     def viewWayback(self, button):
         webbrowser.open_new_tab(config.uri_wayback)
@@ -1389,13 +1338,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
     def createListBox(self):
 
         self.uriListBoxTitle = wx.StaticText(
-            self, 7, 'URIs to Crawl:', (self.x, 5 + self.height * 7 + 30))
+            self, 7, config.textLabel_urisToCrawl,
+            (self.x, 5 + self.height * 7 + 30))
         self.uriListBox = wx.ListBox(self, 99,
                                      (self.x, 5 + self.height * 8 + 25),
                                      (400 - 50, 100), [""])
         self.uriListBox.Bind(wx.EVT_LISTBOX, self.addURI)
         self.SetSize((self.GetSize().x, self.GetSize().y+300))
-        self.archiveViewGroup.SetSize((self.archiveViewGroup.GetSize().x, 235))
+
         mainAppWindow.SetSize((mainAppWindow.GetSize().x, 400))
 
     def setupOneOffCrawl(self, button):
@@ -1415,9 +1365,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.writeConfig.SetFont(wail_style_button_font)
         self.writeConfig.Bind(wx.EVT_BUTTON, self.crawlURIs)
         self.writeConfig.Disable()
-        self.launchCrawlButton = wx.Button(self, 33, "Launch Crawl",
-                                           (self.GetSize().x-175, 305),
-                                           (self.width, self.height))
+        self.launchCrawlButton = wx.Button(
+            self, 33, config.textLabel_launchCrawl,
+            (self.GetSize().x-175, 305), (self.width, self.height))
         self.launchCrawlButton.SetFont(wail_style_button_font)
         self.launchCrawlButton.Bind(wx.EVT_BUTTON, self.launchCrawl)
         self.launchCrawlButton.Disable()
@@ -1512,7 +1462,7 @@ class Wayback(Service):
             return False
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("wayback", "FIXING")
+        mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel("FIXING")
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -1524,8 +1474,7 @@ class Wayback(Service):
         thread.start_new_thread(self.killAsync, ())
 
     def killAsync(self):
-        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses(
-            "wayback", "KILLING")
+        mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel("KILLING")
         cmd = config.tomcatPathStop
         ret = subprocess.Popen(cmd)
         time.sleep(3)
@@ -1700,7 +1649,7 @@ class Heritrix(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("heritrix", "FIXING")
+        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel("FIXING")
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
@@ -1711,7 +1660,7 @@ class Heritrix(Service):
         thread.start_new_thread(self.killAsync, ())
 
     def killAsync(self):
-        mainAppWindow.advConfig.servicesPanel.updateServiceStatuses("heritrix", "KILLING")
+        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel("KILLING")
         # Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print('Trying to kill Heritrix...')
