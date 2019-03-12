@@ -964,8 +964,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.panelUpdater = None  # For updating stats UI
 
-            panelSizer = wx.FlexGridSizer(1, 2, 3, 3)
-            leftColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+            panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
+            leftColSizer = wx.FlexGridSizer(rows=3, cols=1, vgap=2, hgap=2)
 
             leftColSizer.AddMany([
                 self.listbox,
