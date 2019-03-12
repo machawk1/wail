@@ -312,6 +312,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         basicGS_buttons.AddStretchSpacer()
         basicGS_buttons.Add(self.archiveNowButton, proportion=1, flag=wx.CENTER)
 
+        self.status = wx.StaticText(self, wx.ID_ANY, '')
+
         self.mementoStatusPublicArchives = wx.StaticText(self, wx.ID_ANY, '')
         self.mementoStatus = wx.StaticText(self, wx.ID_ANY, '')
         basicGS_messages.Add(self.mementoStatusPublicArchives, flag=wx.CENTER)
@@ -321,6 +323,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         basicGridSizer.Add(basicGS_URI, proportion=0, flag=wx.EXPAND)
         basicGridSizer.AddSpacer(3)
         basicGridSizer.Add(basicGS_buttons, proportion=0, flag=wx.EXPAND)
+        basicGridSizer.AddSpacer(3)
+        basicGridSizer.Add(self.status, proportion=0, flag=wx.EXPAND)
         basicGridSizer.AddSpacer(3)
         basicGridSizer.Add(basicGS_messages, proportion=0, flag=wx.EXPAND)
 
@@ -392,9 +396,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.Layout()
 
     def setMessage(self, msg):
-        if hasattr(self, 'status'):
-            self.status.Destroy()
-        self.status = wx.StaticText(self, -1, msg, pos=(5, 65), size=(300, 20))
+        self.status.SetLabel(msg)
 
     def fetchMementos(self):
         """Request memento count from MemGator based on URI currently
