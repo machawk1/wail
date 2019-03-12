@@ -96,6 +96,8 @@ textLabel_depth = "Depth"
 textLabel_depth_default = "1"
 textLabel_launchCrawl = "Launch Crawl"
 textLabel_urisToCrawl = 'URIs to Crawl:'
+textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
+                        'to begin archiving.')
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"

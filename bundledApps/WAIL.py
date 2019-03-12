@@ -293,43 +293,41 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.uri = wx.TextCtrl(self, wx.ID_ANY, value=config.textLabel_defaultURI)
 
-        basicGridSizer = wx.BoxSizer(wx.VERTICAL)
-        basicGS_URI = wx.BoxSizer()
-        basicGS_buttons = wx.BoxSizer()
-        basicGS_messages = wx.BoxSizer()
+        basicSizer = wx.BoxSizer(wx.VERTICAL)
+        basicSizer_URI = wx.BoxSizer()
+        basicSizer_buttons = wx.BoxSizer()
+        basicSizer_messages = wx.BoxSizer()
 
-        basicGS_URI.Add(wx.StaticText(self, wx.ID_ANY, config.buttonLabel_uri), flag=wx.CENTER)
-        basicGS_URI.Add(self.uri, proportion=1, flag=wx.CENTER)
+        basicSizer_URI.Add(wx.StaticText(self, wx.ID_ANY, config.buttonLabel_uri), flag=wx.CENTER)
+        basicSizer_URI.Add(self.uri, proportion=1, flag=wx.CENTER)
 
         self.archiveNowButton = wx.Button(self, wx.ID_ANY, config.buttonLabel_archiveNow)
         self.checkArchiveStatus = wx.Button(self,  wx.ID_ANY,
                                             config.buttonLabel_checkStatus)
         self.viewArchive = wx.Button(self, wx.ID_ANY, config.buttonLabel_viewArchive)
 
-        basicGS_buttons.Add(self.viewArchive, proportion=1, flag=wx.CENTER)
-        basicGS_buttons.AddStretchSpacer()
-        basicGS_buttons.Add(self.checkArchiveStatus, proportion=1, flag=wx.CENTER)
-        basicGS_buttons.AddStretchSpacer()
-        basicGS_buttons.Add(self.archiveNowButton, proportion=1, flag=wx.CENTER)
+        basicSizer_buttons.Add(self.viewArchive, proportion=1, flag=wx.CENTER)
+        basicSizer_buttons.AddStretchSpacer()
+        basicSizer_buttons.Add(self.checkArchiveStatus, proportion=1, flag=wx.CENTER)
+        basicSizer_buttons.AddStretchSpacer()
+        basicSizer_buttons.Add(self.archiveNowButton, proportion=1, flag=wx.CENTER)
 
-        self.status = wx.StaticText(self, wx.ID_ANY, '')
+        self.status = wx.StaticText(self, wx.ID_ANY, config.textLabel_statusInit)
 
         self.mementoStatusPublicArchives = wx.StaticText(self, wx.ID_ANY, '')
         self.mementoStatus = wx.StaticText(self, wx.ID_ANY, '')
-        basicGS_messages.Add(self.mementoStatusPublicArchives, flag=wx.CENTER)
-        basicGS_messages.Add(self.mementoStatus, flag=wx.CENTER)
+        basicSizer_messages.Add(self.mementoStatusPublicArchives, flag=wx.CENTER)
+        basicSizer_messages.Add(self.mementoStatus, flag=wx.CENTER)
 
+        basicSizer.Add(basicSizer_URI, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddSpacer(3)
+        basicSizer.Add(basicSizer_buttons, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddSpacer(3)
+        basicSizer.Add(self.status, proportion=0, flag=wx.EXPAND)
+        basicSizer.AddStretchSpacer()
+        basicSizer.Add(basicSizer_messages, proportion=1)
 
-        basicGridSizer.Add(basicGS_URI, proportion=0, flag=wx.EXPAND)
-        basicGridSizer.AddSpacer(3)
-        basicGridSizer.Add(basicGS_buttons, proportion=0, flag=wx.EXPAND)
-        basicGridSizer.AddSpacer(3)
-        basicGridSizer.Add(self.status, proportion=0, flag=wx.EXPAND)
-        basicGridSizer.AddSpacer(3)
-        basicGridSizer.Add(basicGS_messages, proportion=0, flag=wx.EXPAND)
-
-
-        self.SetSizerAndFit(basicGridSizer)
+        self.SetSizerAndFit(basicSizer)
         self.archiveNowButton.SetDefault()
 
         # Basic interface button actions
@@ -341,9 +339,6 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.ensureEnvironmentVariablesAreSet()
 
         self.setMementoCount(None)
-
-        # self.setMessage(
-        #   "Type a URL and click \"Archive Now!\" to begin archiving");
 
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
