@@ -953,21 +953,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
             self.panelUpdater = None  # For updating stats UI
-            self.sizer = wx.BoxSizer(wx.VERTICAL)
-            gs = wx.FlexGridSizer(1, 2, 10, 10)
-            gs2 = wx.FlexGridSizer(3, 1, 2, 2)
 
-            gs2.AddMany([
+            panelSizer = wx.FlexGridSizer(1, 2, 3, 3)
+            leftColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+
+            leftColSizer.AddMany([
                 self.listbox,
                 (self.setupNewCrawlButton, 0, wx.EXPAND),
                 (self.launchWebUIButton, 0, wx.EXPAND)
             ])
 
-            gs.Add(gs2)
-
-            self.sizer.Add(gs, proportion=1)
-            self.SetSizer(self.sizer)
-
+            panelSizer.Add(leftColSizer)
+            self.SetSizer(panelSizer)
 
         def populateListboxWithJobs(self):
             list = Heritrix().getListOfJobs()
@@ -1116,21 +1113,52 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             """
             # Check if the UI elements already exist before adding them
-            if hasattr(self, 'newCrawlTextCtrlLabel'):
-                self.newCrawlTextCtrlLabel.Destroy()
-                self.newCrawlTextCtrl.Destroy()
-                self.newCrawlDepthTextCtrlLabel.Destroy()
-                self.newCrawlDepthTextCtrl.Destroy()
-                self.startCrawlButton.Destroy()
+            # if hasattr(self, 'newCrawlTextCtrlLabel'):
+            #    self.newCrawlTextCtrlLabel.Destroy()
+            #    self.newCrawlTextCtrl.Destroy()
+            #    self.newCrawlDepthTextCtrlLabel.Destroy()
+            #    self.newCrawlDepthTextCtrl.Destroy()
+            #    self.startCrawlButton.Destroy()
 
             self.statusMsg.Hide()
+            chil = self.Sizer.GetChildren()
+            if len(chil) > 1:
+                self.Sizer.Hide(len(chil)-1)
+                self.Sizer.Remove(len(chil)-1)
+
+                self.Layout()
+                return
+                #chil[-1].Clear()
+
+            #self.Sizer.Add(wx.StaticText(self, -1, "test"))
+            #self.Layout()
+            #return
 
             self.newCrawlTextCtrlLabel = wx.StaticText(
-                self, -1, config.textLabel_uriEntry, pos=(135, 0))
+                self, wx.ID_ANY, config.textLabel_uriEntry)
             multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
             self.newCrawlTextCtrl = \
-                wx.TextCtrl(self, -1, pos=(135, 20), size=(225, 90),
+                wx.TextCtrl(self, wx.ID_ANY, size=(220, 90),
                             style=multiLineAndNoWrapStyle)
+
+            rightColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+
+            rightColSizer.AddMany([
+                self.newCrawlTextCtrlLabel,
+                self.newCrawlTextCtrl
+            ])
+
+            depthSizer = wx.FlexGridSizer(1, 3, 0, 0)
+            depthSizer.AddMany([
+                wx.StaticText(self, wx.ID_ANY, "Depth"),
+                wx.TextCtrl(self, wx.ID_ANY),
+                wx.Button(self, wx.ID_ANY, config.buttonLabel_starCrawl)
+            ])
+            rightColSizer.Add(depthSizer)
+
+            self.Sizer.Add(rightColSizer)
+            self.Layout()
+            return
 
             self.newCrawlDepthTextCtrlLabel = \
                 wx.StaticText(self, -1, config.textLabel_depth, pos=(135, 112))
