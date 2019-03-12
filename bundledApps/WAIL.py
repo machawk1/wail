@@ -770,10 +770,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             thread.start_new_thread(self.updateServiceStatuses, ())
 
         def draw(self):
-            self.sizer = wx.BoxSizer(wx.VERTICAL)
+            self.sizer = wx.BoxSizer()
 
             gs = wx.FlexGridSizer(3, 5, 0, 0)
-            gs.SetFlexibleDirection(wx.HORIZONTAL)
+            #gs.SetFlexibleDirection(wx.HORIZONTAL)
 
             gs.AddMany([
                 wx.StaticText(self, wx.ID_ANY,
@@ -783,7 +783,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 1
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 2
                 wx.StaticText(self, wx.ID_ANY, "Wayback"),
-                self.status_wayback,
+                (self.status_wayback, 1, wx.EXPAND),
                 wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()),
                 self.fix_wayback,
                 self.kill_wayback,
@@ -793,9 +793,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.fix_heritrix,
                 self.kill_heritrix
             ])
+            #gs.AddGrowableCol(1, 3)
+            gs.AddGrowableCol(0, 1)
+            gs.AddGrowableCol(1, 1)
+            gs.AddGrowableCol(2, 1)
+            #gs.AddGrowableCol(3, 1)
 
             self.sizer.Add(gs, proportion=1)
             self.SetSizer(self.sizer)
+            self.Layout()
 
         def setHeritrixStatus(self, status):
             self.status_heritrix.SetLabel(status)
@@ -941,18 +947,16 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox = wx.ListBox(self, 100)
             self.populateListboxWithJobs()
 
+            # TODO: Convert statusMsg to use sizers
             self.statusMsg = wx.StaticText(self, -1, "", pos=(150, 0))
 
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
 
-            # Button layout
-            bsize = self.width, self.height = (125, 25 * .75)
-
             self.setupNewCrawlButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_newCrawl)
+                self, wx.ID_ANY, config.buttonLabel_heritrix_newCrawl)
             self.launchWebUIButton = wx.Button(
-                self, 1, config.buttonLabel_heritrix_launchWebUI)
+                self, wx.ID_ANY, config.buttonLabel_heritrix_launchWebUI)
 
             # Button functionality
             self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
