@@ -1107,32 +1107,19 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # this function
             print('Restarting job')
 
-        def setupNewCrawl(self, evt):
-            """Create UI elements for user to specify the URIs and other
-            attributes for a new Heritrix crawl.
-
-            """
-            # Check if the UI elements already exist before adding them
-            # if hasattr(self, 'newCrawlTextCtrlLabel'):
-            #    self.newCrawlTextCtrlLabel.Destroy()
-            #    self.newCrawlTextCtrl.Destroy()
-            #    self.newCrawlDepthTextCtrlLabel.Destroy()
-            #    self.newCrawlDepthTextCtrl.Destroy()
-            #    self.startCrawlButton.Destroy()
-
-            self.statusMsg.Hide()
+        def removeNewCrawlUI(self):
             chil = self.Sizer.GetChildren()
             if len(chil) > 1:
                 self.Sizer.Hide(len(chil)-1)
                 self.Sizer.Remove(len(chil)-1)
 
                 self.Layout()
-                return
-                #chil[-1].Clear()
 
-            #self.Sizer.Add(wx.StaticText(self, -1, "test"))
-            #self.Layout()
-            #return
+        def addNewCrawlUI(self):
+            self.statusMsg.Hide()
+            chil = self.Sizer.GetChildren()
+            if len(chil) > 1:
+                self.removeNewCrawlUI()
 
             self.newCrawlTextCtrlLabel = wx.StaticText(
                 self, wx.ID_ANY, config.textLabel_uriEntry)
@@ -1149,35 +1136,35 @@ class WAILGUIFrame_Advanced(wx.Panel):
             ])
 
             depthSizer = wx.FlexGridSizer(1, 3, 0, 0)
-            depthSizer.AddMany([
-                wx.StaticText(self, wx.ID_ANY, "Depth"),
-                wx.TextCtrl(self, wx.ID_ANY),
-                wx.Button(self, wx.ID_ANY, config.buttonLabel_starCrawl)
-            ])
-            rightColSizer.Add(depthSizer)
-
-            self.Sizer.Add(rightColSizer)
-            self.Layout()
-            return
-
-            self.newCrawlDepthTextCtrlLabel = \
-                wx.StaticText(self, -1, config.textLabel_depth, pos=(135, 112))
-            self.newCrawlDepthTextCtrl = \
-                wx.TextCtrl(self, -1, pos=(180, 110), size=(40, 25))
-            self.newCrawlDepthTextCtrl.SetValue(config.textLabel_depth_default)
+            self.newCrawlDepthTextCtrl = wx.TextCtrl(self, wx.ID_ANY)
+            self.newCrawlDepthTextCtrl.SetValue(
+                config.textLabel_depth_default)
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_KILL_FOCUS, self.validateCrawlDepth)
             self.newCrawlDepthTextCtrl.Bind(
                 wx.EVT_CHAR, self.handleCrawlDepthKeypress)
 
-            # self.crawlOptionsButton = wx.Button(self, -1, "More options",
-            # ...pos=(150,125))
             self.startCrawlButton = wx.Button(
-                self, -1, config.buttonLabel_starCrawl, pos=(265, 110))
+                self, wx.ID_ANY, config.buttonLabel_starCrawl)
             self.startCrawlButton.SetDefault()
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
-            self.showNewCrawlUIElements()
+            depthSizer.AddMany([
+                wx.StaticText(self, wx.ID_ANY, config.textLabel_depth),
+                self.newCrawlDepthTextCtrl,
+                self.startCrawlButton
+            ])
+            rightColSizer.Add(depthSizer)
+
+            self.Sizer.Add(rightColSizer)
+            self.Layout()
+
+        def setupNewCrawl(self, evt):
+            """Create UI elements for user to specify the URIs and other
+            attributes for a new Heritrix crawl.
+
+            """
+            self.addNewCrawlUI()
             self.newCrawlTextCtrl.SetFocus()
 
         def handleCrawlDepthKeypress(self, event):
@@ -1204,13 +1191,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def hideNewCrawlUIElements(self):
             """Hide UI elements related to a new Heritrix crawl."""
 
-            if not hasattr(self, 'newCrawlTextCtrlLabel'):
-                return
-            self.newCrawlTextCtrlLabel.Hide()
-            self.newCrawlTextCtrl.Hide()
-            self.startCrawlButton.Hide()
-            self.newCrawlDepthTextCtrl.Hide()
-            self.newCrawlDepthTextCtrlLabel.Hide()
+            self.removeNewCrawlUI()
 
         def showNewCrawlUIElements(self):
             """Display UI elements related to a new Heritrix crawl."""
