@@ -991,11 +991,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.SetSizer(panelSizer)
 
         def populateListboxWithJobs(self):
-            list = Heritrix().getListOfJobs()
+            jobs_list = Heritrix().getListOfJobs()
 
             # Set to reverse chronological so newest jobs are at the top
-            list.reverse()
-            self.listbox.Set(list)
+            jobs_list.reverse()
+            self.listbox.Set(jobs_list)
 
         def clickedListboxItem(self, event):
             self.hideNewCrawlUIElements()
