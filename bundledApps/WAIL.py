@@ -1519,14 +1519,12 @@ class Wayback(Service):
 
     def generateCDX(self):
         print('CDX: ', end='')
-        wailRoot = '/Applications/WAIL.app'
-        if util.is_windows():
-            wailRoot = 'C:\wail'
-        dest = wailRoot + "/config/path-index.txt"
-        warcsPath = wailRoot + "/archives/"
-        cdxFilePathPre = wailRoot + "/archiveIndexes/"
+
+        dest = config.wailPath + "/config/path-index.txt"
+        warcsPath = config.wailPath + "/archives/"
+        cdxFilePathPre = config.wailPath + "/archiveIndexes/"
         cdxIndexerPath = '{0}{1}'.format(
-            wailRoot, "/bundledApps/tomcat/webapps/bin/cdx-indexer")
+            config.wailPath, "/bundledApps/tomcat/webapps/bin/cdx-indexer")
 
         print('generating ', end='')
         for file in listdir(warcsPath):
@@ -1695,26 +1693,27 @@ class UpdateSoftwareWindow(wx.Frame):
     def updateWAIL(self, button):
         print('Downloading ' + self.updateJSONData['wail-core']['uri'])
         wailcorefile = urlopen(self.updateJSONData['wail-core']['uri'])
-        output = open('/Applications/WAIL.app/support/temp.tar.gz', 'wb')
+        output = open(config.wailPath + '/support/temp.tar.gz', 'wb')
         output.write(wailcorefile.read())
         output.close()
         print('Done downloading WAIL update, backing up.')
 
         try:
-            util.copyanything("/Applications/WAIL.app/Contents/",
-                              "/Applications/WAIL.app/Contents_bkp/")
+            util.copyanything(config.wailPath + "/Contents/",
+                              config.wailPath + "/Contents_bkp/")
             print('Done backing up. Nuking obsolete version.')
         except:
             print('Back up previously done, continuing.')
 
-        shutil.rmtree("/Applications/WAIL.app/Contents/")
+        shutil.rmtree(config.wailPath + "/Contents/")
         print('Done nuking, decompressing update.')
 
-        tar = tarfile.open("/Applications/WAIL.app/support/temp.tar.gz")
-        tar.extractall('/Applications/WAIL.app/')
+        tar = tarfile.open(config.wailPath + "/support/temp.tar.gz")
+        tar.extractall(config.wailPath + '/')
         tar.close()
         print('Done, restart now.')
-        os.system("defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null")
+        os.system("defaults read {}/Contents/Info.plist > /dev/null".format(
+            config.wailPath))
         # TODO: flush Info.plist cache
         # (cmd involving defaults within this py script)
 
