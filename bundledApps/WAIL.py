@@ -500,8 +500,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                     sys.exit()
 
                 prog = wx.ProgressDialog(
-                    util.msg_java_resolving,
-                    util.msg_java7_downloading,
+                    config.msg_java_resolving,
+                    config.msg_java7_downloading,
                     maximum=100,
                     style=wx.PD_APP_MODAL|wx.PD_SMOOTH|wx.PD_CAN_ABORT|wx.PD_AUTO_HIDE)
 
