@@ -73,15 +73,15 @@ then
 
 <blockquote>docker container run -d -it --rm -p 5920:5920 --name wail machawk1/wail</blockquote>
 
-To log into the container and view the WAIL GUI built, run:
+To log into the container to view the WAIL interface point a VNC Client to localhost:5920. The container can also be accessed via the command-line with:
 
 <blockquote>docker exec -it wail /bin/bash</blockquote>
 
 Once in the container, run the WAIL executable with:
 
-<blockquote>/wail/dist/WAIL</blockquote>
+<blockquote>cd /wail; /wail/WAIL</blockquote>
 
-and take note of the plethora of errors that still need to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>.
+There still exists some issues to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>, as will be evident in the reports on the console.
 
 
 <h2>Problems? Questions?</h2>
