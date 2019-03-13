@@ -24,7 +24,6 @@ from string import Template  # Py3.6+
 
 from six.moves.urllib.request import urlopen
 from six.moves.urllib.parse import urlparse
-from six.moves.urllib import request
 from six.moves.urllib.error import HTTPError
 
 try:  # Py3
@@ -662,12 +661,13 @@ class WAILGUIFrame_Basic(wx.Panel):
         data = {"action": "launch"}
         headers = {"Accept": "application/xml",
                    "Content-type": "application/x-www-form-urlencoded"}
-        r = requests.post(
+        requests.post(
             '{0}{1}'.format(config.uri_heritrixJob, self.hJob.jobNumber),
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
                 config.heritrixCredentials_password),
             data=data, headers=headers, verify=False, stream=True)
+        # TODO: Verify that the post request was received
 
     def buildHeritrixJob(self):
         """Instruct the Heritrix binary to build the previously created
@@ -679,12 +679,13 @@ class WAILGUIFrame_Basic(wx.Panel):
         data = {"action": "build"}
         headers = {"Accept": "application/xml",
                    "Content-type": "application/x-www-form-urlencoded"}
-        r = requests.post(
+        requests.post(
             '{0}{1}'.format(config.uri_heritrixJob, self.hJob.jobNumber),
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
                 config.heritrixCredentials_password),
             data=data, headers=headers, verify=False, stream=True)
+        # TODO: Verify that the post request was received
 
         # curl -v -d "action=launch" -k -u lorem:ipsum --anyauth --location
         # -H "Accept: application/xml" https://127.0.0.1:8443/engine/job/142..
@@ -1305,7 +1306,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.Notebook.AddPage(self.miscellaneousPanel, config.tabLabel_advanced_miscellaneous)
 
         self.x, self.y = (15, 5)
-        bsize = self.width, self.height = (150, 25*.80)
+        self.height = (150, 25 * .80)
 
         # Inits for 'self' references uses in methods
         self.writeConfig = None
@@ -1340,7 +1341,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         # TODO: shell=True was added for macOS
         # ...verify that functionality persists on Win64
-        ret = subprocess.Popen(cmd, shell=True)
+        subprocess.Popen(cmd, shell=True)
         # urlib won't respond to https, hard-coded sleep until I
         # ...can ping like Tomcat
         time.sleep(6)
@@ -1531,7 +1532,6 @@ class Wayback(Service):
         cdxIndexerPath = '{0}{1}'.format(
             wailRoot, "/bundledApps/tomcat/webapps/bin/cdx-indexer")
 
-        outputContents = ""
         print('generating ', end='')
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
