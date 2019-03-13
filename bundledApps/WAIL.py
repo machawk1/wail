@@ -522,7 +522,14 @@ class WAILGUIFrame_Basic(wx.Panel):
         if java7DMG_localPath.is_file():
             java7DMG_localPath.unlink()
 
-        with requests.get(config.osx_java7DMG_URI, stream=True) as resp:
+        try:
+            resp = requests.get(config.osx_java7DMG_URI, stream=True)
+        except requests.exceptions.RequestException:
+            # TODO: alert that Java was not installed, offer Abort, Retry, Fail in GUI
+            print("An exception occurred downloading Java. Check your connection and try again.")
+            return False
+        else:
+            print('Getting java')
             with open(java7DMG_localPath, 'wb') as f:
                 total_length = resp.headers.get('Content-Length')
                 dl = 0
@@ -554,6 +561,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def verifyHash(self, filePath, expectedHash):
         """Compare the Java download to verify file validity"""
+        # openssl dgst -sha256 (file) on macOS 10.14.2 provides a hash
+        # where below is every-other. Why?
         expectedHash = b'\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2'
         calculatedHash = util.hash_bytestr_iter(util.file_as_blockiter(open(filePath, 'rb')), hashlib.sha256())
 
@@ -564,6 +573,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         the UI from locking up
 
         """
+        if not self.ensureEnvironmentVariablesAreSet():
+            print('Java must be installed to archive using Heritrix')
+            return
+
         self.archiveNowButton.SetLabel(
             config.buttonLabel_archiveNow_initializing)
         self.setMessage('Starting Archiving Process...')
