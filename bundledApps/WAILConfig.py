@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
+# coding: utf-8
 
 import os
 import sys
@@ -9,7 +9,7 @@ import wx
 WAIL_VERSION = "-1"
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
-wailPath = wailPath.replace('\\bundledApps', '') # Fix for dev mode
+wailPath = wailPath.replace('\\bundledApps', '')  # Fix for dev mode
 
 infoPlistPath = ""
 if 'darwin' in sys.platform:
@@ -23,7 +23,7 @@ try:
         data = myfile.read()
         vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
         m = re.search(vsXML, data)
-        WAIL_VERSION =  m.groups()[0].strip()
+        WAIL_VERSION = m.groups()[0].strip()
 except:
     print('User likely has the binary in the wrong location.')
 
@@ -198,7 +198,7 @@ archivesJSON = ""
 fontSize = 8
 wailWindowSize = (400, 250)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
-wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
+wail_style_yesNo = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
 if 'darwin' in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
@@ -227,12 +227,12 @@ if 'darwin' in sys.platform:  # macOS-specific code
     for r, d, f in os.walk(wailPath):
         os.chmod(r, 0o777)
 elif sys.platform.startswith('linux'):
-    '''Linux Specific Code here'''
+    pass  # Linux Specific Code here
 elif sys.platform.startswith('win32'):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
-    wailPath = "C:\wail"
+    wailPath = "C:\\wail"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
