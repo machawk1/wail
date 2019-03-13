@@ -240,7 +240,7 @@ elif sys.platform.startswith('linux'):
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
-    memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
+    memGatorPath = wailPath + "/bundledApps/memgator-linux-amd64"
     archivesJSON = wailPath + "/config/archives.json"
 
     # Fix tomcat control scripts' permissions
