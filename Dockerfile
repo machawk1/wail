@@ -18,7 +18,7 @@ RUN apt update && apt install -y \
  python-pip \
  git
 
-RUN pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython && \
+RUN pip install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython==4.0.4 && \
     pip install pyinstaller && \
     git clone https://github.com/machawk1/wail && \
     cd wail && \ 
