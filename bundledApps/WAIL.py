@@ -1537,14 +1537,14 @@ class Wayback(Service):
 
         # Combine CDX files
         print('combining ', end='')
-        allCDXesPath = wailRoot + "/archiveIndexes/*.cdx"
+        allCDXesPath = config.wailPath + "/archiveIndexes/*.cdx"
 
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
         print('merging ', end='')
 
         # Is cdxt the right filename?
-        unsortedPath = wailRoot + '/archiveIndexes/combined_unsorted.cdxt'
+        unsortedPath = config.wailPath + '/archiveIndexes/combined_unsorted.cdxt'
 
         with open(unsortedPath, 'w') as outfile:
             for fname in filenames:
@@ -1561,8 +1561,8 @@ class Wayback(Service):
         for f in filelist:
             os.remove(f)
 
-        cdxTemp = wailRoot + "/archiveIndexes/combined_unsorted.cdxt"
-        cdxFinal = wailRoot + "/archiveIndexes/index.cdx"
+        cdxTemp = config.wailPath + "/archiveIndexes/combined_unsorted.cdxt"
+        cdxFinal = config.wailPath + "/archiveIndexes/index.cdx"
         # TODO: fix cdx sorting in Windows #281
         # if 'darwin' in sys.platform:
         print('sorting ', end='')
