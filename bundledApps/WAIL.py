@@ -464,7 +464,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Check system to verify that Java variables have been set.
         Notify the user if not and initialize the Java installation process.
         """
-        if util.is_windows():
+        if util.is_windows() or util.is_linux():
             return  # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
@@ -1503,12 +1503,8 @@ class Wayback(Service):
         self.generateCDX()
 
     def generatePathIndex(self):
-        wailPath = '/Applications/WAIL.app'
-        if util.is_windows():
-            wailPath = 'C:\wail'
-
-        dest = wailPath + "/config/path-index.txt"
-        warcsPath = wailPath + "/archives/"
+        dest = config.wailPath + "/config/path-index.txt"
+        warcsPath = config.wailPath + "/archives/"
 
         outputContents = ""
         for file in listdir(warcsPath):

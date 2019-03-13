@@ -227,7 +227,32 @@ if 'darwin' in sys.platform:  # macOS-specific code
     for r, d, f in os.walk(wailPath):
         os.chmod(r, 0o777)
 elif sys.platform.startswith('linux'):
-    pass  # Linux Specific Code here
+    # Should be more dynamics but suitable for Docker-Linux testing
+    wailPath = "/wail"
+    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
+    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
+    heritrixJobPath = heritrixPath + "jobs/"
+    fontSize = 10
+    tomcatPath = wailPath + "/bundledApps/tomcat"
+    warcsFolder = wailPath + "/archives"
+    tomcatPathStart = tomcatPath + "/bin/startup.sh"
+    tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+
+    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
+
+    memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
+    archivesJSON = wailPath + "/config/archives.json"
+
+    # Fix tomcat control scripts' permissions
+    os.chmod(tomcatPathStart, 0o744)
+    os.chmod(tomcatPathStop, 0o744)
+    os.chmod(tomcatPath + "/bin/catalina.sh", 0o744)
+    # TODO, variable encode paths, ^ needed for startup.sh to execute
+
+    # Change all permissions within the app bundle (a big hammer)
+    for r, d, f in os.walk(wailPath):
+        os.chmod(r, 0o777)
+
 elif sys.platform.startswith('win32'):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
