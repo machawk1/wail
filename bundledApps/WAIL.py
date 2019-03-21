@@ -1943,6 +1943,10 @@ if __name__ == "__main__":
     #   print "WAIL was launched without any file parameters."
     # requests.packages. urllib3.disable_warnings()
 
+    if sys.version_info[0] == 2:
+        print(config.msg_py3)
+        sys.exit()
+
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
     mainAppWindow.ensureCorrectInstallation()

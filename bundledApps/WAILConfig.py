@@ -64,6 +64,7 @@ msg_java_resolving = "Resolving Java Dependency"
 msg_java7_downloading = "Downloading Java 7 DMG"
 msg_error_tomcat_noStop = "Tomcat could not be stopped"
 msg_error_tomcat_failed = "Command Failed"
+msg_py3 = "ERROR: WAIL requires Python 3."
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
