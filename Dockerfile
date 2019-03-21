@@ -4,8 +4,7 @@ LABEL      app.name="WAIL" \
            app.description="Web Archiving Integration Layer: One-Click User Instigated Preservation" \
            app.license="MIT License" \
            app.license.url="https://github.com/machawk1/wail/blob/osagnostic/LICENSE" \
-           app.repo.url="https://github.com/machawk1/wail" \
-           app.authors="Mat Kelly <@machawk1> and Sawood Alam <@ibnesayeed>"
+           app.repo.url="https://github.com/machawk1/wail"
 
 #TZdata will interactively ask for this info
 ENV        TZ=Europe/Minsk
