@@ -362,7 +362,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             memCountMsg = config.msg_fetchingMementos
         elif m_count > 0:
             localeToSet = 'en_US'
-            if sys.platform.startswith('win32'):
+            if not util.is_macOS():  # Let system determine locale
                 localeToSet = ''
 
             locale.setlocale(locale.LC_ALL, localeToSet)
