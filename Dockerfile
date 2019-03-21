@@ -5,17 +5,18 @@ ENV TZ=Europe/Minsk
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 RUN apt update && apt install -y \
- apt-file \
- libsdl1.2debian \
- libgtk-3-0 \
- libxxf86vm1 \
- libsm6 \
- libnotify4 \
- x11vnc \
- xvfb \
- python3 \
- python3-pip \
- git
+    apt-file \
+    git \
+    libgtk-3-0 \
+    libnotify4 \
+    libsdl1.2debian \
+    libsm6 \
+    libxxf86vm1 \
+    python3 \
+    python3-pip \
+    x11vnc \
+    xvfb \
+  && rm -rf /var/lib/apt/lists/*
 
 COPY . /wail/
 
