@@ -79,7 +79,7 @@ To log into the container to view the WAIL interface point a VNC Client to local
 
 Once in the container, run the WAIL executable with:
 
-<blockquote>cd /wail; /wail/WAIL</blockquote>
+<blockquote>./WAIL</blockquote>
 
 There still exists some issues to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>, as will be evident in the reports on the console.
 
