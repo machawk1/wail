@@ -52,8 +52,8 @@ esac
 installRequirements ()
 {
   #pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
-  pip install --upgrade wxPython
-  pip install -r requirements.txt
+  python3 -m pip install --upgrade wxPython
+  python3 -m pip install -r requirements.txt
 }
 
 createBinary ()
