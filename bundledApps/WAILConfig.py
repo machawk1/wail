@@ -181,9 +181,9 @@ uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
     host_crawler, port_crawler)
 uri_heritrixJob = uri_heritrix + '/engine/job/'
 
-jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
-jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
-javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+jdkPath = ""
+jreHome = ""
+javaHome = ""
 
 ###############################
 # Platform-specific paths
@@ -214,6 +214,10 @@ if 'darwin' in sys.platform:  # macOS-specific code
     warcsFolder = wailPath + "/archives"
     tomcatPathStart = tomcatPath + "/bin/startup.sh"
     tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+
+    jdkPath = wailPath + "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/"
+    jreHome = jdkPath
+    javaHome = jdkPath
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 

@@ -1943,6 +1943,7 @@ if __name__ == "__main__":
     if sys.version_info[0] == 2:
         print(config.msg_py3)
         sys.exit()
+    os.environ["JAVA_HOME"] = config.jdkPath
 
     app = wx.App(redirect=False)
     mainAppWindow = TabController()
