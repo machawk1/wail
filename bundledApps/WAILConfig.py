@@ -75,8 +75,10 @@ tabLabel_advanced_heritrix = "Heritrix"
 tabLabel_advanced_miscellaneous = "Miscellaneous"
 tabLabel_advanced_services_serviceStatus = "SERVICE STATUS"
 
-serviceEnabledLabel_YES = "  OK  "  # "✓"
-serviceEnabledLabel_NO = "   X  "  # "✗"
+serviceEnabledLabel_YES = "OK"  # "✓"
+serviceEnabledLabel_NO = "X"  # "✗"
+serviceEnabledLabel_FIXING = "FIXING"
+serviceEnabledLabel_KILLING = "KILLING"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
