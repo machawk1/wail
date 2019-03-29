@@ -340,7 +340,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
 
-        thread.start_new_thread(self.fetchMementos, ())
+        if util.is_linux():  # Issue 404
+            thread.start_new_thread(self.fetchMementos, ())
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
@@ -767,8 +768,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback = wx.Button(self, 1, config.buttonLabel_kill, style=wx.BU_EXACTFIT)
             self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill, style=wx.BU_EXACTFIT)
 
-            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "    X    ")
-            self.status_heritrix= wx.StaticText(self, wx.ID_ANY, "    X    ")
+            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_heritrix= wx.StaticText(self, wx.ID_ANY, "X")
 
             self.draw()
             thread.start_new_thread(self.updateServiceStatuses, ())
@@ -790,18 +791,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
             gs.AddMany([
                 wx.StaticText(self, wx.ID_ANY,
                               config.tabLabel_advanced_services_serviceStatus),
-                wx.StaticText(self, wx.ID_ANY, "STATE"),
-                wx.StaticText(self, wx.ID_ANY, "VERSION"),
+                (wx.StaticText(self, wx.ID_ANY, "STATE"), 1, wx.ALIGN_CENTER_HORIZONTAL),
+                (wx.StaticText(self, wx.ID_ANY, "VERSION"), 1, wx.ALIGN_CENTER_HORIZONTAL),
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 1
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 2
                 (wx.StaticText(self, wx.ID_ANY, "Wayback"), 1, wx.ALIGN_CENTER_VERTICAL),
-                (self.status_wayback, 1, wx.ALIGN_CENTER_VERTICAL),
-                (wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()), 1, wx.ALIGN_CENTER_VERTICAL),
+                (self.status_wayback, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()), 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
                 self.fix_wayback,
                 self.kill_wayback,
                 (wx.StaticText(self, wx.ID_ANY, "Heritrix"), 1, wx.ALIGN_CENTER_VERTICAL),
-                (self.status_heritrix, 1, wx.ALIGN_CENTER_VERTICAL),
-                (wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()), 1, wx.ALIGN_CENTER_VERTICAL),
+                (self.status_heritrix, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()), 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
                 self.fix_heritrix,
                 self.kill_heritrix
             ])
@@ -809,7 +810,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             gs.AddGrowableCol(0, 1)
             gs.AddGrowableCol(1, 1)
             gs.AddGrowableCol(2, 1)
-            #gs.AddGrowableCol(3, 1)
 
             self.sizer.Add(gs, proportion=1)
             self.SetSizer(self.sizer)
@@ -1629,7 +1629,7 @@ class Heritrix(Service):
             logData = re.sub(r'[|]+', '|', ll).split("|")
             timeStamp, discovered, queued, downloaded = logData[0:4]
 
-            try:  # Check if crawl is running by assuming scraped stats are ints
+            try:  # Check if crawl is running, assume scraped stats are ints
                 int(discovered)
                 status = "   {}: {}\n   {}: {}\n   {}: {}\n".format(
                     'Discovered', discovered,
@@ -1656,7 +1656,9 @@ class Heritrix(Service):
         thread.start_new_thread(self.fixAsync, cb)
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel("FIXING")
+        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel(
+            config.serviceEnabledLabel_FIXING
+        )
         mainAppWindow.basicConfig.launchHeritrix()
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
@@ -1667,7 +1669,9 @@ class Heritrix(Service):
         thread.start_new_thread(self.killAsync, ())
 
     def killAsync(self):
-        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel("KILLING")
+        mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel(
+            config.serviceEnabledLabel_KILLING
+        )
         # Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
         cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
         print('Trying to kill Heritrix...')
