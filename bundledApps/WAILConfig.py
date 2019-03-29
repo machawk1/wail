@@ -168,6 +168,8 @@ host_replay = '0.0.0.0'
 port_crawler = '8443'
 port_replay = '8080'
 
+index_timer_seconds = 10.0
+
 uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
 uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
 uri_wayback_allMementos = uri_wayback + '*/'

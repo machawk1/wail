@@ -62,9 +62,6 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 #  from pync import Notifier # OS X notifications
 
-INDEX_TIMER_SECONDS = 10.0
-
-
 ###############################
 # Tab Controller (Notebook)
 ###############################
@@ -93,7 +90,7 @@ class TabController(wx.Frame):
         self.createMenu()
 
         self.indexingTimer = threading.Timer(
-            INDEX_TIMER_SECONDS, Wayback().index)
+            config.index_timer_seconds, Wayback().index)
         self.indexingTimer.daemon = True
         self.indexingTimer.start()
 
@@ -1583,8 +1580,8 @@ class Wayback(Service):
         # Queue next iteration of indexing
         if mainAppWindow.indexingTimer:
             mainAppWindow.indexingTimer.cancel()
-        mainAppWindow.indexingTimer = threading.Timer(INDEX_TIMER_SECONDS,
-                                                      Wayback().index)
+        mainAppWindow.indexingTimer = threading.Timer(
+            config.index_timer_seconds, Wayback().index)
         mainAppWindow.indexingTimer.daemon = True
         mainAppWindow.indexingTimer.start()
 
