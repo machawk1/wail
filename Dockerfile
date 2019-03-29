@@ -26,10 +26,13 @@ RUN        apt update && apt install -y \
              python3-pip \
              x11vnc \
              xvfb \
+             openjdk-8-jdk \
        &&  rm -rf /var/lib/apt/lists/*
 
 RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython==4.0.4 \
        &&  pip3 install pyinstaller==3.4
+
+ENV        JAVA_HOME="/lib/jvm/java-8-openjdk-amd64/jre/bin/"
 
 WORKDIR    /wail
 COPY       requirements.txt ./
