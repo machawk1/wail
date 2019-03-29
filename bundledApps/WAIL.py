@@ -74,6 +74,7 @@ class TabController(wx.Frame):
                           style=config.wailWindowStyle)
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
+        wx.Frame.Center(self)
 
         self.Notebook = wx.Notebook(panel)
         vbox.Add(self.Notebook, 2, flag=wx.EXPAND)
@@ -793,14 +794,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 wx.StaticText(self, wx.ID_ANY, "VERSION"),
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 1
                 wx.StaticText(self, wx.ID_ANY, ""), # button col 2
-                wx.StaticText(self, wx.ID_ANY, "Wayback"),
-                (self.status_wayback, 1, wx.EXPAND),
-                wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()),
+                (wx.StaticText(self, wx.ID_ANY, "Wayback"), 1, wx.ALIGN_CENTER_VERTICAL),
+                (self.status_wayback, 1, wx.ALIGN_CENTER_VERTICAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()), 1, wx.ALIGN_CENTER_VERTICAL),
                 self.fix_wayback,
                 self.kill_wayback,
-                wx.StaticText(self, wx.ID_ANY, "Heritrix"),
-                self.status_heritrix,
-                wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()),
+                (wx.StaticText(self, wx.ID_ANY, "Heritrix"), 1, wx.ALIGN_CENTER_VERTICAL),
+                (self.status_heritrix, 1, wx.ALIGN_CENTER_VERTICAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()), 1, wx.ALIGN_CENTER_VERTICAL),
                 self.fix_heritrix,
                 self.kill_heritrix
             ])
@@ -955,11 +956,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.listbox = wx.ListBox(self, 100)
+            self.listbox = wx.ListBox(self)
             self.populateListboxWithJobs()
 
             # TODO: Convert statusMsg to use sizers
-            self.statusMsg = wx.StaticText(self, -1, "", pos=(150, 0))
+            self.statusMsg = wx.StaticText(self, wx.ID_ANY, "", pos=(150, 0))
 
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
@@ -1355,9 +1356,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uriListBoxTitle = wx.StaticText(
             self, 7, config.textLabel_urisToCrawl,
             (self.x, 5 + self.height * 7 + 30))
-        self.uriListBox = wx.ListBox(self, 99,
-                                     (self.x, 5 + self.height * 8 + 25),
-                                     (400 - 50, 100), [""])
+        self.uriListBox = wx.ListBox(self, wx.ID_ANY, [""])
         self.uriListBox.Bind(wx.EVT_LISTBOX, self.addURI)
         self.SetSize((self.GetSize().x, self.GetSize().y+300))
 
