@@ -364,6 +364,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             if not util.is_macOS():  # Let system determine locale
                 localeToSet = ''
 
+            if util.is_linux():
+                localeToSet = 'en_US.UTF-8'
+
             locale.setlocale(locale.LC_ALL, localeToSet)
 
             m_plurality = 's'
