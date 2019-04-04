@@ -340,7 +340,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
 
-        if util.is_linux():  # Issue 404
+        if not util.is_linux():  # Issue 404
             thread.start_new_thread(self.fetchMementos, ())
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
