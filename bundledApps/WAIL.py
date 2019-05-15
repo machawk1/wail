@@ -968,6 +968,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
 
+            self.crawlJobsTextCtrlLabel = wx.StaticText(
+                self, wx.ID_ANY, config.textLabel_crawlJobs)
             self.setupNewCrawlButton = wx.Button(
                 self, wx.ID_ANY, config.buttonLabel_heritrix_newCrawl)
             self.launchWebUIButton = wx.Button(
@@ -980,9 +982,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.panelUpdater = None  # For updating stats UI
 
             panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
-            leftColSizer = wx.FlexGridSizer(rows=3, cols=1, vgap=2, hgap=2)
+            leftColSizer = wx.FlexGridSizer(rows=4, cols=1, vgap=2, hgap=2)
 
             leftColSizer.AddMany([
+                self.crawlJobsTextCtrlLabel,
                 self.listbox,
                 (self.setupNewCrawlButton, 0, wx.EXPAND),
                 (self.launchWebUIButton, 0, wx.EXPAND)
