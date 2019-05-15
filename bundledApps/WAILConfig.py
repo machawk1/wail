@@ -98,7 +98,8 @@ textLabel_uriEntry = "Enter one URI per line to crawl"
 textLabel_depth = "Depth"
 textLabel_depth_default = "1"
 textLabel_launchCrawl = "Launch Crawl"
-textLabel_urisToCrawl = 'URIs to Crawl:'
+textLabel_urisToCrawl = "URIs to Crawl:"
+textLabel_crawlJobs = "Crawl Jobs"
 textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
                         'to begin archiving.')
 
