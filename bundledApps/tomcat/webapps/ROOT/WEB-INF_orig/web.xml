@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+            http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
+        version="2.4">
+
+    <!--
+    	Wayback runs as a single Servlet Filter, which intercepts all incoming
+    	requests.
+    	
+    	AccessPoints are defined in a Spring configuration file, and register
+    	themselves to handle incoming requests with this Filter. If no 
+    	AccessPoint matches an incoming request, the filter does nothing, 
+    	falling back to normal request processing, but this is an exceptional
+    	case: To enable "virtual" AccessPoints to share the common
+    	static content (and especially .jsp files) directly under the webapp
+    	directory, AccessPoints will generally strip leading path information,
+    	and forward() the requests internally to the top level of the webapp
+    	directory. To allow .jsp files to customize output based on the 
+    	particular AccessPoint which matched the request, references to the 
+    	AccessPoint, and other data structures are often stored in the 
+    	HttpServletRequest objects before forwarding these requests. In this 
+    	case, the AccessPoint will inform the common request Filter that 
+    	content has been returned, so "normal" request processing is skipped.
+    	
+    	In general, only 2 configurations are needed, which are both 
+    	webapp-relative paths to configuration.
+    	
+    	Specifically, this is a logging configuration .properties file, for
+    	java.util.logging (logging-config-path) and a Spring XML configuration
+    	file describing the set of AccessPoints objects (and their internal 
+    	objects) being served by this webapp (config-path).
+     -->
+    <context-param>
+        <param-name>logging-config-path</param-name>
+        <param-value>/WEB-INF/classes/logging.properties</param-value>
+    </context-param>
+    <context-param>
+        <param-name>config-path</param-name>
+        <param-value>/WEB-INF/wayback.xml</param-value>
+    </context-param>
+    <filter>
+        <filter-name>RequestFilter</filter-name>
+        <filter-class>org.archive.wayback.util.webapp.RequestFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RequestFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+<!--
+    The following configuration will add HTTP Basic Authentication to an
+    an AccessPoint called "usersecure", which also needs to be defined in
+    the wayback.xml Spring configuration file.
+    
+    Also note that you will need to add one or more users to your 
+    tomcat-users.xml with in the role "wayback".
+-->
+
+<!--
+    <security-role>
+        <description>Secured-Wayback-Access</description>
+        <role-name>wayback</role-name>
+    </security-role>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Secured-Wayback</web-resource-name>
+            <url-pattern>/usersecure/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>wayback</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>Secured-Wayback</realm-name>
+    </login-config>
+
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/WEB-INF/exception/HTMLError.jsp</location>
+    </error-page>
+-->
+
+</web-app>
