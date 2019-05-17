@@ -1164,7 +1164,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.newCrawlTextCtrl
             ])
 
-            depthSizer = wx.FlexGridSizer(1, 3, 0, 0)
+            depthSizer = wx.FlexGridSizer(1, 3, 0, 2)
             self.newCrawlDepthTextCtrl = wx.TextCtrl(self, wx.ID_ANY)
             self.newCrawlDepthTextCtrl.SetValue(
                 config.textLabel_depth_default)
@@ -1179,9 +1179,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
             depthSizer.AddMany([
-                wx.StaticText(self, wx.ID_ANY, config.textLabel_depth),
-                self.newCrawlDepthTextCtrl,
-                self.startCrawlButton
+                (wx.StaticText(self, wx.ID_ANY, config.textLabel_depth), 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
+                (self.newCrawlDepthTextCtrl, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
+                (self.startCrawlButton, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
             ])
             rightColSizer.Add(depthSizer)
 
