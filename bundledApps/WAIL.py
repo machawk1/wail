@@ -340,7 +340,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Bind changes in URI to query MemGator
         self.memgatorDelayTimer = None
 
-        if not util.is_linux():  # Issue 404
+        if not util.is_linux():  # GitHub issue #404
             thread.start_new_thread(self.fetchMementos, ())
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
@@ -610,6 +610,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             #  Notifier.notify('Archival process successfully initiated.',
             #  ...title="WAIL")
         else:
+            print('JAVA not INSTALLED')
             print(config.msg_java6Required)
             self.setMessage(config.msg_archiveFailed_java)
 
@@ -1430,8 +1431,9 @@ class Service():
         print(chkMsg)
 
         try:
+            print('Fixing UI clipping here?')
             handle = urlopen(self.uri, None, 3)
-            print(self.__class__.__name__ + ' is a go! ')
+            print('Service: ' + self.__class__.__name__ + ' is a go! ')
             return True
         except IOError as e:
             if hasattr(e, 'code'):  # HTTPError
@@ -1467,7 +1469,7 @@ class Wayback(Service):
 
             accessible = 'http://mementoweb.org/terms/donotnegotiate' in linkHeader
             if accessible:
-                print(self.__class__.__name__ + ' is a go! ')
+                print('Wayback: ' + self.__class__.__name__ + ' is a go at ' + self.uri)
             else:
                 print(
                     'Unable to access {0}, something else is running on port 8080'.format(
@@ -1476,13 +1478,16 @@ class Wayback(Service):
             return accessible
 
         except Exception as e:
+            print(e)
             print('Wayback(): Failed to access {0} service at {1}'.format(
                 self.__class__.__name__, self.uri
             ))
             return False
 
     def fixAsync(self, cb=None):
-        mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel("FIXING")
+        #mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel(
+        #    config.serviceEnabledLabel_FIXING)
+        mainAppWindow.advConfig.servicesPanel.setWaybackStatus(config.serviceEnabledLabel_FIXING)
         cmd = config.tomcatPathStart
         ret = subprocess.Popen(cmd)
         time.sleep(3)
