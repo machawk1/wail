@@ -11,7 +11,7 @@ trap exit INT
 wailProcessesRunning=$(ps -A | grep '[/]WAIL.app/' | wc -l)
 if (($wailProcessesRunning > 0)); then
   while true; do
-    read -p "Kill currently running WAIL processes (y/n)?" yn
+    read -p "Kill currently running WAIL processes (y/n)? " yn
     case $yn in
         [Yy]* ) 
             pkill -f '[/]WAIL.app/'
