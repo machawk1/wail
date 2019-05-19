@@ -102,6 +102,7 @@ textLabel_urisToCrawl = "URIs to Crawl:"
 textLabel_crawlJobs = "Crawl Jobs"
 textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
                         'to begin archiving.')
+textLabel_noJobsAvailable = '(No jobs available)'
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
