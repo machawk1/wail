@@ -1000,6 +1000,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Set to reverse chronological so newest jobs are at the top
             jobs_list.reverse()
+
+            if len(jobs_list) == 0:
+                jobs_list = [config.textLabel_noJobsAvailable]
+                self.clearInfoPanel()
+
             self.listbox.Set(jobs_list)
 
         def clickedListboxItem(self, event):
@@ -1007,6 +1012,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.statusMsg.Show()
 
             crawlId = self.listbox.GetString(self.listbox.GetSelection())
+            if crawlId == config.textLabel_noJobsAvailable:
+                self.clearInfoPanel()
+                return
 
             jobLaunches = Heritrix().getJobLaunches(crawlId)
             if self.panelUpdater:  # Kill any currently running timer
@@ -1020,6 +1028,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 1.0, self.updateInfoPanel, [active])
             self.panelUpdater.daemon = True
             self.panelUpdater.start()
+
+        def clearInfoPanel(self):
+            if hasattr(self, 'statusMsg'):
+                self.statusMsg.SetLabel('')
 
         def launchWebUI(self, button):
             self.launchWebUIButton.SetLabel(
