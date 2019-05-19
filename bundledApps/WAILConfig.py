@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 -*-
+# coding: utf-8
 
 import os
 import sys
@@ -9,7 +9,7 @@ import wx
 WAIL_VERSION = "-1"
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
-wailPath = wailPath.replace('\\bundledApps', '') # Fix for dev mode
+wailPath = wailPath.replace('\\bundledApps', '')  # Fix for dev mode
 
 infoPlistPath = ""
 if 'darwin' in sys.platform:
@@ -23,11 +23,12 @@ try:
         data = myfile.read()
         vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
         m = re.search(vsXML, data)
-        WAIL_VERSION =  m.groups()[0].strip()
+        WAIL_VERSION = m.groups()[0].strip()
 except:
     print('User likely has the binary in the wrong location.')
 
-osx_java7DMG = "http://matkelly.com/wail/support/jdk-7u79-macosx-x64.dmg"
+osx_java7DMG_URI = "https://matkelly.com/wail_old/support/jdk-7u79-macosx-x64.dmg"
+osx_java7DMG_hash = b'\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2'
 
 ###############################
 # Platform independent Messages
@@ -59,6 +60,11 @@ msg_installJava = 'Java needs to be installed for Heritrix and Wayback'
 msg_java6Required = '{0}{1}'.format('Java SE 6 needs to be installed. ',
                                     'WAIL should invoke the installer here.')
 msg_archiveFailed_java = 'Archive Now failed due to Java JRE Requirements'
+msg_java_resolving = "Resolving Java Dependency"
+msg_java7_downloading = "Downloading Java 7 DMG"
+msg_error_tomcat_noStop = "Tomcat could not be stopped"
+msg_error_tomcat_failed = "Command Failed"
+msg_py3 = "ERROR: WAIL requires Python 3."
 
 tabLabel_basic = "Basic"
 tabLabel_advanced = "Advanced"
@@ -71,6 +77,8 @@ tabLabel_advanced_services_serviceStatus = "SERVICE STATUS"
 
 serviceEnabledLabel_YES = "OK"  # "✓"
 serviceEnabledLabel_NO = "X"  # "✗"
+serviceEnabledLabel_FIXING = "FIXING"
+serviceEnabledLabel_KILLING = "KILLING"
 
 # Basic Tab Buttons
 buttonLabel_archiveNow = "Archive Now!"
@@ -82,9 +90,19 @@ buttonLabel_uri = "URL:"
 buttonLabel_fix = "Fix"
 buttonLabel_kill = "Kill"
 buttonLabel_refresh = "Refresh"
+buttonLabel_starCrawl = "Start Crawl"
 
 textLabel_defaultURI = "http://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
+textLabel_uriEntry = "Enter one URI per line to crawl"
+textLabel_depth = "Depth"
+textLabel_depth_default = "1"
+textLabel_launchCrawl = "Launch Crawl"
+textLabel_urisToCrawl = "URIs to Crawl:"
+textLabel_crawlJobs = "Crawl Jobs"
+textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
+                        'to begin archiving.')
+textLabel_noJobsAvailable = '(No jobs available)'
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
@@ -101,6 +119,7 @@ buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
 buttonLabel_setupCrawl = "Setup One-Off Crawl"
 buttonLabel_viewArchiveFiles = "View Archive Files"
+buttonLabel_checkForUpdates = "Check for Updates"
 buttonLabel_heritrix_launchWebUI = "Launch WebUI"
 buttonLabel_heritrix_launchWebUI_launching = "Launching..."
 buttonLabel_heritrix_newCrawl = "New Crawl"
@@ -124,12 +143,19 @@ menuTitle_file_allCrawls_pause = 'Pause'
 menuTitle_file_allCrawls_restart = 'Restart'
 menuTitle_file_allCrawls_destroy = "Destroy (does not delete archive)"
 
+menuTitle_edit_undo = "Undo"
+menuTitle_edit_redo = "Redo"
+menuTitle_edit_cut = "Cut"
+menuTitle_edit_copy = "Copy"
+menuTitle_edit_paste = "Paste"
+menuTitle_edit_selectAll = "Select All"
+
 menuTitle_view_viewBasic = 'Basic Interface'
 menuTitle_view_viewAdvanced = 'Advanced Interface'
 menuTitle_view_viewAdvanced_services = 'Services'
 menuTitle_view_viewAdvanced_wayback = 'Wayback'
 menuTitle_view_viewAdvanced_heritrix = 'Heritrix'
-menuTitle_view_viewAdvanced_miscellaneous = 'Miscelleanous'
+menuTitle_view_viewAdvanced_miscellaneous = 'Miscellaneous'
 
 menuTitle_window_wail = 'Web Archiving Integration Layer'
 
@@ -146,6 +172,8 @@ host_replay = '0.0.0.0'
 port_crawler = '8443'
 port_replay = '8080'
 
+index_timer_seconds = 10.0
+
 uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
 uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
 uri_wayback_allMementos = uri_wayback + '*/'
@@ -157,9 +185,9 @@ uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
     host_crawler, port_crawler)
 uri_heritrixJob = uri_heritrix + '/engine/job/'
 
-jdkPath = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
-jreHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
-javaHome = "/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+jdkPath = ""
+jreHome = ""
+javaHome = ""
 
 ###############################
 # Platform-specific paths
@@ -177,19 +205,23 @@ archivesJSON = ""
 fontSize = 8
 wailWindowSize = (400, 250)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
-wail_style_yesNo = wx.YES_NO|wx.YES_DEFAULT|wx.ICON_QUESTION
+wail_style_yesNo = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
-if 'darwin' in sys.platform:  # OS X Specific Code here
+if 'darwin' in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
     wailPath = "/Applications/WAIL.app"
     heritrixPath = wailPath + "/bundledApps/heritrix-3.4.0-20190207/"
-    heritrixBinPath = "sh " + heritrixPath+"bin/heritrix"
+    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
     heritrixJobPath = heritrixPath + "jobs/"
     fontSize = 10
     tomcatPath = wailPath + "/bundledApps/tomcat"
     warcsFolder = wailPath + "/archives"
     tomcatPathStart = tomcatPath + "/bin/startup.sh"
     tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+
+    jdkPath = wailPath + "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/"
+    jreHome = jdkPath
+    javaHome = jdkPath
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 
@@ -206,12 +238,37 @@ if 'darwin' in sys.platform:  # OS X Specific Code here
     for r, d, f in os.walk(wailPath):
         os.chmod(r, 0o777)
 elif sys.platform.startswith('linux'):
-    '''Linux Specific Code here'''
+    # Should be more dynamics but suitable for Docker-Linux testing
+    wailPath = "/wail"
+    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
+    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
+    heritrixJobPath = heritrixPath + "jobs/"
+    fontSize = 10
+    tomcatPath = wailPath + "/bundledApps/tomcat"
+    warcsFolder = wailPath + "/archives"
+    tomcatPathStart = tomcatPath + "/bin/startup.sh"
+    tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+
+    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
+
+    memGatorPath = wailPath + "/bundledApps/memgator-linux-amd64"
+    archivesJSON = wailPath + "/config/archives.json"
+
+    # Fix tomcat control scripts' permissions
+    os.chmod(tomcatPathStart, 0o744)
+    os.chmod(tomcatPathStop, 0o744)
+    os.chmod(tomcatPath + "/bin/catalina.sh", 0o744)
+    # TODO, variable encode paths, ^ needed for startup.sh to execute
+
+    # Change all permissions within the app bundle (a big hammer)
+    for r, d, f in os.walk(wailPath):
+        os.chmod(r, 0o777)
+
 elif sys.platform.startswith('win32'):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
-    wailPath = "C:\wail"
+    wailPath = "C:\\wail"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
 

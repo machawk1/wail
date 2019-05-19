@@ -15,7 +15,16 @@ WAIL is written in Python and compiled to a native executable using <a href="htt
 
 <h2>Installing WAIL</h2>
 
-WAIL is an application that runs either on your macOS (.app) or Windows (.exe) system. To install WAIL, first <a href="http://machawk1.github.io/wail/#download">download</a> the appropriate package for your file system (.dmg for macOS or .zip for Windows), open the package, and follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
+WAIL is an application that runs either on your macOS (`.app`) or Windows (`.exe`) system.
+
+To install WAIL:
+1. <a href="http://machawk1.github.io/wail/#download">Download</a> the appropriate package for your file system (`.dmg` for macOS or `.zip` for Windows) or see [more releases](https://github.com/machawk1/wail/releases).
+2. Open the package (`.dmg` or `.zip`).
+3. Follow the instructions to drag-and-drop the WAIL application to the correct location on your file system.
+
+Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
+
+<blockquote>𝚋𝚛𝚎𝚠 𝚌𝚊𝚜𝚔 𝚒𝚗𝚜𝚝𝚊𝚕𝚕 wail</blockquote>
 
 <h2>Running WAIL</h2>
 
@@ -23,7 +32,7 @@ WAIL is an application that runs either on your macOS (.app) or Windows (.exe) s
 
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
-End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows (7+).
+End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows.
 To run it using Python for testing, run the following from the root of the WAIL source directory:
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
 
@@ -56,7 +65,7 @@ From the Windows shell:
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
 <h3>Linux</h3>
-Building for Linux is problematic due to wxPython but a solution is in-the-works using Docker (see <a href="https://github.com/machawk1/wail/issues/340">#340</a>). From the root of the WAIL source working directory, run:
+Linux support is currently in-development using Docker (see #2). From the root of the WAIL source working directory, run:
 
 <blockquote>docker build -t machawk1/wail .</blockquote>
 
@@ -64,15 +73,15 @@ then
 
 <blockquote>docker container run -d -it --rm -p 5920:5920 --name wail machawk1/wail</blockquote>
 
-To log into the container and view the WAIL GUI built, run:
+To log into the container to view the WAIL interface point a VNC Client to localhost:5920. The container can also be accessed via the command-line with:
 
 <blockquote>docker exec -it wail /bin/bash</blockquote>
 
 Once in the container, run the WAIL executable with:
 
-<blockquote>/wail/dist/WAIL</blockquote>
+<blockquote>./WAIL</blockquote>
 
-and take note of the plethora of errors that still need to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>.
+There still exists some issues to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>, as will be evident in the reports on the console.
 
 
 <h2>Problems? Questions?</h2>

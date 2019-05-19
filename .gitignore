@@ -3,6 +3,7 @@
 
 # Mac binary
 *.app
+*.dmg
 
 #ignore build remnants
 build/*
