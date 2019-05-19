@@ -1057,6 +1057,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if self.listbox.GetCount() == 0:
                 return
 
+            # Do not show context menu for empty placeholder
+            if self.listbox.GetItems()[0] == config.textLabel_noJobsAvailable:
+                return
+
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             self.clickedListboxItem(None)
 
