@@ -1558,7 +1558,7 @@ class Wayback(Service):
 
         print('generating ', end='')
         for file in listdir(warcsPath):
-            if file.endswith(".warc"):
+            if file.endswith(".warc") or file.endswith(".warc.gz"):
                 cdxFilePath = cdxFilePathPre + file.replace('.warc', '.cdx')
                 process = subprocess.Popen(
                     [cdxIndexerPath, join(warcsPath, file), cdxFilePath],
