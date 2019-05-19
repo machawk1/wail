@@ -7,6 +7,6 @@ exclude_paths:
 - "build/*"
 - "support/*"
 - "WAIL.spec"
-- "bundledApps/heritrix-3.4.0-20190207/*"
+- "bundledApps/heritrix-3.4.0-20190418/*"
 - "bundledApps/html/*"
 - "bundledApps/tomcat/*"
