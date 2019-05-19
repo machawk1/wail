@@ -831,7 +831,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             for file in os.listdir(htrixLibPath):
                 if file.startswith("heritrix-commons"):
                     regex = re.compile("commons-(.*)\.")
-                    return regex.findall(file)[0]
+                    h_version = regex.findall(file)[0]
+                    try:
+                        h_version = h_version[:h_version.index('-')] + '*'
+                    except ValueError:
+                        pass
+                    return h_version
 
         def getWaybackVersion(self):
             tomcatLibPath = config.tomcatPath + "/webapps/lib/"
@@ -1450,7 +1455,6 @@ class Service():
         print(chkMsg)
 
         try:
-            print('Fixing UI clipping here?')
             handle = urlopen(self.uri, None, 3)
             print('Service: ' + self.__class__.__name__ + ' is a go! ')
             return True
@@ -1771,7 +1775,13 @@ class UpdateSoftwareWindow(wx.Frame):
         for file in os.listdir(config.heritrixPath + "lib/"):
             if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
-                return regex.findall(file)[0]
+                h_version = regex.findall(file)[0]
+                try:
+                    h_version = h_version[:h_version.index('-')] + '*'
+                except ValueError:
+                    print('NO DASH')
+                    pass
+                return h_version
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     def getWaybackVersion(self):
