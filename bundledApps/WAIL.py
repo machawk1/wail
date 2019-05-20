@@ -1011,10 +1011,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
 
-            crawlId = self.listbox.GetString(self.listbox.GetSelection())
+            selectionIndex = self.listbox.GetSelection()
+            if selectionIndex == -1:
+                raise InvalidSelectionContextException('Selected empty space')
+
+            crawlId = self.listbox.GetString(selectionIndex)
             if crawlId == config.textLabel_noJobsAvailable:
                 self.clearInfoPanel()
-                return
+                raise InvalidSelectionContextException('Selected empty placeholder')
 
             jobLaunches = Heritrix().getJobLaunches(crawlId)
             if self.panelUpdater:  # Kill any currently running timer
@@ -1062,8 +1066,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 return
 
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
-            self.clickedListboxItem(None)
+            try:
+                self.clickedListboxItem(None)
+            except InvalidSelectionContextException:
+                # Do not create context menu for invalid selection
+                return
 
+            # Create context menu for selection
             menu = wx.Menu()
             menu.Append(1, config.menu_forceCrawlFinish)
             menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
@@ -1962,6 +1971,9 @@ class UpdateSoftwareWindow(wx.Frame):
             (updateFrameIcons_pos_left, updateFrameIcons_pos_top[2]),
             (openwayback_64.GetWidth(), openwayback_64.GetHeight()))
 
+
+class InvalidSelectionContextException(Exception):
+    '''raise when attempt to create a context menu without context'''
 
 mainAppWindow = None
 
