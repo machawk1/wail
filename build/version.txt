@@ -6,8 +6,8 @@ VSVersionInfo(
   ffi=FixedFileInfo(
     # filevers and prodvers should be always a tuple with four items: (1, 2, 3, 4)
     # Set not needed items to zero 0.
-    filevers=(2019, 4, 4, 0),
-    prodvers=(2019, 4, 4, 0),
+    filevers=(2019, 5, 21, 0),
+    prodvers=(2019, 5, 21, 0),
     # Contains a bitmask that specifies the valid bits 'flags'
     mask=0x3f, 
     # Contains a bitmask that specifies the Boolean attributes of the file.
@@ -31,10 +31,10 @@ VSVersionInfo(
         u'040904b0', 
         [StringStruct(u'CompanyName', u'Mat Kelly'), 
         StringStruct(u'ProductName', u'Web Archiving Integration Layer (WAIL)'), 
-        StringStruct(u'ProductVersion', u'2019, 4, 4, 0'),
+        StringStruct(u'ProductVersion', u'2019, 5, 21, 0'),
         StringStruct(u'InternalName', u'WAIL'), 
         StringStruct(u'OriginalFilename', u'wail.exe'), 
-        StringStruct(u'FileVersion', u'2019, 4, 4, 0'),
+        StringStruct(u'FileVersion', u'2019, 5, 21, 0'),
         StringStruct(u'FileDescription', u'Web Archiving Integration Layer (WAIL): Web archiving tools in a graphical user interface.'),
         StringStruct(u'LegalCopyright', u'MIT'),
         StringStruct(u'LegalTrademarks', u'MIT'),])
