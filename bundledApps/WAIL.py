@@ -466,8 +466,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Check system to verify that Java variables have been set.
         Notify the user if not and initialize the Java installation process.
         """
-        if util.is_windows() or util.is_linux():
-            return  # Allow windows to proceed w/o java checks for now.
+        #if util.is_windows() or util.is_linux():
+        #    return True # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
         JRE_HOME_defined = 'JRE_HOME' in os.environ
@@ -475,43 +475,23 @@ class WAILGUIFrame_Basic(wx.Panel):
             jreHome = ''
             javaHome = ''
             jdkPath = ''
-            if util.is_macOS():
+            if util.is_macOS() or util.is_windows():
+                print("JAVA HOME")
+                print(os.environ["JAVA_HOME"])
                 jdkPath = config.jdkPath
                 jreHome = config.jreHome
                 javaHome = config.javaHome
+                print("Setting JDK Paths!")
+                print(jdkPath)
+                print("JAVA HOME")
+                print(os.environ["JAVA_HOME"])
             else:  # Win, incomplete
                 # os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
                 pass
 
-            # Find java 1.7
-            # /usr/libexec/java_home -v 1.7
-            jdkInstalled = os.path.isdir(jdkPath)
-
-            if jdkInstalled:
-                os.environ["JAVA_HOME"] = javaHome
-                os.environ["JRE_HOME"] = jreHome
-                self.ensureEnvironmentVariablesAreSet()
-            else:
-                d = wx.MessageDialog(self, config.msg_installJava,
-                                     "Install now?", config.wail_style_yesNo)
-                result = d.ShowModal()
-                d.Destroy()
-
-                if result == wx.ID_NO:
-                    sys.exit()
-
-                prog = wx.ProgressDialog(
-                    config.msg_java_resolving,
-                    config.msg_java7_downloading,
-                    maximum=100,
-                    style=wx.PD_APP_MODAL|wx.PD_SMOOTH|wx.PD_CAN_ABORT|wx.PD_AUTO_HIDE)
-
-                prog.Pulse()
-                prog.Show()
-
-                thread.start_new_thread(self.installJava, (prog,))
-
-            return False
+            os.environ["JAVA_HOME"] = javaHome
+            os.environ["JRE_HOME"] = jreHome
+            self.ensureEnvironmentVariablesAreSet()
         return True
 
     def installJava(self, prog):
@@ -643,6 +623,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         cmd = '{0} -a {1}:{2}'.format(
             config.heritrixBinPath, config.heritrixCredentials_username,
             config.heritrixCredentials_password)
+
+        print(cmd)
 
         # TODO: shell=True was added for OS X
         # TODO: verify that functionality persists on Win64
@@ -1529,6 +1511,8 @@ class Wayback(Service):
         #    config.serviceEnabledLabel_FIXING)
         mainAppWindow.advConfig.servicesPanel.setWaybackStatus(config.serviceEnabledLabel_FIXING)
         cmd = config.tomcatPathStart
+        mainAppWindow.basicConfig.ensureEnvironmentVariablesAreSet()
+
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)

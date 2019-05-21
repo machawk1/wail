@@ -176,17 +176,6 @@ port_replay = '8080'
 
 index_timer_seconds = 10.0
 
-uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
-uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
-uri_wayback_allMementos = uri_wayback + '*/'
-uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrixJob = uri_heritrix + '/engine/job/'
-
 jdkPath = ""
 jreHome = ""
 javaHome = ""
@@ -273,9 +262,12 @@ elif sys.platform.startswith('win32'):
     wailPath = "C:\\wail"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
+    jdkPath = wailPath + "\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\"
+    jreHome = jdkPath
+    javaHome = jdkPath
 
     heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
-    heritrixBinPath = heritrixPath + "\\bin\\heritrix.cmd"
+    heritrixBinPath = heritrixPath + "bin\\heritrix.cmd"
     heritrixJobPath = heritrixPath + "\\jobs\\"
     tomcatPath = wailPath + "\\bundledApps\\tomcat"
     warcsFolder = wailPath + "\\archives"
@@ -283,3 +275,17 @@ elif sys.platform.startswith('win32'):
     archivesJSON = wailPath + "\\config\\archives.json"
     tomcatPathStart = wailPath + "\\support\\catalina_start.bat"
     tomcatPathStop = wailPath + "\\support\\catalina_stop.bat"
+
+    host_crawler = 'localhost'
+    host_replay = 'localhost'
+
+uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
+uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
+uri_wayback_allMementos = uri_wayback + '*/'
+uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrixJob = uri_heritrix + '/engine/job/'
