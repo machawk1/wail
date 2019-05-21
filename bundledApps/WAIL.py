@@ -1512,8 +1512,7 @@ class Wayback(Service):
         mainAppWindow.advConfig.servicesPanel.setWaybackStatus(config.serviceEnabledLabel_FIXING)
         cmd = config.tomcatPathStart
         mainAppWindow.basicConfig.ensureEnvironmentVariablesAreSet()
-        print("CCCMD")
-        print(cmd)
+
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
