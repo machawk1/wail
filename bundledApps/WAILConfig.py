@@ -273,12 +273,12 @@ elif sys.platform.startswith('win32'):
     wailPath = "C:\\wail"
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
-    jdkPath = wailPath + "\\bundledApps\\Java\\Windows\\jdk1.7.0_80.jdk\\"
+    jdkPath = wailPath + "\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\"
     jreHome = jdkPath
     javaHome = jdkPath
 
     heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
-    heritrixBinPath = heritrixPath + "\\bin\\heritrix.cmd"
+    heritrixBinPath = heritrixPath + "bin\\heritrix.cmd"
     heritrixJobPath = heritrixPath + "\\jobs\\"
     tomcatPath = wailPath + "\\bundledApps\\tomcat"
     warcsFolder = wailPath + "\\archives"

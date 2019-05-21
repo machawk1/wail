@@ -623,6 +623,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         cmd = '{0} -a {1}:{2}'.format(
             config.heritrixBinPath, config.heritrixCredentials_username,
             config.heritrixCredentials_password)
+
         print(cmd)
 
         # TODO: shell=True was added for OS X
