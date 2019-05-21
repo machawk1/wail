@@ -1080,6 +1080,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.deleteHeritrixJob, id=2)
             menu.Append(3, config.menu_viewJobInWebBrowser)
             menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)
+            menu.Append(4, config.menu_rebuildJob)
+            menu.Bind(wx.EVT_MENU, self.rebuildJob, id=4)
+            menu.Append(5, config.menu_rebuildAndLaunchJob)
+            menu.Bind(wx.EVT_MENU, self.rebuildAndLaunchJob, id=5)
             mainAppWindow.PopupMenu(
                 menu, mainAppWindow.ScreenToClient(wx.GetMousePosition()))
             menu.Destroy()
@@ -1139,6 +1143,15 @@ class WAILGUIFrame_Advanced(wx.Panel):
             """
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
             webbrowser.open_new_tab(config.uri_heritrixJob + jobId)
+
+        def rebuildJob(self, evt):
+            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+            self.sendActionToHeritrix('build', jobId)
+
+        def rebuildAndLaunchJob(self, evt):
+            jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
+            self.sendActionToHeritrix('build', jobId)
+            self.sendActionToHeritrix('launch', jobId)
 
         def openConfigInTextEditor(self, evt):
             # TODO, most systems don't know how to open a cxml file.
