@@ -274,6 +274,8 @@ elif sys.platform.startswith('win32'):
 
     aboutWindow_iconPath = wailPath + aboutWindow_iconPath
     jdkPath = wailPath + "\\bundledApps\\Java\\Windows\\jdk1.7.0_80.jdk\\"
+    jreHome = jdkPath
+    javaHome = jdkPath
 
     heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
     heritrixBinPath = heritrixPath + "\\bin\\heritrix.cmd"
