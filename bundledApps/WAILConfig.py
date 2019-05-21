@@ -176,17 +176,6 @@ port_replay = '8080'
 
 index_timer_seconds = 10.0
 
-uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
-uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
-uri_wayback_allMementos = uri_wayback + '*/'
-uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrixJob = uri_heritrix + '/engine/job/'
-
 jdkPath = ""
 jreHome = ""
 javaHome = ""
@@ -289,3 +278,14 @@ elif sys.platform.startswith('win32'):
 
     host_crawler = 'localhost'
     host_replay = 'localhost'
+
+uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
+uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
+uri_wayback_allMementos = uri_wayback + '*/'
+uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
+    heritrixCredentials_username, heritrixCredentials_password,
+    host_crawler, port_crawler)
+uri_heritrixJob = uri_heritrix + '/engine/job/'
