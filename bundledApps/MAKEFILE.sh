@@ -51,7 +51,6 @@ esac
 
 installRequirements ()
 {
-  #pip install --upgrade --trusted-host wxpython.org --pre -f http://wxpython.org/Phoenix/snapshot-builds/ wxPython_Phoenix
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
 }
@@ -84,6 +83,14 @@ cleanupByproducts ()
   rm -r ./build/WAIL
 }
 
+optimizeforMac ()
+{
+  # Remove Windows supporting package
+  rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
+  rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
+  rm -rf ./dist/WAIL.app/bundledApps/Java/Windows
+}
+
 buildDiskImage ()
 {
   # Create a dmg
@@ -102,6 +109,7 @@ tweakOS ()
 installRequirements
 createBinary
 deleteBinary # Remove previous version
+optimizeforMac
 mvProducts
 cleanupByproducts
 
