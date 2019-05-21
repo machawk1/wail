@@ -1459,7 +1459,6 @@ class Service():
         print(chkMsg)
 
         try:
-            print('Fixing UI clipping here?')
             handle = urlopen(self.uri, None, 3)
             print('Service: ' + self.__class__.__name__ + ' is a go! ')
             return True
