@@ -162,6 +162,8 @@ menuTitle_window_wail = 'Web Archiving Integration Layer'
 menu_destroyJob = 'Destroy Job (Does not delete archive)'
 menu_forceCrawlFinish = 'Force crawl to finish'
 menu_viewJobInWebBrowser = 'View job in web browser'
+menu_rebuildJob = 'Rebuild job'
+menu_rebuildAndLaunchJob = 'Rebuild and launch job'
 
 heritrixCredentials_username = 'lorem'
 heritrixCredentials_password = 'ipsum'
