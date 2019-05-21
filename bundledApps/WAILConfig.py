@@ -286,3 +286,6 @@ elif sys.platform.startswith('win32'):
     archivesJSON = wailPath + "\\config\\archives.json"
     tomcatPathStart = wailPath + "\\support\\catalina_start.bat"
     tomcatPathStop = wailPath + "\\support\\catalina_stop.bat"
+
+    host_crawler = 'localhost'
+    host_replay = 'localhost'
