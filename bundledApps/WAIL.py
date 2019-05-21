@@ -466,7 +466,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Check system to verify that Java variables have been set.
         Notify the user if not and initialize the Java installation process.
         """
-        #if util.is_windows() or util.is_linux():
+        # if util.is_windows() or util.is_linux():
         #    return True # Allow windows to proceed w/o java checks for now.
 
         JAVA_HOME_defined = 'JAVA_HOME' in os.environ
@@ -476,15 +476,9 @@ class WAILGUIFrame_Basic(wx.Panel):
             javaHome = ''
             jdkPath = ''
             if util.is_macOS() or util.is_windows():
-                print("JAVA HOME")
-                print(os.environ["JAVA_HOME"])
                 jdkPath = config.jdkPath
                 jreHome = config.jreHome
                 javaHome = config.javaHome
-                print("Setting JDK Paths!")
-                print(jdkPath)
-                print("JAVA HOME")
-                print(os.environ["JAVA_HOME"])
             else:  # Win, incomplete
                 # os.environ['PATH'] # java8 does not use JRE_HOME, JAVA_HOME
                 pass
@@ -747,7 +741,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-
             self.fix_wayback = wx.Button(self, 1, config.buttonLabel_fix, style=wx.BU_EXACTFIT)
             self.fix_heritrix = wx.Button(self, 1, config.buttonLabel_fix, style=wx.BU_EXACTFIT)
 
@@ -755,7 +748,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_heritrix = wx.Button(self, 1, config.buttonLabel_kill, style=wx.BU_EXACTFIT)
 
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_heritrix= wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
 
             self.draw()
             thread.start_new_thread(self.updateServiceStatuses, ())
@@ -772,27 +765,25 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.sizer = wx.BoxSizer()
 
             gs = wx.FlexGridSizer(3, 5, 0, 0)
-            #gs.SetFlexibleDirection(wx.HORIZONTAL)
 
             gs.AddMany([
                 wx.StaticText(self, wx.ID_ANY,
                               config.tabLabel_advanced_services_serviceStatus),
                 (wx.StaticText(self, wx.ID_ANY, "STATE"), 1, wx.ALIGN_CENTER_HORIZONTAL),
                 (wx.StaticText(self, wx.ID_ANY, "VERSION"), 1, wx.ALIGN_CENTER_HORIZONTAL),
-                wx.StaticText(self, wx.ID_ANY, ""), # button col 1
-                wx.StaticText(self, wx.ID_ANY, ""), # button col 2
+                wx.StaticText(self, wx.ID_ANY, ""),  # button col 1
+                wx.StaticText(self, wx.ID_ANY, ""),  # button col 2
                 (wx.StaticText(self, wx.ID_ANY, "Wayback"), 1, wx.ALIGN_CENTER_VERTICAL),
-                (self.status_wayback, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
-                (wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()), 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
+                (self.status_wayback, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getWaybackVersion()), 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
                 self.fix_wayback,
                 self.kill_wayback,
                 (wx.StaticText(self, wx.ID_ANY, "Heritrix"), 1, wx.ALIGN_CENTER_VERTICAL),
-                (self.status_heritrix, 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
-                (wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()), 1, wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL),
+                (self.status_heritrix, 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
+                (wx.StaticText(self, wx.ID_ANY, self.getHeritrixVersion()), 1, wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL),
                 self.fix_heritrix,
                 self.kill_heritrix
             ])
-            #gs.AddGrowableCol(1, 3)
             gs.AddGrowableCol(0, 1)
             gs.AddGrowableCol(1, 1)
             gs.AddGrowableCol(2, 1)
@@ -1200,11 +1191,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.startCrawlButton.SetDefault()
             self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
 
-            #depthSizer.AddMany([
-            depthSizer.Add(wx.StaticText(self, wx.ID_ANY, config.textLabel_depth), pos=(0,0), flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
-            depthSizer.Add(self.newCrawlDepthTextCtrl, pos=(0,1), flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
-            depthSizer.Add(self.startCrawlButton, pos=(0,6), span=(2,1), flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
-            #])
+            depthSizer.Add(
+                wx.StaticText(self, wx.ID_ANY, config.textLabel_depth),
+                pos=(0, 0), flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
+            depthSizer.Add(self.newCrawlDepthTextCtrl, pos=(0, 1),
+                           flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL)
+            depthSizer.Add(self.startCrawlButton, pos=(0, 6), span=(2, 1),
+                           flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT)
 
             rightColSizer.Add(depthSizer)
 
@@ -1500,14 +1493,13 @@ class Wayback(Service):
             return accessible
 
         except Exception as e:
-            print(e)
             print('Wayback(): Failed to access {0} service at {1}'.format(
                 self.__class__.__name__, self.uri
             ))
             return False
 
     def fixAsync(self, cb=None):
-        #mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel(
+        # mainAppWindow.advConfig.servicesPanel.status_wayback.SetLabel(
         #    config.serviceEnabledLabel_FIXING)
         mainAppWindow.advConfig.servicesPanel.setWaybackStatus(config.serviceEnabledLabel_FIXING)
         cmd = config.tomcatPathStart
@@ -1970,6 +1962,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
 class InvalidSelectionContextException(Exception):
     '''raise when attempt to create a context menu without context'''
+
 
 mainAppWindow = None
 
