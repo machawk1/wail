@@ -42,11 +42,11 @@ a#fork img {
     display: inline-block;
 }
 .flexy figure figcaption {
-    position: sticky;
-    top: 600px;
-    vertical-align: bottom;
+    position: relative;
+    bottom: 0px;
 }
-figure img {
+
+.flexy figure img {
     max-width: 100%;
 }
 
@@ -59,4 +59,11 @@ div#vid {
 
 .center {
     text-align: center;
+}
+
+@media only screen and (max-device-width: 480px) {
+ h3 {text-align: left; font-size: 1.0em;}
+ p {text-align: left; margin-top: 0.5em;}
+ ul {margin-top: 0.5em;}
+ .flexy {margin: 0 0 1.0em 0;}
 }
