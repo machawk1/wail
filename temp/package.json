@@ -1,0 +1,81 @@
+{
+  "name": "WAIL-UI",
+  "main": "./dist/electron-main.js",
+  "scripts": {
+    "build-main": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.electron.js --progress --profile --colors",
+    "build-renderer": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.production.js --progress --profile --colors",
+    "check-dev-engines": "node node_modules/fbjs-scripts/node/check-dev-engines.js package.json",
+    "package": "cross-env NODE_ENV=production node -r babel-register build-binary.js",
+    "package-wextra": "cross-env NODE_ENV=production node -r babel-register build-binary.js --we",
+    "package-all": "npm run package -- --all",
+    "package-windows": "npm run package -- --win",
+    "package-linux": "npm run package -- --linux ",
+    "package-osx": "npm run package -- --osx",
+    "standard": "standard --verbose | snazzy",
+    "start-dev": "cross-env concurrently --kill-others \"npm run dev-electron\" \"npm run dev\"",
+    "npm-install": "npm install"
+  },
+  "eslintConfig": {
+    "parser": "babel-eslint",
+    "env": {
+      "node": true,
+      "es6": true
+    },
+    "globals": [
+      "React",
+      "window"
+    ],
+    "rules": {
+      "comma-dangle": "off",
+      "react/jsx-boolean-value": "off",
+      "react/jsx-space-before-closing": "off",
+      "no-unused-var": "off",
+      "no-undef": "off"
+    },
+    "extends": [
+      "standard",
+      "standard-react"
+    ]
+  },
+  "standard": {
+    "parser": "babel-eslint",
+    "ignore": [
+      "archiveIndexes/*",
+      "archives/*",
+      "buildResources/*",
+      "bundledApps",
+      "config/*",
+      "*.cxml",
+      "dist/*",
+      "Dockerfile",
+      "LICENSE",
+      "*.log",
+      "*.md",
+      "node_modules/*",
+      "package.js",
+      "release/*",
+      "*.sh",
+      "support/*",
+      "test/*",
+      "tools/*",
+      "*.txt",
+      "waillogs/*",
+      "webpack.*",
+      "*.xml",
+      "*.yml",
+      "zips/*"
+    ],
+    "globals": [
+      "React",
+      "window"
+    ],
+    "env": {
+      "node": true,
+      "browser": true,
+      "es6": true
+    },
+    "rules": {
+      "comma-dangle": "off"
+    }
+  }
+}

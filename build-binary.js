@@ -1,27 +1,28 @@
-import fs from 'fs-extra'
-import Promise from 'bluebird'
-import util from 'util'
-import path from 'path'
-import os from 'os'
-import webpack from 'webpack'
-import electronCfg from './webpack.config.electron.js'
-import cfg from './webpack.config.production.js'
-import packager from 'electron-packager'
-import pkg from './package.json'
-import moveTo from './tools/moveJDKMemgator'
-Promise.promisifyAll(fs)
+const fs = require('fs-extra')
+const path = require('path')
+const os = require('os')
+const Promise = require('bluebird')
+const webpack = require('webpack')
+const zip = require('cross-zip')
+const cp = require('child_process')
+const electronCfg = require('./webpackConfigs/ui/webpack.config.electron.js')
+const cfgUI = require('./webpackConfigs/ui/webpack.config.production.js')
+const cfgCore = require('./webpackConfigs/core/webpack.config.production.js')
+const packager = require('electron-packager')
+const pkg = require('./package.json')
+const moveThemP = require('./tools/noImportMoveJdkMemgator').moveThemP
 
 const argv = require('minimist')(process.argv.slice(2))
-const cwd = path.resolve('.')
-
+const cwd = process.cwd()
 const iconPath = path.normalize(path.join(cwd, 'build/icons/whale.ico'))
+// fs.emptyDirSync(path.join(cwd, 'dist'))
 
 const darwinBuild = {
   icon: 'whale.icns',
   iconPath: path.normalize(path.join(cwd, 'buildResources/osx/whale.icns')),
   archiveIcon: 'archive.icns',
   archiveIconPath: path.normalize(path.join(cwd, 'buildResources/osx/archive.icns')),
-  extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist')),
+  extendPlist: path.normalize(path.join(cwd, 'buildResources/osx/Extended-Info.plist'))
 }
 
 const deps = Object.keys(pkg.dependencies)
@@ -31,28 +32,41 @@ const shouldBuildAll = argv.all || false
 const shouldBuildWindows = argv.win || false
 const shouldBuildOSX = argv.osx || false
 const shouldBuildLinux = argv.linux || false
-const shouldBuildWithExtra = argv.we || false
 const shouldBuildCurrent = !shouldBuildAll && !shouldBuildLinux && !shouldBuildOSX && !shouldBuildWindows
 
 const ignore = [
-  '^/archiveIndexes/',
-  '^/archives/',
+  '^/archiveIndexes($|/)',
+  '^/archives2($|/)',
   '^/.babelrc($|/)',
+  '^/node_modules/.cache($|/)',
+  '^/.babelrc2($|/)',
+  '^/.babelrc.bk($|/)',
+  '^/.gitattributes$',
+  '^/depDifWinRest.txt$',
   '^/build($|/)',
   '^/build-binary.js$',
   '^/build-binary-old.js$',
-  '^/bundledApps/heritrix-3.2.0($|/)',
-  '^/bundledApps/heritrix-3.3.0/heritrix_out.log$',
-  '^/bundledApps/heritrix-3.3.0/adhoc.keystore$',
-  '^/bundledApps/heritrix-3.3.0/heritrix.pid$',
-  '^/bundledApps/heritrix-3.3.0/jobs/',
+  '^/bundledApps/heritrix/heritrix_out.log$',
+  '^/bundledApps/heritrix/adhoc.keystore$',
+  '^/bundledApps/heritrix/heritrix.pid$',
+  '^/bundledApps/heritrix/jobs/',
   '^/bundledApps/memgator($|/)',
+  '^/bundledApps/old($|/)',
+  '^/bundledApps/bk($|/)',
   '^/bundledApps/openjdk($|/)',
   '^/bundledApps/wailpy($|/)',
+  '^/bundledApps/tomcat($|/)',
+  '^/bundledApps/pywb_($|/)',
   '^/.codeclimate.yml($|/)',
+  '^/crawler-beans_bk.cxml$',
+  '^/dev_coreData',
+  '^/coreData($|/)',
   '^/doElectron.sh$',
+  '^/wail-core_old($|/)',
   '^/bootstrap.sh$',
   '^/npm-debug.log.*$',
+  '^/tests($|/)',
+  '^/chromDLogs($|/)',
   '^/electron-main-dev.js$',
   '^/.gitignore($|/)',
   '^/.idea($|/)',
@@ -66,16 +80,27 @@ const ignore = [
   '^/tools($|/)',
   '^/waillogs($|/)',
   '^/webpack.config.*$',
+  '^/webpackConfigs($|/)$',
+  '^/buildResources($|/)$',
+  '^/sharedUtil($|/)$',
+  '^/wail_utils($|/)$',
+  '^/wail-core_old($|/)$',
+  '^/wail-config($|/)$',
+  '^/bundledApps/pywb_old($|/)$',
+  '^/support($|/)$',
+  '^/temp($|/)$',
+  '^/yarn.lock$',
   '^/zips($|/)'
 ].concat(devDeps.map(name => `/node_modules/${name}($|/)`))
   .concat(
     deps.filter(name => !electronCfg.externals.includes(name))
+      .filter(name => !cfgUI.externals.includes(name))
       .map(name => `/node_modules/${name}($|/)`)
   )
 
 const DEFAULT_OPTS = {
-  'app-copyright': 'jberlin',
-  'app-version': pkg.version,
+  appCopyright: 'Copyright © 2016-2017 Web Science And Digital Libraries Research Group ODU CS',
+  appVersion: pkg.version,
   asar: false,
   prune: true,
   dir: cwd,
@@ -83,31 +108,29 @@ const DEFAULT_OPTS = {
   ignore,
   overwrite: true,
   out: path.normalize(path.join(cwd, 'release')),
-  version: require('electron-prebuilt/package.json').version
+  electronVersion: '1.8.1'
 }
 
 // OSX
 const darwinSpecificOpts = {
 
-  'app-bundle-id': 'wsdl.cs.odu.edu.wail',
+  'appBundleId': 'wsdl.cs.odu.edu.wail',
 
   // The application category type, as shown in the Finder via 'View' -> 'Arrange by
   // Application Category' when viewing the Applications directory (OS X only).
-  'app-category-type': 'public.app-category.utilities',
+  'appCategoryType': 'public.app-category.utilities',
 
   // // The bundle identifier to use in the application helper's plist (OS X only).
-  'helper-bundle-id': 'wsdl.wail.cs.odu.edu-helper',
+  'helperBundleId': 'wsdl.wail.cs.odu.edu-helper',
 
-  'extend-info': darwinBuild.extendPlist,
-
-  'extra-resource': [ darwinBuild.archiveIconPath, darwinBuild.iconPath ],
+  'extraResource': [darwinBuild.archiveIconPath, darwinBuild.iconPath],
 
   // Application icon.
   icon: darwinBuild.iconPath
 }
 
 const windowsSpecificOpts = {
-  'version-string': {
+  win32metadata: {
 
     // Company that produced the file.
     CompanyName: 'wsdl.cs.odu.edu',
@@ -134,7 +157,19 @@ const windowsSpecificOpts = {
 }
 
 const linuxSpecificOpts = {
-  icon: path.normalize(path.join(cwd, 'buildResources/linux/icon.png')),
+  icon: path.normalize(path.join(cwd, 'buildResources/linux/icon.png'))
+}
+
+function emptyRelease () {
+  return new Promise((resolve, reject) => {
+    fs.emptyDir(path.join(cwd, 'release'), error => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+  })
 }
 
 function build (cfg) {
@@ -146,269 +181,180 @@ function build (cfg) {
   })
 }
 
-function pack (plat, arch, cb) {
-  // there is no darwin ia32 electron
-  if (plat === 'darwin' && arch === 'ia32') return
-
-  let opts
-  if (plat === 'darwin') {
-    opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {
-      platform: plat,
-      arch
-    })
-  } else if (plat === 'win32') {
-    opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {
-      platform: plat,
-      arch
-    })
-  } else {
-    /* linux */
-    opts = Object.assign({}, DEFAULT_OPTS, linuxSpecificOpts, {
-      platform: plat,
-      arch
-    })
-  }
-
-  packager(opts, cb)
-}
-
-function createDMG (appPath, cb) {
-  let _createDMG = require('electron-installer-dmg')
-  let out = path.normalize(path.join(cwd, 'release/wail-darwin-dmg'))
-  fs.emptyDirSync(out)
-  let dmgOpts = {
-    appPath,
-    debug: true,
-    name: DEFAULT_OPTS.name,
-    icon: darwinSpecificOpts.icon,
-    overwrite: true,
-    out
-  }
-
-  _createDMG(dmgOpts, error => {
-    if (error) {
-      console.error('There was an error in creating the dmg file', error)
-    } else {
-      if (cb) {
-        cb()
+function zipUp (inPath, outPath) {
+  return new Promise((resolve, reject) => {
+    zip.zip(inPath, outPath, (error) => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
       }
-    }
+    })
   })
 }
 
-function createWindowsInstallers (plat, arch, cb) {
-  let winInstaller = require('electron-winstaller')
-  let outputDirectory = path.normalize(path.join(cwd, `release/wail-${plat}-${arch}-installer`))
-  fs.emptyDirSync(outputDirectory)
-  let winInstallerOpts = {
-    appDirectory: path.normalize(path.join(cwd, `release/wail-${plat}-${arch}`)),
-    authors: pkg.contributors,
-    description: pkg.description,
-    exe: `${DEFAULT_OPTS.name}.exe`,
-    iconUrl: iconPath,
-    loadingGif: path.normalize(path.join(cwd, 'buildResources/winLinux/mLogo_animated.gif')),
-    name: DEFAULT_OPTS.name,
-    noMsi: true,
-    outputDirectory,
-    productName: DEFAULT_OPTS.name,
-    setupExe: `${DEFAULT_OPTS.name}Setup.exe`,
-    setupIcon: iconPath,
-    title: DEFAULT_OPTS.name,
-    usePackageJson: false,
-    version: pkg.version
-  }
-
-  console.log(`Creating windows installer for ${arch}. This could take some time`)
-  winInstaller.createWindowsInstaller(winInstallerOpts)
-    .then(() => cb())
-    .catch(error => console.error(`There was an error in creating the windows installer for ${arch}`, error))
-}
-
-function createDeb_redHat (arc, cb) {
-  let deb = require('electron-installer-debian')
-  let deb2 = require('nobin-debian-installer')
-  let redHat = require('electron-installer-redhat')
-  let arch = arc === 'x64' ? 'amd64' : 'i386'
-  let debOptions = {
-    name: DEFAULT_OPTS.name,
-    productName: DEFAULT_OPTS.name,
-    genericName: DEFAULT_OPTS.name,
-    maintainer: 'John Berlin(jberlin@cs.odu.edu)',
-    arch,
-    productDescription: pkg.description,
-    src: `release/wail-linux-${arc}`,
-    dest: 'release/installers/',
-    version: pkg.version,
-    revision: pkg.revision,
-    icon: {
-      '32x32': path.normalize(path.join(cwd, 'build/icons/whale_32.png')),
-      '64x64': path.normalize(path.join(cwd, 'build/icons/whale_64.png')),
-      '128x128': path.normalize(path.join(cwd, 'build/icons/whale_128.png')),
-      '256x256': path.normalize(path.join(cwd, 'build/icons/whale_256.png'))
-    },
-    section: 'utils',
-    depends: [
-      'gconf2',
-      'libxss1',
-      'gconf-service',
-      'gvfs-bin',
-      'libc6',
-      'libcap2',
-      'libgtk2.0-0',
-      'libudev0 | libudev1',
-      'libgcrypt11 | libgcrypt20',
-      'libnotify4',
-      'libnss3',
-      'libxtst6',
-      'python',
-      'xdg-utils'
-    ],
-    recommends: [
-      'lsb-release'
-    ],
-    suggests: [
-      'gir1.2-gnomekeyring-1.0',
-      'libgnome-keyring0'
-    ],
-    lintianOverrides: [
-      'changelog-file-missing-in-native-package'
-    ]
-  }
-
-  let redOpts = {
-    name: DEFAULT_OPTS.name,
-    productName: DEFAULT_OPTS.name,
-    genericName: DEFAULT_OPTS.name,
-    maintainer: 'John Berlin(jberlin@cs.odu.edu)',
-    arch,
-    productDescription: pkg.description,
-    src: `release/wail-linux-${arc}`,
-    dest: 'release/installers/',
-    version: pkg.version,
-    revision: pkg.revision,
-    icon: {
-      '32x32': path.normalize(path.join(cwd, 'build/icons/whale_32.png')),
-      '64x64': path.normalize(path.join(cwd, 'build/icons/whale_64.png')),
-      '128x128': path.normalize(path.join(cwd, 'build/icons/whale_128.png')),
-      '256x256': path.normalize(path.join(cwd, 'build/icons/whale_256.png'))
-    },
-    description: pkg.description,
-    license: pkg.license,
-
-    group: undefined,
-    requires: [
-      'lsb'
-    ],
-    bin: pkg.name,
-    categories: [
-      'GNOME',
-      'GTK',
-      'Utility'
-    ]
-  }
-
-  deb(debOptions, err => {
-    if (err) {
-      console.log(`There was an error in creating debian package for ${arc}`)
-      console.log(`Attempting to create red-hat package for ${arc}`)
-      console.error(err)
-    } else {
-      console.log(`Created debian package for ${arc}`)
-      console.log(`Creating red-hat package for ${arc}`)
-    }
-    redHat(debOptions, rhErr => {
+function packWindows (platform, arch) {
+  return new Promise((resolve, reject) => {
+    let opts = Object.assign({}, DEFAULT_OPTS, windowsSpecificOpts, {platform, arch})
+    packager(opts, (err) => {
       if (err) {
-        console.log(`There was an error in creating redHat package for ${arc}`)
-        console.error(rhErr)
-        cb()
+        reject(err)
       } else {
-        console.log(`Created redHat package for ${arc}`)
+        resolve()
       }
     })
   })
 }
 
-function log (plat, arch) {
-  return (err, filepath) => {
-    if (err) return console.error(err)
-    let moveToPath
-    let cb
-    if (plat === 'darwin') {
-      let appPath = `release/wail-${plat}-${arch}/wail.app`
-      moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
-      let aIconPath = `${appPath}/Contents/Resources/${darwinBuild.archiveIcon}`
-      cb = () => {
-        // fs.copySync(darwinBuild.archiveIconPath, path.normalize(path.join(cwd, aIconPath)))
-        if (process.platform === 'darwin') {
-          console.log('Building dmg')
-          createDMG(appPath, () => console.log(`${plat}-${arch} finished!`))
-          // console.log(`${plat}-${arch} finished!`)
-        } else {
-          console.error(`Can not build dmg file on this operating system [${plat}-${arch}]. It must be done on OSX`)
-          console.log(`${plat}-${arch} finished!`)
-        }
-      }
-    } else {
-      if (plat === 'win32') {
-        cb = () => {
-          createWindowsInstallers(plat, arch, () => console.log(`${plat}-${arch} finished!`))
-        }
+function packDarwin (platform, arch) {
+  return new Promise((resolve, reject) => {
+    let opts = Object.assign({}, DEFAULT_OPTS, darwinSpecificOpts, {platform, arch})
+    packager(opts, (err) => {
+      if (err) {
+        reject(err)
       } else {
-        // cb = () => {
-        //   createDeb_redHat(arch, () => console.log(`${plat}-${arch} finished!`))
-        // }
-        console.log(`${plat}-${arch} finished!`)
+        resolve()
       }
-      moveToPath = `release/wail-${plat}-${arch}/resources/app/bundledApps`
+    })
+  })
+}
+
+function makeDMG (appPath) {
+  return new Promise((resolve, reject) => {
+    let _createDMG = require('electron-installer-dmg')
+    let out = path.join(cwd, 'release', 'wail-darwin-dmg')
+    fs.emptyDirSync(out)
+    let dmgOpts = {
+      appPath,
+      debug: true,
+      name: DEFAULT_OPTS.name,
+      icon: darwinSpecificOpts.icon,
+      overwrite: true,
+      out
     }
-    let releasePath = path.normalize(path.join(cwd, moveToPath))
-    moveTo({ arch: `${plat}${arch}`, to: releasePath }, cb)
+    _createDMG(dmgOpts, error => {
+      if (error) {
+        reject(error)
+      } else {
+        resolve()
+      }
+    })
+  })
+}
+
+function packLinux (platform, arch) {
+  return new Promise((resolve, reject) => {
+    let opts = Object.assign({}, DEFAULT_OPTS, linuxSpecificOpts, {platform, arch})
+    packager(opts, (err) => {
+      if (err) {
+        reject(err)
+      } else {
+        resolve()
+      }
+    })
+  })
+}
+
+async function darwinDoBuild (platform, arch) {
+  if (arch === 'ia32') return
+  console.log(`building the binary for ${platform}-${arch}`)
+  let packagedPath = path.join(cwd, 'release', `WAIL-${platform}-${arch}`)
+  let appPath = `${packagedPath}/WAIL.app`
+  let moveToPath = `${appPath}/Contents/Resources/app/bundledApps`
+  await packDarwin(platform, arch)
+  await moveThemP({arch: `${platform}${arch}`, to: moveToPath})
+  console.log('Building dmg')
+  await makeDMG(appPath)
+  console.log(`zipping up the release for ${platform}-${arch}`)
+  await zipUp(appPath, `${packagedPath}.zip`)
+  console.log(`${platform}-${arch} finished!`)
+}
+
+async function linuxDoBuild (platform, arch) {
+  console.log(`building the binary for ${platform}-${arch}`)
+  let packagedPath = path.join(cwd, `release/WAIL-${platform}-${arch}`)
+  let moveToPath = `${packagedPath}/resources/app/bundledApps`
+  await packLinux(platform, arch)
+  await moveThemP({arch: `${platform}${arch}`, to: moveToPath})
+  console.log(`zipping up the release for ${platform}-${arch}`)
+  await zipUp(packagedPath, `${packagedPath}.zip`)
+  console.log(`${platform}-${arch} finished!`)
+}
+
+async function windowsDoBuild (platform, arch) {
+  console.log(`building the binary for ${platform}-${arch}`)
+  let packagedPath = path.join(cwd, 'release', `WAIL-${platform}-${arch}`)
+  let moveToPath = path.join(packagedPath, 'resources', 'app', 'bundledApps')
+  await packWindows(platform, arch)
+  await moveThemP({arch: `${platform}${arch}`, to: moveToPath})
+  console.log(`zipping up the release for ${platform}-${arch}`)
+  await zipUp(packagedPath, `${packagedPath}.zip`)
+  console.log(`${platform}-${arch} finished!`)
+}
+
+async function buildForPlatArch (plats, archs) {
+  let i = 0
+  let plen = plats.length
+  let alen = archs.length
+  for (; i < plen; ++i) {
+    let plat = plats[i]
+    let j = 0
+    for (; j < alen; ++j) {
+      let arch = archs[j]
+      if (plat === 'darwin') {
+        await darwinDoBuild(plat, arch)
+      } else if (plat === 'linux') {
+        await linuxDoBuild(plat, arch)
+      } else {
+        await windowsDoBuild(plat, arch)
+      }
+    }
   }
 }
 
-fs.emptyDirSync(path.join(cwd, 'dist'))
-fs.emptyDirSync(path.join(cwd, 'release'))
-
-console.log('building webpack.config.electron')
-build(electronCfg)
-  .then((stats) => {
-    console.log('building webpack.config.production')
-    build(cfg)
-  })
-  .then((stats) => {
-    if (shouldBuildCurrent) {
-      console.log(`building the binary for ${os.platform()}-${os.arch()}`)
-      pack(os.platform(), os.arch(), log(os.platform(), os.arch()))
+async function doBuild () {
+  console.log('Building WAIL')
+  console.log('Transpiling and Creating Single File WAIL-Electron-Main')
+  await build(electronCfg)
+  console.log('Transpiling and Creating Single File WAIL-UI')
+  await build(cfgUI)
+  console.log('Transpiling and Creating Single File WAIL-Core')
+  await build(cfgCore)
+  console.log('cleaning previous releases')
+  await emptyRelease()
+  if (shouldBuildCurrent) {
+    const thePlat = os.platform()
+    if (thePlat === 'darwin') {
+      await darwinDoBuild(thePlat, os.arch())
+    } else if (thePlat === 'linux') {
+      await linuxDoBuild(thePlat, os.arch())
     } else {
-      let buildFor
-      let archs
-      let platforms
-      if (shouldBuildAll) {
-        buildFor = 'building for all platforms'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux', 'win32', 'darwin' ]
-      } else if (shouldBuildLinux) {
-        buildFor = 'building for linux'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'linux' ]
-      } else if (shouldBuildOSX) {
-        buildFor = 'building for OSX'
-        archs = [ 'x64' ]
-        platforms = [ 'darwin' ]
-      } else {
-        buildFor = 'building for Windows'
-        archs = [ 'ia32', 'x64' ]
-        platforms = [ 'win32' ]
-      }
-      console.log(buildFor)
-      platforms.forEach(plat => {
-        archs.forEach(arch => {
-          console.log(`building the binary for ${plat}-${arch}`)
-          pack(plat, arch, log(plat, arch))
-        })
-      })
+      await windowsDoBuild(thePlat, os.arch())
     }
+  } else {
+    let archs
+    let platforms
+    if (shouldBuildAll) {
+      archs = ['ia32', 'x64']
+      platforms = ['linux', 'win32', 'darwin']
+    } else if (shouldBuildLinux) {
+      archs = ['ia32', 'x64']
+      platforms = ['linux']
+    } else if (shouldBuildOSX) {
+      archs = ['x64']
+      platforms = ['darwin']
+    } else {
+      archs = ['ia32', 'x64']
+      platforms = ['win32']
+    }
+    await buildForPlatArch(platforms, archs)
+  }
+}
+
+doBuild()
+  .then(() => {
+    console.log('done')
   })
-  .catch(err => {
-    console.error(err)
+  .catch(error => {
+    console.error('failed', error)
   })

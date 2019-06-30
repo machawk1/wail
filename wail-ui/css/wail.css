@@ -1,0 +1,410 @@
+@charset "UTF-8";
+/* wail */
+
+/*
+.dark-primary-color    { background: #00796B; }
+.default-primary-color { background: #009688; }
+.light-primary-color   { background: #B2DFDB; }
+.text-primary-color    { color: #FFFFFF; }
+.accent-color          { background: #536DFE; }
+.primary-text-color    { color: #212121; }
+.secondary-text-color  { color: #757575; }
+.divider-color         { border-color: #BDBDBD; }
+*/
+
+.wailCrawlUrl {
+    padding-left: 5px;
+    width: 200px;
+    word-wrap: break-word;
+    text-overflow: 'none';
+    whiteSpace: normal;
+    overflow: hidden;
+}
+
+.wailCrawlType {
+    width: 75px;
+    word-wrap: break-word;
+    text-align: center;
+    whiteSpace: normal;
+    cursor: default;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.collectionCard {
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+.collectionCardBody {
+    height: 100px;
+    overflow-y: auto;
+}
+
+.collectionCardBodyInfo {
+    padding: 10px 10px 16px;
+}
+
+.selectCollectionContainerDiv {
+    height: inherit;
+    margin: auto;
+    padding-top: 5px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.mementoCard {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.inheritThyWidthHeight {
+    width: inherit;
+    height: inherit;
+}
+
+.collectionSeedTable {
+    height: inherit;
+    margin: auto;
+    padding-top: 5px;
+    padding-left: 35px;
+    padding-right: 35px;
+}
+
+.widthHeightHundoPercent {
+    width: 100%;
+    height: 100%;
+}
+
+.twitterScreenNameDiv {
+    width: 75%;
+    height: 100px;
+    display: table;
+    margin: 0 auto;
+}
+
+.archiveTwitterButtons {
+    position: absolute;
+    bottom: 0;
+}
+
+.centering-container {
+    margin-right: auto;
+    margin-left: auto;
+}
+
+
+
+
+.wail-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.wail-container:before, .wail-container:after {
+    content: " ";
+    display: table;
+}
+
+.wail-container:after {
+    clear: both;
+}
+
+@media (min-width: 544px) {
+    .wail-container {
+        max-width: 570px;
+    }
+}
+
+@media (min-width: 768px) {
+    .wail-container {
+        max-width: 740px;
+    }
+}
+
+@media (min-width: 992px) {
+    .wail-container {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .wail-container {
+        max-width: 1170px;
+    }
+}
+
+.joyride-tooltip__header {
+    border-bottom-color: #0097a7;
+}
+
+.joyride-tooltip__button--secondary {
+    color: #0097a7;
+}
+
+.joyride-tooltip__button--primary{
+    background-color: #0097a7;
+}
+
+.joyride-beacon__inner  {
+    background-color: #ffb300;
+}
+
+.joyride-beacon__outer {
+    border-color: #ffb300;
+    background-color: rgba(255, 171, 0, 0.42);
+}
+
+.joyride-tooltip__button--primary:active, .joyride-tooltip__button--primary:focus, .joyride-tooltip__button--primary:hover {
+    background-color: #0097a7;
+}
+
+.hambuger {
+
+}
+
+.wail-container-fluid {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.wail-container-fluid:before, .wail-container-fluid:after {
+    content: " ";
+    display: table;
+}
+
+.wail-container-fluid:after {
+    clear: both;
+}
+
+.sortHeader {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 24px;
+    flex: 0 0 24px;
+    height: 1em;
+    width: 1em;
+    fill: currentColor;
+}
+
+.flipText {
+    display: block;
+    -webkit-transform: matrix(-1, 0, 0, 1, 0, 0);
+    -moz-transform: matrix(-1, 0, 0, 1, 0, 0);
+    -o-transform: matrix(-1, 0, 0, 1, 0, 0);
+    transform: matrix(-1, 0, 0, 1, 0, 0);
+}
+
+.basicMiddle {
+    width: 95%;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.colActionMenu {
+    margin: 0;
+    top: auto;
+    right: 20px;
+    bottom: 80px;
+    left: auto;
+    position: fixed;
+}
+
+.wbTest {
+    width: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.waybackCLMiddle2 {
+    position: relative;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+}
+
+.waybackCLMiddle {
+    margin: auto;
+    width: 75%;
+    padding: 10px;
+}
+
+.seedListWB {
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    width: 80%;
+    padding: 10px;
+}
+
+.generalTab {
+    height: inherit;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 25px;
+}
+
+.miscTab {
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 25px;
+}
+
+.layoutChildDiv {
+    position: absolute;
+    overflow: auto;
+    width: 99%;
+    top: 250px;
+    bottom: 57px;
+    border: 1px solid red;
+}
+
+.ncChildDiv {
+    position: absolute;
+    overflow: auto;
+    top: 50px;
+    width: 100%;
+    height: 100%;
+}
+
+.newCrawlSeedList {
+    height: 100%;
+    overflow: hidden;
+    overflow-y: scroll;
+}
+
+.contentFab {
+    margin: 0;
+    top: auto;
+    right: 20px;
+    bottom: 65px;
+    left: auto;
+    position: fixed;
+}
+
+.noMarginGrid {
+    margin: 0;
+    padding: 0;
+}
+
+.layoutHeader {
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+
+.wailContainer {
+    width: 100%;
+    height: 100%;
+    background-color: #f2f2f2;
+}
+
+.sortIcon {
+    cursor: pointer;
+}
+
+.sortIcon path {
+    pointer-events: none;
+}
+
+.layoutBody {
+    background-color: #f2f2f2;
+    position: absolute;
+    top: 55px;
+    width: 100%;
+    height: 100%;
+}
+
+.firstLoadBody {
+    top: 64px;
+    width: 100%;
+    height: inherit;
+}
+
+.wailToolTip {
+    color: #ffffff !important;
+    background-color: #616161 !important;
+    border-radius: 2px !important;
+    z-index: 3000 !important;
+}
+
+.layoutFooter {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.layOutGrid {
+    padding-right: 0;
+    padding-left: 0;
+}
+
+.layoutRow {
+    margin-right: 0;
+    margin-left: 0;
+}
+
+.layoutCol {
+    /*padding-right: 0;*/
+    /*padding-left: 0;*/
+}
+
+.layOutGridFH {
+    height: 100%;
+    margin: 0;
+    padding: 0 8px;
+}
+
+.loadingLayoutGrid {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0 8px;
+}
+
+.layoutLayoutGrid {
+    margin: 0;
+    padding: 0;
+}
+
+.basicTabLayout {
+    margin: 0;
+    padding: 0;
+}
+
+.warcUpload {
+    height: 150px;
+    border-width: 2px;
+    border-color: #666;
+    border-style: dashed;
+    border-radius: 5px;
+}
+
+.waybackGrid {
+    min-width: 100%;
+    min-height: 100%;
+    padding-right: 0;
+    padding-left: 0;
+    margin-right: 0;
+}
+
+.wbCollectionOverviewRow {
+    padding-top: 5px;
+    min-height: 200px;
+    height: 100%;
+}
+
+.stepRefresh {
+    display: block;
+}

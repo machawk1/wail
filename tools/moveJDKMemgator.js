@@ -1,10 +1,9 @@
-import 'babel-polyfill'
-import fs from 'fs-extra'
+import * as fs from 'fs-extra'
 import shelljs from 'shelljs'
 import path from 'path'
 import Promise from 'bluebird'
 import os from 'os'
-Promise.promisifyAll(fs)
+
 
 const zips = path.resolve('./', 'zips')
 const memgators = path.resolve('./', 'memgators')
@@ -43,6 +42,40 @@ const memgatorNames = [
   'memgator',
 ]
 
+export function moveThemP (opts) {
+  return new Promise((resolve, reject) => {
+    if (!opts) {
+      opts = {
+        arch: currentOSArch,
+        to: bapps
+      }
+    }
+    let to = opts.to
+    let memgatorFromPath = memgatorPaths[idxs[opts.arch]]
+    let memgatorToPath = path.join(to, memgatorNames[idxs[opts.arch]])
+    let jdkFromPath = jdkPaths[idxs[opts.arch]]
+    let jdkToPath = path.join(to, 'openjdk')
+    fs.emptyDir(jdkToPath, emptyError => {
+      if (emptyError) return reject(emptyError)
+      console.log(`moving jdk ${jdkFromPath} to ${jdkToPath}`)
+      fs.copy(jdkFromPath, jdkToPath, {clobber: true}, (jdkError) => {
+        if (jdkError) return reject(jdkError)
+        console.log('success in moving jdk!')
+        console.log(`moving memgator ${memgatorFromPath} to ${memgatorToPath}`)
+        fs.remove(memgatorToPath, removeError => {
+          if (removeError) return reject(removeError)
+          fs.copy(memgatorFromPath, memgatorToPath, {clobber: true}, (memgatorError) => {
+            if (memgatorError) return reject(memgatorError)
+            shelljs.chmod('777', memgatorToPath)
+            console.log('success in moving memgator!')
+            resolve()
+          })
+        })
+      })
+    })
+  })
+}
+
 export default function moveThem (opts, cb) {
   if (!opts) {
     opts = {
@@ -51,21 +84,21 @@ export default function moveThem (opts, cb) {
     }
   }
   let to = opts.to
-  let memgatorFromPath = memgatorPaths[ idxs[ opts.arch ] ]
-  let memgatorToPath = path.join(to, memgatorNames[ idxs[ opts.arch ] ])
-  let jdkFromPath = jdkPaths[ idxs[ opts.arch ] ]
-  let jdkToPath = path.join(to, "openjdk")
+  let memgatorFromPath = memgatorPaths[idxs[opts.arch]]
+  let memgatorToPath = path.join(to, memgatorNames[idxs[opts.arch]])
+  let jdkFromPath = jdkPaths[idxs[opts.arch]]
+  let jdkToPath = path.join(to, 'openjdk')
   fs.emptyDirSync(jdkToPath)
   console.log(`moving jdk ${jdkFromPath} to ${jdkToPath}`)
-  fs.copy(jdkFromPath, jdkToPath, { clobber: true }, (jdkError) => {
+  fs.copy(jdkFromPath, jdkToPath, {clobber: true}, (jdkError) => {
     if (jdkError) return console.error(jdkError)
-    console.log("success in moving jdk!")
+    console.log('success in moving jdk!')
     console.log(`moving memgator ${memgatorFromPath} to ${memgatorToPath}`)
     fs.removeSync(memgatorToPath)
-    fs.copy(memgatorFromPath, memgatorToPath, { clobber: true }, (memgatorError) => {
+    fs.copy(memgatorFromPath, memgatorToPath, {clobber: true}, (memgatorError) => {
       if (memgatorError) return console.error(memgatorError)
       shelljs.chmod('777', memgatorToPath)
-      console.log("success in moving memgator!")
+      console.log('success in moving memgator!')
       if (cb) {
         cb()
       }

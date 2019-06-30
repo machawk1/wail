@@ -2,15 +2,15 @@ import "babel-polyfill"
 import fs from 'fs-extra'
 import path from 'path'
 import Promise from 'bluebird'
-Promise.promisifyAll(fs)
-const argv = require('minimist')(process.argv.slice(2))
 import os from 'os'
 import moveThem from './moveJDKMemgator'
 import through2 from 'through2'
 import request from 'request'
 import extract from 'extract-zip'
 import shelljs from 'shelljs'
+Promise.promisifyAll(fs)
 
+const argv = require('minimist')(process.argv.slice(2))
 const zips = path.resolve('./', 'zips')
 const bapps = path.resolve('./', 'bundledApps')
 const memgatorsP = path.resolve('./', 'memgators')
@@ -50,11 +50,11 @@ const jdks = [
 ]
 
 const memgators = [
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-windows-386.exe',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-windows-amd64.exe',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-386',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-linux-amd64',
-  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc5/memgator-darwin-amd64',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc7/memgator-windows-386.exe',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc7/memgator-windows-amd64.exe',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc7/memgator-linux-386',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc7/memgator-linux-amd64',
+  'https://github.com/oduwsdl/memgator/releases/download/1.0-rc7/memgator-darwin-amd64',
 ]
 
 const unpackedJDKs = [
@@ -109,7 +109,7 @@ function downloadJDK (uri) {
       if (res.statusCode !== 200) throw new Error('Status not 200')
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
-      if (encoding == 'application/zip') {
+      if (encoding === 'application/zip') {
         if (argv.all) {
           console.log(titles[ titleC++ ])
         } else {
@@ -147,7 +147,7 @@ function downloadMemgator (uri) {
       if (res.statusCode !== 200) throw new Error('Status not 200')
       let encoding = res.headers[ 'content-type' ]
       let name = namrex.exec(res.headers[ 'content-disposition' ])[ 1 ]
-      if (encoding == 'application/octet-stream') {
+      if (encoding === 'application/octet-stream') {
         if (argv.all) {
           console.log(titles[ titleC++ ])
         } else {
@@ -224,7 +224,7 @@ if (argv.all) {
   fs.removeSync(`${unpackedJDKs[ idxs[ currentOSArch ] ]}`)
   downloadJDK(jdks[ idxs[ currentOSArch ] ])
     .then(() => {
-      downloadMemgator(memgators[ idxs[ currentOSArch ] ])
+      downloadMemgator(jdks[ idxs[ currentOSArch ] ])
         .then(() => {
           console.log(`Done downloading memgator for ${currentOSArch} extracting jdk `)
           shelljs.chmod('777', `${unpackedJDKs[ idxs[ currentOSArch ] ]}.zip`)

@@ -12,7 +12,7 @@ build/*
 bundledApps/waybackConfigWriter.pyc
 bundledApps/openjdk
 WAIL.spec
-
+*.db
 # Mac meta
 .DS_Store
 
@@ -30,13 +30,14 @@ src/public/*
 
 .idea
 
+creds.json
 
 build
 
-bundledApps/heritrix-3.2.0/
+#bundledApps/heritrix-3.2.0/
+bundledApps/heritrix-3.3.0/
 
 wayback.xml
-heritrix.pid
 heritrix_out.log
 electron/build/dist
 
@@ -53,3 +54,8 @@ electron-main.js*
 backUp
 dist
 
+wail-config
+
+testBuild
+
+chromDLogs
