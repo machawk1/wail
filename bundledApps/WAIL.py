@@ -1536,7 +1536,7 @@ class Wayback(Service):
 
         outputContents = ""
         for file in listdir(warcsPath):
-            if file.endswith(".warc"):
+            if file.endswith(".warc") or file.endswith(".warc.gz"):
                 outputContents += file + "\t" + join(warcsPath, file) + "\n"
 
         print('Writing path-index.txt file...', end='')
@@ -1777,7 +1777,7 @@ class UpdateSoftwareWindow(wx.Frame):
                 try:
                     h_version = h_version[:h_version.index('-')] + '*'
                 except ValueError:
-                    print('NO DASH')
+                    # No dash present when parsing Heritrix version
                     pass
                 return h_version
 
