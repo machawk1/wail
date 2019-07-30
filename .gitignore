@@ -14,6 +14,10 @@ build/*
 bundledApps/waybackConfigWriter.pyc
 WAIL.spec
 
+#ignore CI
+!.pre-commit-config.yaml
+!.travis.yml
+
 # Mac meta
 .DS_Store
 
