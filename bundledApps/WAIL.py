@@ -20,7 +20,6 @@ import functools
 # from ntfy.backends.default import notify
 
 import hashlib
-import pathlib
 from string import Template  # Py3.6+
 
 from six.moves.urllib.request import urlopen
