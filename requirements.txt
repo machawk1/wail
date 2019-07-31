@@ -3,6 +3,7 @@ black
 dmgbuild
 ds-store
 mac-alias
+pathlib2
 pyinstaller
 pystache
 requests
@@ -10,4 +11,3 @@ schedule
 six
 wheel
 wxPython
-pathlib2
