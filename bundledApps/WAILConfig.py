@@ -9,10 +9,10 @@ import wx
 WAIL_VERSION = "-1"
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
-wailPath = wailPath.replace('\\bundledApps', '')  # Fix for dev mode
+wailPath = wailPath.replace("\\bundledApps", "")  # Fix for dev mode
 
 infoPlistPath = ""
-if 'darwin' in sys.platform:
+if "darwin" in sys.platform:
     infoPlistPath = "/Applications/WAIL.app/Contents/Info.plist"
 else:
     infoPlistPath = wailPath + "\\build\\Info.plist"
@@ -25,10 +25,10 @@ try:
         m = re.search(vsXML, data)
         WAIL_VERSION = m.groups()[0].strip()
 except:
-    print('User likely has the binary in the wrong location.')
+    print("User likely has the binary in the wrong location.")
 
 osx_java7DMG_URI = "https://matkelly.com/wail_old/support/jdk-7u79-macosx-x64.dmg"
-osx_java7DMG_hash = b'\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2'
+osx_java7DMG_hash = b"\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2"
 
 ###############################
 # Platform independent Messages
@@ -41,25 +41,27 @@ msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "This page has been archived!"
-msg_uriInArchives_body = ("This URL is currently in your archive!"
-                          " Hit the \"View Archive\" Button")
+msg_uriInArchives_body = (
+    "This URL is currently in your archive!" ' Hit the "View Archive" Button'
+)
 msg_wrongLocation_body = (
     "WAIL must reside in your Applications directory. "
-    "Move it there then relaunch. \n* Current Location: ")
+    "Move it there then relaunch. \n* Current Location: "
+)
 msg_wrongLocation_title = "Wrong Location"
 msg_noJavaRuntime = b"No Java runtime present, requesting install."
 msg_fetchingMementos = "Fetching memento count..."
 msg_noMementosAvailable = "No mementos available."
 
-msg_crawlStatus_writingConfig = 'Writing Crawl Configuration...'
-msg_crawlStatus_launchingCrawler = 'Launching Crawler...'
-msg_crawlStatus_launchingWayback = 'Launching Wayback...'
-msg_crawlStatus_initializingCrawlJob = 'Initializing Crawl Job...'
+msg_crawlStatus_writingConfig = "Writing Crawl Configuration..."
+msg_crawlStatus_launchingCrawler = "Launching Crawler..."
+msg_crawlStatus_launchingWayback = "Launching Wayback..."
+msg_crawlStatus_initializingCrawlJob = "Initializing Crawl Job..."
 
-msg_installJava = 'Java needs to be installed for Heritrix and Wayback'
-msg_java6Required = '{0}{1}'.format('Java SE 6 needs to be installed. ',
-                                    'WAIL should invoke the installer here.')
-msg_archiveFailed_java = 'Archive Now failed due to Java JRE Requirements'
+msg_java6Required = "{0}{1}".format(
+    "Java SE 6 needs to be installed. ", "WAIL should invoke the installer here."
+)
+msg_archiveFailed_java = "Archive Now failed due to Java JRE Requirements"
 msg_java_resolving = "Resolving Java Dependency"
 msg_java7_downloading = "Downloading Java 7 DMG"
 msg_error_tomcat_noStop = "Tomcat could not be stopped"
@@ -100,9 +102,8 @@ textLabel_depth_default = "1"
 textLabel_launchCrawl = "Launch Crawl"
 textLabel_urisToCrawl = "URIs to Crawl:"
 textLabel_crawlJobs = "Crawl Jobs"
-textLabel_statusInit = ('Type a URL and click \"Archive Now!\" '
-                        'to begin archiving.')
-textLabel_noJobsAvailable = '(No jobs available)'
+textLabel_statusInit = 'Type a URL and click "Archive Now!" ' "to begin archiving."
+textLabel_noJobsAvailable = "(No jobs available)"
 
 aboutWindow_appName = "Web Archiving Integration Layer (WAIL)"
 aboutWindow_author = "By Mat Kelly <wail@matkelly.com>"
@@ -124,23 +125,23 @@ buttonLabel_heritrix_launchWebUI = "Launch WebUI"
 buttonLabel_heritrix_launchWebUI_launching = "Launching..."
 buttonLabel_heritrix_newCrawl = "New Crawl"
 
-groupLabel_window = 'Web Archiving Integration Layer'
+groupLabel_window = "Web Archiving Integration Layer"
 
 ui_justButtons_Position_1 = (0, 2)
 ui_justButtons_Position_2 = (0, 27)
 
-menuTitle_about = '&About WAIL'
-menuTitle_file = '&File'
-menuTitle_edit = '&Edit'
-menuTitle_view = '&View'
-menuTitle_window = '&Window'
-menuTitle_help = '&Help'
-menuTitle_file_newCrawl = '&New Crawl'
+menuTitle_about = "&About WAIL"
+menuTitle_file = "&File"
+menuTitle_edit = "&Edit"
+menuTitle_view = "&View"
+menuTitle_window = "&Window"
+menuTitle_help = "&Help"
+menuTitle_file_newCrawl = "&New Crawl"
 
-menuTitle_file_allCrawls = 'All Crawls'
-menuTitle_file_allCrawls_finish = 'Finish'
-menuTitle_file_allCrawls_pause = 'Pause'
-menuTitle_file_allCrawls_restart = 'Restart'
+menuTitle_file_allCrawls = "All Crawls"
+menuTitle_file_allCrawls_finish = "Finish"
+menuTitle_file_allCrawls_pause = "Pause"
+menuTitle_file_allCrawls_restart = "Restart"
 menuTitle_file_allCrawls_destroy = "Destroy (does not delete archive)"
 
 menuTitle_edit_undo = "Undo"
@@ -150,29 +151,29 @@ menuTitle_edit_copy = "Copy"
 menuTitle_edit_paste = "Paste"
 menuTitle_edit_selectAll = "Select All"
 
-menuTitle_view_viewBasic = 'Basic Interface'
-menuTitle_view_viewAdvanced = 'Advanced Interface'
-menuTitle_view_viewAdvanced_services = 'Services'
-menuTitle_view_viewAdvanced_wayback = 'Wayback'
-menuTitle_view_viewAdvanced_heritrix = 'Heritrix'
-menuTitle_view_viewAdvanced_miscellaneous = 'Miscellaneous'
+menuTitle_view_viewBasic = "Basic Interface"
+menuTitle_view_viewAdvanced = "Advanced Interface"
+menuTitle_view_viewAdvanced_services = "Services"
+menuTitle_view_viewAdvanced_wayback = "Wayback"
+menuTitle_view_viewAdvanced_heritrix = "Heritrix"
+menuTitle_view_viewAdvanced_miscellaneous = "Miscellaneous"
 
-menuTitle_window_wail = 'Web Archiving Integration Layer'
+menuTitle_window_wail = "Web Archiving Integration Layer"
 
-menu_destroyJob = 'Destroy Job (Does not delete archive)'
-menu_forceCrawlFinish = 'Force crawl to finish'
-menu_viewJobInWebBrowser = 'View job in web browser'
-menu_rebuildJob = 'Rebuild job'
-menu_rebuildAndLaunchJob = 'Rebuild and launch job'
+menu_destroyJob = "Destroy Job (Does not delete archive)"
+menu_forceCrawlFinish = "Force crawl to finish"
+menu_viewJobInWebBrowser = "View job in web browser"
+menu_rebuildJob = "Rebuild job"
+menu_rebuildAndLaunchJob = "Rebuild and launch job"
 
-heritrixCredentials_username = 'lorem'
-heritrixCredentials_password = 'ipsum'
+heritrixCredentials_username = "lorem"
+heritrixCredentials_password = "ipsum"
 
-host_crawler = '0.0.0.0'
-host_replay = '0.0.0.0'
+host_crawler = "0.0.0.0"
+host_replay = "0.0.0.0"
 
-port_crawler = '8443'
-port_replay = '8080'
+port_crawler = "8443"
+port_replay = "8080"
 
 index_timer_seconds = 10.0
 
@@ -198,7 +199,7 @@ wailWindowSize = (400, 250)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 wail_style_yesNo = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
-if 'darwin' in sys.platform:  # macOS-specific code
+if "darwin" in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
     wailPath = "/Applications/WAIL.app"
     heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
@@ -210,7 +211,10 @@ if 'darwin' in sys.platform:  # macOS-specific code
     tomcatPathStart = tomcatPath + "/bin/startup.sh"
     tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
 
-    jdkPath = wailPath + "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/"
+    jdkPath = (
+        wailPath
+        + "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/"
+    )
     jreHome = jdkPath
     javaHome = jdkPath
 
@@ -228,7 +232,7 @@ if 'darwin' in sys.platform:  # macOS-specific code
     # Change all permissions within the app bundle (a big hammer)
     for r, d, f in os.walk(wailPath):
         os.chmod(r, 0o777)
-elif sys.platform.startswith('linux'):
+elif sys.platform.startswith("linux"):
     # Should be more dynamics but suitable for Docker-Linux testing
     wailPath = "/wail"
     heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
@@ -255,7 +259,7 @@ elif sys.platform.startswith('linux'):
     for r, d, f in os.walk(wailPath):
         os.chmod(r, 0o777)
 
-elif sys.platform.startswith('win32'):
+elif sys.platform.startswith("win32"):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
@@ -276,16 +280,22 @@ elif sys.platform.startswith('win32'):
     tomcatPathStart = wailPath + "\\support\\catalina_start.bat"
     tomcatPathStop = wailPath + "\\support\\catalina_stop.bat"
 
-    host_crawler = 'localhost'
-    host_replay = 'localhost'
+    host_crawler = "localhost"
+    host_replay = "localhost"
 
-uri_tomcat = 'http://{0}:{1}'.format(host_replay, port_replay)
-uri_wayback = 'http://{0}:{1}/wayback/'.format(host_replay, port_replay)
-uri_wayback_allMementos = uri_wayback + '*/'
-uri_heritrix = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrix_accessiblityURI = 'https://{0}:{1}@{2}:{3}'.format(
-    heritrixCredentials_username, heritrixCredentials_password,
-    host_crawler, port_crawler)
-uri_heritrixJob = uri_heritrix + '/engine/job/'
+uri_tomcat = "http://{0}:{1}".format(host_replay, port_replay)
+uri_wayback = "http://{0}:{1}/wayback/".format(host_replay, port_replay)
+uri_wayback_allMementos = uri_wayback + "*/"
+uri_heritrix = "https://{0}:{1}@{2}:{3}".format(
+    heritrixCredentials_username,
+    heritrixCredentials_password,
+    host_crawler,
+    port_crawler,
+)
+uri_heritrix_accessiblityURI = "https://{0}:{1}@{2}:{3}".format(
+    heritrixCredentials_username,
+    heritrixCredentials_password,
+    host_crawler,
+    port_crawler,
+)
+uri_heritrixJob = uri_heritrix + "/engine/job/"

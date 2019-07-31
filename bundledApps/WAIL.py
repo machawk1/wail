@@ -522,68 +522,6 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.ensureEnvironmentVariablesAreSet()
         return True
 
-    def installJava(self, prog):
-        """Start the Java installation process"""
-        print("Downloading Java 7 DMG from {}".format(config.osx_java7DMG_URI))
-
-        java7DMG_localPath = pathlib.Path("/tmp/java7.dmg")
-
-        if java7DMG_localPath.is_file():
-            java7DMG_localPath.unlink()
-
-        try:
-            resp = requests.get(config.osx_java7DMG_URI, stream=True)
-        except requests.exceptions.RequestException:
-            # TODO: alert that Java was not installed, offer Abort, Retry, Fail in GUI
-            print(
-                "An exception occurred downloading Java. Check your connection and try again."
-            )
-            return False
-        else:
-            print("Getting java")
-            with open(java7DMG_localPath, "wb") as f:
-                total_length = resp.headers.get("Content-Length")
-                dl = 0
-                total_length = int(total_length)
-
-                for data in resp.iter_content(chunk_size=4096):
-                    dl += len(data)
-                    f.write(data)
-                    done = int(100 * dl / total_length)
-                    thread.start_new_thread(prog.Update, (done,))
-                    if prog.WasCancelled():
-                        prog.Destroy()
-                        return
-
-        # Hash .pkg downloaded
-        print("Done downloading java 7 DMG, verifying hash")
-        if not self.verifyHash(str(java7DMG_localPath), config.osx_java7DMG_hash):
-            # TODO: Add further guidance if hashes do not match
-            return
-
-        p = Popen(["hdiutil", "attach", "/tmp/java7.dmg"], stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate()
-
-        q = Popen(
-            ["open", "JDK 7 Update 79.pkg"],
-            cwd=r"/Volumes/JDK 7 Update 79/",
-            stdout=PIPE,
-            stderr=PIPE,
-        )
-        stdout, stderr = q.communicate()
-        sys.exit()
-
-    def verifyHash(self, filePath, expectedHash):
-        """Compare the Java download to verify file validity"""
-        # openssl dgst -sha256 (file) on macOS 10.14.2 provides a hash
-        # where below is every-other. Why?
-        expectedHash = b"\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2"
-        calculatedHash = util.hash_bytestr_iter(
-            util.file_as_blockiter(open(filePath, "rb")), hashlib.sha256()
-        )
-
-        return expectedHash == calculatedHash
-
     def archiveNow(self, button):
         """Call asynchronous version of archiving process to prevent
         the UI from locking up
@@ -1209,7 +1147,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 "Accept": "application/xml",
                 "Content-type": "application/x-www-form-urlencoded",
             }
-            r = requests.post(
+            requests.post(
                 config.uri_heritrixJob + jobId,
                 auth=HTTPDigestAuth(
                     config.heritrixCredentials_username,
