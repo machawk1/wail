@@ -36,7 +36,12 @@ if [ -d "$DIRECTORY" ]; then
   done
 fi
 
-read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
+if [ $1 == "ci" ]; then
+ ans="i"
+else
+ read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
+fi
+
 
 case "$ans" in
   i|d|b)
