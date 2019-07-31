@@ -23,5 +23,7 @@ install:
 - pip3 install -r requirements.txt || pip3 install -r requirements.txt
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
-script: sh bundledApps/MAKEFILE.sh ci
+script:
+- if [ "$TRAVIS_OS_NAME" = "osx" ]; then sh bundledApps/MAKEFILE.sh ci ; fi
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then bundledApps\MAKEFILE.bat ; fi
 # script: pytest
