@@ -16,9 +16,9 @@ matrix:
         - python -m pip install --upgrade pip
       env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
 install:
-- pip3 install --upgrade pip  # all three OSes agree about 'pip3'
-- pip3 install --upgrade wxPython
-- pip3 install -r requirements.txt
+# - pip3 install --upgrade pip  # all three OSes agree about 'pip3'
+- python3 -m pip install --upgrade wxPython
+- python3 -m pip install -r requirements.txt
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
 # 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
 script: python3 bundledApps/WAIL.py || python bundledApps/WAIL.py
