@@ -10,3 +10,4 @@ schedule
 six
 wheel
 wxPython
+pathlib2
