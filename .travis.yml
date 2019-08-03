@@ -18,6 +18,9 @@ matrix:
   allow_failures:
     - os: linux
 install:
+- if [ "$TRAVIS_OS_NAME" = "linux" ]; pip install -U \
+  -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 \
+  wxPython ; fi
 - pip3 install --upgrade wxPython
 - pip3 install -r requirements.txt
 # 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
