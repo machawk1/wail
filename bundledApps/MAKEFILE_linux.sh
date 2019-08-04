@@ -42,4 +42,4 @@ cleanupByproducts ()
 
 installRequirements
 createBinary
-cleanupByproducts
+# cleanupByproducts
