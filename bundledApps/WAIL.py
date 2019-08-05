@@ -55,7 +55,7 @@ import threading  # Necessary for polling/indexing
 from requests.auth import HTTPDigestAuth
 
 from os import listdir
-from os.path import isfile, join
+from os.path import join
 import tarfile  # For updater
 
 ssl._create_default_https_context = ssl._create_unverified_context
@@ -507,9 +507,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         if not JAVA_HOME_defined or not JRE_HOME_defined:
             jreHome = ""
             javaHome = ""
-            jdkPath = ""
             if util.is_macOS() or util.is_windows():
-                jdkPath = config.jdkPath
                 jreHome = config.jreHome
                 javaHome = config.javaHome
             else:  # Win, incomplete
@@ -696,10 +694,9 @@ class WAILGUIFrame_Basic(wx.Panel):
                 config.msg_uriNotInArchives, "Checking for " + self.uri.GetValue()
             )
         else:
-            #mb = wx.MessageBox(
-            #    config.msg_uriInArchives_body, config.msg_uriInArchives_title
-            #)
-            mb = wx.MessageDialog(self, config.msg_uriInArchives_body, config.msg_uriInArchives_title, style=wx.OK|wx.CANCEL)
+            mb = wx.MessageDialog(self, config.msg_uriInArchives_body,
+                                  config.msg_uriInArchives_title,
+                                  style=wx.OK|wx.CANCEL)
             mb.SetOKCancelLabels("View Latest", "Go Back")
             resp = mb.ShowModal()
 
@@ -1179,7 +1176,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print("Deleting Job at {}".format(jobPath))
             try:
                 shutil.rmtree(jobPath)
-            except OSError as e:
+            except OSError:
                 print("Job deletion failed.")
             self.populateListboxWithJobs()
 
@@ -1599,7 +1596,7 @@ class Wayback(Service):
 
             return accessible
 
-        except Exception as e:
+        except Exception:
             print(
                 "Wayback(): Failed to access {0} service at {1}".format(
                     self.__class__.__name__, self.uri
