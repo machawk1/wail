@@ -6,6 +6,8 @@ import sys
 import re
 import wx
 
+from xml.dom import minidom
+
 WAIL_VERSION = "-1"
 
 wailPath = os.path.dirname(os.path.realpath(__file__))
@@ -299,3 +301,47 @@ uri_heritrix_accessiblityURI = "https://{0}:{1}@{2}:{3}".format(
     port_crawler,
 )
 uri_heritrixJob = uri_heritrix + "/engine/job/"
+
+
+class PreferencesWindow(wx.Frame):
+    """UI elements for graphically setting WAIL preferences"""
+    def __init__(self):
+        wx.Frame.__init__(self, None, title="WAIL Preferences")
+        panel = wx.Panel(self)
+
+        panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
+        leftColSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=2, hgap=2)
+
+        archiveLocations = wx.StaticText(panel, label="Archive Locations")
+        self.listbox = wx.ListBox(self)
+
+
+        leftColSizer.AddMany(
+            [
+                (archiveLocations, 0, wx.EXPAND),
+                (self.listbox, 0, wx.EXPAND)#,
+               # (self.setupNewCrawlButton, 0, wx.EXPAND),
+               #(self.launchWebUIButton, 0, wx.EXPAND),
+            ]
+        )
+
+        panelSizer.Add(leftColSizer)
+        self.SetSizer(panelSizer)
+        self.readArchiveLocations()
+
+    def readArchiveLocations(self):
+        #with open("/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml", "r") as f:
+        #    config = f.read()
+        #print(config)
+        xmldoc = minidom.parse('/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml')
+        itemlist = xmldoc.getElementsByTagName('bean')
+
+        #print(itemlist[0].attributes['name'].value)
+        targetEl = None
+        for s in itemlist:
+            if s.attributes['class'].value == "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer":
+                targetEl = s
+                break
+        print(targetEl.childNodes[1].childNodes[1].tagName) # TODO: Get value of this node then parse out archive paths
+
+        #org.springframework.beans.factory.config.PropertyPlaceholderConfigurer")

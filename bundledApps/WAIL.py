@@ -195,7 +195,7 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda evt: windowWail.Check(True), windowWail)
 
         helpPreferences = help_menu.Append(wx.ID_PREFERENCES, "Preferences...\tCTRL+,")
-        helpPreferences.Enable(0)  # TODO: implement
+        # helpPreferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
             help_menu.Prepend(wx.ID_ABOUT, config.menuTitle_about)
@@ -222,6 +222,8 @@ class TabController(wx.Frame):
             lambda evt, basicTab=True: self.displayTab(basicTab=basicTab),
             viewBasic,
         )
+
+        self.Bind(wx.EVT_MENU, self.displayPreferences, helpPreferences)
 
         self.bindMenu(config.menuTitle_view_viewAdvanced_services, viewServices)
         self.bindMenu(config.menuTitle_view_viewAdvanced_wayback, viewWayback)
@@ -268,6 +270,10 @@ class TabController(wx.Frame):
         """Change view to Advanced Crawl, display URI textbox"""
         self.displayTab(config.menuTitle_view_viewAdvanced_heritrix)
         self.advConfig.heritrixPanel.setupNewCrawl(None)
+
+    def displayPreferences(self, button):
+        """Open the Preferences window"""
+        config.PreferencesWindow().Show()
 
     def displayAboutMenu(self, button):
         """Show new window with application information"""
