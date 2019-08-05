@@ -696,13 +696,19 @@ class WAILGUIFrame_Basic(wx.Panel):
                 config.msg_uriNotInArchives, "Checking for " + self.uri.GetValue()
             )
         else:
-            mb = wx.MessageBox(
-                config.msg_uriInArchives_body, config.msg_uriInArchives_title
-            )
-            # b = wx.Button(self, -1, config.buttonLabel_mementoCountInfo,
-            #              pos=(10, 85), size=(25, 15))
-            # Disabled until we tie more functionality to the button
-            # mb.AddButton(b)  # Will not work in wxPython >4
+            #mb = wx.MessageBox(
+            #    config.msg_uriInArchives_body, config.msg_uriInArchives_title
+            #)
+            mb = wx.MessageDialog(self, config.msg_uriInArchives_body, config.msg_uriInArchives_title, style=wx.OK|wx.CANCEL)
+            mb.SetOKCancelLabels("View Latest", "Go Back")
+            resp = mb.ShowModal()
+
+            if resp == wx.ID_OK:  # View latest capture
+                print('Showing latest capture')
+                self.viewArchiveInBrowser(None, True)
+            else:  # Show main window again
+                print('Show main window again')
+
 
     def resetArchiveNowButton(self):
         """Update the Archive Now button in the UI to be in its initial
@@ -711,15 +717,18 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         self.archiveNowButton.SetLabel(config.buttonLabel_archiveNow_initializing)
 
-    def viewArchiveInBrowser(self, button):
+    def viewArchiveInBrowser(self, button, latestMemento=False):
         """Open the OS's default browser to display the locally running
         Wayback instance
 
         """
         if Wayback().accessible():
-            webbrowser.open_new_tab(
-                config.uri_wayback_allMementos + self.uri.GetValue()
-            )
+            uri = config.uri_wayback_allMementos + self.uri.GetValue()
+
+            if latestMemento:
+                uri = config.uri_wayback + self.uri.GetValue()
+                ''''''
+            webbrowser.open_new_tab(uri)
         else:
             d = wx.MessageDialog(
                 self, "Launch now?", "Wayback is not running", config.wail_style_yesNo

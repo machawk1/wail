@@ -40,10 +40,8 @@ msg_waybackDisabled = "Currently Disabled"
 msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
-msg_uriInArchives_title = "This page has been archived!"
-msg_uriInArchives_body = (
-    "This URL is currently in your archive!" ' Hit the "View Archive" Button'
-)
+msg_uriInArchives_title = "Archived Status"
+msg_uriInArchives_body = "Archival captures (mementos) for this URL are locally available."
 msg_wrongLocation_body = (
     "WAIL must reside in your Applications directory. "
     "Move it there then relaunch. \n* Current Location: "
