@@ -1863,7 +1863,7 @@ class UpdateSoftwareWindow(wx.Frame):
         # (cmd involving defaults within this py script)
 
     def fetchCurrentVersionsFile(self):
-        self.srcURI = "http://matkelly.com/wail/update.json"
+        self.srcURI = "https://matkelly.com/wail/update.json"
         f = urlopen(self.srcURI).read()
         data = f
         self.updateJSONData = json.loads(data)

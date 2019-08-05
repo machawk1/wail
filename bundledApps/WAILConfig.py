@@ -92,7 +92,7 @@ buttonLabel_kill = "Kill"
 buttonLabel_refresh = "Refresh"
 buttonLabel_starCrawl = "Start Crawl"
 
-textLabel_defaultURI = "http://matkelly.com/wail"
+textLabel_defaultURI = "https://matkelly.com/wail"
 textLabel_defaultURI_title = "WAIL homepage"
 textLabel_uriEntry = "Enter one URI per line to crawl"
 textLabel_depth = "Depth"
