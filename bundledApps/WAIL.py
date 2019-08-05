@@ -727,7 +727,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
             if latestMemento:
                 uri = config.uri_wayback + self.uri.GetValue()
-                ''''''
+
             webbrowser.open_new_tab(uri)
         else:
             d = wx.MessageDialog(
