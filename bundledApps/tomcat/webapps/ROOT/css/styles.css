@@ -242,3 +242,5 @@ filter: alpha(opacity=20);
 #wbCalNote b {
     font-size: 18px;
 }
+
+.tt {font-family: "Lucida Console", "Menlo", "Monaco", "Courier", monospace;}

@@ -68,7 +68,7 @@ if(e instanceof ResourceNotInArchiveException) {
 		%>
 		        </p>
 		        <p><%= fmt.format("HTMLError.moreOptions") %></p>
-			    <p><%= fmt.format("HTMLError.trySearching") %> <a href="<%= escapedLink %>"><%= escapedParentUrl %></a></p>
+			    <p><%= fmt.format("HTMLError.trySearching") %> <a href="<%= escapedLink %>"><%= escapedParentUrl %></a> or <a href="https://localhost:8444/crawl?uri=<%= escapedParentUrl %>">crawl <span class="tt"><%= escapedParentUrl %></span> now</a>.</p>
 		<%
 	}
 } else if(e instanceof SpecificCaptureReplayException) {
