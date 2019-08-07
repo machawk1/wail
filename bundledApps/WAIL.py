@@ -16,6 +16,7 @@ import time
 import sys
 import locale
 import functools
+import responder
 
 # from ntfy.backends.default import notify
 
@@ -2177,8 +2178,13 @@ class UpdateSoftwareWindow(wx.Frame):
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
 
-
 mainAppWindow = None
+api = responder.API()
+
+
+@api.route("/crawl?uri={uri}")
+async def startCrawl(req, resp, *, uri):
+    resp.text = f"Crawling {uri}"
 
 if __name__ == "__main__":
     # if len(sys.argv) > 1:
@@ -2200,5 +2206,8 @@ if __name__ == "__main__":
 
     # Start indexer
     # Wayback().index()
+    api.run(port=8444)
 
     app.MainLoop()
+
+
