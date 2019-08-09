@@ -1660,7 +1660,7 @@ class Wayback(Service):
         cmd = config.tomcatPathStart
         mainAppWindow.basicConfig.ensureEnvironmentVariablesAreSet()
 
-        ret = subprocess.Popen(cmd)
+        ret = subprocess.Popen(cmd, close_fds=True)
         time.sleep(3)
         wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
         if cb:
