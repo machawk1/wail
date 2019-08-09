@@ -29,14 +29,14 @@ if [ -d "$DIRECTORY" ]; then
   while true; do
     read -p "Do you want me to delete the old app and continue (y/n)? " yn
     case $yn in
-        [Yy]* ) echo "Continuing to build"; break;;
+        [Yy]* ) echo "Continuing to build, retaining WARCs"; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer y or n.";;
     esac
   done
 fi
 
-if [ $1 == "ci" ]; then
+if [[ $1 == "ci" ]]; then
  ans="i"
 else
  read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
@@ -74,6 +74,21 @@ createBinary ()
 deleteBinary ()
 {
   rm -rf /Applications/WAIL.app
+}
+
+mvWARCsToTemp ()
+{
+  echo "Moving WARCs to /tmp/tempArchives/"
+  mv /tmp/tempArchives /tmp/tempArchives_old
+  mv /Applications/WAIL.app/archives /tmp/tempArchives
+}
+
+mvWARCsBackFromTemp ()
+{
+  echo "Moving WARCs back to /Applications/WAIL.app/archives/"
+  mv /tmp/tempArchives/* /Applications/WAIL.app/archives/
+  rm -rf /tmp/tempArchives
+  mv /tmp/tempArchives_old /tmp/tempArchives
 }
 
 mvProducts ()
@@ -114,10 +129,12 @@ tweakOS ()
 
 installRequirements
 createBinary
+mvWARCsToTemp
 deleteBinary # Remove previous version
 optimizeforMac
 mvProducts
 cleanupByproducts
+mvWARCsBackFromTemp
 
 # install binary, create dmg, or both? (i/d/b) 
 
