@@ -5,6 +5,7 @@ import os
 import sys
 import re
 import wx
+import re
 
 from xml.dom import minidom
 
@@ -342,6 +343,13 @@ class PreferencesWindow(wx.Frame):
             if s.attributes['class'].value == "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer":
                 targetEl = s
                 break
-        print(targetEl.childNodes[1].childNodes[1].tagName) # TODO: Get value of this node then parse out archive paths
 
-        #org.springframework.beans.factory.config.PropertyPlaceholderConfigurer")
+        # TODO: Get value of this node then parse out archive paths
+        txtValue = ''
+        for x in targetEl.childNodes[1].childNodes[1].childNodes:
+            txtValue += x.data + '\n'
+        print(txtValue)
+        # re.findall(...
+        # We would need to reinterpret variable that the Wayback logic already processes.
+        # There is likely a better way than having to re-implement this logic
+
