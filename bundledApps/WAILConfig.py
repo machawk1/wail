@@ -313,13 +313,17 @@ class PreferencesWindow(wx.Frame):
         panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
         leftColSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=2, hgap=2)
 
-        archiveLocations = wx.StaticText(panel, label="Archive Locations")
+        self.archiveLocations = wx.StaticText(panel, label="Archive Locations")
         self.listbox = wx.ListBox(self)
+
+        archiveLocationsList = self.readArchiveLocations()
+
+        self.listbox.Set(archiveLocationsList)
 
 
         leftColSizer.AddMany(
             [
-                (archiveLocations, 0, wx.EXPAND),
+                (self.archiveLocations, 0, wx.EXPAND),
                 (self.listbox, 0, wx.EXPAND)#,
                # (self.setupNewCrawlButton, 0, wx.EXPAND),
                #(self.launchWebUIButton, 0, wx.EXPAND),
@@ -328,7 +332,7 @@ class PreferencesWindow(wx.Frame):
 
         panelSizer.Add(leftColSizer)
         self.SetSizer(panelSizer)
-        self.readArchiveLocations()
+
 
     def readArchiveLocations(self):
         #with open("/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml", "r") as f:
@@ -344,12 +348,26 @@ class PreferencesWindow(wx.Frame):
                 targetEl = s
                 break
 
-        # TODO: Get value of this node then parse out archive paths
+        # A very hacky way to parse out the archive directory paths from
+        # wayback.xml. See #343
+
         txtValue = ''
         for x in targetEl.childNodes[1].childNodes[1].childNodes:
-            txtValue += x.data + '\n'
-        print(txtValue)
-        # re.findall(...
-        # We would need to reinterpret variable that the Wayback logic already processes.
-        # There is likely a better way than having to re-implement this logic
+            txtValue += x.data + '\n'  # Combine comments and text into str
 
+        baseDirNeedle = 'wayback.basedir.default='
+        archiveDirNeedle = 'wayback.archivedir'
+
+        baseDirNeedleVar = '${wayback.basedir}'
+
+        srcs = []
+        baseDir = ''
+        for line in txtValue.split('\n'):
+            if baseDirNeedle in line:
+                baseDir = line.split('=')[1]
+            if archiveDirNeedle in line:
+                srcs.append(line.split('=')[1])
+        for i, src in enumerate(srcs):
+            srcs[i] = srcs[i].replace(baseDirNeedleVar, baseDir)
+
+        return srcs
