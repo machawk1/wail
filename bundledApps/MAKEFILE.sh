@@ -36,7 +36,7 @@ if [ -d "$DIRECTORY" ]; then
   done
 fi
 
-if [[] $1 == "ci" ]]; then
+if [[ $1 == "ci" ]]; then
  ans="i"
 else
  read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
