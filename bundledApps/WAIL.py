@@ -273,10 +273,21 @@ class TabController(wx.Frame):
 
     def displayPreferences(self, button):
         """Open the Preferences window"""
-        # TODO: Check first to determine whether the window is open.
-        #  If so, show it
-        #  If not, initialize and open it (wx's .Show())
-        config.PreferencesWindow().Show()
+        # Check for window existence, build and show if not, show if so
+
+        try:
+            self.preferencesWindow
+        except AttributeError:
+            self.preferencesWindow = config.PreferencesWindow()
+
+        self.preferencesWindow.Show()
+        self.preferencesWindow.Bind(wx.EVT_CLOSE, self.deletePrefWin)
+
+
+    def deletePrefWin(self, event):
+        #self.preferencesWindow.Close()
+        self.preferencesWindow.Hide()
+        del self.preferencesWindow
 
     def displayAboutMenu(self, button):
         """Show new window with application information"""

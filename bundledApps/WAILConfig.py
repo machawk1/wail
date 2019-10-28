@@ -332,6 +332,8 @@ class PreferencesWindow(wx.Frame):
 
         panelSizer.Add(leftColSizer)
         self.SetSizer(panelSizer)
+        self.Center()
+
 
 
     def readArchiveLocations(self):
