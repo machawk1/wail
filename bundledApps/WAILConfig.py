@@ -313,7 +313,7 @@ class PreferencesWindow(wx.Frame):
         panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
         leftColSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=2, hgap=2)
 
-        self.archiveLocations = wx.StaticText(panel, label="Archive Locations")
+        self.archiveLocations = wx.StaticText(self, wx.ID_ANY, label="Archive Locations")
         self.listbox = wx.ListBox(self)
 
         archiveLocationsList = self.readArchiveLocations()
