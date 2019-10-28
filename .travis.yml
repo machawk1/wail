@@ -27,5 +27,5 @@ install:
 script:
 - if [ "$TRAVIS_OS_NAME" = "osx" ]; then sh bundledApps/MAKEFILE.sh ci ; fi
 - if [ "$TRAVIS_OS_NAME" = "linux" ]; then bash ./bundledApps/MAKEFILE_linux.sh ci ; fi
-- if [ "$TRAVIS_OS_NAME" = "windows" ]; then bundledApps\MAKEFILE.bat ; fi
+- if [ "$TRAVIS_OS_NAME" = "windows" ]; then bundledApps\\MAKEFILE.bat ; fi
 # script: pytest
