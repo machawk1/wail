@@ -310,28 +310,26 @@ class PreferencesWindow(wx.Frame):
         wx.Frame.__init__(self, None, title="WAIL Preferences")
         panel = wx.Panel(self)
 
-        panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
-        leftColSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=2, hgap=2)
+        box = wx.BoxSizer(wx.HORIZONTAL)
 
         self.archiveLocations = wx.StaticText(self, wx.ID_ANY, label="Archive Locations")
-        self.listbox = wx.ListBox(self)
+        self.listbox = wx.ListBox(self, style = wx.LB_HSCROLL)
 
         archiveLocationsList = self.readArchiveLocations()
 
         self.listbox.Set(archiveLocationsList)
 
-
-        leftColSizer.AddMany(
+        box.AddMany(
             [
-                (self.archiveLocations, 0, wx.EXPAND),
-                (self.listbox, 0, wx.EXPAND)#,
+                (self.archiveLocations, 0),
+                (self.listbox, 0, wx.EXPAND)
                # (self.setupNewCrawlButton, 0, wx.EXPAND),
                #(self.launchWebUIButton, 0, wx.EXPAND),
             ]
         )
+        self.listbox.SetMaxSize((300, 200))
 
-        panelSizer.Add(leftColSizer)
-        self.SetSizer(panelSizer)
+        self.SetSizer(box)
         self.Center()
 
 
