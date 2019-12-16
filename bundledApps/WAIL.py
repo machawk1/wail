@@ -281,6 +281,7 @@ class TabController(wx.Frame):
             self.preferencesWindow = config.PreferencesWindow()
 
         self.preferencesWindow.Show()
+        self.preferencesWindow.Raise()
         self.preferencesWindow.Bind(wx.EVT_CLOSE, self.deletePrefWin)
 
 
