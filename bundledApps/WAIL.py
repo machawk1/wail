@@ -1265,6 +1265,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
                 self.Layout()
 
+        def deselectCrawlListboxItems(self, evt):
+            self.listbox.Deselect(self.listbox.GetSelection())
+
         def addNewCrawlUI(self):
             self.statusMsg.Hide()
             chil = self.Sizer.GetChildren()
@@ -1295,6 +1298,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlDepthTextCtrl.Bind(wx.EVT_CHAR,
                                             self.handleCrawlDepthKeypress)
 
+            self.newCrawlTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
+            self.newCrawlDepthTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
+
             self.startCrawlButton = wx.Button(
                 self, wx.ID_ANY, config.buttonLabel_starCrawl
             )
@@ -1324,7 +1330,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.Layout()
 
             # Deselect any highlighted selection in the jobs listbox
-            self.listbox.Deselect(self.listbox.GetSelection())
+            self.deselectCrawlListboxItems()
 
         def setupNewCrawl(self, evt):
             """Create UI elements for user to specify the URIs and other
