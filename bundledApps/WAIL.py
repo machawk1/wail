@@ -1323,6 +1323,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.Sizer.Add(rightColSizer)
             self.Layout()
 
+            # Deselect any highlighted selection in the jobs listbox
+            self.listbox.Deselect(self.listbox.GetSelection())
+
         def setupNewCrawl(self, evt):
             """Create UI elements for user to specify the URIs and other
             attributes for a new Heritrix crawl.
