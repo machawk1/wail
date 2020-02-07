@@ -975,11 +975,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.editWaybackConfiguration = wx.Button(
                 self, -1, config.buttonLabel_editWaybackConfig
             )
+            self.reindexWebArchivesButton = wx.Button(
+                self, -1, config.buttonLabel_reindexWebArchiveFiles
+            )
             self.viewWaybackInBrowserButton.Bind(
                 wx.EVT_BUTTON, self.openWaybackInBrowser
             )
             self.editWaybackConfiguration.Bind(
                 wx.EVT_BUTTON, self.openWaybackConfiguration
+            )
+            self.reindexWebArchivesButton.Bind(
+                wx.EVT_BUTTON, self.reindexWebArchives
             )
 
             box = wx.BoxSizer(wx.VERTICAL)
@@ -1021,6 +1027,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 os.startfile(filepath)
             elif util.is_linux():
                 subprocess.call(("xdg-open", filepath))
+
+        def reindexWebArchives(self, button):
+            print("TODO: Re-indexing WARCs to generate CDX")
 
     class HeritrixPanel(wx.Panel):
         def __init__(self, parent):

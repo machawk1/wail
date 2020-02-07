@@ -113,6 +113,7 @@ aboutWindow_iconHeight = 128
 buttonLabel_wayback = "View Wayback in Browser"
 buttonLabel_wayback_launching = "Launching Wayback..."
 buttonLabel_editWaybackConfig = "Edit Wayback Configuration"
+buttonLabel_reindexWebArchiveFiles = "Re-index Web Archive Files"
 buttonLabel_resetWaybackConfig = "Reset Wayback Configuration"
 buttonLabel_startHeritrix = "Start Heritrix Process"
 buttonLabel_viewHeritrix = "View Heritrix in Browser"
