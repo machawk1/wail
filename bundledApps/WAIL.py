@@ -1035,6 +1035,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
             self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
 
+            self.listbox.Bind(wx.EVT_SET_FOCUS, self.selectOnFocus)
+
             self.crawlJobsTextCtrlLabel = wx.StaticText(
                 self, wx.ID_ANY, config.textLabel_crawlJobs
             )
@@ -1066,6 +1068,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             panelSizer.Add(leftColSizer)
             self.SetSizer(panelSizer)
 
+        def selectOnFocus(self, evt=None):
+            if self.listbox.GetItems()[0] != config.textLabel_noJobsAvailable:
+                # There is a legitimate value, select it
+                self.listbox.SetSelection(0)
+                self.clickedListboxItem()
+
         def populateListboxWithJobs(self):
             jobs_list = Heritrix().getListOfJobs()
 
@@ -1078,7 +1086,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.listbox.Set(jobs_list)
 
-        def clickedListboxItem(self, event):
+        def clickedListboxItem(self, event=None):
             self.hideNewCrawlUIElements()
             self.statusMsg.Show()
 
@@ -1137,7 +1145,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Do not show context menu for empty placeholder
             if self.listbox.GetItems()[0] == config.textLabel_noJobsAvailable:
                 return
-            print('test')
+
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             try:
                 self.clickedListboxItem(None)
