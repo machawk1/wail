@@ -1137,7 +1137,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Do not show context menu for empty placeholder
             if self.listbox.GetItems()[0] == config.textLabel_noJobsAvailable:
                 return
-
+            print('test')
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             try:
                 self.clickedListboxItem(None)
@@ -1265,7 +1265,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
                 self.Layout()
 
-        def deselectCrawlListboxItems(self, evt):
+        def deselectCrawlListboxItems(self, evt=None):
             self.listbox.Deselect(self.listbox.GetSelection())
 
         def addNewCrawlUI(self):
@@ -1298,6 +1298,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.newCrawlDepthTextCtrl.Bind(wx.EVT_CHAR,
                                             self.handleCrawlDepthKeypress)
 
+            # When a new crawl UI textbox is selected, deselect listbox
             self.newCrawlTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
             self.newCrawlDepthTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
 
