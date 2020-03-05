@@ -304,33 +304,95 @@ uri_heritrix_accessiblityURI = "https://{0}:{1}@{2}:{3}".format(
 uri_heritrixJob = uri_heritrix + "/engine/job/"
 
 
+class PrefTab_Replay(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        sz = wx.BoxSizer()
+
+        sz.Add(
+            wx.StaticText(self, wx.ID_ANY, "Replay"), flag=wx.CENTER
+        )
+
+
+
+        self.archiveLocations = wx.StaticText(self, wx.ID_ANY, label="Archive Locations")
+        self.listbox = wx.ListBox(self, style = wx.LB_HSCROLL)
+
+        #archiveLocationsList = parent.readArchiveLocations()
+        #self.listbox.Set(archiveLocationsList)
+
+        sz.AddMany(
+            [
+                (self.archiveLocations, 0),
+                (self.listbox, 0, wx.EXPAND),
+                (wx.StaticText(self, 7, "test"), 1, wx.EXPAND)
+               # (self.setupNewCrawlButton, 0, wx.EXPAND),
+               #(self.launchWebUIButton, 0, wx.EXPAND),
+            ]
+        )
+        #self.listbox.SetMaxSize((300, 100))
+
+
+class PrefTab_Aggregator(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        sz = wx.BoxSizer()
+
+        sz.Add(
+            wx.StaticText(self, wx.ID_ANY, "Aggregator"), flag=wx.CENTER
+        )
+
+
+class PrefTab_Crawler(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+        sz = wx.BoxSizer()
+
+        self.r1c1 = wx.StaticText(self, wx.ID_ANY, "R1C1")
+        self.r1c2 = wx.StaticText(self, wx.ID_ANY, "R1C2")
+        self.r2c2 = wx.StaticText(self, wx.ID_ANY, "R2C2")
+
+    def draw(self):
+        self.sizer = wx.BoxSizer()
+
+        gs = wx.FlexGridSizer(2, 2, 0, 0)
+        gs.AddMany([
+            self.r1c1,
+            self.r1c2,
+
+            self.r2c2,self.r2c2
+        ])
+        gs.AddGrowableCol(0, 1)
+        gs.AddGrowableCol(1, 1)
+        # gs.AddGrowableCol(2, 1)
+
+        self.sizer.Add(gs, proportion=1)
+        self.SetSizer(self.sizer)
+        self.Layout()
+
 class PreferencesWindow(wx.Frame):
     """UI elements for graphically setting WAIL preferences"""
     def __init__(self):
         wx.Frame.__init__(self, None, title="WAIL Preferences")
         panel = wx.Panel(self)
-
         box = wx.BoxSizer(wx.HORIZONTAL)
+        wx.Frame.Center(self)
+        self.Notebook = wx.Notebook(panel)
+        box.Add(self.Notebook, 2, flag=wx.EXPAND)
+        panel.SetSizer(box)
 
-        self.archiveLocations = wx.StaticText(self, wx.ID_ANY, label="Archive Locations")
-        self.listbox = wx.ListBox(self, style = wx.LB_HSCROLL)
+        self.preftab_crawler = PrefTab_Crawler(self.Notebook)
+        self.preftab_replay = PrefTab_Replay(self.Notebook)
+        self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
 
-        archiveLocationsList = self.readArchiveLocations()
+        self.Notebook.AddPage(self.preftab_crawler, "Crawler")
+        self.Notebook.AddPage(self.preftab_replay, "Replay")
+        self.Notebook.AddPage(self.preftab_aggregator, "Aggregator")
+        #'''return
 
-        self.listbox.Set(archiveLocationsList)
 
-        box.AddMany(
-            [
-                (self.archiveLocations, 0),
-                (self.listbox, 0, wx.EXPAND)
-               # (self.setupNewCrawlButton, 0, wx.EXPAND),
-               #(self.launchWebUIButton, 0, wx.EXPAND),
-            ]
-        )
-        self.listbox.SetMaxSize((300, 200))
-
-        self.SetSizer(box)
-        self.Center()
+        #self.SetSizer(box)
+        #self.Center()#'''
 
 
 
