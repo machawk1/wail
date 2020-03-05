@@ -912,11 +912,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 tomcatAccessible = serviceEnabled[Tomcat().accessible()]
 
             # Update a transitional status and short circuit
-            if serviceId and transitionalStatus:
-                if serviceId is "wayback":
+            if serviceId is not None and transitionalStatus is not None:
+                if serviceId == "wayback":
                     self.setWaybackStatus(transitionalStatus)
                     return
-                elif serviceId is "heritrix":
+                elif serviceId == "heritrix":
                     self.setHeritrixStatus(transitionalStatus)
                     return
                 else:
