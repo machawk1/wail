@@ -19,7 +19,7 @@ else:
 
 
 try:
-    with open(infoPlistPath, "r") as myfile:
+    with open(infoPlistPath, "r", encoding='latin1') as myfile:
         data = myfile.read()
         vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
         m = re.search(vsXML, data)
