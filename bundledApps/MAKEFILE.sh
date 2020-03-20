@@ -110,6 +110,7 @@ optimizeforMac ()
   rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
   rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
   rm -rf ./dist/WAIL.app/bundledApps/Java/Windows
+  chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
 }
 
 buildDiskImage ()
