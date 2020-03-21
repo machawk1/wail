@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
-	<string>2019.05.21</string>
+	<string>2020.03.20</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © Mat Kelly - Web Archiving Integration Layer (WAIL)</string>
 	<key>CFBundleExecutable</key>
