@@ -80,19 +80,23 @@ class TabController(wx.Frame):
         vbox = wx.BoxSizer(wx.VERTICAL)
         wx.Frame.Center(self)
 
-        self.Notebook = wx.Notebook(panel)
-        vbox.Add(self.Notebook, 2, flag=wx.EXPAND)
+        self.notebook = wx.Notebook(panel)
+        self.notebook.parent = self
+        vbox.Add(self.notebook, 2, flag=wx.EXPAND)
 
         panel.SetSizer(vbox)
 
+        self.statusbar = self.CreateStatusBar()
+
         # Add basic config page/tab
-        self.basicConfig = WAILGUIFrame_Basic(self.Notebook)
-        self.Notebook.AddPage(self.basicConfig, config.tabLabel_basic)
+        self.basicConfig = WAILGUIFrame_Basic(self.notebook)
+        self.notebook.AddPage(self.basicConfig, config.tabLabel_basic)
 
         # Add advanced config page/tab
-        self.advConfig = WAILGUIFrame_Advanced(self.Notebook)
-        self.Notebook.AddPage(self.advConfig, config.tabLabel_advanced)
+        self.advConfig = WAILGUIFrame_Advanced(self.notebook)
+        self.notebook.AddPage(self.advConfig, config.tabLabel_advanced)
         self.createMenu()
+
 
         self.indexingTimer = threading.Timer(
             config.index_timer_seconds, Wayback().index
@@ -312,6 +316,7 @@ class TabController(wx.Frame):
 class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
+        self.parent = parent
 
         # Forces Windows into composite mode for drawing
         self.SetDoubleBuffered(True)
@@ -349,12 +354,6 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.status = wx.StaticText(self, wx.ID_ANY,
                                     config.textLabel_statusInit)
-
-        self.mementoStatusPublicArchives = wx.StaticText(self, wx.ID_ANY, "")
-        self.mementoStatus = wx.StaticText(self, wx.ID_ANY, "")
-        basicSizer_messages.Add(self.mementoStatusPublicArchives,
-                                flag=wx.CENTER)
-        basicSizer_messages.Add(self.mementoStatus, flag=wx.CENTER)
 
         basicSizer.Add(basicSizer_URI, proportion=0, flag=wx.EXPAND)
         basicSizer.AddSpacer(3)
@@ -426,9 +425,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
             """ """
 
-        # Bug: Does not update UI on Windows
-        self.mementoStatus.SetLabel(memCountMsg)
-        self.mementoStatusPublicArchives.SetLabel("Public archives: ")
+        self.parent.parent.statusbar.SetStatusText(
+            '{}{}'.format("Public archives: ", memCountMsg))
+
         self.Layout()
 
     def setMessage(self, msg):
@@ -1448,26 +1447,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
 
-        self.Notebook = wx.Notebook(self)
+        self.notebook = wx.Notebook(self)
+        self.notebook.myStatusBar = self
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.Notebook, 10, flag=wx.EXPAND)
+        vbox.Add(self.notebook, 10, flag=wx.EXPAND)
 
         self.SetSizer(vbox)
 
-        self.servicesPanel = WAILGUIFrame_Advanced.ServicesPanel(self.Notebook)
-        self.waybackPanel = WAILGUIFrame_Advanced.WaybackPanel(self.Notebook)
-        self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.Notebook)
+        self.servicesPanel = WAILGUIFrame_Advanced.ServicesPanel(self.notebook)
+        self.waybackPanel = WAILGUIFrame_Advanced.WaybackPanel(self.notebook)
+        self.heritrixPanel = WAILGUIFrame_Advanced.HeritrixPanel(self.notebook)
         self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(
-            self.Notebook
+            self.notebook
         )
 
-        self.Notebook.AddPage(self.servicesPanel,
+        self.notebook.AddPage(self.servicesPanel,
                               config.tabLabel_advanced_services)
-        self.Notebook.AddPage(self.waybackPanel,
+        self.notebook.AddPage(self.waybackPanel,
                               config.tabLabel_advanced_wayback)
-        self.Notebook.AddPage(self.heritrixPanel,
+        self.notebook.AddPage(self.heritrixPanel,
                               config.tabLabel_advanced_heritrix)
-        self.Notebook.AddPage(
+        self.notebook.AddPage(
             self.miscellaneousPanel, config.tabLabel_advanced_miscellaneous
         )
 
