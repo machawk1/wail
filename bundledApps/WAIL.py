@@ -425,8 +425,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
             """ """
 
-        self.parent.parent.statusbar.SetStatusText(
-            '{}{}'.format("Public archives: ", memCountMsg))
+        statusString = f"Public archives: {memCountMsg}"
+        self.parent.parent.statusbar.SetStatusText(statusString)
 
         self.Layout()
 
