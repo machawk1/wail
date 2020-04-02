@@ -350,7 +350,9 @@ class PrefTab_Crawler(wx.Panel):
 
         self.r1c1 = wx.StaticText(self, wx.ID_ANY, "R1C1")
         self.r1c2 = wx.StaticText(self, wx.ID_ANY, "R1C2")
+        self.r2c1 = wx.StaticText(self, wx.ID_ANY, "R2C1")
         self.r2c2 = wx.StaticText(self, wx.ID_ANY, "R2C2")
+        self.draw()
 
     def draw(self):
         self.sizer = wx.BoxSizer()
@@ -360,11 +362,11 @@ class PrefTab_Crawler(wx.Panel):
             self.r1c1,
             self.r1c2,
 
-            self.r2c2,self.r2c2
+            self.r2c1,
+            self.r2c2
         ])
         gs.AddGrowableCol(0, 1)
         gs.AddGrowableCol(1, 1)
-        # gs.AddGrowableCol(2, 1)
 
         self.sizer.Add(gs, proportion=1)
         self.SetSizer(self.sizer)
