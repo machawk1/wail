@@ -4,7 +4,7 @@ dmgbuild
 ds-store
 mac-alias
 pathlib2
-pyinstaller
+pyinstaller>=3.6
 pystache
 requests
 schedule
