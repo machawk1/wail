@@ -336,11 +336,24 @@ class PrefTab_Replay(wx.Panel):
 class PrefTab_Aggregator(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        sz = wx.BoxSizer()
+        self.sizer = wx.BoxSizer()
+        gs = wx.FlexGridSizer(2, 2, 0, 0)
 
-        sz.Add(
-            wx.StaticText(self, wx.ID_ANY, "Aggregator"), flag=wx.CENTER
-        )
+        self.ua = wx.TextCtrl(self, wx.ID_ANY,
+                               value="test")
+        self.timeout = wx.TextCtrl(self, wx.ID_ANY,
+                              value="100")
+
+        gs.AddMany([
+            wx.StaticText(self, wx.ID_ANY, "User Agent"),
+            self.ua,
+            wx.StaticText(self, wx.ID_ANY, "Default Timeout (ms)"),
+            self.timeout
+        ])
+
+        self.sizer.Add(gs, proportion=1)
+        self.SetSizer(self.sizer)
+        self.Layout()
 
 
 class PrefTab_Crawler(wx.Panel):
@@ -348,25 +361,30 @@ class PrefTab_Crawler(wx.Panel):
         wx.Panel.__init__(self, parent)
         sz = wx.BoxSizer()
 
-        self.r1c1 = wx.StaticText(self, wx.ID_ANY, "R1C1")
-        self.r1c2 = wx.StaticText(self, wx.ID_ANY, "R1C2")
-        self.r2c1 = wx.StaticText(self, wx.ID_ANY, "R2C1")
-        self.r2c2 = wx.StaticText(self, wx.ID_ANY, "R2C2")
+        self.box_creds = wx.StaticBox(self, wx.ID_ANY,
+                                      "Web Interface Credentials")
+        #self.box_creds_sizer = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
+        self.box_creds_u = wx.StaticText(self.box_creds, wx.ID_ANY, "Username")
+        self.box_creds_p = wx.StaticText(self.box_creds, wx.ID_ANY, "Password")
+
+        self.box_attrs = wx.StaticBox(self, wx.ID_ANY,
+                                      "Crawl Attributes")
+        self.jURL = wx.StaticText(self.box_attrs, wx.ID_ANY, "Operator Contact URL")
+        self.jName = wx.StaticText(self.box_attrs, wx.ID_ANY, "Job Name")
+        self.jDesc = wx.StaticText(self.box_attrs, wx.ID_ANY, "Job Description")
+
         self.draw()
 
     def draw(self):
         self.sizer = wx.BoxSizer()
 
-        gs = wx.FlexGridSizer(2, 2, 0, 0)
+        gs = wx.FlexGridSizer(2, 1, 0, 0)
         gs.AddMany([
-            self.r1c1,
-            self.r1c2,
-
-            self.r2c1,
-            self.r2c2
+            self.box_creds,
+            self.box_attrs,
         ])
         gs.AddGrowableCol(0, 1)
-        gs.AddGrowableCol(1, 1)
+        #gs.AddGrowableCol(1, 1)
 
         self.sizer.Add(gs, proportion=1)
         self.SetSizer(self.sizer)
