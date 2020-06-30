@@ -1603,14 +1603,14 @@ class Service:
 
         try:
             handle = urlopen(self.uri, None, 3)
-            print(f"Service: f{self.__class__.__name__} is a go! ")
+            print(f"Service: {self.__class__.__name__} is a go! ")
             return True
         except IOError as e:
             if hasattr(e, "code"):  # HTTPError
-                print(
-                    f"{self.__class__.__name__}"
-                    f" Pseudo-Success in accessing {self.uri}"
-                )
+                print((
+                    f"{self.__class__.__name__} "
+                    f"Pseudo-Success in accessing {self.uri}"
+                ))
                 return True
 
             print((
