@@ -28,7 +28,7 @@ class HeritrixJob:
         headers = {"Accept":"application/xml",
                    "Content-type":"application/x-www-form-urlencoded"}
         r =requests.post(
-            '{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
+            f'{config.uri_heritrixJob}{self.jobNumber}',
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
                 config.heritrixCredentials_password),
@@ -40,7 +40,7 @@ class HeritrixJob:
         data = {"action":"build"}
         headers = {"Accept": "application/xml",
                    "Content-type" :"application/x-www-form-urlencoded"}
-        r =requests.post('{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
+        r =requests.post(f'{config.uri_heritrixJob}{self.jobNumber}',
                          auth=HTTPDigestAuth(
                              config.heritrixCredentials_username,
                              config.heritrixCredentials_password),
