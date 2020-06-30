@@ -396,16 +396,17 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         mem_count_msg = ""
         if m_count is None:
+            print("a")
             mem_count_msg = config.msg_fetchingMementos
         elif m_count > 0:
-            localeToSet = "en_US"
+            locale_to_set = "en_US"
             if not util.is_macOS():  # Let system determine locale
                 localeToSet = ""
 
             if util.is_linux():
-                localeToSet = "en_US.UTF-8"
+                locale_to_set = "en_US.UTF-8"
 
-            locale.setlocale(locale.LC_ALL, localeToSet)
+            locale.setlocale(locale.LC_ALL, locale_to_set)
 
             m_plurality = "s"
             a_plurality = "s"
@@ -440,11 +441,11 @@ class WAILGUIFrame_Basic(wx.Panel):
         currentURIValue = self.uri.GetValue()
         print(f"MEMGATOR checking {currentURIValue}")
 
-        startupinfo = None
+        startup_info = None
         # Fixes issue of Popen on Windows
         if sys.platform.startswith("win32"):
-            startupinfo = subprocess.STARTUPINFO()
-            startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+            startup_info = subprocess.STARTUPINFO()
+            startup_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
         mg = Popen(
             [
@@ -464,7 +465,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             stdout=PIPE,
             stdin=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            startupinfo=startupinfo,
+            startupinfo=startup_info,
         )
 
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
