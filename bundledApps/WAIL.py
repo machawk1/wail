@@ -299,10 +299,10 @@ class TabController(wx.Frame):
         if util.is_macOS() and currentPath != "/Applications":
             # Alert the user to move the file. Exit the program
             wx.MessageBox(
-                config.msg_wrongLocation_body + currentPath,
+                f"{config.msg_wrongLocation_body}{currentPath}",
                 config.msg_wrongLocation_title,
             )
-            print(config.msg_wrongLocation_body + currentPath)
+            print(f"{config.msg_wrongLocation_body}{currentPath}")
 
     def quit(self, button):
         """Exit the application"""
@@ -683,7 +683,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
         """
-        url = config.uri_wayback_allMementos + self.uri.GetValue()
+        url = f"{config.uri_wayback_allMementos}{self.uri.GetValue()}"
         statusCode = None
         try:
             resp = urlopen(url)
@@ -710,7 +710,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         elif 200 != statusCode:
             wx.MessageBox(
                 config.msg_uriNotInArchives,
-                "Checking for " + self.uri.GetValue()
+                f"Checking for {self.uri.GetValue()}"
             )
         else:
             mb = wx.MessageDialog(self, config.msg_uriInArchives_body,
@@ -739,10 +739,10 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         """
         if Wayback().accessible():
-            uri = config.uri_wayback_allMementos + self.uri.GetValue()
+            uri = f"{config.uri_wayback_allMementos}{self.uri.GetValue()}"
 
             if latestMemento:
-                uri = config.uri_wayback + self.uri.GetValue()
+                uri = f"{config.uri_wayback}{self.uri.GetValue()}"
 
             webbrowser.open_new_tab(uri)
         else:
@@ -866,20 +866,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.status_wayback.SetLabel(status)
 
         def getHeritrixVersion(self, abbr=True):
-            htrixLibPath = config.heritrixPath + "lib/"
+            htrixLibPath = f"{config.heritrixPath}lib/"
 
             for file in os.listdir(htrixLibPath):
                 if file.startswith("heritrix-commons"):
                     regex = re.compile("commons-(.*)\.")
                     h_version = regex.findall(file)[0]
                     try:
-                        h_version = h_version[: h_version.index("-")] + "*"
+                        h_version = f'{h_version[: h_version.index("-")]}*'
                     except ValueError:
                         pass
                     return h_version
 
         def getWaybackVersion(self):
-            tomcatLibPath = config.tomcatPath + "/webapps/lib/"
+            tomcatLibPath = f"{config.tomcatPath}/webapps/lib/"
 
             for file in os.listdir(tomcatLibPath):
                 if file.startswith("openwayback-core"):
@@ -888,7 +888,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def getTomcatVersion(self):
             # Apache Tomcat Version 7.0.30
-            releaseNotesPath = config.tomcatPath + "/RELEASE-NOTES"
+            releaseNotesPath = f"{config.tomcatPath}/RELEASE-NOTES"
 
             if not os.path.exists(releaseNotesPath):
                 return "?"
@@ -1007,7 +1007,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     self.viewWaybackInBrowserButton.Disable()
 
         def openWaybackConfiguration(self, button):
-            filepath = config.tomcatPath + "/webapps/ROOT/WEB-INF/wayback.xml"
+            filepath = f"{config.tomcatPath}/webapps/ROOT/WEB-INF/wayback.xml"
             if util.is_macOS():
                 subprocess.call(("open", filepath))
             elif util.is_windows():
@@ -1188,7 +1188,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 "Content-type": "application/x-www-form-urlencoded",
             }
             requests.post(
-                config.uri_heritrixJob + jobId,
+                f"{config.uri_heritrixJob}{jobId}",
                 auth=HTTPDigestAuth(
                     config.heritrixCredentials_username,
                     config.heritrixCredentials_password,
@@ -1225,7 +1225,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             """
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
-            webbrowser.open_new_tab(config.uri_heritrixJob + jobId)
+            webbrowser.open_new_tab(f"{config.uri_heritrixJob}{jobId}")
 
         def rebuildJob(self, evt):
             jobId = str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -1699,7 +1699,7 @@ class Wayback(Service):
 
     def generatePathIndex(self):
         dest = f"{config.wailPath}/config/path-index.txt"
-        warcsPath = config.wailPath + "/archives/"
+        warcsPath = f"{config.wailPath}/archives/"
 
         outputContents = ""
         for file in listdir(warcsPath):
@@ -1725,7 +1725,9 @@ class Wayback(Service):
         print("generating ", end="")
         for file in listdir(warcsPath):
             if file.endswith(".warc"):
-                cdxFilePath = cdxFilePathPre + file.replace(".warc", ".cdx")
+                cdxFilePath = (
+                    f"{cdxFilePathPre}"
+                    f"{file.replace('.warc', '.cdx')}")
                 process = subprocess.Popen(
                     [cdxIndexerPath, join(warcsPath, file), cdxFilePath],
                     stdout=PIPE,
@@ -1961,12 +1963,12 @@ class UpdateSoftwareWindow(wx.Frame):
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     def getHeritrixVersion(self):
-        for file in os.listdir(config.heritrixPath + "lib/"):
+        for file in os.listdir(f"{config.heritrixPath}lib/"):
             if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
                 h_version = regex.findall(file)[0]
                 try:
-                    h_version = h_version[: h_version.index("-")] + "*"
+                    h_version = f'{h_version[: h_version.index("-")]}*'
                 except ValueError:
                     # No dash present when parsing Heritrix version
                     pass
@@ -1974,7 +1976,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     def getWaybackVersion(self):
-        for file in os.listdir(config.tomcatPath + "/webapps/lib/"):
+        for file in os.listdir(f"{config.tomcatPath}/webapps/lib/"):
             if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
                 return regex.findall(file)[0]
@@ -2066,11 +2068,11 @@ class UpdateSoftwareWindow(wx.Frame):
 
         # TODO: Akin to #293, update this icon w/ new version
         #  Need to generate a 64px version for this.
-        iconPath = config.wailPath + "/build/icons/"
+        iconPath = f"{config.wailPath}/build/icons/"
         updateFrame_panels_icons = (
-            iconPath + "whaleLogo_64.png",
-            iconPath + "heritrixLogo_64.png",
-            iconPath + "openWaybackLogo_64.png",
+            f"{iconPath}whaleLogo_64.png",
+            f"{iconPath}heritrixLogo_64.png",
+            f"{iconPath}openWaybackLogo_64.png",
         )
         updateFrame_panels_titles = ("WAIL Core", "Preservation", "Replay")
         updateFrame_panels_size = (390, 90)
