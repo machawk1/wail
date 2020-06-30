@@ -1837,8 +1837,8 @@ class Heritrix(Service):
                 int(discovered)
                 status = (
                     f"   Discovered: {discovered}\n"
-                    f"Queued: {queued}\n   "
-                    f"Downloaded: {downloaded}\n"
+                    f"   Queued: {queued}\n"
+                    f"   Downloaded: {downloaded}\n"
                 )
             except ValueError:
                 # Job is being built or completed
