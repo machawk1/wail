@@ -97,7 +97,6 @@ class TabController(wx.Frame):
         self.notebook.AddPage(self.advConfig, config.tabLabel_advanced)
         self.createMenu()
 
-
         self.indexingTimer = threading.Timer(
             config.index_timer_seconds, Wayback().index
         )
@@ -1302,8 +1301,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                             self.handleCrawlDepthKeypress)
 
             # When a new crawl UI textbox is selected, deselect listbox
-            self.newCrawlTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_SET_FOCUS, self.deselectCrawlListboxItems)
+            self.newCrawlTextCtrl.Bind(wx.EVT_SET_FOCUS,
+                                       self.deselectCrawlListboxItems)
+            self.newCrawlDepthTextCtrl.Bind(wx.EVT_SET_FOCUS,
+                                            self.deselectCrawlListboxItems)
 
             self.startCrawlButton = wx.Button(
                 self, wx.ID_ANY, config.buttonLabel_starCrawl
@@ -1493,7 +1494,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 waitingForTomcat = False
             time.sleep(2)
 
-        self.waybackPanel.viewWaybackInBrowserButton.Enable()  # TODO: error here
+        self.waybackPanel.viewWaybackInBrowserButton.Enable()
 
     def launchHeritrix(self, button):
         # self.heritrixStatus.SetLabel("Launching Heritrix")
@@ -1602,12 +1603,13 @@ class Service:
 
         try:
             handle = urlopen(self.uri, None, 3)
-            print("Service: " + self.__class__.__name__ + " is a go! ")
+            print(f"Service: f{self.__class__.__name__} is a go! ")
             return True
         except IOError as e:
             if hasattr(e, "code"):  # HTTPError
                 print(
-                    self.__class__.__name__ + " Pseudo-Success in accessing " + self.uri
+                    f"{self.__class__.__name__}"
+                    f" Pseudo-Success in accessing {self.uri}"
                 )
                 return True
 
@@ -1617,10 +1619,10 @@ class Service:
             ))
             return False
         except:
-            print(
-                (
-                    "Some other error occurred trying " "to check service accessibility.")
-            )
+            print((
+                "Some other error occurred trying "
+                "to check service accessibility."
+            ))
             return False
 
 
@@ -1636,15 +1638,18 @@ class Wayback(Service):
             handle = urlopen(self.uri, None, 3)
             headers = handle.getheaders()
 
-            linkHeader = ""
+            link_header = ""
             for h in headers:
                 if h[0] == "Link":
-                    linkHeader = h[1]
+                    link_header = h[1]
 
-            accessible = "http://mementoweb.org/terms/donotnegotiate" in linkHeader
+            accessible = "http://mementoweb.org/terms/donotnegotiate" \
+                         in link_header
             if accessible:
-                print(
-                    "Wayback: " + self.__class__.__name__ + " is a go at " + self.uri)
+                print((
+                    f"Wayback: {self.__class__.__name__} is a go"
+                    f" at {self.uri}"
+                ))
             else:
                 print((
                     f"Unable to access {self.__class__.__name__}, something "
@@ -1671,7 +1676,8 @@ class Wayback(Service):
 
         ret = subprocess.Popen(cmd)
         time.sleep(3)
-        wx.CallAfter(mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
+        wx.CallAfter(
+            mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
         if cb:
             wx.CallAfter(cb)
 
@@ -1692,13 +1698,13 @@ class Wayback(Service):
         self.generateCDX()
 
     def generatePathIndex(self):
-        dest = config.wailPath + "/config/path-index.txt"
+        dest = f"{config.wailPath}/config/path-index.txt"
         warcsPath = config.wailPath + "/archives/"
 
         outputContents = ""
         for file in listdir(warcsPath):
             if file.endswith(".warc") or file.endswith(".warc.gz"):
-                outputContents += file + "\t" + join(warcsPath, file) + "\n"
+                outputContents += f"{file}\t{join(warcsPath, file)}\n"
 
         print("Writing path-index.txt file...", end="")
         pathIndexFile = open(dest, "w")
@@ -1709,9 +1715,9 @@ class Wayback(Service):
     def generateCDX(self):
         print("CDX: ", end="")
 
-        dest = config.wailPath + "/config/path-index.txt"
-        warcsPath = config.wailPath + "/archives/"
-        cdxFilePathPre = config.wailPath + "/archiveIndexes/"
+        dest = f"{config.wailPath}/config/path-index.txt"
+        warcsPath = f"{config.wailPath}/archives/"
+        cdxFilePathPre = f"{config.wailPath}/archiveIndexes/"
         cdxIndexerPath = (
             f"{config.wailPath}/bundledApps/tomcat/webapps/bin/cdx-indexer"
         )
@@ -1729,14 +1735,15 @@ class Wayback(Service):
 
         # Combine CDX files
         print("combining ", end="")
-        allCDXesPath = config.wailPath + "/archiveIndexes/*.cdx"
+        allCDXesPath = f"{config.wailPath}/archiveIndexes/*.cdx"
 
         filenames = glob.glob(allCDXesPath)
         cdxHeaderIncluded = False
         print("merging ", end="")
 
         # Is cdxt the right filename?
-        unsortedPath = config.wailPath + "/archiveIndexes/combined_unsorted.cdxt"
+        unsortedPath = (
+            f"{config.wailPath}/archiveIndexes/combined_unsorted.cdxt")
 
         with open(unsortedPath, "w") as outfile:
             for fname in filenames:
@@ -1753,8 +1760,8 @@ class Wayback(Service):
         for f in filelist:
             os.remove(f)
 
-        cdxTemp = config.wailPath + "/archiveIndexes/combined_unsorted.cdxt"
-        cdxFinal = config.wailPath + "/archiveIndexes/index.cdx"
+        cdxTemp = f"{config.wailPath}/archiveIndexes/combined_unsorted.cdxt"
+        cdxFinal = f"{config.wailPath}/archiveIndexes/index.cdx"
         # TODO: fix cdx sorting in Windows #281
         # if 'darwin' in sys.platform:
         print("sorting ", end="")
@@ -1799,17 +1806,18 @@ class Heritrix(Service):
         return list(map(justFile,
                         glob.glob(os.path.join(config.heritrixJobPath, "*"))))
 
-    """ # getListOfJobs - rewrite to use the Heritrix API, will need to parse XML
+    """ # getListOfJobs - rewrite to use the Heritrix API,
+        will need to parse XML
         -H "Accept: application/xml"
         # replicate curl -v -d "action=rescan" -k -u lorem:ipsum --anyauth
         --location -H "Accept: application/xml" https://0.0.0.0:8443/engine
     """
 
     def getJobLaunches(self, jobId):
-        jobPath = config.heritrixJobPath + jobId
+        jobPath = f"{config.heritrixJobPath}{jobId}"
         return [
             f
-            for f in os.listdir(config.heritrixJobPath + jobId)
+            for f in os.listdir(f"{config.heritrixJobPath}{jobId}")
             if re.search(r"^[0-9]+$", f)
         ]
 
@@ -1853,7 +1861,7 @@ class Heritrix(Service):
                     elif queued == "EMPTY":
                         status = "   EMPTY, ENDING"
                 else:  # Show unknown status for debugging
-                    status = "   UNKNOWN" + discovered + queued
+                    status = f"   UNKNOWN{discovered}{queued}"
 
         return statusTemplate.safe_substitute(jobId=jobId, status=status)
 
@@ -1878,8 +1886,12 @@ class Heritrix(Service):
         mainAppWindow.advConfig.servicesPanel.status_heritrix.SetLabel(
             config.serviceEnabledLabel_KILLING
         )
-        # Ideally, the Heritrix API would have support for this. This will have to do. Won't work in Wintel
-        cmd = """ps ax | grep 'heritrix' | grep -v grep | awk '{print "kill -9 " $1}' | sh"""
+        # Ideally, the Heritrix API would have support for this.
+        # This will have to do. Won't work in Wintel
+        cmd = (
+            "ps ax | grep 'heritrix' | grep -v grep | "
+            """awk '{print "kill -9 " $1}' | sh"""
+        )
         print("Trying to kill Heritrix...")
         ret = subprocess.Popen(cmd, stderr=subprocess.STDOUT, shell=True)
         time.sleep(3)
@@ -1898,27 +1910,27 @@ class UpdateSoftwareWindow(wx.Frame):
     latestVersion_wayback = ""
 
     def updateWAIL(self, button):
-        print("Downloading " + self.updateJSONData["wail-core"]["uri"])
+        print(f'Downloading {self.updateJSONData["wail-core"]["uri"]}')
         wailcorefile = urlopen(self.updateJSONData["wail-core"]["uri"])
-        output = open(config.wailPath + "/support/temp.tar.gz", "wb")
+        output = open(f"{config.wailPath}/support/temp.tar.gz", "wb")
         output.write(wailcorefile.read())
         output.close()
         print("Done downloading WAIL update, backing up.")
 
         try:
             util.copyanything(
-                config.wailPath + "/Contents/",
-                config.wailPath + "/Contents_bkp/"
+                f"{config.wailPath}/Contents/",
+                f"{config.wailPath}/Contents_bkp/"
             )
             print("Done backing up. Nuking obsolete version.")
         except:
             print("Back up previously done, continuing.")
 
-        shutil.rmtree(config.wailPath + "/Contents/")
+        shutil.rmtree(f"{config.wailPath}/Contents/")
         print("Done nuking, decompressing update.")
 
-        tar = tarfile.open(config.wailPath + "/support/temp.tar.gz")
-        tar.extractall(config.wailPath + "/")
+        tar = tarfile.open(f"{config.wailPath}/support/temp.tar.gz")
+        tar.extractall(f"{config.wailPath}/")
         tar.close()
         print("Done, restart now.")
         os.system((
