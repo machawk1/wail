@@ -56,8 +56,9 @@ msg_crawlStatus_launchingCrawler = "Launching Crawler..."
 msg_crawlStatus_launchingWayback = "Launching Wayback..."
 msg_crawlStatus_initializingCrawlJob = "Initializing Crawl Job..."
 
-msg_java6Required = "{0}{1}".format(
-    "Java SE 6 needs to be installed. ", "WAIL should invoke the installer here."
+msg_java6Required = (
+    "Java SE 6 needs to be installed. "
+    "WAIL should invoke the installer here."
 )
 msg_archiveFailed_java = "Archive Now failed due to Java JRE Requirements"
 msg_java_resolving = "Resolving Java Dependency"
@@ -281,19 +282,17 @@ elif sys.platform.startswith("win32"):
     host_crawler = "localhost"
     host_replay = "localhost"
 
-uri_tomcat = "http://{0}:{1}".format(host_replay, port_replay)
-uri_wayback = "http://{0}:{1}/wayback/".format(host_replay, port_replay)
+uri_tomcat = f"http://{host_replay}:{port_replay}"
+uri_wayback = f"http://{host_replay}:{port_replay}/wayback/"
 uri_wayback_allMementos = uri_wayback + "*/"
-uri_heritrix = "https://{0}:{1}@{2}:{3}".format(
-    heritrixCredentials_username,
-    heritrixCredentials_password,
-    host_crawler,
-    port_crawler,
+uri_heritrix = (
+    f"https://"
+    f"{heritrixCredentials_username}:{heritrixCredentials_password}@"
+    f"{host_crawler}:{port_crawler}"
 )
-uri_heritrix_accessiblityURI = "https://{0}:{1}@{2}:{3}".format(
-    heritrixCredentials_username,
-    heritrixCredentials_password,
-    host_crawler,
-    port_crawler,
+uri_heritrix_accessiblityURI = (
+    f"https://"
+    f"{heritrixCredentials_username}:{heritrixCredentials_password}@"
+    f"{host_crawler}:{port_crawler}"
 )
 uri_heritrixJob = uri_heritrix + "/engine/job/"

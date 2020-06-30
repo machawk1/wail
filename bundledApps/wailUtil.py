@@ -8,8 +8,8 @@ def tail(filename, lines=1, _buffer=4098):
     try:
         f = open(filename, "r")
     except IOError as e:
-        return '{0}\n{1}'.format(
-            "No job info yet",
+        return (
+            "No job info yet\n"
             "You must run a job before stats can be shown here")
     lines_found = []
     block_counter = -1

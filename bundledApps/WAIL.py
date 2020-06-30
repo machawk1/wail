@@ -257,8 +257,7 @@ class TabController(wx.Frame):
         sep = "\t"
         if shortCut == "":
             sep = ""
-        return parentMenu.Append(wx.ID_ANY,
-                                 "{0}{1}{2}".format(itemText, sep, shortCut))
+        return parentMenu.Append(wx.ID_ANY, f"{itemText}{sep}{shortCut}")
 
     def bindMenu(self, title, menu):
         self.Bind(wx.EVT_MENU, lambda evt, t=title: self.displayTab(t), menu)
@@ -288,7 +287,7 @@ class TabController(wx.Frame):
         """Show new window with application information"""
         info = wx.adv.AboutDialogInfo()
         info.SetName(config.aboutWindow_appName)
-        info.SetVersion("v. " + config.WAIL_VERSION)
+        info.SetVersion(f"v. {config.WAIL_VERSION}")
         info.SetCopyright(config.aboutWindow_author)
 
         wx.adv.AboutBox(info)
@@ -384,7 +383,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
-    def setMementoCount(self, m_count, a_count=0):
+    def setMemenmemCountMsgtoCount(self, m_count, a_count=0):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
@@ -395,9 +394,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         if m_count is not None and (m_count < 0 or a_count < 0):
             raise ValueError("Invalid memento or archive count specified")
 
-        memCountMsg = ""
+        mem_count_msg = ""
         if m_count is None:
-            memCountMsg = config.msg_fetchingMementos
+            mem_count_msg = config.msg_fetchingMementos
         elif m_count > 0:
             localeToSet = "en_US"
             if not util.is_macOS():  # Let system determine locale
@@ -416,16 +415,16 @@ class WAILGUIFrame_Basic(wx.Panel):
             if a_count == 1:
                 a_plurality = ""
             m_count = locale.format_string("%d", m_count, grouping=True)
-            memCountMsg = (
-                "{0} memento{1} available " "from {2} archive{3}").format(
-                m_count, m_plurality, a_count, a_plurality
+            mem_count_msg = (
+                f"{m_count} memento{m_plurality} available from "
+                f"{a_count} archive{a_plurality}"
             )
         elif m_count == 0:
-            memCountMsg = config.msg_noMementosAvailable
+            mem_count_msg = config.msg_noMementosAvailable
         else:
             """ """
 
-        statusString = f"Public archives: {memCountMsg}"
+        statusString = f"Public archives: {mem_count_msg}"
         self.parent.parent.statusbar.SetStatusText(statusString)
 
         self.Layout()
@@ -439,7 +438,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         # TODO: Use CDXJ for counting the mementos
         currentURIValue = self.uri.GetValue()
-        print("MEMGATOR checking {0}".format(currentURIValue))
+        print(f"MEMGATOR checking {currentURIValue}")
 
         startupinfo = None
         # Fixes issue of Popen on Windows
@@ -482,9 +481,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         # UI not updated on Windows
         self.setMementoCount(mCount, len(archHosts))
 
-        print(
-            "MEMGATOR\n* URI-R: {0}\n* URI-Ms {1}\n* Archives: {2}".format(
-                currentURIValue, mCount, len(archHosts)
+        print((
+            f"MEMGATOR\n* URI-R: {currentURIValue}\n* URI-Ms {mCount}\n* "
+            f"Archives: {len(archHosts)}"
             )
         )
         # TODO: cache the TM
@@ -569,8 +568,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             self.setMessage(config.msg_crawlStatus_initializingCrawlJob)
             self.startHeritrixJob()
             mainAppWindow.advConfig.heritrixPanel.populateListboxWithJobs()
-            self.setMessage(
-                "Crawl of {0} started!".format(self.uri.GetValue()[0:41]))
+            self.setMessage(f"Crawl of {self.uri.GetValue()[0:41]} started!")
             wx.CallAfter(
                 mainAppWindow.advConfig.servicesPanel.updateServiceStatuses)
             # if sys.platform.startswith('darwin'): #show a notification
@@ -608,11 +606,9 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def launchHeritrix(self):
         """Execute Heritrix binary to allow jobs to be submitted"""
-        cmd = "{0} -a {1}:{2}".format(
-            config.heritrixBinPath,
-            config.heritrixCredentials_username,
-            config.heritrixCredentials_password,
-        )
+        cmd = (f"{config.heritrixBinPath} "
+               f"-a {config.heritrixCredentials_username}:"
+               f"{config.heritrixCredentials_password}")
 
         print(cmd)
 
@@ -639,7 +635,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             "Content-type": "application/x-www-form-urlencoded",
         }
         requests.post(
-            "{0}{1}".format(config.uri_heritrixJob, self.hJob.jobNumber),
+            f"{config.uri_heritrixJob}{self.hJob.jobNumber}",
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
                 config.heritrixCredentials_password
@@ -664,7 +660,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             "Content-type": "application/x-www-form-urlencoded",
         }
         requests.post(
-            "{0}{1}".format(config.uri_heritrixJob, self.hJob.jobNumber),
+            f"{config.uri_heritrixJob}{self.hJob.jobNumber}",
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
                 config.heritrixCredentials_password
@@ -933,12 +929,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     self.setHeritrixStatus(transitionalStatus)
                     return
                 else:
-                    print(
-                        "{0}{1}".format(
-                            "Invalid transitional service id specified. ",
-                            "Updating status per usual.",
-                        )
-                    )
+                    print((
+                        "Invalid transitional service id specified. "
+                        "Updating status per usual."
+                    ))
 
             self.setHeritrixStatus(heritrixAccessible)
             self.setWaybackStatus(tomcatAccessible)
@@ -1210,11 +1204,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             configuration files from the file system.
 
             """
-            jobPath = "{}{}".format(
-                config.heritrixJobPath,
-                str(self.listbox.GetString(self.listbox.GetSelection())),
+            jobPath = (
+                config.heritrixJobPath
+                str(self.listbox.GetString(self.listbox.GetSelection()))
             )
-            print("Deleting Job at {}".format(jobPath))
+            print(f"Deleting Job at {jobPath}")
             try:
                 shutil.rmtree(jobPath)
             except OSError:
@@ -1248,9 +1242,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # Issue #22 prevents the context of the right-click item from
             # ...being obtained and used here.
-            file = "{0}{1}/crawler-beans.cxml".format(
-                config.heritrixJobPath,
-                str(self.listbox.GetString(self.listbox.GetSelection())),
+            file = (
+                f"{config.heritrixJobPath}"
+                f"{str(self.listbox.GetString(self.listbox.GetSelection()))}"
+                f"/crawler-beans.cxml"
             )
             if util.is_macOS():
                 subprocess.call(("open", file))
@@ -1501,10 +1496,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
     def launchHeritrix(self, button):
         # self.heritrixStatus.SetLabel("Launching Heritrix")
-        cmd = "{0} -a {1}:{2}".format(
-            config.heritrixBinPath,
-            config.heritrixCredentials_username,
-            config.heritrixCredentials_password,
+        cmd = (
+            f"{config.heritrixBinPath} -a "
+            f"{config.heritrixCredentials_username}:"
+            f"{config.heritrixCredentials_password}"
         )
 
         # TODO: shell=True was added for macOS
@@ -1601,9 +1596,7 @@ class Service:
     uri = None  # TODO: update to use @abstractmethod + @property
 
     def accessible(self):
-        chkMsg = "Checking access to {0} at {1}".format(
-            self.__class__.__name__, self.uri
-        )
+        chkMsg = f"Checking access to {self.__class__.__name__} at {self.uri}"
         print(chkMsg)
 
         try:
@@ -1617,11 +1610,10 @@ class Service:
                 )
                 return True
 
-            print(
-                "Service: Failed to access {0} service at {1}".format(
-                    self.__class__.__name__, self.uri
-                )
-            )
+            print((
+                f"Service: Failed to access {self.__class__.__name__} service"
+                f" at {self.uri}"
+            ))
             return False
         except:
             print(
@@ -1653,20 +1645,18 @@ class Wayback(Service):
                 print(
                     "Wayback: " + self.__class__.__name__ + " is a go at " + self.uri)
             else:
-                print(
-                    "Unable to access {0}, something else is running on port 8080".format(
-                        self.__class__.__name__
-                    )
-                )
+                print((
+                    f"Unable to access {self.__class__.__name__}, something "
+                    f"else is running on port 8080"
+                ))
 
             return accessible
 
         except Exception:
-            print(
-                "Wayback(): Failed to access {0} service at {1}".format(
-                    self.__class__.__name__, self.uri
-                )
-            )
+            print((
+                f"Wayback(): Failed to access {self.__class__.__name__} "
+                f"service at {self.uri}"
+            ))
             return False
 
     def fixAsync(self, cb=None):
@@ -1721,8 +1711,8 @@ class Wayback(Service):
         dest = config.wailPath + "/config/path-index.txt"
         warcsPath = config.wailPath + "/archives/"
         cdxFilePathPre = config.wailPath + "/archiveIndexes/"
-        cdxIndexerPath = "{0}{1}".format(
-            config.wailPath, "/bundledApps/tomcat/webapps/bin/cdx-indexer"
+        cdxIndexerPath = (
+            f"{config.wailPath}/bundledApps/tomcat/webapps/bin/cdx-indexer"
         )
 
         print("generating ", end="")
@@ -1799,7 +1789,7 @@ class Tomcat(Service):
 
 
 class Heritrix(Service):
-    uri = "https://{0}:{1}".format(config.host_crawler, config.port_crawler)
+    uri = f"https://{config.host_crawler}:{config.port_crawler}"
 
     def getListOfJobs(self):
         def justFile(fullPath):
@@ -1832,9 +1822,9 @@ class Heritrix(Service):
             status = "   NOT BUILT"
 
         for launch in launches:
-            progressLogFilePath = "{0}{1}/{2}/{3}".format(
-                config.heritrixJobPath, jobId, launch,
-                "logs/progress-statistics.log"
+            progressLogFilePath = (
+                f"{config.heritrixJobPath}{jobId}/"
+                f"{launch}/logs/progress-statistics.log"
             )
             lastLine = util.tail(progressLogFilePath)
 
@@ -1844,9 +1834,10 @@ class Heritrix(Service):
 
             try:  # Check if crawl is running, assume scraped stats are ints
                 int(discovered)
-                status = "   {}: {}\n   {}: {}\n   {}: {}\n".format(
-                    "Discovered", discovered, "Queued", queued, "Downloaded",
-                    downloaded
+                status = (
+                    f"   Discovered: {discovered}\n"
+                    f"Queued: {queued}\n   "
+                    f"Downloaded: {downloaded}\n"
                 )
             except ValueError:
                 # Job is being built or completed
@@ -1929,10 +1920,10 @@ class UpdateSoftwareWindow(wx.Frame):
         tar.extractall(config.wailPath + "/")
         tar.close()
         print("Done, restart now.")
-        os.system(
-            "defaults read {}/Contents/Info.plist > /dev/null".format(
-                config.wailPath)
-        )
+        os.system((
+            f"defaults read {config.wailPath}/Contents/Info.plist > "
+            f"/dev/null"
+        ))
         # TODO: flush Info.plist cache
         # (cmd involving defaults within this py script)
 
