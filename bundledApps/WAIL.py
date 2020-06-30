@@ -383,7 +383,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uriChanged)
 
-    def setMemenmemCountMsgtoCount(self, m_count, a_count=0):
+    def setMementoCount(self, m_count, a_count=0):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
@@ -1205,8 +1205,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             """
             jobPath = (
-                config.heritrixJobPath
-                str(self.listbox.GetString(self.listbox.GetSelection()))
+                f"{config.heritrixJobPath}"
+                f"{str(self.listbox.GetString(self.listbox.GetSelection()))}"
             )
             print(f"Deleting Job at {jobPath}")
             try:
