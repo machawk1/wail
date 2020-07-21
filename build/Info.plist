@@ -18,6 +18,8 @@
 	<string>wail_blue.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<false/>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
