@@ -5,6 +5,7 @@ import os
 import sys
 import re
 import wx
+from win32com.client import Dispatch
 
 WAIL_VERSION = "-1"
 
@@ -19,11 +20,16 @@ else:
 
 
 try:
-    with open(infoPlistPath, "r", encoding='latin1') as myfile:
-        data = myfile.read()
-        vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
-        m = re.search(vsXML, data)
-        WAIL_VERSION = m.groups()[0].strip()
+    if "darwin" in sys.platform:
+        with open(infoPlistPath, "r", encoding='latin1') as myfile:
+            data = myfile.read()
+            vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
+            m = re.search(vsXML, data)
+            WAIL_VERSION = m.groups()[0].strip()
+    elif sys.platform.startswith("win32"):
+        version_parser = Dispatch('Scripting.FileSystemObject')
+        WAIL_VERSION = version_parser.GetFileVersion('C:\wail\WAIL.exe')
+
 except:
     print("User likely has the binary in the wrong location.")
 
