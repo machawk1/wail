@@ -5,7 +5,7 @@ import os
 import sys
 import re
 import wx
-from win32api import GetFileVersionInfo, LOWORD, HIWORD
+from win32com.client import Dispatch
 
 WAIL_VERSION = "-1"
 
@@ -27,10 +27,8 @@ try:
             m = re.search(vsXML, data)
             WAIL_VERSION = m.groups()[0].strip()
     elif sys.platform.startswith("win32"):
-        info = GetFileVersionInfo ('C:\\wail.exe', "\\")
-        ms = info['FileVersionMS']
-        ls = info['FileVersionLS']
-        WAIL_VERSION = f'{HIWORD (ms)}, {LOWORD (ms)}, {HIWORD (ls)}, {LOWORD (ls)}'
+        version_parser = Dispatch('Scripting.FileSystemObject')
+        WAIL_VERSION = version_parser.GetFileVersion('C:\wail\WAIL.exe')
 
 except:
     print("User likely has the binary in the wrong location.")
