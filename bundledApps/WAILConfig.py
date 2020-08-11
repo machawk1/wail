@@ -5,7 +5,8 @@ import os
 import sys
 import re
 import wx
-from win32com.client import Dispatch
+if os.name == 'nt':
+    from win32com.client import Dispatch
 
 WAIL_VERSION = "-1"
 
