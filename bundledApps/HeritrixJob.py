@@ -7,11 +7,13 @@ import WAILConfig as config
 
 from requests.auth import HTTPDigestAuth
 
+
 class HeritrixJob:
     def write(self):
         self.jobNumber = str(int(time.time()))
         path = self.jobPath + self.jobNumber
-        if not os.path.exists(path): os.makedirs(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
         beansFilePath = path
         if sys.platform.startswith('win32'):
             beansFilePath += "\\"
@@ -19,15 +21,15 @@ class HeritrixJob:
             beansFilePath += "/"
         with open(beansFilePath + "crawler-beans.cxml", "w") as f:
             f.write(self.sampleXML)
-            #print beansFilePath+"crawler-beans.cxml"
+            # print beansFilePath+"crawler-beans.cxml"
 
     def launchHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Launching Heritrix job')
-        data = {"action":"launch"}
-        headers = {"Accept":"application/xml",
-                   "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post(
+        data = {"action": "launch"}
+        headers = {"Accept": "application/xml",
+                   "Content-type": "application/x-www-form-urlencoded"}
+        r = requests.post(
             f'{config.uri_heritrixJob}{self.jobNumber}',
             auth=HTTPDigestAuth(
                 config.heritrixCredentials_username,
@@ -37,14 +39,15 @@ class HeritrixJob:
     def buildHeritrixJob(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
-        data = {"action":"build"}
+        data = {"action": "build"}
         headers = {"Accept": "application/xml",
-                   "Content-type" :"application/x-www-form-urlencoded"}
-        r =requests.post(f'{config.uri_heritrixJob}{self.jobNumber}',
-                         auth=HTTPDigestAuth(
+                   "Content-type": "application/x-www-form-urlencoded"}
+        r = requests.post(f'{config.uri_heritrixJob}{self.jobNumber}',
+                          auth=HTTPDigestAuth(
                              config.heritrixCredentials_username,
                              config.heritrixCredentials_password),
-                         data=data, headers=headers, verify=False,stream=True)
+                          data=data, headers=headers,
+                          verify=False, stream=True)
 
     def __init__(self, hJobPath, uris, depth=1):
         self.jobPath = hJobPath

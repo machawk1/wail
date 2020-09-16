@@ -599,8 +599,12 @@ class WAILGUIFrame_Basic(wx.Panel):
         # First check to be sure Java SE is installed.
         # Move this logic elsewhere in production
         noJava = config.msg_noJavaRuntime
-        p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
-        stdout, stderr = p.communicate()
+        try:
+          p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
+          stdout, stderr = p.communicate()
+        except FileNotFoundError:
+          return False
+
         return (noJava not in stdout) and (noJava not in stderr)
 
     def launchHeritrix(self):
