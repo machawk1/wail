@@ -207,15 +207,15 @@ wail_style_yesNo = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
 if "darwin" in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
-    wailPath = "/Applications/WAIL.app"
-    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
-    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
-    heritrixJobPath = heritrixPath + "jobs/"
+    wailPath = '/Applications/WAIL.app'
+    heritrixPath = f'{wailPath}/bundledApps/heritrix-3.2.0/'
+    heritrixBinPath = f'sh {heritrixPath}bin/heritrix'
+    heritrixJobPath = f'{heritrixPath}jobs/'
     fontSize = 10
-    tomcatPath = wailPath + "/bundledApps/tomcat"
-    warcsFolder = wailPath + "/archives"
-    tomcatPathStart = tomcatPath + "/bin/startup.sh"
-    tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+    tomcatPath = f'{wailPath}/bundledApps/tomcat'
+    warcsFolder = f'{wailPath}/archives'
+    tomcatPathStart = f'{tomcatPath}/bin/startup.sh'
+    tomcatPathStop = f'{tomcatPath}/bin/shutdown.sh'
 
     jdkPath = (
         wailPath
@@ -224,15 +224,15 @@ if "darwin" in sys.platform:  # macOS-specific code
     jreHome = jdkPath
     javaHome = jdkPath
 
-    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
+    aboutWindow_iconPath = f'{wailPath}{aboutWindow_iconPath}'
 
-    memGatorPath = wailPath + "/bundledApps/memgator-darwin-amd64"
-    archivesJSON = wailPath + "/config/archives.json"
+    memGatorPath = f'{wailPath}/bundledApps/memgator-darwin-amd64'
+    archivesJSON = f'{wailPath}/config/archives.json'
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart, 0o744)
     os.chmod(tomcatPathStop, 0o744)
-    os.chmod(tomcatPath + "/bin/catalina.sh", 0o744)
+    os.chmod(f'{tomcatPath}/bin/catalina.sh', 0o744)
     # TODO, variable encode paths, ^ needed for startup.sh to execute
 
     # Change all permissions within the app bundle (a big hammer)
@@ -240,25 +240,25 @@ if "darwin" in sys.platform:  # macOS-specific code
         os.chmod(r, 0o777)
 elif sys.platform.startswith("linux"):
     # Should be more dynamics but suitable for Docker-Linux testing
-    wailPath = "/wail"
-    heritrixPath = wailPath + "/bundledApps/heritrix-3.2.0/"
-    heritrixBinPath = "sh " + heritrixPath + "bin/heritrix"
-    heritrixJobPath = heritrixPath + "jobs/"
+    wailPath = '/wail'
+    heritrixPath = f'{wailPath}/bundledApps/heritrix-3.2.0/'
+    heritrixBinPath = f'sh {heritrixPath}bin/heritrix'
+    heritrixJobPath = f'{heritrixPath}jobs/'
     fontSize = 10
-    tomcatPath = wailPath + "/bundledApps/tomcat"
-    warcsFolder = wailPath + "/archives"
-    tomcatPathStart = tomcatPath + "/bin/startup.sh"
-    tomcatPathStop = tomcatPath + "/bin/shutdown.sh"
+    tomcatPath = f'{wailPath}/bundledApps/tomcat'
+    warcsFolder = f'{wailPath}/archives'
+    tomcatPathStart = f'{tomcatPath}/bin/startup.sh'
+    tomcatPathStop = f'{tomcatPath}/bin/shutdown.sh'
 
-    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
+    aboutWindow_iconPath = f'{wailPath}{aboutWindow_iconPath}'
 
-    memGatorPath = wailPath + "/bundledApps/memgator-linux-amd64"
-    archivesJSON = wailPath + "/config/archives.json"
+    memGatorPath = f'{wailPath}/bundledApps/memgator-linux-amd64'
+    archivesJSON = f'{wailPath}/config/archives.json'
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcatPathStart, 0o744)
     os.chmod(tomcatPathStop, 0o744)
-    os.chmod(tomcatPath + "/bin/catalina.sh", 0o744)
+    os.chmod(f'{tomcatPath}/bin/catalina.sh', 0o744)
     # TODO, variable encode paths, ^ needed for startup.sh to execute
 
     # Change all permissions within the app bundle (a big hammer)
@@ -269,22 +269,22 @@ elif sys.platform.startswith("win32"):
     # Win Specific Code here, this applies to both 32 and 64 bit
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
-    wailPath = "C:\\wail"
+    wailPath = 'C:\\wail'
 
-    aboutWindow_iconPath = wailPath + aboutWindow_iconPath
-    jdkPath = wailPath + "\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\"
+    aboutWindow_iconPath = f'{wailPath}{aboutWindow_iconPath}'
+    jdkPath = f'{wailPath}\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\'
     jreHome = jdkPath
     javaHome = jdkPath
 
     heritrixPath = wailPath + "\\bundledApps\\heritrix-3.2.0\\"
-    heritrixBinPath = heritrixPath + "bin\\heritrix.cmd"
-    heritrixJobPath = heritrixPath + "\\jobs\\"
-    tomcatPath = wailPath + "\\bundledApps\\tomcat"
-    warcsFolder = wailPath + "\\archives"
-    memGatorPath = wailPath + "\\bundledApps\\memgator-windows-amd64.exe"
-    archivesJSON = wailPath + "\\config\\archives.json"
-    tomcatPathStart = wailPath + "\\support\\catalina_start.bat"
-    tomcatPathStop = wailPath + "\\support\\catalina_stop.bat"
+    heritrixBinPath = f'{heritrixPath}bin\\heritrix.cmd'
+    heritrixJobPath = f'{heritrixPath}\\jobs\\'
+    tomcatPath = f'{wailPath}\\bundledApps\\tomcat'
+    warcsFolder = f'{wailPath}\\archives'
+    memGatorPath = f'wailPath}\\bundledApps\\memgator-windows-amd64.exe'
+    archivesJSON = f'{wailPath}\\config\\archives.json'
+    tomcatPathStart = f'{wailPath}\\support\\catalina_start.bat'
+    tomcatPathStop = f'{wailPath}\\support\\catalina_stop.bat'
 
     host_crawler = "localhost"
     host_replay = "localhost"
@@ -302,4 +302,4 @@ uri_heritrix_accessiblityURI = (
     f"{heritrixCredentials_username}:{heritrixCredentials_password}@"
     f"{host_crawler}:{port_crawler}"
 )
-uri_heritrixJob = uri_heritrix + "/engine/job/"
+uri_heritrixJob = f'{uri_heritrix}/engine/job/'
