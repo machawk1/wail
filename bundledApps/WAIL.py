@@ -603,7 +603,8 @@ class WAILGUIFrame_Basic(wx.Panel):
           p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
           stdout, stderr = p.communicate()
         except FileNotFoundError:
-          pass
+          return False
+
         return (noJava not in stdout) and (noJava not in stderr)
 
     def launchHeritrix(self):
