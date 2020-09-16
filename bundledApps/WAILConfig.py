@@ -24,7 +24,8 @@ try:
     if "darwin" in sys.platform:
         with open(infoPlistPath, "r", encoding='latin1') as myfile:
             data = myfile.read()
-            vsXML = r"<key>CFBundleShortVersionString</key>\n\t<string>(.*)</string>"
+            vsXML = (r"<key>CFBundleShortVersionString</key>\n\t"
+                     r"<string>(.*)</string>")
             m = re.search(vsXML, data)
             WAIL_VERSION = m.groups()[0].strip()
     elif sys.platform.startswith("win32"):
@@ -34,8 +35,6 @@ try:
 except:
     print("User likely has the binary in the wrong location.")
 
-osx_java7DMG_URI = "https://matkelly.com/wail_old/support/jdk-7u79-macosx-x64.dmg"
-osx_java7DMG_hash = b"\xb5+\xca\xc5d@\xe7\xfd\x0b]\xb9\xe31\xd3\x1d+\xd4X\xf5\x88\xb8\xb0\x1eR\xea\xf0\xad*\xff\xaf\x9d\xa2"
 
 ###############################
 # Platform independent Messages
@@ -48,7 +47,8 @@ msg_waybackNotStarted_title = "Wayback does not appear to be running."
 msg_waybackNotStarted_body = "Launch Wayback and re-check?"
 msg_uriNotInArchives = "The URL is not yet in the archives."
 msg_uriInArchives_title = "Archived Status"
-msg_uriInArchives_body = "Archival captures (mementos) for this URL are locally available."
+msg_uriInArchives_body = ("Archival captures (mementos) for this URL "
+                          "are locally available.")
 msg_wrongLocation_body = (
     "WAIL must reside in your Applications directory. "
     "Move it there then relaunch. \n* Current Location: "
@@ -219,7 +219,8 @@ if "darwin" in sys.platform:  # macOS-specific code
 
     jdkPath = (
         wailPath
-        + "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home/"
+        "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
+        "/Contents/Home/"
     )
     jreHome = jdkPath
     javaHome = jdkPath
