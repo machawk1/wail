@@ -201,7 +201,7 @@ tomcatPathStop = ""
 memGatorPath = ""
 archivesJSON = ""
 fontSize = 8
-wailWindowSize = (400, 250)
+wailWindowSize = (410, 275)
 wailWindowStyle = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 wail_style_yesNo = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
