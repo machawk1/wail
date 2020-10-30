@@ -217,10 +217,9 @@ if "darwin" in sys.platform:  # macOS-specific code
     tomcatPathStart = f'{tomcatPath}/bin/startup.sh'
     tomcatPathStop = f'{tomcatPath}/bin/shutdown.sh'
 
-    jdkPath = (
-        wailPath
-        "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
-        "/Contents/Home/"
+    jdkPath = (wailPath
+               "/bundledApps/Java/JavaVirtualMachines/jdk1.7.0_79.jdk"
+               "/Contents/Home/"
     )
     jreHome = jdkPath
     javaHome = jdkPath
@@ -282,7 +281,7 @@ elif sys.platform.startswith("win32"):
     heritrixJobPath = f'{heritrixPath}\\jobs\\'
     tomcatPath = f'{wailPath}\\bundledApps\\tomcat'
     warcsFolder = f'{wailPath}\\archives'
-    memGatorPath = f'wailPath}\\bundledApps\\memgator-windows-amd64.exe'
+    memGatorPath = f'{wailPath}\\bundledApps\\memgator-windows-amd64.exe'
     archivesJSON = f'{wailPath}\\config\\archives.json'
     tomcatPathStart = f'{wailPath}\\support\\catalina_start.bat'
     tomcatPathStop = f'{wailPath}\\support\\catalina_stop.bat'
