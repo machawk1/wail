@@ -600,10 +600,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Move this logic elsewhere in production
         noJava = config.msg_noJavaRuntime
         try:
-          p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
-          stdout, stderr = p.communicate()
+            p = Popen(["java", "-version"], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
         except FileNotFoundError:
-          return False
+            return False
 
         return (noJava not in stdout) and (noJava not in stderr)
 
