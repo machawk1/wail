@@ -397,7 +397,7 @@ xml = """<?xml version="1.0" encoding="UTF-8"?>
 
 
 
-def writeConfig(self):
+def write_config(self):
  thisScriptsPath = os.path.dirname(os.path.realpath(__file__))
  waybackRoot = thisScriptsPath+"/tomcat/webapps/ROOT"
  filename = 'waybackNEW.xml'

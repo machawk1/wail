@@ -29,7 +29,7 @@ def tail(filename, lines=1, _buffer=4098):
     return lines_found[-lines:]
 
 
-def copyanything(src, dst):
+def copy_anything(src, dst):
     try:
         shutil.copytree(src, dst)
     except OSError as exc:  # python >2.5
