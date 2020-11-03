@@ -24,7 +24,7 @@ class HeritrixJob:
             # print beans_file_path+"crawler-beans.cxml"
 
     def launch_heritrix_job(self):
-        logging.basic_config(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
         print('Launching Heritrix job')
         data = {"action": "launch"}
         headers = {"Accept": "application/xml",
@@ -37,7 +37,7 @@ class HeritrixJob:
             data=data, headers=headers, verify=False, stream=True)
 
     def build_heritrix_job(self):
-        logging.basic_config(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
         data = {"action": "build"}
         headers = {"Accept": "application/xml",

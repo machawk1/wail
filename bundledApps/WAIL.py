@@ -627,7 +627,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def launch_heritrix_job(self):
         """ Launch Heritrix job after building"""
-        logging.basic_config(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
         print("Launching Heririx job")
         data = {"action": "launch"}
         headers = {
@@ -652,7 +652,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         job file
 
         """
-        logging.basic_config(level=logging.DEBUG)
+        logging.basicConfig(level=logging.DEBUG)
         print("Building Heritrix job")
         data = {"action": "build"}
         headers = {
