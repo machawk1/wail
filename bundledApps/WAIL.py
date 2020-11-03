@@ -1115,7 +1115,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 config.button_label_heritrix_launch_web_ui_launching
             )
             self.launch_webui_button.Disable()
-            thread.start_new_thread(self.launchWebUIAsync, ())
+            thread.start_new_thread(self.launch_webui_async, ())
 
         def launch_webui_async(self):
             if not Heritrix().accessible():
