@@ -10,8 +10,8 @@ class Test(wx.Frame):
     def __init__(self, m_count, a_count):
         wx.Frame.__init__(self, None)
         panel = wx.Panel(self)
-        self.Notebook = wx.Notebook(panel)
-        b = basic(self.Notebook)
+        self.notebook = wx.Notebook(panel)
+        b = basic(self.notebook)
         b.set_memento_count(m_count, a_count)
         self.result = b.memento_status.GetLabel()
 

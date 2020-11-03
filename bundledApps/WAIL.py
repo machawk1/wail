@@ -122,7 +122,7 @@ class TabController(wx.Frame):
         file_all_crawls_finish = self.add_menu_item(
             file_all_crawls, config.menu_title_file_all_crawls_finish
         )
-        file_all_crawls_pauseUnpause = self.add_menu_item(
+        file_all_crawls_pause_unpause = self.add_menu_item(
             file_all_crawls, config.menu_title_file_all_crawls_pause
         )
         file_all_crawls_restart = self.add_menu_item(
@@ -230,7 +230,7 @@ class TabController(wx.Frame):
         # Menu events
         self.Bind(
             wx.EVT_MENU,
-            lambda evt, basicTab=True: self.display_tab(basicTab=basicTab),
+            lambda evt, basic_tab=True: self.display_tab(basic_tab=basic_tab),
             view_basic,
         )
 
@@ -264,10 +264,10 @@ class TabController(wx.Frame):
     def display_tab(self, table_title="Basic", basic_tab=False):
         """Change tab currently shown in the UI"""
         if basic_tab:
-            self.Notebook.SetSelection(0)
+            self.notebook.SetSelection(0)
             return
 
-        self.Notebook.SetSelection(1)
+        self.notebook.SetSelection(1)
 
         pages = {
             config.menu_title_view_view_advanced_services: 0,
@@ -275,7 +275,7 @@ class TabController(wx.Frame):
             config.menu_title_view_view_advanced_heritrix: 2,
             config.menu_title_view_view_advanced_miscellaneous: 3,
         }
-        self.adv_config.Notebook.SetSelection(pages[table_title])
+        self.adv_config.notebook.SetSelection(pages[table_title])
 
     def setup_new_crawl_from_menu(self, menu):
         """Change view to Advanced Crawl, display URI textbox"""
@@ -428,7 +428,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.Layout()
 
-    def setMessage(self, msg):
+    def set_message(self, msg):
         self.status.SetLabel(msg)
 
     def fetch_mementos(self):
@@ -508,9 +508,6 @@ class WAILGUIFrame_Basic(wx.Panel):
         # thread.start_new_thread(self.fetch_mementos,())
         event.Skip()
 
-    def testCallback(self):
-        print("callback executed!")
-
     def ensure_environment_variables_are_set(self):
         """Check system to verify that Java variables have been set.
         Notify the user if not and initialize the Java installation process.
@@ -546,7 +543,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.archive_now_button.SetLabel(
             config.button_label_archive_now_initializing)
-        self.setMessage("Starting Archiving Process...")
+        self.set_message("Starting Archiving Process...")
         self.archive_now_button.Disable()
         thread.start_new_thread(self.archive_now2Async, ())
 
@@ -554,20 +551,20 @@ class WAILGUIFrame_Basic(wx.Panel):
         """Create Heritrix crawl job, execute job, and update WAIL UI
         to indicate that a crawl has been initialized
         """
-        self.setMessage(config.msg_crawl_status_writing_config)
+        self.set_message(config.msg_crawl_status_writing_config)
         self.write_heritrix_log_with_uri()
         # First check to be sure Java SE is installed.
         if self.java_installed():
-            self.setMessage(config.msg_crawl_status_launching_crawler)
+            self.set_message(config.msg_crawl_status_launching_crawler)
             if not Heritrix().accessible():
                 self.launch_heritrix()
-            self.setMessage(config.msg_crawl_status_launching_wayback)
-            main_app_window.adv_config.startTomcat(None)
+            self.set_message(config.msg_crawl_status_launching_wayback)
+            main_app_window.adv_config.start_tomcat(None)
             # time.sleep(4)
-            self.setMessage(config.msg_crawl_status_initializing_crawl_job)
+            self.set_message(config.msg_crawl_status_initializing_crawl_job)
             self.start_heritrix_job()
             main_app_window.adv_config.heritrix_panel.populate_listbox_with_jobs()
-            self.setMessage(f"Crawl of {self.uri.GetValue()[0:41]} started!")
+            self.set_message(f"Crawl of {self.uri.GetValue()[0:41]} started!")
             wx.CallAfter(
                 main_app_window.adv_config.services_panel.update_service_statuses)
             # if sys.platform.startswith('darwin'): #show a notification
@@ -577,7 +574,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
             print("JAVA not INSTALLED")
             print(config.msg_java6Required)
-            self.setMessage(config.msg_archive_failed_java)
+            self.set_message(config.msg_archive_failed_java)
 
         wx.CallAfter(self.on_long_run_done)
 
@@ -751,7 +748,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
             d = wx.MessageDialog(
                 self, "Launch now?", "Wayback is not running",
-                config.wail_style_yesNo
+                config.wail_style_yes_no
             )
             result = d.ShowModal()
             d.Destroy()
@@ -891,11 +888,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def get_tomcat_version(self):
             # Apache Tomcat Version 7.0.30
-            releaseNotesPath = f"{config.tomcat_path}/RELEASE-NOTES"
+            release_notes_path = f"{config.tomcat_path}/RELEASE-NOTES"
 
-            if not os.path.exists(releaseNotesPath):
+            if not os.path.exists(release_notes_path):
                 return "?"
-            f = open(releaseNotesPath, "r")
+            f = open(release_notes_path, "r")
             version = ""
             for line in f.readlines():
                 if "Apache Tomcat Version " in line:
@@ -919,9 +916,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             wayback_accessible = service_enabled[Wayback().accessible()]
 
             if wayback_accessible is config.service_enabled_label_YES:
-                tomcatAccessible = wayback_accessible
+                tomcat_accessible = wayback_accessible
             else:
-                tomcatAccessible = service_enabled[Tomcat().accessible()]
+                tomcat_accessible = service_enabled[Tomcat().accessible()]
 
             # Update a transitional status and short circuit
             if service_id and transitional_status:
@@ -938,7 +935,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     ))
 
             self.set_heritrix_status(heritrix_accessible)
-            self.set_wayback_status(tomcatAccessible)
+            self.set_wayback_status(tomcat_accessible)
 
             if not hasattr(self, "fix_heritrix"):
                 print("First call, UI has not been setup")
@@ -954,7 +951,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.fix_heritrix.Enable()
                 self.kill_heritrix.Disable()
 
-            if tomcatAccessible is config.service_enabled_label_YES:
+            if tomcat_accessible is config.service_enabled_label_YES:
                 self.fix_wayback.Disable()
                 self.kill_wayback.Enable()
             else:
@@ -997,7 +994,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     self,
                     "Launch now?",
                     "Wayback is not running",
-                    config.wail_style_yesNo,
+                    config.wail_style_yes_no,
                 )
                 result = d.ShowModal()
                 d.Destroy()
@@ -1025,50 +1022,50 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox = wx.ListBox(self)
             self.populate_listbox_with_jobs()
 
-            # TODO: Convert statusMsg to use sizers
-            self.statusMsg = wx.StaticText(self, wx.ID_ANY, "", pos=(150, 0))
+            # TODO: Convert status_msg to use sizers
+            self.status_msg = wx.StaticText(self, wx.ID_ANY, "", pos=(150, 0))
 
-            self.listbox.Bind(wx.EVT_LISTBOX, self.clickedListboxItem)
-            self.listbox.Bind(wx.EVT_RIGHT_UP, self.manageJobs)
+            self.listbox.Bind(wx.EVT_LISTBOX, self.clicked_listbox_item)
+            self.listbox.Bind(wx.EVT_RIGHT_UP, self.manage_jobs)
 
             self.listbox.Bind(wx.EVT_SET_FOCUS, self.select_on_focus)
 
             self.crawl_jobs_text_ctrl_label = wx.StaticText(
                 self, wx.ID_ANY, config.text_label_crawl_jobs
             )
-            self.setupNewCrawlButton = wx.Button(
+            self.setup_new_crawl_button = wx.Button(
                 self, wx.ID_ANY, config.button_label_heritrix_new_crawl
             )
-            self.launchWebUIButton = wx.Button(
+            self.launch_webui_button = wx.Button(
                 self, wx.ID_ANY, config.button_label_heritrix_launch_web_ui
             )
 
             # Button functionality
-            self.setupNewCrawlButton.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
-            self.launchWebUIButton.Bind(wx.EVT_BUTTON, self.launchWebUI)
+            self.setup_new_crawl_button.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
+            self.launch_webui_button.Bind(wx.EVT_BUTTON, self.launchWebUI)
 
-            self.panelUpdater = None  # For updating stats UI
+            self.panel_updater = None  # For updating stats UI
 
-            panelSizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
-            leftColSizer = wx.FlexGridSizer(rows=4, cols=1, vgap=2, hgap=2)
+            panel_sizer = wx.FlexGridSizer(rows=1, cols=2, vgap=3, hgap=3)
+            left_col_sizer = wx.FlexGridSizer(rows=4, cols=1, vgap=2, hgap=2)
 
-            leftColSizer.AddMany(
+            left_col_sizer.AddMany(
                 [
                     self.crawl_jobs_text_ctrl_label,
                     self.listbox,
-                    (self.setupNewCrawlButton, 0, wx.EXPAND),
-                    (self.launchWebUIButton, 0, wx.EXPAND),
+                    (self.setup_new_crawl_button, 0, wx.EXPAND),
+                    (self.launch_webui_button, 0, wx.EXPAND),
                 ]
             )
 
-            panelSizer.Add(leftColSizer)
-            self.SetSizer(panelSizer)
+            panel_sizer.Add(left_col_sizer)
+            self.SetSizer(panel_sizer)
 
         def select_on_focus(self, evt=None):
             if self.listbox.GetItems()[0] != config.text_label_no_jobs_available:
                 # There is a legitimate value, select it
                 self.listbox.SetSelection(0)
-                self.clickedListboxItem()
+                self.clicked_listbox_item()
 
         def populate_listbox_with_jobs(self):
             jobs_list = Heritrix().get_list_of_jobs()
@@ -1078,62 +1075,62 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             if len(jobs_list) == 0:
                 jobs_list = [config.text_label_no_jobs_available]
-                self.clearInfoPanel()
+                self.clear_info_panel()
 
             self.listbox.Set(jobs_list)
 
-        def clickedListboxItem(self, event=None):
+        def clicked_listbox_item(self, event=None):
             self.hideNewCrawlUIElements()
-            self.statusMsg.Show()
+            self.status_msg.Show()
 
             selectionIndex = self.listbox.GetSelection()
             if selectionIndex == -1:
                 raise InvalidSelectionContextException("Selected empty space")
 
-            crawlId = self.listbox.GetString(selectionIndex)
-            if crawlId == config.text_label_no_jobs_available:
-                self.clearInfoPanel()
+            crawl_id = self.listbox.GetString(selectionIndex)
+            if crawl_id == config.text_label_no_jobs_available:
+                self.clear_info_panel()
                 raise InvalidSelectionContextException(
                     "Selected empty placeholder")
 
-            jobLaunches = Heritrix().get_job_launches(crawlId)
-            if self.panelUpdater:  # Kill any currently running timer
-                self.panelUpdater.cancel()
-                self.panelUpdater = None
-            self.updateInfoPanel(crawlId)
+            job_launches = Heritrix().get_job_launches(crawl_id)
+            if self.panel_updater:  # Kill any currently running timer
+                self.panel_updater.cancel()
+                self.panel_updater = None
+            self.updateInfoPanel(crawl_id)
 
         def updateInfoPanel(self, active):
-            self.statusMsg.SetLabel(Heritrix().get_current_stats(active))
-            self.panelUpdater = threading.Timer(1.0, self.updateInfoPanel,
+            self.status_msg.SetLabel(Heritrix().get_current_stats(active))
+            self.panel_updater = threading.Timer(1.0, self.updateInfoPanel,
                                                 [active])
-            self.panelUpdater.daemon = True
-            self.panelUpdater.start()
+            self.panel_updater.daemon = True
+            self.panel_updater.start()
 
-        def clearInfoPanel(self):
-            if hasattr(self, "statusMsg"):
-                self.statusMsg.SetLabel("")
+        def clear_info_panel(self):
+            if hasattr(self, "status_msg"):
+                self.status_msg.SetLabel("")
 
         def launchWebUI(self, button):
-            self.launchWebUIButton.SetLabel(
+            self.launch_webui_button.SetLabel(
                 config.button_label_heritrix_launch_web_ui_launching
             )
-            self.launchWebUIButton.Disable()
+            self.launch_webui_button.Disable()
             thread.start_new_thread(self.launchWebUIAsync, ())
 
-        def launchWebUIAsync(self):
+        def launch_webui_async(self):
             if not Heritrix().accessible():
                 main_app_window.basic_config.launch_heritrix()
             webbrowser.open_new_tab(config.uri_heritrix)
-            self.launchWebUIButton.SetLabel(
+            self.launch_webui_button.SetLabel(
                 config.button_label_heritrix_launch_web_ui)
-            self.launchWebUIButton.Enable()
+            self.launch_webui_button.Enable()
 
-        def launch_heritrixProcess(self, button):
+        def launch_heritrix_process(self, button):
             Heritrix().kill(None)
             time.sleep(3)
             main_app_window.basic_config.launch_heritrix()
 
-        def manageJobs(self, evt):
+        def manage_jobs(self, evt):
             # Do not show context menu without context
             if self.listbox.GetCount() == 0:
                 return
@@ -1144,46 +1141,46 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             try:
-                self.clickedListboxItem(None)
+                self.clicked_listbox_item(None)
             except InvalidSelectionContextException:
                 # Do not create context menu for invalid selection
                 return
 
             # Create context menu for selection
             menu = wx.Menu()
-            menu.Append(1, config.menu_forceCrawlFinish)
-            menu.Bind(wx.EVT_MENU, self.forceCrawlFinish, id=1)
-            menu.Append(2, config.menu_destroyJob)
+            menu.Append(1, config.menu_force_crawl_to_finish)
+            menu.Bind(wx.EVT_MENU, self.force_crawl_to_finish, id=1)
+            menu.Append(2, config.menu_destroy_job)
             menu.Bind(wx.EVT_MENU, self.deleteheritrix_job, id=2)
-            menu.Append(3, config.menu_viewJobInWebBrowser)
-            menu.Bind(wx.EVT_MENU, self.viewJobInWebBrowser, id=3)
-            menu.Append(4, config.menu_rebuildJob)
-            menu.Bind(wx.EVT_MENU, self.rebuildJob, id=4)
-            menu.Append(5, config.menu_rebuildAndLaunch_job)
-            menu.Bind(wx.EVT_MENU, self.rebuildAndLaunch_job, id=5)
+            menu.Append(3, config.menu_view_jobs_in_web_browser)
+            menu.Bind(wx.EVT_MENU, self.view_jobs_in_web_browser, id=3)
+            menu.Append(4, config.menu_rebuild_job)
+            menu.Bind(wx.EVT_MENU, self.rebuild_job, id=4)
+            menu.Append(5, config.menu_rebuild_and_launch_job)
+            menu.Bind(wx.EVT_MENU, self.rebuild_and_launch_job, id=5)
             main_app_window.PopupMenu(
                 menu, main_app_window.ScreenToClient(wx.GetMousePosition())
             )
             menu.Destroy()
 
         def finish_all_crawls(self, evt):
-            for crawlId in self.listbox.GetItems():
-                self.finishCrawl(crawlId)
+            for crawl_id in self.listbox.GetItems():
+                self.finish_crawl(crawl_id)
 
-        def finishCrawl(self, job_id):
+        def finish_crawl(self, job_id):
             """Cleanup Heritrix job after finishing"""
-            self.sendActionToHeritrix("terminate", job_id)
-            self.sendActionToHeritrix("teardown", job_id)
+            self.send_action_to_heritrix("terminate", job_id)
+            self.send_action_to_heritrix("teardown", job_id)
 
-        def forceCrawlFinish(self, evt):
-            """Read currently selected crawlID and instruct Heritrix
+        def force_crawl_to_finish(self, evt):
+            """Read currently selected crawl_id and instruct Heritrix
             to finish the job.
 
             """
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
-            self.finishCrawl(job_id)
+            self.finish_crawl(job_id)
 
-        def sendActionToHeritrix(self, action, job_id):
+        def send_action_to_heritrix(self, action, job_id):
             """Communicate with the local Heritrix binary via its HTTP API"""
             data = {"action": action}
             headers = {
@@ -1203,43 +1200,43 @@ class WAILGUIFrame_Advanced(wx.Panel):
             )
 
         def deleteheritrix_job(self, evt):
-            """Read the currently selected crawlID and delete its
+            """Read the currently selected crawl_id and delete its
             configuration files from the file system.
 
             """
-            jobPath = (
+            job_path = (
                 f"{config.heritrix_job_path}"
                 f"{str(self.listbox.GetString(self.listbox.GetSelection()))}"
             )
-            print(f"Deleting Job at {jobPath}")
+            print(f"Deleting Job at {job_path}")
             try:
-                shutil.rmtree(jobPath)
+                shutil.rmtree(job_path)
             except OSError:
                 print("Job deletion failed.")
             self.populate_listbox_with_jobs()
 
             # Blanks details if no job entries remain in UI
             if self.listbox.GetCount() == 0:
-                self.statusMsg.SetLabel("")
+                self.status_msg.SetLabel("")
 
-        def viewJobInWebBrowser(self, evt):
+        def view_jobs_in_web_browser(self, evt):
             """Display crawl information in the Heritrix web interface
-            based on the currently selected crawlID.
+            based on the currently selected crawl_id.
 
             """
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             webbrowser.open_new_tab(f"{config.uri_heritrix_job}{job_id}")
 
-        def rebuildJob(self, evt):
+        def rebuild_job(self, evt):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
-            self.sendActionToHeritrix("build", job_id)
+            self.send_action_to_heritrix("build", job_id)
 
-        def rebuildAndLaunch_job(self, evt):
+        def rebuild_and_launch_job(self, evt):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
-            self.sendActionToHeritrix("build", job_id)
-            self.sendActionToHeritrix("launch", job_id)
+            self.send_action_to_heritrix("build", job_id)
+            self.send_action_to_heritrix("launch", job_id)
 
-        def openConfigInTextEditor(self, evt):
+        def open_config_in_text_editor(self, evt):
             # TODO, most systems don't know how to open a cxml file.
             # ...Is there a way to create a system mapping from python?
 
@@ -1262,7 +1259,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # this function
             print("Restarting job")
 
-        def removeNewCrawlUI(self):
+        def remove_new_crawl_ui(self):
             chil = self.Sizer.GetChildren()
             if len(chil) > 1:
                 self.Sizer.Hide(len(chil) - 1)
@@ -1270,83 +1267,83 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
                 self.Layout()
 
-        def deselectCrawlListboxItems(self, evt=None):
+        def deselect_crawl_listbox_items(self, evt=None):
             self.listbox.Deselect(self.listbox.GetSelection())
 
-        def addNewCrawlUI(self):
-            self.statusMsg.Hide()
+        def add_new_crawl_ui(self):
+            self.status_msg.Hide()
             chil = self.Sizer.GetChildren()
             if len(chil) > 1:
-                self.removeNewCrawlUI()
+                self.remove_new_crawl_ui()
 
-            self.newCrawlTextCtrlLabel = wx.StaticText(
-                self, wx.ID_ANY, config.text_label_uriEntry
+            self.new_crawl_text_ctrl_label = wx.StaticText(
+                self, wx.ID_ANY, config.text_label_uri_entry
             )
-            multiLineAndNoWrapStyle = wx.TE_MULTILINE + wx.TE_DONTWRAP
-            self.newCrawlTextCtrl = wx.TextCtrl(
-                self, wx.ID_ANY, size=(220, 90), style=multiLineAndNoWrapStyle
+            multline_and_no_wrap_style = wx.TE_MULTILINE + wx.TE_DONTWRAP
+            self.new_crawl_text_ctrl = wx.TextCtrl(
+                self, wx.ID_ANY, size=(220, 90), style=multline_and_no_wrap_style
             )
 
-            rightColSizer = wx.FlexGridSizer(3, 1, 2, 2)
+            right_col_sizer = wx.FlexGridSizer(3, 1, 2, 2)
 
-            rightColSizer.AddMany(
-                [self.newCrawlTextCtrlLabel, self.newCrawlTextCtrl])
+            right_col_sizer.AddMany(
+                [self.new_crawl_text_ctrl_label, self.new_crawl_text_ctrl])
 
-            depthSizer = wx.GridBagSizer(2, 2)
+            depth_sizer = wx.GridBagSizer(2, 2)
 
-            self.newCrawlDepthTextCtrl = wx.TextCtrl(self, wx.ID_ANY,
+            self.new_crawl_depth_text_ctrl = wx.TextCtrl(self, wx.ID_ANY,
                                                      size=(44, -1))
 
-            self.newCrawlDepthTextCtrl.SetValue(config.text_label_depth_default)
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_KILL_FOCUS,
+            self.new_crawl_depth_text_ctrl.SetValue(config.text_label_depth_default)
+            self.new_crawl_depth_text_ctrl.Bind(wx.EVT_KILL_FOCUS,
                                             self.validateCrawlDepth)
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_CHAR,
+            self.new_crawl_depth_text_ctrl.Bind(wx.EVT_CHAR,
                                             self.handleCrawlDepthKeypress)
 
             # When a new crawl UI textbox is selected, deselect listbox
-            self.newCrawlTextCtrl.Bind(wx.EVT_SET_FOCUS,
-                                       self.deselectCrawlListboxItems)
-            self.newCrawlDepthTextCtrl.Bind(wx.EVT_SET_FOCUS,
-                                            self.deselectCrawlListboxItems)
+            self.new_crawl_text_ctrl.Bind(wx.EVT_SET_FOCUS,
+                                       self.deselect_crawl_listbox_items)
+            self.new_crawl_depth_text_ctrl.Bind(wx.EVT_SET_FOCUS,
+                                            self.deselect_crawl_listbox_items)
 
-            self.startCrawlButton = wx.Button(
+            self.start_crawl_button = wx.Button(
                 self, wx.ID_ANY, config.button_label_starCrawl
             )
-            self.startCrawlButton.SetDefault()
-            self.startCrawlButton.Bind(wx.EVT_BUTTON, self.crawlURIsListed)
+            self.start_crawl_button.SetDefault()
+            self.start_crawl_button.Bind(wx.EVT_BUTTON, self.crawl_uris_listed)
 
-            depthSizer.Add(
+            depth_sizer.Add(
                 wx.StaticText(self, wx.ID_ANY, config.text_label_depth),
                 pos=(0, 0),
                 flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
             )
-            depthSizer.Add(
-                self.newCrawlDepthTextCtrl,
+            depth_sizer.Add(
+                self.new_crawl_depth_text_ctrl,
                 pos=(0, 1),
                 flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
             )
-            depthSizer.Add(
-                self.startCrawlButton,
+            depth_sizer.Add(
+                self.start_crawl_button,
                 pos=(0, 6),
                 span=(2, 1),
                 flag=wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_RIGHT,
             )
 
-            rightColSizer.Add(depthSizer)
+            right_col_sizer.Add(depth_sizer)
 
-            self.Sizer.Add(rightColSizer)
+            self.Sizer.Add(right_col_sizer)
             self.Layout()
 
             # Deselect any highlighted selection in the jobs listbox
-            self.deselectCrawlListboxItems()
+            self.deselect_crawl_listbox_items()
 
         def setupNewCrawl(self, evt):
             """Create UI elements for user to specify the URIs and other
             attributes for a new Heritrix crawl.
 
             """
-            self.addNewCrawlUI()
-            self.newCrawlTextCtrl.SetFocus()
+            self.add_new_crawl_ui()
+            self.new_crawl_text_ctrl.SetFocus()
 
         def handleCrawlDepthKeypress(self, event):
             """Ensure that values for the crawl depth text input field
@@ -1365,28 +1362,28 @@ class WAILGUIFrame_Advanced(wx.Panel):
             field is numerical.
 
             """
-            if len(self.newCrawlDepthTextCtrl.GetValue()) == 0:
-                self.newCrawlDepthTextCtrl.SetValue("1")
+            if len(self.new_crawl_depth_text_ctrl.GetValue()) == 0:
+                self.new_crawl_depth_text_ctrl.SetValue("1")
             event.Skip()
 
         def hideNewCrawlUIElements(self):
             """Hide UI elements related to a new Heritrix crawl."""
 
-            self.removeNewCrawlUI()
+            self.remove_new_crawl_ui()
 
-        def showNewCrawlUIElements(self):
+        def show_new_crawl_ui_elements(self):
             """Display UI elements related to a new Heritrix crawl."""
-            self.newCrawlTextCtrlLabel.Show()
-            self.newCrawlTextCtrl.Show()
-            self.startCrawlButton.Show()
+            self.new_crawl_text_ctrl_label.Show()
+            self.new_crawl_text_ctrl.Show()
+            self.start_crawl_button.Show()
 
-        def crawlURIsListed(self, evt):
+        def crawl_uris_listed(self, evt):
             """Build and initialize a new Heritrix crawl based on the
             list of URIs specified in the WAIL UI.
 
             """
-            uris = self.newCrawlTextCtrl.GetValue().split("\n")
-            depth = self.newCrawlDepthTextCtrl.GetValue()
+            uris = self.new_crawl_text_ctrl.GetValue().split("\n")
+            depth = self.new_crawl_depth_text_ctrl.GetValue()
             self.h_job = HeritrixJob(config.heritrix_job_path, uris, depth)
             self.h_job.write()
             self.populate_listbox_with_jobs()
@@ -1400,27 +1397,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            view_archivesFolderButtonButton = wx.Button(
+            view_archives_folder_button_button = wx.Button(
                 self, 1, config.button_label_view_archive_files
             )
 
-            view_archivesFolderButtonButton.Bind(wx.EVT_BUTTON,
-                                                self.openArchivesFolder)
-            self.testUpdate = wx.Button(self, 1,
+            view_archives_folder_button_button.Bind(wx.EVT_BUTTON,
+                                                self.open_archives_folder)
+            self.test_update = wx.Button(self, 1,
                                         config.button_label_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(view_archivesFolderButtonButton, 0, wx.EXPAND, 0)
-            box.Add(self.testUpdate, 0, wx.EXPAND, 0)
+            box.Add(view_archives_folder_button_button, 0, wx.EXPAND, 0)
+            box.Add(self.test_update, 0, wx.EXPAND, 0)
 
             self.SetAutoLayout(True)
             self.SetSizer(box)
             self.Layout()
 
-            self.testUpdate.Bind(wx.EVT_BUTTON, self.checkForUpdates)
-            self.testUpdate.Disable()
+            self.test_update.Bind(wx.EVT_BUTTON, self.check_for_updates)
+            self.test_update.Disable()
 
-        def openArchivesFolder(self, button):
+        def open_archives_folder(self, button):
             """Display the folder in which generated WARCs reside in the
             operating system's file manager.
 
@@ -1433,11 +1430,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 subprocess.call(["open", config.warcs_folder])
 
-        def checkForUpdates(self, button):
+        def check_for_updates(self, button):
             """Display the window for updating WAIL."""
 
-            updateWindow = UpdateSoftwareWindow(parent=self, id=-1)
-            updateWindow.Show()
+            update_window = UpdateSoftwareWindow(parent=self, id=-1)
+            update_window.Show()
             # return
             # check if an updates version is available
 
@@ -1448,27 +1445,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         self.notebook = wx.Notebook(self)
-        self.notebook.myStatusBar = self
+        self.notebook.my_status_bar = self
         vbox = wx.BoxSizer(wx.VERTICAL)
         vbox.Add(self.notebook, 10, flag=wx.EXPAND)
 
         self.SetSizer(vbox)
 
         self.services_panel = WAILGUIFrame_Advanced.services_panel(self.notebook)
-        self.waybackPanel = WAILGUIFrame_Advanced.WaybackPanel(self.notebook)
+        self.wayback_panel = WAILGUIFrame_Advanced.WaybackPanel(self.notebook)
         self.heritrix_panel = WAILGUIFrame_Advanced.heritrix_panel(self.notebook)
-        self.miscellaneousPanel = WAILGUIFrame_Advanced.MiscellaneousPanel(
+        self.miscellaneous_panel = WAILGUIFrame_Advanced.MiscellaneousPanel(
             self.notebook
         )
 
         self.notebook.AddPage(self.services_panel,
                               config.tab_label_advanced_services)
-        self.notebook.AddPage(self.waybackPanel,
+        self.notebook.AddPage(self.wayback_panel,
                               config.tab_label_advanced_wayback)
         self.notebook.AddPage(self.heritrix_panel,
                               config.tab_label_advanced_heritrix)
         self.notebook.AddPage(
-            self.miscellaneousPanel, config.tab_label_advanced_miscellaneous
+            self.miscellaneous_panel, config.tab_label_advanced_miscellaneous
         )
 
         self.x, self.y = (15, 5)
@@ -1478,17 +1475,17 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.write_config = None
         self.h_job = None
 
-    def tomcatMessageOff(self):
-        # self.tomcatStatus.SetLabel(msg_waybackDisabled)
-        self.tomcatStatus.SetForegroundColour((255, 0, 0))
-        self.startTomcatButton.SetLabel(self.startTomcatLabel)
+    def tomcat_message_off(self):
+        # selftomcat_status.SetLabel(msg_waybackDisabled)
+        selftomcat_status.SetForegroundColour((255, 0, 0))
+        self.start_tomcat_button.SetLabel(self.start_tomcatLabel)
 
     def tomcatMessageOn(self):
-        # self.tomcatStatus.SetLabel(msg_waybackEnabled)
-        self.tomcatStatus.SetForegroundColour((0, 200, 0))
-        self.startTomcatButton.SetLabel(self.stopTomcatLabel)
+        # selftomcat_status.SetLabel(msg_waybackEnabled)
+        selftomcat_status.SetForegroundColour((0, 200, 0))
+        self.start_tomcat_button.SetLabel(self.stopTomcatLabel)
 
-    def startTomcat(self, button):
+    def start_tomcat(self, button):
         cmd = config.tomcat_path_start
         ret = subprocess.Popen(cmd)
         waiting_for_tomcat = True
@@ -1497,7 +1494,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 waiting_for_tomcat = False
             time.sleep(2)
 
-        self.waybackPanel.view_wayback_in_browser_button.Enable()
+        self.wayback_panel.view_wayback_in_browser_button.Enable()
 
     def launch_heritrix(self, button):
         # self.heritrixStatus.SetLabel("Launching Heritrix")
@@ -1521,22 +1518,22 @@ class WAILGUIFrame_Advanced(wx.Panel):
     def view_heritrix(self, button):
         webbrowser.open_new_tab(config.uri_heritrix)
 
-    def createListBox(self):
+    def create_listboxx(self):
 
-        self.uri_list_boxTitle = wx.StaticText(
+        self.uri_list_box_title = wx.StaticText(
             self, 7, config.text_label_urisToCrawl,
             (self.x, 5 + self.height * 7 + 30)
         )
         self.uri_list_box = wx.ListBox(self, wx.ID_ANY, [""])
-        self.uri_list_box.Bind(wx.EVT_LISTBOX, self.addURI)
+        self.uri_list_box.Bind(wx.EVT_LISTBOX, self.add_uri)
         self.SetSize((self.GetSize().x, self.GetSize().y + 300))
 
         main_app_window.SetSize((main_app_window.GetSize().x, 400))
 
-    def setupOneOffCrawl(self, button):
+    def setup_one_off_crawl(self, button):
         if self.uri_list_box is not None:
             return  # This function has already been done
-        self.createListBox()
+        self.create_listboxx()
 
         self.write_config = wx.Button(
             self,
@@ -1547,27 +1544,27 @@ class WAILGUIFrame_Advanced(wx.Panel):
         )
 
         wail_style_button_font = wx.Font(
-            config.fontSize,
+            config.font_size,
             wx.FONTFAMILY_SWISS,
             wx.FONTSTYLE_NORMAL,
             wx.FONTWEIGHT_NORMAL,
         )
 
         self.write_config.SetFont(wail_style_button_font)
-        self.write_config.Bind(wx.EVT_BUTTON, self.crawlURIs)
+        self.write_config.Bind(wx.EVT_BUTTON, self.crawl_uris)
         self.write_config.Disable()
         self.launch_crawl_button = wx.Button(
             self,
             33,
-            config.text_label_launchCrawl,
+            config.text_label_launch_crawl,
             (self.GetSize().x - 175, 305),
             (self.width, self.height),
         )
         self.launch_crawl_button.SetFont(wail_style_button_font)
-        self.launch_crawl_button.Bind(wx.EVT_BUTTON, self.launchCrawl)
+        self.launch_crawl_button.Bind(wx.EVT_BUTTON, self.launch_crawl)
         self.launch_crawl_button.Disable()
 
-    def crawlURIs(self, button):
+    def crawl_uris(self, button):
         uris = self.uri_list_box.GetStrings()
         self.h_job = HeritrixJob(config.heritrix_job_path, uris)
         self.h_job.write()
@@ -1575,12 +1572,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.uri_list_box.Set([""])
         self.launch_crawl_button.Enable()
 
-    def launchCrawl(self, button):
+    def launch_crawl(self, button):
         main_app_window.basic_config.h_job = self.h_job
         main_app_window.basic_config.launch_heritrix()
         main_app_window.basic_config.start_heritrix_job()
 
-    def addURI(self, listbox):
+    def add_uri(self, listbox):
         default_message = ""
         try:
             default_message = self.uri_list_box.GetString(
@@ -1601,8 +1598,8 @@ class Service:
     uri = None  # TODO: update to use @abstractmethod + @property
 
     def accessible(self):
-        chkMsg = f"Checking access to {self.__class__.__name__} at {self.uri}"
-        print(chkMsg)
+        chk_msg = f"Checking access to {self.__class__.__name__} at {self.uri}"
+        print(chk_msg)
 
         try:
             handle = urlopen(self.uri, None, 3)
@@ -1819,7 +1816,7 @@ class Heritrix(Service):
     """
 
     def get_job_launches(self, job_id):
-        jobPath = f"{config.heritrix_job_path}{job_id}"
+        job_path = f"{config.heritrix_job_path}{job_id}"
         return [
             f
             for f in os.listdir(f"{config.heritrix_job_path}{job_id}")

@@ -11,17 +11,17 @@ from requests.auth import HTTPDigestAuth
 class HeritrixJob:
     def write(self):
         self.job_number = str(int(time.time()))
-        path = self.jobPath + self.job_number
+        path = self.job_path + self.job_number
         if not os.path.exists(path):
             os.makedirs(path)
-        beansFilePath = path
+        beans_file_path = path
         if sys.platform.startswith('win32'):
-            beansFilePath += "\\"
+            beans_file_path += "\\"
         else:
-            beansFilePath += "/"
-        with open(beansFilePath + "crawler-beans.cxml", "w") as f:
+            beans_file_path += "/"
+        with open(beans_file_path + "crawler-beans.cxml", "w") as f:
             f.write(self.sampleXML)
-            # print beansFilePath+"crawler-beans.cxml"
+            # print beans_file_path+"crawler-beans.cxml"
 
     def launch_heritrix_job(self):
         logging.basic_config(level=logging.DEBUG)
@@ -49,8 +49,8 @@ class HeritrixJob:
                           data=data, headers=headers,
                           verify=False, stream=True)
 
-    def __init__(self, h_jobPath, uris, depth=1):
-        self.jobPath = h_jobPath
+    def __init__(self, h_job_path, uris, depth=1):
+        self.job_path = h_job_path
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE
