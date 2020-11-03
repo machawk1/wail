@@ -1152,7 +1152,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             menu.Bind(wx.EVT_MENU, self.force_crawl_to_finish, id=1)
             menu.Append(2, config.menu_destroy_job)
             menu.Bind(wx.EVT_MENU, self.deleteheritrix_job, id=2)
-            menu.Append(3, config.menu_view_jobs_in_web_browser)
+            menu.Append(3, config.menu_view_job_in_web_browser)
             menu.Bind(wx.EVT_MENU, self.view_jobs_in_web_browser, id=3)
             menu.Append(4, config.menu_rebuild_job)
             menu.Bind(wx.EVT_MENU, self.rebuild_job, id=4)

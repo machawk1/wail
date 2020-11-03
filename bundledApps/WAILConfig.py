@@ -164,7 +164,7 @@ menu_title_view_view_advanced_miscellaneous = "Miscellaneous"
 menu_title_window_wail = "Web Archiving Integration Layer"
 
 menu_destroy_job = "Destroy Job (Does not delete archive)"
-menu_force_crawl_finish = "Force crawl to finish"
+menu_force_crawl_to_finish = "Force crawl to finish"
 menu_view_job_in_web_browser = "View job in web browser"
 menu_rebuild_job = "Rebuild job"
 menu_rebuild_and_launch_job = "Rebuild and launch job"
