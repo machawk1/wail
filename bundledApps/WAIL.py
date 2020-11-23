@@ -921,7 +921,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     return regex.findall(file)[0]
 
         def get_memgator_version(self):
-            return "1.0"  # Placeholder
+            cmd = f'{config.memgator_path} -v'
+            ret = subprocess.run(cmd, capture_output=True, shell=True,
+                                 encoding='utf8')
+
+            return ret.stdout[len('MemGator ('):-2]
 
         def get_tomcat_version(self):
             # Apache Tomcat Version 7.0.30
