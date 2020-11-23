@@ -311,3 +311,8 @@ uri_heritrix_accessiblity_uri = (
 )
 uri_heritrix_job = f'{uri_heritrix}/engine/job/'
 uri_aggregator = f"http://{host_aggregator}:{port_aggregator}/"
+
+memgator_format = 'cdxj'
+memgator_restimeout = '0m3s'
+memgator_hdrtimeout = '3s'
+memgator_contimeout = '3s'

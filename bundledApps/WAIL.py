@@ -8,14 +8,23 @@
 
 from __future__ import print_function
 
-import wx
-import subprocess
-import webbrowser
-import os
-import time
-import sys
-import locale
 import functools
+import glob
+import json
+import locale
+import logging
+import os
+import re
+import requests
+import shutil
+import ssl
+import subprocess
+import sys
+import tarfile  # For updater
+import threading
+import time
+import webbrowser
+import wx
 
 # from ntfy.backends.default import notify
 
@@ -31,12 +40,6 @@ try:  # Py3
 except ImportError:  # Py2
     import thread  # For a more responsive UI
 
-import glob
-import re
-import ssl
-import shutil
-
-import json
 from HeritrixJob import HeritrixJob
 import WAILConfig as config
 import wailUtil as util
@@ -45,17 +48,10 @@ import wailUtil as util
 import wx.adv
 from subprocess import Popen, PIPE
 
-# For a more asynchronous UI, esp with accessible()s
-from multiprocessing import Pool as Thread
-import logging
-import requests
-import threading  # Necessary for polling/indexing
-
 from requests.auth import HTTPDigestAuth
 
 from os import listdir
 from os.path import join
-import tarfile  # For updater
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
@@ -385,6 +381,8 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uri_changed)
 
+        self.memgator = MemGator()
+
     def set_memento_count(self, m_count, a_count=0):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
@@ -434,7 +432,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def set_message(self, msg):
         self.status.SetLabel(msg)
 
-    def fetch_mementos(self):
+    def fetch_mementos(self):  # MemGator in server mode
         """Request memento count from MemGator based on URI currently
         displayed in the Basic interface
         """
@@ -448,37 +446,22 @@ class WAILGUIFrame_Basic(wx.Panel):
             startup_info = subprocess.STARTUPINFO()
             startup_info.dwFlags |= subprocess.STARTF_USESHOWWINDOW
 
-        mg = Popen(
-            [
-                config.memgator_path,
-                "--arcs",
-                config.archives_json,
-                "--format",
-                "cdxj",
-                "--restimeout",
-                "0m3s",
-                "--hdrtimeout",
-                "3s",
-                "--contimeout",
-                "3s",
-                current_uri_value,
-            ],
-            stdout=PIPE,
-            stdin=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            startupinfo=startup_info,
-        )
+        while not self.memgator.accessible():
+            self.memgator.fix()
+            time.sleep(500)
+        tm = self.memgator.get_timemap(current_uri_value, 'cdxj').split('\n')
 
         # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
         # results in 0 mementos, for which MemGator throws exception
 
         m_count = 0
         arch_hosts = set()
-        for line in mg.stdout:
+
+        for line in tm:
             cleaned_line = line.strip()
             if cleaned_line[:1].isdigit():
                 m_count += 1
-                arch_hosts.add(cleaned_line.split(b"/", 3)[2])
+                arch_hosts.add(cleaned_line.split('/', 3)[2])
 
         # UI not updated on Windows
         self.set_memento_count(m_count, len(arch_hosts))
@@ -1681,6 +1664,21 @@ class Service:
 
 class MemGator(Service):
     uri = config.uri_aggregator
+
+    def __init__(self, archives_json=config.archives_json,
+                 restimeout=config.memgator_restimeout,
+                 hdrtimeout=config.memgator_hdrtimeout,
+                 contimeout=config.memgator_contimeout):
+        self.archives_json = archives_json
+        self.restimeout = restimeout
+        self.hdrtimeout = hdrtimeout
+        self.contimeout = contimeout
+
+
+    def get_timemap(self, uri, format=config.memgator_format):
+        tm_uri = f'{config.uri_aggregator}timemap/{format}/{uri}'
+        resp = requests.get(tm_uri)
+        return resp.text
 
     def fix(self, cb=None):
         # main_app_window.adv_config.services_panel.status_wayback.SetLabel(
