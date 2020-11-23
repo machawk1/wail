@@ -159,6 +159,7 @@ menu_title_view_view_advanced = "Advanced Interface"
 menu_title_view_view_advanced_services = "Services"
 menu_title_view_view_advanced_wayback = "Wayback"
 menu_title_view_view_advanced_heritrix = "Heritrix"
+menu_title_view_view_advanced_memgator = "MemGator"
 menu_title_view_view_advanced_miscellaneous = "Miscellaneous"
 
 menu_title_window_wail = "Web Archiving Integration Layer"
@@ -174,9 +175,11 @@ heritrix_credentials_password = "ipsum"
 
 host_crawler = "0.0.0.0"
 host_replay = "0.0.0.0"
+host_aggregator = "0.0.0.0"
 
 port_crawler = "8443"
 port_replay = "8080"
+port_aggregator = "1208"
 
 index_timer_seconds = 10.0
 
@@ -225,6 +228,7 @@ if "darwin" in sys.platform:  # macOS-specific code
 
     memgator_path = f'{wail_path}/bundledApps/memgator-darwin-amd64'
     archives_json = f'{wail_path}/config/archives.json'
+    memgator_start = f'{memgator_path} server'
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcat_path_start, 0o744)
@@ -251,6 +255,8 @@ elif sys.platform.startswith("linux"):
 
     memgator_path = f'{wail_path}/bundledApps/memgator-linux-amd64'
     archives_json = f'{wail_path}/config/archives.json'
+
+    memgator_start = f'{memgator_path} server'
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcat_path_start, 0o744)
@@ -283,6 +289,8 @@ elif sys.platform.startswith("win32"):
     tomcat_path_start = f'{wail_path}\\support\\catalina_start.bat'
     tomcat_path_stop = f'{wail_path}\\support\\catalina_stop.bat'
 
+    memgator_start = f'{memgator_path} server'
+
     host_crawler = "localhost"
     host_replay = "localhost"
 
@@ -300,3 +308,4 @@ uri_heritrix_accessiblity_uri = (
     f"{host_crawler}:{port_crawler}"
 )
 uri_heritrix_job = f'{uri_heritrix}/engine/job/'
+uri_aggregator = f"http://{host_aggregator}:{port_aggregator}/"

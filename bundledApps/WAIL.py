@@ -768,6 +768,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_heritrix = wx.Button(
                 self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
             )
+            self.fix_memgator = wx.Button(
+                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
+            )
 
             self.kill_wayback = wx.Button(
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
@@ -775,25 +778,32 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_heritrix = wx.Button(
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
             )
+            self.kill_memgator = wx.Button(
+                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
+            )
 
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
 
             self.draw()
             thread.start_new_thread(self.update_service_statuses, ())
 
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
+            self.fix_memgator.Bind(wx.EVT_BUTTON, MemGator().fix)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
+            self.kill_memgator.Bind(wx.EVT_BUTTON, MemGator().kill)
+
 
             thread.start_new_thread(self.update_service_statuses, ())
 
         def draw(self):
             self.sizer = wx.BoxSizer()
 
-            gs = wx.FlexGridSizer(3, 5, 0, 0)
+            gs = wx.FlexGridSizer(4, 5, 0, 0)
 
             gs.AddMany(
                 [
@@ -849,6 +859,24 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     ),
                     self.fix_heritrix,
                     self.kill_heritrix,
+                    (
+                        wx.StaticText(self, wx.ID_ANY, "MemGator"),
+                        1,
+                        wx.ALIGN_CENTER_VERTICAL,
+                    ),
+                    (
+                        self.status_memgator,
+                        1,
+                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
+                    ),
+                    (
+                        wx.StaticText(self, wx.ID_ANY,
+                                      self.get_memgator_version()),
+                        1,
+                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
+                    ),
+                    self.fix_memgator,
+                    self.kill_memgator,
                 ]
             )
             gs.AddGrowableCol(0, 1)
@@ -864,6 +892,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def set_wayback_status(self, status):
             self.status_wayback.SetLabel(status)
+
+        def set_memgator_status(self, status):
+            self.status_memgator.SetLabel(status)
 
         def get_heritrix_version(self, abbr=True):
             htrix_lib_path = f"{config.heritrix_path}lib/"
@@ -885,6 +916,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 if file.startswith("openwayback-core"):
                     regex = re.compile("core-(.*)\.")
                     return regex.findall(file)[0]
+
+        def get_memgator_version(self):
+            return "1.0"  # Placeholder
 
         def get_tomcat_version(self):
             # Apache Tomcat Version 7.0.30
@@ -914,6 +948,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             heritrix_accessible = service_enabled[Heritrix().accessible()]
             wayback_accessible = service_enabled[Wayback().accessible()]
+            memgator_accessible = service_enabled[MemGator().accessible()]
 
             if wayback_accessible is config.service_enabled_label_YES:
                 tomcat_accessible = wayback_accessible
@@ -928,14 +963,18 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 elif service_id == "heritrix":
                     self.set_heritrix_status(transitional_status)
                     return
+                elif service_id == "memgator":
+                    self.set_memgator_status(transitional_status)
+                    return
                 else:
                     print((
                         "Invalid transitional service id specified. "
                         "Updating status per usual."
                     ))
 
-            self.set_heritrix_status(heritrix_accessible)
             self.set_wayback_status(tomcat_accessible)
+            self.set_heritrix_status(heritrix_accessible)
+            self.set_memgator_status(memgator_accessible)
 
             if not hasattr(self, "fix_heritrix"):
                 print("First call, UI has not been setup")
@@ -1624,6 +1663,28 @@ class Service:
                 "to check service accessibility."
             ))
             return False
+
+
+class MemGator(Service):
+    uri = config.uri_aggregator
+
+    def fix(self, cb=None):
+        # main_app_window.adv_config.services_panel.status_wayback.SetLabel(
+        #    config.service_enabled_label_FIXING)
+        main_app_window.adv_config.services_panel.set_memgator_status(
+            config.service_enabled_label_FIXING
+        )
+        cmd = config.memgator_start
+
+        ret = subprocess.Popen(cmd)
+        time.sleep(3)
+        wx.CallAfter(
+            main_app_window.adv_config.services_panel.update_service_statuses)
+        if cb:
+            wx.CallAfter(cb)
+
+    def kill(self, button):
+        pass  # TODO: implement halting memgator server process
 
 
 class Wayback(Service):
