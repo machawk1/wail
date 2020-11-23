@@ -305,6 +305,9 @@ class TabController(wx.Frame):
             print(f"{config.msg_wrong_location_body}{current_path}")
 
     def quit(self, button):
+        """Kill MemGator"""
+        MemGator().kill(None)
+        
         """Exit the application"""
         if main_app_window.indexing_timer:
             main_app_window.indexing_timer.cancel()
@@ -1684,7 +1687,17 @@ class MemGator(Service):
             wx.CallAfter(cb)
 
     def kill(self, button):
-        pass  # TODO: implement halting memgator server process
+        main_app_window.adv_config.services_panel.status_memgator.SetLabel(
+            "KILLING")
+
+        if sys.platform.startswith('win32'):
+            os.system("taskkill /f /im  memgator-windows-amd64.exe")
+        else:
+            cmd = config.memgator_stop
+            ret = subprocess.Popen(cmd)
+        time.sleep(3)
+        wx.CallAfter(
+            main_app_window.adv_config.services_panel.update_service_statuses)
 
 
 class Wayback(Service):

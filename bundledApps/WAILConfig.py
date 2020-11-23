@@ -216,6 +216,7 @@ if "darwin" in sys.platform:  # macOS-specific code
     warcs_folder = f'{wail_path}/archives'
     tomcat_path_start = f'{tomcat_path}/bin/startup.sh'
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
+    memgator_stop = ['pkill','memgator']
 
     jdk_path = (f"{wail_path}/bundledApps/Java"
                "/JavaVirtualMachines/jdk1.7.0_79.jdk"
@@ -250,6 +251,7 @@ elif sys.platform.startswith("linux"):
     warcs_folder = f'{wail_path}/archives'
     tomcat_path_start = f'{tomcat_path}/bin/startup.sh'
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
+    memgator_stop = 'pkill memgator'
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 
