@@ -1004,6 +1004,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.fix_wayback.Enable()
                 self.kill_wayback.Disable()
 
+            if memgator_accessible is config.service_enabled_label_YES:
+                self.fix_memgator.Disable()
+                self.kill_memgator.Enable()
+            else:
+                self.fix_memgator.Enable()
+                self.kill_memgator.Disable()
+
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
