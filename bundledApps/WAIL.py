@@ -102,7 +102,8 @@ class TabController(wx.Frame):
         self.indexing_timer.daemon = True
         self.indexing_timer.start()
 
-        pub.subscribe(self.basic_config.set_memento_count, 'change_statusbar_with_counts')
+        pub.subscribe(self.basic_config.set_memento_count,
+                      'change_statusbar_with_counts')
 
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
@@ -151,16 +152,16 @@ class TabController(wx.Frame):
         )
 
         edit_undo = self.add_menu_item(edit_menu, config.menu_title_edit_undo,
-                                     "CTRL+Z")
+                                       "CTRL+Z")
         edit_redo = self.add_menu_item(edit_menu, config.menu_title_edit_redo,
-                                     "CTRL+Y")
+                                       "CTRL+Y")
         edit_menu.AppendSeparator()
         edit_cut = self.add_menu_item(edit_menu, config.menu_title_edit_cut,
-                                    "CTRL+X")
+                                      "CTRL+X")
         edit_copy = self.add_menu_item(edit_menu, config.menu_title_edit_copy,
-                                     "CTRL+C")
+                                       "CTRL+C")
         edit_paste = self.add_menu_item(edit_menu, config.menu_title_edit_paste,
-                                      "CTRL+V")
+                                        "CTRL+V")
         edit_select_all = self.add_menu_item(
             edit_menu, config.menu_title_edit_select_all, "CTRL+A"
         )
@@ -212,7 +213,7 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda evt: window_wail.Check(True), window_wail)
 
         help_preferences = help_menu.Append(wx.ID_PREFERENCES,
-                                           "Preferences...\tCTRL+,")
+                                            "Preferences...\tCTRL+,")
         help_preferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
@@ -242,10 +243,11 @@ class TabController(wx.Frame):
         )
 
         self.bind_menu(config.menu_title_view_view_advanced_services,
-                      view_services)
-        self.bind_menu(config.menu_title_view_view_advanced_wayback, view_wayback)
+                       view_services)
+        self.bind_menu(config.menu_title_view_view_advanced_wayback,
+                       view_wayback)
         self.bind_menu(config.menu_title_view_view_advanced_heritrix,
-                      view_heritrix)
+                       view_heritrix)
         self.bind_menu(
             config.menu_title_view_view_advanced_miscellaneous, view_miscellaneous
         )
@@ -351,15 +353,15 @@ class WAILGUIFrame_Basic(wx.Panel):
             self, wx.ID_ANY, config.button_label_check_status
         )
         self.view_archive = wx.Button(self, wx.ID_ANY,
-                                     config.button_label_view_archive)
+                                      config.button_label_view_archive)
 
         basic_sizer_buttons.Add(self.view_archive, proportion=1, flag=wx.CENTER)
         basic_sizer_buttons.AddStretchSpacer()
         basic_sizer_buttons.Add(self.check_archive_status, proportion=1,
-                               flag=wx.CENTER)
+                                flag=wx.CENTER)
         basic_sizer_buttons.AddStretchSpacer()
         basic_sizer_buttons.Add(self.archive_now_button, proportion=1,
-                               flag=wx.CENTER)
+                                flag=wx.CENTER)
 
         self.status = wx.StaticText(self, wx.ID_ANY,
                                     config.text_label_status_init)
@@ -480,7 +482,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         # UI not updated on Windows
         pub.sendMessage('change_statusbar_with_counts',
-                        m_count=m_count, a_count = len(arch_hosts))
+                        m_count=m_count, a_count=len(arch_hosts))
 
         print((
             f"MEMGATOR\n* URI-R: {current_uri_value}\n* URI-Ms {m_count}\n* "
@@ -495,8 +497,6 @@ class WAILGUIFrame_Basic(wx.Panel):
             return  # Prevent modifiers from causing MemGator query
 
         self.set_memento_count(None)
-
-        #self.fetch_mementos()
 
         if self.memgator_delay_timer:  # Kill any currently running timer
             self.memgator_delay_timer.cancel()
@@ -712,7 +712,8 @@ class WAILGUIFrame_Basic(wx.Panel):
             launch_wayback = launch_wayback_dialog.ShowModal()
             if launch_wayback == wx.ID_YES:
                 wx.GetApp().Yield()
-                Wayback().fix(None, lambda: self.check_if_url_is_in_archive(button))
+                Wayback().fix(None,
+                              lambda: self.check_if_url_is_in_archive(button))
         elif 200 != status_code:
             wx.MessageBox(
                 config.msg_uri_not_in_archive,
@@ -802,7 +803,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
             self.kill_memgator.Bind(wx.EVT_BUTTON, MemGator().kill)
-
 
             thread.start_new_thread(self.update_service_statuses, ())
 
@@ -946,7 +946,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             return version
 
         def update_service_statuses(self, service_id=None,
-                                  transitional_status=None):
+                                    transitional_status=None):
             """Check if each service is enabled and set the GUI elements
             accordingly
 
@@ -1348,19 +1348,20 @@ class WAILGUIFrame_Advanced(wx.Panel):
             depth_sizer = wx.GridBagSizer(2, 2)
 
             self.new_crawl_depth_text_ctrl = wx.TextCtrl(self, wx.ID_ANY,
-                                                     size=(44, -1))
+                                                         size=(44, -1))
 
-            self.new_crawl_depth_text_ctrl.SetValue(config.text_label_depth_default)
+            self.new_crawl_depth_text_ctrl.SetValue(
+                config.text_label_depth_default)
             self.new_crawl_depth_text_ctrl.Bind(wx.EVT_KILL_FOCUS,
-                                            self.validateCrawlDepth)
+                                                self.validateCrawlDepth)
             self.new_crawl_depth_text_ctrl.Bind(wx.EVT_CHAR,
-                                            self.handleCrawlDepthKeypress)
+                                                self.handleCrawlDepthKeypress)
 
             # When a new crawl UI textbox is selected, deselect listbox
             self.new_crawl_text_ctrl.Bind(wx.EVT_SET_FOCUS,
-                                       self.deselect_crawl_listbox_items)
+                                          self.deselect_crawl_listbox_items)
             self.new_crawl_depth_text_ctrl.Bind(wx.EVT_SET_FOCUS,
-                                            self.deselect_crawl_listbox_items)
+                                                self.deselect_crawl_listbox_items)
 
             self.start_crawl_button = wx.Button(
                 self, wx.ID_ANY, config.button_label_starCrawl
@@ -1458,9 +1459,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             )
 
             view_archives_folder_button_button.Bind(wx.EVT_BUTTON,
-                                                self.open_archives_folder)
+                                                    self.open_archives_folder)
             self.test_update = wx.Button(self, 1,
-                                        config.button_label_check_for_updates)
+                                         config.button_label_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(view_archives_folder_button_button, 0, wx.EXPAND, 0)
@@ -1709,11 +1710,6 @@ class MemGator(Service):
         return resp.text
 
     def fix(self, cb=None):
-        # main_app_window.adv_config.services_panel.status_wayback.SetLabel(
-        #    config.service_enabled_label_FIXING)
-        #main_app_window.adv_config.services_panel.set_memgator_status(
-        #    config.service_enabled_label_FIXING
-        #)
         cmd = [config.memgator_path] + self.get_flags() + ['server']
 
         ret = subprocess.Popen(cmd)
@@ -1921,8 +1917,8 @@ class Heritrix(Service):
         def just_file(fullPath):
             return os.path.basename(fullPath)
 
-        return list(map(just_file,
-                        glob.glob(os.path.join(config.heritrix_job_path, "*"))))
+        return list(map(just_file,glob.glob(
+            os.path.join(config.heritrix_job_path, "*"))))
 
     """ # get_list_of_jobs - rewrite to use the Heritrix API,
         will need to parse XML
@@ -2372,10 +2368,12 @@ class UpdateSoftwareWindow(wx.Frame):
             (openwayback_64.GetWidth(), openwayback_64.GetHeight()),
         )
 
+
 class MementoInfoWindow(wx.Frame):
     def __init__(self, title, parent=None):
         wx.Frame.__init__(self, parent=parent, title=title)
         self.Show()
+
 
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
