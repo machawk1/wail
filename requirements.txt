@@ -5,6 +5,7 @@ ds-store
 mac-alias
 pathlib2
 pyinstaller>=3.6
+pypubsub
 pystache
 requests
 schedule
