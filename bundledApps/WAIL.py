@@ -84,6 +84,7 @@ class TabController(wx.Frame):
         panel.SetSizer(vbox)
 
         self.statusbar = self.CreateStatusBar()
+        self.statusbar.Bind(wx.EVT_LEFT_UP, self.show_memento_info)
         pub.subscribe(self.change_statusbar, 'change_statusbar')
 
         # Add basic config page/tab
@@ -102,6 +103,9 @@ class TabController(wx.Frame):
         self.indexing_timer.start()
 
         pub.subscribe(self.basic_config.set_memento_count, 'change_statusbar_with_counts')
+
+    def show_memento_info(self, evt):
+        pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg):
         self.statusbar.SetStatusText(msg)
@@ -427,7 +431,7 @@ class WAILGUIFrame_Basic(wx.Panel):
                 a_plurality = ""
             m_count = locale.format_string("%d", m_count, grouping=True)
             mem_count_msg = (
-                f"{m_count} memento{m_plurality} available from "
+                f"🕒 {m_count} memento{m_plurality} available from "
                 f"{a_count} archive{a_plurality}"
             )
         elif m_count == 0:
@@ -435,7 +439,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         else:
             """ """
 
-        status_string = f"Public archives: {mem_count_msg}"
+        status_string = f"{mem_count_msg}"
         pub.sendMessage('change_statusbar', msg=status_string)
 
         self.Layout()
@@ -2368,6 +2372,10 @@ class UpdateSoftwareWindow(wx.Frame):
             (openwayback_64.GetWidth(), openwayback_64.GetHeight()),
         )
 
+class MementoInfoWindow(wx.Frame):
+    def __init__(self, title, parent=None):
+        wx.Frame.__init__(self, parent=parent, title=title)
+        self.Show()
 
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
