@@ -48,7 +48,7 @@ msg_wayback_not_started_body = "Launch Wayback and re-check?"
 msg_uri_not_in_archive = "The URL is not yet in the archives."
 msg_uri_in_archives_title = "Archived Status"
 msg_uri_in_archives_body = ("Archival captures (mementos) for this URL "
-                          "are locally available.")
+                            "are locally available.")
 msg_wrong_location_body = (
     "WAIL must reside in your Applications directory. "
     "Move it there then relaunch. \n* Current Location: "
@@ -108,7 +108,9 @@ text_label_depth_default = "1"
 text_label_launch_crawl = "Launch Crawl"
 text_label_uris_to_crawl = "URIs to Crawl:"
 text_label_crawl_jobs = "Crawl Jobs"
-text_label_status_init = 'Type a URL and click "Archive Now!" ' "to begin archiving."
+text_label_status_init = ('Type a URL and click "Archive Now!" '
+                          'to begin archiving.')
+
 text_label_no_jobs_available = "(No jobs available)"
 
 about_window_app_name = "Web Archiving Integration Layer (WAIL)"
@@ -254,7 +256,6 @@ elif sys.platform.startswith("linux"):
 
     memgator_path = f'{wail_path}/bundledApps/memgator-linux-amd64'
     archives_json = f'{wail_path}/config/archives.json'
-
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcat_path_start, 0o744)
