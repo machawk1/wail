@@ -1680,6 +1680,12 @@ class MemGator(Service):
         self.hdrtimeout = hdrtimeout
         self.contimeout = contimeout
 
+    def get_flags(self):
+        return [
+            f'--hdrtimeout={self.hdrtimeout}',
+            f'--contimeout={self.contimeout}',
+            f'--restimeout={self.contimeout}'
+        ]
 
     def get_timemap(self, uri, format=config.memgator_format):
         tm_uri = f'{config.uri_aggregator}timemap/{format}/{uri}'
@@ -1692,8 +1698,8 @@ class MemGator(Service):
         #main_app_window.adv_config.services_panel.set_memgator_status(
         #    config.service_enabled_label_FIXING
         #)
-        cmd = config.memgator_start
-
+        cmd = [config.memgator_path] + self.get_flags() + ['server']
+        
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(

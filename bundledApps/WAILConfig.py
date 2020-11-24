@@ -228,7 +228,6 @@ if "darwin" in sys.platform:  # macOS-specific code
 
     memgator_path = f'{wail_path}/bundledApps/memgator-darwin-amd64'
     archives_json = f'{wail_path}/config/archives.json'
-    memgator_start = [memgator_path, 'server']
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcat_path_start, 0o744)
@@ -256,7 +255,6 @@ elif sys.platform.startswith("linux"):
     memgator_path = f'{wail_path}/bundledApps/memgator-linux-amd64'
     archives_json = f'{wail_path}/config/archives.json'
 
-    memgator_start = f'{memgator_path} server'
 
     # Fix tomcat control scripts' permissions
     os.chmod(tomcat_path_start, 0o744)
