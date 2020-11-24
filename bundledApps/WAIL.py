@@ -1708,9 +1708,14 @@ class MemGator(Service):
         if sys.platform.startswith('win32'):
             os.system("taskkill /f /im  memgator-windows-amd64.exe")
         else:
-            cmd = config.memgator_stop
-            ret = subprocess.Popen(cmd)
-        time.sleep(3)
+            sp = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+            output, error = sp.communicate()
+            target_process = "memgator"
+            for line in output.splitlines():
+                if target_process in str(line):
+                    pid = int(line.split(None, 1)[0])
+                    os.kill(pid, 9)
+
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
 
