@@ -49,6 +49,7 @@ import wx.adv
 from subprocess import Popen, PIPE
 
 from requests.auth import HTTPDigestAuth
+from pubsub import pub
 
 from os import listdir
 from os.path import join
@@ -83,6 +84,7 @@ class TabController(wx.Frame):
         panel.SetSizer(vbox)
 
         self.statusbar = self.CreateStatusBar()
+        pub.subscribe(self.change_statusbar, 'change_statusbar')
 
         # Add basic config page/tab
         self.basic_config = WAILGUIFrame_Basic(self.notebook)
@@ -98,6 +100,9 @@ class TabController(wx.Frame):
         )
         self.indexing_timer.daemon = True
         self.indexing_timer.start()
+
+    def change_statusbar(self, msg):
+        self.statusbar.SetStatusText(msg)
 
     def create_menu(self):
         """Configure, initialize, and attach application menus"""
@@ -431,7 +436,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             """ """
 
         status_string = f"Public archives: {mem_count_msg}"
-        self.parent.parent.statusbar.SetStatusText(status_string)
+        pub.sendMessage('change_statusbar', msg=status_string)
 
         self.Layout()
 
@@ -1699,7 +1704,7 @@ class MemGator(Service):
         #    config.service_enabled_label_FIXING
         #)
         cmd = [config.memgator_path] + self.get_flags() + ['server']
-        
+
         ret = subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(
