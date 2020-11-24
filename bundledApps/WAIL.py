@@ -302,8 +302,8 @@ class TabController(wx.Frame):
 
     def quit(self, button):
         """Kill MemGator"""
-        MemGator().kill(None)
-        
+        self.basic_config.memgator.kill(None)
+
         """Exit the application"""
         if main_app_window.indexing_timer:
             main_app_window.indexing_timer.cancel()
@@ -314,6 +314,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
         self.parent = parent
+        self.memgator = MemGator()
 
         # Forces Windows into composite mode for drawing
         self.SetDoubleBuffered(True)
@@ -381,7 +382,12 @@ class WAILGUIFrame_Basic(wx.Panel):
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uri_changed)
 
-        self.memgator = MemGator()
+        self.memgator_delay_timer = threading.Timer(
+            1.0, thread.start_new_thread, [self.fetch_mementos, ()]
+        )
+        self.memgator_delay_timer.daemon = True
+        self.memgator_delay_timer.start()
+
 
     def set_memento_count(self, m_count, a_count=0):
         """Display the number of mementos in the interface based on the
@@ -1683,9 +1689,9 @@ class MemGator(Service):
     def fix(self, cb=None):
         # main_app_window.adv_config.services_panel.status_wayback.SetLabel(
         #    config.service_enabled_label_FIXING)
-        main_app_window.adv_config.services_panel.set_memgator_status(
-            config.service_enabled_label_FIXING
-        )
+        #main_app_window.adv_config.services_panel.set_memgator_status(
+        #    config.service_enabled_label_FIXING
+        #)
         cmd = config.memgator_start
 
         ret = subprocess.Popen(cmd)
