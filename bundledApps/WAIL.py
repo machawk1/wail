@@ -101,6 +101,8 @@ class TabController(wx.Frame):
         self.indexing_timer.daemon = True
         self.indexing_timer.start()
 
+        pub.subscribe(self.basic_config.set_memento_count, 'change_statusbar_with_counts')
+
     def change_statusbar(self, msg):
         self.statusbar.SetStatusText(msg)
 
@@ -393,12 +395,10 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
 
-
     def set_memento_count(self, m_count, a_count=0):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
-
         # Ensure m_count is an int, convert if not, allow None
         if m_count is not None and not isinstance(m_count, int):
             m_count = int(m_count)
@@ -475,7 +475,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                 arch_hosts.add(cleaned_line.split('/', 3)[2])
 
         # UI not updated on Windows
-        self.set_memento_count(m_count, len(arch_hosts))
+        pub.sendMessage('change_statusbar_with_counts',
+                        m_count=m_count, a_count = len(arch_hosts))
 
         print((
             f"MEMGATOR\n* URI-R: {current_uri_value}\n* URI-Ms {m_count}\n* "
@@ -491,15 +492,19 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.set_memento_count(None)
 
+        #self.fetch_mementos()
+
         if self.memgator_delay_timer:  # Kill any currently running timer
             self.memgator_delay_timer.cancel()
             self.memgator_delay_timer = None
 
         self.memgator_delay_timer = threading.Timer(
-            1.0, thread.start_new_thread, [self.fetch_mementos, ()]
+            1.0, self.fetch_mementos
         )
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
+
+        pub.subscribe(self.set_memento_count, 'change_statusbar_with_counts')
 
         # TODO: start timer on below, kill if another key is hit
         # thread.start_new_thread(self.fetch_mementos,())
@@ -1675,6 +1680,7 @@ class Service:
 
 class MemGator(Service):
     uri = config.uri_aggregator
+    last_uri = ''
 
     def __init__(self, archives_json=config.archives_json,
                  restimeout=config.memgator_restimeout,
@@ -1695,6 +1701,7 @@ class MemGator(Service):
     def get_timemap(self, uri, format=config.memgator_format):
         tm_uri = f'{config.uri_aggregator}timemap/{format}/{uri}'
         resp = requests.get(tm_uri)
+        self.last_uri = tm_uri
         return resp.text
 
     def fix(self, cb=None):
