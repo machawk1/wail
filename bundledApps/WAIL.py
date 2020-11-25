@@ -105,7 +105,8 @@ class TabController(wx.Frame):
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg):
-        self.statusbar.SetStatusText(msg)
+        #self.statusbar.SetStatusText(msg)
+        wx.CallAfter(self.statusbar.SetStatusText, msg)
 
     def create_menu(self):
         """Configure, initialize, and attach application menus"""
@@ -1723,7 +1724,8 @@ class MemGator(Service):
     def fix(self, cb=None):
         cmd = [config.memgator_path] + self.get_flags() + ['server']
 
-        subprocess.Popen(cmd)
+        subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.STDOUT)
         time.sleep(3)
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
