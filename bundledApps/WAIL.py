@@ -105,7 +105,6 @@ class TabController(wx.Frame):
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg):
-        #self.statusbar.SetStatusText(msg)
         wx.CallAfter(self.statusbar.SetStatusText, msg)
 
     def create_menu(self):
