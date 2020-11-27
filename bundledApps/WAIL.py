@@ -598,9 +598,9 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def write_heritrix_log_with_uri(self):
         """Create crawl job files with URI currently in Basic interface"""
-        h_job = HeritrixJob(
+        self.h_job = HeritrixJob(
             config.heritrix_job_path, [self.uri.GetValue()])
-        h_job.write()
+        self.h_job.write()
 
     def java_installed(self):
         """Check that a java binary is available"""
