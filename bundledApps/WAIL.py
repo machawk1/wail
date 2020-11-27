@@ -1148,7 +1148,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.listbox.Set(jobs_list)
 
-        def clicked_listbox_item(self, _):
+        def clicked_listbox_item(self, _=None):
             self.hideNewCrawlUIElements()
             self.status_msg.Show()
 
@@ -1211,7 +1211,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             self.listbox.SetSelection(self.listbox.HitTest(evt.GetPosition()))
             try:
-                self.clicked_listbox_item(None)
+                self.clicked_listbox_item()
             except InvalidSelectionContextException:
                 # Do not create context menu for invalid selection
                 return
