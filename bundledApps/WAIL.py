@@ -30,9 +30,9 @@ import wx
 
 from string import Template  # Py3.6+
 
-from six.moves.urllib.request import urlopen
-from six.moves.urllib.parse import urlparse
-from six.moves.urllib.error import HTTPError
+from urllib.request import urlopen
+from urllib.parse import urlparse
+from urllib.error import HTTPError
 
 import _thread as thread
 
