@@ -338,15 +338,15 @@ class WAILGUIFrame_Basic(wx.Panel):
                                value=config.text_label_default_uri)
 
         basic_sizer = wx.BoxSizer(wx.VERTICAL)
-        basic_sizer_URI = wx.BoxSizer()
+        basic_sizer_uri = wx.BoxSizer()
         basic_sizer_buttons = wx.BoxSizer()
         basic_sizer_messages = wx.BoxSizer()
 
-        basic_sizer_URI.Add(
+        basic_sizer_uri.Add(
             wx.StaticText(self, wx.ID_ANY, config.button_label_uri),
             flag=wx.CENTER
         )
-        basic_sizer_URI.Add(self.uri, proportion=1, flag=wx.CENTER)
+        basic_sizer_uri.Add(self.uri, proportion=1, flag=wx.CENTER)
 
         self.archive_now_button = wx.Button(
             self, wx.ID_ANY, config.button_label_archive_now
@@ -369,7 +369,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.status = wx.StaticText(self, wx.ID_ANY,
                                     config.text_label_status_init)
 
-        basic_sizer.Add(basic_sizer_URI, proportion=0, flag=wx.EXPAND)
+        basic_sizer.Add(basic_sizer_uri, proportion=0, flag=wx.EXPAND)
         basic_sizer.AddSpacer(3)
         basic_sizer.Add(basic_sizer_buttons, proportion=0, flag=wx.EXPAND)
         basic_sizer.AddSpacer(3)
@@ -569,7 +569,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             if not Heritrix().accessible():
                 self.launch_heritrix()
             self.set_message(config.msg_crawl_status_launching_wayback)
-            main_app_window.adv_config.start_tomcat(None)
+            main_app_window.adv_config.start_tomcat()
             # time.sleep(4)
             self.set_message(config.msg_crawl_status_initializing_crawl_job)
             self.start_heritrix_job()
@@ -907,7 +907,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def set_memgator_status(self, status):
             self.status_memgator.SetLabel(status)
 
-        def get_heritrix_version(self, abbr=True):
+        def get_heritrix_version(self):
             htrix_lib_path = f"{config.heritrix_path}lib/"
 
             for file in os.listdir(htrix_lib_path):
@@ -1162,7 +1162,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 raise InvalidSelectionContextException(
                     "Selected empty placeholder")
 
-            job_launches = Heritrix().get_job_launches(crawl_id)
             if self.panel_updater:  # Kill any currently running timer
                 self.panel_updater.cancel()
                 self.panel_updater = None
@@ -1551,7 +1550,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.write_config = None
         self.h_job = None
 
-    def start_tomcat(self, button):
+    def start_tomcat(self):
         cmd = config.tomcat_path_start
         subprocess.Popen(cmd)
         waiting_for_tomcat = True
@@ -1814,7 +1813,7 @@ class Wayback(Service):
         main_app_window.adv_config.services_panel.status_wayback.SetLabel(
             "KILLING")
         cmd = config.tomcat_path_stop
-        ret = subprocess.Popen(cmd)
+        subprocess.Popen(cmd)
         time.sleep(3)
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
