@@ -1831,16 +1831,12 @@ class Wayback(Service):
             if file.endswith(".warc") or file.endswith(".warc.gz"):
                 output_contents += f"{file}\t{join(warcs_path, file)}\n"
 
-        print("Writing path-index.txt file...", end="")
         path_index_file = open(dest, "w")
         path_index_file.write(output_contents)
         path_index_file.close()
-        print("COMPLETE")
 
     @staticmethod
     def generate_cdx():
-        print("CDX: ", end="")
-
         dest = f"{config.wail_path}/config/path-index.txt"
         warcs_path = f"{config.wail_path}/archives/"
         cdx_file_path_pre = f"{config.wail_path}/archiveIndexes/"
@@ -1848,7 +1844,6 @@ class Wayback(Service):
             f"{config.wail_path}/bundledApps/tomcat/webapps/bin/cdx-indexer"
         )
 
-        print("generating ", end="")
         for file in listdir(warcs_path):
             if file.endswith(".warc"):
                 cdx_file_path = (
@@ -1862,12 +1857,10 @@ class Wayback(Service):
                 process.communicate()
 
         # Combine CDX files
-        print("combining ", end="")
         all_cdxes_path = f"{config.wail_path}/archiveIndexes/*.cdx"
 
         filenames = glob.glob(all_cdxes_path)
         cdx_header_included = False
-        print("merging ", end="")
 
         # Is cdxt the right filename?
         unsorted_path = (
@@ -1883,7 +1876,7 @@ class Wayback(Service):
                             # Only include first CDX header
                             outfile.write(line)
                             cdx_header_included = True
-        print("cleaning ", end="")
+
         file_list = glob.glob(all_cdxes_path)
         for f in file_list:
             os.remove(f)
@@ -1891,9 +1884,6 @@ class Wayback(Service):
         cdx_temp = f"{config.wail_path}/archiveIndexes/combined_unsorted.cdxt"
         cdx_final = f"{config.wail_path}/archiveIndexes/index.cdx"
         # TODO: fix cdx sorting in Windows #281
-        # if 'darwin' in sys.platform:
-        print("sorting ", end="")
-        # os.system("export LC_ALL=C; sort -u " + cdx_temp + " > " + cdx_final)
 
         with open(cdx_temp, "r") as temp_file:
             with open(cdx_final, "w") as final_file:
@@ -1905,7 +1895,6 @@ class Wayback(Service):
                     final_file.write(entry)
 
         os.remove(cdx_temp)
-        print("DONE!")
 
         # Queue next iteration of indexing
         if main_app_window.indexing_timer:
