@@ -289,7 +289,7 @@ class TabController(wx.Frame):
     def setup_new_crawl_from_menu(self, _):
         """Change view to Advanced Crawl, display URI textbox"""
         self.display_tab(config.menu_title_view_view_advanced_heritrix)
-        self.adv_config.heritrix_panel.setupNewCrawl(None)
+        self.adv_config.heritrix_panel.setup_new_crawl(None)
 
     @staticmethod
     def display_about_menu(_):
@@ -1110,7 +1110,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             )
 
             # Button functionality
-            self.setup_new_crawl_button.Bind(wx.EVT_BUTTON, self.setupNewCrawl)
+            self.setup_new_crawl_button.Bind(wx.EVT_BUTTON, self.setup_new_crawl)
             self.launch_webui_button.Bind(wx.EVT_BUTTON, self.launch_web_ui)
 
             self.panel_updater = None  # For updating stats UI
@@ -1149,7 +1149,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.listbox.Set(jobs_list)
 
         def clicked_listbox_item(self, _=None):
-            self.hideNewCrawlUIElements()
+            self.hide_new_crawl_ui_elements()
             self.status_msg.Show()
 
             selectionIndex = self.listbox.GetSelection()
@@ -1368,7 +1368,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.new_crawl_depth_text_ctrl.SetValue(
                 config.text_label_depth_default)
             self.new_crawl_depth_text_ctrl.Bind(wx.EVT_KILL_FOCUS,
-                                                self.validateCrawlDepth)
+                                                self.validate_crawl_depth)
             self.new_crawl_depth_text_ctrl.Bind(
                 wx.EVT_CHAR, self.handle_crawl_depth_keypress)
 
@@ -1409,7 +1409,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             # Deselect any highlighted selection in the jobs listbox
             self.deselect_crawl_listbox_items()
 
-        def setupNewCrawl(self, _):
+        def setup_new_crawl(self, _):
             """Create UI elements for user to specify the URIs and other
             attributes for a new Heritrix crawl.
 
@@ -1430,7 +1430,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     # Valid alphanumeric character
                     event.Skip()
 
-        def validateCrawlDepth(self, event):
+        def validate_crawl_depth(self, event):
             """Verify that the value supplied for the crawl depth text
             field is numerical.
 
@@ -1439,7 +1439,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self.new_crawl_depth_text_ctrl.SetValue("1")
             event.Skip()
 
-        def hideNewCrawlUIElements(self):
+        def hide_new_crawl_ui_elements(self):
             """Hide UI elements related to a new Heritrix crawl."""
 
             self.remove_new_crawl_ui()
