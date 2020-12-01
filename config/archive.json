@@ -1,8 +1,0 @@
-[
-  {
-    "id": "WAIL",
-    "name": "Web Archive Integration Layer",
-    "timemap": "http://localhost:8080/wayback/timemap/link/",
-    "timegate": "http://localhost:8080/wayback/"
-  }
-]
