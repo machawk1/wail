@@ -2395,18 +2395,37 @@ class WAILStatusBar(wx.StatusBar):
         self.SetFieldsCount(2)
         self.SetStatusWidths([-2, 30])
         self.sb_button = wx.Button(
-            self, wx.ID_ANY, "❗", style=wx.BU_EXACTFIT|wx.BORDER_NONE
+            self, wx.ID_ANY, "", style=wx.BU_EXACTFIT|wx.BORDER_NONE
         )
+        self.label_button_active = '❗'
+        self.label_button_inactive = ''
 
-        self.Reposition()
+        self.show_button()
+        self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
 
-    def Reposition(self):
+        self.reposition()
+
+    def reposition(self):
         rect = self.GetFieldRect(1)
         rect.x += 1
         rect.y += 1
         self.sb_button.SetRect(rect)
         self.sizeChanged = False
 
+    def hide_button(self):
+        self.sb_button.SetLabel(self.label_button_inactive)
+
+    def show_button(self):
+        self.sb_button.SetLabel(self.label_button_active)
+
+    def toggle_button(self):
+        if self.sb_button.GetLabel() == self.label_button_active:
+            self.hide_button()
+        else:
+            self.show_button()
+
+    def press_button(self, _):
+        self.toggle_button()
 
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
