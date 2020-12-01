@@ -79,7 +79,12 @@ class TabController(wx.Frame):
 
         panel.SetSizer(vbox)
 
-        self.statusbar = self.CreateStatusBar()
+        # self.statusbar = self.CreateStatusBar()
+
+        self.sb = WAILStatusBar(self)
+        self.SetStatusBar(self.sb)
+        self.statusbar = self.sb
+
         self.statusbar.Bind(wx.EVT_LEFT_UP, self.show_memento_info)
         pub.subscribe(self.change_statusbar, 'change_statusbar')
 
@@ -1728,8 +1733,8 @@ class MemGator(Service):
         time.sleep(3)
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
-        if cb:
-            wx.CallAfter(cb)
+        # if cb:
+        #     wx.CallAfter(cb)
 
     @staticmethod
     def kill(_):
@@ -2382,6 +2387,25 @@ class MementoInfoWindow(wx.Frame):
     def __init__(self, title, parent=None):
         wx.Frame.__init__(self, parent=parent, title=title)
         self.Show()
+
+class WAILStatusBar(wx.StatusBar):
+    def __init__(self, parent):
+        wx.StatusBar.__init__(self, parent, -1)
+
+        self.SetFieldsCount(2)
+        self.SetStatusWidths([-2, 30])
+        self.sb_button = wx.Button(
+            self, wx.ID_ANY, "❗", style=wx.BU_EXACTFIT|wx.BORDER_NONE
+        )
+
+        self.Reposition()
+
+    def Reposition(self):
+        rect = self.GetFieldRect(1)
+        rect.x += 1
+        rect.y += 1
+        self.sb_button.SetRect(rect)
+        self.sizeChanged = False
 
 
 class InvalidSelectionContextException(Exception):
