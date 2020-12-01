@@ -472,9 +472,6 @@ class WAILGUIFrame_Basic(wx.Panel):
             time.sleep(500)
         tm = self.memgator.get_timemap(current_uri_value, 'cdxj').split('\n')
 
-        # TODO: bug, on Gogo internet MemGator cannot hit aggregator, which
-        # results in 0 mementos, for which MemGator throws exception
-
         m_count = 0
         arch_hosts = set()
 
@@ -1717,6 +1714,9 @@ class MemGator(Service):
     def get_timemap(self, uri, timemap_format=config.memgator_format):
         tm_uri = f'{config.uri_aggregator}timemap/{timemap_format}/{uri}'
         resp = requests.get(tm_uri)
+
+        if 'text/plain' in resp.headers['content-type']:  # 404, no mementos
+            return ""
         self.last_uri = tm_uri
         return resp.text
 
