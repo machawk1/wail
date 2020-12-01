@@ -109,8 +109,12 @@ class TabController(wx.Frame):
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
 
-    def change_statusbar(self, msg):
+    def change_statusbar(self, msg, includes_local):
         wx.CallAfter(self.statusbar.SetStatusText, msg)
+        if includes_local:
+            wx.CallAfter(self.statusbar.hide_button)
+        else:
+            wx.CallAfter(self.statusbar.show_button)
 
     def create_menu(self):
         """Configure, initialize, and attach application menus"""
@@ -410,7 +414,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
 
-    def set_memento_count(self, m_count, a_count=0):
+    def set_memento_count(self, m_count, a_count=0, includes_local=False):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
@@ -451,7 +455,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             """ """
 
         status_string = f"{mem_count_msg}"
-        pub.sendMessage('change_statusbar', msg=status_string)
+        pub.sendMessage('change_statusbar', msg=status_string, includes_local=includes_local)
 
         self.Layout()
 
@@ -482,13 +486,16 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         for line in tm:
             cleaned_line = line.strip()
+
             if cleaned_line[:1].isdigit():
                 m_count += 1
                 arch_hosts.add(cleaned_line.split('/', 3)[2])
 
+        includes_local = 'localhost:8080' in arch_hosts
         # UI not updated on Windows
         pub.sendMessage('change_statusbar_with_counts',
-                        m_count=m_count, a_count=len(arch_hosts))
+                        m_count=m_count, a_count=len(arch_hosts),
+                        includes_local=includes_local)
 
         print((
             f"MEMGATOR\n* URI-R: {current_uri_value}\n* URI-Ms {m_count}\n* "
@@ -2400,7 +2407,6 @@ class WAILStatusBar(wx.StatusBar):
         self.label_button_active = '❗'
         self.label_button_inactive = ''
 
-        self.show_button()
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
 
         self.reposition()
