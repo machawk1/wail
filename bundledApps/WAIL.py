@@ -1710,7 +1710,8 @@ class MemGator(Service):
         return [
             f'--hdrtimeout={self.hdrtimeout}',
             f'--contimeout={self.contimeout}',
-            f'--restimeout={self.contimeout}'
+            f'--restimeout={self.contimeout}',
+            f'--arcs={self.archives_json}'
         ]
 
     def get_timemap(self, uri, timemap_format=config.memgator_format):
