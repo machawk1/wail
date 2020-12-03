@@ -79,8 +79,6 @@ class TabController(wx.Frame):
 
         panel.SetSizer(vbox)
 
-        # self.statusbar = self.CreateStatusBar()
-
         self.sb = WAILStatusBar(self)
         self.SetStatusBar(self.sb)
         self.statusbar = self.sb
@@ -1387,7 +1385,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                                 self.deselect_crawl_listbox_items)
 
             self.start_crawl_button = wx.Button(
-                self, wx.ID_ANY, config.button_label_starCrawl
+                self, wx.ID_ANY, config.button_label_start_crawl
             )
             self.start_crawl_button.SetDefault()
             self.start_crawl_button.Bind(wx.EVT_BUTTON, self.crawl_uris_listed)
@@ -2404,11 +2402,8 @@ class WAILStatusBar(wx.StatusBar):
         self.sb_button = wx.Button(
             self, wx.ID_ANY, "", style=wx.BU_EXACTFIT|wx.BORDER_NONE
         )
-        self.label_button_active = '❗'
-        self.label_button_inactive = ''
 
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
-
         self.reposition()
 
     def reposition(self):
@@ -2419,13 +2414,15 @@ class WAILStatusBar(wx.StatusBar):
         self.sizeChanged = False
 
     def hide_button(self):
-        self.sb_button.SetLabel(self.label_button_inactive)
+        self.sb_button.SetLabel(config.button_label_local_archive_included)
+        self.sb_button.SetToolTip(config.tooltip_local_archive_included)
 
     def show_button(self):
-        self.sb_button.SetLabel(self.label_button_active)
+        self.sb_button.SetLabel(config.button_label_local_archive_excluded)
+        self.sb_button.SetToolTip(config.tooltip_local_archive_excluded)
 
     def toggle_button(self):
-        if self.sb_button.GetLabel() == self.label_button_active:
+        if self.sb_button.GetLabel() == config.button_label_local_archive_excluded:
             self.hide_button()
         else:
             self.show_button()
