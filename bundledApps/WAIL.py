@@ -2421,14 +2421,8 @@ class WAILStatusBar(wx.StatusBar):
         self.sb_button.SetLabel(config.button_label_local_archive_excluded)
         self.sb_button.SetToolTip(config.tooltip_local_archive_excluded)
 
-    def toggle_button(self):
-        if self.sb_button.GetLabel() == config.button_label_local_archive_excluded:
-            self.hide_button()
-        else:
-            self.show_button()
-
     def press_button(self, _):
-        self.toggle_button()
+        pass
 
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
