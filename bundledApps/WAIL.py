@@ -2405,6 +2405,7 @@ class WAILStatusBar(wx.StatusBar):
             self, wx.ID_ANY, "", style=wx.BU_EXACTFIT|wx.BORDER_NONE
         )
 
+        self.msg = ''
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
         self.reposition()
 
@@ -2424,14 +2425,19 @@ class WAILStatusBar(wx.StatusBar):
         self.sb_button.SetToolTip(config.tooltip_local_archive_excluded)
 
     def press_button(self, _):
-        # Check if Wayback accessible
         local_wayback_accessible = Wayback().accessible()
-        if local_wayback_accessible:
-            msg = "There are no local captures for this URL"
-        else:
-            msg = "Wayback is not running. Click again to fix."
 
-        pub.sendMessage('change_statusbar', msg=msg,
+        if local_wayback_accessible:
+            self.msg = config.text_statusbar_no_captures
+        elif self.msg == config.text_statusbar_wayback_not_running:
+                self.msg = config.text_statusbar_fixing_wayback
+
+                Wayback().fix(self.press_button)
+                return
+        else:
+            self.msg = config.text_statusbar_wayback_not_running
+
+        pub.sendMessage('change_statusbar', msg=self.msg,
                         includes_local=local_wayback_accessible)
         pass
 

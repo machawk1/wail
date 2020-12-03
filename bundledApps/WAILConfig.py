@@ -118,6 +118,10 @@ tooltip_local_archive_excluded = (
 tooltip_local_archive_included = (
     'This URI is present in the local archive')
 
+text_statusbar_no_captures = 'There are no local captures for this URL.'
+text_statusbar_wayback_not_running = 'Wayback is not running. Click again to fix.'
+text_statusbar_fixing_wayback = 'Launching Wayback'
+
 about_window_app_name = "Web Archiving Integration Layer (WAIL)"
 about_window_author = "By Mat Kelly <wail@matkelly.com>"
 about_window_icon_path = "/build/icons/wail_blue.ico"
