@@ -425,6 +425,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         mem_count_msg = ""
         if m_count is None:
             mem_count_msg = config.msg_fetching_mementos
+            includes_local = True
         elif m_count > 0:
             locale_to_set = "en_US"
             if not util.is_macOS():  # Let system determine locale
@@ -2396,6 +2397,7 @@ class MementoInfoWindow(wx.Frame):
 class WAILStatusBar(wx.StatusBar):
     def __init__(self, parent):
         wx.StatusBar.__init__(self, parent, -1)
+        self.parent = parent
 
         self.SetFieldsCount(2)
         self.SetStatusWidths([-2, 30])
@@ -2422,6 +2424,15 @@ class WAILStatusBar(wx.StatusBar):
         self.sb_button.SetToolTip(config.tooltip_local_archive_excluded)
 
     def press_button(self, _):
+        # Check if Wayback accessible
+        local_wayback_accessible = Wayback().accessible()
+        if local_wayback_accessible:
+            msg = "There are no local captures for this URL"
+        else:
+            msg = "Wayback is not running. Click again to fix."
+
+        pub.sendMessage('change_statusbar', msg=msg,
+                        includes_local=local_wayback_accessible)
         pass
 
 class InvalidSelectionContextException(Exception):
