@@ -2396,6 +2396,7 @@ class MementoInfoWindow(wx.Frame):
         wx.Frame.__init__(self, parent=parent, title=title)
         self.Show()
 
+
 class WAILStatusBar(wx.StatusBar):
     def __init__(self, parent):
         wx.StatusBar.__init__(self, parent, -1)
@@ -2404,7 +2405,7 @@ class WAILStatusBar(wx.StatusBar):
         self.SetFieldsCount(2)
         self.SetStatusWidths([-2, 30])
         self.sb_button = wx.Button(
-            self, wx.ID_ANY, "", style=wx.BU_EXACTFIT|wx.BORDER_NONE
+            self, wx.ID_ANY, "", style=wx.BU_EXACTFIT | wx.BORDER_NONE
         )
 
         self.msg = ''
@@ -2432,17 +2433,18 @@ class WAILStatusBar(wx.StatusBar):
         if local_wayback_accessible:
             self.msg = config.text_statusbar_no_captures
         elif self.msg == config.text_statusbar_wayback_not_running:
-                self.msg = config.text_statusbar_fixing_wayback
+            self.msg = config.text_statusbar_fixing_wayback
 
-                Wayback().fix(self.press_button)
-                pub.sendMessage('recheck_uri_in_basic_interface')
-                return
+            Wayback().fix(self.press_button)
+            pub.sendMessage('recheck_uri_in_basic_interface')
+            return
         else:
             self.msg = config.text_statusbar_wayback_not_running
 
         pub.sendMessage('change_statusbar', msg=self.msg,
                         includes_local=local_wayback_accessible)
         pass
+
 
 class InvalidSelectionContextException(Exception):
     """raise when attempt to create a context menu without context"""
