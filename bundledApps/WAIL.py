@@ -405,6 +405,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             thread.start_new_thread(self.fetch_mementos, ())
         # Call MemGator on URI change
         self.uri.Bind(wx.EVT_KEY_UP, self.uri_changed)
+        pub.subscribe(self.uri_changed, 'recheck_uri_in_basic_interface')
 
         self.memgator_delay_timer = threading.Timer(
             1.0, thread.start_new_thread, [self.fetch_mementos, ()]
@@ -503,9 +504,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         )
         # TODO: cache the TM
 
-    def uri_changed(self, event):
+    def uri_changed(self, event=None):
         """React when the URI has changed in the interface, call MemGator"""
-        if event.GetUnicodeKey() == wx.WXK_NONE:
+        if event is not None and event.GetUnicodeKey() == wx.WXK_NONE:
             return  # Prevent modifiers from causing MemGator query
 
         self.set_memento_count(None)
@@ -524,7 +525,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         # TODO: start timer on below, kill if another key is hit
         # thread.start_new_thread(self.fetch_mementos,())
-        event.Skip()
+        if event:
+            event.Skip()
 
     def ensure_environment_variables_are_set(self):
         """Check system to verify that Java variables have been set.
@@ -2433,6 +2435,7 @@ class WAILStatusBar(wx.StatusBar):
                 self.msg = config.text_statusbar_fixing_wayback
 
                 Wayback().fix(self.press_button)
+                pub.sendMessage('recheck_uri_in_basic_interface')
                 return
         else:
             self.msg = config.text_statusbar_wayback_not_running
