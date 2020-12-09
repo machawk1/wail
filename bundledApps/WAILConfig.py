@@ -96,7 +96,9 @@ button_label_uri = "URL:"
 button_label_fix = "Fix"
 button_label_kill = "Kill"
 button_label_refresh = "Refresh"
-button_label_starCrawl = "Start Crawl"
+button_label_start_crawl = "Start Crawl"
+button_label_local_archive_included = ""
+button_label_local_archive_excluded = "❗"
 
 text_label_default_uri = "https://matkelly.com/wail"
 text_label_default_uri_title = "WAIL homepage"
@@ -110,6 +112,15 @@ text_label_status_init = ('Type a URL and click "Archive Now!" '
                           'to begin archiving.')
 
 text_label_no_jobs_available = "(No jobs available)"
+
+tooltip_local_archive_excluded = (
+    'This URI is not present in the local archive')
+tooltip_local_archive_included = (
+    'This URI is present in the local archive')
+
+text_statusbar_no_captures = 'There are no local captures for this URL.'
+text_statusbar_wayback_not_running = 'Wayback is not running. Click again to fix.'
+text_statusbar_fixing_wayback = 'Launching Wayback'
 
 about_window_app_name = "Web Archiving Integration Layer (WAIL)"
 about_window_author = "By Mat Kelly <wail@matkelly.com>"

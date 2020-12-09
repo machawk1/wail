@@ -84,5 +84,11 @@
     "name": "National Records of Scotland",
     "timemap": "https://webarchive.nrscotland.gov.uk/timemap/",
     "timegate": "https://webarchive.nrscotland.gov.uk/timegate/"
+  },
+  {
+    "id": "wail",
+    "name": "My Local Archive",
+    "timemap": "http://localhost:8080/wayback/timemap/link/",
+    "timegate": "http://localhost:8080/wayback/"
   }
 ]
