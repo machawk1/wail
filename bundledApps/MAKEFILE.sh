@@ -78,17 +78,23 @@ deleteBinary ()
 
 mvWARCsToTemp ()
 {
-  echo "Moving WARCs to /tmp/tempArchives/"
-  mv /tmp/tempArchives /tmp/tempArchives_old
-  mv /Applications/WAIL.app/archives /tmp/tempArchives
+  if [ -d "/tmp/tempArchives" ]
+  then
+    echo "Moving WARCs to /tmp/tempArchives/"
+    mv /tmp/tempArchives /tmp/tempArchives_old
+    mv /Applications/WAIL.app/archives /tmp/tempArchives
+  fi
 }
 
 mvWARCsBackFromTemp ()
 {
-  echo "Moving WARCs back to /Applications/WAIL.app/archives/"
-  mv /tmp/tempArchives/* /Applications/WAIL.app/archives/
-  rm -rf /tmp/tempArchives
-  mv /tmp/tempArchives_old /tmp/tempArchives
+  if [ -d "/tmp/tempArchives" ]
+  then
+    echo "Moving WARCs back to /Applications/WAIL.app/archives/"
+    mv /tmp/tempArchives/* /Applications/WAIL.app/archives/
+    rm -rf /tmp/tempArchives
+    mv /tmp/tempArchives_old /tmp/tempArchives
+  fi
 }
 
 mvProducts ()
