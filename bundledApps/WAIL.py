@@ -217,9 +217,9 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda evt: window_wail.Check(True),
                   window_wail)
 
-        helpPreferences = help_menu.Append(wx.ID_PREFERENCES,
+        help_preferences = help_menu.Append(wx.ID_PREFERENCES,
                                            "Preferences...\tCTRL+,")
-        helpPreferences.Enable(0)  # TODO: implement
+        help_preferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
             help_menu.Prepend(wx.ID_ABOUT, config.menu_title_about)
@@ -248,7 +248,7 @@ class TabController(wx.Frame):
         )
 
 
-        self.Bind(wx.EVT_MENU, self.displayPreferences, help_preferences)
+        self.Bind(wx.EVT_MENU, self.display_preferences, help_preferences)
 
         self.bind_menu(config.menu_title_view_view_advanced_services,
                        view_services)
