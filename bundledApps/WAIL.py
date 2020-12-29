@@ -312,7 +312,7 @@ class TabController(wx.Frame):
 
         self.preferencesWindow.Show()
         self.preferencesWindow.Raise()
-        self.preferencesWindow.Bind(wx.EVT_CLOSE, self.deletePrefWin)
+        self.preferencesWindow.Bind(wx.EVT_CLOSE, self.delete_preferences_window)
 
 
     def delete_preferences_window(self, event):
