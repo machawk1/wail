@@ -306,19 +306,19 @@ class TabController(wx.Frame):
         # Check for window existence, build and show if not, show if so
 
         try:
-            self.preferencesWindow
+            self.preferences_window
         except AttributeError:
-            self.preferencesWindow = config.PreferencesWindow()
+            self.preferences_window = config.PreferencesWindow()
 
-        self.preferencesWindow.Show()
-        self.preferencesWindow.Raise()
-        self.preferencesWindow.Bind(wx.EVT_CLOSE, self.delete_preferences_window)
+        self.preferences_window.Show()
+        self.preferences_window.Raise()
+        self.preferences_window.Bind(wx.EVT_CLOSE, self.delete_preferences_window)
 
 
     def delete_preferences_window(self, event):
-        #self.preferencesWindow.Close()
-        self.preferencesWindow.Hide()
-        del self.preferencesWindow
+        # self.preferences_window.Close()
+        self.preferences_window.Hide()
+        del self.preferences_window
 
     @staticmethod
     def display_about_menu(_):
