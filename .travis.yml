@@ -1,20 +1,17 @@
 language: python            # this works for Linux but is an error on macOS or Windows
 matrix:
   include:
-    - name: "Python 3.7 on Linux"
-      python: 3.7           # this works for Linux but is ignored on macOS or Windows
-      dist: xenial          # required for Python >= 3.7
-      before_install:
-        - pip3 install -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-16.04 wxPython
+    - name: "Python 3.8 on Linux"
+      python: 3.8           # this works for Linux but is ignored on macOS or Windows
     - name: "Python 3.7 on macOS"
       os: osx
-      osx_image: xcode11  # Python 3.7 running on macOS 10.14
+      osx_image: xcode12.2  # Python 3.7.5 running on macOS 10.14.4
       language: shell       # 'language: python' is an error on Travis CI macOS
-    - name: "Python 3.7 on Windows"
+    - name: "Python 3.8 on Windows"
       os: windows
       language: shell       # 'language: python' is an error on Travis CI Windows
       before_install:
-        - choco install python
+        - choco install python --version 3.8.0
         - python -m pip install --upgrade pip
       env: PATH=/c/Python38:/c/Python38/Scripts:$PATH
   allow_failures:

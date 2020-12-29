@@ -1,5 +1,5 @@
 <h3 align="center">
- <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
+ <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-transp-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
 <p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
 <hr style="height: 1px; border: none;" />
 
@@ -86,6 +86,6 @@ There still exists some issues to be resolved for <a href="https://github.com/ma
 <p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
 
 <h2>Contact</h2>
-<p>WAIL is a project of the <a href="https://ws-dl.cs.odu.edu/">Web Science and Digital Libraries (WS-DL) Research Group</a> at <a href="https://odu.edu/">Old Dominion University (ODU)</a>, created by <a href="https://www.cs.odu.edu/~mkelly/">Mat Kelly</a> with additional extensive contributions by <a href="https://github.com/n0tan3rd">John Berlin</a>.</p>
+<p>WAIL is a project of the <a href="https://ws-dl.cs.odu.edu/">Web Science and Digital Libraries (WS-DL) Research Group</a> at <a href="https://odu.edu/">Old Dominion University (ODU)</a>, created by <a href="https://matkelly.com/">Mat Kelly</a> with additional extensive contributions by <a href="https://github.com/n0tan3rd">John Berlin</a>.</p>
 
 <p>For support e-mail wail@matkelly.com or tweet to us at <a href="https://twitter.com/machawk1">@machawk1</a> and/or <a href="https://twitter.com/WebSciDL">@WebSciDL</a>.</p>

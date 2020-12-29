@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # This is the Makefile for WAIL for macOS
-# http://matkelly.com/wail/
+# https://matkelly.com/wail/
 
 trap exit INT
 

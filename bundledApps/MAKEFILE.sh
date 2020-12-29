@@ -29,7 +29,7 @@ if [ -d "$DIRECTORY" ]; then
   while true; do
     read -p "Do you want me to delete the old app and continue (y/n)? " yn
     case $yn in
-        [Yy]* ) echo "Continuing to build"; break;;
+        [Yy]* ) echo "Continuing to build, retaining WARCs"; break;;
         [Nn]* ) exit;;
         * ) echo "Please answer y or n.";;
     esac
@@ -76,6 +76,27 @@ deleteBinary ()
   rm -rf /Applications/WAIL.app
 }
 
+mvWARCsToTemp ()
+{
+  if [ -d "/tmp/tempArchives" ]
+  then
+    echo "Moving WARCs to /tmp/tempArchives/"
+    mv /tmp/tempArchives /tmp/tempArchives_old
+    mv /Applications/WAIL.app/archives /tmp/tempArchives
+  fi
+}
+
+mvWARCsBackFromTemp ()
+{
+  if [ -d "/tmp/tempArchives" ]
+  then
+    echo "Moving WARCs back to /Applications/WAIL.app/archives/"
+    mv /tmp/tempArchives/* /Applications/WAIL.app/archives/
+    rm -rf /tmp/tempArchives
+    mv /tmp/tempArchives_old /tmp/tempArchives
+  fi
+}
+
 mvProducts ()
 {
   mv ./dist/WAIL.app /Applications/
@@ -95,6 +116,7 @@ optimizeforMac ()
   rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
   rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
   rm -rf ./dist/WAIL.app/bundledApps/Java/Windows
+  chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
 }
 
 buildDiskImage ()
@@ -114,10 +136,12 @@ tweakOS ()
 
 installRequirements
 createBinary
+mvWARCsToTemp
 deleteBinary # Remove previous version
 optimizeforMac
 mvProducts
 cleanupByproducts
+mvWARCsBackFromTemp
 
 # install binary, create dmg, or both? (i/d/b) 
 

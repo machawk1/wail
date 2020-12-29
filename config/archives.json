@@ -1,82 +1,94 @@
 [
   {
-    "id": "ia",
+    "id": "web.archive.org",
     "name": "Internet Archive",
-    "timemap": "http://web.archive.org/web/timemap/link/",
-    "timegate": "http://web.archive.org/web/" 
+    "timemap": "https://web.archive.org/web/timemap/link/",
+    "timegate": "https://web.archive.org/web/"
   },
   {
-    "id": "proni",
-    "name": "PRONI Web Archive",
-    "timemap": "http://webarchive.proni.gov.uk/timemap/",
-    "timegate": "http://webarchive.proni.gov.uk/timegate/" 
-  },
-  {
-    "id": "pastpages",
+    "id": "pastpages.org",
     "name": "PastPages Web Archive",
     "timemap": "http://www.pastpages.org/timemap/link/",
     "timegate": "http://www.pastpages.org/timegate/",
     "ignore": true
   },
   {
-    "id": "ba",
+    "id": "web.archive.bibalex.org",
     "name": "Bibliotheca Alexandrina Web Archive",
     "timemap": "http://web.archive.bibalex.org/web/timemap/link/",
     "timegate": "http://web.archive.bibalex.org/web/",
     "ignore": true
   },
   {
-    "id": "blarchive",
+    "id": "webarchive.org.uk",
     "name": "UK Web Archive",
-    "timemap": "http://www.webarchive.org.uk/wayback/archive/timemap/link/",
-    "timegate": "http://www.webarchive.org.uk/wayback/archive/" 
+    "timemap": "https://www.webarchive.org.uk/wayback/archive/timemap/link/",
+    "timegate": "https://www.webarchive.org.uk/wayback/archive/"
   },
   {
-    "id": "loc",
+    "id": "webarchive.loc.gov",
     "name": "Library of Congress",
-    "timemap": "http://webarchive.loc.gov/all/timemap/link/",
-    "timegate": "http://webarchive.loc.gov/all/" 
+    "timemap": "https://webarchive.loc.gov/all/timemap/link/",
+    "timegate": "https://webarchive.loc.gov/all/"
   },
   {
-    "id": "archiveit",
+    "id": "wayback.archive-it.org",
     "name": "Archive-It",
-    "timemap": "http://wayback.archive-it.org/all/timemap/link/",
-    "timegate": "http://wayback.archive-it.org/all/" 
+    "timemap": "https://wayback.archive-it.org/all/timemap/link/",
+    "timegate": "https://wayback.archive-it.org/all/"
   },
   {
-    "id": "ukparliament",
+    "id": "webarchive.parliament.uk",
     "name": "UK Parliament Web Archive",
     "timemap": "http://webarchive.parliament.uk/timemap/",
     "timegate": "http://webarchive.parliament.uk/timegate/"
   },
   {
-    "id": "uknationalarchives",
+    "id": "webarchive.nationalarchives.gov",
     "name": "UK National Archives Web Archive",
-    "timemap": "http://webarchive.nationalarchives.gov.uk/timemap/",
-    "timegate": "http://webarchive.nationalarchives.gov.uk/timegate/" 
+    "timemap": "https://webarchive.nationalarchives.gov.uk/timemap/",
+    "timegate": "https://webarchive.nationalarchives.gov.uk/timegate/"
   },
   {
-    "id": "archive.is",
+    "id": "archive.today",
     "name": "archive.today",
-    "timemap": "http://archive.today/timemap/",
-    "timegate": "http://archive.today/timegate/" 
+    "timemap": "https://archive.today/timemap/",
+    "timegate": "https://archive.today/timegate/"
   },
   {
-    "id": "is",
+    "id": "wayback.vefsafn.is",
     "name": "Icelandic Web Archive",
     "timemap": "http://wayback.vefsafn.is/wayback/timemap/link/",
-    "timegate": "http://wayback.vefsafn.is/wayback/" 
+    "timegate": "http://wayback.vefsafn.is/wayback/"
   },
   {
-    "id": "swa",
+    "id": "swap.stanford.edu",
     "name": "Stanford Web Archive",
     "timemap": "https://swap.stanford.edu/timemap/link/",
-    "timegate": "https://swap.stanford.edu/" 
+    "timegate": "https://swap.stanford.edu/"
   },
   {
-    "id": "pt",
+    "id": "arquivo.pt",
     "name": "Portuguese Web Archive",
-    "timemap": "http://arquivo.pt/wayback/timemap/*/",
-    "timegate": "http://arquivo.pt/wayback/" 
+    "timemap": "https://arquivo.pt/wayback/timemap/link/",
+    "timegate": "https://arquivo.pt/wayback/"
+  },
+  {
+    "id": "perma-archives.org",
+    "name": "Perma Archive",
+    "timemap": "https://perma-archives.org/warc/timemap/*/",
+    "timegate": "https://perma-archives.org/warc/timegate/"
+  },
+  {
+    "id": "webarchive.nrscotland.gov.uk",
+    "name": "National Records of Scotland",
+    "timemap": "https://webarchive.nrscotland.gov.uk/timemap/",
+    "timegate": "https://webarchive.nrscotland.gov.uk/timegate/"
+  },
+  {
+    "id": "wail",
+    "name": "My Local Archive",
+    "timemap": "http://localhost:8080/wayback/timemap/link/",
+    "timegate": "http://localhost:8080/wayback/"
   }
 ]

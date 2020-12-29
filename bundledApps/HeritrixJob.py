@@ -7,47 +7,50 @@ import WAILConfig as config
 
 from requests.auth import HTTPDigestAuth
 
+
 class HeritrixJob:
     def write(self):
-        self.jobNumber = str(int(time.time()))
-        path = self.jobPath + self.jobNumber
-        if not os.path.exists(path): os.makedirs(path)
-        beansFilePath = path
+        self.job_number = str(int(time.time()))
+        path = self.job_path + self.job_number
+        if not os.path.exists(path):
+            os.makedirs(path)
+        beans_file_path = path
         if sys.platform.startswith('win32'):
-            beansFilePath += "\\"
+            beans_file_path += "\\"
         else:
-            beansFilePath += "/"
-        with open(beansFilePath + "crawler-beans.cxml", "w") as f:
+            beans_file_path += "/"
+        with open(beans_file_path + "crawler-beans.cxml", "w") as f:
             f.write(self.sampleXML)
-            #print beansFilePath+"crawler-beans.cxml"
+            # print beans_file_path+"crawler-beans.cxml"
 
-    def launchHeritrixJob(self):
+    def launch_heritrix_job(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Launching Heritrix job')
-        data = {"action":"launch"}
-        headers = {"Accept":"application/xml",
-                   "Content-type":"application/x-www-form-urlencoded"}
-        r =requests.post(
-            '{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
+        data = {"action": "launch"}
+        headers = {"Accept": "application/xml",
+                   "Content-type": "application/x-www-form-urlencoded"}
+        r = requests.post(
+            f'{config.uri_heritrix_job}{self.job_number}',
             auth=HTTPDigestAuth(
-                config.heritrixCredentials_username,
-                config.heritrixCredentials_password),
+                config.heritrix_credentials_username,
+                config.heritrix_credentials_password),
             data=data, headers=headers, verify=False, stream=True)
 
-    def buildHeritrixJob(self):
+    def build_heritrix_job(self):
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
-        data = {"action":"build"}
+        data = {"action": "build"}
         headers = {"Accept": "application/xml",
-                   "Content-type" :"application/x-www-form-urlencoded"}
-        r =requests.post('{0}{1}'.format(config.uri_heritrixJob, self.jobNumber),
-                         auth=HTTPDigestAuth(
-                             config.heritrixCredentials_username,
-                             config.heritrixCredentials_password),
-                         data=data, headers=headers, verify=False,stream=True)
+                   "Content-type": "application/x-www-form-urlencoded"}
+        r = requests.post(f'{config.uri_heritrix_job}{self.job_number}',
+                          auth=HTTPDigestAuth(
+                             config.heritrix_credentials_username,
+                             config.heritrix_credentials_password),
+                          data=data, headers=headers,
+                          verify=False, stream=True)
 
-    def __init__(self, hJobPath, uris, depth=1):
-        self.jobPath = hJobPath
+    def __init__(self, h_job_path, uris, depth=1):
+        self.job_path = h_job_path
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
   HERITRIX 3 CRAWL JOB CONFIGURATION FILE
@@ -393,7 +396,7 @@ metadata.description=Basic crawl starting with useful defaults
   <!-- <property name="directory" value="C:\\WAIL\\tomcat\\webapps\\ROOT\\" /> -->
    <property name="storePaths">
         <list>
-         <value>''' + config.warcsFolder + '''</value>
+         <value>''' + config.warcs_folder + '''</value>
         </list>
        </property>
   <!-- <property name="writeRequests" value="true" /> -->
