@@ -24,7 +24,7 @@ To install WAIL:
 
 Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
 
-<blockquote>𝚋𝚛𝚎𝚠 𝚌𝚊𝚜𝚔 𝚒𝚗𝚜𝚝𝚊𝚕𝚕 wail</blockquote>
+<blockquote>brew install wail</blockquote>
 
 <h2>Running WAIL</h2>
 
