@@ -6,7 +6,7 @@
 *.dmg
 
 #ignore build remnants
-build/*
+#build/*
 !build/icons*
 *.pyc
 !build/version.txt
