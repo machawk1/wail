@@ -2,8 +2,9 @@
 # coding: utf-8
 
 import os
-import sys
+import platform
 import re
+import sys
 import wx
 if os.name == 'nt':
     from win32com.client import Dispatch
@@ -237,7 +238,11 @@ if "darwin" in sys.platform:  # macOS-specific code
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 
-    memgator_path = f'{wail_path}/bundledApps/memgator-darwin-amd64'
+    memgator_bin = 'memgator-darwin-amd64'
+    if 'arm64' in platform.machine():
+        memgator_bin = 'memgator-darwin-arm64'
+
+    memgator_path = f'{wail_path}/bundledApps/{memgator_bin}'
     archives_json = f'{wail_path}/config/archives.json'
 
     # Fix tomcat control scripts' permissions
