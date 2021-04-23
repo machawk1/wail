@@ -377,36 +377,38 @@ class PrefTab_Aggregator(wx.Panel):
 class PrefTab_Crawler(wx.Panel):
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
-        sz = wx.BoxSizer()
+        self.vbox = wx.BoxSizer(wx.VERTICAL)
 
         self.box_creds = wx.StaticBox(self, wx.ID_ANY,
                                       "Web Interface Credentials")
-        #self.box_creds_sizer = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
-        self.box_creds_u = wx.StaticText(self.box_creds, wx.ID_ANY, "Username")
-        self.box_creds_p = wx.StaticText(self.box_creds, wx.ID_ANY, "Password")
+
+        self.box_creds_u = wx.StaticText(self, wx.ID_ANY, "Username")
+        self.box_creds_p = wx.StaticText(self, wx.ID_ANY, "Password")
+
 
         self.box_attrs = wx.StaticBox(self, wx.ID_ANY,
                                       "Crawl Attributes")
-        self.jURL = wx.StaticText(self.box_attrs, wx.ID_ANY, "Operator Contact URL")
-        self.jName = wx.StaticText(self.box_attrs, wx.ID_ANY, "Job Name")
-        self.jDesc = wx.StaticText(self.box_attrs, wx.ID_ANY, "Job Description")
+        self.jURL = wx.StaticText(self, wx.ID_ANY, "Operator Contact URL")
+        self.jName = wx.StaticText(self, wx.ID_ANY, "Job Name")
+        self.jDesc = wx.StaticText(self, wx.ID_ANY, "Job Description")
 
         self.draw()
 
     def draw(self):
-        self.sizer = wx.BoxSizer()
+        self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
+        self.sbs_creds.Add(self.box_creds_u, 0, wx.TOP|wx.LEFT)
+        self.sbs_creds.Add(self.box_creds_p, 0, wx.TOP | wx.LEFT)
 
-        gs = wx.FlexGridSizer(2, 1, 0, 0)
-        gs.AddMany([
-            self.box_creds,
-            self.box_attrs,
-        ])
-        gs.AddGrowableCol(0, 1)
-        #gs.AddGrowableCol(1, 1)
+        self.sbs_attrs = wx.StaticBoxSizer(self.box_attrs, wx.VERTICAL)
+        self.sbs_attrs.Add(self.jURL, 0, wx.TOP|wx.LEFT)
+        self.sbs_attrs.Add(self.jName, 0, wx.TOP|wx.LEFT)
+        self.sbs_attrs.Add(self.jDesc, 0, wx.TOP|wx.LEFT)
 
-        self.sizer.Add(gs, proportion=1)
-        self.SetSizer(self.sizer)
-        self.Layout()
+        self.vbox.Add(self.sbs_creds, 1, wx.EXPAND | wx.ALL)
+        self.vbox.Add(self.sbs_attrs, 1, wx.EXPAND | wx.ALL)
+
+        self.SetSizer(self.vbox)
+
 
 class PreferencesWindow(wx.Frame):
     """UI elements for graphically setting WAIL preferences"""
