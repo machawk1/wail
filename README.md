@@ -53,7 +53,7 @@ On macOS, application icons are stored in a `.icns` file. To generate this:
 1. Create a directory to store images: `mkdir wail_blue.iconset`
 1. Create a PNG of your high resolution (1024x1024) icon, currently based on `/build/icons/wail-blue-logo.psd`, name it `icon_1024x1024.png` and place it in the `wail_blue.iconset`
 1. In a terminal, `cd wail_blue.iconset` then run the script to generate the other images needed for an `.icns` with `../build/resize.sh`. There will then be 11 PNGs in the directory.
-1. Navigate to the parent directory with `cd ../' and run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
+1. Navigate to the parent directory with `cd ../` and run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
 1. Store `wail_blue.icns` in `WAIL/build/icons/` when running building WAIL using `MAKEFILE.sh` on macOS.</li>
 
 
