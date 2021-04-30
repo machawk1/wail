@@ -50,6 +50,8 @@ from pubsub import pub
 from os import listdir
 from os.path import join
 
+import xml.etree.ElementTree as ET
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
@@ -1262,11 +1264,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         @staticmethod
         def send_action_to_heritrix(action, job_id):
             """Communicate with the local Heritrix binary via its HTTP API"""
+            # TODO: revise this to account for HTTP gets, see #492
             data = {"action": action}
             headers = {
                 "Accept": "application/xml",
                 "Content-type": "application/x-www-form-urlencoded",
             }
+
             requests.post(
                 f"{config.uri_heritrix_job}{job_id}",
                 auth=HTTPDigestAuth(
@@ -1278,6 +1282,33 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 verify=False,
                 stream=True,
             )
+
+        @staticmethod
+        def get_heritrix_crawl_status(job_id):
+            """Communicate with the local Heritrix binary via its HTTP API"""
+            headers = {
+                "Accept": "application/xml",
+                "Content-type": "application/x-www-form-urlencoded",
+            }
+
+            r = requests.get(
+                f"{config.uri_heritrix_job}{job_id}",
+                auth=HTTPDigestAuth(
+                    config.heritrix_credentials_username,
+                    config.heritrix_credentials_password,
+                ),
+                headers=headers,
+                verify=False,
+                stream=True,
+            )
+            root = ET.fromstring(r.content)
+            x = root.findall("./statusDescription")
+            try:
+                statusDescription = x[0].text
+                return statusDescription
+            except err:
+                return ''
+
 
         def delete_heritrix_job(self, _):
             """Read the currently selected crawl_id and delete its
@@ -1310,6 +1341,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def rebuild_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.send_action_to_heritrix("build", job_id)
+            jStatus = self.get_heritrix_crawl_status(job_id)
+            # TODO: Update right side panel of UI after building job
 
         def rebuild_and_launch_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
