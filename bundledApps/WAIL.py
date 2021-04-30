@@ -50,6 +50,8 @@ from pubsub import pub
 from os import listdir
 from os.path import join
 
+import xml.etree.ElementTree as ET
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
@@ -706,12 +708,15 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         url = f"{config.uri_wayback_all_mementos}{self.uri.GetValue()}"
         status_code = None
+        print('a')
         try:
             resp = urlopen(url)
             status_code = resp.getcode()
         except HTTPError as e:
+            print('httperror')
+            print(e)
             status_code = e.code
-        except:
+        except OSError as err:
             # When the server is unavailable, keep the default.
             # This is necessary, as unavailability will still cause an
             # exception
@@ -1175,12 +1180,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if self.panel_updater:  # Kill any currently running timer
                 self.panel_updater.cancel()
                 self.panel_updater = None
-            self.updateInfoPanel(crawl_id)
+            self.update_info_panel(crawl_id)
 
-        def updateInfoPanel(self, active):
+        def update_info_panel(self, active):
             self.status_msg.SetLabel(Heritrix().get_current_stats(active))
             self.panel_updater = threading.Timer(
-                1.0, self.updateInfoPanel, [active])
+                1.0, self.update_info_panel, [active])
             self.panel_updater.daemon = True
             self.panel_updater.start()
 
@@ -1262,11 +1267,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         @staticmethod
         def send_action_to_heritrix(action, job_id):
             """Communicate with the local Heritrix binary via its HTTP API"""
+            # TODO: revise this to account for HTTP gets, see #492
             data = {"action": action}
             headers = {
                 "Accept": "application/xml",
                 "Content-type": "application/x-www-form-urlencoded",
             }
+
             requests.post(
                 f"{config.uri_heritrix_job}{job_id}",
                 auth=HTTPDigestAuth(
@@ -1278,6 +1285,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 verify=False,
                 stream=True,
             )
+
 
         def delete_heritrix_job(self, _):
             """Read the currently selected crawl_id and delete its
@@ -1310,6 +1318,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def rebuild_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.send_action_to_heritrix("build", job_id)
+            jStatus = Heritrix().get_heritrix_crawl_status(job_id)
+            # TODO: Update right side panel of UI after building job
 
         def rebuild_and_launch_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -1938,6 +1948,32 @@ class Heritrix(Service):
         return list(map(just_file, glob.glob(
             os.path.join(config.heritrix_job_path, "*"))))
 
+    @staticmethod
+    def get_heritrix_crawl_status(job_id):
+        """Communicate with the local Heritrix binary via its HTTP API"""
+        headers = {
+            "Accept": "application/xml",
+            "Content-type": "application/x-www-form-urlencoded",
+        }
+
+        r = requests.get(
+            f"{config.uri_heritrix_job}{job_id}",
+            auth=HTTPDigestAuth(
+                config.heritrix_credentials_username,
+                config.heritrix_credentials_password,
+            ),
+            headers=headers,
+            verify=False,
+            stream=True,
+        )
+        root = ET.fromstring(r.content)
+        x = root.findall("./statusDescription")
+        try:
+            statusDescription = x[0].text
+            return statusDescription
+        except Exception as err:
+            return ''
+
     """ # get_list_of_jobs - rewrite to use the Heritrix API,
         will need to parse XML
         -H "Accept: application/xml"
@@ -1960,7 +1996,9 @@ class Heritrix(Service):
         status_template = Template("job_id: $job_id\n$status")
 
         if len(launches) == 0:
-            status = "   NOT BUILT"
+            # TODO: call function her to check whether the job been built.
+            status = f'    {self.get_heritrix_crawl_status(job_id)}'
+            #status = "   NOT BUILT"
 
         for launch in launches:
             progress_log_file_path = (
