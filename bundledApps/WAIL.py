@@ -708,12 +708,15 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         url = f"{config.uri_wayback_all_mementos}{self.uri.GetValue()}"
         status_code = None
+        print('a')
         try:
             resp = urlopen(url)
             status_code = resp.getcode()
         except HTTPError as e:
+            print('httperror')
+            print(e)
             status_code = e.code
-        except:
+        except OSError as err:
             # When the server is unavailable, keep the default.
             # This is necessary, as unavailability will still cause an
             # exception
