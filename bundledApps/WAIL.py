@@ -950,7 +950,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             ret = subprocess.run(cmd, capture_output=True, shell=True,
                                  encoding='utf8')
 
-            return ret.stdout[len('MemGator '):].strip()
+            return ret.stdout[len('MemGator ('):-2]
 
         @staticmethod
         def get_tomcat_version():
