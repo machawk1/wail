@@ -19,6 +19,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
+  runAndScreenshot:
     - name: Install screenshot utility
       run: pip3 install screenshot
     - name: Run
@@ -27,8 +28,8 @@ jobs:
         sleep 10
     - name: Take screenshot
       run: screenshot WAIL --filename /tmp/wail.png --shadow
-    - name: Retain screenshot artifact
-      uses: actions/download-artifact@v2
+    - name: Upload screenshot
+      uses: actions/upload-artifact@v2
       with:
         name: wail-screenshot
         path: /tmp/wail.png
