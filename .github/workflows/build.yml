@@ -24,7 +24,7 @@ jobs:
     - name: Run
       working-directory: /Applications
       run: |
-        cwd
+        pwd
         open -a WAIL.app
         sleep 10
     - name: Take screenshot
