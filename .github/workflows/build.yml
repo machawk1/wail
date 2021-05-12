@@ -19,5 +19,9 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
+    - name: Install screenshot utility
+      run: pip3 install screenshot
     - name: Run
       run: open /Applications/WAIL.app
+    - name: Take screenshot
+      run: screenshow WAIL
