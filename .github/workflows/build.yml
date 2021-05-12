@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: 'gh-pages'
+        ref: 'gh-actions'
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
