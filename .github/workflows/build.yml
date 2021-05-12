@@ -31,13 +31,13 @@ jobs:
         open -a /Applications/WAIL.app
         sleep 10
     - name: Take screenshot
-      run: screenshot WAIL --filename wail-${matrix.os}.png --shadow
+      run: screenshot WAIL --filename wail-${{matrix.os}}.png --shadow
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
       with:
-        name: wail-screenshot-${matrix.os}
-        path: wail-${matrix.os}.png
+        name: wail-screenshot-${{matrix.os}}
+        path: wail-${{matrix.os}}.png
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
-        name: wail-screenshot-${matrix.os}
+        name: wail-screenshot-${{matrix.os}}
