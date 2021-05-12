@@ -7,52 +7,71 @@ DIRECTORY="/Applications/WAIL.app/"
 
 trap exit INT
 
-# Check if WAIL processes are running and offer to kill them
-wailProcessesRunning=$(ps -A | grep '[/]WAIL.app/' | wc -l)
-if (($wailProcessesRunning > 0)); then
-  while true; do
-    read -p "Kill currently running WAIL processes (y/n)? " yn
-    case $yn in
-        [Yy]* ) 
-            pkill -f '[/]WAIL.app/'
-            break;;
-        [Nn]* )
-            break;;
-        * ) echo "Please answer y or n.";;
+main ()
+{
+  # Provide a means to skip all questions for GitHub Actions
+  while getopts ":q" opt; do
+    case ${opt} in
+    q )
+      echo "Skipping options to build for testing" >&2
+      makeWAIL
+      exit 0
+      ;;
+    \? )
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
     esac
   done
-fi
-
-# Check if WAIL.app exists. Ask the user whether to nuke old binary. Exit if 'no'
-if [ -d "$DIRECTORY" ]; then
-  echo $DIRECTORY" already exists!"
-  while true; do
-    read -p "Do you want me to delete the old app and continue (y/n)? " yn
-    case $yn in
-        [Yy]* ) echo "Continuing to build, retaining WARCs"; break;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer y or n.";;
-    esac
-  done
-fi
-
-if [[ $1 == "ci" ]]; then
- ans="i"
-else
- read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
-fi
 
 
-case "$ans" in
-  i|d|b)
-    ;;
-  *)
-    echo "Invalid choice, choose one of i/d/b"
-    exit
-    ;;
-esac
+  # Check if WAIL processes are running and offer to kill them
+  wailProcessesRunning=$(ps -A | grep '[/]WAIL.app/' | wc -l)
+  if (($wailProcessesRunning > 0)); then
+    while true; do
+      read -p "Kill currently running WAIL processes (y/n)? " yn
+      case $yn in
+          [Yy]* )
+              pkill -f '[/]WAIL.app/'
+              break;;
+          [Nn]* )
+              break;;
+          * ) echo "Please answer y or n.";;
+      esac
+    done
+  fi
+
+  # Check if WAIL.app exists. Ask the user whether to nuke old binary. Exit if 'no'
+  if [ -d "$DIRECTORY" ]; then
+    echo $DIRECTORY" already exists!"
+    while true; do
+      read -p "Do you want me to delete the old app and continue (y/n)? " yn
+      case $yn in
+          [Yy]* ) echo "Continuing to build, retaining WARCs"; break;;
+          [Nn]* ) exit;;
+          * ) echo "Please answer y or n.";;
+      esac
+    done
+  fi
+
+  if [[ $1 == "ci" ]]; then
+   ans="i"
+  else
+   read -p "Would you like to install binary (i), create dmg (d), or both (b)? (i/d/b) " ans
+  fi
 
 
+  case "$ans" in
+    i|d|b)
+      ;;
+    *)
+      echo "Invalid choice, choose one of i/d/b"
+      exit
+      ;;
+  esac
+
+  makeWAIL
+}
 
 installRequirements ()
 {
@@ -134,31 +153,36 @@ tweakOS ()
   /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
 }
 
-installRequirements
-createBinary
-mvWARCsToTemp
-deleteBinary # Remove previous version
-optimizeforMac
-mvProducts
-cleanupByproducts
-mvWARCsBackFromTemp
+makeWAIL ()
+{
+  installRequirements
+  createBinary
+  mvWARCsToTemp
+  deleteBinary # Remove previous version
+  optimizeforMac
+  mvProducts
+  cleanupByproducts
+  mvWARCsBackFromTemp
 
-# install binary, create dmg, or both? (i/d/b) 
+  # install binary, create dmg, or both? (i/d/b)
 
-# Just build dmg, delete binary, no system tweaks required
-if [ $ans = "b" ] || [ $ans = "d" ]; then
-  buildDiskImage
-  if [ $ans = "d" ]; then # Remove the installed binary if only making dmg
-    deleteBinary
+  # Just build dmg, delete binary, no system tweaks required
+  if [ $ans = "b" ] || [ $ans = "d" ]; then
+    buildDiskImage
+    if [ $ans = "d" ]; then # Remove the installed binary if only making dmg
+      deleteBinary
+    fi
   fi
-fi
 
-if [ $ans = "i" ] || [ $ans = "d" ]; then # Tweak system for binary
-  tweakOS
-fi
-#killall Finder
+  if [ $ans = "i" ] || [ $ans = "d" ]; then # Tweak system for binary
+    tweakOS
+  fi
+  #killall Finder
 
-#cleanup
-#rm -r dist
-#rm WAIL.spec
-#rm -r build
+  #cleanup
+  #rm -r dist
+  #rm WAIL.spec
+  #rm -r build
+}
+
+main "$@"; exit
