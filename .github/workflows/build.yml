@@ -24,4 +24,4 @@ jobs:
     - name: Run
       run: open /Applications/WAIL.app
     - name: Take screenshot
-      run: screenshow WAIL
+      run: screenshot WAIL
