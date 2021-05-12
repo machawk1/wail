@@ -16,6 +16,6 @@ jobs:
           - os: macos-latest
           - os: macos-10.15
     steps:
-    - uses: actions/checkout@osagnostic
+    - uses: actions/checkout@v2
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh
