@@ -19,7 +19,6 @@ jobs:
     - uses: actions/checkout@v2
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
-  runAndScreenshot:
     - name: Install screenshot utility
       run: pip3 install screenshot
     - name: Run
