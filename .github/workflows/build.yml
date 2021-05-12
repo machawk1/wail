@@ -30,4 +30,5 @@ jobs:
     - name: Retain screenshot artifact
       uses: actions/download-artifact@v2
       with:
-        name: /tmp/wail.png
+        name: wail.png
+        path: /tmp
