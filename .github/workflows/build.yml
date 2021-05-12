@@ -25,7 +25,8 @@ jobs:
       working-directory: /Applications
       run: |
         pwd
-        open -a WAIL.app
+        ls
+        open -a /Applications/WAIL.app
         sleep 10
     - name: Take screenshot
       run: screenshot WAIL --filename wail.png --shadow
