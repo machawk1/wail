@@ -167,14 +167,14 @@ makeWAIL ()
   # install binary, create dmg, or both? (i/d/b)
 
   # Just build dmg, delete binary, no system tweaks required
-  if [ $ans = "b" ] || [ $ans = "d" ]; then
+  if [[ $ans == "b" ]] || [[ $ans == "d" ]]; then
     buildDiskImage
-    if [ $ans = "d" ]; then # Remove the installed binary if only making dmg
+    if [[ $ans = "d" ]]; then # Remove the installed binary if only making dmg
       deleteBinary
     fi
   fi
 
-  if [ $ans = "i" ] || [ $ans = "d" ]; then # Tweak system for binary
+  if [[ $ans = "i" ]] || [[ $ans = "d" ]]; then # Tweak system for binary
     tweakOS
   fi
   #killall Finder
