@@ -27,3 +27,7 @@ jobs:
         sleep 10
     - name: Take screenshot
       run: screenshot WAIL --filename wail.png --shadow
+    - name: Retain screenshot artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: wail.png
