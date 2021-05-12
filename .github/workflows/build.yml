@@ -26,9 +26,9 @@ jobs:
         open -a /Applications/WAIL.app
         sleep 10
     - name: Take screenshot
-      run: screenshot WAIL --filename /tmp/wail.png --shadow
+      run: screenshot WAIL --filename wail.png --shadow
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
       with:
         name: wail-screenshot
-        path: /tmp/wail.png
+        path: wail.png
