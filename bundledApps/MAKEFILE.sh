@@ -75,12 +75,14 @@ main ()
 
 installRequirements ()
 {
+  echo "Installing build requirements"
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
 }
 
 createBinary ()
 {
+  echo "Creating binary"
   which pyinstaller
   pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
@@ -92,6 +94,7 @@ createBinary ()
 
 deleteBinary ()
 {
+  echo "Deleting binary"
   rm -rf /Applications/WAIL.app
 }
 
@@ -118,12 +121,14 @@ mvWARCsBackFromTemp ()
 
 mvProducts ()
 {
+  echo "Moving WAIL.app to /Applications"
   mv ./dist/WAIL.app /Applications/
   mv ./dist/WAIL /Applications/WAIL_cli
 }
 
 cleanupByproducts ()
 {
+  echo "Cleaning up byproducts, deleting ./dist and ./build/WAIL"
   # Remove installation remnants
   rm -r ./dist
   rm -r ./build/WAIL
@@ -131,6 +136,7 @@ cleanupByproducts ()
 
 optimizeforMac ()
 {
+  echo "Optimizing for Mac"
   # Remove Windows supporting package
   rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
   rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
@@ -140,12 +146,14 @@ optimizeforMac ()
 
 buildDiskImage ()
 {
+  echo "Building Disk Image"
   # Create a dmg
   dmgbuild -s ./build/dmgbuild_settings.py "WAIL" WAIL.dmg
 }
 
 tweakOS ()
 {
+  echo "Tweaking OS file associations"
   # Instruct the system to update the version string
   defaults read /Applications/WAIL.app/Contents/Info.plist > /dev/null
 
@@ -155,6 +163,7 @@ tweakOS ()
 
 makeWAIL ()
 {
+  echo "Running makeWAIL()"
   installRequirements
   createBinary
   mvWARCsToTemp
