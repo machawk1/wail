@@ -26,4 +26,4 @@ jobs:
         open -a /Applications/WAIL.app
         sleep 10
     - name: Take screenshot
-      run: screenshot WAIL
+      run: screenshot WAIL --filename wail.png --shadow
