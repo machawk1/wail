@@ -23,8 +23,9 @@ jobs:
       run: pip3 install screenshot
     - name: Run
       run: |
-        open -a /Applications/WAIL.app
+        open -a WAIL.app
         sleep 10
+      working-directory: /Applications
     - name: Take screenshot
       run: screenshot WAIL --filename wail.png --shadow
     - name: Upload screenshot
