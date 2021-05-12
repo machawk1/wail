@@ -17,6 +17,8 @@ jobs:
           - os: macos-10.15
     steps:
     - uses: actions/checkout@v2
+      with:
+        ref: 'gh-pages'
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
