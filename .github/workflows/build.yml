@@ -30,6 +30,8 @@ jobs:
         ls
         open -a /Applications/WAIL.app
         sleep 10
+    - name: Change tab
+      run: osascript tests/changeTabs.scpt
     - name: Take screenshot
       run: screenshot WAIL --filename wail-${{matrix.os}}.png --shadow
     - name: Upload screenshot
