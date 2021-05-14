@@ -30,15 +30,19 @@ jobs:
         ls
         open -a /Applications/WAIL.app
         sleep 10
-    - name: Change tab
-      run: osascript tests/changeTabs.scpt
-    - name: Take screenshot
-      run: screenshot WAIL --filename wail-${{matrix.os}}.png --shadow
+    - name: Iterate tabs, taking screenshot
+      env:
+        KEYCODES: 29 18 19 20 21
+      run: |
+        for k in $KEYCODES; do
+          osascript tests/changeTabs.scpt $k
+          screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
+        done
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
       with:
         name: wail-screenshot-${{matrix.os}}
-        path: wail-${{matrix.os}}.png
+        path: wail-${{matrix.os}}*.png
     - name: Download artifact
       uses: actions/download-artifact@v2
       with:
