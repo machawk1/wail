@@ -1,0 +1,49 @@
+on:
+  push:
+    branches:
+      - osagnostic
+      - gh-actions
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, macos-10.15]
+        include:
+          - os: macos-10.15
+          - os: macos-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        ref: 'gh-actions'
+    - name: Build
+      run: sh ./bundledApps/MAKEFILE.sh -q
+    - name: Install screenshot utility
+      run: pip3 install screenshot
+    - name: Run
+      working-directory: /Applications
+      run: |
+        pwd
+        ls
+        open -a /Applications/WAIL.app
+        sleep 10
+    - name: Iterate tabs, taking screenshot
+      env:
+        KEYCODES: 29 18 19 20 21
+      run: |
+        for k in $KEYCODES; do
+          osascript tests/changeTabs.scpt $k
+          screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
+        done
+    - name: Upload screenshot
+      uses: actions/upload-artifact@v2
+      with:
+        name: wail-screenshot-${{matrix.os}}
+        path: wail-${{matrix.os}}*.png
+    - name: Download artifact
+      uses: actions/download-artifact@v2
+      with:
+        name: wail-screenshot-${{matrix.os}}
