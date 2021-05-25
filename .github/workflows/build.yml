@@ -25,8 +25,7 @@ jobs:
     - name: Run
       working-directory: /Applications
       run: |
-        system_profiler SPDisplaysDataType | awk '/Resolution/{print $2, $3, $4}'
-        displayplacer list
+        system_profiler SPDisplaysDataType | grep Resolution
         pwd
         ls
         open -a /Applications/WAIL.app
