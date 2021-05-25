@@ -22,7 +22,7 @@ jobs:
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
       run: pip3 install screenshot
-    - name: Change screen resolution
+    - name: List available screen resolutions
       run: |
         brew install screenresolution
         screenresolution list
