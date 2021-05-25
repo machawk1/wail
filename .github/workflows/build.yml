@@ -25,7 +25,7 @@ jobs:
     - name: Change screen resolution
       run: |
         brew install screenresolution
-        screenresolution set 1920x1080x32@60
+        screenresolution list
     - name: Run
       working-directory: /Applications
       run: |
