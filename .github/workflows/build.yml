@@ -26,6 +26,11 @@ jobs:
       run: |
         brew install screenresolution
         screenresolution list
+    - name: Test setting to max display size
+      run: |
+        system_profiler SPDisplaysDataType | grep Resolution
+        "/Library/Application Support/VMware Tools/vmware-resolutionSet" 2560 1440
+        system_profiler SPDisplaysDataType | grep Resolution
     - name: Run
       working-directory: /Applications
       run: |
