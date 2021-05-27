@@ -799,6 +799,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_memgator = wx.Button(
                 self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
             )
+            self.fix_wasapi = wx.Button(
+                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
+            )
 
             self.kill_wayback = wx.Button(
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
@@ -809,10 +812,14 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_memgator = wx.Button(
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
             )
+            self.kill_wasapi = wx.Button(
+                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
+            )
 
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_wasapi = wx.StaticText(self, wx.ID_ANY, "X")
 
             self.draw()
             thread.start_new_thread(self.update_service_statuses, ())
@@ -820,20 +827,21 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.fix_wayback.Bind(wx.EVT_BUTTON, Wayback().fix)
             self.fix_heritrix.Bind(wx.EVT_BUTTON, Heritrix().fix)
             self.fix_memgator.Bind(wx.EVT_BUTTON, MemGator().fix)
+            self.fix_wasapi.Bind(wx.EVT_BUTTON, Wasapi().fix)
 
             self.kill_wayback.Bind(wx.EVT_BUTTON, Wayback().kill)
             self.kill_heritrix.Bind(wx.EVT_BUTTON, Heritrix().kill)
             self.kill_memgator.Bind(wx.EVT_BUTTON, MemGator().kill)
+            self.kill_wasapi.Bind(wx.EVT_BUTTON, Wasapi().kill)
 
             thread.start_new_thread(self.update_service_statuses, ())
 
         def draw(self):
             self.sizer = wx.BoxSizer()
 
-            gs = wx.FlexGridSizer(4, 5, 0, 0)
+            gs = wx.FlexGridSizer(5, 5, 0, 0)
 
-            gs.AddMany(
-                [
+            header_row = [
                     wx.StaticText(
                         self, wx.ID_ANY,
                         config.tab_label_advanced_services_serviceStatus
@@ -841,71 +849,101 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     (
                         wx.StaticText(self, wx.ID_ANY, "STATE"),
                         1,
-                        wx.ALIGN_CENTER_HORIZONTAL,
+                        wx.ALIGN_CENTER_HORIZONTAL
                     ),
                     (
                         wx.StaticText(self, wx.ID_ANY, "VERSION"),
                         1,
-                        wx.ALIGN_CENTER_HORIZONTAL,
+                        wx.ALIGN_CENTER_HORIZONTAL
                     ),
                     wx.StaticText(self, wx.ID_ANY, ""),  # button col 1
-                    wx.StaticText(self, wx.ID_ANY, ""),  # button col 2
-                    (
-                        wx.StaticText(self, wx.ID_ANY, "Wayback"),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL,
-                    ),
-                    (
-                        self.status_wayback,
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    (
-                        wx.StaticText(self, wx.ID_ANY,
-                                      self.get_wayback_version()),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    self.fix_wayback,
-                    self.kill_wayback,
-                    (
-                        wx.StaticText(self, wx.ID_ANY, "Heritrix"),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL,
-                    ),
-                    (
-                        self.status_heritrix,
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    (
-                        wx.StaticText(self, wx.ID_ANY,
-                                      self.get_heritrix_version()),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    self.fix_heritrix,
-                    self.kill_heritrix,
-                    (
-                        wx.StaticText(self, wx.ID_ANY, "MemGator"),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL,
-                    ),
-                    (
-                        self.status_memgator,
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    (
-                        wx.StaticText(self, wx.ID_ANY,
-                                      self.get_memgator_version()),
-                        1,
-                        wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL,
-                    ),
-                    self.fix_memgator,
-                    self.kill_memgator,
-                ]
+                    wx.StaticText(self, wx.ID_ANY, "")  # button col 2
+            ]
+            wayback_row = [
+                (
+                    wx.StaticText(self, wx.ID_ANY, "Wayback"),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL
+                ),
+                (
+                    self.status_wayback,
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                (
+                    wx.StaticText(self, wx.ID_ANY,
+                                  self.get_wayback_version()),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                self.fix_wayback,
+                self.kill_wayback
+            ]
+            heritrix_row = [
+                (
+                    wx.StaticText(self, wx.ID_ANY, "Heritrix"),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL,
+                ),
+                (
+                    self.status_heritrix,
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                (
+                    wx.StaticText(self, wx.ID_ANY,
+                                  self.get_heritrix_version()),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                self.fix_heritrix,
+                self.kill_heritrix
+            ]
+            memgator_row = [
+                (
+                    wx.StaticText(self, wx.ID_ANY, "MemGator"),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL,
+                ),
+                (
+                    self.status_memgator,
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                (
+                    wx.StaticText(self, wx.ID_ANY,
+                                  self.get_memgator_version()),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                self.fix_memgator,
+                self.kill_memgator
+            ]
+            wasapi_row = [
+                (
+                    wx.StaticText(self, wx.ID_ANY, "WASAPI"),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL,
+                ),
+                (
+                    self.status_wasapi,
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                (
+                    wx.StaticText(self, wx.ID_ANY,
+                                  self.get_wasapi_version()),
+                    1,
+                    wx.ALIGN_CENTER_VERTICAL | wx.ALIGN_CENTER_HORIZONTAL
+                ),
+                self.fix_wasapi,
+                self.kill_wasapi
+            ]
+
+            gs.AddMany( #  Merge lists of UI elements for each service
+                header_row + wayback_row + heritrix_row + memgator_row + wasapi_row
             )
+
             gs.AddGrowableCol(0, 1)
             gs.AddGrowableCol(1, 1)
             gs.AddGrowableCol(2, 1)
@@ -922,6 +960,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         def set_memgator_status(self, status):
             self.status_memgator.SetLabel(status)
+
+        def set_wasapi_status(self, status):
+            self.status_wasapi.SetLabel(status)
 
         def get_heritrix_version(self):
             htrix_lib_path = f"{config.heritrix_path}lib/"
@@ -954,6 +995,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             return ret.stdout[len('MemGator ('):-2]
 
         @staticmethod
+        def get_wasapi_version():
+            return 'TBD'
+
+        @staticmethod
         def get_tomcat_version():
             # Apache Tomcat Version 7.0.30
             release_notes_path = f"{config.tomcat_path}/RELEASE-NOTES"
@@ -983,6 +1028,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             heritrix_accessible = service_enabled[Heritrix().accessible()]
             wayback_accessible = service_enabled[Wayback().accessible()]
             memgator_accessible = service_enabled[MemGator().accessible()]
+            wasapi_accessible = service_enabled[Wasapi().accessible()]
 
             if wayback_accessible is config.service_enabled_label_YES:
                 tomcat_accessible = wayback_accessible
@@ -1000,6 +1046,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 elif service_id == "memgator":
                     self.set_memgator_status(transitional_status)
                     return
+                elif service_id == "wasapi":
+                    self.set_wasapi_status(transitional_status)
+                    return
                 else:
                     print((
                         "Invalid transitional service id specified. "
@@ -1009,6 +1058,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.set_wayback_status(tomcat_accessible)
             self.set_heritrix_status(heritrix_accessible)
             self.set_memgator_status(memgator_accessible)
+            self.set_wasapi_status(wasapi_accessible)
 
             if not hasattr(self, "fix_heritrix"):
                 print("First call, UI has not been setup")
@@ -1037,6 +1087,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 self.fix_memgator.Enable()
                 self.kill_memgator.Disable()
+
+            if wasapi_accessible is config.service_enabled_label_YES:
+                self.fix_wasapi.Disable()
+                self.kill_wasapi.Enable()
+            else:
+                self.fix_wasapi.Enable()
+                self.kill_wasapi.Disable()
 
     class WaybackPanel(wx.Panel):
         def __init__(self, parent):
@@ -1937,6 +1994,18 @@ class Tomcat(Service):
     def accessible(self):
         return Wayback().accessible()
 
+
+class Wasapi(Service):
+    uri = config.uri_wasapi
+
+    def accessible(self):
+        return True  # TODO: fix placeholder
+
+    def fix(self):
+        pass
+
+    def kill(self):
+        pass
 
 class Heritrix(Service):
     uri = f"https://{config.host_crawler}:{config.port_crawler}"

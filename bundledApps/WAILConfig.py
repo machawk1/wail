@@ -187,10 +187,12 @@ heritrix_credentials_password = "ipsum"
 host_crawler = "0.0.0.0"
 host_replay = "0.0.0.0"
 host_aggregator = "0.0.0.0"
+host_wasapi = "0.0.0.0"
 
 port_crawler = "8443"
 port_replay = "8080"
 port_aggregator = "1208"
+port_wasapi = "23119"
 
 index_timer_seconds = 10.0
 
@@ -317,6 +319,7 @@ uri_heritrix_accessiblity_uri = (
 )
 uri_heritrix_job = f'{uri_heritrix}/engine/job/'
 uri_aggregator = f"http://{host_aggregator}:{port_aggregator}/"
+uri_wasapi = f"http://{host_wasapi}:{port_wasapi}"
 
 memgator_format = 'cdxj'
 memgator_restimeout = '0m3s'
