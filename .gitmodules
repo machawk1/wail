@@ -1,0 +1,3 @@
+[submodule "bundledApps/wailsapi"]
+	path = bundledApps/wailsapi
+	url = https://github.com/machawk1/wailsapi
