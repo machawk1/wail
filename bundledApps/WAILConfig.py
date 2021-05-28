@@ -212,6 +212,7 @@ tomcat_path = ""
 tomcat_path_start = ""
 tomcat_path_stop = ""
 memgator_path = ""
+wasapi_path = ""
 archives_json = ""
 font_size = 8
 wail_window_size = (410, 275)
@@ -240,6 +241,7 @@ if "darwin" in sys.platform:  # macOS-specific code
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 
     memgator_path = f'{wail_path}/bundledApps/memgator-darwin-amd64'
+    wasapi_path = f'{wail_path}/bundledApps/wailsapi'
     archives_json = f'{wail_path}/config/archives.json'
 
     # Fix tomcat control scripts' permissions

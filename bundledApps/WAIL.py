@@ -53,9 +53,9 @@ from os.path import join
 import xml.etree.ElementTree as ET
 
 ssl._create_default_https_context = ssl._create_unverified_context
+main_app_window = None
 
-
-#  from pync import Notifier # OS X notifications
+#  from pync import Notifier # macOS notifications
 
 ###############################
 # Tab Controller (Notebook)
@@ -1809,8 +1809,7 @@ class MemGator(Service):
         time.sleep(3)
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
-        # if cb:
-        #     wx.CallAfter(cb)
+
 
     @staticmethod
     def kill(_):
@@ -1998,11 +1997,29 @@ class Tomcat(Service):
 class Wasapi(Service):
     uri = config.uri_wasapi
 
-    def fix(self):
-        pass
+    def fix(self, cb=None):
+        subprocess.Popen(config.wasapi_path, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.STDOUT)
+        time.sleep(3)
+        wx.CallAfter(
+            main_app_window.adv_config.services_panel.update_service_statuses)
 
-    def kill(self):
-        pass
+    @staticmethod
+    def kill(_):
+        main_app_window.adv_config.services_panel.status_wasapi.SetLabel(
+            "KILLING")
+
+        # TODO: adapt to use taskkill like MemGator kill() for Windows
+        sp = subprocess.Popen(['ps', '-A'], stdout=subprocess.PIPE)
+        output, error = sp.communicate()
+        target_process = "wailsapi"
+        for line in output.splitlines():
+            if target_process in str(line):
+                pid = int(line.split(None, 1)[0])
+                os.kill(pid, 9)
+
+        wx.CallAfter(
+            main_app_window.adv_config.services_panel.update_service_statuses)
 
 class Heritrix(Service):
     uri = f"https://{config.host_crawler}:{config.port_crawler}"
