@@ -73,6 +73,15 @@ main ()
   makeWAIL
 }
 
+buildWailsapi ()
+{
+  cd bundledApps/wailsapi
+  pyinstaller --onefile --add-data 'templates:templates' --add-data 'static:static' wailsapi.py
+  cd ../../
+  pwd
+  mv bundledApps/wailsapi-src/dist/wailsapi bundledApps/wailsapi-bin
+}
+
 installRequirements ()
 {
   echo "Installing build requirements"
@@ -85,7 +94,7 @@ createBinary ()
   echo "Creating binary"
   which pyinstaller
   pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
-  # Replace default version and icon information from pyinstaller 
+  # Replace default version and icon information from pyinstaller
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
   cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
@@ -165,6 +174,7 @@ makeWAIL ()
 {
   echo "Running makeWAIL()"
   installRequirements
+  buildWailsapi
   createBinary
   mvWARCsToTemp
   deleteBinary # Remove previous version
