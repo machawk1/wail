@@ -1998,9 +1998,6 @@ class Tomcat(Service):
 class Wasapi(Service):
     uri = config.uri_wasapi
 
-    def accessible(self):
-        return True  # TODO: fix placeholder
-
     def fix(self):
         pass
 
