@@ -79,7 +79,7 @@ buildWailsapi ()
   pyinstaller --onefile --add-data 'templates:templates' --add-data 'static:static' wailsapi.py
   cd ../../
   pwd
-  mv bundledApps/wailsapi-src/dist/wailsapi bundledApps/wailsapi-bin
+  mv bundledApps/wailsapi/dist/wailsapi bundledApps/wailsapi-bin
 }
 
 installRequirements ()
