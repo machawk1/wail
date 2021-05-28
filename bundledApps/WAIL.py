@@ -1547,17 +1547,23 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class MiscellaneousPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
-            view_archives_folder_button_button = wx.Button(
+            view_archives_folder_button = wx.Button(
                 self, 1, config.button_label_view_archive_files
             )
+            import_archives_button = wx.Button(
+                self, 1, config.button_label_import_archives
+            )
 
-            view_archives_folder_button_button.Bind(wx.EVT_BUTTON,
+            view_archives_folder_button.Bind(wx.EVT_BUTTON,
                                                     self.open_archives_folder)
+            import_archives_button.Bind(wx.EVT_BUTTON,
+                                                    self.open_import_interface)
             self.test_update = wx.Button(self, 1,
                                          config.button_label_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(view_archives_folder_button_button, 0, wx.EXPAND, 0)
+            box.Add(view_archives_folder_button, 0, wx.EXPAND, 0)
+            box.Add(import_archives_button , 0, wx.EXPAND, 0)
             box.Add(self.test_update, 0, wx.EXPAND, 0)
 
             self.SetAutoLayout(True)
@@ -1580,6 +1586,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 os.startfile(config.warcs_folder)
             else:
                 subprocess.call(["open", config.warcs_folder])
+
+        @staticmethod
+        def open_import_interface(_):
+            """Show the window to import WARCs from other sources"""
+            print('opening window')
 
         def check_for_updates(self, _):
             """Display the window for updating WAIL."""
