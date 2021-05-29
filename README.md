@@ -41,7 +41,7 @@ To run it using Python for testing, run the following from the root of the WAIL 
 python ./bundledApps/WAIL.py
 ```
 
-Since Wayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g., WAIL.app) currently exists in directory specific to your operating system (see below).
+Since OpenWayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g., WAIL.app) currently exists in directory specific to your operating system (see below).
 
 Python is not required to be installed for end-users, just double-click (see above) and go!
 
