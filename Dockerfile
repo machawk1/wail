@@ -27,6 +27,7 @@ RUN        apt update && apt install -y \
              x11vnc \
              xvfb \
              language-pack-en \
+             ttf-ancient-fonts \
        &&  rm -rf /var/lib/apt/lists/*
 
 RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
