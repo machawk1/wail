@@ -1,4 +1,4 @@
-FROM       ubuntu:18.10
+FROM       ubuntu:20.04
 
 LABEL      app.name="WAIL" \
            app.description="Web Archiving Integration Layer: One-Click User Instigated Preservation" \
@@ -19,7 +19,7 @@ RUN        apt update && apt install -y \
              git \
              libgtk-3-0 \
              libnotify4 \
-             libsdl1.2debian \
+             libsdl2-2.0-0 \
              libsm6 \
              libxxf86vm1 \
              python3 \
@@ -29,8 +29,8 @@ RUN        apt update && apt install -y \
              language-pack-en \
        &&  rm -rf /var/lib/apt/lists/*
 
-RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-18.04 wxPython==4.0.4 \
-       &&  pip3 install pyinstaller==3.4
+RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
+       &&  pip3 install pyinstaller==4.3
 
 WORKDIR    /wail
 COPY       requirements.txt ./
