@@ -30,7 +30,7 @@ brew install wail
 
 <h2>Running WAIL</h2>
 
-<img src="https://github.com/machawk1/wail/blob/issue-355/images/screenshot_mac_20210528.png">
+<img src="https://github.com/machawk1/wail/blob/issue-355/images/screenshot_mac_20210528.png" width="522" height="387">
 
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 
