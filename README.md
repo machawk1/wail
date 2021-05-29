@@ -24,7 +24,9 @@ To install WAIL:
 
 Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
 
-<blockquote>brew install wail</blockquote>
+```sh
+brew install wail
+```
 
 <h2>Running WAIL</h2>
 
@@ -34,17 +36,40 @@ This section is intended only to run WAIL from source. To download the compiled 
 
 End-user execution is meant to be accessed through the binary file, either WAIL.app on macOS or WAIL.exe on Windows.
 To run it using Python for testing, run the following from the root of the WAIL source directory:
-<blockquote>python ./bundledApps/WAIL.py</blockquote>
+
+```
+python ./bundledApps/WAIL.py
+```
 
 Since Wayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g., WAIL.app) currently exists in directory specific to your operating system (see below).
 
 Python is not required to be installed for end-users, just double-click (see above) and go!
 
 <h2>Development</h2>
-To build WAIL from source to a native system executable (.app or .exe), open a terminal or console session and move into the root of the WAIL source directory then:
+To build WAIL from source to a native system executable (.app or .exe), open a terminal or console session and clone a fresh copy of the WAIL source:
+
+
+```bash
+git clone https://github.com/machawk1/wail
+git submodule init
+git submodule update
+```
+
+Move into the root of the WAIL source directory:
+
+```
+cd wail
+```
+
+then, follow the below based on your operating system:
+
 <h3>macOS</h3>
-<blockquote>sh bundledApps/MAKEFILE.sh</blockquote>
-This will create /Applications/WAIL.app on macOS.
+
+```
+sh bundledApps/MAKEFILE.sh
+```
+
+Answer the questions in the prompts and this will create /Applications/WAIL.app on macOS.
 
 <h4>Generating App Icons</h4>
 
@@ -59,25 +84,37 @@ On macOS, application icons are stored in a `.icns` file. To generate this:
 
 <h3>Windows</h3>
 From the Windows shell:
-<blockquote>bundledApps\MAKEFILE.bat</blockquote>
+
+```
+bundledApps\MAKEFILE.bat
+```
+
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
 <h3>Linux</h3>
 Linux support is currently in-development using Docker (see <a href="https://github.com/machawk1/wail/issues/2">#2</a>). From the root of the WAIL source working directory, run:
 
-<blockquote>docker build -t machawk1/wail .</blockquote>
+```
+docker build -t machawk1/wail .
+```
 
 then
 
-<blockquote>docker container run -d -it --rm -p 5920:5920 --name wail machawk1/wail</blockquote>
+```
+docker container run -d -it --rm -p 5920:5920 --name wail machawk1/wail
+```
 
 To log into the container to view the WAIL interface point a VNC Client to localhost:5920. The container can also be accessed via the command-line with:
 
-<blockquote>docker exec -it wail /bin/bash</blockquote>
+```
+docker exec -it wail /bin/bash
+```
 
 Once in the container, run the WAIL executable with:
 
-<blockquote>./WAIL</blockquote>
+```
+./WAIL
+```
 
 There still exists some issues to be resolved for <a href="https://github.com/machawk1/wail/issues/2">#2</a>, as will be evident in the reports on the console.
 
