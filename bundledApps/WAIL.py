@@ -2008,12 +2008,21 @@ class Tomcat(Service):
 class Wasapi(Service):
     uri = config.uri_wasapi
 
-    def fix(self, cb=None):
+    def fix(self, _, *cb):
+        thread.start_new_thread(self.fix_async, cb)
+
+    @staticmethod
+    def fix_async(cb=None):
+        main_app_window.adv_config.services_panel.status_wasapi.SetLabel(
+            config.service_enabled_label_FIXING
+        )
         subprocess.Popen(config.wasapi_path, stdout=subprocess.DEVNULL,
                          stderr=subprocess.STDOUT)
         time.sleep(3)
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
+        if cb:
+            wx.CallAfter(cb)
 
     @staticmethod
     def kill(_):
