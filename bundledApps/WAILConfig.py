@@ -366,7 +366,7 @@ class WasapiWindow(wx.Frame):
         username_sizer.Add(self.username, 0, wx.ALL, 5)
 
         password_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        password_label = wx.StaticText(self, label="Password:", size=(75, -1))
+        password_label = wx.StaticText(self, label="Password:", size=(80, -1))
         password_sizer.Add(password_label, 0, wx.ALL | wx.CENTER, 5)
         self.password = wx.TextCtrl(self,
                                     style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER)
