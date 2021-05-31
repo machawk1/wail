@@ -401,13 +401,15 @@ class WasapiWindow(wx.Frame):
 
         params = {'source': src, 'username': u, 'password': p}
 
-        t = Thread(target=self.make_request, args=[params])
+        ret = {'response': None}
+        t = Thread(target=self.make_request, args=[params, ret])
         t.start()
         t.join()
         print('done')
+        print(ret)
+        print(ret['response'].content)
 
 
-    def make_request(self, params, cb=None):
-        resp = requests.post(f'{uri_wasapi}/wasapi/', data=params)
-
-
+    def make_request(self, params, ret=None):
+        response = requests.post(f'{uri_wasapi}/wasapi/', data=params)
+        ret['response'] = response
