@@ -351,6 +351,10 @@ class WasapiWindow(wx.Frame):
         self.src_other.Disable()
         self.src_ait.SetValue(True)
 
+        self.button_label_fetch = 'Fetch File List'
+        self.button_label_processing = 'Fetching...Click again to cancel'
+        self.button_label_canceling = 'Canceling Fetch'
+
         radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
         radio_sizer.Add(self.src_ait, 0, wx.ALL, 5)
         radio_sizer.Add(self.src_wr, 0, wx.ALL, 5)
@@ -383,7 +387,7 @@ class WasapiWindow(wx.Frame):
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
         main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
-        self.fetch_button = wx.Button(self, label="Fetch File List")
+        self.fetch_button = wx.Button(self, label=self.button_label_fetch)
         self.fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
         self.fetch_button.SetDefault()
         self.fetch_button.SetFocus()
@@ -406,20 +410,38 @@ class WasapiWindow(wx.Frame):
         params = {'source': src, 'username': u, 'password': p}
 
         ret = {'response': None}
-        thread_pool_executor = futures.ThreadPoolExecutor(max_workers=1)
-        thread_pool_executor.submit(self.make_request, params, ret, self.print_result)
+        self.thread_pool_executor = futures.ThreadPoolExecutor(max_workers=1)
+        self.thread_pool_executor.submit(self.make_request, params, ret, self.print_result)
 
     def print_result(self, res):
         wx.CallAfter(self.set_button_text, 'Fetch Complete')
+        self.set_button_to_submit()
         print(res['response'].content)
 
     def make_request(self, params, ret=None, cb=None):
-        wx.CallAfter(self.set_button_text, 'Fetching...')
+        print('making request')
+        wx.CallAfter(self.set_button_text, self.button_label_processing)
+        self.set_button_to_cancel()
         response = requests.post(f'{uri_wasapi}/wasapi/', data=params)
         ret['response'] = response
 
         if cb:
             cb(ret)
+
+    def cancel_query(self, _):
+        print('canceling query')
+        # TODO: cancel query
+        self.set_button_to_submit()
+
+    def set_button_to_cancel(self):
+        wx.CallAfter(self.set_button_text, self.button_label_processing)
+        self.fetch_button.Unbind(wx.EVT_BUTTON)
+        self.fetch_button.Bind(wx.EVT_BUTTON, self.cancel_query)
+
+    def set_button_to_submit(self):
+        wx.CallAfter(self.set_button_text, self.button_label_fetch)
+        self.fetch_button.Unbind(wx.EVT_BUTTON)
+        self.fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
 
     def set_button_text(self, txt):
         self.fetch_button.SetLabel(txt)
