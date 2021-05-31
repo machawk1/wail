@@ -336,7 +336,8 @@ class WasapiWindow(wx.Frame):
     """UI elements for graphically importing WARCs with WASAPI """
 
     def __init__(self):
-        wx.Frame.__init__(self, None, title="Import Archive Files")
+        wx.Frame.__init__(self, None, title="Import Archive Files", size=(400, 220),
+            style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX),)
 
         self.srcbox = wx.StaticBox(self, -1, 'Archival Source')
         self.srcboxsizer = wx.StaticBoxSizer(self.srcbox, wx.VERTICAL)
