@@ -331,75 +331,64 @@ memgator_contimeout = '3s'
 
 
 class WasapiWindow(wx.Frame):
-    """UI elements for graphically setting WAIL preferences"""
+    """UI elements for graphically importing WARCs with WASAPI """
 
     def __init__(self):
         wx.Frame.__init__(self, None, title="Import Archive Files")
-        panel = wx.Panel(self)
-        box = wx.BoxSizer(wx.VERTICAL)
-        wx.Frame.Center(self)
-        self.Notebook = wx.Notebook(panel)
-        box.Add(self.Notebook, 2, flag=wx.EXPAND)
-        '''
-        self.preftab_crawler = PrefTab_Crawler(self.Notebook)
-        self.preftab_replay = PrefTab_Replay(self.Notebook)
-        self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
 
-        self.Notebook.AddPage(self.preftab_crawler, "Crawler")
-        self.Notebook.AddPage(self.preftab_replay, "Replay")
-        self.Notebook.AddPage(self.preftab_aggregator, "Aggregator")
+        self.srcbox = wx.StaticBox(self, -1, 'Archival Source')
+        self.srcboxsizer = wx.StaticBoxSizer(self.srcbox, wx.VERTICAL)
 
-        config = ConfigParser()
-        config.read('config.ini')
-        '''
-        self.save_button = wx.Button(panel, wx.ID_ANY, "Cancel")
-        self.cancel_button = wx.Button(panel, wx.ID_ANY, "Save")
+        self.src_ait = wx.RadioButton(self, label="Archive-It", style = wx.RB_GROUP)
+        self.src_wr = wx.RadioButton(self, label="Webrecorder/Conifer")
 
-        gs = wx.FlexGridSizer(1, 2, 0, 0)
-        gs.AddMany([
+        radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        radio_sizer.Add(self.src_ait, 0, wx.ALL, 5)
+        radio_sizer.Add(self.src_wr, 0, wx.ALL, 5)
+
+        self.srcboxsizer.Add(radio_sizer)
+
+
+        self.credsbox = wx.StaticBox(self, -1, 'Credentials')
+        self.credsboxsizer = wx.StaticBoxSizer(self.credsbox, wx.VERTICAL)
+        user_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
+        user_lbl = wx.StaticText(self, label="Username:",size=(75, -1))
+        user_sizer.Add(user_lbl, 0, wx.ALL | wx.CENTER, 5)
+        self.user = wx.TextCtrl(self)
+        user_sizer.Add(self.user, 0, wx.ALL, 5)
+
+        p_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        p_lbl = wx.StaticText(self, label="Password:",size=(75, -1))
+        p_sizer.Add(p_lbl, 0, wx.ALL | wx.CENTER, 5)
+        self.password = wx.TextCtrl(self,
+                                    style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER)
+        p_sizer.Add(self.password, 0, wx.ALL)
+
+        self.credsboxsizer.Add(user_sizer, 0, wx.ALL)
+        self.credsboxsizer.Add(p_sizer, 0, wx.ALL)
+
+        main_sizer = wx.BoxSizer(wx.VERTICAL)
+        main_sizer.Add(self.srcboxsizer)
+        main_sizer.Add(self.credsboxsizer)
+
+
+        btn = wx.Button(self, label="Login")
+        #btn.Bind(wx.EVT_BUTTON, self.onLogin)
+        main_sizer.Add(btn, 0, wx.ALL | wx.CENTER, 5)
+
+        #self.SetSizer(main_sizer)
+
+        #self.save_button = wx.Button(panel, wx.ID_ANY, "Cancel")
+        #self.cancel_button = wx.Button(panel, wx.ID_ANY, "Save")
+
+        #gs = wx.FlexGridSizer(3, 1, 0, 0)
+        '''gs.AddMany([
+            text,
             self.save_button,
             self.cancel_button
-        ])
+        ])'''
 
-        box.Add(gs, 0, wx.ALIGN_RIGHT)
-        panel.SetSizer(box)
+        #box.Add(gs, 0, wx.ALIGN_RIGHT)
+        self.SetSizer(main_sizer)
 
-    def read_archive_locations(self):
-        # with open("/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml", "r") as f:
-        #    config = f.read()
-        # print(config)
-        xmldoc = minidom.parse(
-            '/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml')
-        itemlist = xmldoc.getElementsByTagName('bean')
-
-        # print(itemlist[0].attributes['name'].value)
-        targetEl = None
-        for s in itemlist:
-            if s.attributes[
-                'class'].value == "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer":
-                targetEl = s
-                break
-
-        # A very hacky way to parse out the archive directory paths from
-        # wayback.xml. See #343
-
-        txtValue = ''
-        for x in targetEl.childNodes[1].childNodes[1].childNodes:
-            txtValue += x.data + '\n'  # Combine comments and text into str
-
-        baseDirNeedle = 'wayback.basedir.default='
-        archiveDirNeedle = 'wayback.archivedir'
-
-        baseDirNeedleVar = '${wayback.basedir}'
-
-        srcs = []
-        baseDir = ''
-        for line in txtValue.split('\n'):
-            if baseDirNeedle in line:
-                baseDir = line.split('=')[1]
-            if archiveDirNeedle in line:
-                srcs.append(line.split('=')[1])
-        for i, src in enumerate(srcs):
-            srcs[i] = srcs[i].replace(baseDirNeedleVar, baseDir)
-
-        return srcs
