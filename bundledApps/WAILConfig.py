@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+import asyncio
 import os
-import sys
 import re
 import requests
-import threading
+import sys
+from threading import Thread
 import wx
+
 if os.name == 'nt':
     from win32com.client import Dispatch
 
@@ -385,10 +387,9 @@ class WasapiWindow(wx.Frame):
         fetch_button.SetDefault()
         fetch_button.SetFocus()
 
-        # self.password.MoveBeforeInTabOrder(self.username)
+        # TODO: fix tabbing order of username-password fields
+
         main_sizer.Add(fetch_button, 0, wx.ALL | wx.EXPAND, 5)
-
-
         self.SetSizer(main_sizer)
 
     def query_wailsapi(self, _):
@@ -398,6 +399,15 @@ class WasapiWindow(wx.Frame):
         if self.src_wr.GetValue():
             src = 'webrecorder'
 
-        #thread.start_new_thread
-        resp = requests.post(f'{uri_wasapi}/wasapi/', data = {'source': src, 'username': u, 'password': p})
-        print(resp)
+        params = {'source': src, 'username': u, 'password': p}
+
+        t = Thread(target=self.make_request, args=[params])
+        t.start()
+        t.join()
+        print('done')
+
+
+    def make_request(self, params, cb=None):
+        resp = requests.post(f'{uri_wasapi}/wasapi/', data=params)
+
+
