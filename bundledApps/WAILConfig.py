@@ -370,6 +370,7 @@ class WasapiWindow(wx.Frame):
         password_sizer.Add(password_label, 0, wx.ALL | wx.CENTER, 5)
         self.password = wx.TextCtrl(self,
                                     style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER)
+
         password_sizer.Add(self.password, 0, wx.ALL)
 
         self.credsboxsizer.Add(username_sizer, 0, wx.ALL)
@@ -379,21 +380,24 @@ class WasapiWindow(wx.Frame):
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
         main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
-        fetch_button = wx.Button(self, label="Fetch")
+        fetch_button = wx.Button(self, label="Fetch File List")
         fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
+        fetch_button.SetDefault()
+        fetch_button.SetFocus()
 
+        # self.password.MoveBeforeInTabOrder(self.username)
         main_sizer.Add(fetch_button, 0, wx.ALL | wx.EXPAND, 5)
 
 
         self.SetSizer(main_sizer)
 
     def query_wailsapi(self, _):
-        u = self.password.GetValue()
-        p = self.username.GetValue()
+        u = self.username.GetValue()
+        p = self.password.GetValue()
         src = 'archive-it'
         if self.src_wr.GetValue():
             src = 'webrecorder'
-        print(src)
+
         #thread.start_new_thread
         resp = requests.post(f'{uri_wasapi}/wasapi/', data = {'source': src, 'username': u, 'password': p})
         print(resp)
