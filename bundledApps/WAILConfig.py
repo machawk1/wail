@@ -341,10 +341,14 @@ class WasapiWindow(wx.Frame):
 
         self.src_ait = wx.RadioButton(self, label="Archive-It", style = wx.RB_GROUP)
         self.src_wr = wx.RadioButton(self, label="Webrecorder/Conifer")
+        self.src_other = wx.RadioButton(self, label="Other...")
+        self.src_other.Disable()
+        self.src_ait.SetValue(True)
 
         radio_sizer = wx.BoxSizer(wx.HORIZONTAL)
         radio_sizer.Add(self.src_ait, 0, wx.ALL, 5)
         radio_sizer.Add(self.src_wr, 0, wx.ALL, 5)
+        radio_sizer.Add(self.src_other, 0, wx.ALL, 5)
 
         self.srcboxsizer.Add(radio_sizer)
 
@@ -369,26 +373,14 @@ class WasapiWindow(wx.Frame):
         self.credsboxsizer.Add(p_sizer, 0, wx.ALL)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
-        main_sizer.Add(self.srcboxsizer)
-        main_sizer.Add(self.credsboxsizer)
+        main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
+        main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
 
-        btn = wx.Button(self, label="Login")
-        #btn.Bind(wx.EVT_BUTTON, self.onLogin)
-        main_sizer.Add(btn, 0, wx.ALL | wx.CENTER, 5)
+        btn = wx.Button(self, label="Fetch")
 
-        #self.SetSizer(main_sizer)
+        main_sizer.Add(btn, 0, wx.ALL | wx.EXPAND, 5)
 
-        #self.save_button = wx.Button(panel, wx.ID_ANY, "Cancel")
-        #self.cancel_button = wx.Button(panel, wx.ID_ANY, "Save")
 
-        #gs = wx.FlexGridSizer(3, 1, 0, 0)
-        '''gs.AddMany([
-            text,
-            self.save_button,
-            self.cancel_button
-        ])'''
-
-        #box.Add(gs, 0, wx.ALIGN_RIGHT)
         self.SetSizer(main_sizer)
 
