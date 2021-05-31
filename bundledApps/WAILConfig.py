@@ -4,6 +4,8 @@
 import os
 import sys
 import re
+import requests
+import threading
 import wx
 if os.name == 'nt':
     from win32com.client import Dispatch
@@ -376,11 +378,15 @@ class WasapiWindow(wx.Frame):
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
         main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
+        fetch_button = wx.Button(self, label="Fetch")
+        fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
 
-        btn = wx.Button(self, label="Fetch")
-
-        main_sizer.Add(btn, 0, wx.ALL | wx.EXPAND, 5)
+        main_sizer.Add(fetch_button, 0, wx.ALL | wx.EXPAND, 5)
 
 
         self.SetSizer(main_sizer)
 
+    def query_wailsapi(self, _):
+        #thread.start_new_thread
+        resp = requests.post(f'{uri_wasapi}/wasapi/', data = {'source':'archive-it', 'username': 'XXX', 'password': 'YYY'})
+        print(resp)
