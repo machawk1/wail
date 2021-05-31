@@ -7,6 +7,7 @@ import re
 import requests
 import sys
 from threading import Thread
+from concurrent import futures
 import wx
 
 if os.name == 'nt':
@@ -382,16 +383,19 @@ class WasapiWindow(wx.Frame):
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
         main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
-        fetch_button = wx.Button(self, label="Fetch File List")
-        fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
-        fetch_button.SetDefault()
-        fetch_button.SetFocus()
+        self.fetch_button = wx.Button(self, label="Fetch File List")
+        self.fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
+        self.fetch_button.SetDefault()
+        self.fetch_button.SetFocus()
+
+
 
         # TODO: fix tabbing order of username-password fields
-
-        main_sizer.Add(fetch_button, 0, wx.ALL | wx.EXPAND, 5)
+        main_sizer.Add(self.fetch_button, 0, wx.ALL | wx.EXPAND, 5)
         self.SetSizer(main_sizer)
 
+    # This might be better as using native wx Events
+    # https://wiki.wxpython.org/LongRunningTasks
     def query_wailsapi(self, _):
         u = self.username.GetValue()
         p = self.password.GetValue()
@@ -402,14 +406,20 @@ class WasapiWindow(wx.Frame):
         params = {'source': src, 'username': u, 'password': p}
 
         ret = {'response': None}
-        t = Thread(target=self.make_request, args=[params, ret])
-        t.start()
-        t.join()
-        print('done')
-        print(ret)
-        print(ret['response'].content)
+        thread_pool_executor = futures.ThreadPoolExecutor(max_workers=1)
+        thread_pool_executor.submit(self.make_request, params, ret, self.print_result)
 
+    def print_result(self, res):
+        wx.CallAfter(self.set_button_text, 'Fetch Complete')
+        print(res['response'].content)
 
-    def make_request(self, params, ret=None):
+    def make_request(self, params, ret=None, cb=None):
+        wx.CallAfter(self.set_button_text, 'Fetching...')
         response = requests.post(f'{uri_wasapi}/wasapi/', data=params)
         ret['response'] = response
+
+        if cb:
+            cb(ret)
+
+    def set_button_text(self, txt):
+        self.fetch_button.SetLabel(txt)
