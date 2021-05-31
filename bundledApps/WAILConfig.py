@@ -328,3 +328,78 @@ memgator_format = 'cdxj'
 memgator_restimeout = '0m3s'
 memgator_hdrtimeout = '3s'
 memgator_contimeout = '3s'
+
+
+class WasapiWindow(wx.Frame):
+    """UI elements for graphically setting WAIL preferences"""
+
+    def __init__(self):
+        wx.Frame.__init__(self, None, title="Import Archive Files")
+        panel = wx.Panel(self)
+        box = wx.BoxSizer(wx.VERTICAL)
+        wx.Frame.Center(self)
+        self.Notebook = wx.Notebook(panel)
+        box.Add(self.Notebook, 2, flag=wx.EXPAND)
+        '''
+        self.preftab_crawler = PrefTab_Crawler(self.Notebook)
+        self.preftab_replay = PrefTab_Replay(self.Notebook)
+        self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
+
+        self.Notebook.AddPage(self.preftab_crawler, "Crawler")
+        self.Notebook.AddPage(self.preftab_replay, "Replay")
+        self.Notebook.AddPage(self.preftab_aggregator, "Aggregator")
+
+        config = ConfigParser()
+        config.read('config.ini')
+        '''
+        self.save_button = wx.Button(panel, wx.ID_ANY, "Cancel")
+        self.cancel_button = wx.Button(panel, wx.ID_ANY, "Save")
+
+        gs = wx.FlexGridSizer(1, 2, 0, 0)
+        gs.AddMany([
+            self.save_button,
+            self.cancel_button
+        ])
+
+        box.Add(gs, 0, wx.ALIGN_RIGHT)
+        panel.SetSizer(box)
+
+    def read_archive_locations(self):
+        # with open("/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml", "r") as f:
+        #    config = f.read()
+        # print(config)
+        xmldoc = minidom.parse(
+            '/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT/WEB-INF/wayback.xml')
+        itemlist = xmldoc.getElementsByTagName('bean')
+
+        # print(itemlist[0].attributes['name'].value)
+        targetEl = None
+        for s in itemlist:
+            if s.attributes[
+                'class'].value == "org.springframework.beans.factory.config.PropertyPlaceholderConfigurer":
+                targetEl = s
+                break
+
+        # A very hacky way to parse out the archive directory paths from
+        # wayback.xml. See #343
+
+        txtValue = ''
+        for x in targetEl.childNodes[1].childNodes[1].childNodes:
+            txtValue += x.data + '\n'  # Combine comments and text into str
+
+        baseDirNeedle = 'wayback.basedir.default='
+        archiveDirNeedle = 'wayback.archivedir'
+
+        baseDirNeedleVar = '${wayback.basedir}'
+
+        srcs = []
+        baseDir = ''
+        for line in txtValue.split('\n'):
+            if baseDirNeedle in line:
+                baseDir = line.split('=')[1]
+            if archiveDirNeedle in line:
+                srcs.append(line.split('=')[1])
+        for i, src in enumerate(srcs):
+            srcs[i] = srcs[i].replace(baseDirNeedleVar, baseDir)
+
+        return srcs

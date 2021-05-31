@@ -816,6 +816,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
             )
 
+            # TODO: adapt these to real initial status instead of not
+            # running by default
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
@@ -1559,7 +1561,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             view_archives_folder_button.Bind(wx.EVT_BUTTON,
                                                     self.open_archives_folder)
             import_archives_button.Bind(wx.EVT_BUTTON,
-                                                    self.open_import_interface)
+                                                    self.display_wasapi_window)
             self.test_update = wx.Button(self, 1,
                                          config.button_label_check_for_updates)
 
@@ -1589,11 +1591,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
             else:
                 subprocess.call(["open", config.warcs_folder])
 
-        @staticmethod
-        def open_import_interface(_):
-            """Show the window to import WARCs from other sources"""
-            print('opening window')
-
         def check_for_updates(self, _):
             """Display the window for updating WAIL."""
 
@@ -1604,6 +1601,23 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             # if an updated version is available and the user wants it,
             # ...copy the /Application/WAIL.app/Contents folder
+
+        def display_wasapi_window(self, _):
+            """Open the WASAPI window"""
+            # Check for window existence, build and show if not, show if so
+
+            try:
+                self.wasapi_window
+            except AttributeError:
+                self.wasapi_window = config.WasapiWindow()
+
+            self.wasapi_window.Show()
+            self.wasapi_window.Raise()
+            self.wasapi_window.Bind(wx.EVT_CLOSE, self.delete_wasapi_window)
+
+        def delete_wasapi_window(self, event):
+            self.wasapi_window.Hide()
+            del self.wasapi_window
 
     def __init__(self, parent):
         wx.Panel.__init__(self, parent)
