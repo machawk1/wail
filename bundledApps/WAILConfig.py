@@ -357,22 +357,22 @@ class WasapiWindow(wx.Frame):
 
         self.credsbox = wx.StaticBox(self, -1, 'Credentials')
         self.credsboxsizer = wx.StaticBoxSizer(self.credsbox, wx.VERTICAL)
-        user_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        username_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        user_lbl = wx.StaticText(self, label="Username:",size=(75, -1))
-        user_sizer.Add(user_lbl, 0, wx.ALL | wx.CENTER, 5)
-        self.user = wx.TextCtrl(self)
-        user_sizer.Add(self.user, 0, wx.ALL, 5)
+        username_label = wx.StaticText(self, label="Username:", size=(75, -1))
+        username_sizer.Add(username_label, 0, wx.ALL | wx.CENTER, 5)
+        self.username = wx.TextCtrl(self)
+        username_sizer.Add(self.username, 0, wx.ALL, 5)
 
-        p_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        p_lbl = wx.StaticText(self, label="Password:",size=(75, -1))
-        p_sizer.Add(p_lbl, 0, wx.ALL | wx.CENTER, 5)
+        password_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        password_label = wx.StaticText(self, label="Password:", size=(75, -1))
+        password_sizer.Add(password_label, 0, wx.ALL | wx.CENTER, 5)
         self.password = wx.TextCtrl(self,
                                     style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER)
-        p_sizer.Add(self.password, 0, wx.ALL)
+        password_sizer.Add(self.password, 0, wx.ALL)
 
-        self.credsboxsizer.Add(user_sizer, 0, wx.ALL)
-        self.credsboxsizer.Add(p_sizer, 0, wx.ALL)
+        self.credsboxsizer.Add(username_sizer, 0, wx.ALL)
+        self.credsboxsizer.Add(password_sizer, 0, wx.ALL)
 
         main_sizer = wx.BoxSizer(wx.VERTICAL)
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
@@ -387,6 +387,12 @@ class WasapiWindow(wx.Frame):
         self.SetSizer(main_sizer)
 
     def query_wailsapi(self, _):
+        u = self.password.GetValue()
+        p = self.username.GetValue()
+        src = 'archive-it'
+        if self.src_wr.GetValue():
+            src = 'webrecorder'
+        print(src)
         #thread.start_new_thread
-        resp = requests.post(f'{uri_wasapi}/wasapi/', data = {'source':'archive-it', 'username': 'XXX', 'password': 'YYY'})
+        resp = requests.post(f'{uri_wasapi}/wasapi/', data = {'source': src, 'username': u, 'password': p})
         print(resp)
