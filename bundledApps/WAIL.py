@@ -709,7 +709,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         url = f"{config.uri_wayback_all_mementos}{self.uri.GetValue()}"
         status_code = None
-        print('a')
+
         try:
             resp = urlopen(url)
             status_code = resp.getcode()
@@ -819,7 +819,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_wasapi = wx.StaticText(self, wx.ID_ANY, "X")
+
+            wasapi_status = "OK" if Wasapi().running() else "X"
+            self.status_wasapi = wx.StaticText(self, wx.ID_ANY, wasapi_status)
 
             self.draw()
             thread.start_new_thread(self.update_service_statuses, ())
@@ -2040,6 +2042,21 @@ class Wasapi(Service):
 
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
+
+    @staticmethod
+    def running():
+        try:
+            resp = urlopen(config.uri_wasapi)
+            resp.getcode()
+            return True
+        except HTTPError as e:
+            print('httperror')
+            print(e)
+            status_code = e.code
+        except OSError as err:
+            # e.g., bind failed, not running
+            pass
+        return False
 
 class Heritrix(Service):
     uri = f"https://{config.host_crawler}:{config.port_crawler}"
