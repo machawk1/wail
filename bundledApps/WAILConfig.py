@@ -411,12 +411,26 @@ class WasapiWindow(wx.Frame):
         self.thread_pool_executor.submit(self.make_request, params, ret, self.print_result)
 
     def print_result(self, res):
-        wx.CallAfter(self.set_button_text, 'Fetch Complete')
         self.set_button_to_submit()
+        if res['response'].status_code == 401:
+            wx.CallAfter(self.show_unauthorized_dialog)
+        else:  # Verify consistent response code between the services
+            wx.CallAfter(self.set_button_text, 'Fetch Complete')
+
         print(res['response'].content)
 
+    def show_unauthorized_dialog(self):
+        # Better implemented by match statement, but requires Py 3.10
+        selected_service_name = "Archive-It" if self.src_ait.GetValue() else "Webrecorder"
+        # self.src_other.GetValue() for third permutation, not implemented
+
+        dialog = wx.MessageDialog(self, f'The credentials specified were rejected by {selected_service_name}.',
+                                  caption="Unauthorized", style=wx.OK, pos=wx.DefaultPosition)
+        dialog.ShowModal()
+        dialog.Destroy()
+
     def make_request(self, params, ret=None, cb=None):
-        print('making request')
+        print(f'Sending request to {uri_wasapi}')
         wx.CallAfter(self.set_button_text, self.button_label_processing)
         self.set_button_to_cancel()
         response = requests.post(f'{uri_wasapi}/wasapi/', data=params)
