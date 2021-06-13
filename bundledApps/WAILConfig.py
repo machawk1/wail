@@ -341,13 +341,14 @@ class WasapiWindow(wx.Frame):
     def __init__(self):
         wx.Frame.__init__(self, None, title="Import Archive Files", size=(400, 220),
             style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX),)
+        panel = wx.Panel(self, wx.ID_ANY)
 
-        self.srcbox = wx.StaticBox(self, -1, 'Archival Source')
+        self.srcbox = wx.StaticBox(panel, -1, 'Archival Source')
         self.srcboxsizer = wx.StaticBoxSizer(self.srcbox, wx.VERTICAL)
 
-        self.src_ait = wx.RadioButton(self, label="Archive-It", style = wx.RB_GROUP)
-        self.src_wr = wx.RadioButton(self, label="Webrecorder/Conifer")
-        self.src_other = wx.RadioButton(self, label="Other...")
+        self.src_ait = wx.RadioButton(panel, label="Archive-It", style = wx.RB_GROUP)
+        self.src_wr = wx.RadioButton(panel, label="Webrecorder/Conifer")
+        self.src_other = wx.RadioButton(panel, label="Other...")
         self.src_other.Disable()
         self.src_ait.SetValue(True)
 
@@ -362,20 +363,19 @@ class WasapiWindow(wx.Frame):
 
         self.srcboxsizer.Add(radio_sizer)
 
-
-        self.credsbox = wx.StaticBox(self, -1, 'Credentials')
+        self.credsbox = wx.StaticBox(panel, -1, 'Credentials')
         self.credsboxsizer = wx.StaticBoxSizer(self.credsbox, wx.VERTICAL)
         username_sizer = wx.BoxSizer(wx.HORIZONTAL)
 
-        username_label = wx.StaticText(self, label="Username:", size=(75, -1))
+        username_label = wx.StaticText(panel, label="Username:", size=(75, -1))
         username_sizer.Add(username_label, 0, wx.ALL | wx.CENTER, 5)
-        self.username = wx.TextCtrl(self)
+        self.username = wx.TextCtrl(panel)
         username_sizer.Add(self.username, 0, wx.ALL, 5)
 
         password_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        password_label = wx.StaticText(self, label="Password:", size=(80, -1))
+        password_label = wx.StaticText(panel, label="Password:", size=(80, -1))
         password_sizer.Add(password_label, 0, wx.ALL | wx.CENTER, 5)
-        self.password = wx.TextCtrl(self,
+        self.password = wx.TextCtrl(panel,
                                     style=wx.TE_PASSWORD | wx.TE_PROCESS_ENTER)
 
         password_sizer.Add(self.password, 0, wx.ALL)
@@ -387,16 +387,13 @@ class WasapiWindow(wx.Frame):
         main_sizer.Add(self.srcboxsizer, wx.ID_ANY, wx.EXPAND)
         main_sizer.Add(self.credsboxsizer, wx.ID_ANY, wx.EXPAND)
 
-        self.fetch_button = wx.Button(self, label=self.button_label_fetch)
+        self.fetch_button = wx.Button(panel, label=self.button_label_fetch)
         self.fetch_button.Bind(wx.EVT_BUTTON, self.query_wailsapi)
         self.fetch_button.SetDefault()
         self.fetch_button.SetFocus()
 
-
-
-        # TODO: fix tabbing order of username-password fields
         main_sizer.Add(self.fetch_button, 0, wx.ALL | wx.EXPAND, 5)
-        self.SetSizer(main_sizer)
+        panel.SetSizerAndFit(main_sizer)
 
     # This might be better as using native wx Events
     # https://wiki.wxpython.org/LongRunningTasks
