@@ -1609,7 +1609,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             try:
                 self.wasapi_window
             except AttributeError:
-                self.wasapi_window = config.WasapiWindow()
+                self.wasapi_window = config.WasapiWindow(Wasapi)
 
             self.wasapi_window.Show()
             self.wasapi_window.Raise()

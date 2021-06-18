@@ -338,11 +338,12 @@ memgator_contimeout = '3s'
 class WasapiWindow(wx.Frame):
     """UI elements for graphically importing WARCs with WASAPI """
 
-    def __init__(self):
+    def __init__(self, wasapi_class):
         wx.Frame.__init__(self, None, title="Import Archive Files", size=(400, 220),
             style=(wx.FRAME_FLOAT_ON_PARENT | wx.CLOSE_BOX),)
         panel = wx.Panel(self, wx.ID_ANY)
 
+        self.wasapi_service = wasapi_class()
         self.srcbox = wx.StaticBox(panel, -1, 'Archival Source')
         self.srcboxsizer = wx.StaticBoxSizer(self.srcbox, wx.VERTICAL)
 
@@ -398,6 +399,11 @@ class WasapiWindow(wx.Frame):
     # This might be better as using native wx Events
     # https://wiki.wxpython.org/LongRunningTasks
     def query_wailsapi(self, _):
+        # TODO: verify that the service is running first before sending query
+        if not self.wasapi_service.accessible():
+            self.wasapi_service.fix(self.query_wailsapi)
+            return
+
         u = self.username.GetValue()
         p = self.password.GetValue()
         src = 'archive-it'
@@ -430,7 +436,8 @@ class WasapiWindow(wx.Frame):
         dialog.Destroy()
 
     def make_request(self, params, ret=None, cb=None):
-        print(f'Sending request to {uri_wasapi}')
+        print(f'Sending request to {uri_wasapi} with params:')
+        print(params)
         wx.CallAfter(self.set_button_text, self.button_label_processing)
         self.set_button_to_cancel()
         response = requests.post(f'{uri_wasapi}/wasapi/', data=params)
