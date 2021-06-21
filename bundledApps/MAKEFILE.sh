@@ -73,11 +73,26 @@ main ()
   makeWAIL
 }
 
+# For Apple Silicon support, see #494
+buildPyinstallerBootloaders ()
+{
+  echo "Building bootloader for Apple Silicon"
+  git clone https://github.com/pyinstaller/pyinstaller.git
+  cd pyinstaller/bootloader
+  python3 ./waf all
+  cd ..
+  python3 -m pip install .
+  cd ..
+}
+
 installRequirements ()
 {
   echo "Installing build requirements"
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
+  if [[ $(uname -p) == 'arm' ]]; then
+    buildPyinstallerBootloaders
+  fi
 }
 
 createBinary ()
@@ -141,7 +156,13 @@ optimizeforMac ()
   rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
   rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
   rm -rf ./dist/WAIL.app/bundledApps/Java/Windows
-  chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
+  if [[ $(uname -p) == 'x86_64' ]]; then
+    rm ./dist/WAIL.app/bundledApps/memgator-darwin-arm64
+    chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
+  else
+    rm ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
+    chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-arm64
+  fi
 }
 
 buildDiskImage ()
