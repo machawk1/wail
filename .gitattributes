@@ -1,0 +1,5 @@
+bundledApps/Java/* linguist-vendored
+bundledApps/heritrix* linguist-vendored
+bundledApps/tomcat/* linguist-vendored
+bundledApps/memgator* linguist-vendored
+support/* linguist-vendored

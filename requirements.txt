@@ -1,12 +1,14 @@
 biplist
+black
 dmgbuild
 ds-store
 mac-alias
-pyinstaller
+pathlib2
+pyinstaller>=4.1
+pypubsub
 pystache
 requests
 schedule
 six
 wheel
 wxPython
-pathlib; python_version <= '2.7'

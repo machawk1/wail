@@ -8,8 +8,8 @@ def tail(filename, lines=1, _buffer=4098):
     try:
         f = open(filename, "r")
     except IOError as e:
-        return '{0}\n{1}'.format(
-            "No job info yet",
+        return (
+            "No job info yet\n"
             "You must run a job before stats can be shown here")
     lines_found = []
     block_counter = -1
@@ -29,7 +29,7 @@ def tail(filename, lines=1, _buffer=4098):
     return lines_found[-lines:]
 
 
-def copyanything(src, dst):
+def copy_anything(src, dst):
     try:
         shutil.copytree(src, dst)
     except OSError as exc:  # python >2.5

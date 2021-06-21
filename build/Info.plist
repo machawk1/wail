@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleShortVersionString</key>
-	<string>2019.04.04</string>
+	<string>2020.03.20</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Mat Kelly</string>
+	<string>Copyright © Mat Kelly - Web Archiving Integration Layer (WAIL)</string>
 	<key>CFBundleExecutable</key>
 	<string>MacOS/WAIL</string>
 	<key>CFBundleName</key>
@@ -18,6 +18,8 @@
 	<string>wail_blue.icns</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<false/>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>

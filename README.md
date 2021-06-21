@@ -1,11 +1,11 @@
 <h3 align="center">
- <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
+ <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-transp-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
 <p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
 <hr style="height: 1px; border: none;" />
 
 Web Archiving Integration Layer (WAIL) is a graphical user interface (GUI) atop multiple web archiving tools intended to be used as an easy way for anyone to preserve and replay web pages.
 
-Tools included and accessible through the GUI are <a href="https://github.com/internetarchive/heritrix3">Heritrix heritrix-3.4.0-20190418</a> and <a href="https://github.com/iipc/openwayback">OpenWayback 2.3.2</a>. Support packages include Apache Tomcat, <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>, and <a href="https://github.com/oduwsdl/memgator">MemGator</a>.
+Tools included and accessible through the GUI are <a href="https://github.com/internetarchive/heritrix3">Heritrix 3.4.0-20190418</a> and <a href="https://github.com/iipc/openwayback">OpenWayback 2.4.0</a>. Support packages include Apache Tomcat, <a href="https://github.com/pyinstaller/pyinstaller/">pyinstaller</a>, and <a href="https://github.com/oduwsdl/memgator">MemGator</a>.
 
 WAIL is written in Python and compiled to a native executable using <a href="http://www.pyinstaller.org/">PyInstaller</a>.
 
@@ -24,7 +24,7 @@ To install WAIL:
 
 Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
 
-<blockquote>𝚋𝚛𝚎𝚠 𝚌𝚊𝚜𝚔 𝚒𝚗𝚜𝚝𝚊𝚕𝚕 wail</blockquote>
+<blockquote>brew install wail</blockquote>
 
 <h2>Running WAIL</h2>
 
@@ -37,8 +37,6 @@ To run it using Python for testing, run the following from the root of the WAIL 
 <blockquote>python ./bundledApps/WAIL.py</blockquote>
 
 Since Wayback and Heritrix configurations rely on absolute paths on the system, checks and interactions with services may not work in debugging mode unless a binary of WAIL (e.g., WAIL.app) currently exists in directory specific to your operating system (see below).
-
-You may need to install other dependencies on your system to compile from source like <a href="http://www.wxwidgets.org/">wxWidgets</a> depending on your local python configuration.
 
 Python is not required to be installed for end-users, just double-click (see above) and go!
 
@@ -53,9 +51,9 @@ This will create /Applications/WAIL.app on macOS.
 On macOS, application icons are stored in a `.icns` file. To generate this:
 
 1. Create a directory to store images: `mkdir wail_blue.iconset`
-1. Create 11 .pngs of your high resolution (≥ 1024x1024) image, semantically scaled and named: `icon_16x16.png`, `icon_16x16@2x.png` (copy of the the 32x32 icon renamed), `icon_32x32.png`, `icon_32x32@2x.png`, `icon_128x128.png`, `icon_128x128@2x.png`, `icon_256x256.png`, `icon_256x256@2x.png`, `icon_512x512.png`, `icon_512x512@2x.png`, `icon_1024x1024.png`.
-1. Place the 11 images into the wail.iconset directory.
-1. Run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
+1. Create a PNG of your high resolution (1024x1024) icon, currently based on `/build/icons/wail-blue-logo.psd`, name it `icon_1024x1024.png` and place it in the `wail_blue.iconset`
+1. In a terminal, `cd wail_blue.iconset` then run the script to generate the other images needed for an `.icns` with `../build/resize.sh`. There will then be 11 PNGs in the directory.
+1. Navigate to the parent directory with `cd ../` and run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
 1. Store `wail_blue.icns` in `WAIL/build/icons/` when running building WAIL using `MAKEFILE.sh` on macOS.</li>
 
 
@@ -65,7 +63,7 @@ From the Windows shell:
 then move the WAIL source directory to the root of your C drive (thus making C:\WAIL\).
 
 <h3>Linux</h3>
-Linux support is currently in-development using Docker (see #2). From the root of the WAIL source working directory, run:
+Linux support is currently in-development using Docker (see <a href="https://github.com/machawk1/wail/issues/2">#2</a>). From the root of the WAIL source working directory, run:
 
 <blockquote>docker build -t machawk1/wail .</blockquote>
 
@@ -88,6 +86,6 @@ There still exists some issues to be resolved for <a href="https://github.com/ma
 <p>Please see the <a href="https://github.com/machawk1/wail/wiki/FAQ">Frequently Asked Questions</a> page.</p>
 
 <h2>Contact</h2>
-<p>WAIL is a project of the <a href="https://ws-dl.cs.odu.edu/">Web Science and Digital Libraries (WS-DL) Research Group</a> at <a href="https://odu.edu/">Old Dominion University (ODU)</a>, created by <a href="https://www.cs.odu.edu/~mkelly/">Mat Kelly</a> with additional extensive contributions by <a href="https://github.com/n0tan3rd">John Berlin</a>.</p>
+<p>WAIL is a project of the <a href="https://ws-dl.cs.odu.edu/">Web Science and Digital Libraries (WS-DL) Research Group</a> at <a href="https://odu.edu/">Old Dominion University (ODU)</a>, created by <a href="https://matkelly.com/">Mat Kelly</a> with additional extensive contributions by <a href="https://github.com/n0tan3rd">John Berlin</a>.</p>
 
 <p>For support e-mail wail@matkelly.com or tweet to us at <a href="https://twitter.com/machawk1">@machawk1</a> and/or <a href="https://twitter.com/WebSciDL">@WebSciDL</a>.</p>

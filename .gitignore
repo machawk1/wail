@@ -6,13 +6,17 @@
 *.dmg
 
 #ignore build remnants
-build/*
+#build/*
 !build/icons*
 *.pyc
 !build/version.txt
 !build/Info.plist
 bundledApps/waybackConfigWriter.pyc
 WAIL.spec
+
+#ignore CI
+!.pre-commit-config.yaml
+!.travis.yml
 
 # Mac meta
 .DS_Store
