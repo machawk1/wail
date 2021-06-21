@@ -73,11 +73,26 @@ main ()
   makeWAIL
 }
 
+# For Apple Silicon support, see #494
+buildPyinstallerBootloaders ()
+{
+  echo "Building bootloader for Apple Silicon"
+  git clone https://github.com/pyinstaller/pyinstaller.git
+  cd pyinstaller/bootloader
+  python3 ./waf all
+  cd ..
+  python3 -m pip install .
+  cd ..
+}
+
 installRequirements ()
 {
   echo "Installing build requirements"
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
+  if [[ $(uname -p) == 'arm' ]]; then
+    buildPyinstallerBootloaders
+  fi
 }
 
 createBinary ()
