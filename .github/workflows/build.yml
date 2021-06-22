@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - osagnostic
+      - macos11ghactionstest
     tags:
       - '*'
 
