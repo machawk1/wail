@@ -1744,7 +1744,10 @@ class MemGator(Service):
         self.last_uri = tm_uri
         return resp.text
 
-    def fix(self, cb=None):
+    def fix(self, _, *cb):
+        thread.start_new_thread(self.fix_async, cb)
+
+    def fix_async(self, cb=None):
         cmd = [config.memgator_path] + self.get_flags() + ['server']
 
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
