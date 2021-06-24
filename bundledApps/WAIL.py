@@ -810,7 +810,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
             )
 
-            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X", )
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
 
@@ -841,7 +841,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     (
                         wx.StaticText(self, wx.ID_ANY, "STATE"),
                         1,
-                        wx.ALIGN_CENTER_HORIZONTAL,
+                        wx.ALIGN_CENTER,
                     ),
                     (
                         wx.StaticText(self, wx.ID_ANY, "VERSION"),
