@@ -841,7 +841,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     (
                         wx.StaticText(self, wx.ID_ANY, "STATE"),
                         1,
-                        wx.ALIGN_CENTER_HORIZONTAL,
+                        wx.ALIGN_CENTER,
                     ),
                     (
                         wx.StaticText(self, wx.ID_ANY, "VERSION"),
@@ -1744,7 +1744,13 @@ class MemGator(Service):
         self.last_uri = tm_uri
         return resp.text
 
-    def fix(self, cb=None):
+    def fix(self, *cb):
+        thread.start_new_thread(self.fix_async, cb)
+
+    def fix_async(self, cb=None):
+        main_app_window.adv_config.services_panel.status_memgator.SetLabel(
+            config.service_enabled_label_FIXING
+        )
         cmd = [config.memgator_path] + self.get_flags() + ['server']
 
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
