@@ -229,7 +229,7 @@ if "darwin" in sys.platform:  # macOS-specific code
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
 
     jdk_path = (f"{wail_path}/bundledApps/Java"
-                "/JavaVirtualMachines/jdk1.7.0_79.jdk"
+                "/JavaVirtualMachines/jdk-11.0.2.jdk"
                 "/Contents/Home/"
                )
     jre_home = jdk_path

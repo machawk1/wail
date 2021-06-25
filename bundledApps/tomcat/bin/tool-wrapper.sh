@@ -37,9 +37,8 @@
 #                   containing some jars in order to allow replacement of APIs
 #                   created outside of the JCP (i.e. DOM and SAX from W3C).
 #                   It can also be used to update the XML parser implementation.
+#                   This is only supported for Java <= 8.
 #                   Defaults to $CATALINA_HOME/endorsed.
-#
-# $Id: tool-wrapper.sh 1138835 2011-06-23 11:27:57Z rjung $
 # -----------------------------------------------------------------------------
 
 # OS specific support.  $var _must_ be set to either true or false.
@@ -120,7 +119,7 @@ fi
 if [ ! -z "$CLASSPATH" ] ; then
   CLASSPATH="$CLASSPATH":
 fi
-CLASSPATH="$CLASSPATH""$CATALINA_HOME"/bin/bootstrap.jar:"$CATALINA_HOME"/bin/tomcat-juli.jar:"$CATALINA_HOME"/lib/servlet-api.jar
+CLASSPATH="$CLASSPATH""$CATALINA_HOME"/bin/bootstrap.jar:"$CATALINA_HOME"/bin/tomcat-juli.jar:"$CATALINA_HOME"/lib/servlet-api.jar:"$CATALINA_HOME"/lib/tomcat-util.jar
 
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
@@ -128,14 +127,27 @@ if $cygwin; then
   JRE_HOME=`cygpath --absolute --windows "$JRE_HOME"`
   CATALINA_HOME=`cygpath --absolute --windows "$CATALINA_HOME"`
   CLASSPATH=`cygpath --path --windows "$CLASSPATH"`
-  JAVA_ENDORSED_DIRS=`cygpath --path --windows "$JAVA_ENDORSED_DIRS"`
+  [ -n "$JAVA_ENDORSED_DIRS" ] && JAVA_ENDORSED_DIRS=`cygpath --path --windows "$JAVA_ENDORSED_DIRS"`
+fi
+
+# Java 9 no longer supports the java.endorsed.dirs
+# system property. Only try to use it if
+# JAVA_ENDORSED_DIRS was explicitly set
+# or CATALINA_HOME/endorsed exists.
+ENDORSED_PROP=ignore.endorsed.dirs
+if [ -n "$JAVA_ENDORSED_DIRS" ]; then
+    ENDORSED_PROP=java.endorsed.dirs
+fi
+if [ -d "$CATALINA_HOME/endorsed" ]; then
+    ENDORSED_PROP=java.endorsed.dirs
 fi
 
 JAVA_OPTS="$JAVA_OPTS -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager"
 
 # ----- Execute The Requested Command -----------------------------------------
 
-exec "$_RUNJAVA" $JAVA_OPTS $TOOL_OPTS \
-  -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" -classpath "$CLASSPATH" \
-  -Dcatalina.home="$CATALINA_HOME" \
+eval exec "\"$_RUNJAVA\"" "$JAVA_OPTS" "$TOOL_OPTS" \
+  -D$ENDORSED_PROP="\"$JAVA_ENDORSED_DIRS\"" \
+  -classpath "\"$CLASSPATH\"" \
+  -Dcatalina.home="\"$CATALINA_HOME\"" \
   org.apache.catalina.startup.Tool "$@"

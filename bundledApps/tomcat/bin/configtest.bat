@@ -14,12 +14,11 @@ rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 rem See the License for the specific language governing permissions and
 rem limitations under the License.
 
-if "%OS%" == "Windows_NT" setlocal
 rem ---------------------------------------------------------------------------
 rem Configuration test script for the CATALINA Server
-rem
-rem $Id: configtest.bat 1137560 2011-06-20 09:27:44Z rjung $
 rem ---------------------------------------------------------------------------
+
+setlocal
 
 rem Guess CATALINA_HOME if not defined
 set "CURRENT_DIR=%cd%"
