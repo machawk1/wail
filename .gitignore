@@ -22,7 +22,8 @@ WAIL.spec
 .DS_Store
 
 .idea
-bundledApps/tomcat/logs
+bundledApps/tomcat/logs/*
+!bundledApps/tomcat/logs/.gitignore
 config/path-index.txt
 bundledApps/tomcat/work
 jobs/
