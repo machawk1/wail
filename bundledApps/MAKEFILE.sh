@@ -153,13 +153,18 @@ optimizeforMac ()
 {
   echo "Optimizing for Mac"
   # Remove Windows supporting package
+  echo "> Removing MemGator (Linux)"
   rm ./dist/WAIL.app/bundledApps/memgator-linux-amd64
+  echo "> Removing MemGator (Window)"
   rm ./dist/WAIL.app/bundledApps/memgator-windows-amd64.exe
+  echo "> Removing Java (Windows)"
   rm -rf ./dist/WAIL.app/bundledApps/Java/Windows
-  if [[ $(uname -p) == 'x86_64' ]]; then
+  if [[ $(uname -p) == 'i386' ]]; then
+    echo "> Removing MemGator (Apple Silicon)"
     rm ./dist/WAIL.app/bundledApps/memgator-darwin-arm64
     chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
   else
+    echo "> Removing MemGator (pre-Apple Silicon)"
     rm ./dist/WAIL.app/bundledApps/memgator-darwin-amd64
     chmod 755 ./dist/WAIL.app/bundledApps/memgator-darwin-arm64
   fi
