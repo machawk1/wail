@@ -327,7 +327,7 @@ class PrefTab_Replay(wx.Panel):
         sz = wx.BoxSizer()
 
         sz.Add(
-            wx.StaticText(self, wx.ID_ANY, "Replay"), flag=wx.CENTER
+            wx.StaticText(panel, wx.ID_ANY, "Replay"), flag=wx.CENTER
         )
 
 
@@ -350,65 +350,136 @@ class PrefTab_Replay(wx.Panel):
         )
         #self.listbox.SetMaxSize((300, 100))
 
-
-class PrefTab_Aggregator(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
-        self.sizer = wx.BoxSizer()
-        gs = wx.FlexGridSizer(2, 2, 0, 0)
-
-        self.ua = wx.TextCtrl(self, wx.ID_ANY,
-                               value="test")
-        self.timeout = wx.TextCtrl(self, wx.ID_ANY,
-                              value="100")
-
-        gs.AddMany([
-            wx.StaticText(self, wx.ID_ANY, "User Agent"),
-            self.ua,
-            wx.StaticText(self, wx.ID_ANY, "Default Timeout (ms)"),
-            self.timeout
-        ])
-
-        self.sizer.Add(gs, proportion=1)
-        self.SetSizer(self.sizer)
-        self.Layout()
-
-
-class PrefTab_Crawler(wx.Panel):
-    def __init__(self, parent):
-        wx.Panel.__init__(self, parent)
+class CrawlerPreferencesPane(wx.PreferencesPage):
+    def CreateWindow(self, parent):
+        panel = wx.Panel(parent)
         self.vbox = wx.BoxSizer(wx.VERTICAL)
 
-        self.box_creds = wx.StaticBox(self, wx.ID_ANY,
+        self.box_creds = wx.StaticBox(panel, wx.ID_ANY,
                                       "Web Interface Credentials")
 
-        self.box_creds_u = wx.StaticText(self, wx.ID_ANY, "Username")
-        self.box_creds_p = wx.StaticText(self, wx.ID_ANY, "Password")
+        self.box_creds_u = wx.StaticText(panel, wx.ID_ANY, "Username")
+        self.box_creds_p = wx.StaticText(panel, wx.ID_ANY, "Password")
 
-
-        self.box_attrs = wx.StaticBox(self, wx.ID_ANY,
+        self.box_attrs = wx.StaticBox(panel, wx.ID_ANY,
                                       "Crawl Attributes")
-        self.jURL = wx.StaticText(self, wx.ID_ANY, "Operator Contact URL")
-        self.jName = wx.StaticText(self, wx.ID_ANY, "Job Name")
-        self.jDesc = wx.StaticText(self, wx.ID_ANY, "Job Description")
+        self.jURL = wx.StaticText(panel, wx.ID_ANY, "Operator Contact URL")
+        self.jName = wx.StaticText(panel, wx.ID_ANY, "Job Name")
+        self.jDesc = wx.StaticText(panel, wx.ID_ANY, "Job Description")
 
-        self.draw()
-
-    def draw(self):
         self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
-        self.sbs_creds.Add(self.box_creds_u, 0, wx.TOP|wx.LEFT)
+        self.sbs_creds.Add(self.box_creds_u, 0, wx.TOP | wx.LEFT)
         self.sbs_creds.Add(self.box_creds_p, 0, wx.TOP | wx.LEFT)
 
         self.sbs_attrs = wx.StaticBoxSizer(self.box_attrs, wx.VERTICAL)
-        self.sbs_attrs.Add(self.jURL, 0, wx.TOP|wx.LEFT)
-        self.sbs_attrs.Add(self.jName, 0, wx.TOP|wx.LEFT)
-        self.sbs_attrs.Add(self.jDesc, 0, wx.TOP|wx.LEFT)
+        self.sbs_attrs.Add(self.jURL, 0, wx.TOP | wx.LEFT)
+        self.sbs_attrs.Add(self.jName, 0, wx.TOP | wx.LEFT)
+        self.sbs_attrs.Add(self.jDesc, 0, wx.TOP | wx.LEFT)
 
         self.vbox.Add(self.sbs_creds, 1, wx.EXPAND | wx.ALL)
         self.vbox.Add(self.sbs_attrs, 1, wx.EXPAND | wx.ALL)
 
-        self.SetSizer(self.vbox)
+        panel.SetSizer(self.vbox)
+        return panel
 
+    def GetLargeIcon(self):
+        '''Return a 32x32 icon'''
+        return wx.Bitmap(32, 32)
+
+    def GetName(self):
+        return "Crawler"
+
+class ReplayPreferencesPane(wx.PreferencesPage):
+    def CreateWindow(self, parent):
+        panel = wx.Panel(parent)
+        sz = wx.BoxSizer()
+
+        sz.Add(
+            wx.StaticText(panel, wx.ID_ANY, "Replay"), flag=wx.CENTER
+        )
+
+        self.archive_locations = wx.StaticText(panel, wx.ID_ANY,
+                                               label="Archive Locations")
+        self.listbox = wx.ListBox(panel, style=wx.LB_HSCROLL)
+
+        # archive_locations_list = parent.read_archive_locations()
+        # self.listbox.Set(archive_locations_list)
+
+        sz.AddMany(
+            [
+                (self.archive_locations, 0),
+                (self.listbox, 0, wx.EXPAND),
+                (wx.StaticText(panel, 7, "test"), 1, wx.EXPAND)
+            ]
+        )
+        return panel
+
+    def GetLargeIcon(self):
+        '''Return a 32x32 icon'''
+        return wx.Bitmap(32, 32)
+
+    def GetName(self):
+        return "Replay"
+
+class AggregatorPreferencesPane(wx.PreferencesPage):
+    def CreateWindow(self, parent):
+        panel = wx.Panel(parent)
+        panel.SetMinSize((500, 500))
+        sz = wx.BoxSizer()
+        gs = wx.FlexGridSizer(2, 2, 0, 0)
+
+        self.ua = wx.TextCtrl(panel, wx.ID_ANY,
+                               value="test")
+        self.timeout = wx.TextCtrl(panel, wx.ID_ANY,
+                              value="100")
+
+        gs.AddMany([
+            wx.StaticText(panel, wx.ID_ANY, "User Agent"),
+            self.ua,
+            wx.StaticText(panel, wx.ID_ANY, "Default Timeout (ms)"),
+            self.timeout
+        ])
+
+        sz.Add(gs, proportion=1)
+        #self.SetSizer(sz)
+        sz.Layout()
+        return panel
+
+    def GetLargeIcon(self):
+        '''Return a 32x32 icon'''
+        return wx.Bitmap(32, 32)
+
+    def GetName(self):
+        return "Aggregator"
+
+class GeneralPage(wx.PreferencesPage):
+    def CreateWindow(self, parent):
+        panel = wx.Panel(parent)
+        panel.SetMinSize((500, 500))
+
+        sz = wx.BoxSizer(wx.VERTICAL)
+        sz.Add(wx.StaticText(panel, wx.ID_ANY, "General Page"),
+               wx.SizerFlags(1).TripleBorder())
+        panel.SetSizer(sz)
+        return panel
+
+class AdvancedPage(wx.PreferencesPage):
+    def CreateWindow(self, parent):
+        panel = wx.Panel(parent)
+        panel.SetMinSize((500, 500))
+        sz = wx.BoxSizer(wx.VERTICAL)
+        sz.Add(wx.StaticText(panel, wx.ID_ANY, "Advanced Page"),
+               wx.SizerFlags(1).TripleBorder())
+        panel.SetSizer(sz)
+        return panel
+
+class PreferencesWindow2(wx.PreferencesEditor):
+    def __init__(self):
+        super().__init__()
+
+        self.AddPage(CrawlerPreferencesPane())
+        self.AddPage(ReplayPreferencesPane())
+        self.AddPage(AggregatorPreferencesPane())
 
 class PreferencesWindow(wx.Frame):
     """UI elements for graphically setting WAIL preferences"""
@@ -421,9 +492,9 @@ class PreferencesWindow(wx.Frame):
         box.Add(self.Notebook, 2, flag=wx.EXPAND)
 
 
-        self.preftab_crawler = PrefTab_Crawler(self.Notebook)
-        self.preftab_replay = PrefTab_Replay(self.Notebook)
-        self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
+        #self.preftab_crawler = PrefTab_Crawler(self.Notebook)
+        #self.preftab_replay = PrefTab_Replay(self.Notebook)
+        #self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
 
         self.Notebook.AddPage(self.preftab_crawler, "Crawler")
         self.Notebook.AddPage(self.preftab_replay, "Replay")

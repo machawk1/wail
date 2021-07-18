@@ -308,9 +308,10 @@ class TabController(wx.Frame):
         try:
             self.preferences_window
         except AttributeError:
-            self.preferences_window = config.PreferencesWindow()
-
-        self.preferences_window.Show()
+            self.preferences_window = config.PreferencesWindow2()
+            #self.preferences_window = config.PreferencesWindow()
+        self.preferences_window.Show(None)
+        #self.preferences_window.Show()
         self.preferences_window.Raise()
         self.preferences_window.Bind(wx.EVT_CLOSE, self.delete_preferences_window)
 
