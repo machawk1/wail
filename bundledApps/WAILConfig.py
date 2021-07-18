@@ -376,8 +376,8 @@ class CrawlerPreferencesPane(wx.PreferencesPage):
         self.sbs_attrs.Add(self.jName, 0, wx.TOP | wx.LEFT)
         self.sbs_attrs.Add(self.jDesc, 0, wx.TOP | wx.LEFT)
 
-        self.vbox.Add(self.sbs_creds, 1, wx.EXPAND | wx.ALL)
-        self.vbox.Add(self.sbs_attrs, 1, wx.EXPAND | wx.ALL)
+        self.vbox.Add(self.sbs_creds, 1, wx.EXPAND | wx.ALL, 10)
+        self.vbox.Add(self.sbs_attrs, 1, wx.EXPAND | wx.ALL, 10)
 
         panel.SetSizer(self.vbox)
         return panel
@@ -407,9 +407,9 @@ class ReplayPreferencesPane(wx.PreferencesPage):
 
         sz.AddMany(
             [
-                (self.archive_locations, 0),
-                (self.listbox, 0, wx.EXPAND),
-                (wx.StaticText(panel, 7, "test"), 1, wx.EXPAND)
+                (self.archive_locations, 0, 10),
+                (self.listbox, 0, wx.EXPAND, 10),
+                (wx.StaticText(panel, 7, "test"), 1, wx.EXPAND, 10)
             ]
         )
         return panel
