@@ -384,7 +384,7 @@ class CrawlerPreferencesPane(wx.PreferencesPage):
 
     def GetLargeIcon(self):
         '''Return a 32x32 icon'''
-        return wx.Bitmap(32, 32)
+        return wx.Bitmap("images/crawler.png")
 
     def GetName(self):
         return "Crawler"
@@ -416,7 +416,7 @@ class ReplayPreferencesPane(wx.PreferencesPage):
 
     def GetLargeIcon(self):
         '''Return a 32x32 icon'''
-        return wx.Bitmap(32, 32)
+        return wx.Bitmap("images/replay.png")
 
     def GetName(self):
         return "Replay"
@@ -447,31 +447,10 @@ class AggregatorPreferencesPane(wx.PreferencesPage):
 
     def GetLargeIcon(self):
         '''Return a 32x32 icon'''
-        return wx.Bitmap(32, 32)
+        return wx.Bitmap("images/aggregator.png")
 
     def GetName(self):
         return "Aggregator"
-
-class GeneralPage(wx.PreferencesPage):
-    def CreateWindow(self, parent):
-        panel = wx.Panel(parent)
-        panel.SetMinSize((500, 500))
-
-        sz = wx.BoxSizer(wx.VERTICAL)
-        sz.Add(wx.StaticText(panel, wx.ID_ANY, "General Page"),
-               wx.SizerFlags(1).TripleBorder())
-        panel.SetSizer(sz)
-        return panel
-
-class AdvancedPage(wx.PreferencesPage):
-    def CreateWindow(self, parent):
-        panel = wx.Panel(parent)
-        panel.SetMinSize((500, 500))
-        sz = wx.BoxSizer(wx.VERTICAL)
-        sz.Add(wx.StaticText(panel, wx.ID_ANY, "Advanced Page"),
-               wx.SizerFlags(1).TripleBorder())
-        panel.SetSizer(sz)
-        return panel
 
 class PreferencesWindow2(wx.PreferencesEditor):
     def __init__(self):
@@ -488,39 +467,16 @@ class PreferencesWindow(wx.Frame):
         panel = wx.Panel(self)
         box = wx.BoxSizer(wx.VERTICAL)
         wx.Frame.Center(self)
-        self.Notebook = wx.Notebook(panel)
-        box.Add(self.Notebook, 2, flag=wx.EXPAND)
-
-
-        #self.preftab_crawler = PrefTab_Crawler(self.Notebook)
-        #self.preftab_replay = PrefTab_Replay(self.Notebook)
-        #self.preftab_aggregator = PrefTab_Aggregator(self.Notebook)
-
-        self.Notebook.AddPage(self.preftab_crawler, "Crawler")
-        self.Notebook.AddPage(self.preftab_replay, "Replay")
-        self.Notebook.AddPage(self.preftab_aggregator, "Aggregator")
 
         config = ConfigParser()
         config.read('config.ini')
 
-        self.save_button = wx.Button(panel, wx.ID_ANY, "Cancel")
-        self.cancel_button = wx.Button(panel, wx.ID_ANY, "Save")
-
-        gs = wx.FlexGridSizer(1, 2, 0, 0)
-        gs.AddMany([
-            self.save_button,
-            self.cancel_button
-        ])
-
-        
-        box.Add(gs, 0, wx.ALIGN_RIGHT)
         # TODO: Bind events to write config.ini (save), or close window (cancel)
         # config.add_section('crawler')
         # config.set('crawler', 'keyfoo', 'valuebar')
         # with open('config.ini', 'w') as f:
         #    config.write(f)
 
-        panel.SetSizer(box)
 
 
     def read_archive_locations(self):
