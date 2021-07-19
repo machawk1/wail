@@ -84,6 +84,17 @@ class TabController(wx.Frame):
         self.sb = WAILStatusBar(self)
         self.SetStatusBar(self.sb)
         self.statusbar = self.sb
+        '''
+        menu = wx.Menu()
+        menu.Append(1, "(URL of aggregator used)")
+        menu.Append(2, "(temporal range)")
+        menu.Append(3, "(submenu of archival breakdown)")
+        # menu.Bind(wx.EVT_MENU, self.somefunctionality, id=1)
+        menu.Bind(wx.EVT_MENU, self.delete_heritrix_job, id=2)
+        main_app_window.PopupMenu(
+            menu, main_app_window.ScreenToClient(wx.GetMousePosition())
+        )
+        menu.Destroy()'''
 
         self.statusbar.Bind(wx.EVT_LEFT_UP, self.show_memento_info)
         pub.subscribe(self.change_statusbar, 'change_statusbar')
@@ -107,6 +118,7 @@ class TabController(wx.Frame):
                       'change_statusbar_with_counts')
 
     def show_memento_info(self, evt):
+        print(self.basic_config.last_aggregator_info)
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg, includes_local):
@@ -416,10 +428,13 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
 
-    def set_memento_count(self, m_count, a_count=0, includes_local=False):
+    def set_memento_count(self, m_count, a_count=0, arch_info=0, includes_local=False):
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
+        # Attach aggregator info for context manu
+        self.last_aggregator_info = arch_info
+
         # Ensure m_count is an int, convert if not, allow None
         if m_count is not None and not isinstance(m_count, int):
             m_count = int(m_count)
@@ -458,6 +473,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             """ """
 
         status_string = f"{mem_count_msg}"
+
         pub.sendMessage('change_statusbar', msg=status_string, includes_local=includes_local)
 
         self.Layout()
@@ -484,19 +500,22 @@ class WAILGUIFrame_Basic(wx.Panel):
         tm = self.memgator.get_timemap(current_uri_value, 'cdxj').split('\n')
 
         m_count = 0
-        arch_hosts = set()
+        arch_hosts = {}
 
         for line in tm:
             cleaned_line = line.strip()
 
             if cleaned_line[:1].isdigit():
                 m_count += 1
-                arch_hosts.add(cleaned_line.split('/', 3)[2])
+                host = cleaned_line.split('/', 3)[2]
+                if host not in arch_hosts:
+                    arch_hosts[host] = 0
+                arch_hosts[host] += 1
 
         includes_local = 'localhost:8080' in arch_hosts
         # UI not updated on Windows
         pub.sendMessage('change_statusbar_with_counts',
-                        m_count=m_count, a_count=len(arch_hosts),
+                        m_count=m_count, a_count=len(arch_hosts), arch_info=arch_hosts,
                         includes_local=includes_local)
 
         print((
