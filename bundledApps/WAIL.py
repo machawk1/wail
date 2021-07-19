@@ -481,7 +481,6 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         while not self.memgator.accessible():
             self.memgator.fix()
-            time.sleep(500)
         tm = self.memgator.get_timemap(current_uri_value, 'cdxj').split('\n')
 
         m_count = 0
