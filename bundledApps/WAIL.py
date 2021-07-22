@@ -122,8 +122,8 @@ class TabController(wx.Frame):
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg, includes_local):
-        advanced_tab_action = (self.notebook.GetSelection() == 1)
-        if advanced_tab_action:
+        advanced_tab_active = (self.notebook.GetSelection() == 1)
+        if advanced_tab_active:
             return
 
         wx.CallAfter(self.statusbar.SetStatusText, msg)
