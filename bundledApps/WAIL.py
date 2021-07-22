@@ -88,6 +88,8 @@ class TabController(wx.Frame):
         self.statusbar.Bind(wx.EVT_LEFT_UP, self.show_memento_info)
         pub.subscribe(self.change_statusbar, 'change_statusbar')
 
+        self.notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.set_statusbar_text_visibility)
+
         # Add basic config page/tab
         self.basic_config = WAILGUIFrame_Basic(self.notebook)
         self.notebook.AddPage(self.basic_config, config.tab_label_basic)
@@ -106,10 +108,24 @@ class TabController(wx.Frame):
         pub.subscribe(self.basic_config.set_memento_count,
                       'change_statusbar_with_counts')
 
+    def set_statusbar_text_visibility(self, evt):
+        basic_tab_index = 0
+        advanced_tab_index = 1
+        current_selection = self.notebook.GetSelection()
+
+        if current_selection == basic_tab_index:
+            self.statusbar.PopStatusText()
+        elif current_selection == advanced_tab_index:
+            self.statusbar.PushStatusText('')
+
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg, includes_local):
+        advanced_tab_action = (self.notebook.GetSelection() == 1)
+        if advanced_tab_action:
+            return
+
         wx.CallAfter(self.statusbar.SetStatusText, msg)
         if includes_local:
             wx.CallAfter(self.statusbar.hide_button)
@@ -2453,6 +2469,7 @@ class WAILStatusBar(wx.StatusBar):
         )
 
         self.msg = ''
+        self.previous_message = ''
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
         self.reposition()
 
