@@ -28,7 +28,7 @@ jobs:
         pwd
         ls
         open -a /Applications/WAIL.app
-        sleep 10
+        sleep 15
     - name: Iterate tabs, taking screenshot
       env:
         KEYCODES: 29 18 19 20 21
