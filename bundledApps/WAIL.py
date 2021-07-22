@@ -2469,7 +2469,6 @@ class WAILStatusBar(wx.StatusBar):
         )
 
         self.msg = ''
-        self.previous_message = ''
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
         self.reposition()
 
