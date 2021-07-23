@@ -28,7 +28,7 @@ jobs:
         pwd
         ls
         open -a /Applications/WAIL.app
-        sleep 15
+        sleep 10
         ps -A | grep WAIL
     - name: Iterate tabs, taking screenshot
       env:
