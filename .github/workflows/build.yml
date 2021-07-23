@@ -29,6 +29,7 @@ jobs:
         ls
         open -a /Applications/WAIL.app
         sleep 15
+        ps -A | grep WAIL
     - name: Iterate tabs, taking screenshot
       env:
         KEYCODES: 29 18 19 20 21
