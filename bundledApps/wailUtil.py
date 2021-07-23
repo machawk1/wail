@@ -6,7 +6,7 @@ import sys
 
 def tail(filename, lines=1, _buffer=4098):
     try:
-        f = open(filename, "r")
+        f = open(filename, "r", encoding="utf-8")
     except IOError as e:
         return (
             "No job info yet\n"
