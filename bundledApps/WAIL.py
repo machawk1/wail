@@ -209,7 +209,8 @@ class TabController(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.selectall, self.edit_select_all)
 
         view_basic = self.add_menu_item(
-            view_menu, config.menu_title_view_view_basic, "CTRL+0"
+            view_menu, config.menu_title_view_view_basic,
+            config.menu_shortcut_view_view_basic
         )
         view_menu.AppendSeparator()
         adv = self.add_menu_item(
@@ -217,17 +218,20 @@ class TabController(wx.Frame):
         adv.Enable(0)
 
         view_services = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_services, "CTRL+1"
+            view_menu, config.menu_title_view_view_advanced_services,
+            config.menu_shortcut_view_view_advanced_services
         )
         view_wayback = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_wayback, "CTRL+2"
+            view_menu, config.menu_title_view_view_advanced_wayback,
+            config.menu_shortcut_view_view_advanced_wayback
         )
         view_heritrix = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_heritrix, "CTRL+3"
+            view_menu, config.menu_title_view_view_advanced_heritrix,
+            config.menu_shortcut_view_view_advanced_heritrix
         )
         view_miscellaneous = self.add_menu_item(
             view_menu, config.menu_title_view_view_advanced_miscellaneous,
-            "CTRL+4"
+            config.menu_shortcut_view_view_advanced_miscellaneous
         )
 
         window_wail = window_menu.AppendCheckItem(
@@ -240,7 +244,7 @@ class TabController(wx.Frame):
                   window_wail)
 
         help_preferences = help_menu.Append(wx.ID_PREFERENCES,
-                                            "Preferences...\tCTRL+,")
+            f'{config.menu_title_about_preferences}\t{config.menu_shortcut_about_preferences}')
         help_preferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
@@ -285,7 +289,7 @@ class TabController(wx.Frame):
         if wail_menu is not None:
             for m in wail_menu.GetMenuItems():
                 if m.GetId() == wx.ID_EXIT:
-                    m.SetItemLabel("Quit WAIL\tCTRL+Q")
+                    m.SetItemLabel(f'{config.menu_title_about_quit}\t{config.menu_shortcut_about_quit}')
 
         self.SetMenuBar(menu_bar)
 
@@ -805,7 +809,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
-    class services_panel(wx.Panel, threading.Thread):
+    class ServicesPanel(wx.Panel, threading.Thread):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
@@ -1119,7 +1123,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             elif util.is_linux():
                 subprocess.call(("xdg-open", file_path))
 
-    class heritrix_panel(wx.Panel):
+    class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
@@ -1564,11 +1568,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.SetSizer(vbox)
 
-        self.services_panel = WAILGUIFrame_Advanced.services_panel(
+        self.services_panel = WAILGUIFrame_Advanced.ServicesPanel(
             self.notebook)
         self.wayback_panel = WAILGUIFrame_Advanced.WaybackPanel(
             self.notebook)
-        self.heritrix_panel = WAILGUIFrame_Advanced.heritrix_panel(
+        self.heritrix_panel = WAILGUIFrame_Advanced.HeritrixPanel(
             self.notebook)
         self.miscellaneous_panel = WAILGUIFrame_Advanced.MiscellaneousPanel(
             self.notebook)
