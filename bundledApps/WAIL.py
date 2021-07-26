@@ -74,6 +74,7 @@ class TabController(wx.Frame):
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
         wx.Frame.Center(self)
+        self.Bind(wx.EVT_MENU_HIGHLIGHT, self.intercept_menu_selection)
 
         self.notebook = wx.Notebook(panel)
         self.notebook.parent = self
@@ -107,6 +108,9 @@ class TabController(wx.Frame):
 
         pub.subscribe(self.basic_config.set_memento_count,
                       'change_statusbar_with_counts')
+
+    def intercept_menu_selection(self, evt):
+        pass  # Menu selected, preventing status bar set
 
     def set_statusbar_text_visibility(self, evt):
         basic_tab_index = 0
