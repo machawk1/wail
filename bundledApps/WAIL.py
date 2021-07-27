@@ -243,7 +243,8 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda evt: window_wail.Check(True),
                   window_wail)
 
-        help_preferences = help_menu.Append(wx.ID_PREFERENCES,
+        help_preferences = help_menu.Append(
+            wx.ID_PREFERENCES,
             f'{config.menu_title_about_preferences}\t{config.menu_shortcut_about_preferences}')
         help_preferences.Enable(0)  # TODO: implement
 
@@ -336,7 +337,6 @@ class TabController(wx.Frame):
 
     @staticmethod
     def ensure_correct_installation():
-        return # For testing screenshotting
         """Verify installation location"""
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
@@ -1310,7 +1310,6 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 stream=True,
             )
 
-
         def delete_heritrix_job(self, _):
             """Read the currently selected crawl_id and delete its
             configuration files from the file system.
@@ -2028,7 +2027,7 @@ class Heritrix(Service):
         if len(launches) == 0:
             # TODO: call function her to check whether the job been built.
             status = f'    {self.get_heritrix_crawl_status(job_id)}'
-            #status = "   NOT BUILT"
+            # status = "   NOT BUILT"
 
         for launch in launches:
             progress_log_file_path = (
