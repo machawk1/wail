@@ -361,15 +361,25 @@ class CrawlerPreferencesPane(wx.PreferencesPage):
         self.box_creds_u = wx.StaticText(panel, wx.ID_ANY, "Username")
         self.box_creds_p = wx.StaticText(panel, wx.ID_ANY, "Password")
 
+        self.box_creds_u_input = wx.TextCtrl(panel, wx.ID_ANY,
+                                   value="lorem")
+        self.box_creds_p_input = wx.TextCtrl(panel, wx.ID_ANY,
+                                   value="ipsum")
+
+
         self.box_attrs = wx.StaticBox(panel, wx.ID_ANY,
                                       "Crawl Attributes")
         self.jURL = wx.StaticText(panel, wx.ID_ANY, "Operator Contact URL")
         self.jName = wx.StaticText(panel, wx.ID_ANY, "Job Name")
         self.jDesc = wx.StaticText(panel, wx.ID_ANY, "Job Description")
 
-        self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
+        self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.HORIZONTAL)
+        #self.sbs_creds = wx.FlexGridSizer(2, 2, 0, 0)
+
         self.sbs_creds.Add(self.box_creds_u, 0, wx.TOP | wx.LEFT)
+        self.sbs_creds.Add(self.box_creds_u_input, 0, wx.TOP | wx.LEFT)
         self.sbs_creds.Add(self.box_creds_p, 0, wx.TOP | wx.LEFT)
+        self.sbs_creds.Add(self.box_creds_p_input, 0, wx.TOP | wx.LEFT)
 
         self.sbs_attrs = wx.StaticBoxSizer(self.box_attrs, wx.VERTICAL)
         self.sbs_attrs.Add(self.jURL, 0, wx.TOP | wx.LEFT)
