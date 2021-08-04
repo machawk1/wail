@@ -1124,6 +1124,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             elif util.is_linux():
                 subprocess.call(("xdg-open", file_path))
 
+    class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
