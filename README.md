@@ -24,7 +24,7 @@ To install WAIL:
 
 Alternatively, WAIL can be installed with the [homebrew package manager](https://github.com/Homebrew) on macOS with:
 
-<blockquote>𝚋𝚛𝚎𝚠 𝚌𝚊𝚜𝚔 𝚒𝚗𝚜𝚝𝚊𝚕𝚕 wail</blockquote>
+<blockquote>brew install wail</blockquote>
 
 <h2>Running WAIL</h2>
 
@@ -51,9 +51,9 @@ This will create /Applications/WAIL.app on macOS.
 On macOS, application icons are stored in a `.icns` file. To generate this:
 
 1. Create a directory to store images: `mkdir wail_blue.iconset`
-1. Create 11 .pngs of your high resolution (≥ 1024x1024) image, semantically scaled and named: `icon_16x16.png`, `icon_16x16@2x.png` (copy of the the 32x32 icon renamed), `icon_32x32.png`, `icon_32x32@2x.png`, `icon_128x128.png`, `icon_128x128@2x.png`, `icon_256x256.png`, `icon_256x256@2x.png`, `icon_512x512.png`, `icon_512x512@2x.png`, `icon_1024x1024.png`.
-1. Place the 11 images into the wail.iconset directory.
-1. Run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
+1. Create a PNG of your high resolution (1024x1024) icon, currently based on `/build/icons/wail-blue-logo.psd`, name it `icon_1024x1024.png` and place it in the `wail_blue.iconset`
+1. In a terminal, `cd wail_blue.iconset` then run the script to generate the other images needed for an `.icns` with `../build/resize.sh`. There will then be 11 PNGs in the directory.
+1. Navigate to the parent directory with `cd ../` and run `iconutil -c icns wail_blue.iconset`. This will create `wail_blue.icns`.
 1. Store `wail_blue.icns` in `WAIL/build/icons/` when running building WAIL using `MAKEFILE.sh` on macOS.</li>
 
 

@@ -2,8 +2,9 @@
 # coding: utf-8
 
 import os
-import sys
+import platform
 import re
+import sys
 import wx
 
 from xml.dom import minidom
@@ -156,6 +157,9 @@ menu_title_window = "&Window"
 menu_title_help = "&Help"
 menu_title_file_new_crawl = "&New Crawl"
 
+menu_title_about_preferences = "Preferences..."
+menu_title_about_quit = "Quit WAIL"
+
 menu_title_file_all_crawls = "All Crawls"
 menu_title_file_all_crawls_finish = "Finish"
 menu_title_file_all_crawls_pause = "Pause"
@@ -184,6 +188,17 @@ menu_force_crawl_to_finish = "Force crawl to finish"
 menu_view_job_in_web_browser = "View job in web browser"
 menu_rebuild_job = "Rebuild job"
 menu_rebuild_and_launch_job = "Rebuild and launch job"
+
+menu_shortcut_about_preferences = 'CTRL+,'
+menu_shortcut_about_quit = 'CTRL+Q'
+
+menu_shortcut_view_view_basic = "CTRL+0"
+menu_shortcut_view_view_advanced_services = "CTRL+1"
+menu_shortcut_view_view_advanced_wayback = "CTRL+2"
+menu_shortcut_view_view_advanced_heritrix = "CTRL+3"
+menu_shortcut_view_view_advanced_miscellaneous = "CTRL+4"
+
+
 
 heritrix_credentials_username = "lorem"
 heritrix_credentials_password = "ipsum"
@@ -241,7 +256,11 @@ if "darwin" in sys.platform:  # macOS-specific code
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 
-    memgator_path = f'{wail_path}/bundledApps/memgator-darwin-amd64'
+    memgator_bin = 'memgator-darwin-amd64'
+    if 'arm64' in platform.machine():
+        memgator_bin = 'memgator-darwin-arm64'
+
+    memgator_path = f'{wail_path}/bundledApps/{memgator_bin}'
     archives_json = f'{wail_path}/config/archives.json'
 
     # Fix tomcat control scripts' permissions

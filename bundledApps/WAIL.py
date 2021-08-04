@@ -50,6 +50,8 @@ from pubsub import pub
 from os import listdir
 from os.path import join
 
+import xml.etree.ElementTree as ET
+
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
@@ -72,6 +74,7 @@ class TabController(wx.Frame):
         panel = wx.Panel(self)
         vbox = wx.BoxSizer(wx.VERTICAL)
         wx.Frame.Center(self)
+        self.Bind(wx.EVT_MENU_HIGHLIGHT, self.intercept_menu_selection)
 
         self.notebook = wx.Notebook(panel)
         self.notebook.parent = self
@@ -85,6 +88,8 @@ class TabController(wx.Frame):
 
         self.statusbar.Bind(wx.EVT_LEFT_UP, self.show_memento_info)
         pub.subscribe(self.change_statusbar, 'change_statusbar')
+
+        self.notebook.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.set_statusbar_text_visibility)
 
         # Add basic config page/tab
         self.basic_config = WAILGUIFrame_Basic(self.notebook)
@@ -104,10 +109,27 @@ class TabController(wx.Frame):
         pub.subscribe(self.basic_config.set_memento_count,
                       'change_statusbar_with_counts')
 
+    def intercept_menu_selection(self, evt):
+        pass  # Menu selected, preventing status bar set
+
+    def set_statusbar_text_visibility(self, evt):
+        basic_tab_index = 0
+        advanced_tab_index = 1
+        current_selection = self.notebook.GetSelection()
+
+        if current_selection == basic_tab_index:
+            self.statusbar.PopStatusText()
+        elif current_selection == advanced_tab_index:
+            self.statusbar.PushStatusText('')
+
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
 
     def change_statusbar(self, msg, includes_local):
+        advanced_tab_active = (self.notebook.GetSelection() == 1)
+        if advanced_tab_active:
+            return
+
         wx.CallAfter(self.statusbar.SetStatusText, msg)
         if includes_local:
             wx.CallAfter(self.statusbar.hide_button)
@@ -187,7 +209,8 @@ class TabController(wx.Frame):
         # self.Bind(wx.EVT_MENU, self.selectall, self.edit_select_all)
 
         view_basic = self.add_menu_item(
-            view_menu, config.menu_title_view_view_basic, "CTRL+0"
+            view_menu, config.menu_title_view_view_basic,
+            config.menu_shortcut_view_view_basic
         )
         view_menu.AppendSeparator()
         adv = self.add_menu_item(
@@ -195,17 +218,20 @@ class TabController(wx.Frame):
         adv.Enable(0)
 
         view_services = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_services, "CTRL+1"
+            view_menu, config.menu_title_view_view_advanced_services,
+            config.menu_shortcut_view_view_advanced_services
         )
         view_wayback = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_wayback, "CTRL+2"
+            view_menu, config.menu_title_view_view_advanced_wayback,
+            config.menu_shortcut_view_view_advanced_wayback
         )
         view_heritrix = self.add_menu_item(
-            view_menu, config.menu_title_view_view_advanced_heritrix, "CTRL+3"
+            view_menu, config.menu_title_view_view_advanced_heritrix,
+            config.menu_shortcut_view_view_advanced_heritrix
         )
         view_miscellaneous = self.add_menu_item(
             view_menu, config.menu_title_view_view_advanced_miscellaneous,
-            "CTRL+4"
+            config.menu_shortcut_view_view_advanced_miscellaneous
         )
 
         window_wail = window_menu.AppendCheckItem(
@@ -217,8 +243,10 @@ class TabController(wx.Frame):
         self.Bind(wx.EVT_MENU, lambda evt: window_wail.Check(True),
                   window_wail)
 
-        help_preferences = help_menu.Append(wx.ID_PREFERENCES,
-                                           "Preferences...\tCTRL+,")
+        help_preferences = help_menu.Append(
+            wx.ID_PREFERENCES,
+            f'{config.menu_title_about_preferences}\t{config.menu_shortcut_about_preferences}')
+
         help_preferences.Enable(0)  # TODO: implement
 
         if util.is_macOS():  # About at top
@@ -266,7 +294,7 @@ class TabController(wx.Frame):
         if wail_menu is not None:
             for m in wail_menu.GetMenuItems():
                 if m.GetId() == wx.ID_EXIT:
-                    m.SetItemLabel("Quit WAIL\tCTRL+Q")
+                    m.SetItemLabel(f'{config.menu_title_about_quit}\t{config.menu_shortcut_about_quit}')
 
         self.SetMenuBar(menu_bar)
 
@@ -501,7 +529,6 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         while not self.memgator.accessible():
             self.memgator.fix()
-            time.sleep(500)
         tm = self.memgator.get_timemap(current_uri_value, 'cdxj').split('\n')
 
         m_count = 0
@@ -729,12 +756,15 @@ class WAILGUIFrame_Basic(wx.Panel):
         """
         url = f"{config.uri_wayback_all_mementos}{self.uri.GetValue()}"
         status_code = None
+        print('a')
         try:
             resp = urlopen(url)
             status_code = resp.getcode()
         except HTTPError as e:
+            print('httperror')
+            print(e)
             status_code = e.code
-        except:
+        except OSError as err:
             # When the server is unavailable, keep the default.
             # This is necessary, as unavailability will still cause an
             # exception
@@ -803,7 +833,7 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 
 class WAILGUIFrame_Advanced(wx.Panel):
-    class services_panel(wx.Panel, threading.Thread):
+    class ServicesPanel(wx.Panel, threading.Thread):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
@@ -858,7 +888,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
                     (
                         wx.StaticText(self, wx.ID_ANY, "STATE"),
                         1,
-                        wx.ALIGN_CENTER_HORIZONTAL,
+                        wx.ALIGN_CENTER,
                     ),
                     (
                         wx.StaticText(self, wx.ID_ANY, "VERSION"),
@@ -1117,7 +1147,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             elif util.is_linux():
                 subprocess.call(("xdg-open", file_path))
 
-    class heritrix_panel(wx.Panel):
+    class HeritrixPanel(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
@@ -1198,12 +1228,12 @@ class WAILGUIFrame_Advanced(wx.Panel):
             if self.panel_updater:  # Kill any currently running timer
                 self.panel_updater.cancel()
                 self.panel_updater = None
-            self.updateInfoPanel(crawl_id)
+            self.update_info_panel(crawl_id)
 
-        def updateInfoPanel(self, active):
+        def update_info_panel(self, active):
             self.status_msg.SetLabel(Heritrix().get_current_stats(active))
             self.panel_updater = threading.Timer(
-                1.0, self.updateInfoPanel, [active])
+                1.0, self.update_info_panel, [active])
             self.panel_updater.daemon = True
             self.panel_updater.start()
 
@@ -1285,11 +1315,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
         @staticmethod
         def send_action_to_heritrix(action, job_id):
             """Communicate with the local Heritrix binary via its HTTP API"""
+            # TODO: revise this to account for HTTP gets, see #492
             data = {"action": action}
             headers = {
                 "Accept": "application/xml",
                 "Content-type": "application/x-www-form-urlencoded",
             }
+
             requests.post(
                 f"{config.uri_heritrix_job}{job_id}",
                 auth=HTTPDigestAuth(
@@ -1333,6 +1365,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def rebuild_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.send_action_to_heritrix("build", job_id)
+            jStatus = Heritrix().get_heritrix_crawl_status(job_id)
+            # TODO: Update right side panel of UI after building job
 
         def rebuild_and_launch_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
@@ -1557,11 +1591,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
         self.SetSizer(vbox)
 
-        self.services_panel = WAILGUIFrame_Advanced.services_panel(
+        self.services_panel = WAILGUIFrame_Advanced.ServicesPanel(
             self.notebook)
         self.wayback_panel = WAILGUIFrame_Advanced.WaybackPanel(
             self.notebook)
-        self.heritrix_panel = WAILGUIFrame_Advanced.heritrix_panel(
+        self.heritrix_panel = WAILGUIFrame_Advanced.HeritrixPanel(
             self.notebook)
         self.miscellaneous_panel = WAILGUIFrame_Advanced.MiscellaneousPanel(
             self.notebook)
@@ -1756,7 +1790,13 @@ class MemGator(Service):
         self.last_uri = tm_uri
         return resp.text
 
-    def fix(self, cb=None):
+    def fix(self, *cb):
+        thread.start_new_thread(self.fix_async, cb)
+
+    def fix_async(self, cb=None):
+        main_app_window.adv_config.services_panel.status_memgator.SetLabel(
+            config.service_enabled_label_FIXING
+        )
         cmd = [config.memgator_path] + self.get_flags() + ['server']
 
         subprocess.Popen(cmd, stdout=subprocess.DEVNULL,
@@ -1961,6 +2001,32 @@ class Heritrix(Service):
         return list(map(just_file, glob.glob(
             os.path.join(config.heritrix_job_path, "*"))))
 
+    @staticmethod
+    def get_heritrix_crawl_status(job_id):
+        """Communicate with the local Heritrix binary via its HTTP API"""
+        headers = {
+            "Accept": "application/xml",
+            "Content-type": "application/x-www-form-urlencoded",
+        }
+
+        r = requests.get(
+            f"{config.uri_heritrix_job}{job_id}",
+            auth=HTTPDigestAuth(
+                config.heritrix_credentials_username,
+                config.heritrix_credentials_password,
+            ),
+            headers=headers,
+            verify=False,
+            stream=True,
+        )
+        root = ET.fromstring(r.content)
+        x = root.findall("./statusDescription")
+        try:
+            statusDescription = x[0].text
+            return statusDescription
+        except Exception as err:
+            return ''
+
     """ # get_list_of_jobs - rewrite to use the Heritrix API,
         will need to parse XML
         -H "Accept: application/xml"
@@ -1983,7 +2049,9 @@ class Heritrix(Service):
         status_template = Template("job_id: $job_id\n$status")
 
         if len(launches) == 0:
-            status = "   NOT BUILT"
+            # TODO: call function her to check whether the job been built.
+            status = f'    {self.get_heritrix_crawl_status(job_id)}'
+            # status = "   NOT BUILT"
 
         for launch in launches:
             progress_log_file_path = (
