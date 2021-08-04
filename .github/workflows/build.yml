@@ -35,7 +35,7 @@ jobs:
       run: |
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
-          screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
+          screenshot --filename wail-${{matrix.os}}-$k.png --shadow WAIL
         done
     - name: Screenshot prefs window
       env:
@@ -43,7 +43,7 @@ jobs:
       run:
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
-          screenshot Crawler --filename wail-${{matrix.os}}-$k.png --shadow
+          screenshot --filename wail-${{matrix.os}}-$k.png --shadow WAIL
           done
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
