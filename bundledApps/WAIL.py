@@ -361,6 +361,7 @@ class TabController(wx.Frame):
 
     @staticmethod
     def ensure_correct_installation():
+        return # Disable for GH screenshotting procedure
         """Verify installation location"""
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
