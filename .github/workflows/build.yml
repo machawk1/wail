@@ -31,12 +31,20 @@ jobs:
         ps -A | grep WAIL
     - name: Iterate tabs, taking screenshot
       env:
-        KEYCODES: 29 18 19 20 21 43
+        KEYCODES: 29 18 19 20 21
       run: |
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
           screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
         done
+    - name: Screenshot prefs window
+      env:
+        KEYCODES: 43
+      run:
+        for k in $KEYCODES; do
+          osascript tests/changeTabs.scpt $k
+          screenshot Crawler --filename wail-${{matrix.os}}-prefs.png --shadow
+          done
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
       with:
