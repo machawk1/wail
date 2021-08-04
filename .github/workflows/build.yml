@@ -2,8 +2,9 @@ on:
   push:
     branches:
       - osagnostic
-    tags:
-      - '*'
+  pull_request:
+    branches:
+      - osagnostic
 
 jobs:
   build:
