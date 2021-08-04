@@ -1,8 +1,9 @@
-on: [push, pull_request]
-  branches:
-    - osagnostic
-  tags:
-    - '*'
+on:
+  push:
+    branches:
+      - osagnostic
+  pull_request:
+      - osagnostic
 
 jobs:
   build:
