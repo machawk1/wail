@@ -1,6 +1,7 @@
 on:
   push:
     branches:
+      - osagnostic
       - issue-343
     tags:
       - '*'
@@ -10,9 +11,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-10.15]
+        os: [macos-10.15, macos-latest]
         include:
-          - os: macos-10.15
+          - os: macos-10.15, macos-latest
     steps:
     - uses: actions/checkout@v2
       with:
@@ -31,16 +32,8 @@ jobs:
         ps -A | grep WAIL
     - name: Iterate tabs, taking screenshot
       env:
-        KEYCODES: 29 18 19 20 21
+        KEYCODES: 29 18 19 20 21 # 43
       run: |
-        for k in $KEYCODES; do
-          osascript tests/changeTabs.scpt $k
-          screenshot --filename wail-${{matrix.os}}-$k.png --shadow WAIL
-        done
-    - name: Screenshot prefs window
-      env:
-        KEYCODES: 43
-      run:
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
           screenshot --filename wail-${{matrix.os}}-$k.png --shadow WAIL
