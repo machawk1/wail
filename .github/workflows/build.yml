@@ -31,7 +31,7 @@ jobs:
         ps -A | grep WAIL
     - name: Iterate tabs, taking screenshot
       env:
-        KEYCODES: 29 18 19 20 21
+        KEYCODES: 29 18 19 20 21 43
       run: |
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
