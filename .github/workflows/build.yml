@@ -1,7 +1,6 @@
 on:
   push:
     branches:
-      - osagnostic
       - issue-343
     tags:
       - '*'
@@ -17,7 +16,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        ref: 'osagnostic'
+        ref: 'issue-343'
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
