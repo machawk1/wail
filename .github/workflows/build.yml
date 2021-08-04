@@ -14,7 +14,6 @@ jobs:
         os: [macos-latest, macos-10.15]
         include:
           - os: macos-10.15
-          - os: macos-latest
     steps:
     - uses: actions/checkout@v2
       with:
