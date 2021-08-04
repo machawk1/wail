@@ -358,33 +358,63 @@ class CrawlerPreferencesPane(wx.PreferencesPage):
         self.box_creds = wx.StaticBox(panel, wx.ID_ANY,
                                       "Web Interface Credentials")
 
-        self.box_creds_u = wx.StaticText(panel, wx.ID_ANY, "Username")
-        self.box_creds_p = wx.StaticText(panel, wx.ID_ANY, "Password")
+        cc_labelsize = (80, -1)
+        cc_inputsize = (250, -1)
 
+        self.username_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.box_creds_u = wx.StaticText(panel, wx.ID_ANY, "Username",
+                                         size=cc_labelsize, style=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
         self.box_creds_u_input = wx.TextCtrl(panel, wx.ID_ANY,
-                                   value="lorem")
+                                             value="lorem")
+        self.username_sizer.Add(self.box_creds_u)
+        self.username_sizer.Add(self.box_creds_u_input)
+
+        self.password_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.box_creds_p = wx.StaticText(panel, wx.ID_ANY, "Password",
+                                         size=cc_labelsize, style=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
         self.box_creds_p_input = wx.TextCtrl(panel, wx.ID_ANY,
                                    value="ipsum")
+        self.password_sizer.Add(self.box_creds_p)
+        self.password_sizer.Add(self.box_creds_p_input)
 
+        ca_labelsize = (140, -1)
+        ca_inputsize = (250, -1)
 
         self.box_attrs = wx.StaticBox(panel, wx.ID_ANY,
                                       "Crawl Attributes")
-        self.jURL = wx.StaticText(panel, wx.ID_ANY, "Operator Contact URL")
-        self.jName = wx.StaticText(panel, wx.ID_ANY, "Job Name")
-        self.jDesc = wx.StaticText(panel, wx.ID_ANY, "Job Description")
 
-        self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.HORIZONTAL)
-        #self.sbs_creds = wx.FlexGridSizer(2, 2, 0, 0)
+        self.jURL_boxsizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.jURL = wx.StaticText(panel, wx.ID_ANY, "Operator Contact URL",
+                                  size=ca_labelsize, style=wx.ALIGN_RIGHT | wx.ALIGN_CENTER_VERTICAL)
+        self.jURL_input = wx.TextCtrl(panel, wx.ID_ANY, value="foo", size=ca_inputsize)
+        self.jURL_boxsizer.Add(self.jURL)
+        self.jURL_boxsizer.Add(self.jURL_input)
 
-        self.sbs_creds.Add(self.box_creds_u, 0, wx.TOP | wx.LEFT)
-        self.sbs_creds.Add(self.box_creds_u_input, 0, wx.TOP | wx.LEFT)
-        self.sbs_creds.Add(self.box_creds_p, 0, wx.TOP | wx.LEFT)
-        self.sbs_creds.Add(self.box_creds_p_input, 0, wx.TOP | wx.LEFT)
+        self.jName_boxsizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.jName = wx.StaticText(panel, wx.ID_ANY, "Job Name",
+                                   size=ca_labelsize, style=wx.ALIGN_RIGHT)
+        self.jName_input = wx.TextCtrl(panel, wx.ID_ANY, value="basic", size=ca_inputsize)
+        self.jName_boxsizer.Add(self.jName, wx.ALIGN_RIGHT)
+        self.jName_boxsizer.Add(self.jName_input)
+
+        self.jDesc_boxsizer = wx.BoxSizer(wx.HORIZONTAL)
+        self.jDesc = wx.StaticText(panel, wx.ID_ANY, "Job Description",
+                                   size=ca_labelsize, style=wx.ALIGN_RIGHT)
+        self.jDesc_input = wx.TextCtrl(panel, wx.ID_ANY,
+                                       value="Basic crawl starting with useful defaults",
+                                       size=ca_inputsize)
+        self.jDesc_boxsizer.Add(self.jDesc)
+        self.jDesc_boxsizer.Add(self.jDesc_input)
+
+        self.sbs_creds = wx.StaticBoxSizer(self.box_creds, wx.VERTICAL)
+
+        self.sbs_creds.Add(self.username_sizer, 0, wx.TOP | wx.LEFT)
+        self.sbs_creds.Add(self.password_sizer, 0, wx.TOP | wx.LEFT)
 
         self.sbs_attrs = wx.StaticBoxSizer(self.box_attrs, wx.VERTICAL)
-        self.sbs_attrs.Add(self.jURL, 0, wx.TOP | wx.LEFT)
-        self.sbs_attrs.Add(self.jName, 0, wx.TOP | wx.LEFT)
-        self.sbs_attrs.Add(self.jDesc, 0, wx.TOP | wx.LEFT)
+        self.sbs_attrs.Add(self.jURL_boxsizer, 0, wx.TOP | wx.LEFT)
+        self.sbs_attrs.Add(self.jName_boxsizer, 0, wx.TOP | wx.LEFT)
+        self.sbs_attrs.Add(self.jDesc_boxsizer, 0, wx.TOP | wx.LEFT)
 
         self.vbox.Add(self.sbs_creds, 1, wx.EXPAND | wx.ALL, 10)
         self.vbox.Add(self.sbs_attrs, 1, wx.EXPAND | wx.ALL, 10)
