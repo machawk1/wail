@@ -400,7 +400,7 @@ class CrawlerPreferencesPane(wx.PreferencesPage):
         ca_inputsize = (250, -1)
 
         self.box_attrs = wx.StaticBox(panel, wx.ID_ANY,
-                                      "Crawl Attributes")
+                                      "Default Crawl Attributes")
 
         self.jURL_boxsizer = wx.BoxSizer(wx.HORIZONTAL)
         self.jURL = wx.StaticText(panel, wx.ID_ANY, "Operator Contact URL",
