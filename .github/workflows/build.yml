@@ -44,7 +44,7 @@ jobs:
         for k in $KEYCODES; do
           osascript tests/changeTabs.scpt $k
           screenshot --filename wail-${{matrix.os}}-$k.png --shadow WAIL
-          done
+        done
     - name: Upload screenshot
       uses: actions/upload-artifact@v2
       with:
