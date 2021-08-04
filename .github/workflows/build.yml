@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - osagnostic
+      - issue-343
     tags:
       - '*'
 
