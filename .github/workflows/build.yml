@@ -19,7 +19,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        source_branch: ""
+        ref: 'osagnostic'
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
