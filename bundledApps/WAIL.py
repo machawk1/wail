@@ -1393,9 +1393,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.new_crawl_text_ctrl_label = wx.StaticText(
                 self, wx.ID_ANY, config.text_label_uri_entry
             )
-            multline_and_no_wrap_style = wx.TE_MULTILINE + wx.TE_DONTWRAP
+            multline_and_no_wrap_style = wx.TE_MULTILINE | wx.TE_DONTWRAP
             self.new_crawl_text_ctrl = wx.TextCtrl(
-                self, wx.ID_ANY, size=(220, 90), style=multline_and_no_wrap_style
+                self, wx.ID_ANY, size=(225, 90), style=multline_and_no_wrap_style
             )
 
             right_col_sizer = wx.FlexGridSizer(3, 1, 2, 2)
