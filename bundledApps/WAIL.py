@@ -1128,7 +1128,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.listbox = wx.ListBox(self)
+            self.listbox = wx.ListBox(self, size=(150, -1))
             self.populate_listbox_with_jobs()
 
             # TODO: Convert status_msg to use sizers
