@@ -6,8 +6,6 @@
 #   Heritrix, and Tomcat.
 #  Mat Kelly <wail@matkelly.com> 2013
 
-from __future__ import print_function
-
 import functools
 import glob
 import json
@@ -40,7 +38,6 @@ from HeritrixJob import HeritrixJob
 import WAILConfig as config
 import wailUtil as util
 
-# from wx import *
 import wx.adv
 from subprocess import Popen, PIPE
 
@@ -811,28 +808,21 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
+        def make_button(self, label):
+            return wx.Button(
+                self, wx.ID_ANY, config.button_label_fix, style=wx.BU_EXACTFIT
+            )
+
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.fix_wayback = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
-            self.fix_heritrix = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
-            self.fix_memgator = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
+            self.fix_wayback = self.make_button(config.button_label_fix)
+            self.fix_heritrix = self.make_button(config.button_label_fix)
+            self.fix_memgator = self.make_button(config.button_label_fix)
 
-            self.kill_wayback = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
-            self.kill_heritrix = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
-            self.kill_memgator = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
+            self.kill_wayback = self.make_button(config.button_label_kill)
+            self.kill_heritrix = self.make_button(config.button_label_kill)
+            self.kill_memgator = self.make_button(config.button_label_kill)
 
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
