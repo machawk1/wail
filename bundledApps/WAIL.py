@@ -824,9 +824,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.kill_heritrix = self.make_button(config.button_label_kill)
             self.kill_memgator = self.make_button(config.button_label_kill)
 
-            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_wayback = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
+            self.status_heritrix = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
+            self.status_memgator = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
 
             self.draw()
             thread.start_new_thread(self.update_service_statuses, ())
