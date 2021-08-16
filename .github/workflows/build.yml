@@ -29,6 +29,7 @@ jobs:
       run: |
         pwd
         ls
+        sleep 10
         open -a /Applications/WAIL.app
         sleep 10
         ps -A | grep WAIL
