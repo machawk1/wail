@@ -6,8 +6,6 @@
 #   Heritrix, and Tomcat.
 #  Mat Kelly <wail@matkelly.com> 2013
 
-from __future__ import print_function
-
 import functools
 import glob
 import json
@@ -40,7 +38,6 @@ from HeritrixJob import HeritrixJob
 import WAILConfig as config
 import wailUtil as util
 
-# from wx import *
 import wx.adv
 from subprocess import Popen, PIPE
 
@@ -362,6 +359,7 @@ class TabController(wx.Frame):
     @staticmethod
     def ensure_correct_installation():
         return # Disable for GH screenshotting procedure
+
         """Verify installation location"""
         # TODO: properly implement this
         # Check that the file is being executed from the correct location
@@ -835,32 +833,25 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
+        def make_button(self, label):
+            return wx.Button(
+                self, wx.ID_ANY, config.button_label_fix, style=wx.BU_EXACTFIT
+            )
+
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.fix_wayback = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
-            self.fix_heritrix = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
-            self.fix_memgator = wx.Button(
-                self, 1, config.button_label_fix, style=wx.BU_EXACTFIT
-            )
+            self.fix_wayback = self.make_button(config.button_label_fix)
+            self.fix_heritrix = self.make_button(config.button_label_fix)
+            self.fix_memgator = self.make_button(config.button_label_fix)
 
-            self.kill_wayback = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
-            self.kill_heritrix = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
-            self.kill_memgator = wx.Button(
-                self, 1, config.button_label_kill, style=wx.BU_EXACTFIT
-            )
+            self.kill_wayback = self.make_button(config.button_label_kill)
+            self.kill_heritrix = self.make_button(config.button_label_kill)
+            self.kill_memgator = self.make_button(config.button_label_kill)
 
-            self.status_wayback = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_heritrix = wx.StaticText(self, wx.ID_ANY, "X")
-            self.status_memgator = wx.StaticText(self, wx.ID_ANY, "X")
+            self.status_wayback = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
+            self.status_heritrix = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
+            self.status_memgator = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
 
             self.draw()
             thread.start_new_thread(self.update_service_statuses, ())
@@ -1152,7 +1143,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.listbox = wx.ListBox(self)
+            self.listbox = wx.ListBox(self, size=(150, -1))
             self.populate_listbox_with_jobs()
 
             # TODO: Convert status_msg to use sizers
@@ -1417,9 +1408,9 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.new_crawl_text_ctrl_label = wx.StaticText(
                 self, wx.ID_ANY, config.text_label_uri_entry
             )
-            multline_and_no_wrap_style = wx.TE_MULTILINE + wx.TE_DONTWRAP
+            multline_and_no_wrap_style = wx.TE_MULTILINE | wx.TE_DONTWRAP
             self.new_crawl_text_ctrl = wx.TextCtrl(
-                self, wx.ID_ANY, size=(220, 90), style=multline_and_no_wrap_style
+                self, wx.ID_ANY, size=(225, 90), style=multline_and_no_wrap_style
             )
 
             right_col_sizer = wx.FlexGridSizer(3, 1, 2, 2)

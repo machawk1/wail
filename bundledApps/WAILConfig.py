@@ -198,8 +198,6 @@ menu_shortcut_view_view_advanced_wayback = "CTRL+2"
 menu_shortcut_view_view_advanced_heritrix = "CTRL+3"
 menu_shortcut_view_view_advanced_miscellaneous = "CTRL+4"
 
-
-
 heritrix_credentials_username = "lorem"
 heritrix_credentials_password = "ipsum"
 
@@ -231,7 +229,7 @@ tomcat_path_stop = ""
 memgator_path = ""
 archives_json = ""
 font_size = 8
-wail_window_size = (410, 275)
+wail_window_size = (420, 285)
 wail_window_style = wx.DEFAULT_FRAME_STYLE & ~(wx.RESIZE_BORDER | wx.MAXIMIZE_BOX)
 wail_style_yes_no = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
