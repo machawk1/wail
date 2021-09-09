@@ -76,6 +76,7 @@ main ()
 buildWailsapi ()
 {
   cd bundledApps/wailsapi
+  python3 -m pip install -r requirements.txt
   pyinstaller --onefile --add-data 'templates:templates' --add-data 'static:static' wailsapi.py
   cd ../../
   pwd
