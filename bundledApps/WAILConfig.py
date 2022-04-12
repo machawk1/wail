@@ -298,6 +298,7 @@ elif sys.platform.startswith("win32"):
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
     wail_path = 'C:\\wail'
+    host_aggregator = 'localhost'
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
     jdk_path = f'{wail_path}\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\'
