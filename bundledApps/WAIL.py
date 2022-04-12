@@ -2468,7 +2468,9 @@ class WAILStatusBar(wx.StatusBar):
 
         self.msg = ''
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
-        self.reposition()
+
+        if not util.is_windows():  # See #548
+          self.reposition()
 
     def reposition(self):
         rect = self.GetFieldRect(1)
