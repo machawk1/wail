@@ -18,6 +18,7 @@ RUN        apt update && apt install -y \
              apt-file \
              git \
              libgtk-3-0 \
+             libgtk-3-dev \
              libnotify4 \
              libsdl2-2.0-0 \
              libsm6 \
@@ -31,7 +32,7 @@ RUN        apt update && apt install -y \
        &&  rm -rf /var/lib/apt/lists/*
 
 RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
-       &&  pip3 install pyinstaller==4.3
+       &&  pip3 install pyinstaller==5.0
 
 WORKDIR    /wail
 COPY       requirements.txt ./
