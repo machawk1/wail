@@ -16,6 +16,7 @@ EXPOSE     5920
 
 RUN        apt update && apt install -y \
              apt-file \
+             nano \
              git \
              libgtk-3-0 \
              libgtk-3-dev \
@@ -29,6 +30,7 @@ RUN        apt update && apt install -y \
              xvfb \
              language-pack-en \
              ttf-ancient-fonts \
+             openjdk-8-jdk \
        &&  rm -rf /var/lib/apt/lists/*
 
 RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
