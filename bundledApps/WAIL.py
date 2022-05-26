@@ -810,7 +810,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
         def make_button(self, label):
             return wx.Button(
-                self, wx.ID_ANY, config.button_label_fix, style=wx.BU_EXACTFIT
+                self, wx.ID_ANY, label, style=wx.BU_EXACTFIT
             )
 
         def __init__(self, parent):
