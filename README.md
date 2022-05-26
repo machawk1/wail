@@ -1,5 +1,5 @@
 <h3 align="center">
- <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/osagnostic/images/wail-blue-transp-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
+ <a href="http://github.com/machawk1/wail"><img src="https://cdn.rawgit.com/machawk1/wail/main/images/wail-blue-transp-500.png" alt="WAIL logo" width="400" alt="Web Archiving Integration Layer (WAIL) logo" /></a></h3>
 <p align="center" style="font-weight: normal;"><em>"One-Click User Instigated Preservation"</em></p>
 <hr style="height: 1px; border: none;" />
 
@@ -28,7 +28,7 @@ Alternatively, WAIL can be installed with the [homebrew package manager](https:/
 
 <h2>Running WAIL</h2>
 
-<img src="https://github.com/machawk1/wail/blob/osagnostic/images/screenshot_mac_20180205.png">
+<img src="https://github.com/machawk1/wail/blob/main/images/screenshot_mac_20180205.png">
 
 This section is intended only to run WAIL from source. To download the compiled application, see the <a href="http://machawk1.github.io/wail/#download">downloads section</a>.
 

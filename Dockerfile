@@ -3,7 +3,7 @@ FROM       ubuntu:20.04
 LABEL      app.name="WAIL" \
            app.description="Web Archiving Integration Layer: One-Click User Instigated Preservation" \
            app.license="MIT License" \
-           app.license.url="https://github.com/machawk1/wail/blob/osagnostic/LICENSE" \
+           app.license.url="https://github.com/machawk1/wail/blob/main/LICENSE" \
            app.repo.url="https://github.com/machawk1/wail"
 
 #TZdata will interactively ask for this info
