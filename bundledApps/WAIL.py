@@ -1761,6 +1761,10 @@ class MemGator(Service):
         thread.start_new_thread(self.fix_async, cb)
 
     def fix_async(self, cb=None):
+        # Check if GUI is ready, abort if not
+        if main_app_window is None:
+            return
+
         main_app_window.adv_config.services_panel.status_memgator.SetLabel(
             config.service_enabled_label_FIXING
         )
