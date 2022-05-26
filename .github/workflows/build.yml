@@ -1,10 +1,10 @@
 on:
   push:
     branches:
-      - osagnostic
+      - main
   pull_request:
     branches:
-      - osagnostic
+      - main
 
 jobs:
   build:

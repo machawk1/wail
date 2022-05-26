@@ -835,7 +835,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
         def make_button(self, label):
             return wx.Button(
-                self, wx.ID_ANY, config.button_label_fix, style=wx.BU_EXACTFIT
+                self, wx.ID_ANY, label, style=wx.BU_EXACTFIT
             )
 
         def __init__(self, parent):
@@ -1786,6 +1786,10 @@ class MemGator(Service):
         thread.start_new_thread(self.fix_async, cb)
 
     def fix_async(self, cb=None):
+        # Check if GUI is ready, abort if not
+        if main_app_window is None:
+            return
+
         main_app_window.adv_config.services_panel.status_memgator.SetLabel(
             config.service_enabled_label_FIXING
         )
@@ -2493,7 +2497,9 @@ class WAILStatusBar(wx.StatusBar):
 
         self.msg = ''
         self.sb_button.Bind(wx.EVT_BUTTON, self.press_button)
-        self.reposition()
+
+        if not util.is_windows():  # See #548
+            self.reposition()
 
     def reposition(self):
         rect = self.GetFieldRect(1)

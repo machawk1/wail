@@ -284,7 +284,13 @@ elif sys.platform.startswith("linux"):
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 
-    memgator_path = f'{wail_path}/bundledApps/memgator-linux-amd64'
+    memgator_bin = 'memgator-linux-amd64'
+    arch = platform.machine()
+    if 'arm64' in arch or 'aarch64' in arch:
+        memgator_bin = 'memgator-linux-arm64'
+
+    memgator_path = f'{wail_path}/bundledApps/{memgator_bin}'
+
     archives_json = f'{wail_path}/config/archives.json'
 
     # Fix tomcat control scripts' permissions
@@ -302,6 +308,7 @@ elif sys.platform.startswith("win32"):
     # Consider using http://code.google.com/p/platinfo/ in the future
     # ...for finer refinement
     wail_path = 'C:\\wail'
+    host_aggregator = 'localhost'
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
     jdk_path = f'{wail_path}\\bundledApps\\Java\\Windows\\jdk1.7.0_80\\'

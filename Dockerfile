@@ -3,7 +3,7 @@ FROM       ubuntu:20.04
 LABEL      app.name="WAIL" \
            app.description="Web Archiving Integration Layer: One-Click User Instigated Preservation" \
            app.license="MIT License" \
-           app.license.url="https://github.com/machawk1/wail/blob/osagnostic/LICENSE" \
+           app.license.url="https://github.com/machawk1/wail/blob/main/LICENSE" \
            app.repo.url="https://github.com/machawk1/wail"
 
 #TZdata will interactively ask for this info
@@ -16,8 +16,10 @@ EXPOSE     5920
 
 RUN        apt update && apt install -y \
              apt-file \
+             nano \
              git \
              libgtk-3-0 \
+             libgtk-3-dev \
              libnotify4 \
              libsdl2-2.0-0 \
              libsm6 \
@@ -28,10 +30,11 @@ RUN        apt update && apt install -y \
              xvfb \
              language-pack-en \
              ttf-ancient-fonts \
+             openjdk-8-jdk \
        &&  rm -rf /var/lib/apt/lists/*
 
 RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
-       &&  pip3 install pyinstaller==4.3
+       &&  pip3 install pyinstaller==5.0
 
 WORKDIR    /wail
 COPY       requirements.txt ./
