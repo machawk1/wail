@@ -198,7 +198,7 @@ heritrix_credentials_username = "lorem"
 heritrix_credentials_password = "ipsum"
 
 host_crawler = "0.0.0.0"
-host_replay = "0.0.0.0"
+host_replay = "localhost"
 host_aggregator = "0.0.0.0"
 
 port_crawler = "8443"
