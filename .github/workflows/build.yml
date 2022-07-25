@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - main
+      - issue-343
   pull_request:
     branches:
       - main
