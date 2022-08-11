@@ -11,4 +11,4 @@ requests
 schedule
 six
 wheel
-wxPython
+wxPython>=4.2.0
