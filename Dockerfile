@@ -33,8 +33,8 @@ RUN        apt update && apt install -y \
              openjdk-8-jdk \
        &&  rm -rf /var/lib/apt/lists/*
 
-RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.1.1 \
-       &&  pip3 install pyinstaller==5.0
+RUN        pip3 install -U -f https://extras.wxpython.org/wxPython4/extras/linux/gtk3/ubuntu-20.04 wxPython==4.2.0 \
+       &&  pip3 install pyinstaller==5.3
 
 WORKDIR    /wail
 COPY       requirements.txt ./
