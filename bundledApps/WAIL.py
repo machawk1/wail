@@ -844,7 +844,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def draw(self):
             self.sizer = wx.BoxSizer()
 
-            gs = wx.FlexGridSizer(4, 5, 0, 0)
+            gs = wx.FlexGridSizer(4, 5, 2, 2)
 
             gs.AddMany(
                 [
