@@ -75,7 +75,7 @@ class TabController(wx.Frame):
 
         self.notebook = wx.Notebook(panel)
         self.notebook.parent = self
-        vbox.Add(self.notebook, 2, flag=wx.EXPAND)
+        vbox.Add(self.notebook, 2, flag=wx.EXPAND | wx.ALL, border=4)
 
         panel.SetSizer(vbox)
 
@@ -1070,8 +1070,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             )
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(self.view_wayback_in_browser_button, 0, wx.EXPAND, 0)
-            box.Add(self.edit_wayback_configuration, 0, wx.EXPAND, 0)
+            box.Add(self.view_wayback_in_browser_button, 0, wx.EXPAND | wx.ALL, 1)
+            box.Add(self.edit_wayback_configuration, 0, wx.EXPAND | wx.ALL, 1)
 
             self.SetAutoLayout(True)
             self.SetSizer(box)
@@ -1152,8 +1152,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 [
                     self.crawl_jobs_text_ctrl_label,
                     self.listbox,
-                    (self.setup_new_crawl_button, 0, wx.EXPAND),
-                    (self.launch_webui_button, 0, wx.EXPAND),
+                    (self.setup_new_crawl_button, 0, wx.EXPAND | wx.ALL, 1),
+                    (self.launch_webui_button, 0, wx.EXPAND | wx.ALL, 1),
                 ]
             )
 
@@ -1513,8 +1513,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                          config.button_label_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(view_archives_folder_button_button, 0, wx.EXPAND, 0)
-            box.Add(self.test_update, 0, wx.EXPAND, 0)
+            box.Add(view_archives_folder_button_button, 0, wx.EXPAND | wx.ALL, 1)
+            box.Add(self.test_update, 0, wx.EXPAND | wx.ALL, 1)
 
             self.SetAutoLayout(True)
             self.SetSizer(box)
@@ -1554,7 +1554,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.notebook = wx.Notebook(self)
         self.notebook.my_status_bar = self
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.notebook, 10, flag=wx.EXPAND)
+        vbox.Add(self.notebook, 10, flag=wx.ALL | wx.EXPAND, border=2)
 
         self.SetSizer(vbox)
 
