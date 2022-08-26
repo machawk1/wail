@@ -116,8 +116,10 @@ class TabController(wx.Frame):
 
         if current_selection == basic_tab_index:
             self.statusbar.PopStatusText()
+            self.statusbar.show_button()
         elif current_selection == advanced_tab_index:
             self.statusbar.PushStatusText('')
+            self.statusbar.hide_button()
 
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
