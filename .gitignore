@@ -27,3 +27,5 @@ config/path-index.txt
 bundledApps/tomcat/work
 jobs/
 !bundledApps/memgator*
+
+bundledApps/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/modules

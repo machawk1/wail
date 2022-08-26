@@ -1590,10 +1590,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
         cmd = config.tomcat_path_start
         subprocess.Popen(cmd)
         waiting_for_tomcat = True
-        while waiting_for_tomcat:
-            if Wayback().accessible():
-                waiting_for_tomcat = False
-            time.sleep(2)
+        #while waiting_for_tomcat:
+        #    if Wayback().accessible():
+        #        waiting_for_tomcat = False
+        #    time.sleep(2)
 
         self.wayback_panel.view_wayback_in_browser_button.Enable()
 

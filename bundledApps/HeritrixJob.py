@@ -49,7 +49,7 @@ class HeritrixJob:
                           data=data, headers=headers,
                           verify=False, stream=True)
 
-    def __init__(self, h_job_path, uris, depth=1):
+    def __init__(self, h_job_path, uris, depth=20):
         self.job_path = h_job_path
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!--
@@ -384,7 +384,7 @@ metadata.description=Basic crawl starting with useful defaults
 
  <!-- DISPOSITION CHAIN -->
  <!-- first, processors are declared as top-level named beans  -->
- <bean id="warcWriter" class="org.archive.modules.writer.WARCWriterProcessor">
+ <bean id="warcWriter" class="org.archive.modules.writer.WARCWriterChainProcessor">
   <property name="compress" value="false" />
   <property name="prefix" value="MAT" />
   <!-- <property name="suffix" value="${HOSTNAME}" /> -->
@@ -721,8 +721,8 @@ metadata.description=Basic crawl starting with useful defaults
  </bean>
 
  <!-- BDBCOOKIESTORAGE: disk-based cookie storage for FetchHTTP -->
- <bean id="cookieStorage"
-   class="org.archive.modules.fetcher.BdbCookieStorage">
+ <bean id="cookieStore"
+   class="org.archive.modules.fetcher.BdbCookieStore">
   <!-- <property name="cookiesLoadFile"><null/></property> -->
   <!-- <property name="cookiesSaveFile"><null/></property> -->
   <!-- <property name="bdb">

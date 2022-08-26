@@ -232,7 +232,7 @@ wail_style_yes_no = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 if "darwin" in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
     wail_path = '/Applications/WAIL.app'
-    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.2.0/'
+    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.4.0-20220727/'
     heritrix_bin_path = f'sh {heritrix_path}bin/heritrix'
     heritrix_job_path = f'{heritrix_path}jobs/'
     font_size = 10
@@ -242,7 +242,7 @@ if "darwin" in sys.platform:  # macOS-specific code
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
 
     jdk_path = (f"{wail_path}/bundledApps/Java"
-                "/JavaVirtualMachines/jdk1.7.0_79.jdk"
+                "/JavaVirtualMachines/temurin-17.jdk"
                 "/Contents/Home/"
                )
     jre_home = jdk_path
@@ -269,7 +269,7 @@ if "darwin" in sys.platform:  # macOS-specific code
 elif sys.platform.startswith("linux"):
     # Should be more dynamics but suitable for Docker-Linux testing
     wail_path = '/wail'
-    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.2.0/'
+    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.4.0-20220727/'
     heritrix_bin_path = f'sh {heritrix_path}bin/heritrix'
     heritrix_job_path = f'{heritrix_path}jobs/'
     font_size = 10
@@ -311,7 +311,7 @@ elif sys.platform.startswith("win32"):
     jre_home = jdk_path
     java_home = jdk_path
 
-    heritrix_path = wail_path + "\\bundledApps\\heritrix-3.2.0\\"
+    heritrix_path = wail_path + "\\bundledApps\\heritrix-3.4.0-20220727\\"
     heritrix_bin_path = f'{heritrix_path}bin\\heritrix.cmd'
     heritrix_job_path = f'{heritrix_path}\\jobs\\'
     tomcat_path = f'{wail_path}\\bundledApps\\tomcat'
