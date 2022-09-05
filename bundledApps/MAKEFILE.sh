@@ -10,7 +10,7 @@ trap exit INT
 main ()
 {
   # Fetch modules file for JDK, which is too big for GitHub
-  echo "Fetching remove JDK modules file, which is too large to store on GitHub"
+  echo "Fetching remote JDK modules file, which is too large to store on GitHub"
   curl https://matkelly.com/temp/temurin-17.jdk/Contents/Home/lib/modules --output ./bundledApps/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/modules
 
   # Provide a means to skip all questions for GitHub Actions
