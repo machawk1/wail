@@ -9,9 +9,16 @@ trap exit INT
 
 main ()
 {
+  arch=$(uname -a)
+  if [[ $arch == *X86_64* ]]; then
+    modules_arch="x86"
+  elif  [[ $arch == arm* ]]; then
+    modules_arch="arm64"
+  fi
   # Fetch modules file for JDK, which is too big for GitHub
   echo "Fetching remote JDK modules file, which is too large to store on GitHub"
-  curl https://matkelly.com/temp/temurin-17.jdk/Contents/Home/lib/modules --output ./bundledApps/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/modules
+  echo "https://matkelly.com/temp/temurin-17.jdk/Contents/Home/lib/modules_${modules_arch}"
+  curl "https://matkelly.com/temp/temurin-17.jdk/Contents/Home/lib/modules_${modules_arch}" --output ./bundledApps/Java/JavaVirtualMachines/temurin-17.jdk/Contents/Home/lib/modules
 
   # Provide a means to skip all questions for GitHub Actions
   while getopts ":q" opt; do
