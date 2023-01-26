@@ -77,7 +77,7 @@ installRequirements ()
 {
   echo "Installing build requirements"
   # wxPython 4.2.0 has issues building on Linux w/o attrdict being installed first
-  python3 -m pip install attrdict
+  python3 -m pip install attrdict3
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
 }
