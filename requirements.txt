@@ -1,4 +1,4 @@
-attrdict3
+attrdict
 biplist
 black
 dmgbuild
