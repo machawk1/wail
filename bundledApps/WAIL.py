@@ -1184,11 +1184,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hide_new_crawl_ui_elements()
             self.status_msg.Show()
 
-            selectionIndex = self.listbox.GetSelection()
-            if selectionIndex == -1:
+            selection_Index = self.listbox.GetSelection()
+            if selection_Index == -1:
                 raise InvalidSelectionContextException("Selected empty space")
 
-            crawl_id = self.listbox.GetString(selectionIndex)
+            crawl_id = self.listbox.GetString(selection_Index)
             if crawl_id == config.text_label_no_jobs_available:
                 self.clear_info_panel()
                 raise InvalidSelectionContextException(
@@ -1334,7 +1334,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def rebuild_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.send_action_to_heritrix("build", job_id)
-            jStatus = Heritrix().get_heritrix_crawl_status(job_id)
+            j_status = Heritrix().get_heritrix_crawl_status(job_id)
             # TODO: Update right side panel of UI after building job
 
         def rebuild_and_launch_job(self, _):
@@ -1366,10 +1366,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print("Restarting job")
 
         def remove_new_crawl_ui(self):
-            chil = self.Sizer.GetChildren()
-            if len(chil) > 1:
-                self.Sizer.Hide(len(chil) - 1)
-                self.Sizer.Remove(len(chil) - 1)
+            children = self.Sizer.GetChildren()
+            if len(children) > 1:
+                self.Sizer.Hide(len(children) - 1)
+                self.Sizer.Remove(len(children) - 1)
 
                 self.Layout()
 
