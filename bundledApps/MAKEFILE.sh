@@ -73,33 +73,20 @@ main ()
   makeWAIL
 }
 
-# For Apple Silicon support, see #494
-buildPyinstallerBootloaders ()
-{
-  echo "Building bootloader for Apple Silicon"
-  git clone https://github.com/pyinstaller/pyinstaller.git
-  cd pyinstaller/bootloader
-  python3 ./waf all
-  cd ..
-  python3 -m pip install .
-  cd ..
-}
-
 installRequirements ()
 {
   echo "Installing build requirements"
+  # wxPython 4.2.0 has issues building on Linux w/o attrdict being installed first
+  python3 -m pip install attrdict3
   python3 -m pip install --upgrade wxPython
   python3 -m pip install -r requirements.txt
-  if [[ $(uname -p) == 'arm' ]]; then
-    buildPyinstallerBootloaders
-  fi
 }
 
 createBinary ()
 {
   echo "Creating binary"
   which pyinstaller
-  pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
+  pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --target-arch universal2 --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/

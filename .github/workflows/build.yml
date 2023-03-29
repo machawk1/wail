@@ -1,26 +1,19 @@
-on:
-  push:
-    branches:
-      - main
-      - issue-343
-  pull_request:
-    branches:
-      - main
+on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-10.15, macos-11]
+        os: [macos-latest, macos-11, macos-12]
         include:
-          - os: macos-10.15
           - os: macos-latest
           - os: macos-11
+          - os: macos-12
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
       with:
-        ref: 'issue-343'
+        ref: ${{ github.ref }}
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility

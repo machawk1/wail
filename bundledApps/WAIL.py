@@ -75,7 +75,7 @@ class TabController(wx.Frame):
 
         self.notebook = wx.Notebook(panel)
         self.notebook.parent = self
-        vbox.Add(self.notebook, 2, flag=wx.EXPAND)
+        vbox.Add(self.notebook, 2, flag=wx.EXPAND | wx.ALL, border=4)
 
         panel.SetSizer(vbox)
 
@@ -116,8 +116,10 @@ class TabController(wx.Frame):
 
         if current_selection == basic_tab_index:
             self.statusbar.PopStatusText()
+            self.statusbar.show_button()
         elif current_selection == advanced_tab_index:
             self.statusbar.PushStatusText('')
+            self.statusbar.hide_button()
 
     def show_memento_info(self, evt):
         pass  # TODO: Open new window with memento info
@@ -869,7 +871,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def draw(self):
             self.sizer = wx.BoxSizer()
 
-            gs = wx.FlexGridSizer(4, 5, 0, 0)
+            gs = wx.FlexGridSizer(4, 5, 2, 2)
 
             gs.AddMany(
                 [
@@ -1095,8 +1097,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
             )
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(self.view_wayback_in_browser_button, 0, wx.EXPAND, 0)
-            box.Add(self.edit_wayback_configuration, 0, wx.EXPAND, 0)
+            box.Add(self.view_wayback_in_browser_button, 0, wx.EXPAND | wx.ALL, 1)
+            box.Add(self.edit_wayback_configuration, 0, wx.EXPAND | wx.ALL, 1)
 
             self.SetAutoLayout(True)
             self.SetSizer(box)
@@ -1177,8 +1179,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                 [
                     self.crawl_jobs_text_ctrl_label,
                     self.listbox,
-                    (self.setup_new_crawl_button, 0, wx.EXPAND),
-                    (self.launch_webui_button, 0, wx.EXPAND),
+                    (self.setup_new_crawl_button, 0, wx.EXPAND | wx.ALL, 1),
+                    (self.launch_webui_button, 0, wx.EXPAND | wx.ALL, 1),
                 ]
             )
 
@@ -1207,11 +1209,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.hide_new_crawl_ui_elements()
             self.status_msg.Show()
 
-            selectionIndex = self.listbox.GetSelection()
-            if selectionIndex == -1:
+            selection_Index = self.listbox.GetSelection()
+            if selection_Index == -1:
                 raise InvalidSelectionContextException("Selected empty space")
 
-            crawl_id = self.listbox.GetString(selectionIndex)
+            crawl_id = self.listbox.GetString(selection_Index)
             if crawl_id == config.text_label_no_jobs_available:
                 self.clear_info_panel()
                 raise InvalidSelectionContextException(
@@ -1357,7 +1359,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         def rebuild_job(self, _):
             job_id = str(self.listbox.GetString(self.listbox.GetSelection()))
             self.send_action_to_heritrix("build", job_id)
-            jStatus = Heritrix().get_heritrix_crawl_status(job_id)
+            j_status = Heritrix().get_heritrix_crawl_status(job_id)
             # TODO: Update right side panel of UI after building job
 
         def rebuild_and_launch_job(self, _):
@@ -1389,10 +1391,10 @@ class WAILGUIFrame_Advanced(wx.Panel):
             print("Restarting job")
 
         def remove_new_crawl_ui(self):
-            chil = self.Sizer.GetChildren()
-            if len(chil) > 1:
-                self.Sizer.Hide(len(chil) - 1)
-                self.Sizer.Remove(len(chil) - 1)
+            children = self.Sizer.GetChildren()
+            if len(children) > 1:
+                self.Sizer.Hide(len(children) - 1)
+                self.Sizer.Remove(len(children) - 1)
 
                 self.Layout()
 
@@ -1538,8 +1540,8 @@ class WAILGUIFrame_Advanced(wx.Panel):
                                          config.button_label_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
-            box.Add(view_archives_folder_button_button, 0, wx.EXPAND, 0)
-            box.Add(self.test_update, 0, wx.EXPAND, 0)
+            box.Add(view_archives_folder_button_button, 0, wx.EXPAND | wx.ALL, 1)
+            box.Add(self.test_update, 0, wx.EXPAND | wx.ALL, 1)
 
             self.SetAutoLayout(True)
             self.SetSizer(box)
@@ -1579,7 +1581,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
         self.notebook = wx.Notebook(self)
         self.notebook.my_status_bar = self
         vbox = wx.BoxSizer(wx.VERTICAL)
-        vbox.Add(self.notebook, 10, flag=wx.EXPAND)
+        vbox.Add(self.notebook, 10, flag=wx.ALL | wx.EXPAND, border=2)
 
         self.SetSizer(vbox)
 
@@ -2504,7 +2506,7 @@ class WAILStatusBar(wx.StatusBar):
     def reposition(self):
         rect = self.GetFieldRect(1)
         rect.x += 1
-        rect.y += 1
+        rect.y += 3
         self.sb_button.SetRect(rect)
         self.sizeChanged = False
 

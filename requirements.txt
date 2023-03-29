@@ -1,5 +1,7 @@
+attrdict
 biplist
 black
+charset_normalizer<3.0
 dmgbuild
 ds-store
 mac-alias
@@ -11,4 +13,4 @@ requests
 schedule
 six
 wheel
-wxPython
+wxPython>=4.2.0
