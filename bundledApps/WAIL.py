@@ -2481,7 +2481,7 @@ class WAILStatusBar(wx.StatusBar):
     def reposition(self):
         rect = self.GetFieldRect(1)
         rect.x += 1
-        rect.y += 1
+        rect.y += 3
         self.sb_button.SetRect(rect)
         self.sizeChanged = False
 
