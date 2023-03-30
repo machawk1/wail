@@ -14,6 +14,7 @@
   See the License for the specific language governing permissions and
   limitations under the License.
 --%>
+<%@ page session="false" trimDirectiveWhitespaces="true" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
  <head>
@@ -33,6 +34,11 @@
     You are not authorized to view this page.
    </p>
    <p>
+    By default the Host Manager is only accessible from a browser running on the
+    same machine as Tomcat. If you wish to modify this restriction, you'll need
+    to edit the Host Manager's <tt>context.xml</tt> file.
+   </p>
+   <p>
     If you have already configured the Host Manager application to allow access
     and you have used your browsers back button, used a saved book-mark or
     similar then you may have triggered the cross-site request forgery (CSRF)
@@ -40,7 +46,7 @@
     application. You will need to reset this protection by returning to the
     <a href="<%=request.getContextPath()%>/html">main Host Manager page</a>.
     Once you return to this page, you will be able to continue using the Host
-    Manager appliction's HTML interface normally. If you continue to see this
+    Manager application's HTML interface normally. If you continue to see this
     access denied message, check that you have the necessary permissions to
     access this application.
    </p>

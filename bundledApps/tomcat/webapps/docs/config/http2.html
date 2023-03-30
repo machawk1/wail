@@ -1,0 +1,184 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html lang="en"><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><link href="../images/docs-stylesheet.css" rel="stylesheet" type="text/css"><title>Apache Tomcat 10 Configuration Reference (10.1.7) - The HTTP2 Upgrade Protocol</title></head><body><div id="wrapper"><header><div id="header"><div><div><div class="logo noPrint"><a href="https://tomcat.apache.org/"><img alt="Tomcat Home" src="../images/tomcat.png"></a></div><div style="height: 1px;"></div><div class="asfLogo noPrint"><a href="https://www.apache.org/" target="_blank"><img src="../images/asf-logo.svg" alt="The Apache Software Foundation" style="width: 266px; height: 83px;"></a></div><h1>Apache Tomcat 10 Configuration Reference</h1><div class="versionInfo">
+            Version 10.1.7,
+            <time datetime="2023-02-27">Feb 27 2023</time></div><div style="height: 1px;"></div><div style="clear: left;"></div></div></div></div></header><div id="middle"><div><div id="mainLeft" class="noprint"><div><nav><div><h2>Links</h2><ul><li><a href="../index.html">Docs Home</a></li><li><a href="index.html">Config Ref. Home</a></li><li><a href="https://cwiki.apache.org/confluence/display/TOMCAT/FAQ">FAQ</a></li><li><a href="#comments_section">User Comments</a></li></ul></div><div><h2>Top Level Elements</h2><ul><li><a href="server.html">Server</a></li><li><a href="service.html">Service</a></li></ul></div><div><h2>Executors</h2><ul><li><a href="executor.html">Executor</a></li></ul></div><div><h2>Connectors</h2><ul><li><a href="http.html">HTTP/1.1</a></li><li><a href="http2.html">HTTP/2</a></li><li><a href="ajp.html">AJP</a></li></ul></div><div><h2>Containers</h2><ul><li><a href="context.html">Context</a></li><li><a href="engine.html">Engine</a></li><li><a href="host.html">Host</a></li><li><a href="cluster.html">Cluster</a></li></ul></div><div><h2>Nested Components</h2><ul><li><a href="cookie-processor.html">CookieProcessor</a></li><li><a href="credentialhandler.html">CredentialHandler</a></li><li><a href="globalresources.html">Global Resources</a></li><li><a href="jar-scanner.html">JarScanner</a></li><li><a href="jar-scan-filter.html">JarScanFilter</a></li><li><a href="listeners.html">Listeners</a></li><li><a href="loader.html">Loader</a></li><li><a href="manager.html">Manager</a></li><li><a href="realm.html">Realm</a></li><li><a href="resources.html">Resources</a></li><li><a href="sessionidgenerator.html">SessionIdGenerator</a></li><li><a href="valve.html">Valve</a></li></ul></div><div><h2>Cluster Elements</h2><ul><li><a href="cluster.html">Cluster</a></li><li><a href="cluster-manager.html">Manager</a></li><li><a href="cluster-channel.html">Channel</a></li><li><a href="cluster-membership.html">Channel/Membership</a></li><li><a href="cluster-sender.html">Channel/Sender</a></li><li><a href="cluster-receiver.html">Channel/Receiver</a></li><li><a href="cluster-interceptor.html">Channel/Interceptor</a></li><li><a href="cluster-valve.html">Valve</a></li><li><a href="cluster-deployer.html">Deployer</a></li><li><a href="cluster-listener.html">ClusterListener</a></li></ul></div><div><h2>web.xml</h2><ul><li><a href="filter.html">Filter</a></li></ul></div><div><h2>Other</h2><ul><li><a href="systemprops.html">System properties</a></li><li><a href="jaspic.html">Jakarta Authentication</a></li></ul></div></nav></div></div><div id="mainRight"><div id="content"><h2>The HTTP2 Upgrade Protocol</h2><h3 id="Table_of_Contents">Table of Contents</h3><div class="text">
+<ul><li><a href="#Introduction">Introduction</a></li><li><a href="#Attributes">Attributes</a><ol><li><a href="#Common_Attributes">Common Attributes</a></li><li><a href="#Standard_Implementation">Standard Implementation</a></li></ol></li><li><a href="#Nested_Components">Nested Components</a></li><li><a href="#Special_Features">Special Features</a></li></ul>
+</div><h3 id="Introduction">Introduction</h3><div class="text">
+
+  <p>The <strong>HTTP Upgrade Protocol</strong> element represents an
+  <strong>Upgrade Protocol</strong> component that supports the HTTP/2 protocol.
+  An instance of this component must be associated with an existing
+  <a href="http.html">HTTP/1.1 Connector</a>.</p>
+
+  <p>HTTP/2 connectors use non-blocking I/O, only utilising a container thread
+  from the thread pool when there is data to read and write. However, because
+  the Servlet API is fundamentally blocking, each HTTP/2 stream requires a
+  dedicated container thread for the duration of that stream.</p>
+
+  <p>Requests processed using HTTP/2 will have the following additional request
+  attributes available:</p>
+  <ul>
+    <li><code>org.apache.coyote.connectionID</code> will return the HTTP/2
+        connection ID</li>
+    <li><code>org.apache.coyote.streamID</code> will return the HTTP/2 stream
+        ID</li>
+  </ul>
+
+</div><h3 id="Attributes">Attributes</h3><div class="text">
+
+  <div class="subsection"><h4 id="Common_Attributes">Common Attributes</h4><div class="text">
+
+  <p>All implementations of <strong>Upgrade Protocol</strong> support the
+  following attributes:</p>
+
+  <table class="defaultTable"><tr><th style="width: 15%;">
+          Attribute
+        </th><th style="width: 85%;">
+          Description
+        </th></tr><tr><td><strong><code class="attributeName">className</code></strong></td><td>
+      <p>This must be <code>org.apache.coyote.http2.Http2Protocol</code>.</p>
+    </td></tr></table>
+
+  </div></div>
+
+  <div class="subsection"><h4 id="Standard_Implementation">Standard Implementation</h4><div class="text">
+
+  <p>The HTTP/2 <strong>Upgrade Protocol</strong> implementation supports the
+  following attributes in addition to the common attributes listed above.</p>
+
+  <table class="defaultTable"><tr><th style="width: 15%;">
+          Attribute
+        </th><th style="width: 85%;">
+          Description
+        </th></tr><tr><td><code class="attributeName">initialWindowSize</code></td><td>
+      <p>Controls the initial size of the flow control window for streams that
+      Tomcat advertises to clients. If not specified, the default value of
+      <code>65535</code> is used.</p>
+    </td></tr><tr><td><code class="attributeName">keepAliveTimeout</code></td><td>
+      <p>The time, in milliseconds, that Tomcat will wait between HTTP/2 frames
+      when there is no active Stream before closing the connection. Negative
+      values will be treated as an infinite timeout. If not specified, a default
+      value of <code>20000</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">maxConcurrentStreamExecution</code></td><td>
+      <p>The controls the maximum number of streams for any one connection that
+      can be allocated threads from the container thread pool. If more streams
+      are active than threads are available, those streams will have to wait
+      for a stream to become available. If not specified, the default value of
+      <code>20</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">maxConcurrentStreams</code></td><td>
+      <p>The controls the maximum number of active streams permitted for any one
+      connection. If a client attempts to open more active streams than this
+      limit, the stream will be reset with a <code>STREAM_REFUSED</code> error.
+      If not specified, the default value of <code>100</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">maxHeaderCount</code></td><td>
+      <p>The maximum number of headers in a request that is allowed by the
+      container. A request that contains more headers than the specified limit
+      will be rejected. A value of less than 0 means no limit.
+      If not specified, a default of 100 is used.</p>
+    </td></tr><tr><td><code class="attributeName">maxTrailerCount</code></td><td>
+      <p>The maximum number of trailer headers in a request that is allowed by
+      the container. A request that contains more trailer headers than the
+      specified limit will be rejected. A value of less than 0 means no limit.
+      If not specified, a default of 100 is used.</p>
+    </td></tr><tr><td><code class="attributeName">overheadContinuationThreshold</code></td><td>
+      <p>The threshold below which the payload size of a non-final
+      <code>CONTINUATION</code> frame will trigger an increase in the overhead
+      count (see <strong>overheadCountFactor</strong>). The overhead count will
+      be increased by <code>overheadContinuationThreshold/payloadSize</code> so
+      that the smaller the <code>CONTINUATION</code> frame, the greater the
+      increase in the overhead count. A value of zero or less disables the
+      checking of non-final <code>CONTINUATION</code> frames. If not specified,
+      a default value of <code>1024</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">overheadCountFactor</code></td><td>
+      <p>The factor to apply when counting overhead frames to determine if a
+      connection has too high an overhead and should be closed. The overhead
+      count starts at <code>-10 * overheadCountFactor</code>. The count is
+      decreased by 20 for each data frame sent or received and each headers frame
+      received. The count is increased by the <code>overheadCountFactor</code>
+      for each setting received, priority frame received and ping received. If
+      the overhead count exceeds zero, the connection is closed. A value of less
+      than <code>1</code> disables this protection. In normal usage a value of
+      approximately <code>20</code> or higher will close the connection before
+      any streams can complete. If not specified, a default value of
+      <code>10</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">overheadDataThreshold</code></td><td>
+      <p>The threshold below which the average payload size of the current and
+      previous non-final <code>DATA</code> frames will trigger an increase in
+      the overhead count (see <strong>overheadCountFactor</strong>). The
+      overhead count will be increased by
+      <code>overheadDataThreshold/average</code> so that the smaller the
+      average, the greater the increase in the overhead count. A value of zero
+      or less disables the checking of non-final <code>DATA</code> frames. If
+      not specified, a default value of <code>1024</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">overheadWindowUpdateThreshold</code></td><td>
+      <p>The threshold below which the average size of current and previous
+      <code>WINDOW_UPDATE</code> frame will trigger an increase in the overhead
+      count (see <strong>overheadCountFactor</strong>). The overhead count will
+      be increased by <code>overheadWindowUpdateThreshold/average</code> so
+      that the smaller the average, the greater the increase in the overhead
+      count. A value of zero or less disables the checking of
+      <code>WINDOW_UPDATE</code> frames. If not specified, a default value of
+      <code>1024</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">readTimeout</code></td><td>
+      <p>The time, in milliseconds, that Tomcat will wait for additional data
+      when a partial HTTP/2 frame has been received. Negative values will be
+      treated as an infinite timeout. If not specified, a default value of
+      <code>5000</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">streamReadTimeout</code></td><td>
+      <p>The time, in milliseconds, that Tomcat will wait for additional data
+      frames to arrive for the stream when an application is performing a
+      blocking I/O read and additional data is required. Negative values will be
+      treated as an infinite timeout. If not specified, a default value of
+      <code>20000</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">streamWriteTimeout</code></td><td>
+      <p>The time, in milliseconds, that Tomcat will wait for additional window
+      update frames to arrive for the stream and/or connection when an
+      application is performing a blocking I/O write and the stream and/or
+      connection flow control window is too small for the write to complete.
+      Negative values will be treated as an infinite timeout. If not specified,
+      a default value of <code>20000</code> will be used.</p>
+    </td></tr><tr><td><code class="attributeName">useSendfile</code></td><td>
+      <p>Use this boolean attribute to enable or disable sendfile capability.
+      The default value is <code>true</code>.</p>
+      <p>This setting is ignored, and the sendfile capability disabled, if the
+      <strong>useAsyncIO</strong> attribute of the associated
+      <strong>Connector</strong> is set to <code>false</code>.</p>
+      <p>The HTTP/2 sendfile capability uses <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/nio/MappedByteBuffer.html">MappedByteBuffer</a> which is known to cause file locking on Windows.</p>
+    </td></tr><tr><td><code class="attributeName">writeTimeout</code></td><td>
+      <p>The time, in milliseconds, that Tomcat will wait to write additional
+      data when an HTTP/2 frame has been partially written. Negative values will
+      be treated as an infinite timeout. If not specified, a default value of
+      <code>5000</code> will be used.</p>
+    </td></tr></table>
+
+  <p>The HTTP/2 upgrade protocol will also inherit the following limits from the
+  <a href="http.html">HTTP Connector</a> it is nested with:</p>
+
+  <ul>
+    <li>allowedTrailerHeaders</li>
+    <li>compressibleMimeType</li>
+    <li>compression</li>
+    <li>compressionMinSize</li>
+    <li>maxCookieCount</li>
+    <li>maxHttpHeaderSize</li>
+    <li>maxHttpRequestHeaderSize</li>
+    <li>maxParameterCount</li>
+    <li>maxPostSize</li>
+    <li>maxSavePostSize</li>
+    <li>maxTrailerSize</li>
+    <li>noCompressionUserAgents</li>
+  </ul>
+
+  </div></div>
+
+</div><h3 id="Nested_Components">Nested Components</h3><div class="text">
+
+  <p>This component does not support any nested components.</p>
+
+</div><h3 id="Special_Features">Special Features</h3><div class="text">
+
+  <p>This component does not support any special features.</p>
+
+</div></div></div></div></div><footer><div id="footer">
+    Copyright &copy; 1999-2023, The Apache Software Foundation
+    </div></footer></div></body></html>
