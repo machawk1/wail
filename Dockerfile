@@ -6,8 +6,9 @@ LABEL      app.name="WAIL" \
            app.license.url="https://github.com/machawk1/wail/blob/main/LICENSE" \
            app.repo.url="https://github.com/machawk1/wail"
 
-#TZdata will interactively ask for this info
+# TZdata will interactively ask for this info
 ENV        TZ=Europe/Minsk
+ENV        DEBIAN_FRONTEND=noninteractive
 RUN        ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 # VNC
