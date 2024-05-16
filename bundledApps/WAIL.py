@@ -385,11 +385,17 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.archive_now_button = wx.Button(
             self, wx.ID_ANY, config.button_label_archive_now
         )
+        self.archive_now_button.SetToolTip(wx.ToolTip(config.tooltip_archive_now))
+
         self.check_archive_status = wx.Button(
             self, wx.ID_ANY, config.button_label_check_status
         )
+        self.check_archive_status.SetToolTip(wx.ToolTip(config.tooltip_check_status))
+
         self.view_archive = wx.Button(self, wx.ID_ANY,
                                       config.button_label_view_archive)
+        self.view_archive.SetToolTip(wx.ToolTip(config.tooltip_view_archive))
+        # self.view_archive.
 
         basic_sizer_buttons.Add(self.view_archive, proportion=1,
                                 flag=wx.CENTER)

@@ -118,6 +118,15 @@ tooltip_local_archive_excluded = (
     'This URI is not present in the local archive')
 tooltip_local_archive_included = (
     'This URI is present in the local archive')
+tooltip_view_archive = (
+    'View most recent archived copy of the current URL in your browser'
+)
+tooltip_check_status = (
+    'Check the local archive to see if captures already exist'
+)
+tooltip_archive_now = (
+    'Start a crawl using the current URL'
+)
 
 text_statusbar_no_captures = 'There are no local captures for this URL.'
 text_statusbar_wayback_not_running = 'Wayback is not running. Click again to fix.'
