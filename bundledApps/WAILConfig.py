@@ -124,9 +124,19 @@ tooltip_view_archive = (
 tooltip_check_status = (
     'Check the local archive to see if captures already exist'
 )
-tooltip_archive_now = (
-    'Start a crawl using the current URL'
-)
+tooltip_archive_now = ('Start a crawl using the current URL')
+tooltip_fix_wayback = ('Restart the Wayback replay service')
+tooltip_fix_heritrix = ('Restart the Heritrix crawling service')
+tooltip_fix_memgator = ('Restart the MemGator aggregation service')
+tooltip_kill_wayback = ('Stop the Wayback replay service')
+tooltip_kill_heritrix = ('Stop the Heritrix crawling service')
+tooltip_kill_memgator = ('Stop the MemGator aggregation service')
+
+tooltip_view_wayback = ('View the archive in your web browser')
+tooltip_edit_wayback = ('Edit the OpenWayback configuration file')
+
+tooltip_view_archives_folder = ('View the directory containing the archive files in Finder') # todo: adapt for Win
+tooltip_check_for_updates = ('Check if a newer version of WAIL is available (disabled)')
 
 text_statusbar_no_captures = 'There are no local captures for this URL.'
 text_statusbar_wayback_not_running = 'Wayback is not running. Click again to fix.'

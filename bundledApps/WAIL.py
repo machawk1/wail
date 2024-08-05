@@ -816,21 +816,25 @@ class WAILGUIFrame_Basic(wx.Panel):
 
 class WAILGUIFrame_Advanced(wx.Panel):
     class ServicesPanel(wx.Panel, threading.Thread):
-        def make_button(self, label):
-            return wx.Button(
+        def make_button(self, label, tooltip=""):
+            # Ideally this would be abstract and in WAILConfig for reuse, but wxPython needs a reference to the
+            # parent when creating the button, limiting this function's reuse by other panels
+            but = wx.Button(
                 self, wx.ID_ANY, label, style=wx.BU_EXACTFIT
             )
+            but.SetToolTip(tooltip)
+            return but
 
         def __init__(self, parent):
             wx.Panel.__init__(self, parent)
 
-            self.fix_wayback = self.make_button(config.button_label_fix)
-            self.fix_heritrix = self.make_button(config.button_label_fix)
-            self.fix_memgator = self.make_button(config.button_label_fix)
+            self.fix_wayback = self.make_button(config.button_label_fix, config.tooltip_fix_wayback)
+            self.fix_heritrix = self.make_button(config.button_label_fix, config.tooltip_fix_heritrix)
+            self.fix_memgator = self.make_button(config.button_label_fix, config.tooltip_fix_memgator)
 
-            self.kill_wayback = self.make_button(config.button_label_kill)
-            self.kill_heritrix = self.make_button(config.button_label_kill)
-            self.kill_memgator = self.make_button(config.button_label_kill)
+            self.kill_wayback = self.make_button(config.button_label_kill, config.tooltip_kill_wayback)
+            self.kill_heritrix = self.make_button(config.button_label_kill, config.tooltip_kill_heritrix)
+            self.kill_memgator = self.make_button(config.button_label_kill, config.tooltip_kill_memgator)
 
             self.status_wayback = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
             self.status_heritrix = wx.StaticText(self, wx.ID_ANY, config.service_enabled_label_NO)
@@ -1067,9 +1071,11 @@ class WAILGUIFrame_Advanced(wx.Panel):
             self.view_wayback_in_browser_button = wx.Button(
                 self, -1, config.button_label_wayback
             )
+            self.view_wayback_in_browser_button.SetToolTip(config.tooltip_view_wayback)
             self.edit_wayback_configuration = wx.Button(
                 self, -1, config.button_label_edit_wayback_config
             )
+            self.edit_wayback_configuration.SetToolTip(config.tooltip_edit_wayback)
             self.view_wayback_in_browser_button.Bind(
                 wx.EVT_BUTTON, self.open_wayback_in_browser
             )
@@ -1514,11 +1520,13 @@ class WAILGUIFrame_Advanced(wx.Panel):
             view_archives_folder_button_button = wx.Button(
                 self, 1, config.button_label_view_archive_files
             )
+            view_archives_folder_button_button.SetToolTip(config.tooltip_view_archives_folder)
 
             view_archives_folder_button_button.Bind(wx.EVT_BUTTON,
                                                     self.open_archives_folder)
             self.test_update = wx.Button(self, 1,
                                          config.button_label_check_for_updates)
+            self.test_update.SetToolTip(config.tooltip_check_for_updates)
 
             box = wx.BoxSizer(wx.VERTICAL)
             box.Add(view_archives_folder_button_button, 0, wx.EXPAND | wx.ALL, 1)
