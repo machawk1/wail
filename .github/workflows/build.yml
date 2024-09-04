@@ -17,7 +17,7 @@ jobs:
         ref: ${{ github.ref }}
     - name: Activate virtualenv
       run: |
-        pip3 install virtualenv
+        python3 -m pip3 install virtualenv
         virtualenv -p python3 ./wailenv
         source wailenv/bin/activate
         echo PATH=$PATH >> $GITHUB_ENV
