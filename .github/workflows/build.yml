@@ -17,6 +17,7 @@ jobs:
         ref: ${{ github.ref }}
     - name: Activate virtualenv
       run: |
+        python3 -m venv env
         . .venv/bin/activate
         echo PATH=$PATH >> $GITHUB_ENV
     - name: Build
