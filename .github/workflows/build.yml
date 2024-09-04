@@ -18,7 +18,8 @@ jobs:
     - name: Activate virtualenv
       run: |
         python3 -m venv env
-        . .venv/bin/activate
+        . .env/bin/activate
+        source .env/bin/activate
         echo PATH=$PATH >> $GITHUB_ENV
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
