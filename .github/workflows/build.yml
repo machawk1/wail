@@ -14,10 +14,12 @@ jobs:
     - uses: actions/checkout@v3
       with:
         ref: ${{ github.ref }}
+    - name: Install environment isolator
+      run: apt install pipx
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
-      run: pip3 install screenshot
+      run: pipx install screenshot
     - name: Run
       working-directory: /Applications
       run: |
