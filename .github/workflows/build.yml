@@ -18,7 +18,6 @@ jobs:
     - name: Activate virtualenv
       run: |
         python3 -m venv env
-        . .env/bin/activate
         source .env/bin/activate
         echo PATH=$PATH >> $GITHUB_ENV
     - name: Build
