@@ -1874,7 +1874,7 @@ class Wayback(Service):
         self.generate_cdx()
 
     def generate_path_index(self):
-        dest = f"{config.wail_path}/config/path-index.txt"
+        dest = f"{config.wail_path}/archiveIndexes/index.cdx"
         warcs_path = f"{config.wail_path}/archives/"
 
         output_contents = ""
@@ -1888,12 +1888,13 @@ class Wayback(Service):
 
     @staticmethod
     def generate_cdx():
-        dest = f"{config.wail_path}/config/path-index.txt"
+        dest = f"{config.wail_path}/archiveIndexes/index.cdx"
         warcs_path = f"{config.wail_path}/archives/"
         cdx_file_path_pre = f"{config.wail_path}/archiveIndexes/"
         cdx_indexer_path = (
             f"{config.wail_path}/bundledApps/tomcat/webapps/bin/cdx-indexer"
         )
+        print('indexing')
 
         for file in listdir(warcs_path):
             if file.endswith(".warc"):
@@ -1905,6 +1906,7 @@ class Wayback(Service):
                     stdout=PIPE,
                     stderr=PIPE,
                 )
+
                 process.communicate()
 
         # Combine CDX files

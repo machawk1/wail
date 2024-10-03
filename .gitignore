@@ -24,6 +24,7 @@ WAIL.spec
 .idea
 bundledApps/tomcat/logs
 config/path-index.txt
+archiveIndexes/*
 bundledApps/tomcat/work
 jobs/
 !bundledApps/memgator*
