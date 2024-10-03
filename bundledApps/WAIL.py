@@ -1894,13 +1894,13 @@ class Wayback(Service):
         cdx_indexer_path = (
             f"{config.wail_path}/bundledApps/tomcat/webapps/bin/cdx-indexer"
         )
-        print('indexing')
 
         for file in listdir(warcs_path):
             if file.endswith(".warc"):
                 cdx_file_path = (
                     f"{cdx_file_path_pre}"
                     f"{file.replace('.warc', '.cdx')}")
+                
                 process = subprocess.Popen(
                     [cdx_indexer_path, join(warcs_path, file), cdx_file_path],
                     stdout=PIPE,
