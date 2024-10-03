@@ -400,8 +400,8 @@ metadata.description=Basic crawl starting with useful defaults
  <!-- DISPOSITION CHAIN -->
  <!-- first, processors are declared as top-level named beans  -->
  <bean id="warcWriter" class="org.archive.modules.writer.WARCWriterChainProcessor">
-  <!-- <property name="compress" value="true" /> -->
-  <!-- <property name="prefix" value="IAH" /> -->
+  <property name="compress" value="true" />
+  <property name="prefix" value="MAT" />
   <!-- <property name="maxFileSizeBytes" value="1000000000" /> -->
   <!-- <property name="poolMaxActive" value="1" /> -->
   <!-- <property name="MaxWaitForIdleMs" value="500" /> -->
