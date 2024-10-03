@@ -121,6 +121,16 @@ mvWARCsBackFromTemp ()
   fi
 }
 
+# JDK 17's modules file is > 100 MB, which doesn't play well with Git, decompress it in-place here
+decompressJDKModules ()
+{
+  echo "Decompressing JDK 17 modules file for Heritrix"
+  cd ./bundledApps/Java/JavaVirtualMachines/jdk17.0.11.jdk/Contents/Home/lib/
+  unzip ./modules.zip
+  rm -rf ./modules.zip
+  cd -
+}
+
 mvProducts ()
 {
   echo "Moving WAIL.app to /Applications"
@@ -181,6 +191,7 @@ makeWAIL ()
   createBinary
   mvWARCsToTemp
   deleteBinary # Remove previous version
+  decompressJDKModules
   optimizeforMac
   mvProducts
   cleanupByproducts

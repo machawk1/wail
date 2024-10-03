@@ -1900,7 +1900,7 @@ class Wayback(Service):
                 cdx_file_path = (
                     f"{cdx_file_path_pre}"
                     f"{file.replace('.warc', '.cdx')}")
-                
+
                 process = subprocess.Popen(
                     [cdx_indexer_path, join(warcs_path, file), cdx_file_path],
                     stdout=PIPE,
