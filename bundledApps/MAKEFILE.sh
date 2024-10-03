@@ -94,7 +94,7 @@ createBinary ()
   #pkgbuild --install-location=/Applications --component ./dist/WAIL.app ~/Downloads/WAIL.pkg
 }
 
-deleteBinary ()
+deleteOldBinary ()
 {
   echo "Deleting binary"
   rm -rf /Applications/WAIL.app
@@ -127,7 +127,6 @@ decompressJDKModules ()
   echo "Decompressing JDK 17 modules file for Heritrix"
   cd ./bundledApps/Java/JavaVirtualMachines/jdk17.0.11.jdk/Contents/Home/lib/
   unzip ./modules.zip
-  rm -rf ./modules.zip
   cd -
 }
 
@@ -144,6 +143,7 @@ cleanupByproducts ()
   # Remove installation remnants
   rm -r ./dist
   rm -r ./build/WAIL
+  rm ./bundledApps/Java/JavaVirtualMachines/jdk17.0.11.jdk/Contents/Home/lib/modules
 }
 
 optimizeforMac ()
@@ -184,15 +184,23 @@ tweakOS ()
   /System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/Support/lsregister -f /Applications/WAIL.app
 }
 
+doFinalCleanupBeforeMove ()
+{
+  # We don't need the Java dependency ZIP in the binary
+  rm ./dist/WAIL.app/bundledApps/Java/JavaVirtualMachines/jdk17.0.11.jdk/Contents/Home/lib/modules.zip
+  # TODO: remove MAKEFILE from binary and other cruft that is fine in src but not in the .app
+}
+
 makeWAIL ()
 {
   echo "Running makeWAIL()"
   installRequirements
+  decompressJDKModules
   createBinary
   mvWARCsToTemp
-  deleteBinary # Remove previous version
-  decompressJDKModules
+  deleteOldBinary # Remove previous version
   optimizeforMac
+  doFinalCleanupBeforeMove
   mvProducts
   cleanupByproducts
   mvWARCsBackFromTemp
@@ -203,7 +211,7 @@ makeWAIL ()
   if [[ $ans == "b" ]] || [[ $ans == "d" ]]; then
     buildDiskImage
     if [[ $ans = "d" ]]; then # Remove the installed binary if only making dmg
-      deleteBinary
+      deleteOldBinary
     fi
   fi
 
