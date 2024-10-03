@@ -232,7 +232,7 @@ wail_style_yes_no = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 if "darwin" in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
     wail_path = '/Applications/WAIL.app'
-    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.2.0/'
+    heritrix_path = f'{wail_path}/bundledApps/heritrix-3.4.0-20240909/'
     heritrix_bin_path = f'sh {heritrix_path}bin/heritrix'
     heritrix_job_path = f'{heritrix_path}jobs/'
     font_size = 10
@@ -241,12 +241,18 @@ if "darwin" in sys.platform:  # macOS-specific code
     tomcat_path_start = f'{tomcat_path}/bin/startup.sh'
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
 
-    jdk_path = (f"{wail_path}/bundledApps/Java"
-                "/JavaVirtualMachines/jdk1.7.0_79.jdk"
+    jdk_wayback_version = "jdk1.7.0_79.jdk"
+    jdk_heritrix_version = "jdk17.0.11.jdk"
+    jdk_path_template = (f"{wail_path}/bundledApps/Java"
+                "/JavaVirtualMachines/{jdk_version}"
                 "/Contents/Home/"
-               )
-    jre_home = jdk_path
-    java_home = jdk_path
+    )
+
+    jdk_path_wayback = jdk_path_template.format(jdk_version=jdk_wayback_version)
+    jdk_path_heritrix = jdk_path_template.format(jdk_version=jdk_heritrix_version)
+
+    jre_home = jdk_path_wayback
+    java_home = jdk_path_wayback
 
     about_window_icon_path = f'{wail_path}{about_window_icon_path}'
 

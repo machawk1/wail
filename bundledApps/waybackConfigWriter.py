@@ -78,10 +78,10 @@ xml = """<?xml version="1.0" encoding="UTF-8"?>
 	ARC/WARC files are located, see the file BDBCollection.xml.
 -->
 
-  <import resource="BDBCollection.xml"/>
-<!--
+<!--  <import resource="BDBCollection.xml"/>-->
+
   <import resource="CDXCollection.xml"/>
-  <import resource="RemoteCollection.xml"/>
+<!--  <import resource="RemoteCollection.xml"/>
   <import resource="NutchCollection.xml"/>
 -->
 
@@ -181,11 +181,11 @@ xml = """<?xml version="1.0" encoding="UTF-8"?>
 	<!--
     <property name="exactHostMatch" value="true" />
 	-->
-    
+ <!--   
     <property name="collection" ref="localbdbcollection" />
-<!--
-    <property name="collection" ref="localcdxcollection" />
 -->
+    <property name="collection" ref="localcdxcollection" />
+
 
     <property name="replay" ref="archivalurlreplay" />
     <property name="query">

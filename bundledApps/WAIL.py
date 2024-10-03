@@ -653,7 +653,8 @@ class WAILGUIFrame_Basic(wx.Panel):
 
     def launch_heritrix(self):
         """Execute Heritrix binary to allow jobs to be submitted"""
-        cmd = (f"{config.heritrix_bin_path} "
+        cmd = (f"export JAVA_HOME={config.jdk_path_heritrix}; "
+               f"{config.heritrix_bin_path} "
                f"-a {config.heritrix_credentials_username}:"
                f"{config.heritrix_credentials_password}")
 
@@ -675,7 +676,7 @@ class WAILGUIFrame_Basic(wx.Panel):
     def launch_heritrix_job(self):
         """ Launch Heritrix job after building"""
         logging.basicConfig(level=logging.DEBUG)
-        print("Launching Heririx job")
+        print("Launching Heritrix job")
         data = {"action": "launch"}
         headers = {
             "Accept": "application/xml",
@@ -2529,7 +2530,7 @@ if __name__ == "__main__":
     if sys.version_info[0] == 2:
         print(config.msg_py3)
         sys.exit()
-    os.environ["JAVA_HOME"] = config.jdk_path
+    os.environ["JAVA_HOME"] = config.jdk_path_wayback
 
     app = wx.App(redirect=False)
     main_app_window = TabController()
