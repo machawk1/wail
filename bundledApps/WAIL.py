@@ -1874,7 +1874,7 @@ class Wayback(Service):
         self.generate_cdx()
 
     def generate_path_index(self):
-        dest = f"{config.wail_path}/archiveIndexes/index.cdx"
+        dest = f"{config.wail_path}/config/path-index.txt"
         warcs_path = f"{config.wail_path}/archives/"
 
         output_contents = ""
