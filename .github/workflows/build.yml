@@ -16,6 +16,10 @@ jobs:
         ref: ${{ github.ref }}
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
+    - name: Create venv for screenshot utility
+      run: |
+        python3 -m venv wailvenv
+        source  wailvenv/bin/activate
     - name: Install screenshot utility
       run: pip3 install screenshot
     - name: Run
