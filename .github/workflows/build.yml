@@ -36,11 +36,11 @@ jobs:
           screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
         done
     - name: Upload screenshot
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: wail-screenshot-${{matrix.os}}
         path: wail-${{matrix.os}}*.png
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: wail-screenshot-${{matrix.os}}
