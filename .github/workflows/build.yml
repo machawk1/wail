@@ -14,15 +14,13 @@ jobs:
     - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
-    - name: Report Python architectures before venv
+    - name: Report available Python architecture(s)
       run: file `which python3`
     - name: Create venv to isolate Python dependencies
       run: |
         python3 -m venv wailvenv
         source  wailvenv/bin/activate
         echo PATH=$PATH >> $GITHUB_ENV
-    - name: Report Python architectures after venv
-      run: file `which python3`
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
