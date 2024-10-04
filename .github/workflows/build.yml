@@ -21,7 +21,7 @@ jobs:
         python3 -m venv wailvenv
         source  wailvenv/bin/activate
     - name: Install screenshot utility
-      run: pip3 install screenshot
+      run: python3 -m pip install screenshot
     - name: Run
       working-directory: /Applications
       run: |
