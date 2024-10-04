@@ -21,6 +21,7 @@ jobs:
         python3 -m venv wailvenv
         source  wailvenv/bin/activate
         python3 -m pip install screenshot
+        echo PATH=$PATH >> $GITHUB_ENV
     - name: Run
       working-directory: /Applications
       run: |
