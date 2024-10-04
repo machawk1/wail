@@ -5,19 +5,26 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [macos-latest, macos-11, macos-12]
+        os: [macos-latest, macos-12, macos-13]
         include:
           - os: macos-latest
-          - os: macos-11
+          - os: macos-13
           - os: macos-12
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         ref: ${{ github.ref }}
+    - name: Report available Python architecture(s)
+      run: file `which python3`
+    - name: Create venv to isolate Python dependencies
+      run: |
+        python3 -m venv wailvenv
+        source  wailvenv/bin/activate
+        echo PATH=$PATH >> $GITHUB_ENV
     - name: Build
       run: sh ./bundledApps/MAKEFILE.sh -q
     - name: Install screenshot utility
-      run: pip3 install screenshot
+      run: python3 -m pip install screenshot
     - name: Run
       working-directory: /Applications
       run: |
@@ -36,11 +43,11 @@ jobs:
           screenshot WAIL --filename wail-${{matrix.os}}-$k.png --shadow
         done
     - name: Upload screenshot
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
         name: wail-screenshot-${{matrix.os}}
         path: wail-${{matrix.os}}*.png
     - name: Download artifact
-      uses: actions/download-artifact@v2
+      uses: actions/download-artifact@v4
       with:
         name: wail-screenshot-${{matrix.os}}
