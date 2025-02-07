@@ -9,7 +9,6 @@ jobs:
         include:
           - os: macos-latest
           - os: macos-13
-          - os: macos-12
     steps:
     - uses: actions/checkout@v4
       with:
