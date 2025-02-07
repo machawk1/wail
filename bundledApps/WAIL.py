@@ -619,7 +619,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             #  ...title="WAIL")
         else:
             print("JAVA not INSTALLED")
-            print(config.msg_java6Required)
+            print(config.msg_java6_required)
             self.set_message(config.msg_archive_failed_java)
 
         wx.CallAfter(self.on_long_run_done)
