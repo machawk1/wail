@@ -4,7 +4,7 @@ import os
 import sys
 
 
-def tail(filename, lines=1, _buffer=4098):
+def tail(filename, lines : int = 1, _buffer : int = 4098) -> list | str:
     try:
         f = open(filename, "r", encoding="utf-8")
     except IOError as e:
@@ -29,7 +29,7 @@ def tail(filename, lines=1, _buffer=4098):
     return lines_found[-lines:]
 
 
-def copy_anything(src, dst):
+def copy_anything(src, dst) -> None:
     try:
         shutil.copytree(src, dst)
     except OSError as exc:  # python >2.5
@@ -39,7 +39,7 @@ def copy_anything(src, dst):
             raise
 
 # https://stackoverflow.com/questions/3431825/generating-an-md5-checksum-of-a-file
-def hash_bytestr_iter(bytesiter, hasher, ashexstr=False):
+def hash_bytestr_iter(bytesiter, hasher, ashexstr : bool = False):
     for block in bytesiter:
         hasher.update(block)
     return hasher.hexdigest() if ashexstr else hasher.digest()
@@ -51,11 +51,11 @@ def file_as_blockiter(afile, blocksize=65536):
             yield block
             block = afile.read(blocksize)
 
-def is_macOS():
+def is_macOS() -> bool:
     return 'darwin' in sys.platform
 
-def is_linux():
+def is_linux() -> bool:
     return sys.platform.startswith('linux')
 
-def is_windows():
+def is_windows() -> bool:
     return sys.platform.startswith('win32')

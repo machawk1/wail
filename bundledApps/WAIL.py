@@ -106,10 +106,10 @@ class TabController(wx.Frame):
         pub.subscribe(self.basic_config.set_memento_count,
                       'change_statusbar_with_counts')
 
-    def intercept_menu_selection(self, evt):
+    def intercept_menu_selection(self, evt) -> None:
         pass  # Menu selected, preventing status bar set
 
-    def set_statusbar_text_visibility(self, evt):
+    def set_statusbar_text_visibility(self, _) -> None:
         basic_tab_index = 0
         advanced_tab_index = 1
         current_selection = self.notebook.GetSelection()
@@ -121,10 +121,10 @@ class TabController(wx.Frame):
             self.statusbar.PushStatusText('')
             self.statusbar.hide_button()
 
-    def show_memento_info(self, evt):
+    def show_memento_info(self, _) -> None:
         pass  # TODO: Open new window with memento info
 
-    def change_statusbar(self, msg, includes_local):
+    def change_statusbar(self, msg : str, includes_local : bool) -> None:
         advanced_tab_active = (self.notebook.GetSelection() == 1)
         if advanced_tab_active:
             return
@@ -135,7 +135,7 @@ class TabController(wx.Frame):
         else:
             wx.CallAfter(self.statusbar.show_button)
 
-    def create_menu(self):
+    def create_menu(self) -> None:
         """Configure, initialize, and attach application menus"""
         menu_bar = wx.MenuBar()
 
@@ -294,16 +294,16 @@ class TabController(wx.Frame):
         self.SetMenuBar(menu_bar)
 
     @staticmethod
-    def add_menu_item(parent_menu, item_text, short_cut=""):
+    def add_menu_item(parent_menu, item_text : str, short_cut : str = ""):
         sep = "\t"
         if short_cut == "":
             sep = ""
         return parent_menu.Append(wx.ID_ANY, f"{item_text}{sep}{short_cut}")
 
-    def bind_menu(self, title, menu):
+    def bind_menu(self, title : str, menu) -> None:
         self.Bind(wx.EVT_MENU, lambda evt, t=title: self.display_tab(t), menu)
 
-    def display_tab(self, table_title="Basic", basic_tab=False):
+    def display_tab(self, table_title : str = "Basic", basic_tab : bool = False) -> None:
         """Change tab currently shown in the UI"""
         if basic_tab:
             self.notebook.SetSelection(0)
@@ -319,13 +319,13 @@ class TabController(wx.Frame):
         }
         self.adv_config.notebook.SetSelection(pages[table_title])
 
-    def setup_new_crawl_from_menu(self, _):
+    def setup_new_crawl_from_menu(self, _) -> None:
         """Change view to Advanced Crawl, display URI textbox"""
         self.display_tab(config.menu_title_view_view_advanced_heritrix)
         self.adv_config.heritrix_panel.setup_new_crawl(None)
 
     @staticmethod
-    def display_about_menu(_):
+    def display_about_menu(_) -> None:
         """Show new window with application information"""
         info = wx.adv.AboutDialogInfo()
         info.SetName(config.about_window_app_name)
@@ -335,7 +335,7 @@ class TabController(wx.Frame):
         wx.adv.AboutBox(info)
 
     @staticmethod
-    def ensure_correct_installation():
+    def ensure_correct_installation() -> None:
         return  # Disable location check for screenshotting util
         """Verify installation location"""
         # TODO: properly implement this
@@ -349,7 +349,7 @@ class TabController(wx.Frame):
             )
             print(f"{config.msg_wrong_location_body}{current_path}")
 
-    def quit(self, _):
+    def quit(self, _) -> None:
         """Kill MemGator"""
         self.basic_config.memgator.kill(None)
 
@@ -440,7 +440,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
 
-    def set_memento_count(self, m_count, a_count=0, includes_local=False):
+    def set_memento_count(self, m_count : int | None, a_count : int = 0, includes_local : bool = False) -> None:
         """Display the number of mementos in the interface based on the
         results returned from MemGator
         """
@@ -486,10 +486,10 @@ class WAILGUIFrame_Basic(wx.Panel):
 
         self.Layout()
 
-    def set_message(self, msg):
+    def set_message(self, msg : str) -> None:
         self.status.SetLabel(msg)
 
-    def fetch_mementos(self):  # MemGator in server mode
+    def fetch_mementos(self) -> None:  # MemGator in server mode
         """Request memento count from MemGator based on URI currently
         displayed in the Basic interface
         """
@@ -530,7 +530,7 @@ class WAILGUIFrame_Basic(wx.Panel):
         )
         # TODO: cache the TM
 
-    def uri_changed(self, event=None):
+    def uri_changed(self, event = None) -> None:
         """React when the URI has changed in the interface, call MemGator"""
         if event is not None and event.GetUnicodeKey() == wx.WXK_NONE:
             return  # Prevent modifiers from causing MemGator query
@@ -619,7 +619,7 @@ class WAILGUIFrame_Basic(wx.Panel):
             #  ...title="WAIL")
         else:
             print("JAVA not INSTALLED")
-            print(config.msg_java6Required)
+            print(config.msg_java6_required)
             self.set_message(config.msg_archive_failed_java)
 
         wx.CallAfter(self.on_long_run_done)
@@ -1374,7 +1374,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
                 self.Layout()
 
-        def deselect_crawl_listbox_items(self, _):
+        def deselect_crawl_listbox_items(self, *_):
             self.listbox.Deselect(self.listbox.GetSelection())
 
         def add_new_crawl_ui(self):
@@ -1701,7 +1701,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 class Service:
     uri = None  # TODO: update to use @abstractmethod + @property
 
-    def accessible(self):
+    def accessible(self) -> bool:
         chk_msg = f"Checking access to {self.__class__.__name__} at {self.uri}"
         print(chk_msg)
 
@@ -1734,16 +1734,16 @@ class MemGator(Service):
     uri = config.uri_aggregator
     last_uri = ''
 
-    def __init__(self, archives_json=config.archives_json,
-                 restimeout=config.memgator_restimeout,
-                 hdrtimeout=config.memgator_hdrtimeout,
-                 contimeout=config.memgator_contimeout):
+    def __init__(self, archives_json : str = config.archives_json,
+                 restimeout : str = config.memgator_restimeout,
+                 hdrtimeout : str = config.memgator_hdrtimeout,
+                 contimeout :  str = config.memgator_contimeout) -> None:
         self.archives_json = archives_json
         self.restimeout = restimeout
         self.hdrtimeout = hdrtimeout
         self.contimeout = contimeout
 
-    def get_flags(self):
+    def get_flags(self) -> list:
         return [
             f'--hdrtimeout={self.hdrtimeout}',
             f'--contimeout={self.contimeout}',
@@ -1751,7 +1751,7 @@ class MemGator(Service):
             f'--arcs={self.archives_json}'
         ]
 
-    def get_timemap(self, uri, timemap_format=config.memgator_format):
+    def get_timemap(self, uri : str , timemap_format : str = config.memgator_format) -> str:
         tm_uri = f'{config.uri_aggregator}timemap/{timemap_format}/{uri}'
         resp = requests.get(tm_uri)
 
@@ -1763,7 +1763,7 @@ class MemGator(Service):
     def fix(self, *cb):
         thread.start_new_thread(self.fix_async, cb)
 
-    def fix_async(self, cb=None):
+    def fix_async(self, cb=None) -> None:
         # Check if GUI is ready, abort if not
         if main_app_window is None:
             return
@@ -1804,11 +1804,11 @@ class MemGator(Service):
 class Wayback(Service):
     uri = config.uri_wayback
 
-    def fix(self, button, *cb):
+    def fix(self, button, *cb) -> None:
         main_app_window.basic_config.ensure_environment_variables_are_set()
         thread.start_new_thread(self.fix_async, cb)
 
-    def accessible(self):
+    def accessible(self) -> bool:
         try:
             handle = urlopen(self.uri, None, 3)
             headers = handle.getheaders()
@@ -1841,7 +1841,7 @@ class Wayback(Service):
             return False
 
     @staticmethod
-    def fix_async(cb=None):
+    def fix_async(cb=None) -> None:
         # main_app_window.adv_config.services_panel.status_wayback.SetLabel(
         #    config.service_enabled_label_FIXING)
         main_app_window.adv_config.services_panel.set_wayback_status(
@@ -1857,10 +1857,10 @@ class Wayback(Service):
         if cb:
             wx.CallAfter(cb)
 
-    def kill(self, button):
+    def kill(self, button) -> None:
         thread.start_new_thread(self.kill_async, ())
 
-    def kill_async(self):
+    def kill_async(self) -> None:
         main_app_window.adv_config.services_panel.status_wayback.SetLabel(
             "KILLING")
         cmd = config.tomcat_path_stop
@@ -1869,7 +1869,7 @@ class Wayback(Service):
         wx.CallAfter(
             main_app_window.adv_config.services_panel.update_service_statuses)
 
-    def index(self):
+    def index(self) -> None:
         self.generate_path_index()
         self.generate_cdx()
 
@@ -1887,8 +1887,9 @@ class Wayback(Service):
         path_index_file.close()
 
     @staticmethod
-    def generate_cdx():
+    def generate_cdx() -> None:
         dest = f"{config.wail_path}/archiveIndexes/index.cdx"
+
         warcs_path = f"{config.wail_path}/archives/"
         cdx_file_path_pre = f"{config.wail_path}/archiveIndexes/"
         cdx_indexer_path = (
@@ -1962,7 +1963,7 @@ class Wayback(Service):
 class Tomcat(Service):
     uri = config.uri_wayback
 
-    def accessible(self):
+    def accessible(self) -> bool:
         return Wayback().accessible()
 
 
@@ -1978,7 +1979,7 @@ class Heritrix(Service):
             os.path.join(config.heritrix_job_path, "*"))))
 
     @staticmethod
-    def get_heritrix_crawl_status(job_id):
+    def get_heritrix_crawl_status(job_id : int) -> str:
         """Communicate with the local Heritrix binary via its HTTP API"""
         headers = {
             "Accept": "application/xml",
@@ -2011,7 +2012,7 @@ class Heritrix(Service):
     """
 
     @staticmethod
-    def get_job_launches(job_id):
+    def get_job_launches(job_id : int) -> list:
         # job_path = f"{config.heritrix_job_path}{job_id}"
         return [
             f
@@ -2019,7 +2020,7 @@ class Heritrix(Service):
             if re.search(r"^[0-9]+$", f)
         ]
 
-    def get_current_stats(self, job_id):
+    def get_current_stats(self, job_id : int) -> str:
         launches = self.get_job_launches(job_id)
         status = ""
         status_template = Template("job_id: $job_id\n$status")
@@ -2064,11 +2065,11 @@ class Heritrix(Service):
 
         return status_template.safe_substitute(job_id=job_id, status=status)
 
-    def fix(self, _, *cb):
+    def fix(self, _, *cb) -> None:
         thread.start_new_thread(self.fix_async, cb)
 
     @staticmethod
-    def fix_async(cb=None):
+    def fix_async(cb = None) -> None:
         main_app_window.adv_config.services_panel.status_heritrix.SetLabel(
             config.service_enabled_label_FIXING
         )
@@ -2079,11 +2080,11 @@ class Heritrix(Service):
         if cb:
             wx.CallAfter(cb)
 
-    def kill(self, _):
+    def kill(self, _) -> None:
         thread.start_new_thread(self.kill_async, ())
 
     @staticmethod
-    def kill_async():
+    def kill_async() -> None:
         main_app_window.adv_config.services_panel.status_heritrix.SetLabel(
             config.service_enabled_label_KILLING
         )
@@ -2110,7 +2111,7 @@ class UpdateSoftwareWindow(wx.Frame):
     current_version_wayback = ""
     latest_version_wayback = ""
 
-    def update_wail(self, _):
+    def update_wail(self, _) -> None:
         print(f'Downloading {self.update_json_data["wail-core"]["uri"]}')
         wailcorefile = urlopen(self.update_json_data["wail-core"]["uri"])
         output = open(f"{config.wail_path}/support/temp.tar.gz", "wb")
@@ -2141,13 +2142,13 @@ class UpdateSoftwareWindow(wx.Frame):
         # TODO: flush Info.plist cache
         # (cmd involving defaults within this py script)
 
-    def fetch_current_versions_file(self):
+    def fetch_current_versions_file(self) -> None:
         src_uri = "https://matkelly.com/wail/update.json"
         f = urlopen(src_uri).read()
         data = f
         self.update_json_data = json.loads(data)
 
-    def set_versions_in_panel(self):
+    def set_versions_in_panel(self) -> None:
         self.current_version_wail = config.WAIL_VERSION
         self.latest_version_wail = self.update_json_data["wail-core"]["version"]
         self.current_version_heritrix = self.get_heritrix_version()
@@ -2162,7 +2163,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     @staticmethod
-    def get_heritrix_version():
+    def get_heritrix_version() -> str:
         for file in os.listdir(f"{config.heritrix_path}lib/"):
             if file.startswith("heritrix-commons"):
                 regex = re.compile("commons-(.*)\.")
@@ -2176,7 +2177,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
     # TODO: Redundant of Advanced Panel implementation, very inaccessible here
     @staticmethod
-    def get_wayback_version():
+    def get_wayback_version() -> str:
         for file in os.listdir(f"{config.tomcat_path}/webapps/lib/"):
             if file.startswith("openwayback-core"):
                 regex = re.compile("core-(.*)\.")
@@ -2189,12 +2190,12 @@ class UpdateSoftwareWindow(wx.Frame):
         panelPosition = ()
         panelLogoPath = ""
 
-        def __init__(self, parent, panelI, index_in_panel=0, panel_title=""):
+        def __init__(self, parent, panelI : int, index_in_panel : int = 0, panel_title : str = ""):
             self.panelPosition = (5, 10 * 85 * panelI)
             self.panelTitle = panel_title
             self.parent = parent
 
-        def draw(self):
+        def draw(self) -> None:
             # TODO: draw icon
             pass
 
@@ -2207,7 +2208,7 @@ class UpdateSoftwareWindow(wx.Frame):
             )
             box = wx.StaticBoxSizer(self.panel, wx.VERTICAL)
 
-    def __init__(self, parent, id):
+    def __init__(self, parent, id : int):
         self.fetch_current_versions_file()
         self.set_versions_in_panel()
 
@@ -2459,7 +2460,7 @@ class UpdateSoftwareWindow(wx.Frame):
 
 
 class MementoInfoWindow(wx.Frame):
-    def __init__(self, title, parent=None):
+    def __init__(self, title, parent = None):
         wx.Frame.__init__(self, parent=parent, title=title)
         self.Show()
 
@@ -2481,22 +2482,22 @@ class WAILStatusBar(wx.StatusBar):
         if not util.is_windows():  # See #548
             self.reposition()
 
-    def reposition(self):
+    def reposition(self) -> None:
         rect = self.GetFieldRect(1)
         rect.x += 1
         rect.y += 3
         self.sb_button.SetRect(rect)
         self.sizeChanged = False
 
-    def hide_button(self):
+    def hide_button(self) -> None:
         self.sb_button.SetLabel(config.button_label_local_archive_included)
         self.sb_button.SetToolTip(config.tooltip_local_archive_included)
 
-    def show_button(self):
+    def show_button(self) -> None:
         self.sb_button.SetLabel(config.button_label_local_archive_excluded)
         self.sb_button.SetToolTip(config.tooltip_local_archive_excluded)
 
-    def press_button(self, _):
+    def press_button(self, _) -> None:
         local_wayback_accessible = Wayback().accessible()
 
         if local_wayback_accessible:

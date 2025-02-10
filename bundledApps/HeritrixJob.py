@@ -9,7 +9,7 @@ from requests.auth import HTTPDigestAuth
 
 
 class HeritrixJob:
-    def write(self):
+    def write(self) -> None:
         self.job_number = str(int(time.time()))
         path = self.job_path + self.job_number
         if not os.path.exists(path):
@@ -23,7 +23,7 @@ class HeritrixJob:
             f.write(self.sampleXML)
             # print beans_file_path+"crawler-beans.cxml"
 
-    def launch_heritrix_job(self):
+    def launch_heritrix_job(self) -> None:
         logging.basicConfig(level=logging.DEBUG)
         print('Launching Heritrix job')
         data = {"action": "launch"}
@@ -36,7 +36,7 @@ class HeritrixJob:
                 config.heritrix_credentials_password),
             data=data, headers=headers, verify=False, stream=True)
 
-    def build_heritrix_job(self):
+    def build_heritrix_job(self) -> None:
         logging.basicConfig(level=logging.DEBUG)
         print('Building Heritrix job')
         data = {"action": "build"}
@@ -49,7 +49,7 @@ class HeritrixJob:
                           data=data, headers=headers,
                           verify=False, stream=True)
 
-    def __init__(self, h_job_path, uris, depth=1):
+    def __init__(self, h_job_path : str, uris : list, depth : int = 1) -> None:
         self.job_path = h_job_path
         self.sampleXML = '''<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
