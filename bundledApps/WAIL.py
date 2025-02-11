@@ -944,7 +944,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             for file in os.listdir(htrix_lib_path):
                 if file.startswith("heritrix-commons"):
-                    regex = re.compile("commons-(.*)\.")
+                    regex = re.compile(r"commons-(.*)\.")
                     h_version = regex.findall(file)[0]
                     try:
                         h_version = f'{h_version[: h_version.index("-")]}*'
@@ -958,7 +958,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
 
             for file in os.listdir(tomcat_lib_path):
                 if file.startswith("openwayback-core"):
-                    regex = re.compile("core-(.*)\.")
+                    regex = re.compile(r"core-(.*)\.")
                     return regex.findall(file)[0]
 
         @staticmethod
@@ -980,7 +980,7 @@ class WAILGUIFrame_Advanced(wx.Panel):
             version = ""
             for line in f.readlines():
                 if "Apache Tomcat Version " in line:
-                    version = re.sub("[^0-9^\.]", "", line)
+                    version = re.sub(r"[^0-9^\.]", "", line)
                     break
             f.close()
             return version
@@ -2162,7 +2162,7 @@ class UpdateSoftwareWindow(wx.Frame):
     def get_heritrix_version() -> str:
         for file in os.listdir(f"{config.heritrix_path}lib/"):
             if file.startswith("heritrix-commons"):
-                regex = re.compile("commons-(.*)\.")
+                regex = re.compile(r"commons-(.*)\.")
                 h_version = regex.findall(file)[0]
                 try:
                     h_version = f'{h_version[: h_version.index("-")]}*'
@@ -2176,7 +2176,7 @@ class UpdateSoftwareWindow(wx.Frame):
     def get_wayback_version() -> str:
         for file in os.listdir(f"{config.tomcat_path}/webapps/lib/"):
             if file.startswith("openwayback-core"):
-                regex = re.compile("core-(.*)\.")
+                regex = re.compile(r"core-(.*)\.")
                 return regex.findall(file)[0]
 
     # TODO: move layout management to responsibility of sub-panels, UNUSED now
