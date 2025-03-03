@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-import biplist
 import os.path
 
 application = defines.get('app', '/Applications/WAIL.app')
 appname = os.path.basename(application)
 
 def icon_from_app(app_path):
-    plist_path = os.path.join(app_path, 'Contents', 'Info.plist')
-    plist = biplist.readPlist(plist_path)
-    icon_name = plist['CFBundleIconFile']
+    icon_name = 'wail_blue.icns'
     icon_root,icon_ext = os.path.splitext(icon_name)
     if not icon_ext:
         icon_ext = '.icns'
@@ -18,7 +15,7 @@ def icon_from_app(app_path):
     return os.path.join(app_path, 'Contents', 'Resources', icon_name)
 
 format = defines.get('format', 'UDBZ')
-size = defines.get('size', '650M')
+size = defines.get('size', '900M')
 
 files = [ application ]
 

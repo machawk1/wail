@@ -1,5 +1,4 @@
 attrdict
-biplist
 black
 charset_normalizer<3.0
 dmgbuild
