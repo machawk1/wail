@@ -95,7 +95,7 @@ createBinary ()
     echo "🍎 Building native single-architecture binary"
   fi
 
-  pyinstaller --specpath=./ -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  pyinstaller --codesign-identity="87FC5BD9729DA162BF0B9767F8847AED82F88839" --osx-entitlements-file="../build/entitlements.plist" -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
