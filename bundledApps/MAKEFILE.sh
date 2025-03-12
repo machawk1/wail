@@ -10,9 +10,6 @@ trap exit INT
 
 main ()
 {
-  echo "Test to check whether we are in GitHub Actions"
-  echo $GITHUB_ACTIONS
-
   # Provide a means to skip all questions for GitHub Actions
   while getopts ":q" opt; do
     case ${opt} in
@@ -207,6 +204,13 @@ doFinalCleanupBeforeMove ()
 
 resignBinary ()
 {
+  echo "Check if running in GitHub Actions, if so, don't resign"
+
+  if $GITHUB_ACTIONS ; then
+    echo "Currently running it GitHub Actions, don't fit signing...for now"
+    return 1
+  fi
+
   echo "Fix signing"
   # We moved the bundledApps into the WAIL.app after signing, so let's move them
   # again (?) and resign to get round the "unsealed contents present in the bundle root" error
