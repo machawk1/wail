@@ -15,8 +15,8 @@
     <property name="properties">
       <value>
         <!-- Customize these basic placeholders. -->
-        wail.basedir=/Applications/WAIL.app
-        wayback.basedir.default=/Applications/WAIL.app/bundledApps/tomcat/webapps/ROOT
+        wail.basedir=/Applications/WAIL.app/Contents
+        wayback.basedir.default=/Applications/WAIL.app/Contents/bundledApps/tomcat/webapps/ROOT
         wayback.url.scheme.default=http
         wayback.url.host.default=localhost
         wayback.url.port.default=8080
