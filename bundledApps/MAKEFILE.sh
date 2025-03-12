@@ -96,8 +96,16 @@ createBinary ()
     echo "🍎 Building native single-architecture binary"
   fi
 
-  pyinstaller --codesign-identity="87FC5BD9729DA162BF0B9767F8847AED82F88839" --osx-entitlements-file="./build/entitlements.plist" -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
-  # Replace default version and icon information from pyinstaller 
+  if ! $GITHUB_ACTIONS ; then
+    echo "Building an initially signed binary, as we are not running under GitHub Actions"
+    pyinstaller --codesign-identity="87FC5BD9729DA162BF0B9767F8847AED82F88839" --osx-entitlements-file="./build/entitlements.plist" -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  else
+    # TODO: make this work for _other_ users to build the app as well, not just Mat with his codesigning creds
+    echo "Building without codesigning"
+    pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  fi
+
+  # Replace default version and icon information from pyinstaller
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
   cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
