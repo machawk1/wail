@@ -41,9 +41,12 @@
 
 <!--
 	A single CDX SearchResultSource example.
+	Prior value was ${wail.basedir}/archiveIndexes/index.cdx , but the variable in the path
+	causes the index to not be accessing from OpenWayback web UI, so hard-code the path for now
+	20250312
 -->
           <bean class="org.archive.wayback.resourceindex.cdx.CDXIndex">
-            <property name="path" value="${wail.basedir}/archiveIndexes/index.cdx" />
+            <property name="path" value="/Applications/WAIL.app/Contents/archiveIndexes/index.cdx" />
           </bean>
 
 <!--

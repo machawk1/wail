@@ -1890,7 +1890,7 @@ class Wayback(Service):
     def generate_cdx() -> None:
         dest = f"{config.wail_path}/archiveIndexes/index.cdx"
 
-        warcs_path = f"{config.wail_path}/archives/"
+        warcs_path = config.warcs_folder
         cdx_file_path_pre = f"{config.wail_path}/archiveIndexes/"
         cdx_indexer_path = (
             f"{config.wail_path}/bundledApps/tomcat/webapps/bin/cdx-indexer"

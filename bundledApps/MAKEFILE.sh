@@ -4,6 +4,7 @@
 # http://matkelly.com/wail/
 
 DIRECTORY="/Applications/WAIL.app/"
+MATS_DEV_ID="Matthew Kelly (843256YZYD)"
 
 trap exit INT
 
@@ -95,8 +96,16 @@ createBinary ()
     echo "🍎 Building native single-architecture binary"
   fi
 
-  pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
-  # Replace default version and icon information from pyinstaller 
+  if ! $GITHUB_ACTIONS ; then
+    echo "Building an initially signed binary, as we are not running under GitHub Actions"
+    pyinstaller --codesign-identity="87FC5BD9729DA162BF0B9767F8847AED82F88839" --osx-entitlements-file="./build/entitlements.plist" -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  else
+    # TODO: make this work for _other_ users to build the app as well, not just Mat with his codesigning creds
+    echo "Building without codesigning"
+    pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  fi
+
+  # Replace default version and icon information from pyinstaller
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
   cp -r ./bundledApps ./support ./build ./config ./archives ./archiveIndexes ./dist/WAIL.app/
@@ -179,7 +188,8 @@ optimizeforMac ()
 buildDiskImage ()
 {
   echo "Building Disk Image"
-  # Create a dmg
+  # Move back to source directory and build the DMG based on the .app generated
+  cd $builddir
   dmgbuild -s ./build/dmgbuild_settings.py "WAIL" WAIL.dmg
 }
 
@@ -200,9 +210,31 @@ doFinalCleanupBeforeMove ()
   # TODO: remove MAKEFILE from binary and other cruft that is fine in src but not in the .app
 }
 
+resignBinary ()
+{
+  echo "Check if running in GitHub Actions, if so, don't resign"
+
+  if $GITHUB_ACTIONS ; then
+    echo "Currently running it GitHub Actions, don't fit signing...for now"
+    return 1
+  fi
+
+  echo "Fix signing"
+  # We moved the bundledApps into the WAIL.app after signing, so let's move them
+  # again (?) and resign to get round the "unsealed contents present in the bundle root" error
+  # See #48 in the WAIL repo for more info
+  cd /Applications/WAIL.app
+  mv archives bundledApps support archiveIndexes build config ./Contents/
+  codesign --force --deep --sign "Developer ID Application: $MATS_DEV_ID" /Applications/WAIL.app
+  echo "Verifying codesigning"
+  codesign -vv --strict /Applications/WAIL.app
+}
+
 makeWAIL ()
 {
   echo "Running makeWAIL()"
+  builddir=$PWD
+
   installRequirements
   decompressJDKModules
   createBinary
@@ -212,6 +244,9 @@ makeWAIL ()
   doFinalCleanupBeforeMove
   mvProducts
   cleanupByproducts
+
+  resignBinary
+
   mvWARCsBackFromTemp
 
   # install binary, create dmg, or both? (i/d/b)

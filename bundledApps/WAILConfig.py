@@ -6,6 +6,9 @@ import platform
 import re
 import sys
 import wx
+
+from pathlib import Path
+
 if os.name == 'nt':
     from win32com.client import Dispatch
 
@@ -231,13 +234,14 @@ wail_style_yes_no = wx.YES_NO | wx.YES_DEFAULT | wx.ICON_QUESTION
 
 if "darwin" in sys.platform:  # macOS-specific code
     # This should be dynamic but doesn't work with WAIL binary
-    wail_path = '/Applications/WAIL.app'
+    wail_path = '/Applications/WAIL.app/Contents'
     heritrix_path = f'{wail_path}/bundledApps/heritrix-3.7.0/'
     heritrix_bin_path = f'sh {heritrix_path}bin/heritrix'
     heritrix_job_path = f'{heritrix_path}jobs/'
     font_size = 10
     tomcat_path = f'{wail_path}/bundledApps/tomcat'
-    warcs_folder = f'{wail_path}/archives'
+    # warcs_folder = f'{wail_path}/archives'
+    warcs_folder = f'{Path.home()}/archives'
     tomcat_path_start = f'{tomcat_path}/bin/startup.sh'
     tomcat_path_stop = f'{tomcat_path}/bin/shutdown.sh'
 
