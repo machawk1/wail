@@ -10,6 +10,9 @@ trap exit INT
 
 main ()
 {
+  echo "Test to check whether we are in GitHub Actions"
+  echo $GITHUB_ACTIONS
+
   # Provide a means to skip all questions for GitHub Actions
   while getopts ":q" opt; do
     case ${opt} in
