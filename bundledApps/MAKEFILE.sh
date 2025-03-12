@@ -180,7 +180,8 @@ optimizeforMac ()
 buildDiskImage ()
 {
   echo "Building Disk Image"
-  # Create a dmg
+  # Move back to source directory and build the DMG based on the .app generated
+  cd $builddir
   dmgbuild -s ./build/dmgbuild_settings.py "WAIL" WAIL.dmg
 }
 
@@ -217,6 +218,8 @@ resignBinary ()
 makeWAIL ()
 {
   echo "Running makeWAIL()"
+  builddir=$PWD
+
   installRequirements
   decompressJDKModules
   createBinary
