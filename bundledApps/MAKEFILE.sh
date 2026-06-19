@@ -87,15 +87,9 @@ createBinary ()
   echo "Creating binary"
   which pyinstaller
 
-  # Only specify the universal2 flag if an appropriate Python is installed, otherwise use default
-  if file `which python3` | grep 'universal'; then
-    echo "🌌 Building universal binary"
-    archflag=(--target-arch universal2)
-  else
-    echo "🍎 Building native single-architecture binary"
-  fi
+  echo "🍎 Building native single-architecture binary"
 
-  pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean "${archflag[@]}" --icon="./build/icons/wail_blue.icns"
+  pyinstaller -p bundledApps ./bundledApps/WAIL.py --onefile --windowed --clean --icon="./build/icons/wail_blue.icns"
   # Replace default version and icon information from pyinstaller 
   cp ./build/Info.plist ./dist/WAIL.app/Contents/Info.plist
   # Copy the bundledApps and support directories to inside WAIL.app/
