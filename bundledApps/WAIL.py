@@ -8,6 +8,7 @@
 
 import functools
 import glob
+import html
 import json
 import locale
 import logging
@@ -24,12 +25,13 @@ import time
 import webbrowser
 import wx
 
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 # from ntfy.backends.default import notify
 
 from string import Template  # Py3.6+
 
 from urllib.request import urlopen
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 from urllib.error import HTTPError
 
 import _thread as thread
@@ -47,11 +49,96 @@ from pubsub import pub
 from os import listdir
 from os.path import join
 
+from WAILArchiveNowServer import ArchiveNowServer
+
 import xml.etree.ElementTree as ET
 
 ssl._create_default_https_context = ssl._create_unverified_context
 
 
+
+
+class ArchiveNowRequestHandler(BaseHTTPRequestHandler):
+    """Handle one-click archive requests from the local OpenWayback UI."""
+
+    def do_GET(self) -> None:
+        parsed_path = urlparse(self.path)
+        if parsed_path.path != "/archive-now":
+            self.send_error(404)
+            return
+
+        params = parse_qs(parsed_path.query)
+        uri = params.get("url", params.get("uri", [""]))[0].strip()
+        parsed_uri = urlparse(uri)
+
+        if parsed_uri.scheme not in ("http", "https") or not parsed_uri.netloc:
+            self._write_html(
+                400,
+                "WAIL Archive Now",
+                "A valid http(s) URI is required.",
+            )
+            return
+
+        wx.CallAfter(self.server.basic_panel.archive_uri_from_wayback, uri)
+        self._write_html(
+            202,
+            "WAIL Archive Now",
+            (
+                "WAIL is archiving "
+                f"<a href=\"{html.escape(uri, quote=True)}\">"
+                f"{html.escape(uri)}</a>."
+            ),
+        )
+
+    def _write_html(self, status_code: int, title: str, body: str) -> None:
+        payload = (
+            "<!doctype html><html><head>"
+            f"<title>{html.escape(title)}</title>"
+            "</head><body>"
+            f"<h1>{html.escape(title)}</h1><p>{body}</p>"
+            "</body></html>"
+        ).encode("utf-8")
+        self.send_response(status_code)
+        self.send_header("Content-Type", "text/html; charset=utf-8")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def log_message(self, format, *args) -> None:
+        logging.debug("ArchiveNowServer: " + format, *args)
+
+
+class ArchiveNowServer:
+    """Expose a local endpoint that lets OpenWayback ask WAIL to crawl a URI."""
+
+    def __init__(self, basic_panel) -> None:
+        self.basic_panel = basic_panel
+        self.httpd = None
+        self.thread = None
+
+    def start(self) -> None:
+        try:
+            self.httpd = ThreadingHTTPServer(
+                (config.host_archive_now, int(config.port_archive_now)),
+                ArchiveNowRequestHandler,
+            )
+        except OSError as err:
+            logging.warning("ArchiveNowServer could not start: %s", err)
+            return
+
+        self.httpd.basic_panel = self.basic_panel
+        self.thread = threading.Thread(
+            target=self.httpd.serve_forever,
+            name="ArchiveNowServer",
+            daemon=True,
+        )
+        self.thread.start()
+
+    def stop(self) -> None:
+        if self.httpd:
+            self.httpd.shutdown()
+            self.httpd.server_close()
+            self.httpd = None
 #  from pync import Notifier # OS X notifications
 
 ###############################
@@ -353,9 +440,12 @@ class TabController(wx.Frame):
         """Kill MemGator"""
         self.basic_config.memgator.kill(None)
 
+        self.basic_config.archive_now_server.stop()
         """Exit the application"""
         if main_app_window.indexing_timer:
             main_app_window.indexing_timer.cancel()
+        
+        self.basic_config.archive_now_server.stop()
         sys.exit(1)  # Be a good citizen. Cleanup your memory footprint
 
 
@@ -411,6 +501,9 @@ class WAILGUIFrame_Basic(wx.Panel):
         basic_sizer.AddStretchSpacer()
         basic_sizer.Add(basic_sizer_messages, proportion=1)
 
+        self.archive_now_server = ArchiveNowServer(self.archive_uri_from_wayback)
+        self.archive_now_server.start()
+
         self.SetSizerAndFit(basic_sizer)
         self.archive_now_button.SetDefault()
 
@@ -420,6 +513,8 @@ class WAILGUIFrame_Basic(wx.Panel):
                                        self.check_if_url_is_in_archive)
         self.view_archive.Bind(wx.EVT_BUTTON, self.view_archive_in_browser)
 
+        self.archive_now_server = ArchiveNowServer(self)
+        self.archive_now_server.start()
         # TODO: check environment variables
         self.ensure_environment_variables_are_set()
 
@@ -439,6 +534,16 @@ class WAILGUIFrame_Basic(wx.Panel):
         )
         self.memgator_delay_timer.daemon = True
         self.memgator_delay_timer.start()
+
+    def archive_uri_from_wayback(self, uri: str) -> None:
+        """Archive a URI sent from OpenWayback's Resource Not In Archive page."""
+        self.uri.SetValue(uri)
+
+        if not self.archive_now_button.IsEnabled():
+            self.set_message("Archive Now is already running.")
+            return
+
+        self.archive_now(None)
 
     def set_memento_count(self, m_count : int | None, a_count : int = 0, includes_local : bool = False) -> None:
         """Display the number of mementos in the interface based on the

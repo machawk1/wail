@@ -205,6 +205,9 @@ port_crawler = "8443"
 port_replay = "8080"
 port_aggregator = "1208"
 
+host_archive_now = "127.0.0.1"
+port_archive_now = "18080"
+uri_archive_now = f"http://{host_archive_now}:{port_archive_now}/archive-now?url="
 index_timer_seconds = 10.0
 
 jdk_path = ""
